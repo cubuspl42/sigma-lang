@@ -1,4 +1,7 @@
 lexer grammar SigmaLexer;
 
-LeftBrace               : '{' ;
-RightBrace              : '}' ;
+LeftBrace : '{' ;
+RightBrace : '}' ;
+Colon : ':' ;
+Comma : ',' ;
+Whitespace : (' ' | '\n') -> skip ;
