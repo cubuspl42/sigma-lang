@@ -36,4 +36,14 @@ class ExpressionEvaluationTest {
             )
         }
     }
+
+    object Read {
+        @Test
+        fun test() {
+            assertEquals(
+                expected = IdentifierValue("bar"),
+                actual = Expression.parse("{foo: bar}[foo]").evaluate(),
+            )
+        }
+    }
 }

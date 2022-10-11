@@ -4,8 +4,11 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
+import sigma.parser.antlr.SigmaParser.FormAltContext
 import sigma.parser.antlr.SigmaParser.FormContext
+import sigma.parser.antlr.SigmaParser.IdentifierAltContext
 import sigma.parser.antlr.SigmaParser.IdentifierContext
+import sigma.parser.antlr.SigmaParser.ReadAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
 sealed interface Expression {
@@ -25,13 +28,19 @@ sealed interface Expression {
         fun build(
             expression: SigmaParser.ExpressionContext,
         ): Expression = object : SigmaParserBaseVisitor<Expression>() {
-            override fun visitForm(
-                ctx: FormContext,
-            ): Expression = FormExpression.build(ctx)
+            override fun visitFormAlt(
+                ctx: FormAltContext,
+            ): Expression = FormExpression.build(ctx.form())
 
-            override fun visitIdentifier(
-                ctx: IdentifierContext,
-            ): Expression = IdentifierExpression.build(ctx)
+            override fun visitIdentifierAlt(
+                ctx: IdentifierAltContext,
+            ): Expression = IdentifierExpression.build(ctx.identifier())
+
+            override fun visitReadAlt(
+                ctx: ReadAltContext,
+            ): Expression {
+                return ReadExpression.build(ctx)
+            }
         }.visit(expression)
     }
 
