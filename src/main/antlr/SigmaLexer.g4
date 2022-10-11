@@ -2,6 +2,8 @@ lexer grammar SigmaLexer;
 
 LeftBrace : '{' ;
 RightBrace : '}' ;
+LeftBracket : '[' ;
+RightBracket : ']' ;
 Colon : ':' ;
 Comma : ',' ;
 Whitespace : (' ' | '\n') -> skip ;

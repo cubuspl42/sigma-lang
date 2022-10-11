@@ -6,8 +6,9 @@ program
     : expression ;
 
 expression
-    : form
-    | identifier ;
+    : form # formAlt
+    | identifier # identifierAlt
+    | subject=expression LeftBracket key=expression RightBracket # readAlt ;
 
 form
     : LeftBrace (entry (Comma entry)*)? RightBrace ;
