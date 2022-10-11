@@ -1,7 +1,17 @@
-fun main(args: Array<String>) {
-    println("Hello World!")
+import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.CommonTokenStream
+import sigma.parser.antlr.SigmaLexer
+import sigma.parser.antlr.SigmaParser
 
-    // Try adding program arguments via Run/Debug configuration.
-    // Learn more about running applications: https://www.jetbrains.com/help/idea/running-applications.html.
-    println("Program arguments: ${args.joinToString()}")
+fun main() {
+    val source = "{}"
+    val sourceName = "__main__"
+
+    val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
+    val tokenStream = CommonTokenStream(lexer)
+    val parser = SigmaParser(tokenStream)
+
+    val program = parser.program()
+
+    println(program.toString())
 }
