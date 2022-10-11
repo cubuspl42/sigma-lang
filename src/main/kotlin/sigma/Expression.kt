@@ -35,5 +35,7 @@ sealed interface Expression {
         }.visit(expression)
     }
 
+    fun evaluate(): Value
+
     fun dump(): String
 }

@@ -13,5 +13,7 @@ data class IdentifierExpression(
         )
     }
 
+    override fun evaluate(): Value = IdentifierValue(value = value)
+
     override fun dump(): String = value
 }
