@@ -59,4 +59,35 @@ class ExpressionParsingTest {
             )
         }
     }
+
+    object Read {
+        @Test
+        fun testIdentifierSubject() {
+            assertEquals(
+                expected = ReadExpression(
+                    subject = IdentifierExpression("foo"),
+                    key = IdentifierExpression("bar"),
+                ),
+                actual = Expression.parse("foo[bar]"),
+            )
+        }
+
+        @Test
+        fun testFormSubject() {
+            assertEquals(
+                expected = ReadExpression(
+                    subject = FormExpression(
+                        entries = listOf(
+                            FormExpression.Entry(
+                                key = IdentifierExpression("foo"),
+                                value = FormExpression.empty,
+                            ),
+                        ),
+                    ),
+                    key = IdentifierExpression("foo"),
+                ),
+                actual = Expression.parse("{foo: {}}[foo]"),
+            )
+        }
+    }
 }
