@@ -29,5 +29,11 @@ data class FormExpression(
         )
     }
 
+    override fun evaluate(): Value = ObjectValue(
+        entries = entries.associate {
+            it.key.evaluate() to it.value.evaluate()
+        },
+    )
+
     override fun dump(): String = "{${entries.joinToString { it.dump() }}}"
 }
