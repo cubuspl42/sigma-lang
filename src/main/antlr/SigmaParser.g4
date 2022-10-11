@@ -6,10 +6,14 @@ program
     : expression ;
 
 expression
-    : form # formAlt ;
+    : form
+    | identifier ;
 
 form
     : LeftBrace (entry (Comma entry)*)? RightBrace ;
 
 entry
     : key=expression Colon value=expression ;
+
+identifier
+    : Identifier ;
