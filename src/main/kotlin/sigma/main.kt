@@ -1,10 +1,12 @@
+package sigma
+
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 
 fun main() {
-    val source = "{}"
+    val source = "{{}: {{}: {}}}"
     val sourceName = "__main__"
 
     val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
@@ -13,5 +15,7 @@ fun main() {
 
     val program = parser.program()
 
-    println(program.toString())
+    val root = Expression.build(program.expression())
+
+    println(root.dump())
 }
