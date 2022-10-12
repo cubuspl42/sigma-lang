@@ -4,11 +4,11 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ExpressionEvaluationTest {
-    object Form {
+    object DictTest {
         @Test
         fun testEmpty() {
             assertEquals(
-                expected = ObjectValue(entries = emptyMap()),
+                expected = Dict(entries = emptyMap()),
                 actual = Expression.parse("{}").evaluate(),
             )
         }
@@ -16,33 +16,60 @@ class ExpressionEvaluationTest {
         @Test
         fun testTwoEntries() {
             assertEquals(
-                expected = ObjectValue(
+                expected = Dict(
                     entries = mapOf(
-                        IdentifierValue("foo") to ObjectValue.empty,
-                        IdentifierValue("bar") to ObjectValue.empty,
+                        Symbol("foo") to Dict.empty,
+                        Symbol("bar") to Dict.empty,
                     ),
                 ),
-                actual = Expression.parse("{foo: {}, bar: {}}").evaluate(),
+                actual = Expression.parse(
+                    source = "{'foo': {}, 'bar': {}}",
+                ).evaluate(),
             )
         }
-    }
 
-    object Identifier {
         @Test
-        fun test() {
+        fun testLabeled() {
             assertEquals(
-                expected = IdentifierValue("foo"),
-                actual = Expression.parse("foo").evaluate(),
+                expected = Dict(
+                    label = "a",
+                    entries = mapOf(
+                        Symbol("foo") to Dict.empty,
+                        Symbol("bar") to Application(
+                            subject = Reference("a"),
+                            key = Symbol("foo"),
+                        ),
+                    ),
+                ),
+                actual = Expression.parse(
+                    source = "a@{'foo': {}, 'bar': a['foo']}",
+                ).evaluate(),
             )
         }
     }
 
     object Read {
         @Test
-        fun test() {
+        fun testFormSubject() {
             assertEquals(
-                expected = IdentifierValue("bar"),
-                actual = Expression.parse("{foo: bar}[foo]").evaluate(),
+                expected = Symbol("bar"),
+                actual = Expression.parse("{'foo': 'bar'}['foo']").evaluate(),
+            )
+        }
+
+        @Test
+        fun testLabelIdentifierSubject() {
+            assertEquals(
+                expected = Symbol("bar"),
+                actual = Expression.parse("{'foo': 'bar'}['foo']").evaluate(),
+            )
+        }
+
+        @Test
+        fun testSelfReferring() {
+            assertEquals(
+                expected = Symbol("baz"),
+                actual = Expression.parse("a@{'foo': 'baz', 'bar': a['foo']}['bar']").evaluate(),
             )
         }
     }

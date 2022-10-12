@@ -6,15 +6,22 @@ program
     : expression ;
 
 expression
-    : form # formAlt
-    | identifier # identifierAlt
+    : value # valueAlt
+    | referee=identifier # referenceAlt
     | subject=expression LeftBracket key=expression RightBracket # readAlt ;
 
-form
-    : LeftBrace (entry (Comma entry)*)? RightBrace ;
-
-entry
-    : key=expression Colon value=expression ;
+value
+    : dict # dictAlt
+    | symbol # symbolAlt ;
 
 identifier
-    : Identifier ;
+    : CharSequence ;
+
+dict
+    : (label=identifier At)? LeftBrace (entry (Comma entry)*)? Comma? RightBrace ;
+
+entry
+    : argument=value Colon image=expression ;
+
+symbol
+    : Quote text=CharSequence Quote ;
