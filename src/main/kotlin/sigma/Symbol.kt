@@ -13,9 +13,5 @@ data class Symbol(
         )
     }
 
-    override fun apply(scope: Scope, key: Value): Value {
-        TODO("Not yet implemented")
-    }
-
     override fun dump(): String = "\"$text\""
 }

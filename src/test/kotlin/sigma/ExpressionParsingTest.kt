@@ -8,9 +8,7 @@ class ExpressionParsingTest {
         @Test
         fun testEmpty() {
             assertEquals(
-                expected = Dict(
-                    entries = emptyMap(),
-                ),
+                expected = TableExpression.empty,
                 actual = Expression.parse("{}"),
             )
         }
@@ -18,9 +16,9 @@ class ExpressionParsingTest {
         @Test
         fun testSingleEntry() {
             assertEquals(
-                expected = Dict(
+                expected = TableExpression(
                     entries = mapOf(
-                        Symbol("foo") to Dict.empty,
+                        Symbol("foo") to TableExpression.empty,
                     ),
                 ),
                 actual = Expression.parse("{'foo': {}}"),
@@ -30,9 +28,9 @@ class ExpressionParsingTest {
         @Test
         fun testTwoEntries() {
             assertEquals(
-                expected = Dict(
+                expected = TableExpression(
                     entries = mapOf(
-                        Symbol("foo") to Dict.empty,
+                        Symbol("foo") to TableExpression.empty,
                         Symbol("bar") to Symbol("baz"),
                     ),
                 ),
@@ -43,7 +41,7 @@ class ExpressionParsingTest {
         @Test
         fun testLabeled1() {
             assertEquals(
-                expected = Dict(
+                expected = TableExpression(
                     label = "l1",
                     entries = emptyMap(),
                 ),
@@ -54,10 +52,10 @@ class ExpressionParsingTest {
         @Test
         fun testLabeled2() {
             assertEquals(
-                expected = Dict(
+                expected = TableExpression(
                     label = "l1",
                     entries = mapOf(
-                        Symbol("foo") to Dict.empty,
+                        Symbol("foo") to TableExpression.empty,
                         Symbol("bar") to Symbol("baz"),
                     ),
                 ),
@@ -82,9 +80,9 @@ class ExpressionParsingTest {
             assertEquals(
                 expected = Abstraction(
                     argument = "x",
-                    image = Dict(
+                    image = TableExpression(
                         entries = mapOf(
-                            Symbol("foo") to Dict.empty,
+                            Symbol("foo") to TableExpression.empty,
                         ),
                     ),
                 ),
@@ -99,7 +97,7 @@ class ExpressionParsingTest {
             assertEquals(
                 expected = Application(
                     subject = Reference("foo"),
-                    key = Symbol("bar"),
+                    argument = Symbol("bar"),
                 ),
                 actual = Expression.parse("foo['bar']"),
             )
@@ -109,12 +107,12 @@ class ExpressionParsingTest {
         fun testFormSubject() {
             assertEquals(
                 expected = Application(
-                    subject = Dict(
+                    subject = TableExpression(
                         entries = mapOf(
-                            Symbol("foo") to Dict.empty,
+                            Symbol("foo") to TableExpression.empty,
                         ),
                     ),
-                    key = Symbol("foo"),
+                    argument = Symbol("foo"),
                 ),
                 actual = Expression.parse("{'foo': {}}['foo']"),
             )
