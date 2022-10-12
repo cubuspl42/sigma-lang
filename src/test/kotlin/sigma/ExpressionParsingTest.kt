@@ -8,8 +8,8 @@ class ExpressionParsingTest {
         @Test
         fun testEmpty() {
             assertEquals(
-                expected = FormExpression(
-                    entries = emptyList(),
+                expected = Dict(
+                    entries = emptyMap(),
                 ),
                 actual = Expression.parse("{}"),
             )
@@ -18,34 +18,50 @@ class ExpressionParsingTest {
         @Test
         fun testSingleEntry() {
             assertEquals(
-                expected = FormExpression(
-                    entries = listOf(
-                        FormExpression.Entry(
-                            key = IdentifierExpression("foo"),
-                            value = FormExpression.empty,
-                        ),
+                expected = Dict(
+                    entries = mapOf(
+                        Symbol("foo") to Dict.empty,
                     ),
                 ),
-                actual = Expression.parse("{foo: {}}"),
+                actual = Expression.parse("{'foo': {}}"),
             )
         }
 
         @Test
         fun testTwoEntries() {
             assertEquals(
-                expected = FormExpression(
-                    entries = listOf(
-                        FormExpression.Entry(
-                            key = IdentifierExpression("foo"),
-                            value = FormExpression.empty,
-                        ),
-                        FormExpression.Entry(
-                            key = IdentifierExpression("bar"),
-                            value = IdentifierExpression("baz"),
-                        ),
+                expected = Dict(
+                    entries = mapOf(
+                        Symbol("foo") to Dict.empty,
+                        Symbol("bar") to Symbol("baz"),
                     ),
                 ),
-                actual = Expression.parse("{foo: {}, bar: baz}"),
+                actual = Expression.parse("{'foo': {}, 'bar': 'baz'}"),
+            )
+        }
+
+        @Test
+        fun testLabeled1() {
+            assertEquals(
+                expected = Dict(
+                    label = "l1",
+                    entries = emptyMap(),
+                ),
+                actual = Expression.parse("l1@{}"),
+            )
+        }
+
+        @Test
+        fun testLabeled2() {
+            assertEquals(
+                expected = Dict(
+                    label = "l1",
+                    entries = mapOf(
+                        Symbol("foo") to Dict.empty,
+                        Symbol("bar") to Symbol("baz"),
+                    ),
+                ),
+                actual = Expression.parse("l1@{'foo': {}, 'bar': 'baz'}"),
             )
         }
     }
@@ -54,7 +70,7 @@ class ExpressionParsingTest {
         @Test
         fun test() {
             assertEquals(
-                expected = IdentifierExpression("foo"),
+                expected = Reference("foo"),
                 actual = Expression.parse("foo"),
             )
         }
@@ -64,29 +80,26 @@ class ExpressionParsingTest {
         @Test
         fun testIdentifierSubject() {
             assertEquals(
-                expected = ReadExpression(
-                    subject = IdentifierExpression("foo"),
-                    key = IdentifierExpression("bar"),
+                expected = Application(
+                    subject = Reference("foo"),
+                    key = Symbol("bar"),
                 ),
-                actual = Expression.parse("foo[bar]"),
+                actual = Expression.parse("foo['bar']"),
             )
         }
 
         @Test
         fun testFormSubject() {
             assertEquals(
-                expected = ReadExpression(
-                    subject = FormExpression(
-                        entries = listOf(
-                            FormExpression.Entry(
-                                key = IdentifierExpression("foo"),
-                                value = FormExpression.empty,
-                            ),
+                expected = Application(
+                    subject = Dict(
+                        entries = mapOf(
+                            Symbol("foo") to Dict.empty,
                         ),
                     ),
-                    key = IdentifierExpression("foo"),
+                    key = Symbol("foo"),
                 ),
-                actual = Expression.parse("{foo: {}}[foo]"),
+                actual = Expression.parse("{'foo': {}}['foo']"),
             )
         }
     }

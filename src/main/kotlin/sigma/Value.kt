@@ -1,17 +1,29 @@
 package sigma
 
-sealed interface Value
+import sigma.parser.antlr.SigmaParser.DictAltContext
+import sigma.parser.antlr.SigmaParser.SymbolAltContext
+import sigma.parser.antlr.SigmaParser.ValueContext
+import sigma.parser.antlr.SigmaParserBaseVisitor
 
-data class ObjectValue(
-    private val entries: Map<Value, Value>,
-) : Value {
+sealed class Value : Expression {
     companion object {
-        val empty = ObjectValue(entries = emptyMap())
+        fun build(
+            value: ValueContext,
+        ): Value = object : SigmaParserBaseVisitor<Value>() {
+            override fun visitDictAlt(
+                ctx: DictAltContext,
+            ): Value = Dict.build(ctx.dict())
+
+            override fun visitSymbolAlt(
+                ctx: SymbolAltContext,
+            ): Value = Symbol.build(ctx.symbol())
+        }.visit(value)
     }
 
-    fun getValue(key: Value): Value? = entries[key]
-}
+    override fun evaluate(scope: Scope): Value = this
 
-data class IdentifierValue(
-    private val value: String,
-) : Value
+    abstract fun apply(
+        scope: Scope,
+        key: Value,
+    ): Value
+}

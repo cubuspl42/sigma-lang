@@ -4,7 +4,12 @@ LeftBrace : '{' ;
 RightBrace : '}' ;
 LeftBracket : '[' ;
 RightBracket : ']' ;
+
+At : '@' ;
 Colon : ':' ;
 Comma : ',' ;
+Quote : '\'' ;
+
+CharSequence : ([a-zA-Z1-9])+ ;
+
 Whitespace : (' ' | '\n') -> skip ;
-Identifier : [a-zA-Z] ([a-zA-Z1-9])* ;
