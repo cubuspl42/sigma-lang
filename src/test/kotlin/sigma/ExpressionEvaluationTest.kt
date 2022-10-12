@@ -1,5 +1,6 @@
 package sigma
 
+import org.junit.jupiter.api.Disabled
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -70,6 +71,19 @@ class ExpressionEvaluationTest {
             assertEquals(
                 expected = Symbol("baz"),
                 actual = Expression.parse("a@{'foo': 'baz', 'bar': a['foo']}['bar']").evaluate(),
+            )
+        }
+    }
+
+    object AbstractionTests {
+        @Test
+        @Disabled
+        fun test() {
+            assertEquals(
+                expected = Symbol("bar"),
+                actual = Expression.parse(
+                    source = "x => {'foo': x}",
+                ).evaluate().apply(key = Symbol("bar")),
             )
         }
     }

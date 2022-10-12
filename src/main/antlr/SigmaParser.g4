@@ -12,7 +12,8 @@ expression
 
 value
     : dict # dictAlt
-    | symbol # symbolAlt ;
+    | symbol # symbolAlt
+    | abstraction # abstractionAlt ;
 
 identifier
     : CharSequence ;
@@ -25,3 +26,6 @@ entry
 
 symbol
     : Quote text=CharSequence Quote ;
+
+abstraction
+    : argument=identifier Arrow image=expression ;
