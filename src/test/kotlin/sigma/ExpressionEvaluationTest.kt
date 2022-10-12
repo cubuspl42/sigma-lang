@@ -5,11 +5,11 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ExpressionEvaluationTest {
-    object DictTest {
+    object TableTest {
         @Test
         fun testEmpty() {
             assertEquals(
-                expected = Dict(entries = emptyMap()),
+                expected = Table.empty,
                 actual = Expression.parse("{}").evaluate(),
             )
         }
@@ -17,10 +17,11 @@ class ExpressionEvaluationTest {
         @Test
         fun testTwoEntries() {
             assertEquals(
-                expected = Dict(
+                expected = Table(
+                    scope = Scope.Empty,
                     entries = mapOf(
-                        Symbol("foo") to Dict.empty,
-                        Symbol("bar") to Dict.empty,
+                        Symbol("foo") to TableExpression.empty,
+                        Symbol("bar") to TableExpression.empty,
                     ),
                 ),
                 actual = Expression.parse(
@@ -32,13 +33,14 @@ class ExpressionEvaluationTest {
         @Test
         fun testLabeled() {
             assertEquals(
-                expected = Dict(
+                expected = Table(
+                    scope = Scope.Empty,
                     label = "a",
                     entries = mapOf(
-                        Symbol("foo") to Dict.empty,
+                        Symbol("foo") to TableExpression.empty,
                         Symbol("bar") to Application(
                             subject = Reference("a"),
-                            key = Symbol("foo"),
+                            argument = Symbol("foo"),
                         ),
                     ),
                 ),
@@ -83,7 +85,7 @@ class ExpressionEvaluationTest {
                 expected = Symbol("bar"),
                 actual = Expression.parse(
                     source = "x => {'foo': x}",
-                ).evaluate().apply(key = Symbol("bar")),
+                ).evaluate(),
             )
         }
     }

@@ -12,7 +12,7 @@ class Test1 {
     @Test
     fun test() {
         assertEquals(
-            expected = Dict.empty,
+            expected = Table.empty,
             actual = Expression.parse(source1).evaluate(),
         )
     }
@@ -20,6 +20,10 @@ class Test1 {
 
 private const val source2 = """
 a@{
+    'f1': x => {
+        'f2': y => (z => {'foo': x})
+     }['f2']
+    'f3': f1['bar'],
     'foo1': c@{},
     'foo2': d@{},
     'bar': a['foo1'][b@{
@@ -36,7 +40,7 @@ class Test2 {
         val root = Expression.parse(source2)
 
         assertEquals(
-            expected = Dict.empty,
+            expected = Table.empty,
             actual = root.evaluate(),
         )
     }

@@ -6,23 +6,20 @@ program
     : expression ;
 
 expression
-    : value # valueAlt
+    : table # tableAlt
+    | abstraction # abstractionAlt
     | referee=identifier # referenceAlt
-    | subject=expression LeftBracket key=expression RightBracket # readAlt ;
-
-value
-    : dict # dictAlt
-    | symbol # symbolAlt
-    | abstraction # abstractionAlt ;
+    | subject=expression LeftBracket key=expression RightBracket # applicationAlt
+    | symbol # symbolAlt ;
 
 identifier
     : CharSequence ;
 
-dict
+table
     : (label=identifier At)? LeftBrace (entry (Comma entry)*)? Comma? RightBrace ;
 
 entry
-    : argument=value Colon image=expression ;
+    : argument=symbol Colon image=expression ;
 
 symbol
     : Quote text=CharSequence Quote ;

@@ -1,32 +1,33 @@
 package sigma
 
-import sigma.parser.antlr.SigmaParser.ReadAltContext
+import sigma.parser.antlr.SigmaParser.ApplicationAltContext
 import kotlin.String
 
 data class Application(
     val subject: Expression,
-    val key: Expression,
+    val argument: Expression,
 ) : Expression {
     companion object {
         fun build(
-            read: ReadAltContext,
+            read: ApplicationAltContext,
         ): Application = Application(
             subject = Expression.build(read.subject),
-            key = Expression.build(read.key),
+            argument = Expression.build(read.key),
         )
     }
 
     override fun evaluate(
         scope: Scope,
     ): Value {
-        val subjectValue = subject.evaluate(scope = scope)
-        val keyValue = key.evaluate(scope = scope)
+        val subjectValue = subject.evaluate(scope = scope) as? FunctionValue
+            ?: throw IllegalStateException("Subject is not a function")
+
+        val argumentValue = argument.evaluate(scope = scope)
 
         return subjectValue.apply(
-            scope = scope,
-            key = keyValue,
+            argument = argumentValue,
         )
     }
 
-    override fun dump(): String = "${subject.dump()}[${key.dump()}]"
+    override fun dump(): String = "${subject.dump()}[${argument.dump()}]"
 }
