@@ -1,5 +1,6 @@
 package sigma
 
+import sigma.parser.antlr.SigmaParser.AbstractionAltContext
 import sigma.parser.antlr.SigmaParser.DictAltContext
 import sigma.parser.antlr.SigmaParser.SymbolAltContext
 import sigma.parser.antlr.SigmaParser.ValueContext
@@ -17,13 +18,17 @@ sealed class Value : Expression {
             override fun visitSymbolAlt(
                 ctx: SymbolAltContext,
             ): Value = Symbol.build(ctx.symbol())
+
+            override fun visitAbstractionAlt(
+                ctx: AbstractionAltContext,
+            ): Value = Abstraction.build(ctx.abstraction())
         }.visit(value)
     }
 
     override fun evaluate(scope: Scope): Value = this
 
     abstract fun apply(
-        scope: Scope,
+        scope: Scope = Scope.Empty,
         key: Value,
     ): Value
 }

@@ -76,6 +76,23 @@ class ExpressionParsingTest {
         }
     }
 
+    object AbstractionTests {
+        @Test
+        fun test() {
+            assertEquals(
+                expected = Abstraction(
+                    argument = "x",
+                    image = Dict(
+                        entries = mapOf(
+                            Symbol("foo") to Dict.empty,
+                        ),
+                    ),
+                ),
+                actual = Expression.parse("x => {'foo': {}}"),
+            )
+        }
+    }
+
     object Read {
         @Test
         fun testIdentifierSubject() {
