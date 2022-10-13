@@ -1,17 +1,15 @@
 package sigma
 
-import sigma.parser.antlr.SigmaParser
-
 data class Symbol(
-    val text: String,
+    val name: String,
 ) : Value() {
     companion object {
-        fun build(
-            symbol: SigmaParser.SymbolContext,
+        fun of(
+            name: String,
         ): Symbol = Symbol(
-            text = symbol.text.text
+            name = name,
         )
     }
 
-    override fun dump(): String = "\"$text\""
+    override fun dump(): String = "`$name`"
 }

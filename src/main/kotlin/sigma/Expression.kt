@@ -6,9 +6,10 @@ import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.AbstractionAltContext
 import sigma.parser.antlr.SigmaParser.ApplicationAltContext
+import sigma.parser.antlr.SigmaParser.LetExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ReferenceAltContext
+import sigma.parser.antlr.SigmaParser.ScopeAltContext
 import sigma.parser.antlr.SigmaParser.SymbolAltContext
-import sigma.parser.antlr.SigmaParser.TableAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
 sealed interface Expression {
@@ -28,30 +29,35 @@ sealed interface Expression {
         fun build(
             expression: SigmaParser.ExpressionContext,
         ): Expression = object : SigmaParserBaseVisitor<Expression>() {
-            override fun visitTableAlt(
-                ctx: TableAltContext,
-            ): Expression = TableExpression.build(ctx.table())
-
-            override fun visitAbstractionAlt(
-                ctx: AbstractionAltContext,
-            ): Expression = Abstraction.build(ctx.abstraction())
 
             override fun visitReferenceAlt(
                 ctx: ReferenceAltContext,
             ): Expression = Reference.build(ctx)
 
+            override fun visitAbstractionAlt(
+                ctx: AbstractionAltContext,
+            ): Expression = Abstraction.build(ctx.abstraction())
+
             override fun visitApplicationAlt(
                 ctx: ApplicationAltContext,
             ): Expression = Application.build(ctx)
 
+            override fun visitLetExpressionAlt(
+                ctx: LetExpressionAltContext,
+            ): Expression = LetExpression.build(ctx.letExpression())
+
+            override fun visitScopeAlt(
+                ctx: ScopeAltContext,
+            ): Expression = ScopeConstructor.build(ctx.scope())
+
             override fun visitSymbolAlt(
                 ctx: SymbolAltContext,
-            ): Expression = Symbol.build(ctx.symbol())
+            ): Expression = Symbol.of(ctx.symbol().identifier().text)
         }.visit(expression)
     }
 
     fun evaluate(
-        scope: Scope = Scope.Empty,
+        scope: Scope = BuiltinScope,
     ): Value
 
     fun dump(): String

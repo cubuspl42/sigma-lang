@@ -6,23 +6,30 @@ program
     : expression ;
 
 expression
-    : table # tableAlt
+    : referee=identifier # referenceAlt
     | abstraction # abstractionAlt
-    | referee=identifier # referenceAlt
     | subject=expression LeftBracket key=expression RightBracket # applicationAlt
+    | letExpression # letExpressionAlt
+    | scope # scopeAlt
     | symbol # symbolAlt ;
 
 identifier
     : CharSequence ;
 
-table
-    : (label=identifier At)? LeftBrace (entry (Comma entry)*)? Comma? RightBrace ;
+bind
+    : name=identifier Assign bound=expression ;
 
-entry
-    : argument=symbol Colon image=expression ;
+bindSeparator
+    : Comma ;
 
 symbol
-    : Quote text=CharSequence Quote ;
+    : Backtick identifier Backtick ;
 
 abstraction
     : argument=identifier Arrow image=expression ;
+
+letExpression
+    : LetKeyword body=scope InKeyword result=expression ;
+
+scope
+    : LeftBrace (bind (bindSeparator bind)*)? bindSeparator? RightBrace ;
