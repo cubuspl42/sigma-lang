@@ -9,20 +9,31 @@ data class BoolValue(
         val True = BoolValue(true)
     }
 
-    object If : FunctionValue() {
+    object If : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
-            argument as FunctionValue
+            val test = argument as BoolValue
 
-            val test = argument.apply(Symbol.of("test")) as BoolValue
+            return object : ComputableFunctionValue() {
+                override fun apply(argument: Value): Value {
+                    val branches = argument as FunctionValue
 
-            return when {
-                test.value -> argument.apply(Symbol.of("then"))
-                else -> argument.apply(Symbol.of("else"))
+                    return when {
+                        test.value -> branches.apply(Symbol.of("then"))
+                        else -> branches.apply(Symbol.of("else"))
+                    }
+                }
+
+                override fun dump(): String = "(if')"
             }
         }
 
-        override fun dump(): String = "(+)"
+        override fun dump(): String = "(if)"
     }
 
     override fun dump(): String = value.toString()
+
+    override fun isSame(other: Value): Boolean {
+        if (other !is BoolValue) return false
+        return value == other.value
+    }
 }

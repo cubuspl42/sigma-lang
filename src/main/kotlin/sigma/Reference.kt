@@ -1,22 +1,21 @@
 package sigma
 
-import sigma.parser.antlr.SigmaParser.ReferenceAltContext
-import kotlin.String
+import sigma.parser.antlr.SigmaParser.ReferenceContext
 
 data class Reference(
     val referee: Symbol,
 ) : Expression {
     companion object {
         fun build(
-            identifier: ReferenceAltContext,
+            reference: ReferenceContext,
         ): Reference = Reference(
-            referee = Symbol(name = identifier.referee.text),
+            referee = Symbol(name = reference.referee.text),
         )
     }
 
     override fun evaluate(
-        scope: Scope,
-    ): Value = scope.get(referee)
+        context: Table,
+    ): Value = context.apply(referee)
 
     override fun dump(): String = referee.dump()
 }

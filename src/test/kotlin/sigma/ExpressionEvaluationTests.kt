@@ -1,9 +1,7 @@
 package sigma
 
-import org.junit.jupiter.api.Disabled
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertIs
 
 class ExpressionEvaluationTests {
     object LetExpressionTests {
@@ -23,44 +21,9 @@ class ExpressionEvaluationTests {
         }
     }
 
-    object ScopeTests {
+    object ApplicationTests {
         @Test
-        fun test() {
-            val scope = assertIs<FunctionValue>(
-                value = Expression.parse(
-                    source = """
-                        {
-                            n = `foo`,
-                            m = n,
-                        }
-                    """.trimIndent()
-                ).evaluate(),
-            )
-
-            assertEquals(
-                expected = Symbol("foo"),
-                actual = scope.apply(Symbol.of("m")),
-            )
-
-            assertEquals(
-                expected = Symbol("foo"),
-                actual = scope.apply(Symbol.of("n")),
-            )
-        }
-    }
-
-
-    object Read {
-        @Test
-        fun testFormSubject() {
-            assertEquals(
-                expected = Symbol("bar"),
-                actual = Expression.parse("{foo = `bar`}[`foo`]").evaluate(),
-            )
-        }
-
-        @Test
-        fun testLabelIdentifierSubject() {
+        fun testDictSubject() {
             assertEquals(
                 expected = Symbol("bar"),
                 actual = Expression.parse("{foo = `bar`}[`foo`]").evaluate(),
@@ -70,7 +33,7 @@ class ExpressionEvaluationTests {
         @Test
         fun testSelfReferring() {
             assertEquals(
-                expected = Symbol("baz"),
+                expected = UndefinedValue(name = Symbol.of("bar")),
                 actual = Expression.parse("{foo = `baz`, bar = foo}[`bar`]").evaluate(),
             )
         }

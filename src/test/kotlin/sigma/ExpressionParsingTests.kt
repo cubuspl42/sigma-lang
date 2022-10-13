@@ -9,13 +9,13 @@ class ExpressionParsingTests {
         fun test() {
             assertEquals(
                 expected = LetExpression(
-                    scopeConstructor = ScopeConstructor(
-                        binds = mapOf(
-                            Symbol("g") to Application(
+                    scope = TableConstructor(
+                        mapOf(
+                            Symbol.of("g") to Application(
                                 subject = Reference(Symbol("h")),
                                 argument = Reference(Symbol("a")),
                             ),
-                            Symbol("f") to Reference(Symbol("g")),
+                            Symbol.of("f") to Reference(Symbol("g")),
                         ),
                     ),
                     result = Application(
@@ -47,13 +47,32 @@ class ExpressionParsingTests {
 
     object ApplicationTests {
         @Test
-        fun testIdentifierSubject() {
+        fun testReferenceSubject() {
             assertEquals(
                 expected = Application(
                     subject = Reference(Symbol("foo")),
                     argument = Symbol("bar"),
                 ),
                 actual = Expression.parse("foo[`bar`]"),
+            )
+        }
+
+        @Test
+        fun testDictSubject() {
+            assertEquals(
+                expected = Application(
+                    subject = DictConstructor(
+                        content = TableConstructor(
+                            entries = mapOf(
+                                Symbol.of("foo") to Symbol.of("bar"),
+                            ),
+                        ),
+                    ),
+                    argument = Symbol("foo"),
+                ),
+                actual = Expression.parse(
+                    source = "{foo = `bar`}[`foo`]",
+                ),
             )
         }
     }
