@@ -3,10 +3,17 @@ import org.antlr.v4.runtime.CommonTokenStream
 import sigma.Expression
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
+import java.lang.management.ManagementFactory
+import java.lang.management.RuntimeMXBean
 
-const val sourceName = "problem6.sigma"
+const val sourceName = "problem.sigma"
 
 fun main() {
+    val runtimeMxBean: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
+    val arguments: List<String> = runtimeMxBean.getInputArguments()
+
+    println("Arguments: $arguments")
+
     val source = getResourceAsText(sourceName) ?: throw RuntimeException("Couldn't load the source file")
 
     val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
@@ -19,7 +26,7 @@ fun main() {
 
     val result = root.evaluate()
 
-    println(result)
+    println(result.dump())
 }
 
 private fun getResourceAsText(path: String): String? =

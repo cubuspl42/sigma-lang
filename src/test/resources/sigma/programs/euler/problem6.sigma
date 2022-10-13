@@ -1,38 +1,17 @@
 let {
     N = 100,
 
-    sumOfSquares = n => if[{
-        test = eq[{
-            left = n,
-            right = 1,
-        }],
+    sumOfSquares = n => if[n == 1] [{
         then = 1,
-        else = plus[{
-            left = sumOfSquares[
-                minus[{
-                    left = n,
-                    right = 1,
-                }]
-            ],
-            right = sq[n],
+        else = add[{
+            augend = sumOfSquares[n - 1],
+            addend = sq[n],
         }],
     }],
 
-    sumOf = n => if[{
-        test = eq[{
-            left = n,
-            right = 1,
-        }],
+    sumOf = n => if [n == 1] [{
         then = 1,
-        else = plus[{
-            left = sumOf[
-                minus[{
-                    left = n,
-                    right = 1,
-                }]
-            ],
-            right = n,
-        }],
+        else = sumOf[n - 1] + n,
     }],
 
     squareOfSum = n => let {
@@ -43,7 +22,4 @@ let {
 
     squareOfSumN = squareOfSum[N],
 
-} in minus[{
-    left = squareOfSumN,
-    right = sumOfSquaresN,
-}]
+} in squareOfSumN - sumOfSquaresN

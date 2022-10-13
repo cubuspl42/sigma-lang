@@ -6,30 +6,65 @@ program
     : expression ;
 
 expression
-    : referee=identifier # referenceAlt
+    : left=expression operator=Asterisk right=expression # binaryOperationAlt
+    | left=expression operator=Slash right=expression # binaryOperationAlt
+    | left=expression operator=Plus right=expression # binaryOperationAlt
+    | left=expression operator=Minus right=expression # binaryOperationAlt
+    | left=expression operator=Lte right=expression # binaryOperationAlt
+    | left=expression operator=Gte right=expression # binaryOperationAlt
+    | left=expression operator=Equals right=expression # binaryOperationAlt
+    | left=expression operator=Lt right=expression # binaryOperationAlt
+    | left=expression operator=Gt right=expression # binaryOperationAlt
+    | left=expression operator=Link right=expression # binaryOperationAlt
+    | parenExpression # parenExpressionAlt
+    | reference # referenceAlt
     | abstraction # abstractionAlt
-    | subject=expression LeftBracket key=expression RightBracket # applicationAlt
+    | dict # dictAlt
     | letExpression # letExpressionAlt
-    | scope # scopeAlt
-    | symbol # symbolAlt ;
+    | symbol # symbolAlt
+    | callableExpression # callableExpressionAlt
+    ;
 
-identifier
-    : CharSequence ;
+// For left-recursion
+callableExpression
+    : callee=callableExpression LeftBracket argument=expression RightBracket # callExpressionAlt
+    | parenExpression # callableParenAlt
+    | reference # callableReferenceAlt
+    | dict # callableDictAlt
+    ;
 
-bind
-    : name=identifier Assign bound=expression ;
+parenExpression
+    : LeftParen expression RightParen
+    ;
 
-bindSeparator
-    : Comma ;
-
-symbol
-    : Backtick identifier Backtick ;
+reference
+    : referee=identifier
+    ;
 
 abstraction
     : argument=identifier Arrow image=expression ;
 
-letExpression
-    : LetKeyword body=scope InKeyword result=expression ;
+identifier
+    : CharSequence ;
 
-scope
+dict
+    : content=table ;
+
+table
     : LeftBrace (bind (bindSeparator bind)*)? bindSeparator? RightBrace ;
+
+// For [table]
+bind
+    : name=identifier Assign bound=expression # symbolBindAlt
+    | LeftBracket key=expression RightBracket Assign bound=expression # arbitraryBindAlt
+    ;
+
+// For [table]
+bindSeparator
+    : Comma ;
+
+letExpression
+    : LetKeyword scope=table InKeyword result=expression ;
+
+symbol
+    : Backtick identifier Backtick ;

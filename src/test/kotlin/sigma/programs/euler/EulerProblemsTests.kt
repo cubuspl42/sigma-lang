@@ -8,6 +8,8 @@ import sigma.IntValue
 import sigma.Value
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
+import java.lang.management.ManagementFactory
+import java.lang.management.RuntimeMXBean
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -23,7 +25,7 @@ class EulerProblemsTests {
     @Test
     fun testProblem7() {
         assertEquals(
-            expected = BoolValue.False,
+            expected = IntValue(71),
             actual = solveProblem(7),
         )
     }
