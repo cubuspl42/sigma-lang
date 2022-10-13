@@ -1,25 +1,11 @@
 package sigma
 
-abstract class Scope {
-    object Empty : Scope() {
-        override fun get(name: String): Value {
-            throw IllegalStateException()
-        }
-    }
+abstract class Scope : FunctionValue() {
+    override fun apply(
+        argument: Value,
+    ): Value = get(
+        name = argument as Symbol,
+    )
 
-    fun extend(
-        label: String,
-        value: Value,
-    ): Scope {
-        val parent = this
-
-        return object : Scope() {
-            override fun get(name: String): Value = when (label) {
-                name -> value
-                else -> parent.get(name = name)
-            }
-        }
-    }
-
-    abstract fun get(name: String): Value
+    abstract fun get(name: Symbol): Value
 }

@@ -1,16 +1,19 @@
 lexer grammar SigmaLexer;
 
+LetKeyword : 'let' ;
+InKeyword : 'in' ;
+
 LeftBrace : '{' ;
 RightBrace : '}' ;
 LeftBracket : '[' ;
 RightBracket : ']' ;
 
-At : '@' ;
 Colon : ':' ;
 Comma : ',' ;
-Quote : '\'' ;
+Backtick : '`' ;
+Assign : '=' ;
 
 Arrow : '=>' ;
-CharSequence : ([a-zA-Z1-9])+ ;
+CharSequence : ([a-zA-Z0-9])+ ;
 
 Whitespace : (' ' | '\n') -> skip ;

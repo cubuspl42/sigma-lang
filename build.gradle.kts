@@ -29,7 +29,7 @@ tasks.generateGrammarSource {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = "1.8"
 
     dependsOn(tasks.generateGrammarSource)
 }

@@ -3,14 +3,14 @@ package sigma
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 
 data class Abstraction(
-    val argument: String,
+    val argumentName: Symbol,
     val image: Expression,
 ) : Expression {
     companion object {
         fun build(
             abstraction: AbstractionContext,
         ): Abstraction = Abstraction(
-            argument = abstraction.argument.text,
+            argumentName = Symbol(abstraction.argument.text),
             image = Expression.build(abstraction.image),
         )
     }
@@ -18,8 +18,8 @@ data class Abstraction(
     override fun evaluate(
         scope: Scope,
     ): Value = Closure(
-        scope = scope,
-        argument = argument,
+        environment = scope,
+        argumentName = argumentName,
         image = image,
     )
 
@@ -27,25 +27,25 @@ data class Abstraction(
 }
 
 data class Closure(
-    val scope: Scope,
-    val argument: String,
+    val environment: Scope,
+    val argumentName: Symbol,
     val image: Expression,
 ) : FunctionValue() {
-    companion object {
-        fun build(
-            symbol: AbstractionContext,
-        ): Abstraction = Abstraction(
-            argument = symbol.argument.text,
-            image = Expression.build(symbol.image),
-        )
-    }
+//    companion object {
+//        fun build(
+//            symbol: AbstractionContext,
+//        ): Abstraction = Abstraction(
+//            argumentName = symbol.argument.text,
+//            image = Expression.build(symbol.image),
+//        )
+//    }
 
     override fun apply(
         argument: Value,
     ): Value = image.evaluate(
-        scope = scope.extend(
-            label = this.argument,
-            value = argument,
+        scope = LinkedScope(
+            parent = environment,
+            binds = mapOf(argumentName to argument),
         ),
     )
 
