@@ -24,6 +24,7 @@ class EulerProblemsTests {
 
     @Test
     fun testProblem7() {
+        // For 20th prime (for performance reasons)
         assertEquals(
             expected = IntValue(71),
             actual = solveProblem(7),

@@ -22,8 +22,6 @@ private val BuiltinContext = DictAssociativeTable(
             Symbol.of("false") to BoolValue.False,
             Symbol.of("true") to BoolValue.True,
             Symbol.of("if") to BoolValue.If,
-            Symbol.of("1") to IntValue(1),
-            Symbol.of("100") to IntValue(100),
             Symbol.of("mul") to IntValue.Mul,
             Symbol.of("div") to IntValue.Div,
             Symbol.of("add") to IntValue.Add,
