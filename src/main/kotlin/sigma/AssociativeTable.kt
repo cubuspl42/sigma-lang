@@ -25,11 +25,18 @@ abstract class AssociativeTable(
         if (entries.isEmpty()) return null
 
         return entries.joinToString(separator = ", ") {
-            val keyStr = it.key.dump()
+            val keyStr = dumpKey(key = it.key)
             val imageStr = it.value.evaluate(context = environment).dump()
 
             "$keyStr = $imageStr"
         }
+    }
+
+    private fun dumpKey(
+        key: Value,
+    ): String = when (key) {
+        is Symbol -> key.dump()
+        else -> "[${key.dump()}]"
     }
 
     fun chainWith(

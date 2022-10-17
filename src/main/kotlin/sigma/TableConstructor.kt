@@ -1,7 +1,9 @@
 package sigma
 
 import sigma.parser.antlr.SigmaParser
+import sigma.parser.antlr.SigmaParser.ArrayContext
 import sigma.parser.antlr.SigmaParser.BindContext
+import sigma.parser.antlr.SigmaParser.DictArrayAltContext
 import sigma.parser.antlr.SigmaParser.TableContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
@@ -18,14 +20,14 @@ abstract class BindMapConstructor {
                     ctx: SigmaParser.SymbolBindAltContext,
                 ) = Bind<Expression>(
                     key = Symbol.of(ctx.name.text),
-                    image = Expression.build(ctx.bound),
+                    image = Expression.build(ctx.image),
                 )
 
                 override fun visitArbitraryBindAlt(
                     ctx: SigmaParser.ArbitraryBindAltContext,
                 ) = Bind<Expression>(
                     key = Expression.build(ctx.key),
-                    image = Expression.build(ctx.bound),
+                    image = Expression.build(ctx.image),
                 )
             }.visit(ctx)
         }
@@ -59,27 +61,38 @@ abstract class BindMapConstructor {
     })
 }
 
+// Idea: Rename to BindSequence? Hierarchy (TableBindSequence, ArrayBindSequence) ?
+// Idea: Table.buildEntryMap(ctx)?
+// Thought: Is this ok that this is a map? Do expressions have identity at this level?
 data class TableConstructor(
     val entries: Map<Expression, Expression>,
 ) {
     companion object {
-        private fun buildEntry(
-            ctx: BindContext,
-        ): Pair<Expression, Expression> = object : SigmaParserBaseVisitor<Pair<Expression, Expression>>() {
-            override fun visitSymbolBindAlt(
-                ctx: SigmaParser.SymbolBindAltContext,
-            ) = Symbol.of(ctx.name.text) to Expression.build(ctx.bound)
-
-            override fun visitArbitraryBindAlt(
-                ctx: SigmaParser.ArbitraryBindAltContext,
-            ) = Expression.build(ctx.key) to Expression.build(ctx.bound)
-        }.visit(ctx)
-
         fun build(
             ctx: TableContext,
         ): TableConstructor = TableConstructor(
             entries = ctx.bind().associate { buildEntry(it) },
         )
+
+        fun buildFromArray(
+            ctx: ArrayContext,
+        ): TableConstructor = TableConstructor(
+            entries = ctx.bindImage().withIndex().associate { (index, imageCtx) ->
+                IntValue(index) to Expression.build(imageCtx.image)
+            },
+        )
+
+        private fun buildEntry(
+            ctx: BindContext,
+        ): Pair<Expression, Expression> = object : SigmaParserBaseVisitor<Pair<Expression, Expression>>() {
+            override fun visitSymbolBindAlt(
+                ctx: SigmaParser.SymbolBindAltContext,
+            ) = Symbol.of(ctx.name.text) to Expression.build(ctx.image.image)
+
+            override fun visitArbitraryBindAlt(
+                ctx: SigmaParser.ArbitraryBindAltContext,
+            ) = Expression.build(ctx.key) to Expression.build(ctx.image.image)
+        }.visit(ctx)
     }
 
     fun construct(
