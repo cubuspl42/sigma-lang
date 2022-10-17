@@ -48,16 +48,23 @@ identifier
     : CharSequence ;
 
 dict
-    : content=table ;
+    : content=table # dictTableAlt
+    | content=array # dictArrayAlt;
 
 table
     : LeftBrace (bind (bindSeparator bind)*)? bindSeparator? RightBrace ;
 
+array
+    : LeftBrace (bindImage (bindSeparator bindImage)*)? bindSeparator? RightBrace ;
+
 // For [table]
 bind
-    : name=identifier Assign bound=expression # symbolBindAlt
-    | LeftBracket key=expression RightBracket Assign bound=expression # arbitraryBindAlt
+    : name=identifier Assign image=bindImage # symbolBindAlt
+    | LeftBracket key=expression RightBracket Assign image=bindImage # arbitraryBindAlt
     ;
+
+bindImage
+    : image=expression ;
 
 // For [table]
 bindSeparator

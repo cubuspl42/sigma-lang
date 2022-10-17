@@ -4,6 +4,54 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ExpressionParsingTests {
+    object DictConstructorTests {
+        @Test
+        fun testSimple() {
+            assertEquals(
+                expected = DictConstructor(
+                    content = TableConstructor(
+                        entries = mapOf(
+                            Symbol.of("foo") to  Reference(Symbol.of("baz1")),
+                            Symbol.of("bar") to Reference(Symbol.of("baz2")),
+                        ),
+                    ),
+                ),
+                actual = Expression.parse("{foo = baz1, bar = baz2}"),
+            )
+        }
+
+        @Test
+        fun testWithArbitrary() {
+            assertEquals(
+                expected = DictConstructor(
+                    content = TableConstructor(
+                        entries = mapOf(
+                            Symbol.of("foo") to Reference(Symbol.of("baz1")),
+                            Reference(Symbol.of("baz")) to  Reference(Symbol.of("baz2"))
+                        ),
+                    ),
+                ),
+                actual = Expression.parse("{foo = baz1, [baz] = baz2}"),
+            )
+        }
+
+        @Test
+        fun testArray() {
+            assertEquals(
+                expected = DictConstructor(
+                    content = TableConstructor(
+                        entries = mapOf(
+                            IntValue(0) to Reference(Symbol.of("foo")),
+                            IntValue(1) to  Reference(Symbol.of("bar")),
+                            IntValue(2) to  Reference(Symbol.of("baz")),
+                        ),
+                    ),
+                ),
+                actual = Expression.parse("{foo, bar, baz}"),
+            )
+        }
+    }
+
     object LetExpressionTests {
         @Test
         fun test() {
