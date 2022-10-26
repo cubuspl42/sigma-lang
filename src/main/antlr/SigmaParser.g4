@@ -28,6 +28,7 @@ expression
 // For left-recursion
 callableExpression
     : callee=callableExpression LeftBracket argument=expression RightBracket # callExpressionAlt
+    | callee=callableExpression argument=dict # callExpressionDictAlt
     | parenExpression # callableParenAlt
     | reference # callableReferenceAlt
     | dict # callableDictAlt
