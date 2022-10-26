@@ -11,7 +11,7 @@ class ExpressionParsingTests {
                 expected = DictConstructor(
                     content = TableConstructor(
                         entries = mapOf(
-                            Symbol.of("foo") to  Reference(Symbol.of("baz1")),
+                            Symbol.of("foo") to Reference(Symbol.of("baz1")),
                             Symbol.of("bar") to Reference(Symbol.of("baz2")),
                         ),
                     ),
@@ -27,7 +27,7 @@ class ExpressionParsingTests {
                     content = TableConstructor(
                         entries = mapOf(
                             Symbol.of("foo") to Reference(Symbol.of("baz1")),
-                            Reference(Symbol.of("baz")) to  Reference(Symbol.of("baz2"))
+                            Reference(Symbol.of("baz")) to Reference(Symbol.of("baz2"))
                         ),
                     ),
                 ),
@@ -42,8 +42,8 @@ class ExpressionParsingTests {
                     content = TableConstructor(
                         entries = mapOf(
                             IntValue(0) to Reference(Symbol.of("foo")),
-                            IntValue(1) to  Reference(Symbol.of("bar")),
-                            IntValue(2) to  Reference(Symbol.of("baz")),
+                            IntValue(1) to Reference(Symbol.of("bar")),
+                            IntValue(2) to Reference(Symbol.of("baz")),
                         ),
                     ),
                 ),
@@ -120,6 +120,23 @@ class ExpressionParsingTests {
                 ),
                 actual = Expression.parse(
                     source = "{foo = `bar`}[`foo`]",
+                ),
+            )
+        }
+
+        @Test
+        fun testDictArgumentShorthand() {
+            assertEquals(
+                expected = Application(
+                    subject = Reference(Symbol.of("foo")),
+                    argument = DictConstructor.of(
+                        entries = mapOf(
+                            Symbol.of("bar") to Symbol.of("baz"),
+                        ),
+                    ),
+                ),
+                actual = Expression.parse(
+                    source = "foo{bar = `baz`}",
                 ),
             )
         }
