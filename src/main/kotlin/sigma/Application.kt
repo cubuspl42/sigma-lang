@@ -1,8 +1,10 @@
 package sigma
 
 import sigma.parser.antlr.SigmaLexer
+import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
+import sigma.parser.antlr.SigmaParser.CallExpressionDictAltContext
 import kotlin.String
 
 private var depth = 0
@@ -46,10 +48,17 @@ data class Application(
         }
 
         fun build(
-            read: CallExpressionAltContext,
+            ctx: CallExpressionAltContext,
         ): Application = Application(
-            subject = Expression.build(read.callee),
-            argument = Expression.build(read.argument),
+            subject = Expression.build(ctx.callee),
+            argument = Expression.build(ctx.argument),
+        )
+
+        fun build(
+            ctx: CallExpressionDictAltContext,
+        ): Application = Application(
+            subject = Expression.build(ctx.callee),
+            argument = DictConstructor.build(ctx.argument),
         )
     }
 

@@ -8,7 +8,9 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.AbstractionAltContext
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
+import sigma.parser.antlr.SigmaParser.CallExpressionDictAltContext
 import sigma.parser.antlr.SigmaParser.CallableDictAltContext
+import sigma.parser.antlr.SigmaParser.CallableExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallableParenAltContext
 import sigma.parser.antlr.SigmaParser.CallableReferenceAltContext
 import sigma.parser.antlr.SigmaParser.DictAltContext
@@ -64,11 +66,15 @@ sealed interface Expression {
             ): Expression = Symbol.of(ctx.symbol().identifier().text)
 
             override fun visitCallableExpressionAlt(
-                ctx: SigmaParser.CallableExpressionAltContext,
+                ctx: CallableExpressionAltContext,
             ): Expression = build(ctx.callableExpression())
 
             override fun visitCallExpressionAlt(
                 ctx: CallExpressionAltContext,
+            ): Expression = Application.build(ctx)
+
+            override fun visitCallExpressionDictAlt(
+                ctx: CallExpressionDictAltContext,
             ): Expression = Application.build(ctx)
 
             override fun visitCallableParenAlt(
