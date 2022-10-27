@@ -57,18 +57,22 @@ class ExpressionParsingTests {
         fun test() {
             assertEquals(
                 expected = LetExpression(
-                    scope = TableConstructor(
-                        mapOf(
-                            Symbol.of("g") to Application(
-                                subject = Reference(Symbol("h")),
-                                argument = Reference(Symbol("a")),
+                    declarations = listOf(
+                        Declaration(
+                            name = Symbol.of("g"),
+                            value = Application(
+                                subject = Reference(Symbol.of("h")),
+                                argument = Reference(Symbol.of("a")),
                             ),
-                            Symbol.of("f") to Reference(Symbol("g")),
+                        ),
+                        Declaration(
+                            name = Symbol.of("f"),
+                            value = Reference(Symbol.of("g")),
                         ),
                     ),
                     result = Application(
-                        subject = Reference(Symbol("f")),
-                        argument = Reference(Symbol("x")),
+                        subject = Reference(Symbol.of("f")),
+                        argument = Reference(Symbol.of("x")),
                     ),
                 ),
                 actual = Expression.parse(
@@ -77,6 +81,29 @@ class ExpressionParsingTests {
                             g = h[a],
                             f = g,
                         } in f[x]
+                    """.trimIndent()
+                ),
+            )
+        }
+
+        @Test
+        fun testDeclarationWithTypeAnnotation() {
+            assertEquals(
+                expected = LetExpression(
+                    declarations = listOf(
+                        Declaration(
+                            name = Symbol.of("a"),
+                            valueType = TypeReference(
+                                referee = Symbol.of("Int"),
+                            ),
+                            value = Reference(Symbol.of("b")),
+                        ),
+                    ),
+                    result = Reference(Symbol.of("a")),
+                ),
+                actual = Expression.parse(
+                    source = """
+                        let { a: Int = b } in a
                     """.trimIndent()
                 ),
             )

@@ -2,8 +2,7 @@ package sigma
 
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ArrayContext
-import sigma.parser.antlr.SigmaParser.BindContext
-import sigma.parser.antlr.SigmaParser.DictArrayAltContext
+import sigma.parser.antlr.SigmaParser.TableBindContext
 import sigma.parser.antlr.SigmaParser.TableContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
@@ -14,7 +13,7 @@ abstract class BindMapConstructor {
     ) {
         companion object {
             fun build(
-                ctx: BindContext,
+                ctx: TableBindContext,
             ): Bind<Expression> = object : SigmaParserBaseVisitor<Bind<Expression>>() {
                 override fun visitSymbolBindAlt(
                     ctx: SigmaParser.SymbolBindAltContext,
@@ -43,7 +42,7 @@ abstract class BindMapConstructor {
         fun build(
             ctx: TableContext,
         ): BindMapConstructor = object : BindMapConstructor() {
-            override val binds = ctx.bind().map {
+            override val binds = ctx.tableBind().map {
                 Bind.build(it)
             }
         }
@@ -71,7 +70,7 @@ data class TableConstructor(
         fun build(
             ctx: TableContext,
         ): TableConstructor = TableConstructor(
-            entries = ctx.bind().associate { buildEntry(it) },
+            entries = ctx.tableBind().associate { buildEntry(it) },
         )
 
         fun buildFromArray(
@@ -83,7 +82,7 @@ data class TableConstructor(
         )
 
         private fun buildEntry(
-            ctx: BindContext,
+            ctx: TableBindContext,
         ): Pair<Expression, Expression> = object : SigmaParserBaseVisitor<Pair<Expression, Expression>>() {
             override fun visitSymbolBindAlt(
                 ctx: SigmaParser.SymbolBindAltContext,

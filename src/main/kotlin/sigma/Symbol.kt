@@ -1,5 +1,7 @@
 package sigma
 
+import sigma.parser.antlr.SigmaParser.IdentifierContext
+
 data class Symbol(
     val name: String,
 ) : Value() {
@@ -9,6 +11,12 @@ data class Symbol(
         ): Symbol = Symbol(
             name = name,
         )
+
+        fun build(
+            ctx: IdentifierContext,
+        ): Symbol {
+            return Symbol(name = ctx.text)
+        }
     }
 
     override fun dump(): String = "`$name`"

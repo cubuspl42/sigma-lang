@@ -3,14 +3,16 @@ package sigma
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
 
 data class LetExpression(
-    val scope: TableConstructor,
+    val declarations: List<Declaration>,
     val result: Expression,
 ) : Expression {
     companion object {
         fun build(
             let: LetExpressionContext,
         ): LetExpression = LetExpression(
-            scope = TableConstructor.build(let.table()),
+            declarations = let.scope.declaration().map {
+                Declaration.build(it)
+            },
             result = Expression.build(let.result),
         )
     }
@@ -22,8 +24,10 @@ data class LetExpression(
     ): Value {
         val scope = LoopedAssociativeTable(
             context = context,
-            associations = scope.construct(
-                environment = context,
+            associations = ExpressionTable(
+                entries = declarations.associate {
+                    it.name to it.value
+                },
             ),
         )
 
