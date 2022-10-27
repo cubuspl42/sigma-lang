@@ -1,7 +1,6 @@
 package sigma
 
 import sigma.parser.antlr.SigmaLexer
-import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionDictAltContext

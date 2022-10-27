@@ -53,26 +53,31 @@ dict
     | content=array # dictArrayAlt;
 
 table
-    : LeftBrace (bind (bindSeparator bind)*)? bindSeparator? RightBrace ;
+    : LeftBrace (tableBind (Comma tableBind)*)? Comma? RightBrace ;
 
-array
-    : LeftBrace (bindImage (bindSeparator bindImage)*)? bindSeparator? RightBrace ;
-
-// For [table]
-bind
+tableBind
     : name=identifier Assign image=bindImage # symbolBindAlt
     | LeftBracket key=expression RightBracket Assign image=bindImage # arbitraryBindAlt
     ;
 
+array
+    : LeftBrace (bindImage (Comma bindImage)*)? Comma? RightBrace ;
+
 bindImage
     : image=expression ;
 
-// For [table]
-bindSeparator
-    : Comma ;
-
 letExpression
-    : LetKeyword scope=table InKeyword result=expression ;
+    : LetKeyword scope=letScope InKeyword result=expression ;
+
+letScope
+    : LeftBrace (declaration (Comma declaration)*)? Comma? RightBrace ;
+
+declaration
+    : name=identifier (Colon valueType=typeExpression)? Assign value=expression
+    ;
 
 symbol
     : Backtick identifier Backtick ;
+
+typeExpression
+    : reference ;
