@@ -1,5 +1,14 @@
 package sigma
 
+import sigma.expressions.Application
+import sigma.expressions.Declaration
+import sigma.expressions.DictConstructor
+import sigma.expressions.Expression
+import sigma.expressions.IntLiteral
+import sigma.expressions.LetExpression
+import sigma.expressions.Reference
+import sigma.expressions.SymbolLiteral
+import sigma.expressions.TypeReference
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

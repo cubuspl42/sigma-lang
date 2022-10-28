@@ -1,5 +1,8 @@
-package sigma
+package sigma.expressions
 
+import sigma.Symbol
+import sigma.Type
+import sigma.TypeContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 
 sealed interface TypeExpression {

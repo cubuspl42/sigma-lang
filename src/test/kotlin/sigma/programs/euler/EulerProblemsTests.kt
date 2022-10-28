@@ -3,13 +3,11 @@ package sigma.programs.euler
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.BoolValue
-import sigma.Expression
+import sigma.expressions.Expression
 import sigma.IntValue
 import sigma.Value
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
-import java.lang.management.ManagementFactory
-import java.lang.management.RuntimeMXBean
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

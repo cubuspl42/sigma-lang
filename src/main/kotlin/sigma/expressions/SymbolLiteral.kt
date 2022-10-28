@@ -1,5 +1,8 @@
-package sigma
+package sigma.expressions
 
+import sigma.Symbol
+import sigma.Table
+import sigma.Value
 import sigma.parser.antlr.SigmaParser
 
 data class SymbolLiteral(

@@ -1,5 +1,8 @@
-package sigma
+package sigma.expressions
 
+import sigma.LoopedScope
+import sigma.Table
+import sigma.Value
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
 
 data class LetExpression(

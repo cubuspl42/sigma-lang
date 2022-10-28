@@ -1,5 +1,7 @@
 package sigma
 
+import sigma.expressions.Expression
+
 class LoopedScope(
     private val context: Table,
     private val declarations: Map<Symbol, Expression>,
