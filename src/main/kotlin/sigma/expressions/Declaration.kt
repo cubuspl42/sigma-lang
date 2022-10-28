@@ -5,20 +5,13 @@ import sigma.TypeExpression
 import sigma.values.Symbol
 import sigma.parser.antlr.SigmaParser.DeclarationContext
 import sigma.types.Type
+import sigma.values.TypeError
 
 data class Declaration(
     val name: Symbol,
     val valueType: TypeExpression? = null,
     val value: Expression,
 ) {
-    val determinedType: TypeExpression = object : TypeExpression {
-        override fun evaluate(context: StaticScope): Type? {
-            val declaredType = valueType ?: return value.inferType(scope = context)
-
-            return declaredType.evaluate(context = context)
-        }
-    }
-
     companion object {
         fun build(
             ctx: DeclarationContext,
@@ -28,4 +21,24 @@ data class Declaration(
             value = Expression.build(ctx.value),
         )
     }
+
+    fun determineAssumedType(
+        scope: StaticScope,
+    ): Type = determineDeclaredType(
+        scope = scope,
+    ) ?: inferType(
+        scope = scope,
+    )
+
+    fun determineDeclaredType(
+        scope: StaticScope,
+    ): Type? = valueType?.evaluate(
+        context = scope,
+    )
+
+    fun inferType(
+        scope: StaticScope,
+    ): Type = value.inferType(
+        scope = scope,
+    )
 }

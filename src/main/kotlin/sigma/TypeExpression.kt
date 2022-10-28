@@ -15,5 +15,5 @@ interface TypeExpression {
 
     fun evaluate(
         context: StaticScope,
-    ): Type?
+    ): Type
 }

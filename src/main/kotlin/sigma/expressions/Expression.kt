@@ -119,6 +119,10 @@ sealed class Expression {
         scope: StaticScope,
     ): Type
 
+    open fun validate(
+        scope: StaticScope,
+    ) {}
+
     abstract fun evaluate(
         scope: Scope,
     ): Thunk

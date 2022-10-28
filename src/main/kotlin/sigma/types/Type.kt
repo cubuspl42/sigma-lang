@@ -1,11 +1,21 @@
 package sigma.types
 
-sealed interface Type
+sealed interface Type {
+    fun dump(): String
+}
 
-object UndefinedType : Type
+object UndefinedType : Type {
+    override fun dump(): String = "Undefined"
+}
 
-object BoolType : Type
+object BoolType : Type {
+    override fun dump(): String = "Bool"
+}
 
-object IntType : Type
+object IntType : Type {
+    override fun dump(): String = "Int"
+}
 
-object SymbolType : Type
+object SymbolType : Type {
+    override fun dump(): String = "Symbol"
+}
