@@ -25,8 +25,8 @@ abstract class Table : FunctionValue() {
     }
 
     fun chainWith(
-        context: Table,
-    ): Table = ChainedTable(
+        context: Scope,
+    ): Scope = ChainedScope(
         context = context,
         table = this,
     )

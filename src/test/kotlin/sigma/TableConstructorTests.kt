@@ -6,6 +6,7 @@ import sigma.expressions.SymbolLiteral
 import sigma.values.tables.EmptyTable
 import sigma.values.Symbol
 import sigma.values.Value
+import sigma.values.tables.Scope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -18,7 +19,7 @@ internal class TableConstructorTests {
         )
 
         val expressionTable = tableConstructor.mapKeys {
-            it.key.evaluate(context = EmptyTable)
+            it.key.evaluate(context = Scope.Empty)
         }
 
         assertEquals(

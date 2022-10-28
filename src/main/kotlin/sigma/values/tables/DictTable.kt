@@ -7,7 +7,7 @@ import sigma.values.Symbol
 import sigma.values.Value
 
 class DictTable(
-    private val environment: Table,
+    private val environment: Scope,
     private val associations: Map<PrimitiveValue, Expression>,
 ) : Table() {
     override fun read(

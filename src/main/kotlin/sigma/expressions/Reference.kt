@@ -2,9 +2,8 @@ package sigma.expressions
 
 import sigma.Thunk
 import sigma.values.Symbol
-import sigma.values.tables.Table
-import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.ReferenceContext
+import sigma.values.tables.Scope
 
 data class Reference(
     val referee: Symbol,
@@ -18,7 +17,7 @@ data class Reference(
     }
 
     override fun evaluate(
-        context: Table,
+        context: Scope,
     ): Thunk = context.apply(referee)
 
     override fun dump(): String = referee.dump()

@@ -2,9 +2,9 @@ package sigma.expressions
 
 import sigma.values.IntValue
 import sigma.values.Symbol
-import sigma.values.tables.Table
 import sigma.values.Value
 import sigma.parser.antlr.SigmaParser
+import sigma.values.tables.Scope
 
 data class IntLiteral(
     val value: IntValue,
@@ -22,7 +22,7 @@ data class IntLiteral(
     }
 
     override fun evaluate(
-        context: Table,
+        context: Scope,
     ): Value = value
 
     override fun dump(): String = value.dump()

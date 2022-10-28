@@ -8,10 +8,9 @@ import sigma.values.UndefinedValue
 import sigma.values.Value
 import sigma.values.tables.Scope
 
-object IntegerTable : Table() {
-    override fun read(argument: Value): Value? {
-        val symbol = argument as? Symbol
-        val integer = symbol?.name?.toIntOrNull()
+private object IntegerTable : Scope() {
+    override fun get(name: Symbol): Value? {
+        val integer = name.name?.toIntOrNull()
 
         return integer?.let { IntValue(it) }
     }
@@ -43,4 +42,6 @@ private object BuiltinContext : Scope() {
     override fun dumpContent(): String = "(built-in context)"
 }
 
-val GlobalContext: Table = BuiltinContext.chainWith(IntegerTable)
+val GlobalContext: Scope = BuiltinContext.chainWith(
+    context = IntegerTable,
+)

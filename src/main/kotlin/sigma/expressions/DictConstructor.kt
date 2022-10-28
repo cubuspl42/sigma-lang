@@ -1,12 +1,12 @@
 package sigma.expressions
 
-import sigma.values.tables.Table
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.DictArrayAltContext
 import sigma.parser.antlr.SigmaParser.DictContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.values.PrimitiveValue
 import sigma.values.tables.DictTable
+import sigma.values.tables.Scope
 
 data class DictConstructor(
     val content: Map<Expression, Expression>,
@@ -62,7 +62,7 @@ data class DictConstructor(
     override fun dump(): String = "(dict constructor)"
 
     override fun evaluate(
-        context: Table,
+        context: Scope,
     ): DictTable = DictTable(
         environment = context,
         associations = content.mapKeys {

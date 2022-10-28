@@ -1,9 +1,9 @@
 package sigma.expressions
 
 import sigma.values.Symbol
-import sigma.values.tables.Table
 import sigma.values.Value
 import sigma.parser.antlr.SigmaParser
+import sigma.values.tables.Scope
 
 data class SymbolLiteral(
     val symbol: Symbol,
@@ -21,7 +21,7 @@ data class SymbolLiteral(
     }
 
     override fun evaluate(
-        context: Table,
+        context: Scope,
     ): Value = symbol
 
     override fun dump(): String = symbol.dump()
