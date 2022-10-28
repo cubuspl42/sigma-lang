@@ -29,7 +29,12 @@ object BuiltinScope : StaticValueScope, Scope {
             value = BoolValue(true),
         ),
         Symbol.of("if") to BuiltinValue(
-            type = FunctionType(imageType = BoolType),
+            type = FunctionType(
+                imageType = FunctionType(
+                    // TODO: Improve this typing
+                    imageType = UndefinedType,
+                ),
+            ),
             value = BoolValue.If,
         ),
         Symbol.of("mul") to BuiltinValue(
@@ -73,6 +78,7 @@ object BuiltinScope : StaticValueScope, Scope {
             value = IntValue.Gte,
         ),
         Symbol.of("link") to BuiltinValue(
+            // TODO: Improve this typing
             type = FunctionType(imageType = UndefinedType),
             value = FunctionValue.Link,
         ),

@@ -4,4 +4,6 @@ data class FunctionType(
     // TODO
     // val argumentType: Type,
     val imageType: Type,
-) : Type
+) : Type {
+    override fun dump(): String = "Function"
+}
