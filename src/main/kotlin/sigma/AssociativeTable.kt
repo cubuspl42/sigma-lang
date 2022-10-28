@@ -9,16 +9,6 @@ abstract class AssociativeTable(
         context = environment,
     )
 
-    override fun isSubsetOf(
-        other: FunctionValue,
-    ): Boolean = associations.getEntries(
-        environment = environment,
-    ).all { (key, image) ->
-        val otherImage = other.apply(argument = key)
-
-        image.obtain().isSame(otherImage)
-    }
-
     override fun dumpContent(): String? {
         val entries = associations.getEntries(environment = environment)
 
@@ -38,13 +28,6 @@ abstract class AssociativeTable(
         is Symbol -> key.dump()
         else -> "[${key.dump()}]"
     }
-
-    fun chainWith(
-        context: Table,
-    ): ChainedTable = ChainedTable(
-        context = context,
-        table = this,
-    )
 
     abstract val environment: Table
 }

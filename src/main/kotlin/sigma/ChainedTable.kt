@@ -11,10 +11,6 @@ class ChainedTable(
         return listOfNotNull(tableContent, contextContent).joinToString(separator = ", ")
     }
 
-    override fun isSubsetOf(
-        other: FunctionValue,
-    ): Boolean = table.isSubsetOf(other) && context.isSubsetOf(other)
-
     override fun read(
         argument: Value,
     ): Value? = table.read(argument = argument) ?: context.read(argument = argument)

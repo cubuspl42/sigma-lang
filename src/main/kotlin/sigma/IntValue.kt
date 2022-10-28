@@ -2,7 +2,7 @@ package sigma
 
 data class IntValue(
     val value: Int,
-) : Value() {
+) : PrimitiveValue() {
     data class BinaryOperationPrototype(
         val functionName: String,
         val leftArgumentName: String,

@@ -33,7 +33,7 @@ class ExpressionEvaluationTests {
         @Test
         fun testSelfReferring() {
             assertEquals(
-                expected = UndefinedValue(name = Symbol.of("bar")),
+                expected = UndefinedValue.undefined,
                 actual = Expression.parse("{foo = `baz`, bar = foo}[`bar`]").evaluate(),
             )
         }

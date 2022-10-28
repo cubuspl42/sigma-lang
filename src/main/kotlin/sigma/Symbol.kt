@@ -4,7 +4,7 @@ import sigma.parser.antlr.SigmaParser.IdentifierContext
 
 data class Symbol(
     val name: String,
-) : Value() {
+) : PrimitiveValue() {
     companion object {
         fun of(
             name: String,

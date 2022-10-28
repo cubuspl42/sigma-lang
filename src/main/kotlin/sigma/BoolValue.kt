@@ -2,7 +2,7 @@ package sigma
 
 data class BoolValue(
     val value: Boolean,
-) : Value() {
+) : PrimitiveValue() {
     companion object {
         val False = BoolValue(false)
 

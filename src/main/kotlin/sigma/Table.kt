@@ -6,11 +6,9 @@ abstract class Table : FunctionValue() {
         argument: Value,
     ): Value = read(
         argument = argument,
-    ) ?: UndefinedValue(argument)
-
-    abstract fun read(
-        argument: Value,
-    ): Value?
+    ) ?: UndefinedValue.withName(
+        name = argument,
+    )
 
     final override fun dump(): String {
         val content = dumpContent()
@@ -21,13 +19,17 @@ abstract class Table : FunctionValue() {
         }
     }
 
-    final override fun isSame(other: Value): Boolean {
-        if (other !is Table) return false
+    fun chainWith(
+        context: Table,
+    ): Table = ChainedTable(
+        context = context,
+        table = this,
+    )
 
-        return this.isSubsetOf(other) && other.isSubsetOf(this)
-    }
-
-    abstract fun isSubsetOf(other: FunctionValue): Boolean
+    // Idea: Rename to `key`?
+    abstract fun read(
+        argument: Value,
+    ): Value?
 
     abstract fun dumpContent(): String?
 }
