@@ -2,5 +2,5 @@ package sigma
 
 class DictAssociativeTable(
     override val environment: Table,
-    associations: ExpressionTable,
+    associations: Map<Value, Expression>,
 ) : AssociativeTable(associations = associations)

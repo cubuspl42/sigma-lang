@@ -18,11 +18,9 @@ internal class TableConstructorTests {
         )
 
         assertEquals(
-            expected = ExpressionTable(
-                entries = mapOf(
-                    Symbol.of("foo") to Reference(referee = Symbol.of("a")),
-                    Symbol.of("bar") to Reference(referee = Symbol.of("b")),
-                )
+            expected = mapOf<Value, Expression>(
+                Symbol.of("foo") to Reference(referee = Symbol.of("a")),
+                Symbol.of("bar") to Reference(referee = Symbol.of("b")),
             ),
             actual = expressionTable,
         )
