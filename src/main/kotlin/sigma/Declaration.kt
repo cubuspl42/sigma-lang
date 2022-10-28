@@ -11,7 +11,7 @@ data class Declaration(
         fun build(
             ctx: DeclarationContext,
         ): Declaration = Declaration(
-            name = Symbol.build(ctx.name),
+            name = Symbol.of(ctx.name.text),
             valueType = ctx.valueType?.let { TypeExpression.build(it) },
             value = Expression.build(ctx.value),
         )

@@ -11,12 +11,6 @@ class UndefinedValue private constructor(
         ): UndefinedValue = UndefinedValue(name = name)
     }
 
-    init {
-        if (Symbol("foo") == name) {
-            println()
-        }
-    }
-
     object IsUndefined : ComputableFunctionValue() {
         override fun apply(
             argument: Value,
