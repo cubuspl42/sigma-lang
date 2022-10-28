@@ -1,6 +1,6 @@
 package sigma.expressions
 
-import sigma.LoopedScope
+import sigma.values.tables.LoopedScope
 import sigma.values.tables.Table
 import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.LetExpressionContext

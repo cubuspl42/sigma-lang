@@ -6,6 +6,7 @@ import sigma.values.Symbol
 import sigma.values.tables.Table
 import sigma.values.UndefinedValue
 import sigma.values.Value
+import sigma.values.tables.Scope
 
 object IntegerTable : Table() {
     override fun read(argument: Value): Value? {
@@ -18,8 +19,8 @@ object IntegerTable : Table() {
     override fun dumpContent(): String = "(integer table)"
 }
 
-private object BuiltinContext : Table() {
-    private val builtins = mapOf(
+private object BuiltinContext : Scope() {
+    private val builtins: Map<Symbol, Value> = mapOf(
         Symbol.of("false") to BoolValue.False,
         Symbol.of("true") to BoolValue.True,
         Symbol.of("if") to BoolValue.If,
@@ -37,12 +38,7 @@ private object BuiltinContext : Table() {
         Symbol.of("isUndefined") to UndefinedValue.IsUndefined,
     )
 
-    override fun read(
-        argument: Value,
-    ): Value? = when (argument) {
-        !is Symbol -> null
-        else -> builtins[argument]
-    }
+    override fun get(name: Symbol): Value? = builtins[name]
 
     override fun dumpContent(): String = "(built-in context)"
 }
