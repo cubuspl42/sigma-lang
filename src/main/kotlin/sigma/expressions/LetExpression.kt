@@ -9,7 +9,7 @@ import sigma.types.Type
 data class LetExpression(
     val declarations: List<Declaration>,
     val result: Expression,
-) : Expression {
+) : Expression() {
     companion object {
         fun build(
             let: LetExpressionContext,

@@ -67,7 +67,7 @@ private fun solveProblem(n: Int): Value {
 
     val root = Expression.build(program.expression())
 
-    val result = root.evaluate()
+    val result = root.obtain()
 
     return result.obtain()
 }

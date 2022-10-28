@@ -7,18 +7,15 @@ import sigma.values.Symbol
 import sigma.values.Value
 
 class DictTable(
-    private val environment: Scope,
-    private val associations: Map<PrimitiveValue, Expression>,
+    private val associations: Map<PrimitiveValue, Thunk>,
 ) : Table() {
     override fun read(
         argument: Value,
-    ): Thunk? = associations[argument]?.evaluate(
-        context = environment,
-    )
+    ): Thunk? = associations[argument]
 
     override fun dumpContent(): String? {
         val entries = associations.mapValues { (_, image) ->
-            image.evaluate(context = environment)
+            image.obtain()
         }.entries
 
         if (entries.isEmpty()) return null

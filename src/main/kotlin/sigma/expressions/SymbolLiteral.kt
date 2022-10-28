@@ -9,7 +9,7 @@ import sigma.values.tables.Scope
 
 data class SymbolLiteral(
     val symbol: Symbol,
-) : Expression {
+) : Expression() {
     companion object {
         fun of(name: String) = SymbolLiteral(
             symbol = Symbol.of(name),

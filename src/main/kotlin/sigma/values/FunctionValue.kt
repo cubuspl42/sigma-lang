@@ -9,8 +9,13 @@ abstract class FunctionValue : Value() {
         ): Value {
             argument as FunctionValue
 
-            val primary = argument.apply(Symbol.of("primary")) as FunctionValue
-            val secondary = argument.apply(Symbol.of("secondary")) as FunctionValue
+            val primary = argument.apply(
+                argument = Symbol.of("primary"),
+            ).obtain() as FunctionValue
+
+            val secondary = argument.apply(
+                argument = Symbol.of("secondary"),
+            ).obtain() as FunctionValue
 
             return object : FunctionValue() {
                 override fun apply(argument: Value): Thunk {

@@ -22,9 +22,10 @@ import sigma.parser.antlr.SigmaParser.ReferenceAltContext
 import sigma.parser.antlr.SigmaParser.SymbolAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.types.Type
+import sigma.values.Value
 import sigma.values.tables.Scope
 
-sealed interface Expression {
+sealed class Expression {
     companion object {
         fun parse(
             source: String,
@@ -95,12 +96,21 @@ sealed interface Expression {
         }.visit(expression) ?: throw IllegalArgumentException("Can't match expression ${expression::class}")
     }
 
-    fun inferType(): Type
+    fun bind(scope: Scope): Thunk = object : Thunk() {
+        override fun obtain(): Value = this@Expression.evaluate(
+            context = scope,
+        ).obtain()
+    }
+
+    fun obtain(): Value = evaluate(context = GlobalContext).obtain()
+
+    abstract fun inferType(): Type
 
     // Thought: Should `context` be `environment`?
-    fun evaluate(
-        context: Scope = GlobalContext,
+    abstract fun evaluate(
+        context: Scope,
     ): Thunk
 
-    fun dump(): String
+    abstract fun dump(): String
 }
+

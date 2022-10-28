@@ -18,7 +18,7 @@ private var depth = 0
 data class Application(
     val subject: Expression,
     val argument: Expression,
-) : Expression {
+) : Expression() {
     companion object {
         fun build(
             ctx: BinaryOperationAltContext,
@@ -79,12 +79,13 @@ data class Application(
     override fun evaluate(
         context: Scope,
     ): Thunk {
-        val subjectValue = subject.evaluate(context = context)
+        val subjectValue = subject.evaluate(context = context).obtain()
 
         if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
 
         val argumentValue = argument.evaluate(context = context)
 
+        // Thought: Obtaining argument here might not be lazy enough
         val image = subjectValue.apply(
             argument = argumentValue.obtain(),
         )
