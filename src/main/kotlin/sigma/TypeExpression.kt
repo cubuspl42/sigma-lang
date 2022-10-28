@@ -14,6 +14,6 @@ sealed interface TypeExpression {
     }
 
     fun evaluate(
-        context: TypeContext,
+        context: StaticScope,
     ): Type?
 }

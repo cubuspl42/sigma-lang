@@ -7,8 +7,8 @@ data class TypeReference(
     val referee: Symbol,
 ) : TypeExpression {
     override fun evaluate(
-        context: TypeContext,
+        context: StaticScope,
     ): Type? = context.getType(
-        name = referee,
+        typeName = referee,
     )
 }

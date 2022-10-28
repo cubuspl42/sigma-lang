@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import sigma.StaticScope
 import sigma.values.Closure
 import sigma.values.Symbol
 import sigma.values.Value
@@ -21,8 +22,8 @@ data class Abstraction(
         )
     }
 
-    override fun inferType(): Type = FunctionType(
-        imageType = image.inferType(),
+    override fun inferType(scope: StaticScope): Type = FunctionType(
+        imageType = image.inferType(scope = scope),
     )
 
     override fun evaluate(

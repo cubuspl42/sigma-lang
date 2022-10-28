@@ -4,6 +4,8 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import sigma.GlobalContext
+import sigma.GlobalStaticScope
+import sigma.StaticScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
@@ -104,9 +106,13 @@ sealed class Expression {
         override fun dump(): String = "(bound thunk)"
     }
 
+    fun obtainType() = inferType(scope = GlobalStaticScope)
+
     fun obtain(): Value = evaluate(scope = GlobalContext).obtain()
 
-    abstract fun inferType(): Type
+    abstract fun inferType(
+        scope: StaticScope,
+    ): Type
 
     abstract fun evaluate(
         scope: Scope,
@@ -114,4 +120,3 @@ sealed class Expression {
 
     abstract fun dump(): String
 }
-
