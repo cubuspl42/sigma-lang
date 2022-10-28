@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import sigma.BinaryOperationPrototype
 import sigma.Thunk
 import sigma.values.FunctionValue
 import sigma.values.IntValue
@@ -26,16 +27,16 @@ data class Application(
             val rightExpression = Expression.build(ctx.right)
 
             val prototype = when (ctx.operator.type) {
-                SigmaLexer.Asterisk -> IntValue.multiplication
-                SigmaLexer.Plus -> IntValue.addition
-                SigmaLexer.Minus -> IntValue.subtraction
-                SigmaLexer.Slash -> IntValue.division
-                SigmaLexer.Lt -> IntValue.lessThan
-                SigmaLexer.Lte -> IntValue.lessThanOrEqual
-                SigmaLexer.Gt -> IntValue.greaterThan
-                SigmaLexer.Gte -> IntValue.greaterThanOrEqual
-                SigmaLexer.Equals -> IntValue.equals
-                SigmaLexer.Link -> IntValue.link
+                SigmaLexer.Asterisk -> BinaryOperationPrototype.multiplication
+                SigmaLexer.Plus -> BinaryOperationPrototype.addition
+                SigmaLexer.Minus -> BinaryOperationPrototype.subtraction
+                SigmaLexer.Slash -> BinaryOperationPrototype.division
+                SigmaLexer.Lt -> BinaryOperationPrototype.lessThan
+                SigmaLexer.Lte -> BinaryOperationPrototype.lessThanOrEqual
+                SigmaLexer.Gt -> BinaryOperationPrototype.greaterThan
+                SigmaLexer.Gte -> BinaryOperationPrototype.greaterThanOrEqual
+                SigmaLexer.Equals -> BinaryOperationPrototype.equals
+                SigmaLexer.Link -> BinaryOperationPrototype.link
                 else -> throw UnsupportedOperationException()
             }
 

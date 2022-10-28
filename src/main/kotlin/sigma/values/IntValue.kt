@@ -1,81 +1,10 @@
 package sigma.values
 
+import sigma.BinaryOperationPrototype
+
 data class IntValue(
     val value: Int,
 ) : PrimitiveValue() {
-    data class BinaryOperationPrototype(
-        val functionName: String,
-        val leftArgumentName: String,
-        val rightArgumentName: String,
-    ) {
-        val leftArgument: Symbol
-            get() = Symbol.of(leftArgumentName)
-
-        val rightArgument: Symbol
-            get() = Symbol.of(rightArgumentName)
-    }
-
-    companion object {
-        val multiplication = BinaryOperationPrototype(
-            functionName = "mul",
-            leftArgumentName = "multiplier",
-            rightArgumentName = "multiplicand"
-        )
-
-        val addition = BinaryOperationPrototype(
-            functionName = "add",
-            leftArgumentName = "augend",
-            rightArgumentName = "addend"
-        )
-
-        val subtraction = BinaryOperationPrototype(
-            functionName = "sub",
-            leftArgumentName = "minuend",
-            rightArgumentName = "subtrahend"
-        )
-
-        val division = BinaryOperationPrototype(
-            functionName = "div",
-            leftArgumentName = "dividend",
-            rightArgumentName = "divisor"
-        )
-
-        val lessThan = BinaryOperationPrototype(
-            functionName = "lt",
-            leftArgumentName = "left",
-            rightArgumentName = "right"
-        )
-
-        val lessThanOrEqual = BinaryOperationPrototype(
-            functionName = "lt",
-            leftArgumentName = "left",
-            rightArgumentName = "right"
-        )
-
-        val greaterThan = BinaryOperationPrototype(
-            functionName = "gt",
-            leftArgumentName = "left",
-            rightArgumentName = "right"
-        )
-
-        val greaterThanOrEqual = BinaryOperationPrototype(
-            functionName = "gte",
-            leftArgumentName = "left",
-            rightArgumentName = "right"
-        )
-
-        val equals = BinaryOperationPrototype(
-            functionName = "eq",
-            leftArgumentName = "first",
-            rightArgumentName = "second"
-        )
-
-        val link = BinaryOperationPrototype(
-            functionName = "link",
-            leftArgumentName = "primary",
-            rightArgumentName = "secondary"
-        )
-    }
 
     abstract class BinaryIntFunction : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
@@ -101,7 +30,7 @@ data class IntValue(
     }
 
     object Mul : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = multiplication
+        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.multiplication
 
         override fun calculate(
             left: Int, right: Int,
@@ -109,7 +38,7 @@ data class IntValue(
     }
 
     object Div : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = division
+        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.division
 
         override fun calculate(
             left: Int, right: Int,
@@ -117,7 +46,7 @@ data class IntValue(
     }
 
     object Add : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = addition
+        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.addition
 
         override fun calculate(
             left: Int, right: Int,
@@ -125,7 +54,7 @@ data class IntValue(
     }
 
     object Sub : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = subtraction
+        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.subtraction
 
         override fun calculate(
             left: Int, right: Int,
@@ -143,7 +72,7 @@ data class IntValue(
     }
 
     object Eq : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = equals
+        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.equals
 
         override fun calculate(
             left: Int,
@@ -152,7 +81,7 @@ data class IntValue(
     }
 
     object Lt : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = lessThan
+        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.lessThan
 
         override fun calculate(
             left: Int,
@@ -161,7 +90,7 @@ data class IntValue(
     }
 
     object Lte : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = lessThanOrEqual
+        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.lessThanOrEqual
 
         override fun calculate(
             left: Int,
@@ -170,7 +99,7 @@ data class IntValue(
     }
 
     object Gt : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = greaterThan
+        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.greaterThan
 
         override fun calculate(
             left: Int,
@@ -179,7 +108,7 @@ data class IntValue(
     }
 
     object Gte : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = greaterThanOrEqual
+        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.greaterThanOrEqual
 
         override fun calculate(
             left: Int,
