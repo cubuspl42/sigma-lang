@@ -21,8 +21,7 @@ import sigma.parser.antlr.SigmaParser.ParenExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ReferenceAltContext
 import sigma.parser.antlr.SigmaParser.SymbolAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
-import sigma.values.Value
-import sigma.values.tables.Table
+import sigma.values.tables.Scope
 
 sealed interface Expression {
     companion object {
@@ -97,7 +96,7 @@ sealed interface Expression {
 
     // Thought: Should `context` be `environment`?
     fun evaluate(
-        context: Table = GlobalContext,
+        context: Scope = GlobalContext,
     ): Thunk
 
     fun dump(): String

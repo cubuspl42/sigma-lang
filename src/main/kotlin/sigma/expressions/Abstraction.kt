@@ -2,11 +2,9 @@ package sigma.expressions
 
 import sigma.values.Closure
 import sigma.values.Symbol
-import sigma.values.tables.Table
 import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.AbstractionContext
-import sigma.types.FunctionType
-import sigma.types.Type
+import sigma.values.tables.Scope
 
 data class Abstraction(
     val argumentName: Symbol,
@@ -22,7 +20,7 @@ data class Abstraction(
     }
 
     override fun evaluate(
-        context: Table,
+        context: Scope,
     ): Value = Closure(
         context = context,
         argumentName = argumentName,

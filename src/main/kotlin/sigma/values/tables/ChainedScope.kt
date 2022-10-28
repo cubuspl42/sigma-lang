@@ -1,12 +1,12 @@
 package sigma.values.tables
 
 import sigma.Thunk
-import sigma.values.Value
+import sigma.values.Symbol
 
-class ChainedTable(
-    private val context: Table,
+class ChainedScope(
+    private val context: Scope,
     private val table: Table,
-) : Table() {
+) : Scope() {
     override fun dumpContent(): String {
         val tableContent = table.dumpContent()
         val contextContent = context.dumpContent()
@@ -14,11 +14,11 @@ class ChainedTable(
         return listOfNotNull(tableContent, contextContent).joinToString(separator = ", ")
     }
 
-    override fun read(
-        argument: Value,
+    override fun get(
+        name: Symbol,
     ): Thunk? = table.read(
-        argument = argument,
-    ) ?: context.read(
-        argument = argument,
+        argument = name,
+    ) ?: context.get(
+        name = name,
     )
 }

@@ -2,16 +2,13 @@ package sigma.expressions
 
 import sigma.BinaryOperationPrototype
 import sigma.Thunk
-import sigma.values.FunctionValue
-import sigma.values.IntValue
-import sigma.values.Symbol
-import sigma.values.tables.Table
-import sigma.values.Value
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionDictAltContext
-import kotlin.String
+import sigma.values.FunctionValue
+import sigma.values.Symbol
+import sigma.values.tables.Scope
 
 private var depth = 0
 
@@ -69,7 +66,7 @@ data class Application(
     }
 
     override fun evaluate(
-        context: Table,
+        context: Scope,
     ): Thunk {
         val subjectValue = subject.evaluate(context = context)
 

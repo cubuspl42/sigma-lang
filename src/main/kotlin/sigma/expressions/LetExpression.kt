@@ -2,9 +2,8 @@ package sigma.expressions
 
 import sigma.Thunk
 import sigma.values.tables.LoopedScope
-import sigma.values.tables.Table
-import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
+import sigma.values.tables.Scope
 
 data class LetExpression(
     val declarations: List<Declaration>,
@@ -24,7 +23,7 @@ data class LetExpression(
     override fun dump(): String = "(let expression)"
 
     override fun evaluate(
-        context: Table,
+        context: Scope,
     ): Thunk {
         val scope = LoopedScope(
             context = context,

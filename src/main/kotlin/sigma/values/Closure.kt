@@ -3,23 +3,21 @@ package sigma.values
 import sigma.ArgumentTable
 import sigma.Thunk
 import sigma.expressions.Expression
-import sigma.values.tables.ChainedTable
-import sigma.values.tables.Table
+import sigma.values.tables.Scope
 
 class Closure(
-    private val context: Table,
+    private val context: Scope,
     private val argumentName: Symbol,
     private val image: Expression,
 ) : ComputableFunctionValue() {
     override fun apply(
         argument: Value,
     ): Thunk = image.evaluate(
-        context = ChainedTable(
+        context = ArgumentTable(
+            name = argumentName,
+            value = argument,
+        ).chainWith(
             context = context,
-            table = ArgumentTable(
-                name = argumentName,
-                value = argument,
-            ),
         ),
     )
 
