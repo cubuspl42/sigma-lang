@@ -1,7 +1,7 @@
 package sigma.expressions
 
 import sigma.GlobalTypeContext
-import sigma.IntType
+import sigma.types.IntType
 import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals

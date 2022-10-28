@@ -5,6 +5,8 @@ import sigma.values.Symbol
 import sigma.values.tables.Table
 import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.AbstractionContext
+import sigma.types.FunctionType
+import sigma.types.Type
 
 data class Abstraction(
     val argumentName: Symbol,

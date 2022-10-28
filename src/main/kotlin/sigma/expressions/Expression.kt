@@ -4,9 +4,6 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import sigma.GlobalContext
-import sigma.values.tables.Table
-import sigma.Thunk
-import sigma.values.Value
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.AbstractionAltContext
@@ -23,6 +20,8 @@ import sigma.parser.antlr.SigmaParser.ParenExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ReferenceAltContext
 import sigma.parser.antlr.SigmaParser.SymbolAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
+import sigma.values.Value
+import sigma.values.tables.Table
 
 sealed interface Expression {
     companion object {
@@ -101,12 +100,4 @@ sealed interface Expression {
     ): Value
 
     fun dump(): String
-}
-
-fun Expression.enclose(
-    environment: Table,
-): Thunk = object : Thunk {
-    override fun obtain(): Value = this@enclose.evaluate(
-        context = environment,
-    )
 }

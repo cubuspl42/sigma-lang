@@ -1,5 +1,7 @@
 package sigma
 
+import sigma.types.IntType
+import sigma.types.Type
 import sigma.values.Symbol
 
 interface TypeContext {
