@@ -5,6 +5,7 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.DictArrayAltContext
 import sigma.parser.antlr.SigmaParser.DictContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
+import sigma.values.PrimitiveValue
 import sigma.values.tables.DictTable
 
 data class DictConstructor(
@@ -65,7 +66,7 @@ data class DictConstructor(
     ): DictTable = DictTable(
         environment = context,
         associations = content.mapKeys {
-            it.key.evaluate(context = context)
+            it.key.evaluate(context = context) as PrimitiveValue
         },
     )
 }

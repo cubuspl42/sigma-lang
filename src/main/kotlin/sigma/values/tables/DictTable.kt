@@ -1,12 +1,13 @@
 package sigma.values.tables
 
 import sigma.expressions.Expression
+import sigma.values.PrimitiveValue
 import sigma.values.Symbol
 import sigma.values.Value
 
 class DictTable(
     private val environment: Table,
-    private val associations: Map<Value, Expression>,
+    private val associations: Map<PrimitiveValue, Expression>,
 ) : Table() {
     override fun read(
         argument: Value,
