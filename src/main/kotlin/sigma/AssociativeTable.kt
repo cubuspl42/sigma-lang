@@ -1,16 +1,18 @@
 package sigma
 
 abstract class AssociativeTable(
-    private val associations: ExpressionTable,
+    private val associations: Map<Value, Expression>,
 ) : Table() {
     override fun read(
         argument: Value,
-    ): Value? = associations.read(argument)?.evaluate(
+    ): Value? = associations[argument]?.evaluate(
         context = environment,
     )
 
     override fun dumpContent(): String? {
-        val entries = associations.getEntries(environment = environment)
+        val entries = associations.mapValues { (_, image) ->
+            image.evaluate(context = environment)
+        }.entries
 
         if (entries.isEmpty()) return null
 

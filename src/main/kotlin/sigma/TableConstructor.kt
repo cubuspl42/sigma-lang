@@ -88,9 +88,7 @@ data class TableConstructor(
 
     fun construct(
         environment: Table,
-    ): ExpressionTable = ExpressionTable(
-        entries = entries.mapKeys {
-            it.key.evaluate(context = environment)
-        },
-    )
+    ): Map<Value, Expression> = entries.mapKeys {
+        it.key.evaluate(context = environment)
+    }
 }
