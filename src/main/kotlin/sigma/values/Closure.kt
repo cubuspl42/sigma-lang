@@ -1,6 +1,9 @@
-package sigma
+package sigma.values
 
+import sigma.ArgumentTable
 import sigma.expressions.Expression
+import sigma.values.tables.ChainedTable
+import sigma.values.tables.Table
 
 class Closure(
     private val context: Table,

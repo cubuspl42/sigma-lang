@@ -1,5 +1,7 @@
 package sigma
 
+import sigma.values.IntValue
+import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

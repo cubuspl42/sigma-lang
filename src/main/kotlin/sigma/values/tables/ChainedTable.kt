@@ -1,4 +1,6 @@
-package sigma
+package sigma.values.tables
+
+import sigma.values.Value
 
 class ChainedTable(
     private val context: Table,

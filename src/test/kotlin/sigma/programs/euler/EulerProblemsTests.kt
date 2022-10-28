@@ -2,10 +2,10 @@ package sigma.programs.euler
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.BoolValue
+import sigma.values.BoolValue
 import sigma.expressions.Expression
-import sigma.IntValue
-import sigma.Value
+import sigma.values.IntValue
+import sigma.values.Value
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import kotlin.test.Test

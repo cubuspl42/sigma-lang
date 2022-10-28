@@ -1,4 +1,4 @@
-package sigma
+package sigma.values
 
 sealed class PrimitiveValue : Value() {
     final override fun equals(other: Any?): Boolean {

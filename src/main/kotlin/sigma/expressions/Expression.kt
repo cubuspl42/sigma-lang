@@ -4,10 +4,9 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import sigma.GlobalContext
-import sigma.Symbol
-import sigma.Table
+import sigma.values.tables.Table
 import sigma.Thunk
-import sigma.Value
+import sigma.values.Value
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.AbstractionAltContext

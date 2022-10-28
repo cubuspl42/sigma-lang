@@ -1,6 +1,6 @@
-package sigma
+package sigma.values
 
-import sigma.expressions.Expression
+import sigma.Thunk
 
 // Idea: Hierarchy like Expression -> Thunk -> Value?
 sealed class Value : Thunk {

@@ -1,4 +1,8 @@
-package sigma
+package sigma.values.tables
+
+import sigma.values.FunctionValue
+import sigma.values.UndefinedValue
+import sigma.values.Value
 
 // Thought: Would PartialFunction be a better name?
 abstract class Table : FunctionValue() {

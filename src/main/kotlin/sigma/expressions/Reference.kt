@@ -1,8 +1,8 @@
 package sigma.expressions
 
-import sigma.Symbol
-import sigma.Table
-import sigma.Value
+import sigma.values.Symbol
+import sigma.values.tables.Table
+import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.ReferenceContext
 
 data class Reference(

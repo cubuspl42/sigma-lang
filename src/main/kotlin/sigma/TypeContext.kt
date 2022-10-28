@@ -1,5 +1,7 @@
 package sigma
 
+import sigma.values.Symbol
+
 interface TypeContext {
     fun getType(name: Symbol): Type?
 }
