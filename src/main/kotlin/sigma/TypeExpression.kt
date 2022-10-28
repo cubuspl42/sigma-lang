@@ -7,7 +7,7 @@ sealed interface TypeExpression {
         fun build(
             ctx: TypeExpressionContext,
         ): TypeExpression = TypeReference(
-            referee = Symbol.build(ctx.reference().referee),
+            referee = Symbol.of(ctx.reference().referee.text),
         )
     }
 

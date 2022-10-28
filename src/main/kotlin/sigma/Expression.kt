@@ -63,7 +63,7 @@ sealed interface Expression {
 
             override fun visitSymbolAlt(
                 ctx: SymbolAltContext,
-            ): Expression = Symbol.of(ctx.symbol().identifier().text)
+            ): Expression = SymbolLiteral.build(ctx.symbol().identifier())
 
             override fun visitCallableExpressionAlt(
                 ctx: CallableExpressionAltContext,

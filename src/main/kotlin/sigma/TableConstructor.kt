@@ -18,7 +18,7 @@ abstract class BindMapConstructor {
                 override fun visitSymbolBindAlt(
                     ctx: SigmaParser.SymbolBindAltContext,
                 ) = Bind<Expression>(
-                    key = Symbol.of(ctx.name.text),
+                    key = SymbolLiteral.build(ctx.name),
                     image = Expression.build(ctx.image),
                 )
 
@@ -69,7 +69,7 @@ data class TableConstructor(
             ctx: ArrayContext,
         ): TableConstructor = TableConstructor(
             entries = ctx.bindImage().withIndex().associate { (index, imageCtx) ->
-                IntValue(index) to Expression.build(imageCtx.image)
+                IntLiteral.of(index) to Expression.build(imageCtx.image)
             },
         )
 
@@ -78,7 +78,7 @@ data class TableConstructor(
         ): Pair<Expression, Expression> = object : SigmaParserBaseVisitor<Pair<Expression, Expression>>() {
             override fun visitSymbolBindAlt(
                 ctx: SigmaParser.SymbolBindAltContext,
-            ) = Symbol.of(ctx.name.text) to Expression.build(ctx.image.image)
+            ) = SymbolLiteral.build(ctx.name) to Expression.build(ctx.image.image)
 
             override fun visitArbitraryBindAlt(
                 ctx: SigmaParser.ArbitraryBindAltContext,
@@ -93,56 +93,4 @@ data class TableConstructor(
             it.key.evaluate(context = environment)
         },
     )
-}
-
-class ExpressionTable(
-    private val entries: Map<Value, Expression>,
-) {
-    fun read(
-        argument: Value,
-    ): Expression? = entries[argument]
-
-    fun getEntries(
-        environment: Table,
-    ): Set<Map.Entry<Value, Value>> = entries.mapValues { (_, image) ->
-        image.evaluate(context = environment)
-    }.entries
-
-    override fun equals(other: Any?): Boolean {
-        throw UnsupportedOperationException()
-    }
-
-    override fun hashCode(): Int = 0
-}
-
-class BindMap(
-    override val binds: List<Bind<PrimitiveValue>>,
-) : BindMapConstructor() {
-    companion object {
-        fun of(
-            vararg binds: Pair<String, Expression>,
-        ): BindMap = BindMap(
-            binds = binds.map { (name, image) ->
-                Bind(
-                    key = Symbol.of(name),
-                    image = image,
-                )
-            },
-        )
-    }
-
-    fun project(key: Value): Expression? {
-        val matchingBinds = binds.filter { it.key.isSame(key) }
-
-        if (matchingBinds.isEmpty()) return null
-
-        return matchingBinds.singleOrNull()?.image
-            ?: throw IllegalStateException("Multiple binds match the key ${key.dump()}")
-    }
-
-    fun encloseImages(
-        environment: Table,
-    ): Map<Value, Thunk> = binds.associate {
-        it.key to it.image.enclose(environment = environment)
-    }
 }

@@ -26,7 +26,7 @@ fun main() {
 
     val result = root.evaluate()
 
-    println(result.dump())
+    println(result)
 }
 
 private fun getResourceAsText(path: String): String? =

@@ -39,8 +39,8 @@ data class Application(
                 ),
                 argument = DictConstructor.of(
                     mapOf(
-                        Symbol.of(prototype.leftArgumentName) to leftExpression,
-                        Symbol.of(prototype.rightArgumentName) to rightExpression,
+                        SymbolLiteral(symbol = prototype.leftArgument) to leftExpression,
+                        SymbolLiteral(symbol = prototype.rightArgument) to rightExpression,
                     ),
                 ),
             )

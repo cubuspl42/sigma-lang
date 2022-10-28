@@ -16,7 +16,7 @@ abstract class AssociativeTable(
 
         return entries.joinToString(separator = ", ") {
             val keyStr = dumpKey(key = it.key)
-            val imageStr = it.value.evaluate(context = environment).dump()
+            val imageStr = it.value.dump()
 
             "$keyStr = $imageStr"
         }
