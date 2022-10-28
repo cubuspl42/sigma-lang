@@ -4,7 +4,7 @@ import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.types.Type
 import sigma.values.Symbol
 
-sealed interface TypeExpression {
+interface TypeExpression {
     companion object {
         fun build(
             ctx: TypeExpressionContext,
