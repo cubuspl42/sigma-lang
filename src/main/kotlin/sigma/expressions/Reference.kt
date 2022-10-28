@@ -22,8 +22,8 @@ data class Reference(
     }
 
     override fun evaluate(
-        context: Scope,
-    ): Thunk = context.apply(referee)
+        scope: Scope,
+    ): Thunk = scope.apply(referee)
 
     override fun dump(): String = referee.dump()
 }

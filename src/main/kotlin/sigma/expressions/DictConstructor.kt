@@ -88,11 +88,11 @@ data class DictConstructor(
     override fun inferType(): Type = DictType
 
     override fun evaluate(
-        context: Scope,
+        scope: Scope,
     ): DictTable = DictTable(
         associations = content.associate {
-            val key = it.key.evaluate(context = context).obtain() as PrimitiveValue
-            val value = it.value.bind(scope = context)
+            val key = it.key.evaluate(scope = scope).obtain() as PrimitiveValue
+            val value = it.value.bind(scope = scope)
 
             key to value
         },

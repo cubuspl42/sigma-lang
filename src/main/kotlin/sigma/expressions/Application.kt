@@ -83,13 +83,13 @@ data class Application(
     }
 
     override fun evaluate(
-        context: Scope,
+        scope: Scope,
     ): Thunk {
-        val subjectValue = subject.evaluate(context = context).obtain()
+        val subjectValue = subject.evaluate(scope = scope).obtain()
 
         if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
 
-        val argumentValue = argument.evaluate(context = context)
+        val argumentValue = argument.evaluate(scope = scope)
 
         // Thought: Obtaining argument here might not be lazy enough
         val image = subjectValue.apply(

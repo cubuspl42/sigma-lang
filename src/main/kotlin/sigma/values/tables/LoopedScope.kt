@@ -11,7 +11,7 @@ class LoopedScope(
     override fun get(
         name: Symbol,
     ): Thunk? = declarations[name]?.evaluate(
-        context = this,
+        scope = this,
     ) ?: context.get(
         name = name,
     )

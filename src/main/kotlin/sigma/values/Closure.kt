@@ -13,7 +13,7 @@ class Closure(
     override fun apply(
         argument: Value,
     ): Thunk = image.evaluate(
-        context = ArgumentTable(
+        scope = ArgumentTable(
             name = argumentName,
             value = argument,
         ).chainWith(

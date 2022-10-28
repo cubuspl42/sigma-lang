@@ -25,7 +25,7 @@ data class SymbolLiteral(
     override fun inferType(): Type = SymbolType
 
     override fun evaluate(
-        context: Scope,
+        scope: Scope,
     ): Value = symbol
 
     override fun dump(): String = symbol.dump()
