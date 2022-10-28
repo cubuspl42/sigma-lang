@@ -1,21 +1,20 @@
-package sigma
+package sigma.values.tables
 
 import sigma.expressions.Expression
 import sigma.values.Symbol
-import sigma.values.tables.Table
 import sigma.values.Value
+
+
 
 class LoopedScope(
     private val context: Table,
     private val declarations: Map<Symbol, Expression>,
-) : Table() {
+) : Scope() {
     private val environment: Table = this.chainWith(context)
 
-    override fun read(argument: Value): Value? {
-        if (argument !is Symbol) return null
-
-        val value = declarations[argument] ?: return context.read(
-            argument = argument,
+    override fun get(name: Symbol): Value? {
+        val value = declarations[name] ?: return context.read(
+            argument = name,
         )
 
         return value.evaluate(context = environment)
