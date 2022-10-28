@@ -6,7 +6,7 @@ import sigma.parser.antlr.SigmaParser.DictContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
 data class DictConstructor(
-    val content: TableConstructor,
+    val content: Map<Expression, Expression>,
 ) : Expression {
     companion object {
         val empty: DictConstructor = of(entries = emptyMap())
@@ -14,9 +14,7 @@ data class DictConstructor(
         fun of(
             entries: Map<Expression, Expression>,
         ): DictConstructor = DictConstructor(
-            content = TableConstructor(
-                entries = entries,
-            ),
+            content = entries,
         )
 
         fun build(
@@ -25,14 +23,36 @@ data class DictConstructor(
             override fun visitDictTableAlt(
                 ctx: SigmaParser.DictTableAltContext,
             ): DictConstructor = DictConstructor(
-                content = TableConstructor.build(ctx.table()),
+                content = buildFromTable(ctx.table()),
             )
 
             override fun visitDictArrayAlt(
                 ctx: DictArrayAltContext,
             ): DictConstructor = DictConstructor(
-                content = TableConstructor.buildFromArray(ctx.content)
+                content = buildFromArray(ctx.content)
             )
+        }.visit(ctx)
+
+        private fun buildFromTable(
+            ctx: SigmaParser.TableContext,
+        ): Map<Expression, Expression> = ctx.tableBind().associate { buildEntry(it) }
+
+        private fun buildFromArray(
+            ctx: SigmaParser.ArrayContext,
+        ): Map<Expression, Expression> = ctx.bindImage().withIndex().associate { (index, imageCtx) ->
+            IntLiteral.of(index) to Expression.build(imageCtx.image)
+        }
+
+        private fun buildEntry(
+            ctx: SigmaParser.TableBindContext,
+        ): Pair<Expression, Expression> = object : SigmaParserBaseVisitor<Pair<Expression, Expression>>() {
+            override fun visitSymbolBindAlt(
+                ctx: SigmaParser.SymbolBindAltContext,
+            ) = SymbolLiteral.build(ctx.name) to Expression.build(ctx.image.image)
+
+            override fun visitArbitraryBindAlt(
+                ctx: SigmaParser.ArbitraryBindAltContext,
+            ) = Expression.build(ctx.key) to Expression.build(ctx.image.image)
         }.visit(ctx)
     }
 
@@ -42,8 +62,8 @@ data class DictConstructor(
         context: Table,
     ): DictAssociativeTable = DictAssociativeTable(
         environment = context,
-        associations = content.construct(
-            environment = context,
-        ),
+        associations = content.mapKeys {
+            it.key.evaluate(context = context)
+        },
     )
 }
