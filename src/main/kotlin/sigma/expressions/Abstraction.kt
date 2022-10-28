@@ -11,7 +11,7 @@ import sigma.values.tables.Scope
 data class Abstraction(
     val argumentName: Symbol,
     val image: Expression,
-) : Expression {
+) : Expression() {
     companion object {
         fun build(
             abstraction: AbstractionContext,

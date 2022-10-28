@@ -19,7 +19,7 @@ class ExpressionEvaluationTests {
                             m = n,
                         } in m
                     """.trimIndent()
-                ).evaluate(),
+                ).obtain(),
             )
         }
     }
@@ -29,7 +29,7 @@ class ExpressionEvaluationTests {
         fun testDictSubject() {
             assertEquals(
                 expected = Symbol("bar"),
-                actual = Expression.parse("{foo = `bar`}[`foo`]").evaluate(),
+                actual = Expression.parse("{foo = `bar`}[`foo`]").obtain(),
             )
         }
 
@@ -37,7 +37,7 @@ class ExpressionEvaluationTests {
         fun testSelfReferring() {
             assertEquals(
                 expected = UndefinedValue.undefined,
-                actual = Expression.parse("{foo = `baz`, bar = foo}[`bar`]").evaluate(),
+                actual = Expression.parse("{foo = `baz`, bar = foo}[`bar`]").obtain(),
             )
         }
     }

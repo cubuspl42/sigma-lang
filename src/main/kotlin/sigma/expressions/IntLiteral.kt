@@ -10,7 +10,7 @@ import sigma.values.tables.Scope
 
 data class IntLiteral(
     val value: IntValue,
-) : Expression {
+) : Expression() {
     companion object {
         fun of(value: Int) = IntLiteral(
             value = IntValue(value)

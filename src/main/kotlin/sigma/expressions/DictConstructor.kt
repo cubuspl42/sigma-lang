@@ -12,7 +12,7 @@ import sigma.types.Type
 
 data class DictConstructor(
     val content: Map<Expression, Expression>,
-) : Expression {
+) : Expression() {
     companion object {
         val empty: DictConstructor = of(entries = emptyMap())
 
@@ -69,9 +69,11 @@ data class DictConstructor(
     override fun evaluate(
         context: Scope,
     ): DictTable = DictTable(
-        environment = context,
-        associations = content.mapKeys {
-            it.key.evaluate(context = context) as PrimitiveValue
+        associations = content.entries.associate { (keyExpression, valueExpression) ->
+            val key = keyExpression.evaluate(context = context) as PrimitiveValue
+            val value = valueExpression.bind(scope = context)
+
+            key to value
         },
     )
 }

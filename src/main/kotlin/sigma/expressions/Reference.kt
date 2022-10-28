@@ -8,7 +8,7 @@ import sigma.values.tables.Scope
 
 data class Reference(
     val referee: Symbol,
-) : Expression {
+) : Expression() {
     companion object {
         fun build(
             reference: ReferenceContext,
