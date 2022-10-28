@@ -1,8 +1,9 @@
 package sigma.expressions
 
 import sigma.Thunk
-import sigma.values.Symbol
 import sigma.parser.antlr.SigmaParser.ReferenceContext
+import sigma.types.Type
+import sigma.values.Symbol
 import sigma.values.tables.Scope
 
 data class Reference(
@@ -14,6 +15,10 @@ data class Reference(
         ): Reference = Reference(
             referee = Symbol(name = reference.referee.text),
         )
+    }
+
+    override fun inferType(): Type {
+        TODO("Not yet implemented")
     }
 
     override fun evaluate(

@@ -1,9 +1,11 @@
 package sigma.expressions
 
+import sigma.parser.antlr.SigmaParser
+import sigma.types.IntType
+import sigma.types.Type
 import sigma.values.IntValue
 import sigma.values.Symbol
 import sigma.values.Value
-import sigma.parser.antlr.SigmaParser
 import sigma.values.tables.Scope
 
 data class IntLiteral(
@@ -20,6 +22,8 @@ data class IntLiteral(
             symbol = Symbol(name = ctx.text),
         )
     }
+
+    override fun inferType(): Type = IntType
 
     override fun evaluate(
         context: Scope,

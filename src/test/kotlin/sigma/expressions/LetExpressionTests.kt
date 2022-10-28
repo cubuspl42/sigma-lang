@@ -1,6 +1,7 @@
 package sigma.expressions
 
 import sigma.GlobalTypeContext
+import sigma.TypeReference
 import sigma.types.IntType
 import sigma.values.Symbol
 import kotlin.test.Test

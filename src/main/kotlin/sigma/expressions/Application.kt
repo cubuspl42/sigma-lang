@@ -6,8 +6,11 @@ import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionDictAltContext
+import sigma.types.FunctionType
+import sigma.types.Type
 import sigma.values.FunctionValue
 import sigma.values.Symbol
+import sigma.values.TypeError
 import sigma.values.tables.Scope
 
 private var depth = 0
@@ -63,6 +66,14 @@ data class Application(
             subject = Expression.build(ctx.callee),
             argument = DictConstructor.build(ctx.argument),
         )
+    }
+
+    override fun inferType(): Type {
+        val subjectType = subject.inferType() as? FunctionType ?: throw TypeError(
+            message = "Only functions can be called",
+        )
+
+        return subjectType.imageType
     }
 
     override fun evaluate(

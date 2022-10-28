@@ -4,6 +4,8 @@ import sigma.values.Closure
 import sigma.values.Symbol
 import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.AbstractionContext
+import sigma.types.FunctionType
+import sigma.types.Type
 import sigma.values.tables.Scope
 
 data class Abstraction(
@@ -18,6 +20,10 @@ data class Abstraction(
             image = Expression.build(abstraction.image),
         )
     }
+
+    override fun inferType(): Type = FunctionType(
+        imageType = image.inferType(),
+    )
 
     override fun evaluate(
         context: Scope,

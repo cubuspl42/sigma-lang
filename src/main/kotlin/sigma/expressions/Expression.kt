@@ -21,6 +21,7 @@ import sigma.parser.antlr.SigmaParser.ParenExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ReferenceAltContext
 import sigma.parser.antlr.SigmaParser.SymbolAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
+import sigma.types.Type
 import sigma.values.tables.Scope
 
 sealed interface Expression {
@@ -93,6 +94,8 @@ sealed interface Expression {
             ): Expression = DictConstructor.build(ctx.dict())
         }.visit(expression) ?: throw IllegalArgumentException("Can't match expression ${expression::class}")
     }
+
+    fun inferType(): Type
 
     // Thought: Should `context` be `environment`?
     fun evaluate(

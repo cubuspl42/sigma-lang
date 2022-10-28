@@ -4,6 +4,7 @@ import sigma.Thunk
 import sigma.values.tables.LoopedScope
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
 import sigma.values.tables.Scope
+import sigma.types.Type
 
 data class LetExpression(
     val declarations: List<Declaration>,
@@ -21,6 +22,8 @@ data class LetExpression(
     }
 
     override fun dump(): String = "(let expression)"
+
+    override fun inferType(): Type = result.inferType()
 
     override fun evaluate(
         context: Scope,
