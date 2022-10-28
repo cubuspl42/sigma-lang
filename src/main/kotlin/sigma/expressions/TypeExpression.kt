@@ -1,9 +1,9 @@
 package sigma.expressions
 
-import sigma.values.Symbol
-import sigma.Type
 import sigma.TypeContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
+import sigma.types.Type
+import sigma.values.Symbol
 
 sealed interface TypeExpression {
     companion object {
