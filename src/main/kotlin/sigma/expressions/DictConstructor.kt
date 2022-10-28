@@ -1,11 +1,11 @@
 package sigma.expressions
 
-import sigma.values.tables.DictAssociativeTable
 import sigma.values.tables.Table
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.DictArrayAltContext
 import sigma.parser.antlr.SigmaParser.DictContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
+import sigma.values.tables.DictTable
 
 data class DictConstructor(
     val content: Map<Expression, Expression>,
@@ -62,7 +62,7 @@ data class DictConstructor(
 
     override fun evaluate(
         context: Table,
-    ): DictAssociativeTable = DictAssociativeTable(
+    ): DictTable = DictTable(
         environment = context,
         associations = content.mapKeys {
             it.key.evaluate(context = context)
