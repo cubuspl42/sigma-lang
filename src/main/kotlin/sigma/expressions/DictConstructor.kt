@@ -9,19 +9,29 @@ import sigma.values.tables.DictTable
 import sigma.values.tables.Scope
 import sigma.types.DictType
 import sigma.types.Type
+import sigma.values.Symbol
 
 data class DictConstructor(
-    val content: Map<Expression, Expression>,
+    val content: List<Assignment>,
 ) : Expression() {
+    sealed interface Assignment {
+        val key: Expression
+        val value: Expression
+    }
+
+    data class SymbolAssignment(
+        val name: Symbol,
+        override val value: Expression,
+    ) : Assignment {
+        override val key: SymbolLiteral = SymbolLiteral(symbol = name)
+    }
+
+    data class ArbitraryAssignment(
+        override val key: Expression,
+        override val value: Expression,
+    ) : Assignment
+
     companion object {
-        val empty: DictConstructor = of(entries = emptyMap())
-
-        fun of(
-            entries: Map<Expression, Expression>,
-        ): DictConstructor = DictConstructor(
-            content = entries,
-        )
-
         fun build(
             ctx: DictContext,
         ): DictConstructor = object : SigmaParserBaseVisitor<DictConstructor>() {
@@ -40,25 +50,36 @@ data class DictConstructor(
 
         private fun buildFromTable(
             ctx: SigmaParser.TableContext,
-        ): Map<Expression, Expression> = ctx.tableBind().associate { buildEntry(it) }
+        ): List<Assignment> = ctx.tableBind().map {
+            buildAssignment(it)
+        }
 
         private fun buildFromArray(
             ctx: SigmaParser.ArrayContext,
-        ): Map<Expression, Expression> = ctx.bindImage().withIndex().associate { (index, imageCtx) ->
+        ): List<ArbitraryAssignment> = ctx.bindImage().withIndex().map { (index, imageCtx) ->
             // Note: When arbitrary binds aren't supported, then these int literals can be changed to values
-            IntLiteral.of(index) to Expression.build(imageCtx.image)
+            ArbitraryAssignment(
+                key = IntLiteral.of(index),
+                value = Expression.build(imageCtx.image),
+            )
         }
 
-        private fun buildEntry(
+        private fun buildAssignment(
             ctx: SigmaParser.TableBindContext,
-        ): Pair<Expression, Expression> = object : SigmaParserBaseVisitor<Pair<Expression, Expression>>() {
+        ): Assignment = object : SigmaParserBaseVisitor<Assignment>() {
             override fun visitSymbolBindAlt(
                 ctx: SigmaParser.SymbolBindAltContext,
-            ) = SymbolLiteral.build(ctx.name) to Expression.build(ctx.image.image)
+            ) = SymbolAssignment(
+                name = Symbol.of(ctx.name.text),
+                value = Expression.build(ctx.image.image),
+            )
 
             override fun visitArbitraryBindAlt(
                 ctx: SigmaParser.ArbitraryBindAltContext,
-            ) = Expression.build(ctx.key) to Expression.build(ctx.image.image)
+            ) = ArbitraryAssignment(
+                key = Expression.build(ctx.key),
+                value = Expression.build(ctx.image.image),
+            )
         }.visit(ctx)
     }
 
@@ -69,9 +90,9 @@ data class DictConstructor(
     override fun evaluate(
         context: Scope,
     ): DictTable = DictTable(
-        associations = content.entries.associate { (keyExpression, valueExpression) ->
-            val key = keyExpression.evaluate(context = context) as PrimitiveValue
-            val value = valueExpression.bind(scope = context)
+        associations = content.associate {
+            val key = it.key.evaluate(context = context).obtain() as PrimitiveValue
+            val value = it.value.bind(scope = context)
 
             key to value
         },

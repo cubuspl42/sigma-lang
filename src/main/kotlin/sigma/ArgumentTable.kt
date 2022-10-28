@@ -3,14 +3,15 @@ package sigma
 import sigma.values.Symbol
 import sigma.values.tables.Table
 import sigma.values.Value
+import sigma.values.tables.Scope
 
 class ArgumentTable(
     private val name: Symbol,
     private val value: Value,
-) : Table() {
-    override fun read(
-        argument: Value,
-    ): Value? = value.takeIf { name.isSame(argument) }
+) : Scope() {
+    override fun get(
+        name: Symbol,
+    ): Value? = value.takeIf { name.isSame(this.name) }
 
     override fun dumpContent(): String = "${name.name} = ${value.dump()} [argument]"
 }

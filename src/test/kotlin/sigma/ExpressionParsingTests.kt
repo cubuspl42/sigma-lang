@@ -16,9 +16,15 @@ class ExpressionParsingTests {
         fun testSimple() {
             assertEquals(
                 expected = DictConstructor(
-                    content = mapOf(
-                        SymbolLiteral.of("foo") to Reference(Symbol.of("baz1")),
-                        SymbolLiteral.of("bar") to Reference(Symbol.of("baz2")),
+                    content = listOf(
+                        DictConstructor.SymbolAssignment(
+                            name = Symbol.of("foo"),
+                            value = Reference(Symbol.of("baz1")),
+                        ),
+                        DictConstructor.SymbolAssignment(
+                            name = Symbol.of("bar"),
+                            value = Reference(Symbol.of("baz2")),
+                        ),
                     ),
                 ),
                 actual = Expression.parse("{foo = baz1, bar = baz2}"),
@@ -29,9 +35,15 @@ class ExpressionParsingTests {
         fun testWithArbitrary() {
             assertEquals(
                 expected = DictConstructor(
-                    content = mapOf(
-                        SymbolLiteral.of("foo") to Reference(Symbol.of("baz1")),
-                        Reference(Symbol.of("baz")) to Reference(Symbol.of("baz2"))
+                    content = listOf(
+                        DictConstructor.SymbolAssignment(
+                            name = Symbol.of("foo"),
+                            value = Reference(Symbol.of("baz1")),
+                        ),
+                        DictConstructor.ArbitraryAssignment(
+                            key = Reference(Symbol.of("baz")),
+                            value = Reference(Symbol.of("baz2")),
+                        ),
                     ),
                 ),
                 actual = Expression.parse("{foo = baz1, [baz] = baz2}"),
@@ -42,10 +54,19 @@ class ExpressionParsingTests {
         fun testArray() {
             assertEquals(
                 expected = DictConstructor(
-                    content = mapOf(
-                        IntLiteral.of(0) to Reference(Symbol.of("foo")),
-                        IntLiteral.of(1) to Reference(Symbol.of("bar")),
-                        IntLiteral.of(2) to Reference(Symbol.of("baz")),
+                    content = listOf(
+                        DictConstructor.ArbitraryAssignment(
+                            key = IntLiteral.of(0),
+                            value = Reference(Symbol.of("foo")),
+                        ),
+                        DictConstructor.ArbitraryAssignment(
+                            key = IntLiteral.of(1),
+                            value = Reference(Symbol.of("bar")),
+                        ),
+                        DictConstructor.ArbitraryAssignment(
+                            key = IntLiteral.of(2),
+                            value = Reference(Symbol.of("baz")),
+                        ),
                     ),
                 ),
                 actual = Expression.parse("{foo, bar, baz}"),
@@ -80,8 +101,11 @@ class ExpressionParsingTests {
             assertEquals(
                 expected = Application(
                     subject = DictConstructor(
-                        content = mapOf(
-                            SymbolLiteral.of("foo") to SymbolLiteral.of("bar"),
+                        content = listOf(
+                            DictConstructor.SymbolAssignment(
+                                name = Symbol.of("foo"),
+                                value = SymbolLiteral.of("bar"),
+                            ),
                         ),
                     ),
                     argument = SymbolLiteral.of("foo"),
@@ -97,9 +121,12 @@ class ExpressionParsingTests {
             assertEquals(
                 expected = Application(
                     subject = Reference(Symbol.of("foo")),
-                    argument = DictConstructor.of(
-                        entries = mapOf(
-                            SymbolLiteral.of("bar") to SymbolLiteral.of("baz"),
+                    argument = DictConstructor(
+                        content = listOf(
+                            DictConstructor.SymbolAssignment(
+                                name = Symbol.of("bar"),
+                                value = SymbolLiteral.of("baz"),
+                            ),
                         ),
                     ),
                 ),
