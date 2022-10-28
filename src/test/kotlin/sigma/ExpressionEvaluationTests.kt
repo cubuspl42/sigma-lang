@@ -1,6 +1,8 @@
 package sigma
 
 import sigma.expressions.Expression
+import sigma.values.Symbol
+import sigma.values.UndefinedValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

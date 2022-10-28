@@ -1,6 +1,9 @@
 package sigma
 
 import sigma.expressions.Expression
+import sigma.values.Symbol
+import sigma.values.tables.Table
+import sigma.values.Value
 
 class LoopedScope(
     private val context: Table,

@@ -3,6 +3,9 @@ package sigma
 import sigma.expressions.Expression
 import sigma.expressions.Reference
 import sigma.expressions.SymbolLiteral
+import sigma.values.tables.EmptyTable
+import sigma.values.Symbol
+import sigma.values.Value
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

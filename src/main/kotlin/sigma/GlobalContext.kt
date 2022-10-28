@@ -1,5 +1,12 @@
 package sigma
 
+import sigma.values.BoolValue
+import sigma.values.IntValue
+import sigma.values.Symbol
+import sigma.values.tables.Table
+import sigma.values.UndefinedValue
+import sigma.values.Value
+
 object IntegerTable : Table() {
     override fun read(argument: Value): Value? {
         val symbol = argument as? Symbol
@@ -26,7 +33,7 @@ private object BuiltinContext : Table() {
         Symbol.of("lte") to IntValue.Lte,
         Symbol.of("gt") to IntValue.Gt,
         Symbol.of("gte") to IntValue.Gte,
-        Symbol.of("link") to FunctionValue.Link,
+        Symbol.of("link") to Link,
         Symbol.of("isUndefined") to UndefinedValue.IsUndefined,
     )
 

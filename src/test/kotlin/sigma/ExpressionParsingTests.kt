@@ -9,6 +9,7 @@ import sigma.expressions.LetExpression
 import sigma.expressions.Reference
 import sigma.expressions.SymbolLiteral
 import sigma.expressions.TypeReference
+import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

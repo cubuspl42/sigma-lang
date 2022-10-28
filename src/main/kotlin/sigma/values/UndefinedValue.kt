@@ -1,4 +1,4 @@
-package sigma
+package sigma.values
 
 class UndefinedValue private constructor(
     val name: Value? = null,

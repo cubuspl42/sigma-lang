@@ -1,4 +1,4 @@
-package sigma
+package sigma.values
 
 data class BoolValue(
     val value: Boolean,

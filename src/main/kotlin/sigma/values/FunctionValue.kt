@@ -1,4 +1,7 @@
-package sigma
+package sigma.values
+
+import sigma.values.tables.ChainedTable
+import sigma.values.tables.Table
 
 abstract class FunctionValue : Value() {
     object Link : ComputableFunctionValue() {

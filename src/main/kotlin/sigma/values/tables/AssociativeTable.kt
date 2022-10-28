@@ -1,6 +1,8 @@
-package sigma
+package sigma.values.tables
 
 import sigma.expressions.Expression
+import sigma.values.Symbol
+import sigma.values.Value
 
 abstract class AssociativeTable(
     private val associations: Map<Value, Expression>,
