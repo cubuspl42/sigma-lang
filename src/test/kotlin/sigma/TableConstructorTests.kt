@@ -6,16 +6,14 @@ import kotlin.test.assertEquals
 internal class TableConstructorTests {
     @Test
     fun testConstruct() {
-        val tableConstructor = TableConstructor(
-            entries = mapOf(
-                SymbolLiteral.of("foo") to Reference(referee = Symbol.of("a")),
-                SymbolLiteral.of("bar") to Reference(referee = Symbol.of("b")),
-            ),
+        val tableConstructor = mapOf(
+            SymbolLiteral.of("foo") to Reference(referee = Symbol.of("a")),
+            SymbolLiteral.of("bar") to Reference(referee = Symbol.of("b")),
         )
 
-        val expressionTable = tableConstructor.construct(
-            environment = EmptyTable,
-        )
+        val expressionTable = tableConstructor.mapKeys {
+            it.key.evaluate(context = EmptyTable)
+        }
 
         assertEquals(
             expected = mapOf<Value, Expression>(

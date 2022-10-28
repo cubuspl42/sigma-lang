@@ -9,11 +9,9 @@ class ExpressionParsingTests {
         fun testSimple() {
             assertEquals(
                 expected = DictConstructor(
-                    content = TableConstructor(
-                        entries = mapOf(
-                            SymbolLiteral.of("foo") to Reference(Symbol.of("baz1")),
-                            SymbolLiteral.of("bar") to Reference(Symbol.of("baz2")),
-                        ),
+                    content = mapOf(
+                        SymbolLiteral.of("foo") to Reference(Symbol.of("baz1")),
+                        SymbolLiteral.of("bar") to Reference(Symbol.of("baz2")),
                     ),
                 ),
                 actual = Expression.parse("{foo = baz1, bar = baz2}"),
@@ -24,11 +22,9 @@ class ExpressionParsingTests {
         fun testWithArbitrary() {
             assertEquals(
                 expected = DictConstructor(
-                    content = TableConstructor(
-                        entries = mapOf(
-                            SymbolLiteral.of("foo") to Reference(Symbol.of("baz1")),
-                            Reference(Symbol.of("baz")) to Reference(Symbol.of("baz2"))
-                        ),
+                    content = mapOf(
+                        SymbolLiteral.of("foo") to Reference(Symbol.of("baz1")),
+                        Reference(Symbol.of("baz")) to Reference(Symbol.of("baz2"))
                     ),
                 ),
                 actual = Expression.parse("{foo = baz1, [baz] = baz2}"),
@@ -40,12 +36,10 @@ class ExpressionParsingTests {
             assertEquals(
                 // TODO: Fix this, those int literals are artificial
                 expected = DictConstructor(
-                    content = TableConstructor(
-                        entries = mapOf(
-                            IntLiteral.of(0) to Reference(Symbol.of("foo")),
-                            IntLiteral.of(1) to Reference(Symbol.of("bar")),
-                            IntLiteral.of(2) to Reference(Symbol.of("baz")),
-                        ),
+                    content = mapOf(
+                        IntLiteral.of(0) to Reference(Symbol.of("foo")),
+                        IntLiteral.of(1) to Reference(Symbol.of("bar")),
+                        IntLiteral.of(2) to Reference(Symbol.of("baz")),
                     ),
                 ),
                 actual = Expression.parse("{foo, bar, baz}"),
@@ -138,10 +132,8 @@ class ExpressionParsingTests {
             assertEquals(
                 expected = Application(
                     subject = DictConstructor(
-                        content = TableConstructor(
-                            entries = mapOf(
-                                SymbolLiteral.of("foo") to SymbolLiteral.of("bar"),
-                            ),
+                        content = mapOf(
+                            SymbolLiteral.of("foo") to SymbolLiteral.of("bar"),
                         ),
                     ),
                     argument = SymbolLiteral.of("foo"),
