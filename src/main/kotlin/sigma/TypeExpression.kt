@@ -1,6 +1,5 @@
-package sigma.expressions
+package sigma
 
-import sigma.TypeContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.types.Type
 import sigma.values.Symbol

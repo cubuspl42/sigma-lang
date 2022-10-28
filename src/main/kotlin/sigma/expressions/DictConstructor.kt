@@ -7,6 +7,8 @@ import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.values.PrimitiveValue
 import sigma.values.tables.DictTable
 import sigma.values.tables.Scope
+import sigma.types.DictType
+import sigma.types.Type
 
 data class DictConstructor(
     val content: Map<Expression, Expression>,
@@ -43,6 +45,7 @@ data class DictConstructor(
         private fun buildFromArray(
             ctx: SigmaParser.ArrayContext,
         ): Map<Expression, Expression> = ctx.bindImage().withIndex().associate { (index, imageCtx) ->
+            // Note: When arbitrary binds aren't supported, then these int literals can be changed to values
             IntLiteral.of(index) to Expression.build(imageCtx.image)
         }
 
@@ -60,6 +63,8 @@ data class DictConstructor(
     }
 
     override fun dump(): String = "(dict constructor)"
+
+    override fun inferType(): Type = DictType
 
     override fun evaluate(
         context: Scope,
