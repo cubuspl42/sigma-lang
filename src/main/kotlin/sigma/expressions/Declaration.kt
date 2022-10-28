@@ -11,13 +11,13 @@ data class Declaration(
     val valueType: TypeExpression? = null,
     val value: Expression,
 ) {
-    fun determineType(
-        context: StaticScope,
-    ): Type = valueType?.evaluate(
-        context = context,
-    ) ?: value.inferType(
-        scope = context,
-    )
+    val determinedType: TypeExpression = object : TypeExpression {
+        override fun evaluate(context: StaticScope): Type? {
+            val declaredType = valueType ?: return value.inferType(scope = context)
+
+            return declaredType.evaluate(context = context)
+        }
+    }
 
     companion object {
         fun build(

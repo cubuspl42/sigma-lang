@@ -31,7 +31,7 @@ data class LetExpression(
         val innerValueScope = LoopedStaticValueScope(
             context = scope,
             declarations = declarations.associate {
-                it.name to it.value
+                it.name to it.determinedType
             },
         )
 

@@ -82,5 +82,22 @@ class LetExpressionTests {
                 actual = type,
             )
         }
+
+        @Test
+        fun testInferred() {
+            val type = Expression.parse(
+                source = """
+                    let {
+                        a: Symbol = `foo`,
+                        b = a,
+                    } in b
+                """.trimIndent()
+            ).obtainType()
+
+            assertEquals(
+                expected = SymbolType,
+                actual = type,
+            )
+        }
     }
 }
