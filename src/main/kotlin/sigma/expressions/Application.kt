@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import sigma.Thunk
 import sigma.values.FunctionValue
 import sigma.values.IntValue
 import sigma.values.Symbol
@@ -68,26 +69,16 @@ data class Application(
 
     override fun evaluate(
         context: Table,
-    ): Value {
-        ++depth
-
-//        if (depth > 1000) {
-//            println("Going deep...")
-//        }
-
+    ): Thunk {
         val subjectValue = subject.evaluate(context = context)
 
         if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
 
         val argumentValue = argument.evaluate(context = context)
 
-//        println("Calling ${subject.dump()} with argument ${argumentValue.dump()}")
-
         val image = subjectValue.apply(
-            argument = argumentValue,
-        ) ?: throw IllegalStateException("Subject is not defined over ${argumentValue.dump()}")
-
-        --depth
+            argument = argumentValue.obtain(),
+        )
 
         return image
     }

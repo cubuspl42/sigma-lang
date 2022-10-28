@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import sigma.Thunk
 import sigma.values.Symbol
 import sigma.values.tables.Table
 import sigma.values.Value
@@ -18,7 +19,7 @@ data class Reference(
 
     override fun evaluate(
         context: Table,
-    ): Value = context.apply(referee)
+    ): Thunk = context.apply(referee)
 
     override fun dump(): String = referee.dump()
 }

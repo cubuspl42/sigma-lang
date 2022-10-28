@@ -1,5 +1,6 @@
 package sigma.values.tables
 
+import sigma.Thunk
 import sigma.expressions.Expression
 import sigma.values.Symbol
 import sigma.values.Value
@@ -12,7 +13,7 @@ class LoopedScope(
 ) : Scope() {
     private val environment: Table = this.chainWith(context)
 
-    override fun get(name: Symbol): Value? {
+    override fun get(name: Symbol): Thunk? {
         val value = declarations[name] ?: return context.read(
             argument = name,
         )

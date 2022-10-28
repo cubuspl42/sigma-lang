@@ -1,6 +1,7 @@
 package sigma.values
 
 import sigma.ArgumentTable
+import sigma.Thunk
 import sigma.expressions.Expression
 import sigma.values.tables.ChainedTable
 import sigma.values.tables.Table
@@ -12,7 +13,7 @@ class Closure(
 ) : ComputableFunctionValue() {
     override fun apply(
         argument: Value,
-    ): Value = image.evaluate(
+    ): Thunk = image.evaluate(
         context = ChainedTable(
             context = context,
             table = ArgumentTable(

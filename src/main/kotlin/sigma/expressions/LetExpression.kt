@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import sigma.Thunk
 import sigma.values.tables.LoopedScope
 import sigma.values.tables.Table
 import sigma.values.Value
@@ -24,7 +25,7 @@ data class LetExpression(
 
     override fun evaluate(
         context: Table,
-    ): Value {
+    ): Thunk {
         val scope = LoopedScope(
             context = context,
             declarations = declarations.associate {

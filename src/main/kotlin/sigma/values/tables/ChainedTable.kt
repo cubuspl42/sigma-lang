@@ -1,5 +1,6 @@
 package sigma.values.tables
 
+import sigma.Thunk
 import sigma.values.Value
 
 class ChainedTable(
@@ -15,5 +16,9 @@ class ChainedTable(
 
     override fun read(
         argument: Value,
-    ): Value? = table.read(argument = argument) ?: context.read(argument = argument)
+    ): Thunk? = table.read(
+        argument = argument,
+    ) ?: context.read(
+        argument = argument,
+    )
 }
