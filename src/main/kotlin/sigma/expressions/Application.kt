@@ -44,10 +44,16 @@ data class Application(
                 subject = Reference(
                     referee = Symbol.of(prototype.functionName),
                 ),
-                argument = DictConstructor.of(
-                    mapOf(
-                        SymbolLiteral(symbol = prototype.leftArgument) to leftExpression,
-                        SymbolLiteral(symbol = prototype.rightArgument) to rightExpression,
+                argument = DictConstructor(
+                    content = listOf(
+                        DictConstructor.SymbolAssignment(
+                            name = prototype.leftArgument,
+                            value = leftExpression,
+                        ),
+                        DictConstructor.SymbolAssignment(
+                            name = prototype.rightArgument,
+                            value = rightExpression,
+                        ),
                     ),
                 ),
             )

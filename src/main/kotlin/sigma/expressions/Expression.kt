@@ -100,6 +100,8 @@ sealed class Expression {
         override fun obtain(): Value = this@Expression.evaluate(
             context = scope,
         ).obtain()
+
+        override fun dump(): String = "(bound thunk)"
     }
 
     fun obtain(): Value = evaluate(context = GlobalContext).obtain()

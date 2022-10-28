@@ -14,4 +14,6 @@ abstract class Thunk {
     override fun toString(): String = "Thunk"
 
     abstract fun obtain(): Value
+
+    abstract fun dump(): String
 }
