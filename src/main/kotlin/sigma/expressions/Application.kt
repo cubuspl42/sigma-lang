@@ -1,5 +1,10 @@
-package sigma
+package sigma.expressions
 
+import sigma.FunctionValue
+import sigma.IntValue
+import sigma.Symbol
+import sigma.Table
+import sigma.Value
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext

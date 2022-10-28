@@ -1,5 +1,7 @@
 package sigma
 
+import sigma.expressions.Expression
+
 abstract class AssociativeTable(
     private val associations: Map<Value, Expression>,
 ) : Table() {

@@ -1,5 +1,7 @@
-package sigma
+package sigma.expressions
 
+import sigma.DictAssociativeTable
+import sigma.Table
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.DictArrayAltContext
 import sigma.parser.antlr.SigmaParser.DictContext

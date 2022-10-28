@@ -1,5 +1,7 @@
 package sigma
 
+import sigma.expressions.Expression
+
 class Closure(
     private val context: Table,
     private val argumentName: Symbol,

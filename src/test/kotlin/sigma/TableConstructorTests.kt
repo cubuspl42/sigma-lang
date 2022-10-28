@@ -1,5 +1,8 @@
 package sigma
 
+import sigma.expressions.Expression
+import sigma.expressions.Reference
+import sigma.expressions.SymbolLiteral
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

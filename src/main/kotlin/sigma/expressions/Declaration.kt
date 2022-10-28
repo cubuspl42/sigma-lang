@@ -1,5 +1,6 @@
-package sigma
+package sigma.expressions
 
+import sigma.Symbol
 import sigma.parser.antlr.SigmaParser.DeclarationContext
 
 data class Declaration(

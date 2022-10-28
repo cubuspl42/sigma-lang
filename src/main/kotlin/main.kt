@@ -1,6 +1,6 @@
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.Expression
+import sigma.expressions.Expression
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import java.lang.management.ManagementFactory

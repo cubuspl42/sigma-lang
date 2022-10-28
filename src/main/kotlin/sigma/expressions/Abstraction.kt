@@ -1,5 +1,9 @@
-package sigma
+package sigma.expressions
 
+import sigma.Closure
+import sigma.Symbol
+import sigma.Table
+import sigma.Value
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 
 data class Abstraction(
