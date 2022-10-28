@@ -4,7 +4,8 @@ import sigma.expressions.Expression
 import sigma.values.Symbol
 import sigma.values.Value
 
-abstract class AssociativeTable(
+class DictTable(
+    private val environment: Table,
     private val associations: Map<Value, Expression>,
 ) : Table() {
     override fun read(
@@ -34,6 +35,4 @@ abstract class AssociativeTable(
         is Symbol -> key.dump()
         else -> "[${key.dump()}]"
     }
-
-    abstract val environment: Table
 }
