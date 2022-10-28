@@ -49,20 +49,12 @@ abstract class BindMapConstructor {
     }
 
     protected abstract val binds: List<Bind<Expression>>
-
-    fun evaluateKeys(
-        environment: Table,
-    ): BindMap = BindMap(binds = binds.map {
-        Bind(
-            key = it.key.evaluate(context = environment),
-            image = it.image,
-        )
-    })
 }
 
 // Idea: Rename to BindSequence? Hierarchy (TableBindSequence, ArrayBindSequence) ?
 // Idea: Table.buildEntryMap(ctx)?
 // Thought: Is this ok that this is a map? Do expressions have identity at this level?
+// Thought: Isn't this now 1:1 with DictConstructor?
 data class TableConstructor(
     val entries: Map<Expression, Expression>,
 ) {
@@ -124,7 +116,7 @@ class ExpressionTable(
 }
 
 class BindMap(
-    override val binds: List<Bind<Value>>,
+    override val binds: List<Bind<PrimitiveValue>>,
 ) : BindMapConstructor() {
     companion object {
         fun of(

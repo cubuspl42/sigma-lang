@@ -1,11 +1,19 @@
 package sigma
 
-data class UndefinedValue(
-    val name: Value,
+class UndefinedValue private constructor(
+    val name: Value? = null,
 ) : Value() {
+    companion object {
+        val undefined = UndefinedValue(name = null)
+
+        fun withName(
+            name: Value,
+        ): UndefinedValue = UndefinedValue(name = name)
+    }
+
     init {
-        if (Symbol("if") == name) {
-            println("if...")
+        if (Symbol("foo") == name) {
+            println()
         }
     }
 
@@ -17,7 +25,14 @@ data class UndefinedValue(
         override fun dump(): String = "(isUndefined)"
     }
 
-    override fun isSame(other: Value): Boolean = other is UndefinedValue
+    override fun equals(other: Any?): Boolean = other is UndefinedValue
+
+    override fun hashCode(): Int = name.hashCode()
+
+    override fun toString(): String = listOf(
+        "undefined",
+        name?.dump()?.let { "($it)" },
+    ).joinToString(separator = " ")
 
     override fun dump(): String = "undefined"
 }

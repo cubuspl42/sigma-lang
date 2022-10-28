@@ -91,6 +91,7 @@ sealed interface Expression {
         }.visit(expression) ?: throw IllegalArgumentException("Can't match expression ${expression::class}")
     }
 
+    // Thought: Should `context` be `environment`?
     fun evaluate(
         context: Table = GlobalContext,
     ): Value

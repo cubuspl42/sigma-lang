@@ -1,7 +1,4 @@
 package sigma
 
-abstract class ComputableFunctionValue : FunctionValue() {
-    final override fun isSame(other: Value): Boolean {
-        throw UnsupportedOperationException()
-    }
-}
+// Thought: Is this needed anymore?
+abstract class ComputableFunctionValue : FunctionValue()

@@ -22,17 +22,15 @@ data class LetExpression(
     override fun evaluate(
         context: Table,
     ): Value {
-        val scope = LoopedAssociativeTable(
+        val scope = LoopedScope(
             context = context,
-            associations = ExpressionTable(
-                entries = declarations.associate {
-                    it.name to it.value
-                },
-            ),
+            declarations = declarations.associate {
+                it.name to it.value
+            },
         )
 
         return result.evaluate(
-            context = scope.environment,
+            context = scope,
         )
     }
 }
