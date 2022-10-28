@@ -26,17 +26,17 @@ data class LetExpression(
     override fun inferType(): Type = result.inferType()
 
     override fun evaluate(
-        context: Scope,
+        scope: Scope,
     ): Thunk {
         val scope = LoopedScope(
-            context = context,
+            context = scope,
             declarations = declarations.associate {
                 it.name to it.value
             },
         )
 
         return result.evaluate(
-            context = scope,
+            scope = scope,
         )
     }
 }

@@ -26,9 +26,9 @@ data class Abstraction(
     )
 
     override fun evaluate(
-        context: Scope,
+        scope: Scope,
     ): Value = Closure(
-        context = context,
+        context = scope,
         argumentName = argumentName,
         image = image,
     )

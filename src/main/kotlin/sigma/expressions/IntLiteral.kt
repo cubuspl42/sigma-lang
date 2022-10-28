@@ -26,7 +26,7 @@ data class IntLiteral(
     override fun inferType(): Type = IntType
 
     override fun evaluate(
-        context: Scope,
+        scope: Scope,
     ): Value = value
 
     override fun dump(): String = value.dump()

@@ -98,19 +98,18 @@ sealed class Expression {
 
     fun bind(scope: Scope): Thunk = object : Thunk() {
         override fun obtain(): Value = this@Expression.evaluate(
-            context = scope,
+            scope = scope,
         ).obtain()
 
         override fun dump(): String = "(bound thunk)"
     }
 
-    fun obtain(): Value = evaluate(context = GlobalContext).obtain()
+    fun obtain(): Value = evaluate(scope = GlobalContext).obtain()
 
     abstract fun inferType(): Type
 
-    // Thought: Should `context` be `environment`?
     abstract fun evaluate(
-        context: Scope,
+        scope: Scope,
     ): Thunk
 
     abstract fun dump(): String
