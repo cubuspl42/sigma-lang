@@ -1,5 +1,6 @@
 package sigma.values.tables
 
+import sigma.Thunk
 import sigma.expressions.Expression
 import sigma.values.PrimitiveValue
 import sigma.values.Symbol
@@ -11,7 +12,7 @@ class DictTable(
 ) : Table() {
     override fun read(
         argument: Value,
-    ): Value? = associations[argument]?.evaluate(
+    ): Thunk? = associations[argument]?.evaluate(
         context = environment,
     )
 
@@ -24,7 +25,7 @@ class DictTable(
 
         return entries.joinToString(separator = ", ") {
             val keyStr = dumpKey(key = it.key)
-            val imageStr = it.value.dump()
+            val imageStr = it.value.obtain().dump()
 
             "$keyStr = $imageStr"
         }

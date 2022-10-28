@@ -69,7 +69,7 @@ private fun solveProblem(n: Int): Value {
 
     val result = root.evaluate()
 
-    return result
+    return result.obtain()
 }
 
 private fun getResourceAsText(

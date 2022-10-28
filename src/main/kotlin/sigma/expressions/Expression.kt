@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import sigma.GlobalContext
+import sigma.Thunk
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.AbstractionAltContext
@@ -97,7 +98,7 @@ sealed interface Expression {
     // Thought: Should `context` be `environment`?
     fun evaluate(
         context: Table = GlobalContext,
-    ): Value
+    ): Thunk
 
     fun dump(): String
 }

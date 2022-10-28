@@ -1,5 +1,7 @@
 package sigma.values
 
+import sigma.Thunk
+
 class UndefinedValue private constructor(
     val name: Value? = null,
 ) : Value() {
@@ -14,7 +16,7 @@ class UndefinedValue private constructor(
     object IsUndefined : ComputableFunctionValue() {
         override fun apply(
             argument: Value,
-        ): Value = BoolValue(argument is UndefinedValue)
+        ): Thunk = BoolValue(argument is UndefinedValue)
 
         override fun dump(): String = "(isUndefined)"
     }

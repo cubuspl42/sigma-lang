@@ -1,5 +1,7 @@
 package sigma.values
 
+import sigma.Thunk
+
 data class BoolValue(
     val value: Boolean,
 ) : PrimitiveValue() {
@@ -14,7 +16,7 @@ data class BoolValue(
             val test = argument as BoolValue
 
             return object : ComputableFunctionValue() {
-                override fun apply(argument: Value): Value {
+                override fun apply(argument: Value): Thunk {
                     val branches = argument as FunctionValue
 
                     return when {

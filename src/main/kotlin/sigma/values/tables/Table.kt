@@ -1,5 +1,6 @@
 package sigma.values.tables
 
+import sigma.Thunk
 import sigma.values.FunctionValue
 import sigma.values.UndefinedValue
 import sigma.values.Value
@@ -8,7 +9,7 @@ import sigma.values.Value
 abstract class Table : FunctionValue() {
     final override fun apply(
         argument: Value,
-    ): Value = read(
+    ): Thunk = read(
         argument = argument,
     ) ?: UndefinedValue.withName(
         name = argument,
@@ -33,7 +34,7 @@ abstract class Table : FunctionValue() {
     // Idea: Rename to `key`?
     abstract fun read(
         argument: Value,
-    ): Value?
+    ): Thunk?
 
     abstract fun dumpContent(): String?
 }

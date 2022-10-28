@@ -1,5 +1,6 @@
 package sigma.values
 
+import sigma.Thunk
 import sigma.values.tables.ChainedTable
 import sigma.values.tables.Table
 
@@ -24,5 +25,5 @@ abstract class FunctionValue : Value() {
 
     abstract fun apply(
         argument: Value,
-    ): Value
+    ): Thunk
 }
