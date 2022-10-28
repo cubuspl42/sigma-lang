@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import sigma.StaticScope
 import sigma.parser.antlr.SigmaParser
 import sigma.types.IntType
 import sigma.types.Type
@@ -23,7 +24,7 @@ data class IntLiteral(
         )
     }
 
-    override fun inferType(): Type = IntType
+    override fun inferType(scope: StaticScope): Type = IntType
 
     override fun evaluate(
         scope: Scope,

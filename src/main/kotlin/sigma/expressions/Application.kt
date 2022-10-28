@@ -1,6 +1,7 @@
 package sigma.expressions
 
 import sigma.BinaryOperationPrototype
+import sigma.StaticScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
@@ -74,8 +75,10 @@ data class Application(
         )
     }
 
-    override fun inferType(): Type {
-        val subjectType = subject.inferType() as? FunctionType ?: throw TypeError(
+    override fun inferType(scope: StaticScope): Type {
+        val subjectType = subject.inferType(
+            scope = scope,
+        ) as? FunctionType ?: throw TypeError(
             message = "Only functions can be called",
         )
 

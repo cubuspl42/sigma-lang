@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import sigma.StaticScope
 import sigma.parser.antlr.SigmaParser
 import sigma.types.SymbolType
 import sigma.types.Type
@@ -22,7 +23,7 @@ data class SymbolLiteral(
         )
     }
 
-    override fun inferType(): Type = SymbolType
+    override fun inferType(scope: StaticScope): Type = SymbolType
 
     override fun evaluate(
         scope: Scope,

@@ -1,10 +1,12 @@
 package sigma.expressions
 
+import sigma.StaticScope
 import sigma.Thunk
 import sigma.values.tables.LoopedScope
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
 import sigma.values.tables.Scope
 import sigma.types.Type
+import sigma.values.LoopedStaticValueScope
 
 data class LetExpression(
     val declarations: List<Declaration>,
@@ -23,12 +25,27 @@ data class LetExpression(
 
     override fun dump(): String = "(let expression)"
 
-    override fun inferType(): Type = result.inferType()
+    override fun inferType(
+        scope: StaticScope,
+    ): Type {
+        val innerValueScope = LoopedStaticValueScope(
+            context = scope,
+            declarations = declarations.associate {
+                it.name to it.value
+            },
+        )
+
+        return result.inferType(
+            scope = scope.copy(
+                valueScope = innerValueScope,
+            ),
+        )
+    }
 
     override fun evaluate(
         scope: Scope,
     ): Thunk {
-        val scope = LoopedScope(
+        val innerScope = LoopedScope(
             context = scope,
             declarations = declarations.associate {
                 it.name to it.value
@@ -36,7 +53,7 @@ data class LetExpression(
         )
 
         return result.evaluate(
-            scope = scope,
+            scope = innerScope,
         )
     }
 }

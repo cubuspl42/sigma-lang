@@ -1,8 +1,8 @@
 package sigma.expressions
 
-import sigma.GlobalTypeContext
 import sigma.TypeReference
 import sigma.types.IntType
+import sigma.types.SymbolType
 import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -69,22 +69,16 @@ class LetExpressionTests {
     object TypeCheckingTests {
         @Test
         fun testSimple() {
-            val expression = Expression.parse(
+            val type = Expression.parse(
                 source = """
                     let {
-                        a: Int = b,
+                        a: Symbol = `foo`,
                     } in a
                 """.trimIndent()
-            ) as LetExpression
-
-            val declaration = expression.declarations.single()
-
-            val type = declaration.valueType!!.evaluate(
-                context = GlobalTypeContext,
-            )
+            ).obtainType()
 
             assertEquals(
-                expected = IntType,
+                expected = SymbolType,
                 actual = type,
             )
         }

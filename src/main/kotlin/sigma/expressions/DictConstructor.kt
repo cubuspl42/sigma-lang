@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import sigma.StaticScope
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.DictArrayAltContext
 import sigma.parser.antlr.SigmaParser.DictContext
@@ -85,7 +86,7 @@ data class DictConstructor(
 
     override fun dump(): String = "(dict constructor)"
 
-    override fun inferType(): Type = DictType
+    override fun inferType(scope: StaticScope): Type = DictType
 
     override fun evaluate(
         scope: Scope,
