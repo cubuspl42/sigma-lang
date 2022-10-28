@@ -1,8 +1,6 @@
 package sigma.values
 
 import sigma.Thunk
-import sigma.values.tables.ChainedTable
-import sigma.values.tables.Table
 
 abstract class FunctionValue : Value() {
     object Link : ComputableFunctionValue() {
@@ -11,13 +9,21 @@ abstract class FunctionValue : Value() {
         ): Value {
             argument as FunctionValue
 
-            val primary = argument.apply(Symbol.of("primary")) as Table
-            val secondary = argument.apply(Symbol.of("secondary")) as Table
+            val primary = argument.apply(Symbol.of("primary")) as FunctionValue
+            val secondary = argument.apply(Symbol.of("secondary")) as FunctionValue
 
-            return ChainedTable(
-                table = primary,
-                context = secondary,
-            )
+            return object : FunctionValue() {
+                override fun apply(argument: Value): Thunk {
+                    val value = primary.apply(argument = argument)
+
+                    return when (value) {
+                        is UndefinedValue -> secondary.apply(argument = argument)
+                        else -> value
+                    }
+                }
+
+                override fun dump(): String = "${primary.dump()} .. ${secondary.dump()}"
+            }
         }
 
         override fun dump(): String = "(link function)"
