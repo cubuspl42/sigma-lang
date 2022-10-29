@@ -1,7 +1,7 @@
 package sigma.expressions
 
 import sigma.StaticScope
-import sigma.parser.antlr.SigmaParser
+import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
 import sigma.types.SymbolType
 import sigma.types.Type
 import sigma.values.Symbol
@@ -17,9 +17,11 @@ data class SymbolLiteral(
         )
 
         fun build(
-            ctx: SigmaParser.IdentifierContext,
+            ctx: SymbolLiteralAltContext,
         ): SymbolLiteral = SymbolLiteral(
-            symbol = Symbol(name = ctx.text),
+            symbol = Symbol(
+                name = ctx.text.drop(1).dropLast(1),
+            ),
         )
     }
 

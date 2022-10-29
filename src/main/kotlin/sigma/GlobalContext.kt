@@ -8,17 +8,7 @@ import sigma.values.UndefinedValue
 import sigma.values.Value
 import sigma.values.tables.Scope
 
-private object IntegerTable : Scope() {
-    override fun get(name: Symbol): Value? {
-        val integer = name.name?.toIntOrNull()
-
-        return integer?.let { IntValue(it) }
-    }
-
-    override fun dumpContent(): String = "(integer table)"
-}
-
-private object BuiltinContext : Scope() {
+object GlobalContext : Scope() {
     private val builtins: Map<Symbol, Value> = mapOf(
         Symbol.of("false") to BoolValue.False,
         Symbol.of("true") to BoolValue.True,
@@ -41,7 +31,3 @@ private object BuiltinContext : Scope() {
 
     override fun dumpContent(): String = "(built-in context)"
 }
-
-val GlobalContext: Scope = BuiltinContext.chainWith(
-    context = IntegerTable,
-)

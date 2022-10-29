@@ -2,6 +2,7 @@ package sigma.expressions
 
 import sigma.StaticScope
 import sigma.parser.antlr.SigmaParser
+import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.types.IntType
 import sigma.types.Type
 import sigma.values.IntValue
@@ -10,17 +11,17 @@ import sigma.values.Value
 import sigma.values.tables.Scope
 
 data class IntLiteral(
-    val value: IntValue,
+    val value: Int,
 ) : Expression() {
     companion object {
         fun of(value: Int) = IntLiteral(
-            value = IntValue(value)
+            value = value,
         )
 
         fun build(
-            ctx: SigmaParser.IdentifierContext,
-        ): SymbolLiteral = SymbolLiteral(
-            symbol = Symbol(name = ctx.text),
+            ctx: IntLiteralAltContext,
+        ): IntLiteral = IntLiteral(
+            value = ctx.text.toInt(),
         )
     }
 
@@ -28,7 +29,9 @@ data class IntLiteral(
 
     override fun evaluate(
         scope: Scope,
-    ): Value = value
+    ): Value = IntValue(
+        value = value,
+    )
 
-    override fun dump(): String = value.dump()
+    override fun dump(): String = value.toString()
 }
