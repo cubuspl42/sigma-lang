@@ -18,10 +18,11 @@ import sigma.parser.antlr.SigmaParser.CallableExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallableParenAltContext
 import sigma.parser.antlr.SigmaParser.CallableReferenceAltContext
 import sigma.parser.antlr.SigmaParser.DictAltContext
+import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.parser.antlr.SigmaParser.LetExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ParenExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ReferenceAltContext
-import sigma.parser.antlr.SigmaParser.SymbolAltContext
+import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.types.Type
 import sigma.values.Value
@@ -68,9 +69,13 @@ sealed class Expression {
                 ctx: LetExpressionAltContext,
             ): Expression = LetExpression.build(ctx.letExpression())
 
-            override fun visitSymbolAlt(
-                ctx: SymbolAltContext,
-            ): Expression = SymbolLiteral.build(ctx.symbol().identifier())
+            override fun visitSymbolLiteralAlt(
+                ctx: SymbolLiteralAltContext,
+            ): Expression = SymbolLiteral.build(ctx)
+
+            override fun visitIntLiteralAlt(
+                ctx: IntLiteralAltContext,
+            ): Expression = IntLiteral.build(ctx)
 
             override fun visitCallableExpressionAlt(
                 ctx: CallableExpressionAltContext,

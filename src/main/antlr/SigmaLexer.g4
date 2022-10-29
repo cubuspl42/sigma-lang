@@ -26,7 +26,10 @@ Lt : '<' ;
 Gt : '>' ;
 
 Arrow : '=>' ;
-CharSequence : ([a-zA-Z0-9])+ ;
+Identifier : [a-zA-Z] [a-zA-Z0-9]* ;
+
+IntLiteral : [0-9]+ ;
+SymbolLiteral : Backtick [a-zA-Z0-9]+ Backtick ;
 
 Whitespace : (' ' | '\n') -> skip ;
 LineComment : '//' ~[\r\n]* -> skip ;

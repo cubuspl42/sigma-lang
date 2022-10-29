@@ -21,7 +21,8 @@ expression
     | abstraction # abstractionAlt
     | dict # dictAlt
     | letExpression # letExpressionAlt
-    | symbol # symbolAlt
+    | SymbolLiteral # symbolLiteralAlt
+    | IntLiteral # intLiteralAlt
     | callableExpression # callableExpressionAlt
     ;
 
@@ -46,7 +47,7 @@ abstraction
     : argument=identifier Arrow image=expression ;
 
 identifier
-    : CharSequence ;
+    : Identifier ;
 
 dict
     : content=table # dictTableAlt
@@ -75,9 +76,6 @@ letScope
 declaration
     : name=identifier (Colon valueType=typeExpression)? Assign value=expression
     ;
-
-symbol
-    : Backtick identifier Backtick ;
 
 typeExpression
     : reference ;
