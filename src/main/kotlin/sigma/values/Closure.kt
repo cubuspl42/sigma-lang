@@ -4,6 +4,7 @@ import sigma.ArgumentTable
 import sigma.Thunk
 import sigma.expressions.Expression
 import sigma.values.tables.Scope
+import sigma.values.tables.chainWith
 
 class Closure(
     private val context: Scope,

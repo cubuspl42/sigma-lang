@@ -8,10 +8,8 @@ import sigma.values.tables.Scope
 class ArgumentTable(
     private val name: Symbol,
     private val value: Value,
-) : Scope() {
+) : Scope {
     override fun get(
         name: Symbol,
     ): Value? = value.takeIf { name.isSame(this.name) }
-
-    override fun dumpContent(): String = "${name.name} = ${value.dump()} [argument]"
 }

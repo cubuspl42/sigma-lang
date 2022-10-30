@@ -7,7 +7,7 @@ import sigma.values.Symbol
 class LoopedScope(
     private val context: Scope,
     private val declarations: Map<Symbol, Expression>,
-) : Scope() {
+) : Scope {
     override fun get(
         name: Symbol,
     ): Thunk? = declarations[name]?.evaluate(
@@ -15,6 +15,4 @@ class LoopedScope(
     ) ?: context.get(
         name = name,
     )
-
-    override fun dumpContent(): String = "(looped scope)"
 }

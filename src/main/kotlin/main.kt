@@ -24,7 +24,7 @@ fun main() {
 
     val root = Expression.build(program.expression())
 
-    val result = root.obtain()
+    val result = root.evaluateAsRoot()
 
     println(result)
 }

@@ -15,8 +15,8 @@ internal class ArgumentTableTests {
 
         assertEquals(
             expected = IntValue(1),
-            actual = argumentTable.read(
-                argument = Symbol.of("arg"),
+            actual = argumentTable.get(
+                name = Symbol.of("arg"),
             ),
         )
     }

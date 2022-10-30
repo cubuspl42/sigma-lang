@@ -24,13 +24,6 @@ abstract class Table : FunctionValue() {
         }
     }
 
-    fun chainWith(
-        context: Scope,
-    ): Scope = ChainedScope(
-        context = context,
-        table = this,
-    )
-
     // Idea: Rename to `key`?
     abstract fun read(
         argument: Value,
