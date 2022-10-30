@@ -2,14 +2,14 @@ package sigma.values.tables
 
 import sigma.Thunk
 import sigma.values.Symbol
-import sigma.values.Value
 
-abstract class Scope : Table() {
-    final override fun read(argument: Value): Thunk? {
-        if (argument !is Symbol) return null
-
-        return get(name = argument)
-    }
-
-    abstract fun get(name: Symbol): Thunk?
+interface Scope {
+    fun get(name: Symbol): Thunk?
 }
+
+fun Scope.chainWith(
+    context: Scope,
+): Scope = ChainedScope(
+    context = context,
+    scope = this,
+)

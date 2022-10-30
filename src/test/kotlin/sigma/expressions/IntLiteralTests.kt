@@ -24,7 +24,7 @@ class IntLiteralTests {
         fun test() {
             assertEquals(
                 expected = IntValue(123),
-                actual = Expression.parse(source = "123").obtain(),
+                actual = Expression.parse(source = "123").evaluateAsRoot(),
             )
         }
     }

@@ -3,7 +3,7 @@ package sigma.expressions
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
-import sigma.GlobalContext
+import sigma.BuiltinScope
 import sigma.GlobalStaticScope
 import sigma.StaticScope
 import sigma.Thunk
@@ -113,7 +113,7 @@ sealed class Expression {
 
     fun obtainType() = inferType(scope = GlobalStaticScope)
 
-    fun obtain(): Value = evaluate(scope = GlobalContext).obtain()
+    fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).obtain()
 
     abstract fun inferType(
         scope: StaticScope,

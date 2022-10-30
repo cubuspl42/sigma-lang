@@ -2,7 +2,6 @@ package sigma
 
 import sigma.expressions.Expression
 import sigma.values.Symbol
-import sigma.values.UndefinedValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -19,25 +18,7 @@ class ExpressionEvaluationTests {
                             m = n,
                         } in m
                     """.trimIndent()
-                ).obtain(),
-            )
-        }
-    }
-
-    object ApplicationTests {
-        @Test
-        fun testDictSubject() {
-            assertEquals(
-                expected = Symbol("bar"),
-                actual = Expression.parse("{foo = `bar`}[`foo`]").obtain(),
-            )
-        }
-
-        @Test
-        fun testSelfReferring() {
-            assertEquals(
-                expected = UndefinedValue.undefined,
-                actual = Expression.parse("{foo = `baz`, bar = foo}[`bar`]").obtain(),
+                ).evaluateAsRoot(),
             )
         }
     }
