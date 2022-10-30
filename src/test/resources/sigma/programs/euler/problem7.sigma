@@ -6,32 +6,32 @@ let {
         // Built table with ith (n * i) multiple of n and greater multiples (smaller than M)
         buildMultiplesFrom = i => let {
             ni = n * i,
-        } in if [ni >= M] [{
+        } in if[ni >= M]{
             then = {},
             else = {
                [ni] = true,
             } .. buildMultiplesFrom[i + 1],
-        }],
+        },
     } in buildMultiplesFrom[2],
 
     // Build prime table with all multiples smaller than M of all numbers up to n
-    buildNonPrimeTable = n => if [n < 2] [{
+    buildNonPrimeTable = n => if[n < 2]{
         then = {},
         else = (buildMultiplesOfNUpToM[n] .. buildNonPrimeTable[n - 1]),
-    }],
+    },
 
     nonPrimeTable = buildNonPrimeTable[M],
 
     // Find all primes <= n
-    findPrimesLte = n => if [n < 2] [{
+    findPrimesLte = n => if[n < 2]{
         then = {},
         else = let {
             smallerPrimes = findPrimesLte[n - 1]
-        } in if [isUndefined[nonPrimeTable[n]]] [{
+        } in if[isUndefined[nonPrimeTable[n]]]{
             then = { [n] = true } .. smallerPrimes,
             else = smallerPrimes,
-        }],
-    }],
+        },
+    },
 
     primeTable = findPrimesLte[M - 1],
 
@@ -42,21 +42,21 @@ let {
 
             isNPrime = isUndefined[nonPrimeTable[n]],
             nextN = n + 1,
-        } in (if [isNPrime] [{
-            then = if [nextPrimeId == i] [{
+        } in if[isNPrime]{
+            then = if[nextPrimeId == i]{
                 then = n,
-                else = find[{
+                else = find{
                     n = nextN,
                     nextPrimeId = (nextPrimeId + 1),
-                }],
-            }],
-            else = find[{
+                },
+            },
+            else = find{
                 n = nextN,
                 nextPrimeId = nextPrimeId,
-            }],
-        }]),
-    } in find[{
+            },
+        },
+    } in find{
         n = 1,
         nextPrimeId = 0,
-    }],
+    },
 } in findIthPrime[20]
