@@ -2,9 +2,9 @@ let {
     M = 100,
 
     // Build table with all multiples of n smaller than M
-    buildMultiplesOfNUpToM = n => let {
+    buildMultiplesOfNUpToM = [n] => let {
         // Built table with ith (n * i) multiple of n and greater multiples (smaller than M)
-        buildMultiplesFrom = i => let {
+        buildMultiplesFrom = [i] => let {
             ni = n * i,
         } in if[ni >= M]{
             then = {},
@@ -15,7 +15,7 @@ let {
     } in buildMultiplesFrom[2],
 
     // Build prime table with all multiples smaller than M of all numbers up to n
-    buildNonPrimeTable = n => if[n < 2]{
+    buildNonPrimeTable = [n] => if[n < 2]{
         then = {},
         else = (buildMultiplesOfNUpToM[n] .. buildNonPrimeTable[n - 1]),
     },
@@ -23,7 +23,7 @@ let {
     nonPrimeTable = buildNonPrimeTable[M],
 
     // Find all primes <= n
-    findPrimesLte = n => if[n < 2]{
+    findPrimesLte = [n] => if[n < 2]{
         then = {},
         else = let {
             smallerPrimes = findPrimesLte[n - 1]
@@ -35,8 +35,8 @@ let {
 
     primeTable = findPrimesLte[M - 1],
 
-    findIthPrime = i => let {
-        find = args => let {
+    findIthPrime = [i] => let {
+        find = [args] => let {
             n = args[`n`],
             nextPrimeId = args[`nextPrimeId`],
 

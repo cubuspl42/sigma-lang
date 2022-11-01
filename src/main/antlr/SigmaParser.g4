@@ -44,7 +44,7 @@ reference
     ;
 
 abstraction
-    : argument=identifier Arrow image=expression ;
+    : LeftBracket argumentName=identifier (Colon argumentType=typeExpression)? RightBracket Arrow image=expression ;
 
 identifier
     : Identifier ;

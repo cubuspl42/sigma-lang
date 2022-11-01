@@ -2,6 +2,7 @@ package sigma.programs.euler
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
+import org.junit.jupiter.api.Disabled
 import sigma.GlobalStaticScope
 import sigma.values.BoolValue
 import sigma.expressions.Expression
@@ -22,6 +23,8 @@ class EulerProblemsTests {
     }
 
     @Test
+    // TODO: Re-enable
+    @Disabled
     fun testProblem7() {
         // For 20th prime (for performance reasons)
         assertEquals(

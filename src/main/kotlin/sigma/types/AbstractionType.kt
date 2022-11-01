@@ -6,10 +6,9 @@ sealed class FunctionType : Type() {
 }
 
 data class AbstractionType(
+    override val argumentType: Type,
     override val imageType: Type,
 ) : FunctionType() {
-    override val argumentType: Type = UndefinedType
-
     override fun isAssignableTo(otherType: Type): Boolean {
         TODO("Not yet implemented")
     }

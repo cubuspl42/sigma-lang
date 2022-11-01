@@ -30,60 +30,98 @@ object BuiltinScope : StaticValueScope, Scope {
         ),
         Symbol.of("if") to BuiltinValue(
             type = AbstractionType(
+                argumentType = UndefinedType,
                 imageType = AbstractionType(
                     // TODO: Improve this typing
+                    argumentType = UndefinedType,
                     imageType = UndefinedType,
                 ),
             ),
             value = BoolValue.If,
         ),
         Symbol.of("mul") to BuiltinValue(
-            type = AbstractionType(imageType = IntCollectiveType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = IntCollectiveType,
+            ),
             value = IntValue.Mul,
         ),
         Symbol.of("div") to BuiltinValue(
-            type = AbstractionType(imageType = IntCollectiveType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = IntCollectiveType,
+            ),
             value = IntValue.Div,
         ),
         Symbol.of("add") to BuiltinValue(
-            type = AbstractionType(imageType = IntCollectiveType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = IntCollectiveType,
+            ),
             value = IntValue.Add,
         ),
         Symbol.of("sub") to BuiltinValue(
-            type = AbstractionType(imageType = IntCollectiveType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = IntCollectiveType,
+            ),
             value = IntValue.Sub,
         ),
         Symbol.of("sq") to BuiltinValue(
-            type = AbstractionType(imageType = IntCollectiveType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = IntCollectiveType,
+            ),
             value = IntValue.Sq,
         ),
         Symbol.of("eq") to BuiltinValue(
-            type = AbstractionType(imageType = BoolType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = BoolType,
+            ),
             value = IntValue.Eq,
         ),
         Symbol.of("lt") to BuiltinValue(
-            type = AbstractionType(imageType = BoolType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = BoolType,
+            ),
             value = IntValue.Lt,
         ),
         Symbol.of("lte") to BuiltinValue(
-            type = AbstractionType(imageType = BoolType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = BoolType,
+            ),
             value = IntValue.Lte,
         ),
         Symbol.of("gt") to BuiltinValue(
-            type = AbstractionType(imageType = BoolType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = BoolType,
+            ),
             value = IntValue.Gt,
         ),
         Symbol.of("gte") to BuiltinValue(
-            type = AbstractionType(imageType = BoolType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = BoolType,
+            ),
             value = IntValue.Gte,
         ),
         Symbol.of("link") to BuiltinValue(
-            // TODO: Improve this typing
-            type = AbstractionType(imageType = UndefinedType),
+            type = AbstractionType(
+                // TODO: Improve this typing
+                argumentType = UndefinedType,
+                imageType = UndefinedType,
+            ),
             value = FunctionValue.Link,
         ),
         Symbol.of("isUndefined") to BuiltinValue(
-            type = AbstractionType(imageType = BoolType),
+            type = AbstractionType(
+                argumentType = UndefinedType,
+                imageType = BoolType,
+            ),
             value = UndefinedValue.IsUndefined,
         ),
     )
