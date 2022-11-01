@@ -404,6 +404,7 @@ object TableConstructorTests {
                     scope = FixedStaticValueScope(
                         entries = mapOf(
                             Symbol.of("key1") to AbstractionType(
+                                argumentType = IntCollectiveType,
                                 imageType = BoolType,
                             ),
                             Symbol.of("value1") to BoolType,

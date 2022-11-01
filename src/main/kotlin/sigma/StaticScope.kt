@@ -18,6 +18,18 @@ interface StaticValueScope {
         typeScope = StaticTypeScope.Empty,
         valueScope = this,
     )
+
+    fun chainWith(
+        valueScope: StaticValueScope,
+    ): StaticValueScope = object : StaticValueScope {
+        override fun getValueType(
+            valueName: Symbol,
+        ): Type? = this@StaticValueScope.getValueType(
+            valueName = valueName,
+        ) ?: valueScope.getValueType(
+            valueName = valueName,
+        )
+    }
 }
 
 data class StaticScope(
