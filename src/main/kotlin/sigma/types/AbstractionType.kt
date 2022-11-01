@@ -10,5 +10,9 @@ data class AbstractionType(
 ) : FunctionType() {
     override val argumentType: Type = UndefinedType
 
+    override fun isAssignableTo(otherType: Type): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun dump(): String = "Abstraction"
 }

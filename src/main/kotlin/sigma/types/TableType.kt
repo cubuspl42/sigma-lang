@@ -27,6 +27,10 @@ sealed class TableType : FunctionType() {
 data class StructType(
     val entries: Map<LiteralType, Type>,
 ) : TableType() {
+    override fun isAssignableTo(otherType: Type): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override val keyType: PrimitiveType
         get() = TODO("key1 | key2 | ...")
 
@@ -42,7 +46,11 @@ data class StructType(
 data class DictType(
     override val keyType: PrimitiveType,
     override val valueType: Type,
-) : TableType()
+) : TableType() {
+    override fun isAssignableTo(otherType: Type): Boolean {
+        TODO("Not yet implemented")
+    }
+}
 
 //// Type of tables with keys { 0, 1, 2, ..., n } of type Int and values of a
 //// specific type

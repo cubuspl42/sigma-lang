@@ -32,7 +32,7 @@ class LoopedStaticValueScope(
             val inferredType = it.inferType(scope = scope)
             val declaredType = it.determineDeclaredType(scope = scope) ?: return@forEach
 
-            if (declaredType != inferredType) {
+            if (!inferredType.isAssignableTo(declaredType)) {
                 throw TypeError(
                     message = "Value ${it.name.dump()} has declared type ${declaredType.dump()}, but its inferred type is ${inferredType.dump()}",
                 )

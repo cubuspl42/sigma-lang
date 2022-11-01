@@ -10,6 +10,8 @@ sealed class Type {
 
     open val asLiteral: LiteralType? = null
 
+    abstract fun isAssignableTo(otherType: Type): Boolean
+
     abstract fun dump(): String
 }
 
@@ -18,18 +20,30 @@ sealed interface LiteralType {
 }
 
 object UndefinedType : Type() {
+    override fun isAssignableTo(
+        otherType: Type,
+    ): Boolean = otherType is UndefinedType
+
     override fun dump(): String = "Undefined"
 }
 
 sealed class PrimitiveType : Type()
 
 object BoolType : PrimitiveType() {
+    override fun isAssignableTo(
+        otherType: Type,
+    ): Boolean = otherType is BoolType
+
     override fun dump(): String = "Bool"
 }
 
 sealed class IntType : PrimitiveType()
 
 object IntCollectiveType : IntType() {
+    override fun isAssignableTo(
+        otherType: Type,
+    ): Boolean = otherType is IntCollectiveType
+
     override fun dump(): String = "Int"
 }
 
@@ -47,6 +61,10 @@ data class IntLiteralType(
     override fun dump(): String = value.toString()
 
     override val asLiteral = this
+
+    override fun isAssignableTo(
+        otherType: Type,
+    ): Boolean = otherType == this || otherType is IntCollectiveType
 }
 
 data class SymbolType(
@@ -63,4 +81,8 @@ data class SymbolType(
     override fun dump(): String = value.dump()
 
     override val asLiteral = this
+
+    override fun isAssignableTo(
+        otherType: Type,
+    ): Boolean = this == otherType
 }
