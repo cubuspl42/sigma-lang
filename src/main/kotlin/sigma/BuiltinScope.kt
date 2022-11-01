@@ -1,8 +1,8 @@
 package sigma
 
 import sigma.types.BoolType
-import sigma.types.FunctionType
-import sigma.types.IntType
+import sigma.types.AbstractionType
+import sigma.types.IntCollectiveType
 import sigma.types.Type
 import sigma.types.UndefinedType
 import sigma.values.BoolValue
@@ -29,8 +29,8 @@ object BuiltinScope : StaticValueScope, Scope {
             value = BoolValue(true),
         ),
         Symbol.of("if") to BuiltinValue(
-            type = FunctionType(
-                imageType = FunctionType(
+            type = AbstractionType(
+                imageType = AbstractionType(
                     // TODO: Improve this typing
                     imageType = UndefinedType,
                 ),
@@ -38,52 +38,52 @@ object BuiltinScope : StaticValueScope, Scope {
             value = BoolValue.If,
         ),
         Symbol.of("mul") to BuiltinValue(
-            type = FunctionType(imageType = IntType),
+            type = AbstractionType(imageType = IntCollectiveType),
             value = IntValue.Mul,
         ),
         Symbol.of("div") to BuiltinValue(
-            type = FunctionType(imageType = IntType),
+            type = AbstractionType(imageType = IntCollectiveType),
             value = IntValue.Div,
         ),
         Symbol.of("add") to BuiltinValue(
-            type = FunctionType(imageType = IntType),
+            type = AbstractionType(imageType = IntCollectiveType),
             value = IntValue.Add,
         ),
         Symbol.of("sub") to BuiltinValue(
-            type = FunctionType(imageType = IntType),
+            type = AbstractionType(imageType = IntCollectiveType),
             value = IntValue.Sub,
         ),
         Symbol.of("sq") to BuiltinValue(
-            type = FunctionType(imageType = IntType),
+            type = AbstractionType(imageType = IntCollectiveType),
             value = IntValue.Sq,
         ),
         Symbol.of("eq") to BuiltinValue(
-            type = FunctionType(imageType = BoolType),
+            type = AbstractionType(imageType = BoolType),
             value = IntValue.Eq,
         ),
         Symbol.of("lt") to BuiltinValue(
-            type = FunctionType(imageType = BoolType),
+            type = AbstractionType(imageType = BoolType),
             value = IntValue.Lt,
         ),
         Symbol.of("lte") to BuiltinValue(
-            type = FunctionType(imageType = BoolType),
+            type = AbstractionType(imageType = BoolType),
             value = IntValue.Lte,
         ),
         Symbol.of("gt") to BuiltinValue(
-            type = FunctionType(imageType = BoolType),
+            type = AbstractionType(imageType = BoolType),
             value = IntValue.Gt,
         ),
         Symbol.of("gte") to BuiltinValue(
-            type = FunctionType(imageType = BoolType),
+            type = AbstractionType(imageType = BoolType),
             value = IntValue.Gte,
         ),
         Symbol.of("link") to BuiltinValue(
             // TODO: Improve this typing
-            type = FunctionType(imageType = UndefinedType),
+            type = AbstractionType(imageType = UndefinedType),
             value = FunctionValue.Link,
         ),
         Symbol.of("isUndefined") to BuiltinValue(
-            type = FunctionType(imageType = BoolType),
+            type = AbstractionType(imageType = BoolType),
             value = UndefinedValue.IsUndefined,
         ),
     )

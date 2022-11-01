@@ -1,21 +1,66 @@
 package sigma.types
 
-sealed interface Type {
-    fun dump(): String
+import sigma.values.IntValue
+import sigma.values.PrimitiveValue
+import sigma.values.Symbol
+import sigma.values.Value
+
+sealed class Type {
+    final override fun toString(): String = dump()
+
+    open val asLiteral: LiteralType? = null
+
+    abstract fun dump(): String
 }
 
-object UndefinedType : Type {
+sealed interface LiteralType {
+    val value: PrimitiveValue
+}
+
+object UndefinedType : Type() {
     override fun dump(): String = "Undefined"
 }
 
-object BoolType : Type {
+sealed class PrimitiveType : Type()
+
+object BoolType : PrimitiveType() {
     override fun dump(): String = "Bool"
 }
 
-object IntType : Type {
+sealed class IntType : PrimitiveType()
+
+object IntCollectiveType : IntType() {
     override fun dump(): String = "Int"
 }
 
-object SymbolType : Type {
-    override fun dump(): String = "Symbol"
+data class IntLiteralType(
+    override val value: IntValue,
+) : IntType(), LiteralType {
+    companion object {
+        fun of(
+            value: Int,
+        ): IntLiteralType = IntLiteralType(
+            value = IntValue(value = value),
+        )
+    }
+
+    override fun dump(): String = value.toString()
+
+    override val asLiteral = this
+}
+
+data class SymbolType(
+    override val value: Symbol,
+) : PrimitiveType(), LiteralType {
+    companion object {
+        fun of(
+            name: String,
+        ): SymbolType = SymbolType(
+            value = Symbol.of(name = name),
+        )
+    }
+
+    override fun dump(): String = value.dump()
+
+    override val asLiteral = this
 }

@@ -1,5 +1,5 @@
 let {
-    N: Int = 100,
+    N = 100,
 
     sumOfSquares = n => if[n == 1] [{
         then = 1,
