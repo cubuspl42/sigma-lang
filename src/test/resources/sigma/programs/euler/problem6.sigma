@@ -1,25 +1,21 @@
 let {
-    N = 100,
+    N: Int = 100,
 
-    sumOfSquares = n => if[n == 1] [{
+    sumOfSquares = n => if[n == 1] {
         then = 1,
-        else = add[{
+        else = add{
             augend = sumOfSquares[n - 1],
             addend = sq[n],
-        }],
-    }],
+        },
+    },
 
-    sumOf = n => if [n == 1] [{
+    sumOf = n => if [n == 1] {
         then = 1,
         else = sumOf[n - 1] + n,
-    }],
+    },
 
     squareOfSum = n => let {
         s = sumOf[n],
     } in sq[s],
 
-    sumOfSquaresN = sumOfSquares[N],
-
-    squareOfSumN = squareOfSum[N],
-
-} in squareOfSumN - sumOfSquaresN
+} in squareOfSum[N] - sumOfSquares[N]

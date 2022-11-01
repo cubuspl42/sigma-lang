@@ -4,8 +4,10 @@ import org.junit.jupiter.api.assertThrows
 import sigma.GlobalStaticScope
 import sigma.TypeReference
 import sigma.types.BoolType
+import sigma.types.IntCollectiveType
 import sigma.types.SymbolType
 import sigma.values.Symbol
+import kotlin.math.exp
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -85,6 +87,28 @@ class LetExpressionTests {
             assertEquals(
                 expected = BoolType,
                 actual = type,
+            )
+        }
+
+        @Test
+        fun testAssignment() {
+            val expression = Expression.parse(
+                source = """
+                    let {
+                        a: Int = 0,
+                    } in a
+                """.trimIndent()
+            )
+
+            expression.validate(
+                scope = GlobalStaticScope,
+            )
+
+            assertEquals(
+                expected = IntCollectiveType,
+                actual = expression.inferType(
+                    scope = GlobalStaticScope,
+                ),
             )
         }
 
