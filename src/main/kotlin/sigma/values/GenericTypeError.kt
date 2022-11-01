@@ -1,5 +1,5 @@
 package sigma.values
 
-class TypeError(
+open class TypeError(
     message: String,
 ) : Exception(message)

@@ -1,7 +1,9 @@
 package sigma.expressions
 
+import org.junit.jupiter.api.assertThrows
+import sigma.GlobalStaticScope
 import sigma.TypeReference
-import sigma.types.IntType
+import sigma.types.BoolType
 import sigma.types.SymbolType
 import sigma.values.Symbol
 import kotlin.test.Test
@@ -68,36 +70,39 @@ class LetExpressionTests {
 
     object TypeCheckingTests {
         @Test
-        fun testSimple() {
+        fun testInferred() {
             val type = Expression.parse(
                 source = """
                     let {
-                        a: Symbol = `foo`,
-                    } in a
+                        a: Bool = false,
+                        b = a,
+                    } in b
                 """.trimIndent()
-            ).obtainType()
+            ).inferType(
+                scope = GlobalStaticScope,
+            )
 
             assertEquals(
-                expected = SymbolType,
+                expected = BoolType,
                 actual = type,
             )
         }
 
         @Test
-        fun testInferred() {
-            val type = Expression.parse(
-                source = """
-                    let {
-                        a: Symbol = `foo`,
-                        b = a,
-                    } in b
-                """.trimIndent()
-            ).obtainType()
-
-            assertEquals(
-                expected = SymbolType,
-                actual = type,
-            )
+        fun testCyclic() {
+            // TODO: Improve this
+            assertThrows<StackOverflowError> {
+                Expression.parse(
+                    source = """
+                        let {
+                            a = b,
+                            b = a,
+                        } in a
+                    """.trimIndent()
+                ).inferType(
+                    scope = GlobalStaticScope,
+                )
+            }
         }
     }
 }

@@ -63,7 +63,7 @@ sealed class Expression {
 
             override fun visitDictAlt(
                 ctx: DictAltContext,
-            ): Expression = DictConstructor.build(ctx.dict())
+            ): Expression = TableConstructor.build(ctx.dict())
 
             override fun visitLetExpressionAlt(
                 ctx: LetExpressionAltContext,
@@ -99,7 +99,7 @@ sealed class Expression {
 
             override fun visitCallableDictAlt(
                 ctx: CallableDictAltContext,
-            ): Expression = DictConstructor.build(ctx.dict())
+            ): Expression = TableConstructor.build(ctx.dict())
         }.visit(expression) ?: throw IllegalArgumentException("Can't match expression ${expression::class}")
     }
 
@@ -111,7 +111,7 @@ sealed class Expression {
         override fun dump(): String = "(bound thunk)"
     }
 
-    fun obtainType() = inferType(scope = GlobalStaticScope)
+    fun inferTypeAsRoot() = inferType(scope = GlobalStaticScope)
 
     fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).obtain()
 

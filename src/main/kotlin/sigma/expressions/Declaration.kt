@@ -5,7 +5,6 @@ import sigma.TypeExpression
 import sigma.values.Symbol
 import sigma.parser.antlr.SigmaParser.DeclarationContext
 import sigma.types.Type
-import sigma.values.TypeError
 
 data class Declaration(
     val name: Symbol,

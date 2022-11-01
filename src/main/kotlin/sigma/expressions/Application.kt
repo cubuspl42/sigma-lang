@@ -7,7 +7,7 @@ import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionDictAltContext
-import sigma.types.FunctionType
+import sigma.types.AbstractionType
 import sigma.types.Type
 import sigma.values.FunctionValue
 import sigma.values.Symbol
@@ -45,13 +45,13 @@ data class Application(
                 subject = Reference(
                     referee = Symbol.of(prototype.functionName),
                 ),
-                argument = DictConstructor(
-                    content = listOf(
-                        DictConstructor.SymbolAssignment(
+                argument = TableConstructor(
+                    entries = listOf(
+                        TableConstructor.SymbolEntryExpression(
                             name = prototype.leftArgument,
                             value = leftExpression,
                         ),
-                        DictConstructor.SymbolAssignment(
+                        TableConstructor.SymbolEntryExpression(
                             name = prototype.rightArgument,
                             value = rightExpression,
                         ),
@@ -71,14 +71,14 @@ data class Application(
             ctx: CallExpressionDictAltContext,
         ): Application = Application(
             subject = Expression.build(ctx.callee),
-            argument = DictConstructor.build(ctx.argument),
+            argument = TableConstructor.build(ctx.argument),
         )
     }
 
     override fun inferType(scope: StaticScope): Type {
         val subjectType = subject.inferType(
             scope = scope,
-        ) as? FunctionType ?: throw TypeError(
+        ) as? AbstractionType ?: throw TypeError(
             message = "Only functions can be called",
         )
 
