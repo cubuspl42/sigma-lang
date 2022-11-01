@@ -25,7 +25,11 @@ data class SymbolLiteral(
         )
     }
 
-    override fun inferType(scope: StaticScope): Type = SymbolType
+    override fun inferType(
+        scope: StaticScope,
+    ): Type = SymbolType(
+        value = symbol,
+    )
 
     override fun evaluate(
         scope: Scope,

@@ -48,7 +48,7 @@ data class LetExpression(
         scope: StaticScope,
     ) = LoopedStaticValueScope(
         context = scope,
-        declarations = declarations.associateBy { it.name },
+        declarations = declarations,
     )
 
     override fun evaluate(

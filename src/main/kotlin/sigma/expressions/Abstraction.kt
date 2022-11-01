@@ -5,7 +5,7 @@ import sigma.values.Closure
 import sigma.values.Symbol
 import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.AbstractionContext
-import sigma.types.FunctionType
+import sigma.types.AbstractionType
 import sigma.types.Type
 import sigma.values.tables.Scope
 
@@ -22,7 +22,7 @@ data class Abstraction(
         )
     }
 
-    override fun inferType(scope: StaticScope): Type = FunctionType(
+    override fun inferType(scope: StaticScope): Type = AbstractionType(
         imageType = image.inferType(scope = scope),
     )
 

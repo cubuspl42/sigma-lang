@@ -1,9 +1,8 @@
 package sigma
 
 import sigma.expressions.Application
-import sigma.expressions.DictConstructor
+import sigma.expressions.TableConstructor
 import sigma.expressions.Expression
-import sigma.expressions.IntLiteral
 import sigma.expressions.Reference
 import sigma.expressions.SymbolLiteral
 import sigma.values.Symbol
@@ -11,69 +10,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ExpressionParsingTests {
-    object DictConstructorTests {
-        @Test
-        fun testSimple() {
-            assertEquals(
-                expected = DictConstructor(
-                    content = listOf(
-                        DictConstructor.SymbolAssignment(
-                            name = Symbol.of("foo"),
-                            value = Reference(Symbol.of("baz1")),
-                        ),
-                        DictConstructor.SymbolAssignment(
-                            name = Symbol.of("bar"),
-                            value = Reference(Symbol.of("baz2")),
-                        ),
-                    ),
-                ),
-                actual = Expression.parse("{foo = baz1, bar = baz2}"),
-            )
-        }
-
-        @Test
-        fun testWithArbitrary() {
-            assertEquals(
-                expected = DictConstructor(
-                    content = listOf(
-                        DictConstructor.SymbolAssignment(
-                            name = Symbol.of("foo"),
-                            value = Reference(Symbol.of("baz1")),
-                        ),
-                        DictConstructor.ArbitraryAssignment(
-                            key = Reference(Symbol.of("baz")),
-                            value = Reference(Symbol.of("baz2")),
-                        ),
-                    ),
-                ),
-                actual = Expression.parse("{foo = baz1, [baz] = baz2}"),
-            )
-        }
-
-        @Test
-        fun testArray() {
-            assertEquals(
-                expected = DictConstructor(
-                    content = listOf(
-                        DictConstructor.ArbitraryAssignment(
-                            key = IntLiteral.of(0),
-                            value = Reference(Symbol.of("foo")),
-                        ),
-                        DictConstructor.ArbitraryAssignment(
-                            key = IntLiteral.of(1),
-                            value = Reference(Symbol.of("bar")),
-                        ),
-                        DictConstructor.ArbitraryAssignment(
-                            key = IntLiteral.of(2),
-                            value = Reference(Symbol.of("baz")),
-                        ),
-                    ),
-                ),
-                actual = Expression.parse("{foo, bar, baz}"),
-            )
-        }
-    }
-
     object ReferenceTests {
         @Test
         fun test() {
@@ -100,9 +36,9 @@ class ExpressionParsingTests {
         fun testDictSubject() {
             assertEquals(
                 expected = Application(
-                    subject = DictConstructor(
-                        content = listOf(
-                            DictConstructor.SymbolAssignment(
+                    subject = TableConstructor(
+                        entries = listOf(
+                            TableConstructor.SymbolEntryExpression(
                                 name = Symbol.of("foo"),
                                 value = SymbolLiteral.of("bar"),
                             ),
@@ -121,9 +57,9 @@ class ExpressionParsingTests {
             assertEquals(
                 expected = Application(
                     subject = Reference(Symbol.of("foo")),
-                    argument = DictConstructor(
-                        content = listOf(
-                            DictConstructor.SymbolAssignment(
+                    argument = TableConstructor(
+                        entries = listOf(
+                            TableConstructor.SymbolEntryExpression(
                                 name = Symbol.of("bar"),
                                 value = SymbolLiteral.of("baz"),
                             ),
