@@ -61,3 +61,11 @@ data class DictType(
 //) : DictType() {
 //    override val keyType: PrimitiveType = IntCollectiveType
 //}
+
+@Suppress("FunctionName")
+fun ArrayType(
+    elementType: Type,
+) = DictType(
+    keyType = IntCollectiveType,
+    valueType = elementType,
+)

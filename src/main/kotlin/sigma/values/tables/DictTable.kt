@@ -8,6 +8,12 @@ import sigma.values.Value
 class DictTable(
     private val associations: Map<PrimitiveValue, Thunk>,
 ) : Table() {
+    companion object {
+        val Empty = DictTable(
+            associations = emptyMap(),
+        )
+    }
+
     override fun read(
         argument: Value,
     ): Thunk? = associations[argument]
