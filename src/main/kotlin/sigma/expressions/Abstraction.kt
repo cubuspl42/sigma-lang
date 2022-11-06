@@ -6,6 +6,7 @@ import sigma.values.Closure
 import sigma.values.Symbol
 import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.AbstractionContext
+import sigma.parser.antlr.SigmaParser.MetaArgumentContext
 import sigma.types.AbstractionType
 import sigma.types.Type
 import sigma.types.UndefinedType
@@ -14,15 +15,33 @@ import sigma.values.tables.Scope
 
 data class Abstraction(
     override val location: SourceLocation,
+    val metaArgument: MetaArgumentExpression? = null,
     val argumentName: Symbol,
     val argumentType: TypeExpression?,
     val image: Expression,
 ) : Expression() {
+    data class MetaArgumentExpression(
+        override val location: SourceLocation,
+        val name: Symbol,
+    ) : Term() {
+        companion object {
+            fun build(
+                ctx: MetaArgumentContext,
+            ): MetaArgumentExpression = MetaArgumentExpression(
+                location = SourceLocation.build(ctx),
+                name = Symbol.of(ctx.name.text),
+            )
+        }
+    }
+
     companion object {
         fun build(
             ctx: AbstractionContext,
         ): Abstraction = Abstraction(
             location = SourceLocation.build(ctx),
+            metaArgument = ctx.metaArgument()?.let {
+                MetaArgumentExpression.build(it)
+            },
             argumentName = Symbol(ctx.argumentName.text),
             argumentType = ctx.argumentType?.let {
                 TypeExpression.build(it)
