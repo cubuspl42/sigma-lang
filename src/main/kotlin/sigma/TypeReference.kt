@@ -11,5 +11,5 @@ data class TypeReference(
         context: StaticScope,
     ): Type = context.getType(
         typeName = referee,
-    ) ?: throw TypeError("Unresolved type ${referee.dump()}")
+    ) ?: throw TypeError(message ="Unresolved type ${referee.dump()}")
 }
