@@ -3,5 +3,6 @@ package sigma.values
 import sigma.Thunk
 
 sealed class Value : Thunk() {
-    final override fun obtain(): Value = this
+    final override val toEvaluatedValue: Value
+        get() = this
 }

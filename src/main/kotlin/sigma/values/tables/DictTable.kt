@@ -1,7 +1,6 @@
 package sigma.values.tables
 
 import sigma.Thunk
-import sigma.expressions.Expression
 import sigma.values.PrimitiveValue
 import sigma.values.Symbol
 import sigma.values.Value
@@ -15,14 +14,14 @@ class DictTable(
 
     override fun dumpContent(): String? {
         val entries = associations.mapValues { (_, image) ->
-            image.obtain()
+            image.toEvaluatedValue
         }.entries
 
         if (entries.isEmpty()) return null
 
         return entries.joinToString(separator = ", ") {
             val keyStr = dumpKey(key = it.key)
-            val imageStr = it.value.obtain().dump()
+            val imageStr = it.value.toEvaluatedValue.dump()
 
             "$keyStr = $imageStr"
         }

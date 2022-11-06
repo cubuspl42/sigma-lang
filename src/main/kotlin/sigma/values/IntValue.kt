@@ -13,8 +13,8 @@ data class IntValue(
         override fun apply(argument: Value): Value {
             argument as FunctionValue
 
-            val left = argument.apply(Symbol.of(prototype.leftArgumentName)).obtain()
-            val right = argument.apply(Symbol.of(prototype.rightArgumentName)).obtain()
+            val left = argument.apply(Symbol.of(prototype.leftArgumentName)).toEvaluatedValue
+            val right = argument.apply(Symbol.of(prototype.rightArgumentName)).toEvaluatedValue
 
             left as IntValue
             right as IntValue
