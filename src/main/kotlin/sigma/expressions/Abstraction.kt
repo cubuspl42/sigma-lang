@@ -8,9 +8,13 @@ import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.MetaArgumentContext
 import sigma.types.AbstractionType
+import sigma.types.ArrayType
+import sigma.types.MetaType
+import sigma.types.TableType
 import sigma.types.Type
 import sigma.types.UndefinedType
 import sigma.values.FixedStaticValueScope
+import sigma.values.TypeError
 import sigma.values.tables.Scope
 
 data class Abstraction(
@@ -23,7 +27,7 @@ data class Abstraction(
     data class MetaArgumentExpression(
         override val location: SourceLocation,
         val name: Symbol,
-    ) : Term() {
+    ) : TypeExpression() {
         companion object {
             fun build(
                 ctx: MetaArgumentContext,
@@ -32,6 +36,12 @@ data class Abstraction(
                 name = Symbol.of(ctx.name.text),
             )
         }
+
+        override fun evaluate(
+            context: StaticScope,
+        ): Type = ArrayType(
+            elementType = MetaType,
+        )
     }
 
     companion object {
@@ -55,6 +65,15 @@ data class Abstraction(
     }
 
     override fun inferType(scope: StaticScope): Type {
+        val metaArgumentType = metaArgument?.let {
+            it.evaluate(
+                context = scope,
+            ) as? TableType ?: throw TypeError(
+                location = location,
+                message = "Meta-arguments have to be of table type",
+            )
+        } ?: TableType.Empty
+
         val argumentType = argumentType?.evaluate(
             context = scope,
         ) ?: UndefinedType
@@ -77,6 +96,7 @@ data class Abstraction(
         )
 
         return AbstractionType(
+            metaArgumentType = metaArgumentType,
             argumentType = argumentType,
             imageType = image.inferType(scope = innerScope),
         )

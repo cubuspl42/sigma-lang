@@ -1,10 +1,11 @@
 package sigma
 
+import sigma.expressions.Term
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.types.Type
 import sigma.values.Symbol
 
-interface TypeExpression {
+abstract class TypeExpression : Term() {
     companion object {
         fun build(
             ctx: TypeExpressionContext,
@@ -13,7 +14,7 @@ interface TypeExpression {
         )
     }
 
-    fun evaluate(
+    abstract fun evaluate(
         context: StaticScope,
     ): Type
 }

@@ -4,11 +4,15 @@ import sigma.GlobalStaticScope
 import sigma.TypeReference
 import sigma.expressions.Abstraction.MetaArgumentExpression
 import sigma.types.AbstractionType
+import sigma.types.ArrayType
+import sigma.types.BoolType
 import sigma.types.IntCollectiveType
 import sigma.types.IntLiteralType
+import sigma.types.MetaType
 import sigma.types.UndefinedType
 import sigma.values.IntValue
 import sigma.values.Symbol
+import sigma.values.tables.DictTable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -87,6 +91,27 @@ class AbstractionTests {
                 ).inferType(
                     scope = GlobalStaticScope,
                 ),
+            )
+        }
+
+        @Test
+        fun testWithMetaArgument() {
+            val type = Expression.parse(
+                source = "![t] [n: Int] => false",
+            ).validateAndInferType(
+                scope = GlobalStaticScope,
+            )
+
+            assertEquals(
+                expected = AbstractionType(
+                    // TODO: Improve array typing
+                    metaArgumentType = ArrayType(
+                        elementType = MetaType,
+                    ),
+                    argumentType = IntCollectiveType,
+                    imageType = BoolType,
+                ),
+                actual = type,
             )
         }
     }

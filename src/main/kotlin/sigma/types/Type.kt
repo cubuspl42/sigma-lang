@@ -15,7 +15,17 @@ sealed class Type {
     abstract fun dump(): String
 }
 
+object MetaType : Type() {
+    override fun isAssignableTo(otherType: Type): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun dump(): String = "Type"
+}
+
 sealed interface LiteralType {
+    val asType: PrimitiveType
+
     val value: PrimitiveValue
 }
 
@@ -28,6 +38,12 @@ object UndefinedType : Type() {
 }
 
 sealed class PrimitiveType : Type()
+
+object NeverType : PrimitiveType() {
+    override fun isAssignableTo(otherType: Type): Boolean = true
+
+    override fun dump(): String = "Never"
+}
 
 object BoolType : PrimitiveType() {
     override fun isAssignableTo(
@@ -65,6 +81,8 @@ data class IntLiteralType(
     override fun isAssignableTo(
         otherType: Type,
     ): Boolean = otherType == this || otherType is IntCollectiveType
+
+    override val asType: PrimitiveType = this
 }
 
 data class SymbolType(
@@ -85,4 +103,6 @@ data class SymbolType(
     override fun isAssignableTo(
         otherType: Type,
     ): Boolean = this == otherType
+
+    override val asType: PrimitiveType = this
 }

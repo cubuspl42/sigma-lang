@@ -71,7 +71,7 @@ class LetExpressionTests {
                         Declaration(
                             name = Symbol.of("a"),
                             valueType = TypeReference(
-                                Symbol.of("Int"),
+                                referee = Symbol.of("Int"),
                             ),
                             value = Reference(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 15),
