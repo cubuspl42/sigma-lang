@@ -23,8 +23,6 @@ class EulerProblemsTests {
     }
 
     @Test
-    // TODO: Re-enable
-    @Disabled
     fun testProblem7() {
         // For 20th prime (for performance reasons)
         assertEquals(
