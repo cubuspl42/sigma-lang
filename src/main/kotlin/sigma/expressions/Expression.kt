@@ -103,14 +103,17 @@ sealed class Expression : Term() {
         }.visit(expression) ?: throw IllegalArgumentException("Can't match expression ${expression::class}")
     }
 
-    fun bind(scope: Scope): Thunk = object : Thunk() {
-        override val toEvaluatedValue: Value
-            get() = this@Expression.evaluate(
+    inner class BoundThunk(private val scope: Scope) : Thunk() {
+        override val toEvaluatedValue: Value by lazy {
+            this@Expression.evaluate(
                 scope = scope,
             ).toEvaluatedValue
+        }
 
         override fun dump(): String = "(bound thunk)"
     }
+
+    fun bind(scope: Scope): Thunk = BoundThunk(scope = scope)
 
     fun inferTypeAsRoot() = inferType(scope = GlobalStaticScope)
 
