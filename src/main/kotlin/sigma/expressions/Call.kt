@@ -108,6 +108,7 @@ data class Call(
         val subjectType = subject.inferType(
             scope = scope,
         ) as? AbstractionType ?: throw TypeError(
+            location = location,
             message = "Only functions can be called",
         )
 
