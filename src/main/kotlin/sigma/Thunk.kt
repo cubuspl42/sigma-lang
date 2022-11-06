@@ -11,7 +11,7 @@ abstract class Thunk {
         throw UnsupportedOperationException()
     }
 
-    override fun toString(): String = "Thunk"
+    override fun toString(): String = dump()
 
     abstract val toEvaluatedValue: Value
 
