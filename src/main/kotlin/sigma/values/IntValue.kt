@@ -5,6 +5,9 @@ import sigma.BinaryOperationPrototype
 data class IntValue(
     val value: Int,
 ) : PrimitiveValue() {
+    companion object {
+        val Zero = IntValue(0)
+    }
 
     abstract class BinaryIntFunction : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
