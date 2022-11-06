@@ -4,8 +4,9 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import sigma.BuiltinScope
-import sigma.GlobalStaticScope
-import sigma.StaticScope
+import sigma.StaticTypeScope
+import sigma.StaticValueScope
+
 import sigma.Thunk
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
@@ -115,24 +116,25 @@ sealed class Expression : Term() {
 
     fun bind(scope: Scope): Thunk = BoundThunk(scope = scope)
 
-    fun inferTypeAsRoot() = inferType(scope = GlobalStaticScope)
-
     fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).toEvaluatedValue
 
     fun validateAndInferType(
-        scope: StaticScope,
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
     ): Type {
-        validate(scope = scope)
+        validate(typeScope = typeScope, valueScope = valueScope)
 
-        return inferType(scope = scope)
+        return inferType(typeScope = typeScope, valueScope = valueScope)
     }
 
     abstract fun inferType(
-        scope: StaticScope,
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
     ): Type
 
     open fun validate(
-        scope: StaticScope,
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
     ) {
     }
 

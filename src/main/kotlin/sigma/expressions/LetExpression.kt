@@ -1,6 +1,7 @@
 package sigma.expressions
 
-import sigma.StaticScope
+import sigma.StaticTypeScope
+import sigma.StaticValueScope
 import sigma.Thunk
 import sigma.values.tables.LoopedScope
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
@@ -28,27 +29,36 @@ data class LetExpression(
     override fun dump(): String = "(let expression)"
 
     override fun inferType(
-        scope: StaticScope,
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
     ): Type {
-        val innerValueScope = buildValueScope(scope = scope)
+        val innerValueScope = buildValueScope(
+            typeScope = typeScope,
+            valueScope = valueScope,
+        )
 
         return result.inferType(
-            scope = scope.copy(
-                valueScope = innerValueScope,
-            ),
+            typeScope = typeScope,
+            valueScope = innerValueScope,
         )
     }
 
     override fun validate(
-        scope: StaticScope,
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
     ) {
-        buildValueScope(scope = scope).validate()
+        buildValueScope(
+            typeScope = typeScope,
+            valueScope = valueScope,
+        ).validate()
     }
 
     private fun buildValueScope(
-        scope: StaticScope,
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
     ) = LoopedStaticValueScope(
-        context = scope,
+        typeContext = typeScope,
+        valueContext = valueScope,
         declarations = declarations,
     )
 

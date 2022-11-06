@@ -2,7 +2,8 @@ package sigma.programs.euler
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.GlobalStaticScope
+import sigma.BuiltinScope
+import sigma.GlobalTypeScope
 import sigma.values.BoolValue
 import sigma.expressions.Expression
 import sigma.values.IntValue
@@ -68,7 +69,10 @@ private fun solveProblem(n: Int): Value {
 
     val root = Expression.build(program.expression())
 
-    root.validate(scope = GlobalStaticScope)
+    root.validate(
+        typeScope = GlobalTypeScope,
+        valueScope = BuiltinScope,
+    )
 
     val result = root.evaluateAsRoot()
 

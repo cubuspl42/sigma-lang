@@ -12,12 +12,13 @@ interface StaticTypeScope {
 }
 
 interface StaticValueScope {
-    fun getValueType(valueName: Symbol): Type?
+    object Empty : StaticValueScope {
+        override fun getValueType(
+            valueName: Symbol,
+        ): Type? = null
+    }
 
-    fun asStaticScope(): StaticScope = StaticScope(
-        typeScope = StaticTypeScope.Empty,
-        valueScope = this,
-    )
+    fun getValueType(valueName: Symbol): Type?
 
     fun chainWith(
         valueScope: StaticValueScope,
@@ -30,21 +31,4 @@ interface StaticValueScope {
             valueName = valueName,
         )
     }
-}
-
-data class StaticScope(
-    val typeScope: StaticTypeScope,
-    val valueScope: StaticValueScope,
-) : StaticTypeScope, StaticValueScope {
-    override fun getType(
-        typeName: Symbol,
-    ): Type? = typeScope.getType(
-        typeName = typeName,
-    )
-
-    override fun getValueType(
-        valueName: Symbol,
-    ): Type? = valueScope.getValueType(
-        valueName = valueName,
-    )
 }

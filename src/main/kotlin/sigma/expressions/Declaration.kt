@@ -1,6 +1,7 @@
 package sigma.expressions
 
-import sigma.StaticScope
+import sigma.StaticTypeScope
+import sigma.StaticValueScope
 import sigma.TypeExpression
 import sigma.values.Symbol
 import sigma.parser.antlr.SigmaParser.DeclarationContext
@@ -22,22 +23,26 @@ data class Declaration(
     }
 
     fun determineAssumedType(
-        scope: StaticScope,
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
     ): Type = determineDeclaredType(
-        scope = scope,
+        typeScope = typeScope,
     ) ?: inferType(
-        scope = scope,
+        typeScope = typeScope,
+        valueScope = valueScope,
     )
 
     fun determineDeclaredType(
-        scope: StaticScope,
+        typeScope: StaticTypeScope,
     ): Type? = valueType?.evaluate(
-        context = scope,
+        typeScope = typeScope,
     )
 
     fun inferType(
-        scope: StaticScope,
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
     ): Type = value.inferType(
-        scope = scope,
+        typeScope = typeScope,
+        valueScope = valueScope,
     )
 }

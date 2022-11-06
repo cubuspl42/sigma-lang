@@ -1,7 +1,10 @@
 package sigma.expressions
 
 import org.junit.jupiter.api.assertThrows
-import sigma.GlobalStaticScope
+import sigma.BuiltinScope
+import sigma.GlobalTypeScope
+import sigma.StaticTypeScope
+import sigma.StaticValueScope
 import sigma.TypeReference
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
@@ -104,7 +107,8 @@ class LetExpressionTests {
                     } in b
                 """.trimIndent()
             ).validateAndInferType(
-                scope = GlobalStaticScope,
+                typeScope = GlobalTypeScope,
+                valueScope = BuiltinScope,
             )
 
             assertEquals(
@@ -123,7 +127,8 @@ class LetExpressionTests {
                     } in a
                 """.trimIndent()
             ).validateAndInferType(
-                scope = GlobalStaticScope,
+                typeScope = GlobalTypeScope,
+                valueScope = BuiltinScope,
             )
 
             assertEquals(
@@ -143,13 +148,15 @@ class LetExpressionTests {
             )
 
             expression.validate(
-                scope = GlobalStaticScope,
+                typeScope = GlobalTypeScope,
+                valueScope = StaticValueScope.Empty,
             )
 
             assertEquals(
                 expected = IntCollectiveType,
                 actual = expression.inferType(
-                    scope = GlobalStaticScope,
+                    typeScope = GlobalTypeScope,
+                    valueScope = StaticValueScope.Empty,
                 ),
             )
         }
@@ -166,7 +173,8 @@ class LetExpressionTests {
                         } in a
                     """.trimIndent()
                 ).inferType(
-                    scope = GlobalStaticScope,
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = StaticValueScope.Empty,
                 )
             }
         }

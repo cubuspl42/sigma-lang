@@ -1,6 +1,7 @@
 package sigma.expressions
 
-import sigma.StaticScope
+import sigma.StaticTypeScope
+import sigma.StaticValueScope
 import sigma.TypeExpression
 import sigma.values.Closure
 import sigma.values.Symbol
@@ -38,7 +39,7 @@ data class Abstraction(
         }
 
         override fun evaluate(
-            context: StaticScope,
+            typeScope: StaticTypeScope,
         ): Type = ArrayType(
             elementType = MetaType,
         )
@@ -60,14 +61,14 @@ data class Abstraction(
         )
     }
 
-    override fun validate(scope: StaticScope) {
-        super.validate(scope)
+    override fun validate(typeScope: StaticTypeScope, valueScope: StaticValueScope) {
+        super.validate(typeScope, valueScope)
     }
 
-    override fun inferType(scope: StaticScope): Type {
+    override fun inferType(typeScope: StaticTypeScope, valueScope: StaticValueScope): Type {
         val metaArgumentType = metaArgument?.let {
             it.evaluate(
-                context = scope,
+                typeScope = typeScope,
             ) as? TableType ?: throw TypeError(
                 location = location,
                 message = "Meta-arguments have to be of table type",
@@ -75,7 +76,7 @@ data class Abstraction(
         } ?: TableType.Empty
 
         val argumentType = argumentType?.evaluate(
-            context = scope,
+            typeScope = typeScope,
         ) ?: UndefinedType
 
         // TODO:
@@ -85,20 +86,18 @@ data class Abstraction(
 //            message = "Abstraction has no declared argument type",
 //        )
 
-        val innerScope = scope.copy(
-            valueScope = FixedStaticValueScope(
-                entries = mapOf(
-                    argumentName to argumentType,
-                ),
-            ).chainWith(
-                scope.valueScope,
-            )
+        val innerScope = FixedStaticValueScope(
+            entries = mapOf(
+                argumentName to argumentType,
+            ),
+        ).chainWith(
+            valueScope,
         )
 
         return AbstractionType(
             metaArgumentType = metaArgumentType,
             argumentType = argumentType,
-            imageType = image.inferType(scope = innerScope),
+            imageType = image.inferType(typeScope = typeScope, valueScope = innerScope),
         )
     }
 

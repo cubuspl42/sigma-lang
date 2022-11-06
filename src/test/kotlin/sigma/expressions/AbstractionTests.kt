@@ -1,6 +1,9 @@
 package sigma.expressions
 
-import sigma.GlobalStaticScope
+import sigma.BuiltinScope
+import sigma.GlobalTypeScope
+import sigma.StaticTypeScope
+import sigma.StaticValueScope
 import sigma.TypeReference
 import sigma.expressions.Abstraction.MetaArgumentExpression
 import sigma.types.AbstractionType
@@ -12,7 +15,6 @@ import sigma.types.MetaType
 import sigma.types.UndefinedType
 import sigma.values.IntValue
 import sigma.values.Symbol
-import sigma.values.tables.DictTable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -74,7 +76,8 @@ class AbstractionTests {
                 actual = Expression.parse(
                     source = "[n: Int] => n",
                 ).inferType(
-                    scope = GlobalStaticScope,
+                    typeScope = GlobalTypeScope,
+                    valueScope = StaticValueScope.Empty,
                 ),
             )
         }
@@ -89,7 +92,8 @@ class AbstractionTests {
                 actual = Expression.parse(
                     source = "[a] => 0",
                 ).inferType(
-                    scope = GlobalStaticScope,
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = StaticValueScope.Empty,
                 ),
             )
         }
@@ -99,7 +103,8 @@ class AbstractionTests {
             val type = Expression.parse(
                 source = "![t] [n: Int] => false",
             ).validateAndInferType(
-                scope = GlobalStaticScope,
+                typeScope = GlobalTypeScope,
+                valueScope = BuiltinScope,
             )
 
             assertEquals(
