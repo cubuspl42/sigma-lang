@@ -5,7 +5,7 @@ import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ApplicationTests {
+class CallTests {
     object EvaluationTests {
         @Test
         fun testDictSubject() {

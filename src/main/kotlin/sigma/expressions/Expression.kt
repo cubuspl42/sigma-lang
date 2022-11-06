@@ -47,7 +47,7 @@ sealed class Expression {
         ): Expression = object : SigmaParserBaseVisitor<Expression>() {
             override fun visitBinaryOperationAlt(
                 ctx: BinaryOperationAltContext,
-            ): Expression = Application.build(ctx)
+            ): Expression = Call.build(ctx)
 
             override fun visitParenExpressionAlt(
                 ctx: ParenExpressionAltContext,
@@ -83,11 +83,11 @@ sealed class Expression {
 
             override fun visitCallExpressionAlt(
                 ctx: CallExpressionAltContext,
-            ): Expression = Application.build(ctx)
+            ): Expression = Call.build(ctx)
 
             override fun visitCallExpressionDictAlt(
                 ctx: CallExpressionDictAltContext,
-            ): Expression = Application.build(ctx)
+            ): Expression = Call.build(ctx)
 
             override fun visitCallableParenAlt(
                 ctx: CallableParenAltContext,

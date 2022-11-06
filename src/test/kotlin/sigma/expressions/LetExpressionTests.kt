@@ -5,9 +5,7 @@ import sigma.GlobalStaticScope
 import sigma.TypeReference
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
-import sigma.types.SymbolType
 import sigma.values.Symbol
-import kotlin.math.exp
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -20,7 +18,7 @@ class LetExpressionTests {
                     declarations = listOf(
                         Declaration(
                             name = Symbol.of("g"),
-                            value = Application(
+                            value = Call(
                                 subject = Reference(Symbol.of("h")),
                                 argument = Reference(Symbol.of("a")),
                             ),
@@ -30,7 +28,7 @@ class LetExpressionTests {
                             value = Reference(Symbol.of("g")),
                         ),
                     ),
-                    result = Application(
+                    result = Call(
                         subject = Reference(Symbol.of("f")),
                         argument = Reference(Symbol.of("x")),
                     ),
