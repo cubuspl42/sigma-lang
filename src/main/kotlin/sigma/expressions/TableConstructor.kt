@@ -1,6 +1,5 @@
 package sigma.expressions
 
-
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser
@@ -8,9 +7,8 @@ import sigma.parser.antlr.SigmaParser.DictArrayAltContext
 import sigma.parser.antlr.SigmaParser.DictContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.types.DictType
-import sigma.types.LiteralType
 import sigma.types.PrimitiveType
-import sigma.types.StructType
+import sigma.types.UnorderedTupleType
 import sigma.values.PrimitiveValue
 import sigma.values.tables.DictTable
 import sigma.values.tables.Scope
@@ -49,17 +47,7 @@ data class TableConstructor(
         val value: Expression
     }
 
-    data class EntryType(
-        val keyType: PrimitiveType,
-        val valueType: Type,
-    )
-
-    data class EntryLiteralType(
-        val keyType: LiteralType,
-        val valueType: Type,
-    )
-
-    data class SymbolEntryExpression(
+    data class NamedEntryExpression(
         val name: Symbol,
         override val value: Expression,
     ) : EntryExpression {
@@ -73,6 +61,16 @@ data class TableConstructor(
         override val key: Expression,
         override val value: Expression,
     ) : EntryExpression
+
+    data class EntryType(
+        val keyType: PrimitiveType,
+        val valueType: Type,
+    )
+
+    data class EntryLiteralType(
+        val key: PrimitiveValue,
+        val valueType: Type,
+    )
 
     companion object {
         fun build(
@@ -88,8 +86,7 @@ data class TableConstructor(
             override fun visitDictArrayAlt(
                 ctx: DictArrayAltContext,
             ): TableConstructor = TableConstructor(
-                location = SourceLocation.build(ctx),
-                entries = buildFromArray(ctx.content)
+                location = SourceLocation.build(ctx), entries = buildFromArray(ctx.content)
             )
         }.visit(ctx)
 
@@ -114,7 +111,7 @@ data class TableConstructor(
         ): EntryExpression = object : SigmaParserBaseVisitor<EntryExpression>() {
             override fun visitSymbolBindAlt(
                 ctx: SigmaParser.SymbolBindAltContext,
-            ) = SymbolEntryExpression(
+            ) = NamedEntryExpression(
                 name = Symbol.of(ctx.name.text),
                 value = Expression.build(ctx.image.image),
             )
@@ -135,17 +132,28 @@ data class TableConstructor(
         valueScope: StaticValueScope,
     ): Type {
         val entryTypes = entries.map {
+            val keyType = it.key.inferType(
+                typeScope = typeScope,
+                valueScope = valueScope,
+            ) as? PrimitiveType ?: throw UnsupportedKeyError()
+
+            val valueType = it.value.inferType(
+                typeScope = typeScope,
+                valueScope = valueScope,
+            )
+
             EntryType(
-                keyType = it.key.inferType(typeScope = typeScope, valueScope = valueScope) as? PrimitiveType ?: throw UnsupportedKeyError(),
-                valueType = it.value.inferType(typeScope = typeScope, valueScope = valueScope),
+                keyType = keyType,
+                valueType = valueType,
             )
         }
 
+        // Note: non-local return
         fun asEntryLiteralTypes(): List<EntryLiteralType>? = entryTypes.map {
-            val keyType = it.keyType as? LiteralType ?: return null
+            val keyLiteralType = it.keyType.asLiteral ?: return null
 
             EntryLiteralType(
-                keyType = keyType,
+                key = keyLiteralType.value,
                 valueType = it.valueType,
             )
         }
@@ -154,15 +162,15 @@ data class TableConstructor(
 
         if (entryLiteralTypes != null) {
             val valueTypeByKeyType = entryLiteralTypes.groupBy {
-                it.keyType
+                it.key
             }.mapValues { (key, entryTypes) ->
                 val valueTypes = entryTypes.map { it.valueType }
 
-                valueTypes.singleOrNull() ?: throw DuplicateKeyError(key = key.value)
+                valueTypes.singleOrNull() ?: throw DuplicateKeyError(key = key)
             }
 
-            return StructType(
-                entries = valueTypeByKeyType,
+            return UnorderedTupleType(
+                valueTypeByKey = valueTypeByKeyType,
             )
         } else {
             val valueTypeByKeyType = entryTypes.groupBy {

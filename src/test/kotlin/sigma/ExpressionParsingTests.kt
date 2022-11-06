@@ -51,7 +51,7 @@ class ExpressionParsingTests {
                     subject = TableConstructor(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         entries = listOf(
-                            TableConstructor.SymbolEntryExpression(
+                            TableConstructor.NamedEntryExpression(
                                 name = Symbol.of("foo"),
                                 value = SymbolLiteral(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 7),
@@ -83,7 +83,7 @@ class ExpressionParsingTests {
                     argument = TableConstructor(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         entries = listOf(
-                            TableConstructor.SymbolEntryExpression(
+                            TableConstructor.NamedEntryExpression(
                                 name = Symbol.of("bar"),
                                 value = SymbolLiteral(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 10),

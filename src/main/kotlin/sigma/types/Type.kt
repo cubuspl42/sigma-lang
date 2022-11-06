@@ -3,12 +3,11 @@ package sigma.types
 import sigma.values.IntValue
 import sigma.values.PrimitiveValue
 import sigma.values.Symbol
-import sigma.values.Value
 
 sealed class Type {
     final override fun toString(): String = dump()
 
-    open val asLiteral: LiteralType? = null
+    open val asLiteral: PrimitiveLiteralType? = null
 
     abstract fun isAssignableTo(otherType: Type): Boolean
 
@@ -23,7 +22,7 @@ object MetaType : Type() {
     override fun dump(): String = "Type"
 }
 
-sealed interface LiteralType {
+sealed interface PrimitiveLiteralType {
     val asType: PrimitiveType
 
     val value: PrimitiveValue
@@ -65,7 +64,7 @@ object IntCollectiveType : IntType() {
 
 data class IntLiteralType(
     override val value: IntValue,
-) : IntType(), LiteralType {
+) : IntType(), PrimitiveLiteralType {
     companion object {
         fun of(
             value: Int,
@@ -87,7 +86,7 @@ data class IntLiteralType(
 
 data class SymbolType(
     override val value: Symbol,
-) : PrimitiveType(), LiteralType {
+) : PrimitiveType(), PrimitiveLiteralType {
     companion object {
         fun of(
             name: String,

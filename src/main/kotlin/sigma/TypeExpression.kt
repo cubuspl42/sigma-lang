@@ -12,6 +12,10 @@ abstract class TypeExpression : Term() {
         ): TypeExpression = TypeReference(
             referee = Symbol.of(ctx.reference().referee.text),
         )
+
+        fun parse(source: String): TypeExpression {
+            TODO()
+        }
     }
 
     abstract fun evaluate(

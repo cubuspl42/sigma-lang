@@ -76,11 +76,11 @@ data class Call(
                 argument = TableConstructor(
                     location = SourceLocation.build(ctx),
                     entries = listOf(
-                        TableConstructor.SymbolEntryExpression(
+                        TableConstructor.NamedEntryExpression(
                             name = prototype.leftArgument,
                             value = leftExpression,
                         ),
-                        TableConstructor.SymbolEntryExpression(
+                        TableConstructor.NamedEntryExpression(
                             name = prototype.rightArgument,
                             value = rightExpression,
                         ),
