@@ -1,6 +1,6 @@
 package sigma
 
-import sigma.expressions.Application
+import sigma.expressions.Call
 import sigma.expressions.TableConstructor
 import sigma.expressions.Expression
 import sigma.expressions.Reference
@@ -20,11 +20,11 @@ class ExpressionParsingTests {
         }
     }
 
-    object ApplicationTests {
+    object CallTests {
         @Test
         fun testReferenceSubject() {
             assertEquals(
-                expected = Application(
+                expected = Call(
                     subject = Reference(Symbol("foo")),
                     argument = SymbolLiteral.of("bar"),
                 ),
@@ -35,7 +35,7 @@ class ExpressionParsingTests {
         @Test
         fun testDictSubject() {
             assertEquals(
-                expected = Application(
+                expected = Call(
                     subject = TableConstructor(
                         entries = listOf(
                             TableConstructor.SymbolEntryExpression(
@@ -55,7 +55,7 @@ class ExpressionParsingTests {
         @Test
         fun testDictArgumentShorthand() {
             assertEquals(
-                expected = Application(
+                expected = Call(
                     subject = Reference(Symbol.of("foo")),
                     argument = TableConstructor(
                         entries = listOf(

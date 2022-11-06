@@ -16,14 +16,14 @@ import sigma.values.tables.Scope
 
 private var depth = 0
 
-data class Application(
+data class Call(
     val subject: Expression,
     val argument: Expression,
 ) : Expression() {
     companion object {
         fun build(
             ctx: BinaryOperationAltContext,
-        ): Application {
+        ): Call {
             val leftExpression = Expression.build(ctx.left)
             val rightExpression = Expression.build(ctx.right)
 
@@ -41,7 +41,7 @@ data class Application(
                 else -> throw UnsupportedOperationException()
             }
 
-            return Application(
+            return Call(
                 subject = Reference(
                     referee = Symbol.of(prototype.functionName),
                 ),
@@ -62,14 +62,14 @@ data class Application(
 
         fun build(
             ctx: CallExpressionAltContext,
-        ): Application = Application(
+        ): Call = Call(
             subject = Expression.build(ctx.callee),
             argument = Expression.build(ctx.argument),
         )
 
         fun build(
             ctx: CallExpressionDictAltContext,
-        ): Application = Application(
+        ): Call = Call(
             subject = Expression.build(ctx.callee),
             argument = TableConstructor.build(ctx.argument),
         )
