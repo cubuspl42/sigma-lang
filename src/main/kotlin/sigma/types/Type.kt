@@ -58,7 +58,7 @@ data class IntLiteralType(
         )
     }
 
-    override fun dump(): String = value.toString()
+    override fun dump(): String = "${value.value}"
 
     override val asLiteral = this
 

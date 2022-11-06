@@ -103,7 +103,26 @@ class LetExpressionTests {
                         b = a,
                     } in b
                 """.trimIndent()
-            ).inferType(
+            ).validateAndInferType(
+                scope = GlobalStaticScope,
+            )
+
+            assertEquals(
+                expected = BoolType,
+                actual = type,
+            )
+        }
+
+        @Test
+        fun testInferredFunctionType() {
+            val type = Expression.parse(
+                source = """
+                    let {
+                        f = [n: Int] => false,
+                        a = f[0],
+                    } in a
+                """.trimIndent()
+            ).validateAndInferType(
                 scope = GlobalStaticScope,
             )
 

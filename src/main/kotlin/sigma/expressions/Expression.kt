@@ -115,6 +115,14 @@ sealed class Expression : Term() {
 
     fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).obtain()
 
+    fun validateAndInferType(
+        scope: StaticScope,
+    ): Type {
+        validate(scope = scope)
+
+        return inferType(scope = scope)
+    }
+
     abstract fun inferType(
         scope: StaticScope,
     ): Type
