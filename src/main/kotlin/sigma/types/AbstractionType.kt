@@ -13,5 +13,5 @@ data class AbstractionType(
         TODO("Not yet implemented")
     }
 
-    override fun dump(): String = "Abstraction"
+    override fun dump(): String = "${argumentType.dump()} => ${imageType.dump()}"
 }

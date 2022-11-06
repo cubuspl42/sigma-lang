@@ -38,7 +38,7 @@ data class Abstraction(
     override fun inferType(scope: StaticScope): Type {
         val argumentType = argumentType?.evaluate(
             context = scope,
-        ) ?: return UndefinedType
+        ) ?: UndefinedType
 
         // TODO:
 //        val argumentType = argumentType?.evaluate(
