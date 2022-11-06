@@ -9,6 +9,8 @@ LeftBrace : '{' ;
 RightBrace : '}' ;
 LeftBracket : '[' ;
 RightBracket : ']' ;
+Lt : '<' ;
+Gt : '>' ;
 
 Lte : '<=' ;
 Gte : '>=' ;
@@ -22,8 +24,7 @@ Asterisk : '*' ;
 Slash : '/' ;
 Plus : '+' ;
 Minus : '-' ;
-Lt : '<' ;
-Gt : '>' ;
+Bang : '!' ;
 
 Arrow : '=>' ;
 Identifier : [a-zA-Z] [a-zA-Z0-9]* ;

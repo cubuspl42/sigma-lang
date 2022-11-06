@@ -44,7 +44,14 @@ reference
     ;
 
 abstraction
-    : LeftBracket argumentName=identifier (Colon argumentType=typeExpression)? RightBracket Arrow image=expression ;
+    :   (Bang metaArgument)?
+        LeftBracket argumentName=identifier (Colon argumentType=typeExpression)? RightBracket
+        Arrow image=expression
+    ;
+
+metaArgument
+    : LeftBracket name=identifier RightBracket
+    ;
 
 identifier
     : Identifier ;
