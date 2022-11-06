@@ -5,6 +5,7 @@ import sigma.TypeExpression
 import sigma.TypeReference
 import sigma.types.AbstractionType
 import sigma.types.IntCollectiveType
+import sigma.values.IntValue
 import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,11 +16,15 @@ class AbstractionTests {
         fun test() {
             assertEquals(
                 expected = Abstraction(
+                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     argumentName = Symbol.of("n"),
                     argumentType = TypeReference(
                         referee = Symbol.of("Int"),
                     ),
-                    image = IntLiteral.of(0),
+                    image = IntLiteral(
+                        SourceLocation(lineIndex = 1, columnIndex = 12),
+                        value = IntValue(0),
+                    ),
                 ),
                 actual = Expression.parse(
                     source = "[n: Int] => 0",
@@ -45,6 +50,5 @@ class AbstractionTests {
         }
     }
 
-    object EvaluationTests {
-    }
+    object EvaluationTests {}
 }

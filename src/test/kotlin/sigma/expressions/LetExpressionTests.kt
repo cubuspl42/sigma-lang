@@ -15,22 +15,40 @@ class LetExpressionTests {
         fun testSimple() {
             assertEquals(
                 expected = LetExpression(
+                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     declarations = listOf(
                         Declaration(
                             name = Symbol.of("g"),
                             value = Call(
-                                subject = Reference(Symbol.of("h")),
-                                argument = Reference(Symbol.of("a")),
+                                location = SourceLocation(lineIndex = 2, columnIndex = 8),
+                                subject = Reference(
+                                    location = SourceLocation(lineIndex = 2, columnIndex = 8),
+                                    referee = Symbol.of("h"),
+                                ),
+                                argument = Reference(
+                                    location = SourceLocation(lineIndex = 2, columnIndex = 10),
+                                    referee = Symbol.of("a"),
+                                ),
                             ),
                         ),
                         Declaration(
                             name = Symbol.of("f"),
-                            value = Reference(Symbol.of("g")),
+                            value = Reference(
+                                location = SourceLocation(lineIndex = 3, columnIndex = 8),
+                                referee = Symbol.of("g"),
+                            ),
                         ),
                     ),
                     result = Call(
-                        subject = Reference(Symbol.of("f")),
-                        argument = Reference(Symbol.of("x")),
+                        location = SourceLocation(lineIndex = 4, columnIndex = 5),
+                        subject = Reference(
+                            location = SourceLocation(lineIndex = 4, columnIndex = 5),
+                            referee = Symbol.of("f"),
+                        ),
+                        argument = Reference(
+                            location = SourceLocation(lineIndex = 4, columnIndex = 7),
+                            referee = Symbol.of("x"),
+                        ),
                     ),
                 ),
                 actual = Expression.parse(
@@ -48,16 +66,23 @@ class LetExpressionTests {
         fun testWithTypeAnnotation() {
             assertEquals(
                 expected = LetExpression(
+                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     declarations = listOf(
                         Declaration(
                             name = Symbol.of("a"),
                             valueType = TypeReference(
-                                referee = Symbol.of("Int"),
+                                Symbol.of("Int"),
                             ),
-                            value = Reference(Symbol.of("b")),
+                            value = Reference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 15),
+                                referee = Symbol.of("b"),
+                            ),
                         ),
                     ),
-                    result = Reference(Symbol.of("a")),
+                    result = Reference(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 22),
+                        referee = Symbol.of("a"),
+                    ),
                 ),
                 actual = Expression.parse(
                     source = """

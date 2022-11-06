@@ -1,7 +1,6 @@
 package sigma.expressions
 
 import sigma.StaticScope
-import sigma.StaticValueScope
 import sigma.Thunk
 import sigma.values.tables.LoopedScope
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
@@ -10,17 +9,19 @@ import sigma.types.Type
 import sigma.values.LoopedStaticValueScope
 
 data class LetExpression(
+    override val location: SourceLocation,
     val declarations: List<Declaration>,
     val result: Expression,
 ) : Expression() {
     companion object {
         fun build(
-            let: LetExpressionContext,
+            ctx: LetExpressionContext,
         ): LetExpression = LetExpression(
-            declarations = let.scope.declaration().map {
+            location = SourceLocation.build(ctx),
+            declarations = ctx.scope.declaration().map {
                 Declaration.build(it)
             },
-            result = Expression.build(let.result),
+            result = Expression.build(ctx.result),
         )
     }
 

@@ -28,7 +28,7 @@ import sigma.types.Type
 import sigma.values.Value
 import sigma.values.tables.Scope
 
-sealed class Expression {
+sealed class Expression : Term() {
     companion object {
         fun parse(
             source: String,
@@ -121,7 +121,8 @@ sealed class Expression {
 
     open fun validate(
         scope: StaticScope,
-    ) {}
+    ) {
+    }
 
     abstract fun evaluate(
         scope: Scope,

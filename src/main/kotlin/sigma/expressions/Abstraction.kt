@@ -10,23 +10,24 @@ import sigma.types.AbstractionType
 import sigma.types.Type
 import sigma.types.UndefinedType
 import sigma.values.FixedStaticValueScope
-import sigma.values.TypeError
 import sigma.values.tables.Scope
 
 data class Abstraction(
+    override val location: SourceLocation,
     val argumentName: Symbol,
     val argumentType: TypeExpression?,
     val image: Expression,
 ) : Expression() {
     companion object {
         fun build(
-            abstraction: AbstractionContext,
+            ctx: AbstractionContext,
         ): Abstraction = Abstraction(
-            argumentName = Symbol(abstraction.argumentName.text),
-            argumentType = abstraction.argumentType?.let {
+            location = SourceLocation.build(ctx),
+            argumentName = Symbol(ctx.argumentName.text),
+            argumentType = ctx.argumentType?.let {
                 TypeExpression.build(it)
             },
-            image = Expression.build(abstraction.image),
+            image = Expression.build(ctx.image),
         )
     }
 
