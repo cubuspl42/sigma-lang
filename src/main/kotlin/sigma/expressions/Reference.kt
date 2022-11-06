@@ -9,13 +9,15 @@ import sigma.values.TypeError
 import sigma.values.tables.Scope
 
 data class Reference(
+    override val location: SourceLocation,
     val referee: Symbol,
 ) : Expression() {
     companion object {
         fun build(
-            reference: ReferenceContext,
+            ctx: ReferenceContext,
         ): Reference = Reference(
-            referee = Symbol(name = reference.referee.text),
+            location = SourceLocation.build(ctx),
+            referee = Symbol(name = ctx.referee.text),
         )
     }
 

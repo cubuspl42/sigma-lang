@@ -17,6 +17,7 @@ import sigma.values.Symbol
 import sigma.values.TypeError
 
 data class TableConstructor(
+    override val location: SourceLocation,
     val entries: List<EntryExpression>,
 ) : Expression() {
     class DuplicateKeyError(
@@ -60,7 +61,10 @@ data class TableConstructor(
         val name: Symbol,
         override val value: Expression,
     ) : EntryExpression {
-        override val key: SymbolLiteral = SymbolLiteral(symbol = name)
+        override val key: SymbolLiteral = SymbolLiteral(
+            location = SourceLocation.Invalid,
+            symbol = name,
+        )
     }
 
     data class ArbitraryEntryExpression(
@@ -75,12 +79,14 @@ data class TableConstructor(
             override fun visitDictTableAlt(
                 ctx: SigmaParser.DictTableAltContext,
             ): TableConstructor = TableConstructor(
+                location = SourceLocation.build(ctx),
                 entries = buildFromTable(ctx.table()),
             )
 
             override fun visitDictArrayAlt(
                 ctx: DictArrayAltContext,
             ): TableConstructor = TableConstructor(
+                location = SourceLocation.build(ctx),
                 entries = buildFromArray(ctx.content)
             )
         }.visit(ctx)

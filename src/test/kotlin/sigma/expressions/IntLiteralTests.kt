@@ -9,7 +9,10 @@ class IntLiteralTests {
         @Test
         fun test() {
             assertEquals(
-                expected = IntLiteral.of(123),
+                expected = IntLiteral(
+                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                    IntValue(123),
+                ),
                 actual = Expression.parse(
                     source = "123",
                 ),

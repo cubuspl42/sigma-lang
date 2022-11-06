@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import org.antlr.v4.runtime.ParserRuleContext
 import sigma.BinaryOperationPrototype
 import sigma.StaticScope
 import sigma.Thunk
@@ -16,7 +17,30 @@ import sigma.values.tables.Scope
 
 private var depth = 0
 
+data class SourceLocation(
+    val lineIndex: Int,
+    val columnIndex: Int,
+) {
+    companion object {
+        // TODO: It's a hack, figure this out
+        val Invalid = SourceLocation(
+            lineIndex = -1,
+            columnIndex = -1,
+        )
+
+        fun build(
+            ctx: ParserRuleContext,
+        ): SourceLocation = SourceLocation(
+            lineIndex = ctx.start.line,
+            columnIndex = ctx.start.charPositionInLine,
+        )
+    }
+
+    override fun toString(): String = "[Ln ${lineIndex}, Col ${columnIndex}]"
+}
+
 data class Call(
+    override val location: SourceLocation,
     val subject: Expression,
     val argument: Expression,
 ) : Expression() {
@@ -42,10 +66,13 @@ data class Call(
             }
 
             return Call(
+                location = SourceLocation.build(ctx),
                 subject = Reference(
+                    location = SourceLocation.build(ctx),
                     referee = Symbol.of(prototype.functionName),
                 ),
                 argument = TableConstructor(
+                    location = SourceLocation.build(ctx),
                     entries = listOf(
                         TableConstructor.SymbolEntryExpression(
                             name = prototype.leftArgument,
@@ -63,6 +90,7 @@ data class Call(
         fun build(
             ctx: CallExpressionAltContext,
         ): Call = Call(
+            location = SourceLocation.build(ctx),
             subject = Expression.build(ctx.callee),
             argument = Expression.build(ctx.argument),
         )
@@ -70,6 +98,7 @@ data class Call(
         fun build(
             ctx: CallExpressionDictAltContext,
         ): Call = Call(
+            location = SourceLocation.build(ctx),
             subject = Expression.build(ctx.callee),
             argument = TableConstructor.build(ctx.argument),
         )

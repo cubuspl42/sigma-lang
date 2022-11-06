@@ -6,6 +6,7 @@ import sigma.expressions.TableConstructor
 import sigma.expressions.Expression
 import sigma.expressions.IntLiteral
 import sigma.expressions.Reference
+import sigma.expressions.SourceLocation
 import sigma.expressions.TableConstructor.DuplicateKeyError
 import sigma.expressions.TableConstructor.InconsistentValuesError
 import sigma.expressions.TableConstructor.InconsistentKeysError
@@ -30,14 +31,21 @@ object TableConstructorTests {
         fun testSimple() {
             assertEquals(
                 expected = TableConstructor(
+                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
                         TableConstructor.SymbolEntryExpression(
                             name = Symbol.of("foo"),
-                            value = Reference(Symbol.of("baz1")),
+                            value = Reference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
+                                referee = Symbol.of("baz1"),
+                            ),
                         ),
                         TableConstructor.SymbolEntryExpression(
                             name = Symbol.of("bar"),
-                            value = Reference(Symbol.of("baz2")),
+                            value = Reference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 19),
+                                referee = Symbol.of("baz2"),
+                            ),
                         ),
                     ),
                 ),
@@ -49,14 +57,24 @@ object TableConstructorTests {
         fun testWithArbitrary() {
             assertEquals(
                 expected = TableConstructor(
+                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
                         TableConstructor.SymbolEntryExpression(
                             name = Symbol.of("foo"),
-                            value = Reference(Symbol.of("baz1")),
+                            value = Reference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
+                                referee = Symbol.of("baz1"),
+                            ),
                         ),
                         TableConstructor.ArbitraryEntryExpression(
-                            key = Reference(Symbol.of("baz")),
-                            value = Reference(Symbol.of("baz2")),
+                            key = Reference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 14),
+                                referee = Symbol.of("baz"),
+                            ),
+                            value = Reference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 21),
+                                referee = Symbol.of("baz2"),
+                            ),
                         ),
                     ),
                 ),
@@ -68,18 +86,28 @@ object TableConstructorTests {
         fun testArray() {
             assertEquals(
                 expected = TableConstructor(
+                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
                         TableConstructor.ArbitraryEntryExpression(
                             key = IntLiteral.of(0),
-                            value = Reference(Symbol.of("foo")),
+                            value = Reference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                                referee = Symbol.of("foo"),
+                            ),
                         ),
                         TableConstructor.ArbitraryEntryExpression(
                             key = IntLiteral.of(1),
-                            value = Reference(Symbol.of("bar")),
+                            value = Reference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 6),
+                                referee = Symbol.of("bar"),
+                            ),
                         ),
                         TableConstructor.ArbitraryEntryExpression(
                             key = IntLiteral.of(2),
-                            value = Reference(Symbol.of("baz")),
+                            value = Reference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 11),
+                                referee = Symbol.of("baz"),
+                            ),
                         ),
                     ),
                 ),
