@@ -16,11 +16,10 @@ import sigma.types.BoolType
 import sigma.types.AbstractionType
 import sigma.types.DictType
 import sigma.types.IntCollectiveType
-import sigma.types.IntLiteralType
-import sigma.types.StructType
-import sigma.types.SymbolType
+import sigma.types.UnorderedTupleType
 import sigma.types.UndefinedType
 import sigma.values.FixedStaticValueScope
+import sigma.values.IntValue
 import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -33,14 +32,14 @@ object TableConstructorTests {
                 expected = TableConstructor(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        TableConstructor.SymbolEntryExpression(
+                        TableConstructor.NamedEntryExpression(
                             name = Symbol.of("foo"),
                             value = Reference(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 7),
                                 referee = Symbol.of("baz1"),
                             ),
                         ),
-                        TableConstructor.SymbolEntryExpression(
+                        TableConstructor.NamedEntryExpression(
                             name = Symbol.of("bar"),
                             value = Reference(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 19),
@@ -59,7 +58,7 @@ object TableConstructorTests {
                 expected = TableConstructor(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        TableConstructor.SymbolEntryExpression(
+                        TableConstructor.NamedEntryExpression(
                             name = Symbol.of("foo"),
                             value = Reference(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 7),
@@ -121,11 +120,11 @@ object TableConstructorTests {
             @Test
             fun testSymbolKeys1() {
                 assertEquals(
-                    expected = StructType(
-                        entries = mapOf(
-                            SymbolType.of("key1") to BoolType,
-                            SymbolType.of("key2") to IntCollectiveType,
-                        )
+                    expected = UnorderedTupleType(
+                        valueTypeByKey = mapOf(
+                            Symbol.of("key1") to BoolType,
+                            Symbol.of("key2") to IntCollectiveType,
+                        ),
                     ),
                     actual = Expression.parse(
                         source = """
@@ -149,10 +148,10 @@ object TableConstructorTests {
             @Test
             fun testSymbolKeys2() {
                 assertEquals(
-                    expected = StructType(
-                        entries = mapOf(
-                            SymbolType.of("key1") to BoolType,
-                            SymbolType.of("key2") to IntCollectiveType,
+                    expected = UnorderedTupleType(
+                        valueTypeByKey = mapOf(
+                            Symbol.of("key1") to BoolType,
+                            Symbol.of("key2") to IntCollectiveType,
                         )
                     ),
                     actual = Expression.parse(
@@ -221,11 +220,11 @@ object TableConstructorTests {
                 )
 
                 assertEquals(
-                    expected = StructType(
-                        entries = mapOf(
-                            IntLiteralType.of(0) to BoolType,
-                            IntLiteralType.of(1) to BoolType,
-                            IntLiteralType.of(2) to BoolType,
+                    expected = UnorderedTupleType(
+                        valueTypeByKey = mapOf(
+                            IntValue(0) to BoolType,
+                            IntValue(1) to BoolType,
+                            IntValue(2) to BoolType,
                         ),
                     ),
                     actual = type,
@@ -236,11 +235,11 @@ object TableConstructorTests {
             fun testNonConsecutiveIntLiteralKeys() {
                 // { [0]: Bool, [1]: Bool, [3]: Bool }, Dict<Int, Bool>
                 assertEquals(
-                    expected = StructType(
-                        entries = mapOf(
-                            IntLiteralType.of(0) to BoolType,
-                            IntLiteralType.of(1) to BoolType,
-                            IntLiteralType.of(3) to BoolType,
+                    expected = UnorderedTupleType(
+                        valueTypeByKey = mapOf(
+                            IntValue(0) to BoolType,
+                            IntValue(1) to BoolType,
+                            IntValue(3) to BoolType,
                         ),
                     ),
                     actual = Expression.parse(
@@ -292,11 +291,11 @@ object TableConstructorTests {
             fun testIntLiteralKeysInconsistentValues() {
                 // { [0]: Bool, [1]: Bool, [2]: Int }
                 assertEquals(
-                    expected = StructType(
-                        entries = mapOf(
-                            IntLiteralType.of(0) to BoolType,
-                            IntLiteralType.of(1) to BoolType,
-                            IntLiteralType.of(2) to IntCollectiveType,
+                    expected = UnorderedTupleType(
+                        valueTypeByKey = mapOf(
+                            IntValue(0) to BoolType,
+                            IntValue(1) to BoolType,
+                            IntValue(2) to IntCollectiveType,
                         ),
                     ),
                     actual = Expression.parse(
@@ -467,9 +466,9 @@ object TableConstructorTests {
                     typeScope = StaticTypeScope.Empty,
                     valueScope = FixedStaticValueScope(
                         entries = mapOf(
-                            Symbol.of("key1") to StructType(
-                                entries = mapOf(
-                                    SymbolType.of("foo") to BoolType,
+                            Symbol.of("key1") to UnorderedTupleType(
+                                valueTypeByKey = mapOf(
+                                    Symbol.of("foo") to BoolType,
                                 ),
                             ),
                             Symbol.of("value1") to BoolType,
@@ -504,10 +503,10 @@ object TableConstructorTests {
         fun testMixedLiteralKeys() {
             // { [0]: Bool, [`key2`]: Bool }
             assertEquals(
-                expected = StructType(
-                    entries = mapOf(
-                        IntLiteralType.of(0) to BoolType,
-                        SymbolType.of("key2") to IntCollectiveType,
+                expected = UnorderedTupleType(
+                    valueTypeByKey = mapOf(
+                        IntValue(0) to BoolType,
+                        Symbol.of("key2") to IntCollectiveType,
                     ),
                 ), actual = Expression.parse(
                     source = """

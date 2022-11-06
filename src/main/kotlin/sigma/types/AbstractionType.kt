@@ -16,7 +16,7 @@ data class AbstractionType(
     }
 
     override fun dump(): String {
-        val metaArgument = if (!metaArgumentType.isDefinitevlyEmpty()) "!${metaArgumentType.dump()}" else null
+        val metaArgument = if (!metaArgumentType.isDefinitelyEmpty()) "!${metaArgumentType.dump()}" else null
 
         return listOfNotNull(
             metaArgument,
