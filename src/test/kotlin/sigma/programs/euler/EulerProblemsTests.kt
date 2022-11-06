@@ -2,7 +2,6 @@ package sigma.programs.euler
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import org.junit.jupiter.api.Disabled
 import sigma.GlobalStaticScope
 import sigma.values.BoolValue
 import sigma.expressions.Expression
@@ -73,7 +72,7 @@ private fun solveProblem(n: Int): Value {
 
     val result = root.evaluateAsRoot()
 
-    return result.obtain()
+    return result.toEvaluatedValue
 }
 
 private fun getResourceAsText(

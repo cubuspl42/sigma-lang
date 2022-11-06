@@ -11,11 +11,11 @@ abstract class FunctionValue : Value() {
 
             val primary = argument.apply(
                 argument = Symbol.of("primary"),
-            ).obtain() as FunctionValue
+            ).toEvaluatedValue as FunctionValue
 
             val secondary = argument.apply(
                 argument = Symbol.of("secondary"),
-            ).obtain() as FunctionValue
+            ).toEvaluatedValue as FunctionValue
 
             return object : FunctionValue() {
                 override fun apply(argument: Value): Thunk {

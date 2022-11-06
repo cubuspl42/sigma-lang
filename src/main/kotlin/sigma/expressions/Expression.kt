@@ -104,16 +104,17 @@ sealed class Expression : Term() {
     }
 
     fun bind(scope: Scope): Thunk = object : Thunk() {
-        override fun obtain(): Value = this@Expression.evaluate(
-            scope = scope,
-        ).obtain()
+        override val toEvaluatedValue: Value
+            get() = this@Expression.evaluate(
+                scope = scope,
+            ).toEvaluatedValue
 
         override fun dump(): String = "(bound thunk)"
     }
 
     fun inferTypeAsRoot() = inferType(scope = GlobalStaticScope)
 
-    fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).obtain()
+    fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).toEvaluatedValue
 
     fun validateAndInferType(
         scope: StaticScope,

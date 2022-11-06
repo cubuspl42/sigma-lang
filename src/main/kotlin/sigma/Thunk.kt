@@ -13,7 +13,7 @@ abstract class Thunk {
 
     override fun toString(): String = "Thunk"
 
-    abstract fun obtain(): Value
+    abstract val toEvaluatedValue: Value
 
     abstract fun dump(): String
 }

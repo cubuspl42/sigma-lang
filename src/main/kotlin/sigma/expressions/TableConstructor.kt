@@ -181,7 +181,7 @@ data class TableConstructor(
         scope: Scope,
     ): DictTable = DictTable(
         associations = entries.associate {
-            val key = it.key.evaluate(scope = scope).obtain() as PrimitiveValue
+            val key = it.key.evaluate(scope = scope).toEvaluatedValue as PrimitiveValue
             val value = it.value.bind(scope = scope)
 
             key to value
