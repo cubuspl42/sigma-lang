@@ -11,11 +11,8 @@ private val builtinTypes = mapOf(
 )
 
 // Idea: BuiltinScope implementing both StaticValueScope and Scope?
-val GlobalStaticScope = StaticScope(
-    typeScope = object : StaticTypeScope {
-        override fun getType(
-            typeName: Symbol,
-        ): Type? = builtinTypes[typeName]
-    },
-    valueScope = BuiltinScope,
-)
+val GlobalTypeScope = object : StaticTypeScope {
+    override fun getType(
+        typeName: Symbol,
+    ): Type? = builtinTypes[typeName]
+}

@@ -15,6 +15,6 @@ abstract class TypeExpression : Term() {
     }
 
     abstract fun evaluate(
-        context: StaticScope,
+        typeScope: StaticTypeScope,
     ): Type
 }

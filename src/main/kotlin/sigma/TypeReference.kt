@@ -11,8 +11,8 @@ data class TypeReference(
     val referee: Symbol,
 ) : TypeExpression() {
     override fun evaluate(
-        context: StaticScope,
-    ): Type = context.getType(
+        typeScope: StaticTypeScope,
+    ): Type = typeScope.getType(
         typeName = referee,
     ) ?: throw TypeError(message = "Unresolved type ${referee.dump()}")
 }

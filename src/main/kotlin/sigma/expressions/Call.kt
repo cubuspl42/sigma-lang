@@ -2,7 +2,9 @@ package sigma.expressions
 
 import org.antlr.v4.runtime.ParserRuleContext
 import sigma.BinaryOperationPrototype
-import sigma.StaticScope
+import sigma.StaticTypeScope
+import sigma.StaticValueScope
+
 import sigma.Thunk
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
@@ -104,9 +106,10 @@ data class Call(
         )
     }
 
-    override fun inferType(scope: StaticScope): Type {
+    override fun inferType(typeScope: StaticTypeScope, valueScope: StaticValueScope): Type {
         val subjectType = subject.inferType(
-            scope = scope,
+            typeScope = typeScope,
+            valueScope = valueScope,
         ) as? AbstractionType ?: throw TypeError(
             location = location,
             message = "Only functions can be called",

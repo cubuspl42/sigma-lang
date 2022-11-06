@@ -135,12 +135,13 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                     ).inferType(
-                        scope = FixedStaticValueScope(
+                        typeScope = GlobalTypeScope,
+                        valueScope = FixedStaticValueScope(
                             mapOf(
                                 Symbol.of("value1") to BoolType,
                                 Symbol.of("value2") to IntCollectiveType,
                             ),
-                        ).asStaticScope(),
+                        )
                     ),
                 )
             }
@@ -162,12 +163,13 @@ object TableConstructorTests {
                             }
                         """.trimIndent(),
                     ).inferType(
-                        scope = FixedStaticValueScope(
+                        typeScope = StaticTypeScope.Empty,
+                        valueScope = FixedStaticValueScope(
                             mapOf(
                                 Symbol.of("value1") to BoolType,
                                 Symbol.of("value2") to IntCollectiveType,
                             ),
-                        ).asStaticScope(),
+                        ),
                     ),
                 )
             }
@@ -183,12 +185,13 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                     ).inferType(
-                        scope = FixedStaticValueScope(
+                        typeScope = StaticTypeScope.Empty,
+                        valueScope = FixedStaticValueScope(
                             mapOf(
                                 Symbol.of("value1") to BoolType,
                                 Symbol.of("value2") to BoolType,
                             ),
-                        ).asStaticScope(),
+                        ),
                     )
                 }
             }
@@ -207,13 +210,14 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                 ).inferType(
-                    scope = FixedStaticValueScope(
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = FixedStaticValueScope(
                         mapOf(
                             Symbol.of("value1") to BoolType,
                             Symbol.of("value2") to BoolType,
                             Symbol.of("value3") to BoolType,
                         ),
-                    ).asStaticScope(),
+                    ),
                 )
 
                 assertEquals(
@@ -248,13 +252,14 @@ object TableConstructorTests {
                             }
                         """.trimIndent(),
                     ).inferType(
-                        scope = FixedStaticValueScope(
+                        typeScope = StaticTypeScope.Empty,
+                        valueScope = FixedStaticValueScope(
                             mapOf(
                                 Symbol.of("value1") to BoolType,
                                 Symbol.of("value2") to BoolType,
                                 Symbol.of("value3") to BoolType,
                             ),
-                        ).asStaticScope(),
+                        ),
                     ),
                 )
             }
@@ -271,13 +276,14 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                     ).inferType(
-                        scope = FixedStaticValueScope(
+                        typeScope = StaticTypeScope.Empty,
+                        valueScope = FixedStaticValueScope(
                             mapOf(
                                 Symbol.of("value1") to BoolType,
                                 Symbol.of("value2") to BoolType,
                                 Symbol.of("value3") to BoolType,
                             ),
-                        ).asStaticScope(),
+                        ),
                     )
                 }
             }
@@ -302,13 +308,14 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                     ).inferType(
-                        scope = FixedStaticValueScope(
+                        typeScope = StaticTypeScope.Empty,
+                        valueScope = FixedStaticValueScope(
                             mapOf(
                                 Symbol.of("value1") to BoolType,
                                 Symbol.of("value2") to BoolType,
                                 Symbol.of("value3") to IntCollectiveType,
                             ),
-                        ).asStaticScope(),
+                        ),
                     ),
                 )
             }
@@ -329,14 +336,15 @@ object TableConstructorTests {
                             }
                         """.trimIndent(),
                     ).inferType(
-                        scope = FixedStaticValueScope(
+                        typeScope = StaticTypeScope.Empty,
+                        valueScope = FixedStaticValueScope(
                             mapOf(
                                 Symbol.of("key1") to IntCollectiveType,
                                 Symbol.of("key2") to IntCollectiveType,
                                 Symbol.of("value1") to BoolType,
                                 Symbol.of("value2") to BoolType,
                             ),
-                        ).asStaticScope(),
+                        ),
                     ),
                 )
             }
@@ -353,7 +361,8 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                     ).inferType(
-                        scope = FixedStaticValueScope(
+                        typeScope = StaticTypeScope.Empty,
+                        valueScope = FixedStaticValueScope(
                             mapOf(
                                 Symbol.of("key1") to IntCollectiveType,
                                 Symbol.of("key2") to IntCollectiveType,
@@ -362,7 +371,7 @@ object TableConstructorTests {
                                 Symbol.of("value2") to BoolType,
                                 Symbol.of("value3") to IntCollectiveType,
                             ),
-                        ).asStaticScope(),
+                        ),
                     )
                 }
             }
@@ -384,13 +393,14 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                     ).inferType(
-                        scope = FixedStaticValueScope(
+                        typeScope = StaticTypeScope.Empty,
+                        valueScope = FixedStaticValueScope(
                             entries = mapOf(
                                 Symbol.of("key2") to IntCollectiveType,
                                 Symbol.of("value1") to BoolType,
                                 Symbol.of("value2") to BoolType,
                             ),
-                        ).asStaticScope(),
+                        ),
                     ),
                 )
             }
@@ -409,12 +419,13 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                 ).inferType(
-                    scope = FixedStaticValueScope(
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = FixedStaticValueScope(
                         entries = mapOf(
                             Symbol.of("key1") to BoolType,
                             Symbol.of("value1") to IntCollectiveType,
                         ),
-                    ).asStaticScope(),
+                    ),
                 )
             }
         }
@@ -429,7 +440,8 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                 ).inferType(
-                    scope = FixedStaticValueScope(
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = FixedStaticValueScope(
                         entries = mapOf(
                             Symbol.of("key1") to AbstractionType(
                                 argumentType = IntCollectiveType,
@@ -437,7 +449,7 @@ object TableConstructorTests {
                             ),
                             Symbol.of("value1") to BoolType,
                         ),
-                    ).asStaticScope(),
+                    ),
                 )
             }
         }
@@ -452,7 +464,8 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                 ).inferType(
-                    scope = FixedStaticValueScope(
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = FixedStaticValueScope(
                         entries = mapOf(
                             Symbol.of("key1") to StructType(
                                 entries = mapOf(
@@ -461,7 +474,7 @@ object TableConstructorTests {
                             ),
                             Symbol.of("value1") to BoolType,
                         ),
-                    ).asStaticScope(),
+                    ),
                 )
             }
         }
@@ -476,12 +489,13 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                 ).inferType(
-                    scope = FixedStaticValueScope(
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = FixedStaticValueScope(
                         entries = mapOf(
                             Symbol.of("key1") to UndefinedType,
                             Symbol.of("value1") to BoolType,
                         ),
-                    ).asStaticScope(),
+                    ),
                 )
             }
         }
@@ -503,12 +517,13 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                 ).inferType(
-                    scope = FixedStaticValueScope(
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = FixedStaticValueScope(
                         entries = mapOf(
                             Symbol.of("value1") to BoolType,
                             Symbol.of("value2") to IntCollectiveType,
                         ),
-                    ).asStaticScope(),
+                    ),
                 )
             )
         }
@@ -524,14 +539,15 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                 ).inferType(
-                    scope = FixedStaticValueScope(
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = FixedStaticValueScope(
                         entries = mapOf(
                             Symbol.of("key1") to BoolType,
                             Symbol.of("key2") to IntCollectiveType,
                             Symbol.of("value1") to BoolType,
                             Symbol.of("value2") to BoolType,
                         ),
-                    ).asStaticScope(),
+                    ),
                 )
             }
         }
@@ -547,12 +563,13 @@ object TableConstructorTests {
                         }
                     """.trimIndent(),
                 ).inferType(
-                    scope = FixedStaticValueScope(
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = FixedStaticValueScope(
                         entries = mapOf(
                             Symbol.of("key1") to BoolType,
                             Symbol.of("value1") to UndefinedType,
                         ),
-                    ).asStaticScope(),
+                    ),
                 )
             }
         }

@@ -1,6 +1,8 @@
 package sigma.expressions
 
-import sigma.StaticScope
+
+import sigma.StaticTypeScope
+import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.DictArrayAltContext
 import sigma.parser.antlr.SigmaParser.DictContext
@@ -129,12 +131,13 @@ data class TableConstructor(
     override fun dump(): String = "(dict constructor)"
 
     override fun inferType(
-        scope: StaticScope,
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
     ): Type {
         val entryTypes = entries.map {
             EntryType(
-                keyType = it.key.inferType(scope = scope) as? PrimitiveType ?: throw UnsupportedKeyError(),
-                valueType = it.value.inferType(scope = scope),
+                keyType = it.key.inferType(typeScope = typeScope, valueScope = valueScope) as? PrimitiveType ?: throw UnsupportedKeyError(),
+                valueType = it.value.inferType(typeScope = typeScope, valueScope = valueScope),
             )
         }
 
