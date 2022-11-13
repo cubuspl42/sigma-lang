@@ -3,7 +3,7 @@ package sigma.expressions
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.TypeExpression
-import sigma.parser.antlr.SigmaParser.TupleContext
+import sigma.parser.antlr.SigmaParser.TupleLiteralContext
 import sigma.types.DictType
 import sigma.types.PrimitiveType
 import sigma.types.UnorderedTupleType
@@ -29,7 +29,7 @@ data class UnorderedTupleTypeLiteral(
 
     companion object {
         fun build(
-            ctx: TupleContext,
+            ctx: TupleLiteralContext,
         ): UnorderedTupleTypeLiteral = TODO()
     }
 

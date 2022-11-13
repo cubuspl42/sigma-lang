@@ -3,7 +3,7 @@ package sigma.expressions
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser
-import sigma.parser.antlr.SigmaParser.UnorderedTupleContext
+import sigma.parser.antlr.SigmaParser.UnorderedTupleLiteralContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.types.DictType
 import sigma.types.PrimitiveType
@@ -74,7 +74,7 @@ data class TableConstructor(
 
     companion object {
         fun build(
-            ctx: UnorderedTupleContext,
+            ctx: UnorderedTupleLiteralContext,
         ): TableConstructor = TableConstructor(
             location = SourceLocation.build(ctx),
             entries = ctx.association().map {

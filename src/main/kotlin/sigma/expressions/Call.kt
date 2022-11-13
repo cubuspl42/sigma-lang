@@ -9,7 +9,7 @@ import sigma.Thunk
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
-import sigma.parser.antlr.SigmaParser.CallExpressionTupleAltContext
+import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
 import sigma.types.AbstractionType
 import sigma.types.Type
 import sigma.values.FunctionValue
@@ -98,7 +98,7 @@ data class Call(
         )
 
         fun build(
-            ctx: CallExpressionTupleAltContext,
+            ctx: CallExpressionTupleLiteralAltContext,
         ): Call = Call(
             location = SourceLocation.build(ctx),
             subject = Expression.build(ctx.callee),

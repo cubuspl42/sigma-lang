@@ -19,7 +19,7 @@ expression
     | parenExpression # parenExpressionAlt
     | reference # referenceAlt
     | abstraction # abstractionAlt
-    | tuple # TupleAlt
+    | tupleLiteral # TupleLiteralAlt
     | letExpression # letExpressionAlt
     | SymbolLiteral # symbolLiteralAlt
     | IntLiteral # intLiteralAlt
@@ -29,10 +29,10 @@ expression
 // For left-recursion
 callableExpression
     : callee=callableExpression LeftBracket argument=expression RightBracket # callExpressionAlt
-    | callee=callableExpression argument=tuple # callExpressionTupleAlt
+    | callee=callableExpression argument=tupleLiteral # callExpressionTupleLiteralAlt
     | parenExpression # callableParenAlt
     | reference # callableReferenceAlt
-    | tuple # callableTupleAlt
+    | tupleLiteral # callableTupleLiteralAlt
     ;
 
 parenExpression
@@ -56,14 +56,13 @@ metaArgument
 identifier
     : Identifier ;
 
-// TODO: Rename to *Literal?
-tuple
+tupleLiteral
     // TODO: Nuke content?
-    : content=unorderedTuple # unorderedTupleAlt
-    | content=orderedTuple # orderedTupleAlt
+    : content=unorderedTupleLiteral # unorderedTupleLiteralAlt
+    | content=orderedTupleLiteral # orderedTupleLiteralAlt
     ;
 
-unorderedTuple
+unorderedTupleLiteral
     : LeftBrace (association (Comma association)*)? Comma? RightBrace ;
 
 association
@@ -71,7 +70,7 @@ association
     | LeftBracket key=expression RightBracket Colon image=expression # arbitraryBindAlt
     ;
 
-orderedTuple
+orderedTupleLiteral
     : LeftBracket ((element (Comma element)*)? Comma?)? RightBracket ;
 
 element

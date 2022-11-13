@@ -13,12 +13,12 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.AbstractionAltContext
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
-import sigma.parser.antlr.SigmaParser.CallExpressionTupleAltContext
-import sigma.parser.antlr.SigmaParser.CallableTupleAltContext
+import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
+import sigma.parser.antlr.SigmaParser.CallableTupleLiteralAltContext
 import sigma.parser.antlr.SigmaParser.CallableExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallableParenAltContext
 import sigma.parser.antlr.SigmaParser.CallableReferenceAltContext
-import sigma.parser.antlr.SigmaParser.TupleAltContext
+import sigma.parser.antlr.SigmaParser.TupleLiteralAltContext
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.parser.antlr.SigmaParser.LetExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ParenExpressionAltContext
@@ -62,9 +62,9 @@ sealed class Expression : Term() {
                 ctx: AbstractionAltContext,
             ): Expression = Abstraction.build(ctx.abstraction())
 
-            override fun visitTupleAlt(
-                ctx: TupleAltContext,
-            ): Expression = TupleLiteral.build(ctx.tuple())
+            override fun visitTupleLiteralAlt(
+                ctx: TupleLiteralAltContext,
+            ): Expression = TupleLiteral.build(ctx.tupleLiteral())
 
             override fun visitLetExpressionAlt(
                 ctx: LetExpressionAltContext,
@@ -86,8 +86,8 @@ sealed class Expression : Term() {
                 ctx: CallExpressionAltContext,
             ): Expression = Call.build(ctx)
 
-            override fun visitCallExpressionTupleAlt(
-                ctx: CallExpressionTupleAltContext,
+            override fun visitCallExpressionTupleLiteralAlt(
+                ctx: CallExpressionTupleLiteralAltContext,
             ): Expression = Call.build(ctx)
 
             override fun visitCallableParenAlt(
@@ -98,9 +98,9 @@ sealed class Expression : Term() {
                 ctx: CallableReferenceAltContext,
             ): Expression = Reference.build(ctx.reference())
 
-            override fun visitCallableTupleAlt(
-                ctx: CallableTupleAltContext,
-            ): Expression = TupleLiteral.build(ctx.tuple())
+            override fun visitCallableTupleLiteralAlt(
+                ctx: CallableTupleLiteralAltContext,
+            ): Expression = TupleLiteral.build(ctx.tupleLiteral())
         }.visit(expression) ?: throw IllegalArgumentException("Can't match expression ${expression::class}")
     }
 
