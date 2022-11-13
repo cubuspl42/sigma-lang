@@ -11,14 +11,14 @@ class CallTests {
         fun testDictSubject() {
             assertEquals(
                 expected = Symbol("bar"),
-                actual = Expression.parse("{foo = `bar`}[`foo`]").evaluateAsRoot(),
+                actual = Expression.parse("{foo: `bar`}[`foo`]").evaluateAsRoot(),
             )
         }
 
         @Test
         fun testSelfReferring() {
             assertThrows<RuntimeException> {
-                Expression.parse("{foo = `baz`, bar = foo}[`bar`]").evaluateAsRoot()
+                Expression.parse("{foo: `baz`, bar: foo}[`bar`]").evaluateAsRoot()
             }
         }
     }

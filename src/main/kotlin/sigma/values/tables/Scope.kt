@@ -4,6 +4,10 @@ import sigma.Thunk
 import sigma.values.Symbol
 
 interface Scope {
+    object Empty : Scope {
+        override fun get(name: Symbol): Thunk? = null
+    }
+
     fun get(name: Symbol): Thunk?
 }
 

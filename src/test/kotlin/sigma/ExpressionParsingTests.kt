@@ -54,19 +54,19 @@ class ExpressionParsingTests {
                             TableConstructor.NamedEntryExpression(
                                 name = Symbol.of("foo"),
                                 value = SymbolLiteral(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 7),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                     symbol = Symbol.of("bar"),
                                 ),
                             ),
                         ),
                     ),
                     argument = SymbolLiteral(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 14),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 13),
                         symbol = Symbol.of("foo"),
                     ),
                 ),
                 actual = Expression.parse(
-                    source = "{foo = `bar`}[`foo`]",
+                    source = "{foo: `bar`}[`foo`]",
                 ),
             )
         }
@@ -86,7 +86,7 @@ class ExpressionParsingTests {
                             TableConstructor.NamedEntryExpression(
                                 name = Symbol.of("bar"),
                                 value = SymbolLiteral(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 10),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 9),
                                     symbol = Symbol.of("baz"),
                                 ),
                             ),
@@ -94,7 +94,7 @@ class ExpressionParsingTests {
                     ),
                 ),
                 actual = Expression.parse(
-                    source = "foo{bar = `baz`}",
+                    source = "foo{bar: `baz`}",
                 ),
             )
         }

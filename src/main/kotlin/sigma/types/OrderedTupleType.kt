@@ -9,7 +9,7 @@ data class OrderedTupleType(
 ) : TupleType() {
     data class Entry(
         val name: Symbol?,
-        val valueType: Type,
+        val elementType: Type,
     )
 
     companion object {
@@ -23,9 +23,9 @@ data class OrderedTupleType(
     }
 
     override fun dump(): String {
-        val dumpedEntries = entries.map { (name, valueType) ->
+        val dumpedEntries = entries.map { (name, elementType) ->
             listOfNotNull(
-                name?.let { "${it.name}: " }, valueType.dump()
+                name?.let { "${it.name}: " }, elementType.dump()
             ).joinToString(
                 separator = " ",
             )
@@ -42,10 +42,10 @@ data class OrderedTupleType(
     override fun isDefinitelyEmpty(): Boolean = entries.isEmpty()
 
     override val valueTypeByKey: Map<PrimitiveValue, Type> = entries.withIndex().associate { (index, entry) ->
-        IntValue(index) to entry.valueType
+        IntValue(index) to entry.elementType
     }
 
     override val valueTypeByLabel: Map<Symbol, Type> = entries.mapNotNull { entry ->
-        entry.name?.let { name -> name to entry.valueType }
+        entry.name?.let { name -> name to entry.elementType }
     }.toMap()
 }

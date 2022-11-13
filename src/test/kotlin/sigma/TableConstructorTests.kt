@@ -24,6 +24,7 @@ import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+// TODO: Rename
 object TableConstructorTests {
     object ParsingTests {
         @Test
@@ -35,20 +36,20 @@ object TableConstructorTests {
                         TableConstructor.NamedEntryExpression(
                             name = Symbol.of("foo"),
                             value = Reference(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 referee = Symbol.of("baz1"),
                             ),
                         ),
                         TableConstructor.NamedEntryExpression(
                             name = Symbol.of("bar"),
                             value = Reference(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 19),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 17),
                                 referee = Symbol.of("baz2"),
                             ),
                         ),
                     ),
                 ),
-                actual = Expression.parse("{foo = baz1, bar = baz2}"),
+                actual = Expression.parse("{foo: baz1, bar: baz2}"),
             )
         }
 
@@ -61,56 +62,23 @@ object TableConstructorTests {
                         TableConstructor.NamedEntryExpression(
                             name = Symbol.of("foo"),
                             value = Reference(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 referee = Symbol.of("baz1"),
                             ),
                         ),
                         TableConstructor.ArbitraryEntryExpression(
                             key = Reference(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 14),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                 referee = Symbol.of("baz"),
                             ),
                             value = Reference(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 21),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 19),
                                 referee = Symbol.of("baz2"),
                             ),
                         ),
                     ),
                 ),
-                actual = Expression.parse("{foo = baz1, [baz] = baz2}"),
-            )
-        }
-
-        @Test
-        fun testArray() {
-            assertEquals(
-                expected = TableConstructor(
-                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    entries = listOf(
-                        TableConstructor.ArbitraryEntryExpression(
-                            key = IntLiteral.of(0),
-                            value = Reference(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                                referee = Symbol.of("foo"),
-                            ),
-                        ),
-                        TableConstructor.ArbitraryEntryExpression(
-                            key = IntLiteral.of(1),
-                            value = Reference(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 6),
-                                referee = Symbol.of("bar"),
-                            ),
-                        ),
-                        TableConstructor.ArbitraryEntryExpression(
-                            key = IntLiteral.of(2),
-                            value = Reference(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 11),
-                                referee = Symbol.of("baz"),
-                            ),
-                        ),
-                    ),
-                ),
-                actual = Expression.parse("{foo, bar, baz}"),
+                actual = Expression.parse("{foo: baz1, [baz]: baz2}"),
             )
         }
     }
@@ -129,8 +97,8 @@ object TableConstructorTests {
                     actual = Expression.parse(
                         source = """
                         {
-                            key1 = value1,
-                            key2 = value2,
+                            key1: value1,
+                            key2: value2,
                         }
                     """.trimIndent(),
                     ).inferType(
@@ -157,8 +125,8 @@ object TableConstructorTests {
                     actual = Expression.parse(
                         source = """
                             {
-                                key1 = value1,
-                                [`key2`] = value2,
+                                key1: value1,
+                                [`key2`]: value2,
                             }
                         """.trimIndent(),
                     ).inferType(
@@ -179,8 +147,8 @@ object TableConstructorTests {
                     Expression.parse(
                         source = """
                         {
-                            key1 = value1,
-                            key1 = value2,
+                            key1: value1,
+                            key1: value2,
                         }
                     """.trimIndent(),
                     ).inferType(
@@ -203,9 +171,9 @@ object TableConstructorTests {
                 val type = Expression.parse(
                     source = """
                         {
-                            [0] = value1,
-                            [1] = value2,
-                            [2] = value3,
+                            [0]: value1,
+                            [1]: value2,
+                            [2]: value3,
                         }
                     """.trimIndent(),
                 ).inferType(
@@ -245,9 +213,9 @@ object TableConstructorTests {
                     actual = Expression.parse(
                         source = """
                             {
-                                [0] = value1,
-                                [1] = value2,
-                                [3] = value3,
+                                [0]: value1,
+                                [1]: value2,
+                                [3]: value3,
                             }
                         """.trimIndent(),
                     ).inferType(
@@ -269,9 +237,9 @@ object TableConstructorTests {
                     Expression.parse(
                         source = """
                         {
-                            [0] = value1,
-                            [1] = value2,
-                            [1] = value3,
+                            [0]: value1,
+                            [1]: value2,
+                            [1]: value3,
                         }
                     """.trimIndent(),
                     ).inferType(
@@ -301,9 +269,9 @@ object TableConstructorTests {
                     actual = Expression.parse(
                         source = """
                         {
-                            [0] = value1,
-                            [1] = value2,
-                            [2] = value3,
+                            [0]: value1,
+                            [1]: value2,
+                            [2]: value3,
                         }
                     """.trimIndent(),
                     ).inferType(
@@ -330,8 +298,8 @@ object TableConstructorTests {
                     actual = Expression.parse(
                         source = """
                             {
-                                [key1] = value1,
-                                [key2] = value2,
+                                [key1]: value1,
+                                [key2]: value2,
                             }
                         """.trimIndent(),
                     ).inferType(
@@ -354,9 +322,9 @@ object TableConstructorTests {
                     Expression.parse(
                         source = """
                         {
-                            [key1] = value1,
-                            [key2] = value2,
-                            [key3] = value3,
+                            [key1]: value1,
+                            [key2]: value2,
+                            [key3]: value3,
                         }
                     """.trimIndent(),
                     ).inferType(
@@ -387,8 +355,8 @@ object TableConstructorTests {
                     actual = Expression.parse(
                         source = """
                         {
-                            [0] = value1,
-                            [key2] = value2,
+                            [0]: value1,
+                            [key2]: value2,
                         }
                     """.trimIndent(),
                     ).inferType(
@@ -414,7 +382,7 @@ object TableConstructorTests {
                 Expression.parse(
                     source = """
                         {
-                            [key1] = value1,
+                            [key1]: value1,
                         }
                     """.trimIndent(),
                 ).inferType(
@@ -435,7 +403,7 @@ object TableConstructorTests {
                 Expression.parse(
                     source = """
                         {
-                            [key1] = value1,
+                            [key1]: value1,
                         }
                     """.trimIndent(),
                 ).inferType(
@@ -459,7 +427,7 @@ object TableConstructorTests {
                 Expression.parse(
                     source = """
                         {
-                            [key1] = value1,
+                            [key1]: value1,
                         }
                     """.trimIndent(),
                 ).inferType(
@@ -484,7 +452,7 @@ object TableConstructorTests {
                 Expression.parse(
                     source = """
                         {
-                            [key1] = value1,
+                            [key1]: value1,
                         }
                     """.trimIndent(),
                 ).inferType(
@@ -511,8 +479,8 @@ object TableConstructorTests {
                 ), actual = Expression.parse(
                     source = """
                         {
-                            [0] = value1,
-                            [`key2`] = value2,
+                            [0]: value1,
+                            [`key2`]: value2,
                         }
                     """.trimIndent(),
                 ).inferType(
@@ -533,8 +501,8 @@ object TableConstructorTests {
                 Expression.parse(
                     source = """
                         {
-                            [key1] = value1,
-                            [key2] = value2,
+                            [key1]: value1,
+                            [key2]: value2,
                         }
                     """.trimIndent(),
                 ).inferType(
@@ -558,7 +526,7 @@ object TableConstructorTests {
                 Expression.parse(
                     source = """
                         {
-                            [key1] = value1,
+                            [key1]: value1,
                         }
                     """.trimIndent(),
                 ).inferType(
