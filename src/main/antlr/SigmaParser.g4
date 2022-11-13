@@ -57,9 +57,8 @@ identifier
     : Identifier ;
 
 tupleLiteral
-    // TODO: Nuke content?
-    : content=unorderedTupleLiteral # unorderedTupleLiteralAlt
-    | content=orderedTupleLiteral # orderedTupleLiteralAlt
+    : unorderedTupleLiteral
+    | orderedTupleLiteral
     ;
 
 unorderedTupleLiteral
