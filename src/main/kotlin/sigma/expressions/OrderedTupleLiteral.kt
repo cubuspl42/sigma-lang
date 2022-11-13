@@ -2,7 +2,7 @@ package sigma.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
-import sigma.parser.antlr.SigmaParser.OrderedTupleContext
+import sigma.parser.antlr.SigmaParser.OrderedTupleLiteralContext
 import sigma.types.OrderedTupleType
 import sigma.values.PrimitiveValue
 import sigma.values.tables.DictTable
@@ -17,7 +17,7 @@ data class OrderedTupleLiteral(
 ) : TupleLiteral() {
     companion object {
         fun build(
-            ctx: OrderedTupleContext,
+            ctx: OrderedTupleLiteralContext,
         ): OrderedTupleLiteral = OrderedTupleLiteral(
             location = SourceLocation.build(ctx),
             elements = ctx.element().map {
