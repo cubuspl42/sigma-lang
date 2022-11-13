@@ -9,15 +9,15 @@ abstract class TupleLiteral : Expression() {
         fun build(
             ctx: TupleLiteralContext,
         ): TupleLiteral = object : SigmaParserBaseVisitor<TupleLiteral>() {
-            override fun visitOrderedTupleLiteralAlt(
-                ctx: SigmaParser.OrderedTupleLiteralAltContext,
+            override fun visitOrderedTupleLiteral(
+                ctx: SigmaParser.OrderedTupleLiteralContext,
             ): OrderedTupleLiteral {
-                return OrderedTupleLiteral.build(ctx.content)
+                return OrderedTupleLiteral.build(ctx)
             }
 
-            override fun visitUnorderedTupleLiteralAlt(
-                ctx: SigmaParser.UnorderedTupleLiteralAltContext,
-            ): TableConstructor = TableConstructor.build(ctx.content)
+            override fun visitUnorderedTupleLiteral(
+                ctx: SigmaParser.UnorderedTupleLiteralContext,
+            ): TableConstructor = TableConstructor.build(ctx)
         }.visit(ctx)
     }
 }
