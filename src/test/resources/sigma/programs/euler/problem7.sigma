@@ -7,29 +7,29 @@ let {
         buildMultiplesFrom = [i] => let {
             ni = n * i,
         } in if[ni >= M]{
-            then = {},
-            else = {
-               [ni] = true,
+            then: {},
+            else: {
+               [ni]: true,
             } .. buildMultiplesFrom[i + 1],
         },
     } in buildMultiplesFrom[2],
 
     // Build prime table with all multiples smaller than M of all numbers up to n
     buildNonPrimeTable = [n] => if[n < 2]{
-        then = {},
-        else = (buildMultiplesOfNUpToM[n] .. buildNonPrimeTable[n - 1]),
+        then: {},
+        else: (buildMultiplesOfNUpToM[n] .. buildNonPrimeTable[n - 1]),
     },
 
     nonPrimeTable = buildNonPrimeTable[M],
 
     // Find all primes <= n
     findPrimesLte = [n] => if[n < 2]{
-        then = {},
-        else = let {
+        then: {},
+        else: let {
             smallerPrimes = findPrimesLte[n - 1]
         } in if[isUndefined[nonPrimeTable[n]]]{
-            then = { [n] = true } .. smallerPrimes,
-            else = smallerPrimes,
+            then: { [n]: true } .. smallerPrimes,
+            else: smallerPrimes,
         },
     },
 
@@ -43,20 +43,20 @@ let {
             isNPrime = isUndefined[nonPrimeTable[n]],
             nextN = n + 1,
         } in if[isNPrime]{
-            then = if[nextPrimeId == i]{
-                then = n,
-                else = find{
-                    n = nextN,
-                    nextPrimeId = (nextPrimeId + 1),
+            then: if[nextPrimeId == i]{
+                then: n,
+                else: find{
+                    n: nextN,
+                    nextPrimeId: (nextPrimeId + 1),
                 },
             },
-            else = find{
-                n = nextN,
-                nextPrimeId = nextPrimeId,
+            else: find{
+                n: nextN,
+                nextPrimeId: nextPrimeId,
             },
         },
     } in find{
-        n = 1,
-        nextPrimeId = 0,
+        n: 1,
+        nextPrimeId: 0,
     },
 } in findIthPrime[20]

@@ -13,12 +13,12 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.AbstractionAltContext
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
-import sigma.parser.antlr.SigmaParser.CallExpressionDictAltContext
-import sigma.parser.antlr.SigmaParser.CallableDictAltContext
+import sigma.parser.antlr.SigmaParser.CallExpressionTupleAltContext
+import sigma.parser.antlr.SigmaParser.CallableTupleAltContext
 import sigma.parser.antlr.SigmaParser.CallableExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallableParenAltContext
 import sigma.parser.antlr.SigmaParser.CallableReferenceAltContext
-import sigma.parser.antlr.SigmaParser.DictAltContext
+import sigma.parser.antlr.SigmaParser.TupleAltContext
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.parser.antlr.SigmaParser.LetExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ParenExpressionAltContext
@@ -62,9 +62,9 @@ sealed class Expression : Term() {
                 ctx: AbstractionAltContext,
             ): Expression = Abstraction.build(ctx.abstraction())
 
-            override fun visitDictAlt(
-                ctx: DictAltContext,
-            ): Expression = TableConstructor.build(ctx.dict())
+            override fun visitTupleAlt(
+                ctx: TupleAltContext,
+            ): Expression = TupleLiteral.build(ctx.tuple())
 
             override fun visitLetExpressionAlt(
                 ctx: LetExpressionAltContext,
@@ -86,8 +86,8 @@ sealed class Expression : Term() {
                 ctx: CallExpressionAltContext,
             ): Expression = Call.build(ctx)
 
-            override fun visitCallExpressionDictAlt(
-                ctx: CallExpressionDictAltContext,
+            override fun visitCallExpressionTupleAlt(
+                ctx: CallExpressionTupleAltContext,
             ): Expression = Call.build(ctx)
 
             override fun visitCallableParenAlt(
@@ -98,9 +98,9 @@ sealed class Expression : Term() {
                 ctx: CallableReferenceAltContext,
             ): Expression = Reference.build(ctx.reference())
 
-            override fun visitCallableDictAlt(
-                ctx: CallableDictAltContext,
-            ): Expression = TableConstructor.build(ctx.dict())
+            override fun visitCallableTupleAlt(
+                ctx: CallableTupleAltContext,
+            ): Expression = TupleLiteral.build(ctx.tuple())
         }.visit(expression) ?: throw IllegalArgumentException("Can't match expression ${expression::class}")
     }
 
@@ -128,7 +128,9 @@ sealed class Expression : Term() {
     }
 
     abstract fun inferType(
+        // Idea: Rename to metaScope?
         typeScope: StaticTypeScope,
+        // Idea: Rename to staticScope?
         valueScope: StaticValueScope,
     ): Type
 

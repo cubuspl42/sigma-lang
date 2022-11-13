@@ -3,8 +3,7 @@ package sigma.expressions
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser
-import sigma.parser.antlr.SigmaParser.DictArrayAltContext
-import sigma.parser.antlr.SigmaParser.DictContext
+import sigma.parser.antlr.SigmaParser.UnorderedTupleContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.types.DictType
 import sigma.types.PrimitiveType
@@ -16,10 +15,11 @@ import sigma.types.Type
 import sigma.values.Symbol
 import sigma.values.TypeError
 
+// TODO: Rename to UnorderedTupleLiteral
 data class TableConstructor(
     override val location: SourceLocation,
     val entries: List<EntryExpression>,
-) : Expression() {
+) : TupleLiteral() {
     class DuplicateKeyError(
         key: PrimitiveValue,
     ) : TypeError(
@@ -74,53 +74,29 @@ data class TableConstructor(
 
     companion object {
         fun build(
-            ctx: DictContext,
-        ): TableConstructor = object : SigmaParserBaseVisitor<TableConstructor>() {
-            override fun visitDictTableAlt(
-                ctx: SigmaParser.DictTableAltContext,
-            ): TableConstructor = TableConstructor(
-                location = SourceLocation.build(ctx),
-                entries = buildFromTable(ctx.table()),
-            )
-
-            override fun visitDictArrayAlt(
-                ctx: DictArrayAltContext,
-            ): TableConstructor = TableConstructor(
-                location = SourceLocation.build(ctx), entries = buildFromArray(ctx.content)
-            )
-        }.visit(ctx)
-
-        private fun buildFromTable(
-            ctx: SigmaParser.TableContext,
-        ): List<EntryExpression> = ctx.tableBind().map {
-            buildAssignment(it)
-        }
-
-        private fun buildFromArray(
-            ctx: SigmaParser.ArrayContext,
-        ): List<ArbitraryEntryExpression> = ctx.bindImage().withIndex().map { (index, imageCtx) ->
-            // Note: When arbitrary binds aren't supported, then these int literals can be changed to values
-            ArbitraryEntryExpression(
-                key = IntLiteral.of(index),
-                value = Expression.build(imageCtx.image),
-            )
-        }
+            ctx: UnorderedTupleContext,
+        ): TableConstructor = TableConstructor(
+            location = SourceLocation.build(ctx),
+            entries = ctx.association().map {
+                buildAssignment(it)
+            }
+        )
 
         private fun buildAssignment(
-            ctx: SigmaParser.TableBindContext,
+            ctx: SigmaParser.AssociationContext,
         ): EntryExpression = object : SigmaParserBaseVisitor<EntryExpression>() {
             override fun visitSymbolBindAlt(
                 ctx: SigmaParser.SymbolBindAltContext,
             ) = NamedEntryExpression(
                 name = Symbol.of(ctx.name.text),
-                value = Expression.build(ctx.image.image),
+                value = Expression.build(ctx.image),
             )
 
             override fun visitArbitraryBindAlt(
                 ctx: SigmaParser.ArbitraryBindAltContext,
             ) = ArbitraryEntryExpression(
                 key = Expression.build(ctx.key),
-                value = Expression.build(ctx.image.image),
+                value = Expression.build(ctx.image),
             )
         }.visit(ctx)
     }

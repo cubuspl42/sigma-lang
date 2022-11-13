@@ -2,13 +2,13 @@ let {
     N: Int = 100,
 
     sumOfSquares = [n: Int] => if[n == 1] {
-        then = 1,
-        else = sumOfSquares[n - 1] + sq[n],
+        then: 1,
+        else: sumOfSquares[n - 1] + sq[n],
     },
 
     sumOf = [n] => if [n == 1] {
-        then = 1,
-        else = sumOf[n - 1] + n,
+        then: 1,
+        else: sumOf[n - 1] + n,
     },
 
     squareOfSum = [n] => let {

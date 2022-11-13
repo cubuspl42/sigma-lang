@@ -2,7 +2,7 @@ package sigma.expressions
 
 import sigma.StaticTypeScope
 import sigma.TypeExpression
-import sigma.parser.antlr.SigmaParser.DictContext
+import sigma.parser.antlr.SigmaParser.TupleContext
 import sigma.types.OrderedTupleType
 import sigma.types.Type
 import sigma.values.Symbol
@@ -18,7 +18,7 @@ data class OrderedTupleTypeLiteral(
 
     companion object {
         fun build(
-            ctx: DictContext,
+            ctx: TupleContext,
         ): OrderedTupleTypeLiteral = TODO()
     }
 
@@ -28,7 +28,7 @@ data class OrderedTupleTypeLiteral(
         entries = entries.map {
             OrderedTupleType.Entry(
                 name = it.name,
-                valueType = it.valueType.evaluate(
+                elementType = it.valueType.evaluate(
                     typeScope = typeScope,
                 ),
             )

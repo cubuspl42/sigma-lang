@@ -19,7 +19,7 @@ expression
     | parenExpression # parenExpressionAlt
     | reference # referenceAlt
     | abstraction # abstractionAlt
-    | dict # dictAlt
+    | tuple # TupleAlt
     | letExpression # letExpressionAlt
     | SymbolLiteral # symbolLiteralAlt
     | IntLiteral # intLiteralAlt
@@ -29,10 +29,10 @@ expression
 // For left-recursion
 callableExpression
     : callee=callableExpression LeftBracket argument=expression RightBracket # callExpressionAlt
-    | callee=callableExpression argument=dict # callExpressionDictAlt
+    | callee=callableExpression argument=tuple # callExpressionTupleAlt
     | parenExpression # callableParenAlt
     | reference # callableReferenceAlt
-    | dict # callableDictAlt
+    | tuple # callableTupleAlt
     ;
 
 parenExpression
@@ -56,23 +56,27 @@ metaArgument
 identifier
     : Identifier ;
 
-dict
-    : content=table # dictTableAlt
-    | content=array # dictArrayAlt;
-
-table
-    : LeftBrace (tableBind (Comma tableBind)*)? Comma? RightBrace ;
-
-tableBind
-    : name=identifier Assign image=bindImage # symbolBindAlt
-    | LeftBracket key=expression RightBracket Assign image=bindImage # arbitraryBindAlt
+// TODO: Rename to *Literal?
+tuple
+    // TODO: Nuke content?
+    : content=unorderedTuple # unorderedTupleAlt
+    | content=orderedTuple # orderedTupleAlt
     ;
 
-array
-    : LeftBrace (bindImage (Comma bindImage)*)? Comma? RightBrace ;
+unorderedTuple
+    : LeftBrace (association (Comma association)*)? Comma? RightBrace ;
 
-bindImage
-    : image=expression ;
+association
+    : name=identifier Colon image=expression # symbolBindAlt // TOOD: Rename
+    | LeftBracket key=expression RightBracket Colon image=expression # arbitraryBindAlt
+    ;
+
+orderedTuple
+    : LeftBracket ((element (Comma element)*)? Comma?)? RightBracket ;
+
+element
+    : expression
+    ;
 
 letExpression
     : LetKeyword scope=letScope InKeyword result=expression ;

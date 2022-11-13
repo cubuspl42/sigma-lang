@@ -159,11 +159,11 @@ class OrderedTupleTypeLiteralTests {
                     entries = listOf(
                         OrderedTupleType.Entry(
                             name = Symbol.of("a"),
-                            valueType = BoolType,
+                            elementType = BoolType,
                         ),
                         OrderedTupleType.Entry(
                             name = null,
-                            valueType = IntCollectiveType,
+                            elementType = IntCollectiveType,
                         ),
                     )
                 ),
