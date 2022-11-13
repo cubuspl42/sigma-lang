@@ -73,14 +73,14 @@ data class Call(
                     location = SourceLocation.build(ctx),
                     referee = Symbol.of(prototype.functionName),
                 ),
-                argument = TableConstructor(
+                argument = UnorderedTupleLiteral(
                     location = SourceLocation.build(ctx),
                     entries = listOf(
-                        TableConstructor.NamedEntryExpression(
+                        UnorderedTupleLiteral.NamedEntryExpression(
                             name = prototype.leftArgument,
                             value = leftExpression,
                         ),
-                        TableConstructor.NamedEntryExpression(
+                        UnorderedTupleLiteral.NamedEntryExpression(
                             name = prototype.rightArgument,
                             value = rightExpression,
                         ),

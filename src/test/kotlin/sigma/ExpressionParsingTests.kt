@@ -1,7 +1,7 @@
 package sigma
 
 import sigma.expressions.Call
-import sigma.expressions.TableConstructor
+import sigma.expressions.UnorderedTupleLiteral
 import sigma.expressions.Expression
 import sigma.expressions.Reference
 import sigma.expressions.SourceLocation
@@ -48,10 +48,10 @@ class ExpressionParsingTests {
             assertEquals(
                 expected = Call(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = TableConstructor(
+                    subject = UnorderedTupleLiteral(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         entries = listOf(
-                            TableConstructor.NamedEntryExpression(
+                            UnorderedTupleLiteral.NamedEntryExpression(
                                 name = Symbol.of("foo"),
                                 value = SymbolLiteral(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 6),
@@ -80,10 +80,10 @@ class ExpressionParsingTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo")
                     ),
-                    argument = TableConstructor(
+                    argument = UnorderedTupleLiteral(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         entries = listOf(
-                            TableConstructor.NamedEntryExpression(
+                            UnorderedTupleLiteral.NamedEntryExpression(
                                 name = Symbol.of("bar"),
                                 value = SymbolLiteral(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),

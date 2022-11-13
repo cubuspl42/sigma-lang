@@ -66,11 +66,10 @@ unorderedTupleLiteral
 
 association
     : name=identifier Colon image=expression # symbolBindAlt // TOOD: Rename
-    | LeftBracket key=expression RightBracket Colon image=expression # arbitraryBindAlt
     ;
 
 orderedTupleLiteral
-    : LeftBracket ((element (Comma element)*)? Comma?)? RightBracket ;
+    : LeftBracket ((element (Comma element)*)+ Comma?)? RightBracket ;
 
 element
     : expression

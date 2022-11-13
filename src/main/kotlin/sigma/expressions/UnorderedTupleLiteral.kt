@@ -15,8 +15,7 @@ import sigma.types.Type
 import sigma.values.Symbol
 import sigma.values.TypeError
 
-// TODO: Rename to UnorderedTupleLiteral
-data class TableConstructor(
+data class UnorderedTupleLiteral(
     override val location: SourceLocation,
     val entries: List<EntryExpression>,
 ) : TupleLiteral() {
@@ -75,7 +74,7 @@ data class TableConstructor(
     companion object {
         fun build(
             ctx: UnorderedTupleLiteralContext,
-        ): TableConstructor = TableConstructor(
+        ): UnorderedTupleLiteral = UnorderedTupleLiteral(
             location = SourceLocation.build(ctx),
             entries = ctx.association().map {
                 buildAssignment(it)
@@ -92,12 +91,13 @@ data class TableConstructor(
                 value = Expression.build(ctx.image),
             )
 
-            override fun visitArbitraryBindAlt(
-                ctx: SigmaParser.ArbitraryBindAltContext,
-            ) = ArbitraryEntryExpression(
-                key = Expression.build(ctx.key),
-                value = Expression.build(ctx.image),
-            )
+            // TODO: Re-support dict literals
+//            override fun visitArbitraryBindAlt(
+//                ctx: SigmaParser.ArbitraryBindAltContext,
+//            ) = ArbitraryEntryExpression(
+//                key = Expression.build(ctx.key),
+//                value = Expression.build(ctx.image),
+//            )
         }.visit(ctx)
     }
 
