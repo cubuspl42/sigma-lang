@@ -2,16 +2,15 @@ package sigma
 
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertThrows
-import sigma.expressions.TableConstructor
+import sigma.expressions.UnorderedTupleLiteral
 import sigma.expressions.Expression
-import sigma.expressions.IntLiteral
 import sigma.expressions.Reference
 import sigma.expressions.SourceLocation
-import sigma.expressions.TableConstructor.DuplicateKeyError
-import sigma.expressions.TableConstructor.InconsistentValuesError
-import sigma.expressions.TableConstructor.InconsistentKeysError
-import sigma.expressions.TableConstructor.UnsupportedValueError
-import sigma.expressions.TableConstructor.UnsupportedKeyError
+import sigma.expressions.UnorderedTupleLiteral.DuplicateKeyError
+import sigma.expressions.UnorderedTupleLiteral.InconsistentValuesError
+import sigma.expressions.UnorderedTupleLiteral.InconsistentKeysError
+import sigma.expressions.UnorderedTupleLiteral.UnsupportedValueError
+import sigma.expressions.UnorderedTupleLiteral.UnsupportedKeyError
 import sigma.types.BoolType
 import sigma.types.AbstractionType
 import sigma.types.DictType
@@ -30,17 +29,17 @@ object TableConstructorTests {
         @Test
         fun testSimple() {
             assertEquals(
-                expected = TableConstructor(
+                expected = UnorderedTupleLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        TableConstructor.NamedEntryExpression(
+                        UnorderedTupleLiteral.NamedEntryExpression(
                             name = Symbol.of("foo"),
                             value = Reference(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 referee = Symbol.of("baz1"),
                             ),
                         ),
-                        TableConstructor.NamedEntryExpression(
+                        UnorderedTupleLiteral.NamedEntryExpression(
                             name = Symbol.of("bar"),
                             value = Reference(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
@@ -54,19 +53,21 @@ object TableConstructorTests {
         }
 
         @Test
+        // TODO: Re-support dict literals
+        @Disabled
         fun testWithArbitrary() {
             assertEquals(
-                expected = TableConstructor(
+                expected = UnorderedTupleLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        TableConstructor.NamedEntryExpression(
+                        UnorderedTupleLiteral.NamedEntryExpression(
                             name = Symbol.of("foo"),
                             value = Reference(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 referee = Symbol.of("baz1"),
                             ),
                         ),
-                        TableConstructor.ArbitraryEntryExpression(
+                        UnorderedTupleLiteral.ArbitraryEntryExpression(
                             key = Reference(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                 referee = Symbol.of("baz"),
@@ -80,6 +81,22 @@ object TableConstructorTests {
                 ),
                 actual = Expression.parse("{foo: baz1, [baz]: baz2}"),
             )
+        }
+
+        @Test
+        fun testMixedSyntax() {
+            val exception = assertThrows<IllegalArgumentException> {
+                Expression.parse(
+                    source = """
+                        {
+                            key1: value1,
+                            [key2]: value2,           
+                        }
+                    """.trimIndent(),
+                )
+            }
+
+            println(exception)
         }
     }
 
@@ -96,47 +113,18 @@ object TableConstructorTests {
                     ),
                     actual = Expression.parse(
                         source = """
-                        {
-                            key1: value1,
-                            key2: value2,
-                        }
-                    """.trimIndent(),
-                    ).inferType(
-                        typeScope = GlobalTypeScope,
-                        valueScope = FixedStaticValueScope(
-                            mapOf(
-                                Symbol.of("value1") to BoolType,
-                                Symbol.of("value2") to IntCollectiveType,
-                            ),
-                        )
-                    ),
-                )
-            }
-
-            @Test
-            fun testSymbolKeys2() {
-                assertEquals(
-                    expected = UnorderedTupleType(
-                        valueTypeByKey = mapOf(
-                            Symbol.of("key1") to BoolType,
-                            Symbol.of("key2") to IntCollectiveType,
-                        )
-                    ),
-                    actual = Expression.parse(
-                        source = """
                             {
                                 key1: value1,
-                                [`key2`]: value2,
+                                key2: value2,
                             }
                         """.trimIndent(),
                     ).inferType(
-                        typeScope = StaticTypeScope.Empty,
-                        valueScope = FixedStaticValueScope(
+                        typeScope = GlobalTypeScope, valueScope = FixedStaticValueScope(
                             mapOf(
                                 Symbol.of("value1") to BoolType,
                                 Symbol.of("value2") to IntCollectiveType,
                             ),
-                        ),
+                        )
                     ),
                 )
             }
@@ -146,11 +134,11 @@ object TableConstructorTests {
                 assertThrows<DuplicateKeyError> {
                     Expression.parse(
                         source = """
-                        {
-                            key1: value1,
-                            key1: value2,
-                        }
-                    """.trimIndent(),
+                            {
+                                key1: value1,
+                                key1: value2,
+                            }
+                        """.trimIndent(),
                     ).inferType(
                         typeScope = StaticTypeScope.Empty,
                         valueScope = FixedStaticValueScope(
@@ -166,6 +154,8 @@ object TableConstructorTests {
 
         object IntKeysTests {
             @Test
+            // TODO: Re-support dict literals
+            @Disabled
             fun testConsecutiveIntLiteralKeys() {
                 // Array<Bool>, { [0]: Bool, [1]: Bool, [2]: Bool }, Dict<Int, Bool>
                 val type = Expression.parse(
@@ -200,6 +190,8 @@ object TableConstructorTests {
             }
 
             @Test
+            // TODO: Re-support dict literals
+            @Disabled
             fun testNonConsecutiveIntLiteralKeys() {
                 // { [0]: Bool, [1]: Bool, [3]: Bool }, Dict<Int, Bool>
                 assertEquals(
@@ -232,6 +224,8 @@ object TableConstructorTests {
             }
 
             @Test
+            // TODO: Re-support dict literals
+            @Disabled
             fun testDuplicateIntLiteralKeys() {
                 assertThrows<DuplicateKeyError> {
                     Expression.parse(
@@ -256,6 +250,8 @@ object TableConstructorTests {
             }
 
             @Test
+            // TODO: Re-support dict literals
+            @Disabled
             fun testIntLiteralKeysInconsistentValues() {
                 // { [0]: Bool, [1]: Bool, [2]: Int }
                 assertEquals(
@@ -288,6 +284,8 @@ object TableConstructorTests {
             }
 
             @Test
+            // TODO: Re-support dict literals
+            @Disabled
             fun testIntCollectiveKeys() {
                 // Dict<Int, Bool>
                 assertEquals(
@@ -317,6 +315,8 @@ object TableConstructorTests {
             }
 
             @Test
+            // TODO: Re-support dict literals
+            @Disabled
             fun testIntCollectiveKeysInconsistentImages() {
                 assertThrows<InconsistentValuesError> {
                     Expression.parse(
@@ -398,6 +398,8 @@ object TableConstructorTests {
         }
 
         @Test
+        // TODO: Re-support dict literals
+        @Disabled
         fun testClosureKeys() {
             assertThrows<UnsupportedKeyError> {
                 Expression.parse(
@@ -422,6 +424,8 @@ object TableConstructorTests {
         }
 
         @Test
+        // TODO: Re-support dict literals
+        @Disabled
         fun testTableKeys() {
             assertThrows<UnsupportedKeyError> {
                 Expression.parse(
@@ -447,6 +451,8 @@ object TableConstructorTests {
         }
 
         @Test
+        // TODO: Re-support dict literals
+        @Disabled
         fun testUndefinedKeys() {
             assertThrows<UnsupportedKeyError> {
                 Expression.parse(
@@ -468,6 +474,8 @@ object TableConstructorTests {
         }
 
         @Test
+        // TODO: Re-support dict literals
+        @Disabled
         fun testMixedLiteralKeys() {
             // { [0]: Bool, [`key2`]: Bool }
             assertEquals(
@@ -496,6 +504,8 @@ object TableConstructorTests {
         }
 
         @Test
+        // TODO: Re-support dict literals
+        @Disabled
         fun testInconsistentCollectiveKeys() {
             assertThrows<InconsistentKeysError> {
                 Expression.parse(

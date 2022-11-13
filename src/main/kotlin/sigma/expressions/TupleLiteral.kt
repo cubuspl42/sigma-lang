@@ -17,7 +17,7 @@ abstract class TupleLiteral : Expression() {
 
             override fun visitUnorderedTupleLiteral(
                 ctx: SigmaParser.UnorderedTupleLiteralContext,
-            ): TableConstructor = TableConstructor.build(ctx)
+            ): UnorderedTupleLiteral = UnorderedTupleLiteral.build(ctx)
         }.visit(ctx)
     }
 }
