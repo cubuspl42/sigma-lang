@@ -43,6 +43,7 @@ data class SourceLocation(
 
 data class Call(
     override val location: SourceLocation,
+    // Idea: Rename to `callee`? (again?)
     val subject: Expression,
     val argument: Expression,
 ) : Expression() {
@@ -106,7 +107,12 @@ data class Call(
         )
     }
 
-    override fun inferType(typeScope: StaticTypeScope, valueScope: StaticValueScope): Type {
+    override fun inferType(
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
+    ): Type {
+        // TODO: Validate passed argument
+
         val subjectType = subject.inferType(
             typeScope = typeScope,
             valueScope = valueScope,

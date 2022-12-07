@@ -5,6 +5,7 @@ import sigma.types.AbstractionType
 import sigma.types.IntCollectiveType
 import sigma.types.Type
 import sigma.types.UndefinedType
+import sigma.types.UnorderedTupleType
 import sigma.values.BoolValue
 import sigma.values.FunctionValue
 import sigma.values.IntValue
@@ -30,10 +31,11 @@ object BuiltinScope : StaticValueScope, Scope {
         ),
         Symbol.of("if") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+                argumentType = UnorderedTupleType.Empty,
                 imageType = AbstractionType(
                     // TODO: Improve this typing
-                    argumentType = UndefinedType,
+
+                    argumentType = UnorderedTupleType.Empty,
                     imageType = UndefinedType,
                 ),
             ),
@@ -41,70 +43,76 @@ object BuiltinScope : StaticValueScope, Scope {
         ),
         Symbol.of("mul") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+                argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Mul,
         ),
         Symbol.of("div") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+                argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Div,
         ),
         Symbol.of("add") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+
+                argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Add,
         ),
         Symbol.of("sub") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+
+                argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Sub,
         ),
         Symbol.of("sq") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+
+                argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Sq,
         ),
         Symbol.of("eq") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+
+                argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Eq,
         ),
         Symbol.of("lt") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+
+                argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Lt,
         ),
         Symbol.of("lte") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+
+                argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Lte,
         ),
         Symbol.of("gt") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+                argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Gt,
         ),
         Symbol.of("gte") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+                argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Gte,
@@ -112,14 +120,15 @@ object BuiltinScope : StaticValueScope, Scope {
         Symbol.of("link") to BuiltinValue(
             type = AbstractionType(
                 // TODO: Improve this typing
-                argumentType = UndefinedType,
+                argumentType = UnorderedTupleType.Empty,
                 imageType = UndefinedType,
             ),
             value = FunctionValue.Link,
         ),
         Symbol.of("isUndefined") to BuiltinValue(
             type = AbstractionType(
-                argumentType = UndefinedType,
+
+                argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = UndefinedValue.IsUndefined,

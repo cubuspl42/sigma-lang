@@ -95,7 +95,7 @@ class OrderedTupleLiteralTests {
 
             assertEquals(
                 expected = OrderedTupleType(
-                    entries = emptyList(),
+                    elements = emptyList(),
                 ),
                 actual = type,
             )
@@ -117,9 +117,9 @@ class OrderedTupleLiteralTests {
 
             assertEquals(
                 expected = OrderedTupleType(
-                    entries = listOf(
-                        OrderedTupleType.Entry(name = null, elementType = BoolType),
-                        OrderedTupleType.Entry(name = null, elementType = IntCollectiveType),
+                    elements = listOf(
+                        OrderedTupleType.Element(name = null, type = BoolType),
+                        OrderedTupleType.Element(name = null, type = IntCollectiveType),
                     ),
                 ),
                 actual = type,

@@ -1,6 +1,7 @@
 package sigma.values
 
 import sigma.BinaryOperationPrototype
+import sigma.values.tables.Table
 
 data class IntValue(
     val value: Int,
@@ -11,10 +12,10 @@ data class IntValue(
 
     abstract class BinaryIntFunction : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
-            argument as FunctionValue
+            val argumentTuple = argument as Table
 
-            val left = argument.apply(Symbol.of(prototype.leftArgumentName)).toEvaluatedValue
-            val right = argument.apply(Symbol.of(prototype.rightArgumentName)).toEvaluatedValue
+            val left = argumentTuple.read(Symbol.of(prototype.leftArgumentName))!!.toEvaluatedValue
+            val right = argumentTuple.read(Symbol.of(prototype.rightArgumentName))!!.toEvaluatedValue
 
             left as IntValue
             right as IntValue
@@ -66,9 +67,9 @@ data class IntValue(
 
     object Sq : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
-            argument as IntValue
+            val arg = (argument as Table).read(IntValue.Zero)!!.toEvaluatedValue as IntValue
 
-            return IntValue(argument.value * argument.value)
+            return IntValue(arg.value * arg.value)
         }
 
         override fun dump(): String = "(sq)"

@@ -3,9 +3,6 @@ package sigma.expressions
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.TypeExpression
-import sigma.values.Closure
-import sigma.values.Symbol
-import sigma.values.Value
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.MetaArgumentContext
 import sigma.types.AbstractionType
@@ -14,15 +11,19 @@ import sigma.types.MetaType
 import sigma.types.TableType
 import sigma.types.Type
 import sigma.types.UndefinedType
+import sigma.values.Closure
 import sigma.values.FixedStaticValueScope
+import sigma.values.Symbol
 import sigma.values.TypeError
+import sigma.values.Value
+import sigma.values.tables.FixedScope
 import sigma.values.tables.Scope
+import sigma.values.tables.Table
 
 data class Abstraction(
     override val location: SourceLocation,
     val metaArgument: MetaArgumentExpression? = null,
-    val argumentName: Symbol,
-    val argumentType: TypeExpression?,
+    val argumentType: TupleTypeLiteral,
     val image: Expression,
 ) : Expression() {
     data class MetaArgumentExpression(
@@ -45,6 +46,10 @@ data class Abstraction(
         )
     }
 
+    interface ArgumentScopeBuilder {
+        fun buildArgumentScope(tableType: TableType)
+    }
+
     companion object {
         fun build(
             ctx: AbstractionContext,
@@ -53,19 +58,17 @@ data class Abstraction(
             metaArgument = ctx.metaArgument()?.let {
                 MetaArgumentExpression.build(it)
             },
-            argumentName = Symbol(ctx.argumentName.text),
-            argumentType = ctx.argumentType?.let {
-                TypeExpression.build(it)
+            argumentType = ctx.argumentType.let {
+                TupleTypeLiteral.build(it)
             },
             image = Expression.build(ctx.image),
         )
     }
 
-    override fun validate(typeScope: StaticTypeScope, valueScope: StaticValueScope) {
-        super.validate(typeScope, valueScope)
-    }
-
-    override fun inferType(typeScope: StaticTypeScope, valueScope: StaticValueScope): Type {
+    override fun inferType(
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
+    ): Type {
         val metaArgumentType = metaArgument?.let {
             it.evaluate(
                 typeScope = typeScope,
@@ -75,22 +78,11 @@ data class Abstraction(
             )
         } ?: TableType.Empty
 
-        val argumentType = argumentType?.evaluate(
+        val argumentType = argumentType.evaluate(
             typeScope = typeScope,
-        ) ?: UndefinedType
+        )
 
-        // TODO:
-//        val argumentType = argumentType?.evaluate(
-//            context = scope,
-//        ) ?: throw TypeError(
-//            message = "Abstraction has no declared argument type",
-//        )
-
-        val innerScope = FixedStaticValueScope(
-            entries = mapOf(
-                argumentName to argumentType,
-            ),
-        ).chainWith(
+        val innerScope = argumentType.toStaticValueScope().chainWith(
             valueScope,
         )
 
@@ -103,9 +95,9 @@ data class Abstraction(
 
     override fun evaluate(
         scope: Scope,
-    ): Value = Closure(
+    ): Closure = Closure(
         context = scope,
-        argumentName = argumentName,
+        argumentType = argumentType,
         image = image,
     )
 

@@ -1,20 +1,20 @@
 package sigma.types
 
-import sigma.values.IntValue
-import sigma.values.PrimitiveValue
+import sigma.StaticValueScope
 import sigma.values.Symbol
 
 data class OrderedTupleType(
-    val entries: List<Entry>,
+    val elements: List<Element>,
 ) : TupleType() {
-    data class Entry(
+    data class Element(
+        // Idea: "label"?
         val name: Symbol?,
-        val elementType: Type,
+        val type: Type,
     )
 
     companion object {
         val Empty = OrderedTupleType(
-            entries = emptyList(),
+            elements = emptyList(),
         )
     }
 
@@ -23,9 +23,9 @@ data class OrderedTupleType(
     }
 
     override fun dump(): String {
-        val dumpedEntries = entries.map { (name, elementType) ->
+        val dumpedEntries = elements.map { (name, type) ->
             listOfNotNull(
-                name?.let { "${it.name}: " }, elementType.dump()
+                name?.let { "${it.name}: " }, type.dump()
             ).joinToString(
                 separator = " ",
             )
@@ -39,13 +39,13 @@ data class OrderedTupleType(
     override val valueType: Type
         get() = TODO("value1 | value2 | ...")
 
-    override fun isDefinitelyEmpty(): Boolean = entries.isEmpty()
+    override fun isDefinitelyEmpty(): Boolean = elements.isEmpty()
 
-    override val valueTypeByKey: Map<PrimitiveValue, Type> = entries.withIndex().associate { (index, entry) ->
-        IntValue(index) to entry.elementType
+    override fun toStaticValueScope(): StaticValueScope = object : StaticValueScope {
+        override fun getValueType(
+            valueName: Symbol,
+        ): Type? = elements.singleOrNull { entry ->
+            valueName == entry.name
+        }?.type
     }
-
-    override val valueTypeByLabel: Map<Symbol, Type> = entries.mapNotNull { entry ->
-        entry.name?.let { name -> name to entry.elementType }
-    }.toMap()
 }

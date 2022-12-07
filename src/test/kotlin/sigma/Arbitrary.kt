@@ -15,14 +15,14 @@ object Arbitrary {
     )
 
     val orderedTupleType = OrderedTupleType(
-        entries = listOf(
-            OrderedTupleType.Entry(
+        elements = listOf(
+            OrderedTupleType.Element(
                 name = null,
-                elementType = BoolType,
+                type = BoolType,
             ),
-            OrderedTupleType.Entry(
+            OrderedTupleType.Element(
                 name = null,
-                elementType = IntCollectiveType,
+                type = IntCollectiveType,
             ),
         ),
     )

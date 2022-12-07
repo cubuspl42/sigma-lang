@@ -26,24 +26,6 @@ class ExpressionParsingTests {
 
     object CallTests {
         @Test
-        fun testReferenceSubject() {
-            assertEquals(
-                expected = Call(
-                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = Reference(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        referee = Symbol("foo"),
-                    ),
-                    argument = SymbolLiteral(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                        symbol = Symbol.of("bar"),
-                    ),
-                ),
-                actual = Expression.parse("foo[`bar`]"),
-            )
-        }
-
-        @Test
         fun testDictSubject() {
             assertEquals(
                 expected = Call(
@@ -66,7 +48,7 @@ class ExpressionParsingTests {
                     ),
                 ),
                 actual = Expression.parse(
-                    source = "{foo: `bar`}[`foo`]",
+                    source = "{foo: `bar`}(`foo`)",
                 ),
             )
         }
