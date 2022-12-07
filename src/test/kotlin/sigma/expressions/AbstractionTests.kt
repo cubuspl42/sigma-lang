@@ -1,7 +1,7 @@
 package sigma.expressions
 
 import sigma.BuiltinScope
-import sigma.GlobalTypeScope
+import sigma.BuiltinTypeScope
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.TypeReference
@@ -76,7 +76,7 @@ class AbstractionTests {
                 actual = Expression.parse(
                     source = "[n: Int] => n",
                 ).inferType(
-                    typeScope = GlobalTypeScope,
+                    typeScope = BuiltinTypeScope,
                     valueScope = StaticValueScope.Empty,
                 ),
             )
@@ -103,7 +103,7 @@ class AbstractionTests {
             val type = Expression.parse(
                 source = "![t] [n: Int] => false",
             ).validateAndInferType(
-                typeScope = GlobalTypeScope,
+                typeScope = BuiltinTypeScope,
                 valueScope = BuiltinScope,
             )
 

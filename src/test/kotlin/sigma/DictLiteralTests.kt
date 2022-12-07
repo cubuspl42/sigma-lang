@@ -5,8 +5,6 @@ import sigma.expressions.DictLiteral
 import sigma.expressions.Expression
 import sigma.expressions.Reference
 import sigma.expressions.SourceLocation
-import sigma.expressions.SymbolLiteral
-import sigma.expressions.UnorderedTupleLiteral
 import sigma.types.BoolType
 import sigma.types.DictType
 import sigma.types.IntCollectiveType
@@ -65,7 +63,7 @@ object DictLiteralTests {
                             }
                         """.trimIndent(),
                 ).inferType(
-                    typeScope = GlobalTypeScope,
+                    typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
                             Symbol.of("key1") to IntCollectiveType,
@@ -91,7 +89,7 @@ object DictLiteralTests {
                             }
                         """.trimIndent(),
                 ).inferType(
-                    typeScope = GlobalTypeScope,
+                    typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
                             Symbol.of("key1") to IntCollectiveType,
@@ -115,7 +113,7 @@ object DictLiteralTests {
                             }
                         """.trimIndent(),
                 ).inferType(
-                    typeScope = GlobalTypeScope,
+                    typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
                             Symbol.of("key1") to IntCollectiveType,
@@ -139,7 +137,7 @@ object DictLiteralTests {
                             }
                         """.trimIndent(),
                 ).inferType(
-                    typeScope = GlobalTypeScope,
+                    typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
                             Symbol.of("key1") to IntCollectiveType,
@@ -162,7 +160,7 @@ object DictLiteralTests {
                             }
                         """.trimIndent(),
                 ).inferType(
-                    typeScope = GlobalTypeScope,
+                    typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
                             Symbol.of("key1") to Arbitrary.unorderedTupleType,

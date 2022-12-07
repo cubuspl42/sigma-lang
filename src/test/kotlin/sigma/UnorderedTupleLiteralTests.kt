@@ -83,7 +83,7 @@ object UnorderedTupleLiteralTests {
                 actual = Expression.parse(
                     source = "{}".trimIndent(),
                 ).inferType(
-                    typeScope = GlobalTypeScope,
+                    typeScope = BuiltinTypeScope,
                     valueScope = StaticValueScope.Empty,
                 ),
             )
@@ -106,7 +106,7 @@ object UnorderedTupleLiteralTests {
                             }
                         """.trimIndent(),
                 ).inferType(
-                    typeScope = GlobalTypeScope,
+                    typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
                             Symbol.of("value1") to BoolType,
