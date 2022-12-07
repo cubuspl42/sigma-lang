@@ -4,9 +4,6 @@ import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.UnorderedTupleLiteralContext
-import sigma.parser.antlr.SigmaParserBaseVisitor
-import sigma.types.DictType
-import sigma.types.PrimitiveType
 import sigma.types.UnorderedTupleType
 import sigma.values.PrimitiveValue
 import sigma.values.tables.DictTable
@@ -17,58 +14,32 @@ import sigma.values.TypeError
 
 data class UnorderedTupleLiteral(
     override val location: SourceLocation,
-    val entries: List<EntryExpression>,
+    val entries: List<Entry>,
 ) : TupleLiteral() {
-    class DuplicateKeyError(
-        key: PrimitiveValue,
-    ) : TypeError(
-        message = "Duplicate key: ${key.dump()}",
-    )
-
-    class InconsistentKeysError : TypeError(
-        message = "Inconsistent key types",
-    )
-
-    class InconsistentValuesError : TypeError(
-        message = "Inconsistent image types",
-    )
-
-    class UnsupportedKeyError : TypeError(
-        message = "Unsupported key type",
-    )
-
-    class UnsupportedValueError : TypeError(
-        message = "Unsupported key type",
-    )
-
-    sealed interface EntryExpression {
-        val key: Expression
-        val value: Expression
-    }
-
-    data class NamedEntryExpression(
+    data class Entry(
         val name: Symbol,
-        override val value: Expression,
-    ) : EntryExpression {
-        override val key: SymbolLiteral = SymbolLiteral(
-            location = SourceLocation.Invalid,
-            symbol = name,
-        )
+        val value: Expression,
+    ) {
+        companion object {
+            fun build(
+                ctx: SigmaParser.UnorderedTupleAssociationContext,
+            ): Entry = Entry(
+                name = Symbol.of(ctx.name.text),
+                value = Expression.build(ctx.value),
+            )
+        }
     }
 
-    data class ArbitraryEntryExpression(
-        override val key: Expression,
-        override val value: Expression,
-    ) : EntryExpression
-
+    // TODO: Share with `UnorderedTupleType`
     data class EntryType(
-        val keyType: PrimitiveType,
+        val name: Symbol,
         val valueType: Type,
     )
 
-    data class EntryLiteralType(
-        val key: PrimitiveValue,
-        val valueType: Type,
+    class DuplicatedNameError(
+        duplicatedKey: PrimitiveValue,
+    ) : TypeError(
+        message = "Duplicate key: ${duplicatedKey.dump()}",
     )
 
     companion object {
@@ -76,29 +47,10 @@ data class UnorderedTupleLiteral(
             ctx: UnorderedTupleLiteralContext,
         ): UnorderedTupleLiteral = UnorderedTupleLiteral(
             location = SourceLocation.build(ctx),
-            entries = ctx.association().map {
-                buildAssignment(it)
-            }
+            entries = ctx.unorderedTupleAssociation().map {
+                Entry.build(it)
+            },
         )
-
-        private fun buildAssignment(
-            ctx: SigmaParser.AssociationContext,
-        ): EntryExpression = object : SigmaParserBaseVisitor<EntryExpression>() {
-            override fun visitSymbolBindAlt(
-                ctx: SigmaParser.SymbolBindAltContext,
-            ) = NamedEntryExpression(
-                name = Symbol.of(ctx.name.text),
-                value = Expression.build(ctx.image),
-            )
-
-            // TODO: Re-support dict literals
-//            override fun visitArbitraryBindAlt(
-//                ctx: SigmaParser.ArbitraryBindAltContext,
-//            ) = ArbitraryEntryExpression(
-//                key = Expression.build(ctx.key),
-//                value = Expression.build(ctx.image),
-//            )
-        }.visit(ctx)
     }
 
     override fun dump(): String = "(dict constructor)"
@@ -106,72 +58,37 @@ data class UnorderedTupleLiteral(
     override fun inferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
-    ): Type {
+    ): UnorderedTupleType {
         val entryTypes = entries.map {
-            val keyType = it.key.inferType(
-                typeScope = typeScope,
-                valueScope = valueScope,
-            ) as? PrimitiveType ?: throw UnsupportedKeyError()
-
             val valueType = it.value.inferType(
                 typeScope = typeScope,
                 valueScope = valueScope,
             )
 
             EntryType(
-                keyType = keyType,
+                name = it.name,
                 valueType = valueType,
             )
         }
 
-        // Note: non-local return
-        fun asEntryLiteralTypes(): List<EntryLiteralType>? = entryTypes.map {
-            val keyLiteralType = it.keyType.asLiteral ?: return null
+        val entryTypeByName = entryTypes.groupBy { it.name }
 
-            EntryLiteralType(
-                key = keyLiteralType.value,
-                valueType = it.valueType,
-            )
-        }
+        return UnorderedTupleType(
+            valueTypeByKey = entryTypeByName.mapValues { (name, entryTypes) ->
+                val entryType = entryTypes.singleOrNull() ?: throw DuplicatedNameError(
+                    duplicatedKey = name,
+                )
 
-        val entryLiteralTypes = asEntryLiteralTypes()
-
-        if (entryLiteralTypes != null) {
-            val valueTypeByKeyType = entryLiteralTypes.groupBy {
-                it.key
-            }.mapValues { (key, entryTypes) ->
-                val valueTypes = entryTypes.map { it.valueType }
-
-                valueTypes.singleOrNull() ?: throw DuplicateKeyError(key = key)
-            }
-
-            return UnorderedTupleType(
-                valueTypeByKey = valueTypeByKeyType,
-            )
-        } else {
-            val valueTypeByKeyType = entryTypes.groupBy {
-                it.keyType
-            }
-
-            val (keyType, valueTypes) = valueTypeByKeyType.entries.singleOrNull() ?: throw InconsistentKeysError()
-
-            val valueType = valueTypes.map { it.valueType }.toSet().singleOrNull() ?: throw InconsistentValuesError()
-
-            return DictType(
-                keyType = keyType,
-                valueType = valueType,
-            )
-        }
+                entryType.valueType
+            },
+        )
     }
 
     override fun evaluate(
         scope: Scope,
     ): DictTable = DictTable(
-        associations = entries.associate {
-            val key = it.key.evaluate(scope = scope).toEvaluatedValue as PrimitiveValue
-            val value = it.value.bind(scope = scope)
-
-            key to value
+        entries = entries.associate {
+            it.name to it.value.bind(scope = scope)
         },
     )
 }

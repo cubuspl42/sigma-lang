@@ -19,7 +19,8 @@ expression
     | parenExpression # parenExpressionAlt
     | reference # referenceAlt
     | abstraction # abstractionAlt
-    | tupleLiteral # TupleLiteralAlt
+    | tupleLiteral # tupleLiteralAlt
+    | dictLiteral # dictLiteralAlt
     | letExpression # letExpressionAlt
     | SymbolLiteral # symbolLiteralAlt
     | IntLiteral # intLiteralAlt
@@ -62,17 +63,26 @@ tupleLiteral
     ;
 
 unorderedTupleLiteral
-    : LeftBrace (association (Comma association)*)? Comma? RightBrace ;
+    : LeftBrace (unorderedTupleAssociation (Comma unorderedTupleAssociation)*)? Comma? RightBrace ;
 
-association
-    : name=identifier Colon image=expression # symbolBindAlt // TOOD: Rename
+unorderedTupleAssociation
+    : name=identifier Colon value=expression
     ;
 
 orderedTupleLiteral
-    : LeftBracket ((element (Comma element)*)+ Comma?)? RightBracket ;
+    : LeftBracket (orderedTupleElement (Comma orderedTupleElement)* Comma?)? RightBracket
+    ;
 
-element
+orderedTupleElement
     : expression
+    ;
+
+dictLiteral
+    : LeftBrace dictAssociation (Comma dictAssociation)* Comma? RightBrace
+    ;
+
+dictAssociation
+    : LeftBracket key=expression RightBracket Colon value=expression
     ;
 
 letExpression

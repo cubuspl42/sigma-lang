@@ -51,7 +51,7 @@ class ExpressionParsingTests {
                     subject = UnorderedTupleLiteral(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         entries = listOf(
-                            UnorderedTupleLiteral.NamedEntryExpression(
+                            UnorderedTupleLiteral.Entry(
                                 name = Symbol.of("foo"),
                                 value = SymbolLiteral(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 6),
@@ -83,7 +83,7 @@ class ExpressionParsingTests {
                     argument = UnorderedTupleLiteral(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         entries = listOf(
-                            UnorderedTupleLiteral.NamedEntryExpression(
+                            UnorderedTupleLiteral.Entry(
                                 name = Symbol.of("bar"),
                                 value = SymbolLiteral(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),

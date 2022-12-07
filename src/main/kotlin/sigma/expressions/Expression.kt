@@ -18,6 +18,7 @@ import sigma.parser.antlr.SigmaParser.CallableTupleLiteralAltContext
 import sigma.parser.antlr.SigmaParser.CallableExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallableParenAltContext
 import sigma.parser.antlr.SigmaParser.CallableReferenceAltContext
+import sigma.parser.antlr.SigmaParser.DictLiteralAltContext
 import sigma.parser.antlr.SigmaParser.TupleLiteralAltContext
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.parser.antlr.SigmaParser.LetExpressionAltContext
@@ -65,6 +66,10 @@ sealed class Expression : Term() {
             override fun visitTupleLiteralAlt(
                 ctx: TupleLiteralAltContext,
             ): Expression = TupleLiteral.build(ctx.tupleLiteral())
+
+            override fun visitDictLiteralAlt(
+                ctx: DictLiteralAltContext,
+            ): Expression = DictLiteral.build(ctx.dictLiteral())
 
             override fun visitLetExpressionAlt(
                 ctx: LetExpressionAltContext,
