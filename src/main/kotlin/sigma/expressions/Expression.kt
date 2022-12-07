@@ -145,6 +145,9 @@ sealed class Expression : Term() {
     ) {
     }
 
+    // Idea for naming:
+    // "environment" - scope in which an expression is evaluated
+    // "context" - outer scope for nested scopes
     abstract fun evaluate(
         scope: Scope,
     ): Thunk

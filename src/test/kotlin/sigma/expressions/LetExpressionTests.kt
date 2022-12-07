@@ -19,26 +19,29 @@ class LetExpressionTests {
             assertEquals(
                 expected = LetExpression(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    declarations = listOf(
-                        Declaration(
-                            name = Symbol.of("g"),
-                            value = Call(
-                                location = SourceLocation(lineIndex = 2, columnIndex = 8),
-                                subject = Reference(
+                    localScope = LocalScope(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                        declarations = listOf(
+                            Declaration(
+                                name = Symbol.of("g"),
+                                value = Call(
                                     location = SourceLocation(lineIndex = 2, columnIndex = 8),
-                                    referee = Symbol.of("h"),
-                                ),
-                                argument = Reference(
-                                    location = SourceLocation(lineIndex = 2, columnIndex = 10),
-                                    referee = Symbol.of("a"),
+                                    subject = Reference(
+                                        location = SourceLocation(lineIndex = 2, columnIndex = 8),
+                                        referee = Symbol.of("h"),
+                                    ),
+                                    argument = Reference(
+                                        location = SourceLocation(lineIndex = 2, columnIndex = 10),
+                                        referee = Symbol.of("a"),
+                                    ),
                                 ),
                             ),
-                        ),
-                        Declaration(
-                            name = Symbol.of("f"),
-                            value = Reference(
-                                location = SourceLocation(lineIndex = 3, columnIndex = 8),
-                                referee = Symbol.of("g"),
+                            Declaration(
+                                name = Symbol.of("f"),
+                                value = Reference(
+                                    location = SourceLocation(lineIndex = 3, columnIndex = 8),
+                                    referee = Symbol.of("g"),
+                                ),
                             ),
                         ),
                     ),
@@ -70,15 +73,18 @@ class LetExpressionTests {
             assertEquals(
                 expected = LetExpression(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    declarations = listOf(
-                        Declaration(
-                            name = Symbol.of("a"),
-                            valueType = TypeReference(
-                                referee = Symbol.of("Int"),
-                            ),
-                            value = Reference(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 15),
-                                referee = Symbol.of("b"),
+                    localScope = LocalScope(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                        declarations = listOf(
+                            Declaration(
+                                name = Symbol.of("a"),
+                                valueType = TypeReference(
+                                    referee = Symbol.of("Int"),
+                                ),
+                                value = Reference(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 15),
+                                    referee = Symbol.of("b"),
+                                ),
                             ),
                         ),
                     ),
