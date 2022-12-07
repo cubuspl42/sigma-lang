@@ -20,7 +20,7 @@ data class OrderedTupleLiteral(
             ctx: OrderedTupleLiteralContext,
         ): OrderedTupleLiteral = OrderedTupleLiteral(
             location = SourceLocation.build(ctx),
-            elements = ctx.element().map {
+            elements = ctx.orderedTupleElement().map {
                 Expression.build(it)
             },
         )

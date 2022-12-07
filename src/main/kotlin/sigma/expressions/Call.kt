@@ -76,11 +76,11 @@ data class Call(
                 argument = UnorderedTupleLiteral(
                     location = SourceLocation.build(ctx),
                     entries = listOf(
-                        UnorderedTupleLiteral.NamedEntryExpression(
+                        UnorderedTupleLiteral.Entry(
                             name = prototype.leftArgument,
                             value = leftExpression,
                         ),
-                        UnorderedTupleLiteral.NamedEntryExpression(
+                        UnorderedTupleLiteral.Entry(
                             name = prototype.rightArgument,
                             value = rightExpression,
                         ),

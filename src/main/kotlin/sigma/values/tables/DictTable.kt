@@ -7,21 +7,20 @@ import sigma.values.Symbol
 import sigma.values.Value
 
 data class DictTable(
-    // Thought: Rename to entries for consistency? Or the other way around...
-    private val associations: Map<PrimitiveValue, Thunk>,
+    private val entries: Map<PrimitiveValue, Thunk>,
 ) : Table() {
     companion object {
         val Empty = DictTable(
-            associations = emptyMap(),
+            entries = emptyMap(),
         )
     }
 
     override fun read(
         argument: Value,
-    ): Thunk? = associations[argument]
+    ): Thunk? = entries[argument]
 
     override fun dumpContent(): String? {
-        val entries = associations.mapValues { (_, image) ->
+        val entries = entries.mapValues { (_, image) ->
             image.toEvaluatedValue
         }.entries
 
@@ -47,7 +46,7 @@ data class DictTable(
 fun ArrayTable(
     elements: List<Thunk>,
 ) = DictTable(
-    associations = elements.withIndex().associate { (index, thunk) ->
+    entries = elements.withIndex().associate { (index, thunk) ->
         IntValue(index) to thunk
     },
 )
