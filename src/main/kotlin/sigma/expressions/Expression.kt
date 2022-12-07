@@ -45,7 +45,7 @@ sealed class Expression : Term() {
         }
 
         fun build(
-            expression: ParserRuleContext,
+            ctx: ParserRuleContext,
         ): Expression = object : SigmaParserBaseVisitor<Expression>() {
             override fun visitBinaryOperationAlt(
                 ctx: BinaryOperationAltContext,
@@ -106,7 +106,7 @@ sealed class Expression : Term() {
             override fun visitCallableTupleLiteralAlt(
                 ctx: CallableTupleLiteralAltContext,
             ): Expression = TupleLiteral.build(ctx.tupleLiteral())
-        }.visit(expression) ?: throw IllegalArgumentException("Can't match expression ${expression::class}")
+        }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class}")
     }
 
     inner class BoundThunk(private val scope: Scope) : Thunk() {

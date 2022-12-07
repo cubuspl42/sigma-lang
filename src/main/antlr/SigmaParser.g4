@@ -3,7 +3,7 @@ parser grammar SigmaParser;
 options { tokenVocab = SigmaLexer; }
 
 program
-    : expression ;
+    : letExpression ;
 
 expression
     : left=expression operator=Asterisk right=expression # binaryOperationAlt

@@ -10,8 +10,7 @@ private val builtinTypes = mapOf(
     Symbol.of("Int") to IntCollectiveType,
 )
 
-// Idea: BuiltinScope implementing both StaticValueScope and Scope?
-val GlobalTypeScope = object : StaticTypeScope {
+val BuiltinTypeScope = object : StaticTypeScope {
     override fun getType(
         typeName: Symbol,
     ): Type? = builtinTypes[typeName]

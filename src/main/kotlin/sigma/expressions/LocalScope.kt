@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import sigma.Program
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser
@@ -12,6 +13,16 @@ data class LocalScope(
     val declarations: List<Declaration>,
 ) : Term() {
     companion object {
+        fun parse(
+            sourceName: String,
+            source: String,
+        ): LocalScope = build(
+            ctx = Program.buildParser(
+                sourceName = sourceName,
+                source = source,
+            ).localScope(),
+        )
+
         fun build(
             ctx: SigmaParser.LocalScopeContext,
         ): LocalScope = LocalScope(

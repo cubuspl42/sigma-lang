@@ -3,7 +3,8 @@ package sigma.programs.euler
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.BuiltinScope
-import sigma.GlobalTypeScope
+import sigma.BuiltinTypeScope
+import sigma.Program
 import sigma.values.BoolValue
 import sigma.expressions.Expression
 import sigma.values.IntValue
@@ -62,22 +63,10 @@ private fun solveProblem(n: Int): Value {
 
     val source = getResourceAsText(sourceName) ?: throw RuntimeException("Couldn't load the source file `$sourceName`")
 
-    val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
-    val tokenStream = CommonTokenStream(lexer)
-    val parser = SigmaParser(tokenStream)
-
-    val program = parser.program()
-
-    val root = Expression.build(program.expression())
-
-    root.validate(
-        typeScope = GlobalTypeScope,
-        valueScope = BuiltinScope,
+    return Program.evaluate(
+        sourceName = sourceName,
+        source = source,
     )
-
-    val result = root.evaluateAsRoot()
-
-    return result.toEvaluatedValue
 }
 
 private fun getResourceAsText(
