@@ -101,9 +101,9 @@ dictAssociation
     ;
 
 letExpression
-    : LetKeyword scope=letScope InKeyword result=expression ;
+    : LetKeyword scope=localScope InKeyword result=expression ;
 
-letScope
+localScope
     : LeftBrace (declaration (Comma declaration)*)? Comma? RightBrace ;
 
 declaration
