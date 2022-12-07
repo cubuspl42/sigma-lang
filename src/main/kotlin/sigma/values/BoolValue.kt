@@ -1,6 +1,7 @@
 package sigma.values
 
 import sigma.Thunk
+import sigma.values.tables.Table
 
 data class BoolValue(
     val value: Boolean,
@@ -13,7 +14,7 @@ data class BoolValue(
 
     object If : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
-            val test = argument as BoolValue
+            val test = (argument as Table).read(IntValue.Zero) as BoolValue
 
             return object : ComputableFunctionValue() {
                 override fun apply(argument: Value): Thunk {

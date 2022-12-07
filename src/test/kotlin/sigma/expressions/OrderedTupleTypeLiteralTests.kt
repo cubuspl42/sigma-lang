@@ -1,6 +1,5 @@
 package sigma.expressions
 
-import org.junit.jupiter.api.Disabled
 import sigma.StaticTypeScope
 import sigma.TypeExpression
 import sigma.TypeReference
@@ -23,7 +22,7 @@ class OrderedTupleTypeLiteralTests {
             assertEquals(
                 expected = OrderedTupleTypeLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    entries = emptyList(),
+                    elements = emptyList(),
                 ),
                 actual = expression,
             )
@@ -38,7 +37,7 @@ class OrderedTupleTypeLiteralTests {
             assertEquals(
                 expected = OrderedTupleTypeLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    entries = listOf(
+                    elements = listOf(
                         OrderedTupleTypeLiteral.Element(
                             name = null,
                             type = TypeReference(
@@ -60,7 +59,7 @@ class OrderedTupleTypeLiteralTests {
             assertEquals(
                 expected = OrderedTupleTypeLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    entries = listOf(
+                    elements = listOf(
                         OrderedTupleTypeLiteral.Element(
                             name = null,
                             type = TypeReference(
@@ -94,7 +93,7 @@ class OrderedTupleTypeLiteralTests {
             assertEquals(
                 expected = OrderedTupleTypeLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    entries = listOf(
+                    elements = listOf(
                         OrderedTupleTypeLiteral.Element(
                             name = Symbol.of("a"),
                             type = TypeReference(
@@ -150,14 +149,14 @@ class OrderedTupleTypeLiteralTests {
 
             assertEquals(
                 expected = OrderedTupleType(
-                    entries = listOf(
-                        OrderedTupleType.Entry(
+                    elements = listOf(
+                        OrderedTupleType.Element(
                             name = Symbol.of("a"),
-                            elementType = BoolType,
+                            type = BoolType,
                         ),
-                        OrderedTupleType.Entry(
+                        OrderedTupleType.Element(
                             name = null,
-                            elementType = IntCollectiveType,
+                            type = IntCollectiveType,
                         ),
                     )
                 ),

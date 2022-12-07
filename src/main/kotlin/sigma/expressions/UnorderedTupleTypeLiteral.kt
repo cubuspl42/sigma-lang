@@ -1,18 +1,20 @@
 package sigma.expressions
 
 import sigma.StaticTypeScope
+import sigma.Thunk
 import sigma.TypeExpression
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
 import sigma.types.UnorderedTupleType
 import sigma.values.PrimitiveValue
-import sigma.types.Type
 import sigma.values.Symbol
 import sigma.values.TypeError
+import sigma.values.tables.Scope
+import sigma.values.tables.Table
 
 data class UnorderedTupleTypeLiteral(
     override val location: SourceLocation,
     val entries: List<Entry>,
-) : TypeExpression() {
+) : TupleTypeLiteral() {
     class DuplicateKeyError(
         key: PrimitiveValue,
     ) : TypeError(
@@ -40,8 +42,8 @@ data class UnorderedTupleTypeLiteral(
 
     override fun evaluate(
         typeScope: StaticTypeScope,
-    ): Type {
-        val valueTypeByName = entries.groupBy {
+    ): UnorderedTupleType = UnorderedTupleType(
+        valueTypeByName = entries.groupBy {
             it.name
         }.mapValues { (key, entryTypes) ->
             val valueTypes = entryTypes.map {
@@ -49,10 +51,10 @@ data class UnorderedTupleTypeLiteral(
             }
 
             valueTypes.singleOrNull() ?: throw DuplicateKeyError(key = key)
-        }
+        },
+    )
 
-        return UnorderedTupleType(
-            valueTypeByName = valueTypeByName,
-        )
+    override fun toArgumentScope(argument: Table): Scope = object : Scope {
+        override fun get(name: Symbol): Thunk? = argument.read(name)
     }
 }

@@ -9,12 +9,16 @@ import sigma.expressions.Abstraction.MetaArgumentExpression
 import sigma.types.AbstractionType
 import sigma.types.ArrayType
 import sigma.types.BoolType
+import sigma.types.DictType
 import sigma.types.IntCollectiveType
 import sigma.types.IntLiteralType
 import sigma.types.MetaType
+import sigma.types.OrderedTupleType
 import sigma.types.UndefinedType
 import sigma.values.IntValue
 import sigma.values.Symbol
+import sigma.values.tables.ArrayTable
+import sigma.values.tables.DictTable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -25,9 +29,16 @@ class AbstractionTests {
             assertEquals(
                 expected = Abstraction(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    argumentName = Symbol.of("n"),
-                    argumentType = TypeReference(
-                        referee = Symbol.of("Int"),
+                    argumentType = OrderedTupleTypeLiteral(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                        elements = listOf(
+                            OrderedTupleTypeLiteral.Element(
+                                name = Symbol.of("n"),
+                                type = TypeReference(
+                                    referee = Symbol.of("Int"),
+                                ),
+                            ),
+                        ),
                     ),
                     image = IntLiteral(
                         SourceLocation(lineIndex = 1, columnIndex = 12),
@@ -49,9 +60,16 @@ class AbstractionTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         name = Symbol.of("t"),
                     ),
-                    argumentName = Symbol.of("n"),
-                    argumentType = TypeReference(
-                        referee = Symbol.of("Int"),
+                    argumentType = OrderedTupleTypeLiteral(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 5),
+                        elements = listOf(
+                            OrderedTupleTypeLiteral.Element(
+                                name = Symbol.of("n"),
+                                type = TypeReference(
+                                    referee = Symbol.of("Int"),
+                                ),
+                            ),
+                        ),
                     ),
                     image = IntLiteral(
                         SourceLocation(lineIndex = 1, columnIndex = 17),
@@ -70,29 +88,20 @@ class AbstractionTests {
         fun test() {
             assertEquals(
                 expected = AbstractionType(
-                    argumentType = IntCollectiveType,
+                    argumentType = OrderedTupleType(
+                        elements = listOf(
+                            OrderedTupleType.Element(
+                                name = Symbol.of("n"),
+                                type = IntCollectiveType,
+                            ),
+                        ),
+                    ),
                     imageType = IntCollectiveType,
                 ),
                 actual = Expression.parse(
                     source = "[n: Int] => n",
                 ).inferType(
                     typeScope = BuiltinTypeScope,
-                    valueScope = StaticValueScope.Empty,
-                ),
-            )
-        }
-
-        @Test
-        fun testUnannotatedArgument() {
-            assertEquals(
-                expected = AbstractionType(
-                    argumentType = UndefinedType,
-                    imageType = IntLiteralType(IntValue.Zero),
-                ),
-                actual = Expression.parse(
-                    source = "[a] => 0",
-                ).inferType(
-                    typeScope = StaticTypeScope.Empty,
                     valueScope = StaticValueScope.Empty,
                 ),
             )
@@ -113,7 +122,14 @@ class AbstractionTests {
                     metaArgumentType = ArrayType(
                         elementType = MetaType,
                     ),
-                    argumentType = IntCollectiveType,
+                    argumentType = OrderedTupleType(
+                        elements = listOf(
+                            OrderedTupleType.Element(
+                                name = Symbol.of("n"),
+                                type = IntCollectiveType,
+                            ),
+                        ),
+                    ),
                     imageType = BoolType,
                 ),
                 actual = type,
@@ -121,5 +137,29 @@ class AbstractionTests {
         }
     }
 
-    object EvaluationTests {}
+    object EvaluationTests {
+        @Test
+        fun testUnorderedArgumentTuple() {
+            val abstraction = Expression.parse(
+                source = "[n: Int, m: Int] => n * m",
+            ) as Abstraction
+
+            val closure = abstraction.evaluate(
+                scope = BuiltinScope,
+            )
+
+
+            assertEquals(
+                expected = IntValue(6),
+                actual = closure.apply(
+                    ArrayTable(
+                        elements = listOf(
+                            IntValue(2),
+                            IntValue(3),
+                        ),
+                    ),
+                ),
+            )
+        }
+    }
 }

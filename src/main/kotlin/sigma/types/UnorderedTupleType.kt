@@ -1,7 +1,11 @@
 package sigma.types
 
+import sigma.StaticValueScope
+import sigma.Thunk
 import sigma.values.PrimitiveValue
 import sigma.values.Symbol
+import sigma.values.tables.Scope
+import sigma.values.tables.Table
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
@@ -32,11 +36,9 @@ data class UnorderedTupleType(
     override val valueType: Type
         get() = TODO("value1 | value2 | ...")
 
-    override fun isDefinitelyEmpty(): Boolean = valueTypeByKey.isEmpty()
+    override fun isDefinitelyEmpty(): Boolean = valueTypeByName.isEmpty()
 
-    override val valueTypeByKey: Map<PrimitiveValue, Type> = valueTypeByName.mapKeys { (name, _) -> name }
-
-    override val valueTypeByLabel: Map<Symbol, Type> = valueTypeByKey.mapNotNull { (key, value) ->
-        (key as? Symbol)?.let { it to value }
-    }.toMap()
+    override fun toStaticValueScope(): StaticValueScope = object : StaticValueScope {
+        override fun getValueType(valueName: Symbol): Type? = valueTypeByName[valueName]
+    }
 }

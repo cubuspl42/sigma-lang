@@ -4,11 +4,8 @@ import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser.OrderedTupleLiteralContext
 import sigma.types.OrderedTupleType
-import sigma.values.PrimitiveValue
-import sigma.values.tables.DictTable
 import sigma.values.tables.Scope
 import sigma.types.Type
-import sigma.values.TypeError
 import sigma.values.tables.ArrayTable
 
 data class OrderedTupleLiteral(
@@ -32,15 +29,15 @@ data class OrderedTupleLiteral(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type = OrderedTupleType(
-        entries = elements.map {
+        elements = elements.map {
             val type = it.inferType(
                 typeScope = typeScope,
                 valueScope = valueScope,
             )
 
-            OrderedTupleType.Entry(
+            OrderedTupleType.Element(
                 name = null,
-                elementType = type,
+                type = type,
             )
         },
     )

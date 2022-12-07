@@ -29,7 +29,7 @@ expression
 
 // For left-recursion
 callableExpression
-    : callee=callableExpression LeftBracket argument=expression RightBracket # callExpressionAlt
+    : callee=callableExpression LeftParen argument=expression RightParen # callExpressionAlt
     | callee=callableExpression argument=tupleLiteral # callExpressionTupleLiteralAlt
     | parenExpression # callableParenAlt
     | reference # callableReferenceAlt
@@ -45,9 +45,7 @@ reference
     ;
 
 abstraction
-    :   (Bang metaArgument)?
-        LeftBracket argumentName=identifier (Colon argumentType=typeExpression)? RightBracket
-        Arrow image=expression
+    : (Bang metaArgument)? argumentType=tupleTypeLiteral Arrow image=expression
     ;
 
 metaArgument
@@ -60,6 +58,11 @@ identifier
 tupleLiteral
     : unorderedTupleLiteral
     | orderedTupleLiteral
+    ;
+
+tupleTypeLiteral
+    : unorderedTupleTypeLiteral
+    | orderedTupleTypeLiteral
     ;
 
 unorderedTupleLiteral
@@ -112,6 +115,5 @@ declaration
 
 typeExpression
     : reference
-    | unorderedTupleTypeLiteral
-    | orderedTupleTypeLiteral
+    | tupleTypeLiteral
     ;

@@ -119,6 +119,7 @@ sealed class Expression : Term() {
         override fun dump(): String = "(bound thunk)"
     }
 
+    // Isn't this the same as `evaluate`?
     fun bind(scope: Scope): Thunk = BoundThunk(scope = scope)
 
     fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).toEvaluatedValue
@@ -139,6 +140,7 @@ sealed class Expression : Term() {
         valueScope: StaticValueScope,
     ): Type
 
+    // TODO: Improve this! Merge with `inferType`?
     open fun validate(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,

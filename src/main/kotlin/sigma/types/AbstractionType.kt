@@ -8,7 +8,7 @@ sealed class FunctionType : Type() {
 
 data class AbstractionType(
     override val metaArgumentType: TableType = TableType.Empty,
-    override val argumentType: Type,
+    override val argumentType: TupleType,
     override val imageType: Type,
 ) : FunctionType() {
     override fun isAssignableTo(otherType: Type): Boolean {

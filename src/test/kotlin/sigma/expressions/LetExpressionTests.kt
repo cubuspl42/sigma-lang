@@ -60,9 +60,9 @@ class LetExpressionTests {
                 actual = Expression.parse(
                     source = """
                         let {
-                            g = h[a],
+                            g = h(a),
                             f = g,
-                        } in f[x]
+                        } in f(x)
                     """.trimIndent()
                 ),
             )

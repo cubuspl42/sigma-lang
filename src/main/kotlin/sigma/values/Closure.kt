@@ -1,22 +1,22 @@
 package sigma.values
 
-import sigma.ArgumentTable
 import sigma.Thunk
 import sigma.expressions.Expression
+import sigma.expressions.TupleTypeLiteral
 import sigma.values.tables.Scope
+import sigma.values.tables.Table
 import sigma.values.tables.chainWith
 
 class Closure(
     private val context: Scope,
-    private val argumentName: Symbol,
+    private val argumentType: TupleTypeLiteral,
     private val image: Expression,
 ) : ComputableFunctionValue() {
     override fun apply(
         argument: Value,
     ): Thunk = image.evaluate(
-        scope = ArgumentTable(
-            name = argumentName,
-            value = argument,
+        scope = argumentType.toArgumentScope(
+            argument = argument as Table,
         ).chainWith(
             context = context,
         ),

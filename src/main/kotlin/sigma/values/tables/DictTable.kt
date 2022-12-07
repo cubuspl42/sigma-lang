@@ -17,7 +17,7 @@ data class DictTable(
 
     override fun read(
         argument: Value,
-    ): Thunk? = entries[argument]
+    ): Thunk? = entries[argument as PrimitiveValue]
 
     override fun dumpContent(): String? {
         val entries = entries.mapValues { (_, image) ->

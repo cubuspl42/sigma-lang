@@ -6,12 +6,12 @@ let {
         else: sumOfSquares[n - 1] + sq[n],
     },
 
-    sumOf = [n] => if [n == 1] {
+    sumOf = [n: Int] => if [n == 1] {
         then: 1,
         else: sumOf[n - 1] + n,
     },
 
-    squareOfSum = [n] => let {
+    squareOfSum = [n: Int] => let {
         s = sumOf[n],
     } in sq[s],
 

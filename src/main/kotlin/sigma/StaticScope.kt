@@ -18,6 +18,7 @@ interface StaticValueScope {
         ): Type? = null
     }
 
+    // Idea: Return `TypeExpression`?
     fun getValueType(valueName: Symbol): Type?
 
     fun chainWith(
