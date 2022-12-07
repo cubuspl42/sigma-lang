@@ -8,7 +8,7 @@ import sigma.values.Symbol
 
 object Arbitrary {
     val unorderedTupleType = UnorderedTupleType(
-        valueTypeByKey = mapOf(
+        valueTypeByName = mapOf(
             Symbol.of("foo") to BoolType,
             Symbol.of("bar") to IntCollectiveType,
         ),

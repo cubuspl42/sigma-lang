@@ -69,12 +69,27 @@ unorderedTupleAssociation
     : name=identifier Colon value=expression
     ;
 
+unorderedTupleTypeLiteral
+    : LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
+
+unorderedTupleTypeEntry
+    : name=identifier Colon valueType=typeExpression
+    ;
+
 orderedTupleLiteral
     : LeftBracket (orderedTupleElement (Comma orderedTupleElement)* Comma?)? RightBracket
     ;
 
 orderedTupleElement
     : expression
+    ;
+
+orderedTupleTypeLiteral
+    : LeftBracket (orderedTupleTypeElement (Comma orderedTupleTypeElement)* Comma?)? RightBracket
+    ;
+
+orderedTupleTypeElement
+    : (name=identifier Colon)? type=typeExpression
     ;
 
 dictLiteral
@@ -96,4 +111,7 @@ declaration
     ;
 
 typeExpression
-    : reference ;
+    : reference
+    | unorderedTupleTypeLiteral
+    | orderedTupleTypeLiteral
+    ;

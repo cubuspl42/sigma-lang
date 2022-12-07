@@ -1,11 +1,8 @@
 package sigma.expressions
 
 import sigma.StaticTypeScope
-import sigma.StaticValueScope
 import sigma.TypeExpression
-import sigma.parser.antlr.SigmaParser.TupleLiteralContext
-import sigma.types.DictType
-import sigma.types.PrimitiveType
+import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
 import sigma.types.UnorderedTupleType
 import sigma.values.PrimitiveValue
 import sigma.types.Type
@@ -14,7 +11,7 @@ import sigma.values.TypeError
 
 data class UnorderedTupleTypeLiteral(
     override val location: SourceLocation,
-    val entries: List<EntryExpression>,
+    val entries: List<Entry>,
 ) : TypeExpression() {
     class DuplicateKeyError(
         key: PrimitiveValue,
@@ -22,21 +19,29 @@ data class UnorderedTupleTypeLiteral(
         message = "Duplicate key: ${key.dump()}",
     )
 
-    data class EntryExpression(
+    data class Entry(
         val name: Symbol,
         val valueType: TypeExpression,
     )
 
     companion object {
         fun build(
-            ctx: TupleLiteralContext,
-        ): UnorderedTupleTypeLiteral = TODO()
+            ctx: UnorderedTupleTypeLiteralContext,
+        ): UnorderedTupleTypeLiteral = UnorderedTupleTypeLiteral(
+            location = SourceLocation.build(ctx),
+            entries = ctx.unorderedTupleTypeEntry().map {
+                Entry(
+                    name = Symbol.of(it.name.text),
+                    valueType = TypeExpression.build(it.valueType),
+                )
+            }
+        )
     }
 
     override fun evaluate(
         typeScope: StaticTypeScope,
     ): Type {
-        val valueTypeByName: Map<PrimitiveValue, Type> = entries.groupBy {
+        val valueTypeByName = entries.groupBy {
             it.name
         }.mapValues { (key, entryTypes) ->
             val valueTypes = entryTypes.map {
@@ -47,7 +52,7 @@ data class UnorderedTupleTypeLiteral(
         }
 
         return UnorderedTupleType(
-            valueTypeByKey = valueTypeByName,
+            valueTypeByName = valueTypeByName,
         )
     }
 }

@@ -78,7 +78,7 @@ object UnorderedTupleLiteralTests {
         fun testEmpty() {
             assertEquals(
                 expected = UnorderedTupleType(
-                    valueTypeByKey = emptyMap(),
+                    valueTypeByName = emptyMap(),
                 ),
                 actual = Expression.parse(
                     source = "{}".trimIndent(),
@@ -93,7 +93,7 @@ object UnorderedTupleLiteralTests {
         fun testMultipleEntries() {
             assertEquals(
                 expected = UnorderedTupleType(
-                    valueTypeByKey = mapOf(
+                    valueTypeByName = mapOf(
                         Symbol.of("key1") to BoolType,
                         Symbol.of("key2") to IntCollectiveType,
                     ),

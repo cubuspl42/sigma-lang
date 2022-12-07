@@ -2,11 +2,15 @@ package sigma
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.expressions.Expression
+import sigma.expressions.OrderedTupleTypeLiteral
 import sigma.expressions.Term
+import sigma.expressions.UnorderedTupleTypeLiteral
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
+import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
+import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
+import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.types.Type
 import sigma.values.Symbol
 
@@ -15,9 +19,21 @@ abstract class TypeExpression : Term() {
     companion object {
         fun build(
             ctx: TypeExpressionContext,
-        ): TypeExpression = TypeReference(
-            referee = Symbol.of(ctx.reference().referee.text),
-        )
+        ): TypeExpression = object : SigmaParserBaseVisitor<TypeExpression>() {
+            override fun visitReference(
+                ctx: ReferenceContext,
+            ): TypeExpression = TypeReference(
+                referee = Symbol.of(ctx.referee.text),
+            )
+
+            override fun visitUnorderedTupleTypeLiteral(
+                ctx: UnorderedTupleTypeLiteralContext,
+            ): TypeExpression = UnorderedTupleTypeLiteral.build(ctx)
+
+            override fun visitOrderedTupleTypeLiteral(
+                ctx: SigmaParser.OrderedTupleTypeLiteralContext,
+            ): TypeExpression = OrderedTupleTypeLiteral.build(ctx)
+        }.visit(ctx) ?: throw IllegalArgumentException("Can't match type expression ${ctx::class}")
 
         fun parse(
             source: String,

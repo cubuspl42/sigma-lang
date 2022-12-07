@@ -74,7 +74,7 @@ data class UnorderedTupleLiteral(
         val entryTypeByName = entryTypes.groupBy { it.name }
 
         return UnorderedTupleType(
-            valueTypeByKey = entryTypeByName.mapValues { (name, entryTypes) ->
+            valueTypeByName = entryTypeByName.mapValues { (name, entryTypes) ->
                 val entryType = entryTypes.singleOrNull() ?: throw DuplicatedNameError(
                     duplicatedKey = name,
                 )
