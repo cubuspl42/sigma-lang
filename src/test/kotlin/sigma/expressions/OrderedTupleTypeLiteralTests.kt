@@ -15,7 +15,6 @@ import kotlin.test.assertEquals
 class OrderedTupleTypeLiteralTests {
     object ParsingTests {
         @Test
-        @Disabled
         fun testEmpty() {
             val expression = TypeExpression.parse(
                 source = "[]",
@@ -31,7 +30,6 @@ class OrderedTupleTypeLiteralTests {
         }
 
         @Test
-        @Disabled
         fun testSingleUnnamed() {
             val expression = TypeExpression.parse(
                 source = "[A]",
@@ -41,9 +39,9 @@ class OrderedTupleTypeLiteralTests {
                 expected = OrderedTupleTypeLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        OrderedTupleTypeLiteral.EntryExpression(
+                        OrderedTupleTypeLiteral.Element(
                             name = null,
-                            valueType = TypeReference(
+                            type = TypeReference(
                                 referee = Symbol.of("A"),
                             ),
                         ),
@@ -54,7 +52,6 @@ class OrderedTupleTypeLiteralTests {
         }
 
         @Test
-        @Disabled
         fun testAllUnnamed() {
             val expression = TypeExpression.parse(
                 source = "[A, B, C]",
@@ -64,21 +61,21 @@ class OrderedTupleTypeLiteralTests {
                 expected = OrderedTupleTypeLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        OrderedTupleTypeLiteral.EntryExpression(
+                        OrderedTupleTypeLiteral.Element(
                             name = null,
-                            valueType = TypeReference(
+                            type = TypeReference(
                                 referee = Symbol.of("A"),
                             ),
                         ),
-                        OrderedTupleTypeLiteral.EntryExpression(
+                        OrderedTupleTypeLiteral.Element(
                             name = null,
-                            valueType = TypeReference(
+                            type = TypeReference(
                                 referee = Symbol.of("B"),
                             ),
                         ),
-                        OrderedTupleTypeLiteral.EntryExpression(
+                        OrderedTupleTypeLiteral.Element(
                             name = null,
-                            valueType = TypeReference(
+                            type = TypeReference(
                                 referee = Symbol.of("C"),
                             ),
                         ),
@@ -89,7 +86,6 @@ class OrderedTupleTypeLiteralTests {
         }
 
         @Test
-        @Disabled
         fun testSomeNamed() {
             val expression = TypeExpression.parse(
                 source = "[a: A, B, c: C]",
@@ -99,21 +95,21 @@ class OrderedTupleTypeLiteralTests {
                 expected = OrderedTupleTypeLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        OrderedTupleTypeLiteral.EntryExpression(
+                        OrderedTupleTypeLiteral.Element(
                             name = Symbol.of("a"),
-                            valueType = TypeReference(
+                            type = TypeReference(
                                 referee = Symbol.of("A"),
                             ),
                         ),
-                        OrderedTupleTypeLiteral.EntryExpression(
+                        OrderedTupleTypeLiteral.Element(
                             name = null,
-                            valueType = TypeReference(
+                            type = TypeReference(
                                 referee = Symbol.of("B"),
                             ),
                         ),
-                        OrderedTupleTypeLiteral.EntryExpression(
+                        OrderedTupleTypeLiteral.Element(
                             name = Symbol.of("c"),
-                            valueType = TypeReference(
+                            type = TypeReference(
                                 referee = Symbol.of("C"),
                             ),
                         ),
@@ -126,7 +122,6 @@ class OrderedTupleTypeLiteralTests {
 
     object EvaluationTests {
         @Test
-        @Disabled
         fun testEmpty() {
             val type = TypeExpression.parse(
                 source = "[]",
@@ -141,7 +136,6 @@ class OrderedTupleTypeLiteralTests {
         }
 
         @Test
-        @Disabled
         fun testNonEmpty() {
             val type = TypeExpression.parse(
                 source = "[a: A, B]",

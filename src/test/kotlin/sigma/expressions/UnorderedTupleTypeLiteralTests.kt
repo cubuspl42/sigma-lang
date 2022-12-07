@@ -15,7 +15,6 @@ import kotlin.test.assertEquals
 class UnorderedTupleTypeLiteralTests {
     object ParsingTests {
         @Test
-        @Disabled
         fun testEmpty() {
             val expression = TypeExpression.parse(
                 source = "{}",
@@ -31,7 +30,6 @@ class UnorderedTupleTypeLiteralTests {
         }
 
         @Test
-        @Disabled
         fun testNonEmpty() {
             val expression = TypeExpression.parse(
                 source = "{a: A, b: B, c: C}",
@@ -41,19 +39,19 @@ class UnorderedTupleTypeLiteralTests {
                 expected = UnorderedTupleTypeLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        UnorderedTupleTypeLiteral.EntryExpression(
+                        UnorderedTupleTypeLiteral.Entry(
                             name = Symbol.of("a"),
                             valueType = TypeReference(
                                 referee = Symbol.of("A"),
                             ),
                         ),
-                        UnorderedTupleTypeLiteral.EntryExpression(
+                        UnorderedTupleTypeLiteral.Entry(
                             name = Symbol.of("b"),
                             valueType = TypeReference(
                                 referee = Symbol.of("B"),
                             ),
                         ),
-                        UnorderedTupleTypeLiteral.EntryExpression(
+                        UnorderedTupleTypeLiteral.Entry(
                             name = Symbol.of("c"),
                             valueType = TypeReference(
                                 referee = Symbol.of("C"),
@@ -68,7 +66,6 @@ class UnorderedTupleTypeLiteralTests {
 
     object EvaluationTests {
         @Test
-        @Disabled
         fun testEmpty() {
             val type = TypeExpression.parse(
                 source = "{}",
@@ -83,7 +80,6 @@ class UnorderedTupleTypeLiteralTests {
         }
 
         @Test
-        @Disabled
         fun testNonEmpty() {
             val type = TypeExpression.parse(
                 source = "{a: A, b: B, c: C}",
@@ -99,7 +95,7 @@ class UnorderedTupleTypeLiteralTests {
 
             assertEquals(
                 expected = UnorderedTupleType(
-                    valueTypeByKey = mapOf(
+                    valueTypeByName = mapOf(
                         Symbol.of("a") to BoolType,
                         Symbol.of("b") to IntCollectiveType,
                         Symbol.of("c") to IntCollectiveType,
