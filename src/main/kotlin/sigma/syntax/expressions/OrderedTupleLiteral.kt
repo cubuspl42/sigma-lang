@@ -1,8 +1,9 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser.OrderedTupleLiteralContext
+import sigma.syntax.SourceLocation
 import sigma.types.OrderedTupleType
 import sigma.values.tables.Scope
 import sigma.types.Type

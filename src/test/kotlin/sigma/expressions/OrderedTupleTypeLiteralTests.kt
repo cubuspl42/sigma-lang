@@ -1,9 +1,10 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import sigma.StaticTypeScope
-import sigma.typeExpressions.TypeExpression
+import sigma.syntax.typeExpressions.TypeExpression
 import sigma.TypeReference
-import sigma.typeExpressions.OrderedTupleTypeLiteral
+import sigma.syntax.SourceLocation
+import sigma.syntax.typeExpressions.OrderedTupleTypeLiteral
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
 import sigma.types.OrderedTupleType
@@ -42,6 +43,7 @@ class OrderedTupleTypeLiteralTests {
                         OrderedTupleTypeLiteral.Element(
                             name = null,
                             type = TypeReference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 1),
                                 referee = Symbol.of("A"),
                             ),
                         ),
@@ -64,18 +66,21 @@ class OrderedTupleTypeLiteralTests {
                         OrderedTupleTypeLiteral.Element(
                             name = null,
                             type = TypeReference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 1),
                                 referee = Symbol.of("A"),
                             ),
                         ),
                         OrderedTupleTypeLiteral.Element(
                             name = null,
                             type = TypeReference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("B"),
                             ),
                         ),
                         OrderedTupleTypeLiteral.Element(
                             name = null,
                             type = TypeReference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
                                 referee = Symbol.of("C"),
                             ),
                         ),
@@ -98,18 +103,21 @@ class OrderedTupleTypeLiteralTests {
                         OrderedTupleTypeLiteral.Element(
                             name = Symbol.of("a"),
                             type = TypeReference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("A"),
                             ),
                         ),
                         OrderedTupleTypeLiteral.Element(
                             name = null,
                             type = TypeReference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
                                 referee = Symbol.of("B"),
                             ),
                         ),
                         OrderedTupleTypeLiteral.Element(
                             name = Symbol.of("c"),
                             type = TypeReference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                 referee = Symbol.of("C"),
                             ),
                         ),

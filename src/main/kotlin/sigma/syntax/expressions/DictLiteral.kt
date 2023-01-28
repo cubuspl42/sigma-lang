@@ -1,9 +1,10 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser.DictAssociationContext
 import sigma.parser.antlr.SigmaParser.DictLiteralContext
+import sigma.syntax.SourceLocation
 import sigma.types.DictType
 import sigma.types.PrimitiveType
 import sigma.values.PrimitiveValue

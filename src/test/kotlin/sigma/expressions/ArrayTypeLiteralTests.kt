@@ -1,8 +1,9 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
-import sigma.typeExpressions.TypeExpression
+import sigma.syntax.typeExpressions.TypeExpression
 import sigma.TypeReference
-import sigma.typeExpressions.ArrayTypeLiteral
+import sigma.syntax.SourceLocation
+import sigma.syntax.typeExpressions.ArrayTypeLiteral
 import sigma.types.ArrayType
 import sigma.types.BoolType
 import sigma.values.FixedStaticTypeScope
@@ -22,6 +23,7 @@ class ArrayTypeLiteralTests {
                 expected = ArrayTypeLiteral(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elementType = TypeReference(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         referee = Symbol.of("A"),
                     ),
                 ),

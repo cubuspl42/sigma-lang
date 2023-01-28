@@ -2,7 +2,7 @@ package sigma.values
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
-import sigma.expressions.Declaration
+import sigma.syntax.expressions.Declaration
 import sigma.types.Type
 
 data class FixedStaticValueScope(

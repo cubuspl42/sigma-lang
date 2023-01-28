@@ -1,7 +1,8 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
+import sigma.syntax.SourceLocation
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
 import sigma.types.OrderedTupleType

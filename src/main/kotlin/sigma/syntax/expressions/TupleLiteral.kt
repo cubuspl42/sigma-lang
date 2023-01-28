@@ -1,4 +1,4 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.TupleLiteralContext

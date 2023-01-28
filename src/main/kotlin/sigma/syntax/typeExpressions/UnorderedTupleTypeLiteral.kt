@@ -1,8 +1,8 @@
-package sigma.typeExpressions
+package sigma.syntax.typeExpressions
 
 import sigma.StaticTypeScope
 import sigma.Thunk
-import sigma.expressions.SourceLocation
+import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
 import sigma.types.UnorderedTupleType
 import sigma.values.PrimitiveValue

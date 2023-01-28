@@ -1,7 +1,7 @@
 package sigma.compiler
 
-import sigma.expressions.Expression
-import sigma.expressions.LetExpression
+import sigma.syntax.expressions.Expression
+import sigma.syntax.expressions.LetExpression
 
 class Compiler(
     private val prelude: Prelude,

@@ -1,6 +1,5 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
-import org.antlr.v4.runtime.ParserRuleContext
 import sigma.BinaryOperationPrototype
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
@@ -10,36 +9,13 @@ import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
+import sigma.syntax.SourceLocation
 import sigma.types.AbstractionType
 import sigma.types.Type
 import sigma.values.FunctionValue
 import sigma.values.Symbol
 import sigma.values.TypeError
 import sigma.values.tables.Scope
-
-private var depth = 0
-
-data class SourceLocation(
-    val lineIndex: Int,
-    val columnIndex: Int,
-) {
-    companion object {
-        // TODO: It's a hack, figure this out
-        val Invalid = SourceLocation(
-            lineIndex = -1,
-            columnIndex = -1,
-        )
-
-        fun build(
-            ctx: ParserRuleContext,
-        ): SourceLocation = SourceLocation(
-            lineIndex = ctx.start.line,
-            columnIndex = ctx.start.charPositionInLine,
-        )
-    }
-
-    override fun toString(): String = "[Ln ${lineIndex}, Col ${columnIndex}]"
-}
 
 data class Call(
     override val location: SourceLocation,

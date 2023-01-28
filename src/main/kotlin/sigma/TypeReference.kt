@@ -1,14 +1,13 @@
 package sigma
 
-import sigma.expressions.SourceLocation
-import sigma.typeExpressions.TypeExpression
+import sigma.syntax.SourceLocation
+import sigma.syntax.typeExpressions.TypeExpression
 import sigma.types.Type
 import sigma.values.Symbol
 import sigma.values.TypeError
 
 data class TypeReference(
-    // TODO
-    override val location: SourceLocation = SourceLocation.Invalid,
+    override val location: SourceLocation,
     val referee: Symbol,
 ) : TypeExpression() {
     override fun evaluate(

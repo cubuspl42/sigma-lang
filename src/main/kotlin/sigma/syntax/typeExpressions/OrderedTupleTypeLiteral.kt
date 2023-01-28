@@ -1,9 +1,9 @@
-package sigma.typeExpressions
+package sigma.syntax.typeExpressions
 
 import indexOfOrNull
 import sigma.StaticTypeScope
 import sigma.Thunk
-import sigma.expressions.SourceLocation
+import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeLiteralContext
 import sigma.types.OrderedTupleType
 import sigma.values.IntValue

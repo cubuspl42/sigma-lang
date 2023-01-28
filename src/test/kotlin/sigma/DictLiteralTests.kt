@@ -1,10 +1,10 @@
 package sigma
 
 import org.junit.jupiter.api.assertThrows
-import sigma.expressions.DictLiteral
-import sigma.expressions.Expression
-import sigma.expressions.Reference
-import sigma.expressions.SourceLocation
+import sigma.syntax.expressions.DictLiteral
+import sigma.syntax.expressions.Expression
+import sigma.syntax.expressions.Reference
+import sigma.syntax.SourceLocation
 import sigma.types.BoolType
 import sigma.types.DictType
 import sigma.types.IntCollectiveType

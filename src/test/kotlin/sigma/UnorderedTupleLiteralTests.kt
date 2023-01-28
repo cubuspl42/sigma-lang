@@ -1,11 +1,11 @@
 package sigma
 
 import org.junit.jupiter.api.assertThrows
-import sigma.expressions.UnorderedTupleLiteral
-import sigma.expressions.Expression
-import sigma.expressions.Reference
-import sigma.expressions.SourceLocation
-import sigma.expressions.UnorderedTupleLiteral.DuplicatedNameError
+import sigma.syntax.expressions.UnorderedTupleLiteral
+import sigma.syntax.expressions.Expression
+import sigma.syntax.expressions.Reference
+import sigma.syntax.SourceLocation
+import sigma.syntax.expressions.UnorderedTupleLiteral.DuplicatedNameError
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
 import sigma.types.UnorderedTupleType

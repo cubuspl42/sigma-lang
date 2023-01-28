@@ -1,4 +1,4 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream

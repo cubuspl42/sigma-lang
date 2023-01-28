@@ -1,9 +1,10 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import sigma.StaticTypeScope
-import sigma.typeExpressions.TypeExpression
+import sigma.syntax.typeExpressions.TypeExpression
 import sigma.TypeReference
-import sigma.typeExpressions.UnorderedTupleTypeLiteral
+import sigma.syntax.SourceLocation
+import sigma.syntax.typeExpressions.UnorderedTupleTypeLiteral
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
 import sigma.types.UnorderedTupleType
@@ -42,18 +43,21 @@ class UnorderedTupleTypeLiteralTests {
                         UnorderedTupleTypeLiteral.Entry(
                             name = Symbol.of("a"),
                             valueType = TypeReference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("A"),
                             ),
                         ),
                         UnorderedTupleTypeLiteral.Entry(
                             name = Symbol.of("b"),
                             valueType = TypeReference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                 referee = Symbol.of("B"),
                             ),
                         ),
                         UnorderedTupleTypeLiteral.Entry(
                             name = Symbol.of("c"),
                             valueType = TypeReference(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 16),
                                 referee = Symbol.of("C"),
                             ),
                         ),

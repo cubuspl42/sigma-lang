@@ -1,4 +1,4 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import org.junit.jupiter.api.assertThrows
 import sigma.BuiltinScope
@@ -6,6 +6,7 @@ import sigma.BuiltinTypeScope
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.TypeReference
+import sigma.syntax.SourceLocation
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
 import sigma.values.Symbol
@@ -79,6 +80,7 @@ class LetExpressionTests {
                             Declaration(
                                 name = Symbol.of("a"),
                                 valueType = TypeReference(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 9),
                                     referee = Symbol.of("Int"),
                                 ),
                                 value = Reference(
