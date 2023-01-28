@@ -116,14 +116,6 @@ class AbstractionTests {
 
             assertEquals(
                 expected = AbstractionType(
-                    metaArgumentType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Symbol.of("t"),
-                                type = MetaType,
-                            ),
-                        ),
-                    ),
                     argumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
