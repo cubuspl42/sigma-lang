@@ -2,6 +2,8 @@ package sigma
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
+import sigma.expressions.ArrayTypeLiteral
+import sigma.expressions.Expression
 import sigma.expressions.Term
 import sigma.expressions.TupleTypeLiteral
 import sigma.parser.antlr.SigmaLexer
@@ -27,6 +29,10 @@ abstract class TypeExpression : Term() {
             override fun visitTupleTypeLiteral(
                 ctx: SigmaParser.TupleTypeLiteralContext,
             ): TypeExpression = TupleTypeLiteral.build(ctx)
+
+            override fun visitArrayTypeLiteral(
+                ctx: SigmaParser.ArrayTypeLiteralContext,
+            ): TypeExpression = ArrayTypeLiteral.build(ctx)
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match type expression ${ctx::class}")
 
         fun parse(

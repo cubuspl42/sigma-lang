@@ -8,6 +8,7 @@ import sigma.parser.antlr.SigmaParser.MetaArgumentContext
 import sigma.types.AbstractionType
 import sigma.types.ArrayType
 import sigma.types.MetaType
+import sigma.types.OrderedTupleType
 import sigma.types.TableType
 import sigma.types.Type
 import sigma.types.UndefinedType
@@ -41,8 +42,13 @@ data class Abstraction(
 
         override fun evaluate(
             typeScope: StaticTypeScope,
-        ): Type = ArrayType(
-            elementType = MetaType,
+        ): Type = OrderedTupleType(
+            elements = listOf(
+                OrderedTupleType.Element(
+                    name = name,
+                    type = MetaType,
+                )
+            ),
         )
     }
 
