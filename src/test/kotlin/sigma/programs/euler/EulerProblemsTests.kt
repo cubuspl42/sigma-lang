@@ -1,6 +1,6 @@
 package sigma.programs.euler
 
-import sigma.Program
+import sigma.compiler.Compiler
 import sigma.values.BoolValue
 import sigma.values.IntValue
 import sigma.values.Value
@@ -56,10 +56,10 @@ private fun solveProblem(n: Int): Value {
 
     val source = getResourceAsText(sourceName) ?: throw RuntimeException("Couldn't load the source file `$sourceName`")
 
-    return Program.evaluate(
+    return Compiler.initialize().load(
         sourceName = sourceName,
         source = source,
-    )
+    ).evaluate()
 }
 
 private fun getResourceAsText(
