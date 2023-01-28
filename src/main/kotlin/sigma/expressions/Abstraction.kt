@@ -46,10 +46,6 @@ data class Abstraction(
         )
     }
 
-    interface ArgumentScopeBuilder {
-        fun buildArgumentScope(tableType: TableType)
-    }
-
     companion object {
         fun build(
             ctx: AbstractionContext,
