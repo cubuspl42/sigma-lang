@@ -2,24 +2,19 @@ package sigma.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
-import sigma.TypeExpression
+import sigma.typeExpressions.TypeExpression
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.MetaArgumentContext
+import sigma.typeExpressions.TupleTypeLiteral
 import sigma.types.AbstractionType
-import sigma.types.ArrayType
 import sigma.types.MetaType
 import sigma.types.OrderedTupleType
 import sigma.types.TableType
 import sigma.types.Type
-import sigma.types.UndefinedType
 import sigma.values.Closure
-import sigma.values.FixedStaticValueScope
 import sigma.values.Symbol
 import sigma.values.TypeError
-import sigma.values.Value
-import sigma.values.tables.FixedScope
 import sigma.values.tables.Scope
-import sigma.values.tables.Table
 
 data class Abstraction(
     override val location: SourceLocation,

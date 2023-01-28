@@ -2,23 +2,18 @@ package sigma.expressions
 
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
-import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.TypeReference
 import sigma.expressions.Abstraction.MetaArgumentExpression
+import sigma.typeExpressions.OrderedTupleTypeLiteral
 import sigma.types.AbstractionType
-import sigma.types.ArrayType
 import sigma.types.BoolType
-import sigma.types.DictType
 import sigma.types.IntCollectiveType
-import sigma.types.IntLiteralType
 import sigma.types.MetaType
 import sigma.types.OrderedTupleType
-import sigma.types.UndefinedType
 import sigma.values.IntValue
 import sigma.values.Symbol
 import sigma.values.tables.ArrayTable
-import sigma.values.tables.DictTable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

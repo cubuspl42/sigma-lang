@@ -1,14 +1,11 @@
-package sigma.expressions
+package sigma.typeExpressions
 
 import indexOfOrNull
 import sigma.StaticTypeScope
-import sigma.StaticValueScope
 import sigma.Thunk
-import sigma.TypeExpression
+import sigma.expressions.SourceLocation
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeLiteralContext
 import sigma.types.OrderedTupleType
-import sigma.types.TupleType
-import sigma.types.Type
 import sigma.values.IntValue
 import sigma.values.Symbol
 import sigma.values.tables.Scope
@@ -31,7 +28,7 @@ data class OrderedTupleTypeLiteral(
             elements = ctx.orderedTupleTypeElement().map { elementCtx ->
                 Element(
                     name = elementCtx.name?.let { Symbol.of(it.text) },
-                    type = TypeExpression.build(elementCtx.type),
+                    type = build(elementCtx.type),
                 )
             })
     }

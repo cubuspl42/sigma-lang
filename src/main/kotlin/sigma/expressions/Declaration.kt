@@ -2,7 +2,7 @@ package sigma.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
-import sigma.TypeExpression
+import sigma.typeExpressions.TypeExpression
 import sigma.values.Symbol
 import sigma.parser.antlr.SigmaParser.DeclarationContext
 import sigma.types.Type
