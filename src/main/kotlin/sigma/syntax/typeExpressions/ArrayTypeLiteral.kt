@@ -1,7 +1,7 @@
-package sigma.typeExpressions
+package sigma.syntax.typeExpressions
 
 import sigma.StaticTypeScope
-import sigma.expressions.SourceLocation
+import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.types.ArrayType
 

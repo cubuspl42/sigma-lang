@@ -1,4 +1,4 @@
-package sigma.typeExpressions
+package sigma.syntax.typeExpressions
 
 import sigma.StaticTypeScope
 import sigma.parser.antlr.SigmaParser

@@ -4,7 +4,7 @@ import getResourceAsText
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.StaticValueScope
-import sigma.expressions.LocalScope
+import sigma.syntax.expressions.LocalScope
 import sigma.values.tables.Scope
 
 data class Prelude(

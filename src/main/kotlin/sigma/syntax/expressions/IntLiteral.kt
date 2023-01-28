@@ -1,9 +1,10 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
+import sigma.syntax.SourceLocation
 import sigma.types.IntLiteralType
 import sigma.types.Type
 import sigma.values.IntValue
@@ -15,11 +16,6 @@ data class IntLiteral(
     val value: IntValue,
 ) : Expression() {
     companion object {
-        fun of(value: Int) = IntLiteral(
-            location = SourceLocation.Invalid,
-            value = IntValue(value = value),
-        )
-
         fun build(
             ctx: IntLiteralAltContext,
         ): IntLiteral = IntLiteral(

@@ -1,6 +1,6 @@
 package sigma.values
 
-import sigma.expressions.SourceLocation
+import sigma.syntax.SourceLocation
 
 open class TypeError(
     location: SourceLocation? = null,

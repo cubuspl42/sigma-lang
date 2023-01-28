@@ -1,9 +1,10 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.UnorderedTupleLiteralContext
+import sigma.syntax.SourceLocation
 import sigma.types.UnorderedTupleType
 import sigma.values.PrimitiveValue
 import sigma.values.tables.DictTable

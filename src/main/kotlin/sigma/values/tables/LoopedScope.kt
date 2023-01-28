@@ -1,7 +1,7 @@
 package sigma.values.tables
 
 import sigma.Thunk
-import sigma.expressions.Expression
+import sigma.syntax.expressions.Expression
 import sigma.values.Symbol
 
 class LoopedScope(

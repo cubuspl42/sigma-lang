@@ -1,11 +1,12 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.StaticValueScope
 import sigma.TypeReference
-import sigma.expressions.Abstraction.MetaArgumentExpression
-import sigma.typeExpressions.OrderedTupleTypeLiteral
+import sigma.syntax.expressions.Abstraction.MetaArgumentExpression
+import sigma.syntax.SourceLocation
+import sigma.syntax.typeExpressions.OrderedTupleTypeLiteral
 import sigma.types.AbstractionType
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
@@ -30,6 +31,7 @@ class AbstractionTests {
                             OrderedTupleTypeLiteral.Element(
                                 name = Symbol.of("n"),
                                 type = TypeReference(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
@@ -61,6 +63,7 @@ class AbstractionTests {
                             OrderedTupleTypeLiteral.Element(
                                 name = Symbol.of("n"),
                                 type = TypeReference(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 9),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),

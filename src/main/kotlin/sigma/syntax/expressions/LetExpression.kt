@@ -1,9 +1,10 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
+import sigma.syntax.SourceLocation
 import sigma.values.tables.Scope
 import sigma.types.Type
 

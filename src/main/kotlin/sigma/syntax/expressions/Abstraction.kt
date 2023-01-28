@@ -1,11 +1,12 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
-import sigma.typeExpressions.TypeExpression
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.MetaArgumentContext
-import sigma.typeExpressions.TupleTypeLiteral
+import sigma.syntax.SourceLocation
+import sigma.syntax.typeExpressions.TupleTypeLiteral
+import sigma.syntax.typeExpressions.TypeExpression
 import sigma.types.AbstractionType
 import sigma.types.MetaType
 import sigma.types.OrderedTupleType
@@ -29,10 +30,11 @@ data class Abstraction(
         companion object {
             fun build(
                 ctx: MetaArgumentContext,
-            ): MetaArgumentExpression = MetaArgumentExpression(
-                location = SourceLocation.build(ctx),
-                name = Symbol.of(ctx.name.text),
-            )
+            ): MetaArgumentExpression =
+                MetaArgumentExpression(
+                    location = SourceLocation.Companion.build(ctx),
+                    name = Symbol.of(ctx.name.text),
+                )
         }
 
         override fun evaluate(
@@ -51,14 +53,14 @@ data class Abstraction(
         fun build(
             ctx: AbstractionContext,
         ): Abstraction = Abstraction(
-            location = SourceLocation.build(ctx),
+            location = SourceLocation.Companion.build(ctx),
             metaArgument = ctx.metaArgument()?.let {
-                MetaArgumentExpression.build(it)
+                MetaArgumentExpression.Companion.build(it)
             },
             argumentType = ctx.argumentType.let {
                 TupleTypeLiteral.build(it)
             },
-            image = Expression.build(ctx.image),
+            image = Expression.Companion.build(ctx.image),
         )
     }
 

@@ -1,19 +1,19 @@
-package sigma.typeExpressions
+package sigma.syntax.typeExpressions
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.StaticTypeScope
 import sigma.TypeReference
-import sigma.expressions.Term
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
+import sigma.syntax.SourceLocation
+import sigma.syntax.expressions.Term
 import sigma.types.Type
 import sigma.values.Symbol
 
-// Thought: Move to a sub-package? And clean up subclasses locations.
 abstract class TypeExpression : Term() {
     companion object {
         fun build(
@@ -22,6 +22,7 @@ abstract class TypeExpression : Term() {
             override fun visitReference(
                 ctx: ReferenceContext,
             ): TypeExpression = TypeReference(
+                location = SourceLocation.build(ctx),
                 referee = Symbol.of(ctx.referee.text),
             )
 

@@ -1,7 +1,7 @@
-package sigma.expressions
+package sigma.syntax.expressions
 
-import org.junit.jupiter.api.assertThrows
 import sigma.Thunk
+import sigma.syntax.SourceLocation
 import sigma.values.ComputableFunctionValue
 import sigma.values.IntValue
 import sigma.values.Symbol

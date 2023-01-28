@@ -3,7 +3,7 @@ package sigma.compiler
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.BuiltinTypeScope
-import sigma.expressions.Expression
+import sigma.syntax.expressions.Expression
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.types.Type

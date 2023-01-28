@@ -1,11 +1,11 @@
 package sigma
 
-import sigma.expressions.Call
-import sigma.expressions.UnorderedTupleLiteral
-import sigma.expressions.Expression
-import sigma.expressions.Reference
-import sigma.expressions.SourceLocation
-import sigma.expressions.SymbolLiteral
+import sigma.syntax.expressions.Call
+import sigma.syntax.expressions.UnorderedTupleLiteral
+import sigma.syntax.expressions.Expression
+import sigma.syntax.expressions.Reference
+import sigma.syntax.SourceLocation
+import sigma.syntax.expressions.SymbolLiteral
 import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals

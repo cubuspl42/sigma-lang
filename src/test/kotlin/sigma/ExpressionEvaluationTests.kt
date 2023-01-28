@@ -1,6 +1,6 @@
 package sigma
 
-import sigma.expressions.Expression
+import sigma.syntax.expressions.Expression
 import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals

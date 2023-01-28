@@ -1,8 +1,8 @@
 package sigma.values
 
 import sigma.Thunk
-import sigma.expressions.Expression
-import sigma.typeExpressions.TupleTypeLiteral
+import sigma.syntax.expressions.Expression
+import sigma.syntax.typeExpressions.TupleTypeLiteral
 import sigma.values.tables.Scope
 import sigma.values.tables.Table
 import sigma.values.tables.chainWith
