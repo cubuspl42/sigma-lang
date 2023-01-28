@@ -11,8 +11,6 @@ sealed class TableType : FunctionType() {
         override fun dump(): String = "{}"
     }
 
-    final override val metaArgumentType: TableType = Empty
-
     final override val argumentType: Type
         get() = keyType
 
