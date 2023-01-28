@@ -95,6 +95,10 @@ orderedTupleTypeElement
     : (name=identifier Colon)? type=typeExpression
     ;
 
+arrayTypeLiteral
+    : LeftBracket type=typeExpression Asterisk RightBracket
+    ;
+
 dictLiteral
     : LeftBrace dictAssociation (Comma dictAssociation)* Comma? RightBrace
     ;
@@ -116,4 +120,5 @@ declaration
 typeExpression
     : reference
     | tupleTypeLiteral
+    | arrayTypeLiteral
     ;

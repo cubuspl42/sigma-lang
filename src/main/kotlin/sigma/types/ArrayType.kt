@@ -1,9 +1,17 @@
 package sigma.types
 
-@Suppress("FunctionName")
-fun ArrayType(
-    elementType: Type,
-) = DictType(
-    keyType = IntCollectiveType,
-    valueType = elementType,
-)
+data class ArrayType(
+   val elementType: Type,
+) : TableType() {
+    override val keyType = IntCollectiveType
+
+    override val valueType: Type = elementType
+
+    override fun isDefinitelyEmpty(): Boolean = false
+
+    override fun isAssignableTo(otherType: Type): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun dump(): String = "[${elementType.dump()}*]"
+}

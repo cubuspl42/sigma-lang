@@ -118,9 +118,13 @@ class AbstractionTests {
 
             assertEquals(
                 expected = AbstractionType(
-                    // TODO: Improve array typing
-                    metaArgumentType = ArrayType(
-                        elementType = MetaType,
+                    metaArgumentType = OrderedTupleType(
+                        elements = listOf(
+                            OrderedTupleType.Element(
+                                name = Symbol.of("t"),
+                                type = MetaType,
+                            ),
+                        ),
                     ),
                     argumentType = OrderedTupleType(
                         elements = listOf(
