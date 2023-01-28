@@ -18,10 +18,6 @@ data class OrderedTupleType(
         )
     }
 
-    override fun isAssignableTo(otherType: Type): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun dump(): String {
         val dumpedEntries = elements.map { (name, type) ->
             listOfNotNull(

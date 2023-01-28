@@ -8,10 +8,6 @@ sealed class TableType : FunctionType() {
 
         override fun isDefinitelyEmpty(): Boolean = true
 
-        override fun isAssignableTo(otherType: Type): Boolean {
-            TODO("Not yet implemented")
-        }
-
         override fun dump(): String = "{}"
     }
 

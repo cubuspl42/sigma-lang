@@ -11,9 +11,6 @@ data class AbstractionType(
     override val argumentType: TupleType,
     override val imageType: Type,
 ) : FunctionType() {
-    override fun isAssignableTo(otherType: Type): Boolean {
-        TODO("Not yet implemented")
-    }
 
     override fun dump(): String {
         val metaArgument = if (!metaArgumentType.isDefinitelyEmpty()) "!${metaArgumentType.dump()}" else null
