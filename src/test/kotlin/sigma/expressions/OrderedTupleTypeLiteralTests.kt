@@ -1,8 +1,9 @@
 package sigma.expressions
 
 import sigma.StaticTypeScope
-import sigma.TypeExpression
+import sigma.typeExpressions.TypeExpression
 import sigma.TypeReference
+import sigma.typeExpressions.OrderedTupleTypeLiteral
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
 import sigma.types.OrderedTupleType

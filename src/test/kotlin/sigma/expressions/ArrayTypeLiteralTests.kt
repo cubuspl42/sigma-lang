@@ -1,11 +1,10 @@
 package sigma.expressions
 
-import sigma.TypeExpression
+import sigma.typeExpressions.TypeExpression
 import sigma.TypeReference
+import sigma.typeExpressions.ArrayTypeLiteral
 import sigma.types.ArrayType
 import sigma.types.BoolType
-import sigma.types.IntCollectiveType
-import sigma.types.OrderedTupleType
 import sigma.values.FixedStaticTypeScope
 import sigma.values.Symbol
 import kotlin.test.Test

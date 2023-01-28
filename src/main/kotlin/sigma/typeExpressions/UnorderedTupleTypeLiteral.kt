@@ -1,8 +1,8 @@
-package sigma.expressions
+package sigma.typeExpressions
 
 import sigma.StaticTypeScope
 import sigma.Thunk
-import sigma.TypeExpression
+import sigma.expressions.SourceLocation
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
 import sigma.types.UnorderedTupleType
 import sigma.values.PrimitiveValue
@@ -34,7 +34,7 @@ data class UnorderedTupleTypeLiteral(
             entries = ctx.unorderedTupleTypeEntry().map {
                 Entry(
                     name = Symbol.of(it.name.text),
-                    valueType = TypeExpression.build(it.valueType),
+                    valueType = build(it.valueType),
                 )
             }
         )

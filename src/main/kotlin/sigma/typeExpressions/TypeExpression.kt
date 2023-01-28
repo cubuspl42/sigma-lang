@@ -1,11 +1,10 @@
-package sigma
+package sigma.typeExpressions
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.expressions.ArrayTypeLiteral
-import sigma.expressions.Expression
+import sigma.StaticTypeScope
+import sigma.TypeReference
 import sigma.expressions.Term
-import sigma.expressions.TupleTypeLiteral
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ReferenceContext
@@ -44,7 +43,7 @@ abstract class TypeExpression : Term() {
             val tokenStream = CommonTokenStream(lexer)
             val parser = SigmaParser(tokenStream)
 
-            return TypeExpression.build(parser.typeExpression())
+            return build(parser.typeExpression())
         }
     }
 

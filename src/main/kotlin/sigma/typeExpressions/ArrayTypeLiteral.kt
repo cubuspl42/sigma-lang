@@ -1,7 +1,7 @@
-package sigma.expressions
+package sigma.typeExpressions
 
 import sigma.StaticTypeScope
-import sigma.TypeExpression
+import sigma.expressions.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.types.ArrayType
 
@@ -14,7 +14,7 @@ data class ArrayTypeLiteral(
             ctx: SigmaParser.ArrayTypeLiteralContext,
         ): ArrayTypeLiteral = ArrayTypeLiteral(
             location = SourceLocation.build(ctx),
-            elementType = TypeExpression.build(ctx.type),
+            elementType = build(ctx.type),
         )
     }
 

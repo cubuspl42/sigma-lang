@@ -1,6 +1,7 @@
 package sigma
 
 import sigma.expressions.SourceLocation
+import sigma.typeExpressions.TypeExpression
 import sigma.types.Type
 import sigma.values.Symbol
 import sigma.values.TypeError

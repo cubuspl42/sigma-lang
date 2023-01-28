@@ -1,7 +1,6 @@
-package sigma.expressions
+package sigma.typeExpressions
 
 import sigma.StaticTypeScope
-import sigma.TypeExpression
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeLiteralContext
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
