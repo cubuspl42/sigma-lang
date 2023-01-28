@@ -1,5 +1,6 @@
 package sigma.expressions
 
+import indexOfOrNull
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.Thunk
@@ -25,7 +26,8 @@ data class OrderedTupleTypeLiteral(
     companion object {
         fun build(
             ctx: OrderedTupleTypeLiteralContext,
-        ): OrderedTupleTypeLiteral = OrderedTupleTypeLiteral(location = SourceLocation.build(ctx),
+        ): OrderedTupleTypeLiteral = OrderedTupleTypeLiteral(
+            location = SourceLocation.build(ctx),
             elements = ctx.orderedTupleTypeElement().map { elementCtx ->
                 Element(
                     name = elementCtx.name?.let { Symbol.of(it.text) },
@@ -49,9 +51,7 @@ data class OrderedTupleTypeLiteral(
 
     override fun toArgumentScope(argument: Table): Scope = object : Scope {
         override fun get(name: Symbol): Thunk? {
-            val index = elements.withIndex().singleOrNull { (_, entry) ->
-                name == entry.name
-            }?.index ?: return null
+            val index = elements.indexOfOrNull { it.name == name } ?: return null
 
             return argument.read(IntValue(index))
         }
