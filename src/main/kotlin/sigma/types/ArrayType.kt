@@ -9,9 +9,5 @@ data class ArrayType(
 
     override fun isDefinitelyEmpty(): Boolean = false
 
-    override fun isAssignableTo(otherType: Type): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun dump(): String = "[${elementType.dump()}*]"
 }
