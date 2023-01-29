@@ -5,6 +5,8 @@ options { tokenVocab = SigmaLexer; }
 program
     : letExpression ;
 
+// Expressions
+
 expression
     : left=expression operator=Asterisk right=expression # binaryOperationAlt
     | left=expression operator=Slash right=expression # binaryOperationAlt
@@ -36,13 +38,26 @@ callableExpression
     | tupleLiteral # callableTupleLiteralAlt
     ;
 
-parenExpression
-    : LeftParen expression RightParen
+tupleLiteral
+    : unorderedTupleLiteral
+    | orderedTupleLiteral
     ;
 
-reference
-    : referee=identifier
+// Let expression
+
+letExpression
+    : LetKeyword scope=localScope InKeyword result=expression ;
+
+localScope
+    : LeftBrace (declaration (Comma declaration)*)? Comma? RightBrace ;
+
+declaration
+    : name=identifier (Colon valueType=typeExpression)? Assign value=expression
     ;
+
+// end
+
+// Abstraction
 
 abstraction
     : (Bang genericParametersTuple)? argumentType=tupleTypeLiteral Arrow image=expression
@@ -56,18 +71,9 @@ genericParameterDeclaration
     : name=identifier
     ;
 
-identifier
-    : Identifier ;
+// end
 
-tupleLiteral
-    : unorderedTupleLiteral
-    | orderedTupleLiteral
-    ;
-
-tupleTypeLiteral
-    : unorderedTupleTypeLiteral
-    | orderedTupleTypeLiteral
-    ;
+// Unordered tuple literal
 
 unorderedTupleLiteral
     : LeftBrace (unorderedTupleAssociation (Comma unorderedTupleAssociation)*)? Comma? RightBrace ;
@@ -76,12 +82,9 @@ unorderedTupleAssociation
     : name=identifier Colon value=expression
     ;
 
-unorderedTupleTypeLiteral
-    : LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
+// end
 
-unorderedTupleTypeEntry
-    : name=identifier Colon valueType=typeExpression
-    ;
+// Ordered tuple literal
 
 orderedTupleLiteral
     : LeftBracket (orderedTupleElement (Comma orderedTupleElement)* Comma?)? RightBracket
@@ -91,17 +94,9 @@ orderedTupleElement
     : expression
     ;
 
-orderedTupleTypeLiteral
-    : LeftBracket (orderedTupleTypeElement (Comma orderedTupleTypeElement)* Comma?)? RightBracket
-    ;
+// end
 
-orderedTupleTypeElement
-    : (name=identifier Colon)? type=typeExpression
-    ;
-
-arrayTypeLiteral
-    : LeftBracket type=typeExpression Asterisk RightBracket
-    ;
+// Dict literal
 
 dictLiteral
     : LeftBrace dictAssociation (Comma dictAssociation)* Comma? RightBrace
@@ -111,18 +106,57 @@ dictAssociation
     : LeftBracket key=expression RightBracket Colon value=expression
     ;
 
-letExpression
-    : LetKeyword scope=localScope InKeyword result=expression ;
+// end
 
-localScope
-    : LeftBrace (declaration (Comma declaration)*)? Comma? RightBrace ;
-
-declaration
-    : name=identifier (Colon valueType=typeExpression)? Assign value=expression
+parenExpression
+    : LeftParen expression RightParen
     ;
+
+reference
+    : referee=identifier
+    ;
+
+// Type expressions
 
 typeExpression
     : reference
     | tupleTypeLiteral
     | arrayTypeLiteral
     ;
+
+tupleTypeLiteral
+    : unorderedTupleTypeLiteral
+    | orderedTupleTypeLiteral
+    ;
+
+// Unordered tuple type literal
+
+unorderedTupleTypeLiteral
+    : LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
+
+unorderedTupleTypeEntry
+    : name=identifier Colon valueType=typeExpression
+    ;
+
+// end
+
+// Ordered tuple type literal
+
+orderedTupleTypeLiteral
+    : LeftBracket (orderedTupleTypeElement (Comma orderedTupleTypeElement)* Comma?)? RightBracket
+    ;
+
+orderedTupleTypeElement
+    : (name=identifier Colon)? type=typeExpression
+    ;
+
+// end
+
+arrayTypeLiteral
+    : LeftBracket type=typeExpression Asterisk RightBracket
+    ;
+
+// Other
+
+identifier
+    : Identifier ;
