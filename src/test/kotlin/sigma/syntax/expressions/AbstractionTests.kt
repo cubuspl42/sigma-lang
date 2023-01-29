@@ -4,7 +4,7 @@ import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.StaticValueScope
 import sigma.TypeReference
-import sigma.syntax.expressions.Abstraction.MetaArgumentExpression
+import sigma.syntax.expressions.Abstraction.GenericParametersTuple
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.OrderedTupleTypeLiteral
 import sigma.types.AbstractionType
@@ -49,13 +49,58 @@ class AbstractionTests {
         }
 
         @Test
-        fun testWithMetaArgument() {
+        fun testGenericWithMultipleParameters() {
             assertEquals(
                 expected = Abstraction(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    metaArgument = MetaArgumentExpression(
+                    metaArgument = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                        name = Symbol.of("t"),
+                        parameterNames = listOf(
+                            Symbol.of("a"),
+                            Symbol.of("b"),
+                        )
+                    ),
+                    argumentType = OrderedTupleTypeLiteral(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 8),
+                        elements = listOf(
+                            OrderedTupleTypeLiteral.Element(
+                                name = Symbol.of("a"),
+                                type = TypeReference(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 12),
+                                    referee = Symbol.of("a"),
+                                ),
+                            ),
+                            OrderedTupleTypeLiteral.Element(
+                                name = Symbol.of("b"),
+                                type = TypeReference(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 18),
+                                    referee = Symbol.of("b"),
+                                ),
+                            ),
+                        ),
+                    ),
+                    image = IntLiteral(
+                        SourceLocation(lineIndex = 1, columnIndex = 24),
+                        value = IntValue(0),
+                    ),
+                ),
+                actual = Expression.parse(
+                    source = "![a, b] [a: a, b: b] => 0",
+                ),
+            )
+        }
+
+
+        @Test
+        fun testGenericWithSingleParameter() {
+            assertEquals(
+                expected = Abstraction(
+                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                    metaArgument = GenericParametersTuple(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        parameterNames = listOf(
+                            Symbol.of("t"),
+                        )
                     ),
                     argumentType = OrderedTupleTypeLiteral(
                         location = SourceLocation(lineIndex = 1, columnIndex = 5),
@@ -106,7 +151,7 @@ class AbstractionTests {
         }
 
         @Test
-        fun testGeneric() {
+        fun testGenericSingleParameter() {
             val type = Expression.parse(
                 source = "![t] [t: t] => false",
             ).validateAndInferType(

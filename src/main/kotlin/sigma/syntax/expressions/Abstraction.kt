@@ -3,7 +3,7 @@ package sigma.syntax.expressions
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser.AbstractionContext
-import sigma.parser.antlr.SigmaParser.MetaArgumentContext
+import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TupleTypeLiteral
 import sigma.types.AbstractionType
@@ -16,27 +16,28 @@ import sigma.values.tables.Scope
 
 data class Abstraction(
     override val location: SourceLocation,
-    val metaArgument: MetaArgumentExpression? = null,
+    val metaArgument: GenericParametersTuple? = null,
     val argumentType: TupleTypeLiteral,
     val image: Expression,
 ) : Expression() {
-    data class MetaArgumentExpression(
+    data class GenericParametersTuple(
         override val location: SourceLocation,
-        val name: Symbol,
+        val parameterNames: List<Symbol>,
     ) : Term() {
         companion object {
             fun build(
-                ctx: MetaArgumentContext,
-            ): MetaArgumentExpression = MetaArgumentExpression(
+                ctx: GenericParametersTupleContext,
+            ): GenericParametersTuple = GenericParametersTuple(
                 location = SourceLocation.build(ctx),
-                name = Symbol.of(ctx.name.text),
+                parameterNames = ctx.genericParameterDeclaration().map {
+                    Symbol.of(it.name.text)
+                },
             )
         }
 
         fun toStaticTypeScope(): StaticTypeScope = FixedStaticTypeScope(
-            entries = mapOf(
-                name to TypeVariable,
-            ),
+            // TODO: Identify type variables
+            entries = parameterNames.associateWith { TypeVariable },
         )
     }
 
@@ -45,8 +46,8 @@ data class Abstraction(
             ctx: AbstractionContext,
         ): Abstraction = Abstraction(
             location = SourceLocation.build(ctx),
-            metaArgument = ctx.metaArgument()?.let {
-                MetaArgumentExpression.build(it)
+            metaArgument = ctx.genericParametersTuple()?.let {
+                GenericParametersTuple.build(it)
             },
             argumentType = ctx.argumentType.let {
                 TupleTypeLiteral.build(it)
