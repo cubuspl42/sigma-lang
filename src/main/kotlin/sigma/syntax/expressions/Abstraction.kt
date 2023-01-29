@@ -6,7 +6,7 @@ import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TupleTypeLiteral
-import sigma.types.AbstractionType
+import sigma.types.UniversalFunctionType
 import sigma.types.Type
 import sigma.types.TypeVariable
 import sigma.values.Closure
@@ -77,7 +77,7 @@ data class Abstraction(
             valueScope = innerValueScope,
         )
 
-        return AbstractionType(
+        return UniversalFunctionType(
             argumentType = argumentType,
             imageType = imageType,
         )

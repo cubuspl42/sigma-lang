@@ -2,7 +2,7 @@ package sigma.values
 
 import sigma.BuiltinValue
 import sigma.Thunk
-import sigma.types.AbstractionType
+import sigma.types.UniversalFunctionType
 import sigma.types.OrderedTupleType
 import sigma.types.Type
 
@@ -18,7 +18,7 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
     }
 
     final override val type: Type
-        get() = AbstractionType(
+        get() = UniversalFunctionType(
             argumentType = OrderedTupleType(
                 elements = argTypes.map {
                     OrderedTupleType.Element(
