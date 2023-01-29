@@ -45,11 +45,15 @@ reference
     ;
 
 abstraction
-    : (Bang metaArgument)? argumentType=tupleTypeLiteral Arrow image=expression
+    : (Bang genericParametersTuple)? argumentType=tupleTypeLiteral Arrow image=expression
     ;
 
-metaArgument
-    : LeftBracket name=identifier RightBracket
+genericParametersTuple
+    : LeftBracket genericParameterDeclaration ((Comma genericParameterDeclaration)+ Comma?)? RightBracket
+    ;
+
+genericParameterDeclaration
+    : name=identifier
     ;
 
 identifier
