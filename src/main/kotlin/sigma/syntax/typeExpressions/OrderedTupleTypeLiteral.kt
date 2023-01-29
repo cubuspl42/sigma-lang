@@ -30,7 +30,8 @@ data class OrderedTupleTypeLiteral(
                     name = elementCtx.name?.let { Symbol.of(it.text) },
                     type = build(elementCtx.type),
                 )
-            })
+            },
+        )
     }
 
     override fun evaluate(
