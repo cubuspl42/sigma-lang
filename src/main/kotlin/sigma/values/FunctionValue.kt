@@ -150,7 +150,11 @@ abstract class FunctionValue : Value() {
             val elements = (args[0] as FunctionValue).toList()
             val transform = args[1] as FunctionValue
 
-            return DictTable.fromList(elements.map { transform.apply(it).toEvaluatedValue })
+            return DictTable.fromList(elements.map {
+                transform.apply(
+                    DictTable.fromList(listOf(it)),
+                ).toEvaluatedValue
+            })
         }
     }
 

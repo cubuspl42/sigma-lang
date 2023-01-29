@@ -2,6 +2,10 @@ package sigma.types
 
 // TODO: Identify type variables somehow
 object TypeVariable : Type() {
+    override fun findLowestCommonSupertype(
+        other: Type,
+    ): Type = AnyType
+
     override fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution = TypeVariableResolution(

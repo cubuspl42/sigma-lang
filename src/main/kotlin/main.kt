@@ -10,7 +10,7 @@ fun main() {
         source = source,
     )
 
-    println("Type: ${program.inferType()}")
+    println("Type: ${program.inferType().dump()}")
 
-    println("Result: ${program.evaluate()}")
+    println("Result: ${program.evaluate().dump()}")
 }
