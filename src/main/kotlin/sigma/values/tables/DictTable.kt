@@ -10,6 +10,14 @@ data class DictTable(
     private val entries: Map<PrimitiveValue, Thunk>,
 ) : Table() {
     companion object {
+        fun fromList(
+            list: List<Value>,
+        ): DictTable = DictTable(
+            entries = list.withIndex().associate { (index, element) ->
+                IntValue(value = index) to element
+            },
+        )
+
         val Empty = DictTable(
             entries = emptyMap(),
         )
@@ -39,6 +47,20 @@ data class DictTable(
     ): String = when (key) {
         is Symbol -> key.dump()
         else -> "[${key.dump()}]"
+    }
+
+    fun toMapDebug(): Map<Int, Thunk> = entries.map { (key, value) ->
+        (key as IntValue).value to value
+    }.toMap()
+
+    fun toListDebug(): List<Thunk> {
+        val map = toMapDebug()
+
+        val expectedIndexSet = (0 until map.size).toSet()
+
+        if (map.keys != expectedIndexSet) throw Exception("Dict keys are not consecutive")
+
+        return map.entries.sortedBy { it.key }.map { it.value }
     }
 }
 

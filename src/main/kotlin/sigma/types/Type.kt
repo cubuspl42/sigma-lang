@@ -20,12 +20,25 @@ sealed class Type {
     abstract fun dump(): String
 }
 
+object AnyType : Type() {
+    override fun resolveTypeVariables(
+        assignedType: Type,
+    ): TypeVariableResolution = TypeVariableResolution.Empty
+
+    override fun substituteTypeVariables(
+        resolution: TypeVariableResolution,
+    ): AnyType = this
+
+    override fun dump(): String = "Any"
+}
+
 sealed interface PrimitiveLiteralType {
     val asType: PrimitiveType
 
     val value: PrimitiveValue
 }
 
+// TODO: Extract
 sealed class PrimitiveType : Type() {
     override fun resolveTypeVariables(
         assignedType: Type,

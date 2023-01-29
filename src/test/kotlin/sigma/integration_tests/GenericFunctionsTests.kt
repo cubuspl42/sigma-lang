@@ -3,7 +3,6 @@ package sigma.integration_tests
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.syntax.expressions.Expression
-import sigma.types.IntCollectiveType
 import sigma.types.IntLiteralType
 import sigma.values.IntValue
 import kotlin.test.Test

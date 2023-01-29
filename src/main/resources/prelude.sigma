@@ -2,4 +2,6 @@
     pi = 3,
 
     e = 2,
+
+    // maxOf = ![e] [elements: [e*], selector: [e] -> e] => max[map[elements]]
 }

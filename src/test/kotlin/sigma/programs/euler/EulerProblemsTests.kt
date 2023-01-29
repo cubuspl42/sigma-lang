@@ -4,6 +4,7 @@ import sigma.compiler.Compiler
 import sigma.values.BoolValue
 import sigma.values.IntValue
 import sigma.values.Value
+import sigma.values.tables.DictTable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -1,6 +1,16 @@
 package sigma.values
 
+import cutOffFront
 import sigma.Thunk
+import sigma.types.AbstractionType
+import sigma.types.AnyType
+import sigma.types.ArrayType
+import sigma.types.IntCollectiveType
+import sigma.types.IntType
+import sigma.types.OrderedTupleType
+import sigma.types.Type
+import sigma.types.TypeVariable
+import sigma.values.tables.DictTable
 
 abstract class FunctionValue : Value() {
     object Link : ComputableFunctionValue() {
@@ -33,6 +43,138 @@ abstract class FunctionValue : Value() {
 
         override fun dump(): String = "(link function)"
     }
+
+    object Chunked4 : BuiltinOrderedFunction() {
+        override val argTypes: List<Type> = listOf(
+            ArrayType(elementType = TypeVariable),
+        )
+
+        override val imageType: Type = ArrayType(
+            elementType = ArrayType(elementType = TypeVariable),
+        )
+
+        override fun compute(args: List<Thunk>): Thunk {
+            val elements = (args.first() as FunctionValue).toList()
+
+            val result = elements.chunked(size = 4)
+
+            return DictTable.fromList(
+                result.map { DictTable.fromList(it) },
+            )
+        }
+    }
+
+    object DropFirst : BuiltinOrderedFunction() {
+        override val argTypes: List<Type> = listOf(
+            ArrayType(elementType = TypeVariable),
+        )
+
+        override val imageType: Type = ArrayType(elementType = TypeVariable)
+
+        override fun compute(args: List<Thunk>): Thunk {
+            val elements = (args.first() as FunctionValue).toList()
+
+            val result = elements.drop(1)
+
+            return DictTable.fromList(result)
+        }
+    }
+
+    object Take : BuiltinOrderedFunction() {
+        override val argTypes: List<Type> = listOf(
+            ArrayType(elementType = TypeVariable),
+        )
+
+        override val imageType: Type = ArrayType(elementType = TypeVariable)
+
+        override fun compute(args: List<Thunk>): Thunk {
+            val elements = (args[0] as FunctionValue).toList()
+            val n = (args[1] as IntValue).value
+
+            val result = elements.take(n)
+
+            return DictTable.fromList(result)
+        }
+    }
+
+    object Windows : BuiltinOrderedFunction() {
+        override val argTypes: List<Type> = listOf(
+            ArrayType(elementType = TypeVariable),
+        )
+
+        override val imageType: Type = ArrayType(
+            elementType = ArrayType(elementType = TypeVariable),
+        )
+
+        override fun compute(args: List<Thunk>): Thunk {
+            val elements = (args[0] as FunctionValue).toList()
+            val n = (args[1] as IntValue).value
+
+            fun computeRecursive(
+                elementsTail: List<Value>,
+            ): List<List<Value>> {
+                val (window) = elementsTail.cutOffFront(n) ?: return emptyList()
+                return listOf(window) + computeRecursive(elementsTail.drop(1))
+            }
+
+            val result = computeRecursive(elements)
+
+            return DictTable.fromList(
+                result.map {
+                    DictTable.fromList(it)
+                },
+            )
+        }
+    }
+
+    object MapFn : BuiltinOrderedFunction() {
+        private val transformType = AbstractionType(
+            argumentType = OrderedTupleType(
+                elements = listOf(
+                    OrderedTupleType.Element(
+                        name = null,
+                        type = TypeVariable,
+                    ),
+                )
+            ),
+            // TODO: Improve this typing, as it makes no sense
+            imageType = TypeVariable,
+        )
+
+        override val argTypes = listOf(
+            ArrayType(elementType = TypeVariable),
+            transformType,
+        )
+
+        override val imageType = ArrayType(elementType = TypeVariable)
+
+        override fun compute(args: List<Thunk>): Thunk {
+            val elements = (args[0] as FunctionValue).toList()
+            val transform = args[1] as FunctionValue
+
+            return DictTable.fromList(elements.map { transform.apply(it).toEvaluatedValue })
+        }
+    }
+
+    object Sum : BuiltinOrderedFunction() {
+        override val argTypes = listOf(
+            ArrayType(elementType = IntCollectiveType),
+        )
+
+        override val imageType = IntCollectiveType
+
+        override fun compute(args: List<Thunk>): Thunk {
+            val elements = (args[0] as FunctionValue).toList()
+
+            return IntValue(
+                value = elements.sumOf { (it as IntValue).value },
+            )
+        }
+    }
+
+    fun toList(): List<Value> = generateSequence(0) { it + 1 }.map {
+        apply(IntValue(value = it)).toEvaluatedValue
+    }.takeWhile { it !is UndefinedValue }.toList()
 
     abstract fun apply(
         argument: Value,

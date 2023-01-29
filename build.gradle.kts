@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     antlr("org.antlr:antlr4:4.11.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0-RC")
     testImplementation(kotlin("test"))
 }
 
