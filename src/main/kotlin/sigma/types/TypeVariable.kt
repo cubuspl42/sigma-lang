@@ -33,3 +33,7 @@ data class TypeVariableResolution(
         )
     }
 }
+
+data class TypeVariableResolutionError(
+    override val message: String,
+) : Exception()

@@ -56,7 +56,7 @@ data class OrderedTupleType(
         return elements.withIndex().fold(
             initial = TypeVariableResolution.Empty,
         ) { accumulatedResolution, (index, element) ->
-            val assignedElement = assignedType.elements.getOrNull(index) ?: throw TypeError(
+            val assignedElement = assignedType.elements.getOrNull(index) ?: throw TypeVariableResolutionError(
                 message = "Cannot resolve type variables, assigned tuple is shorter",
             )
 

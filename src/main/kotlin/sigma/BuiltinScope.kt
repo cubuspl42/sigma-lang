@@ -141,6 +141,7 @@ object BuiltinScope : StaticValueScope, Scope {
         Symbol.of("take") to FunctionValue.Take,
         Symbol.of("map") to FunctionValue.MapFn,
         Symbol.of("sum") to FunctionValue.Sum,
+        Symbol.of("max") to FunctionValue.Max,
     )
 
     override fun getValueType(

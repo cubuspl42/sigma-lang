@@ -11,6 +11,8 @@ import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
 import sigma.syntax.SourceLocation
 import sigma.types.UniversalFunctionType
 import sigma.types.Type
+import sigma.types.TypeVariableResolution
+import sigma.types.TypeVariableResolutionError
 import sigma.values.FunctionValue
 import sigma.values.Symbol
 import sigma.values.TypeError
@@ -89,9 +91,16 @@ data class Call(
             valueScope = valueScope,
         )
 
-        val typeVariableResolution = subjectType.argumentType.resolveTypeVariables(
-            assignedType = argumentType
-        )
+        val typeVariableResolution = try {
+            subjectType.argumentType.resolveTypeVariables(
+                assignedType = argumentType
+            )
+        } catch (e: TypeVariableResolutionError) {
+            throw TypeError(
+                location = location,
+                message = e.message,
+            )
+        }
 
         return subjectType.imageType.substituteTypeVariables(
             resolution = typeVariableResolution,
