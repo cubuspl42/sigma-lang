@@ -5,12 +5,11 @@ import sigma.StaticTypeScope
 import sigma.StaticValueScope
 
 import sigma.Thunk
-import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
 import sigma.syntax.SourceLocation
-import sigma.types.AbstractionType
+import sigma.types.UniversalFunctionType
 import sigma.types.Type
 import sigma.values.FunctionValue
 import sigma.values.Symbol
@@ -80,7 +79,7 @@ data class Call(
         val subjectType = subject.inferType(
             typeScope = typeScope,
             valueScope = valueScope,
-        ) as? AbstractionType ?: throw TypeError(
+        ) as? UniversalFunctionType ?: throw TypeError(
             location = location,
             message = "Only functions can be called",
         )

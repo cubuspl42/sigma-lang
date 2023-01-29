@@ -2,19 +2,14 @@ package sigma.types
 
 import sigma.values.TypeError
 
-sealed class FunctionType : Type() {
-    abstract val argumentType: Type
-    abstract val imageType: Type
-}
-
-data class AbstractionType(
+data class UniversalFunctionType(
     override val argumentType: TupleType,
     override val imageType: Type,
 ) : FunctionType() {
     override fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution {
-        if (assignedType !is AbstractionType) throw TypeError(
+        if (assignedType !is UniversalFunctionType) throw TypeError(
             message = "Cannot resolve type variables, non-abstraction is assigned",
         )
 
@@ -31,7 +26,7 @@ data class AbstractionType(
 
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
-    ): AbstractionType = AbstractionType(
+    ): UniversalFunctionType = UniversalFunctionType(
         argumentType = argumentType.substituteTypeVariables(
             resolution = resolution,
         ),

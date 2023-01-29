@@ -2,11 +2,9 @@ package sigma.values
 
 import cutOffFront
 import sigma.Thunk
-import sigma.types.AbstractionType
-import sigma.types.AnyType
+import sigma.types.UniversalFunctionType
 import sigma.types.ArrayType
 import sigma.types.IntCollectiveType
-import sigma.types.IntType
 import sigma.types.OrderedTupleType
 import sigma.types.Type
 import sigma.types.TypeVariable
@@ -128,7 +126,7 @@ abstract class FunctionValue : Value() {
     }
 
     object MapFn : BuiltinOrderedFunction() {
-        private val transformType = AbstractionType(
+        private val transformType = UniversalFunctionType(
             argumentType = OrderedTupleType(
                 elements = listOf(
                     OrderedTupleType.Element(

@@ -1,7 +1,7 @@
 package sigma
 
 import sigma.types.BoolType
-import sigma.types.AbstractionType
+import sigma.types.UniversalFunctionType
 import sigma.types.IntCollectiveType
 import sigma.types.Type
 import sigma.types.UndefinedType
@@ -35,9 +35,9 @@ object BuiltinScope : StaticValueScope, Scope {
             value = BoolValue(true),
         ),
         Symbol.of("if") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
-                imageType = AbstractionType(
+                imageType = UniversalFunctionType(
                     // TODO: Improve this typing
                     argumentType = UnorderedTupleType.Empty,
                     imageType = UndefinedType,
@@ -46,21 +46,21 @@ object BuiltinScope : StaticValueScope, Scope {
             value = BoolValue.If,
         ),
         Symbol.of("mul") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Mul,
         ),
         Symbol.of("div") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Div,
         ),
         Symbol.of("add") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
 
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
@@ -68,7 +68,7 @@ object BuiltinScope : StaticValueScope, Scope {
             value = IntValue.Add,
         ),
         Symbol.of("sub") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
 
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
@@ -76,7 +76,7 @@ object BuiltinScope : StaticValueScope, Scope {
             value = IntValue.Sub,
         ),
         Symbol.of("sq") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
 
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
@@ -84,7 +84,7 @@ object BuiltinScope : StaticValueScope, Scope {
             value = IntValue.Sq,
         ),
         Symbol.of("eq") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
 
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
@@ -92,7 +92,7 @@ object BuiltinScope : StaticValueScope, Scope {
             value = IntValue.Eq,
         ),
         Symbol.of("lt") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
 
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
@@ -100,28 +100,28 @@ object BuiltinScope : StaticValueScope, Scope {
             value = IntValue.Lt,
         ),
         Symbol.of("lte") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Lte,
         ),
         Symbol.of("gt") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Gt,
         ),
         Symbol.of("gte") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Gte,
         ),
         Symbol.of("link") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
                 // TODO: Improve this typing
                 argumentType = UnorderedTupleType.Empty,
                 imageType = UndefinedType,
@@ -129,7 +129,7 @@ object BuiltinScope : StaticValueScope, Scope {
             value = FunctionValue.Link,
         ),
         Symbol.of("isUndefined") to SimpleBuiltinValue(
-            type = AbstractionType(
+            type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),

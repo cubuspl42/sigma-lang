@@ -7,7 +7,7 @@ import sigma.TypeReference
 import sigma.syntax.expressions.Abstraction.GenericParametersTuple
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.OrderedTupleTypeLiteral
-import sigma.types.AbstractionType
+import sigma.types.UniversalFunctionType
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
 import sigma.types.OrderedTupleType
@@ -130,7 +130,7 @@ class AbstractionTests {
         @Test
         fun test() {
             assertEquals(
-                expected = AbstractionType(
+                expected = UniversalFunctionType(
                     argumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
@@ -160,7 +160,7 @@ class AbstractionTests {
             )
 
             assertEquals(
-                expected = AbstractionType(
+                expected = UniversalFunctionType(
                     argumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
