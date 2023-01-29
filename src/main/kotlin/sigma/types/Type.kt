@@ -9,12 +9,15 @@ sealed class Type {
 
     open val asLiteral: PrimitiveLiteralType? = null
 
+    abstract fun resolveTypeVariables(
+        assignedType: Type,
+    ): TypeVariableResolution
+
+    abstract fun substituteTypeVariables(
+        resolution: TypeVariableResolution,
+    ): Type
+
     abstract fun dump(): String
-}
-
-object MetaType : Type() {
-
-    override fun dump(): String = "Type"
 }
 
 sealed interface PrimitiveLiteralType {
@@ -23,27 +26,31 @@ sealed interface PrimitiveLiteralType {
     val value: PrimitiveValue
 }
 
-object UndefinedType : Type() {
+sealed class PrimitiveType : Type() {
+    override fun resolveTypeVariables(
+        assignedType: Type,
+    ): TypeVariableResolution = TypeVariableResolution.Empty
 
+    override fun substituteTypeVariables(
+        resolution: TypeVariableResolution,
+    ): PrimitiveType = this
+}
+
+object UndefinedType : PrimitiveType() {
     override fun dump(): String = "Undefined"
 }
 
-sealed class PrimitiveType : Type()
-
 object NeverType : PrimitiveType() {
-
     override fun dump(): String = "Never"
 }
 
 object BoolType : PrimitiveType() {
-
     override fun dump(): String = "Bool"
 }
 
 sealed class IntType : PrimitiveType()
 
 object IntCollectiveType : IntType() {
-
     override fun dump(): String = "Int"
 }
 

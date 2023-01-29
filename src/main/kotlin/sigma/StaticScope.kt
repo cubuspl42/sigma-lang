@@ -9,6 +9,18 @@ interface StaticTypeScope {
     }
 
     fun getType(typeName: Symbol): Type?
+
+    fun chainWith(
+        backScope: StaticTypeScope,
+    ): StaticTypeScope = object : StaticTypeScope {
+        override fun getType(
+            typeName: Symbol,
+        ): Type? = this@StaticTypeScope.getType(
+            typeName = typeName,
+        ) ?: backScope.getType(
+            typeName = typeName,
+        )
+    }
 }
 
 interface StaticValueScope {
@@ -22,13 +34,13 @@ interface StaticValueScope {
     fun getValueType(valueName: Symbol): Type?
 
     fun chainWith(
-        valueScope: StaticValueScope,
+        backScope: StaticValueScope,
     ): StaticValueScope = object : StaticValueScope {
         override fun getValueType(
             valueName: Symbol,
         ): Type? = this@StaticValueScope.getValueType(
             valueName = valueName,
-        ) ?: valueScope.getValueType(
+        ) ?: backScope.getValueType(
             valueName = valueName,
         )
     }

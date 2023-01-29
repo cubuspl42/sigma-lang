@@ -2,6 +2,7 @@ package sigma.types
 
 import sigma.StaticValueScope
 import sigma.values.Symbol
+import sigma.values.TypeError
 
 data class OrderedTupleType(
     val elements: List<Element>,
@@ -10,7 +11,15 @@ data class OrderedTupleType(
         // Idea: "label"?
         val name: Symbol?,
         val type: Type,
-    )
+    ) {
+        fun substituteTypeVariables(
+            resolution: TypeVariableResolution,
+        ): Element = copy(
+            type = type.substituteTypeVariables(
+                resolution = resolution,
+            )
+        )
+    }
 
     companion object {
         val Empty = OrderedTupleType(
@@ -37,6 +46,28 @@ data class OrderedTupleType(
 
     override fun isDefinitelyEmpty(): Boolean = elements.isEmpty()
 
+    override fun resolveTypeVariables(
+        assignedType: Type,
+    ): TypeVariableResolution {
+        if (assignedType !is OrderedTupleType) throw TypeError(
+            message = "Cannot resolve type variables, non-(ordered tuple) is assigned",
+        )
+
+        return elements.withIndex().fold(
+            initial = TypeVariableResolution.Empty,
+        ) { accumulatedResolution, (index, element) ->
+            val assignedElement = assignedType.elements.getOrNull(index) ?: throw TypeError(
+                message = "Cannot resolve type variables, assigned tuple is shorter",
+            )
+
+            val elementResolution = element.type.resolveTypeVariables(
+                assignedType = assignedElement.type,
+            )
+
+            accumulatedResolution.mergeWith(elementResolution)
+        }
+    }
+
     override fun toStaticValueScope(): StaticValueScope = object : StaticValueScope {
         override fun getValueType(
             valueName: Symbol,
@@ -44,4 +75,12 @@ data class OrderedTupleType(
             valueName == entry.name
         }?.type
     }
+
+    override fun substituteTypeVariables(
+        resolution: TypeVariableResolution,
+    ): OrderedTupleType = OrderedTupleType(
+        elements = elements.map {
+            it.substituteTypeVariables(resolution = resolution)
+        },
+    )
 }

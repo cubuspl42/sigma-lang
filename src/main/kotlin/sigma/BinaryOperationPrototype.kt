@@ -1,5 +1,7 @@
 package sigma
 
+import sigma.parser.antlr.SigmaLexer
+import sigma.parser.antlr.SigmaParser
 import sigma.values.Symbol
 
 data class BinaryOperationPrototype(
@@ -47,6 +49,22 @@ data class BinaryOperationPrototype(
         val link = BinaryOperationPrototype(
             functionName = "link", leftArgumentName = "primary", rightArgumentName = "secondary"
         )
+
+        fun build(
+            ctx: SigmaParser.BinaryOperationAltContext,
+        ): BinaryOperationPrototype = when (ctx.operator.type) {
+            SigmaLexer.Asterisk -> BinaryOperationPrototype.multiplication
+            SigmaLexer.Plus -> BinaryOperationPrototype.addition
+            SigmaLexer.Minus -> BinaryOperationPrototype.subtraction
+            SigmaLexer.Slash -> BinaryOperationPrototype.division
+            SigmaLexer.Lt -> BinaryOperationPrototype.lessThan
+            SigmaLexer.Lte -> BinaryOperationPrototype.lessThanOrEqual
+            SigmaLexer.Gt -> BinaryOperationPrototype.greaterThan
+            SigmaLexer.Gte -> BinaryOperationPrototype.greaterThanOrEqual
+            SigmaLexer.Equals -> BinaryOperationPrototype.equals
+            SigmaLexer.Link -> BinaryOperationPrototype.link
+            else -> throw UnsupportedOperationException()
+        }
     }
 
     val leftArgument: Symbol
