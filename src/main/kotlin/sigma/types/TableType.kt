@@ -1,16 +1,6 @@
 package sigma.types
 
 sealed class TableType : FunctionType() {
-    object Empty : TableType() {
-        override val keyType: PrimitiveType = NeverType
-
-        override val valueType: Type = NeverType
-
-        override fun isDefinitelyEmpty(): Boolean = true
-
-        override fun dump(): String = "{}"
-    }
-
     final override val argumentType: Type
         get() = keyType
 

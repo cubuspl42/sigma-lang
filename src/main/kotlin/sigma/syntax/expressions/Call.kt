@@ -30,19 +30,7 @@ data class Call(
             val leftExpression = Expression.build(ctx.left)
             val rightExpression = Expression.build(ctx.right)
 
-            val prototype = when (ctx.operator.type) {
-                SigmaLexer.Asterisk -> BinaryOperationPrototype.multiplication
-                SigmaLexer.Plus -> BinaryOperationPrototype.addition
-                SigmaLexer.Minus -> BinaryOperationPrototype.subtraction
-                SigmaLexer.Slash -> BinaryOperationPrototype.division
-                SigmaLexer.Lt -> BinaryOperationPrototype.lessThan
-                SigmaLexer.Lte -> BinaryOperationPrototype.lessThanOrEqual
-                SigmaLexer.Gt -> BinaryOperationPrototype.greaterThan
-                SigmaLexer.Gte -> BinaryOperationPrototype.greaterThanOrEqual
-                SigmaLexer.Equals -> BinaryOperationPrototype.equals
-                SigmaLexer.Link -> BinaryOperationPrototype.link
-                else -> throw UnsupportedOperationException()
-            }
+            val prototype = BinaryOperationPrototype.build(ctx)
 
             return Call(
                 location = SourceLocation.build(ctx),
@@ -97,7 +85,18 @@ data class Call(
             message = "Only functions can be called",
         )
 
-        return subjectType.imageType
+        val argumentType = argument.inferType(
+            typeScope = typeScope,
+            valueScope = valueScope,
+        )
+
+        val typeVariableResolution = subjectType.argumentType.resolveTypeVariables(
+            assignedType = argumentType
+        )
+
+        return subjectType.imageType.substituteTypeVariables(
+            resolution = typeVariableResolution,
+        )
     }
 
     override fun evaluate(

@@ -7,11 +7,10 @@ import sigma.parser.antlr.SigmaParser.MetaArgumentContext
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TupleTypeLiteral
 import sigma.types.AbstractionType
-import sigma.types.MetaType
-import sigma.types.OrderedTupleType
-import sigma.types.TableType
 import sigma.types.Type
+import sigma.types.TypeVariable
 import sigma.values.Closure
+import sigma.values.FixedStaticTypeScope
 import sigma.values.Symbol
 import sigma.values.tables.Scope
 
@@ -24,16 +23,21 @@ data class Abstraction(
     data class MetaArgumentExpression(
         override val location: SourceLocation,
         val name: Symbol,
-    ): Term() {
+    ) : Term() {
         companion object {
             fun build(
                 ctx: MetaArgumentContext,
-            ): MetaArgumentExpression =
-                MetaArgumentExpression(
-                    location = SourceLocation.build(ctx),
-                    name = Symbol.of(ctx.name.text),
-                )
+            ): MetaArgumentExpression = MetaArgumentExpression(
+                location = SourceLocation.build(ctx),
+                name = Symbol.of(ctx.name.text),
+            )
         }
+
+        fun toStaticTypeScope(): StaticTypeScope = FixedStaticTypeScope(
+            entries = mapOf(
+                name to TypeVariable,
+            ),
+        )
     }
 
     companion object {
@@ -55,17 +59,26 @@ data class Abstraction(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type {
+        val innerTypeScope = metaArgument?.toStaticTypeScope()?.chainWith(
+            backScope = typeScope,
+        ) ?: typeScope
+
         val argumentType = argumentType.evaluate(
-            typeScope = typeScope,
+            typeScope = innerTypeScope,
         )
 
-        val innerScope = argumentType.toStaticValueScope().chainWith(
+        val innerValueScope = argumentType.toStaticValueScope().chainWith(
             valueScope,
+        )
+
+        val imageType = image.inferType(
+            typeScope = innerTypeScope,
+            valueScope = innerValueScope,
         )
 
         return AbstractionType(
             argumentType = argumentType,
-            imageType = image.inferType(typeScope = typeScope, valueScope = innerScope),
+            imageType = imageType,
         )
     }
 

@@ -10,8 +10,8 @@ import sigma.syntax.typeExpressions.OrderedTupleTypeLiteral
 import sigma.types.AbstractionType
 import sigma.types.BoolType
 import sigma.types.IntCollectiveType
-import sigma.types.MetaType
 import sigma.types.OrderedTupleType
+import sigma.types.TypeVariable
 import sigma.values.IntValue
 import sigma.values.Symbol
 import sigma.values.tables.ArrayTable
@@ -106,9 +106,9 @@ class AbstractionTests {
         }
 
         @Test
-        fun testWithMetaArgument() {
+        fun testGeneric() {
             val type = Expression.parse(
-                source = "![t] [n: Int] => false",
+                source = "![t] [t: t] => false",
             ).validateAndInferType(
                 typeScope = BuiltinTypeScope,
                 valueScope = BuiltinScope,
@@ -119,8 +119,8 @@ class AbstractionTests {
                     argumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
-                                name = Symbol.of("n"),
-                                type = IntCollectiveType,
+                                name = Symbol.of("t"),
+                                type = TypeVariable,
                             ),
                         ),
                     ),
@@ -141,7 +141,6 @@ class AbstractionTests {
             val closure = abstraction.evaluate(
                 scope = BuiltinScope,
             )
-
 
             assertEquals(
                 expected = IntValue(6),

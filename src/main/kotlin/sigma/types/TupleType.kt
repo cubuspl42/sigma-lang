@@ -8,4 +8,8 @@ import sigma.values.tables.Table
 
 abstract class TupleType : TableType() {
     abstract fun toStaticValueScope(): StaticValueScope
+
+    abstract override fun substituteTypeVariables(
+        resolution: TypeVariableResolution,
+    ): TupleType
 }
