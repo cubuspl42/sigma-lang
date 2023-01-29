@@ -14,48 +14,52 @@ import sigma.values.UndefinedValue
 import sigma.values.Value
 import sigma.values.tables.Scope
 
+interface BuiltinValue {
+    val type: Type
+    val value: Value
+}
+
 object BuiltinScope : StaticValueScope, Scope {
-    private data class BuiltinValue(
-        val type: Type,
-        val value: Value,
-    )
+    private data class SimpleBuiltinValue(
+        override val type: Type,
+        override val value: Value,
+    ) : BuiltinValue
 
     private val builtinValues: Map<Symbol, BuiltinValue> = mapOf(
-        Symbol.of("false") to BuiltinValue(
+        Symbol.of("false") to SimpleBuiltinValue(
             type = BoolType,
             value = BoolValue(false),
         ),
-        Symbol.of("true") to BuiltinValue(
+        Symbol.of("true") to SimpleBuiltinValue(
             type = BoolType,
             value = BoolValue(true),
         ),
-        Symbol.of("if") to BuiltinValue(
+        Symbol.of("if") to SimpleBuiltinValue(
             type = AbstractionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = AbstractionType(
                     // TODO: Improve this typing
-
                     argumentType = UnorderedTupleType.Empty,
                     imageType = UndefinedType,
                 ),
             ),
             value = BoolValue.If,
         ),
-        Symbol.of("mul") to BuiltinValue(
+        Symbol.of("mul") to SimpleBuiltinValue(
             type = AbstractionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Mul,
         ),
-        Symbol.of("div") to BuiltinValue(
+        Symbol.of("div") to SimpleBuiltinValue(
             type = AbstractionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Div,
         ),
-        Symbol.of("add") to BuiltinValue(
+        Symbol.of("add") to SimpleBuiltinValue(
             type = AbstractionType(
 
                 argumentType = UnorderedTupleType.Empty,
@@ -63,7 +67,7 @@ object BuiltinScope : StaticValueScope, Scope {
             ),
             value = IntValue.Add,
         ),
-        Symbol.of("sub") to BuiltinValue(
+        Symbol.of("sub") to SimpleBuiltinValue(
             type = AbstractionType(
 
                 argumentType = UnorderedTupleType.Empty,
@@ -71,7 +75,7 @@ object BuiltinScope : StaticValueScope, Scope {
             ),
             value = IntValue.Sub,
         ),
-        Symbol.of("sq") to BuiltinValue(
+        Symbol.of("sq") to SimpleBuiltinValue(
             type = AbstractionType(
 
                 argumentType = UnorderedTupleType.Empty,
@@ -79,7 +83,7 @@ object BuiltinScope : StaticValueScope, Scope {
             ),
             value = IntValue.Sq,
         ),
-        Symbol.of("eq") to BuiltinValue(
+        Symbol.of("eq") to SimpleBuiltinValue(
             type = AbstractionType(
 
                 argumentType = UnorderedTupleType.Empty,
@@ -87,7 +91,7 @@ object BuiltinScope : StaticValueScope, Scope {
             ),
             value = IntValue.Eq,
         ),
-        Symbol.of("lt") to BuiltinValue(
+        Symbol.of("lt") to SimpleBuiltinValue(
             type = AbstractionType(
 
                 argumentType = UnorderedTupleType.Empty,
@@ -95,29 +99,28 @@ object BuiltinScope : StaticValueScope, Scope {
             ),
             value = IntValue.Lt,
         ),
-        Symbol.of("lte") to BuiltinValue(
+        Symbol.of("lte") to SimpleBuiltinValue(
             type = AbstractionType(
-
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Lte,
         ),
-        Symbol.of("gt") to BuiltinValue(
+        Symbol.of("gt") to SimpleBuiltinValue(
             type = AbstractionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Gt,
         ),
-        Symbol.of("gte") to BuiltinValue(
+        Symbol.of("gte") to SimpleBuiltinValue(
             type = AbstractionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Gte,
         ),
-        Symbol.of("link") to BuiltinValue(
+        Symbol.of("link") to SimpleBuiltinValue(
             type = AbstractionType(
                 // TODO: Improve this typing
                 argumentType = UnorderedTupleType.Empty,
@@ -125,14 +128,19 @@ object BuiltinScope : StaticValueScope, Scope {
             ),
             value = FunctionValue.Link,
         ),
-        Symbol.of("isUndefined") to BuiltinValue(
+        Symbol.of("isUndefined") to SimpleBuiltinValue(
             type = AbstractionType(
-
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = UndefinedValue.IsUndefined,
         ),
+        Symbol.of("chunked4") to FunctionValue.Chunked4,
+        Symbol.of("dropFirst") to FunctionValue.DropFirst,
+        Symbol.of("windows") to FunctionValue.Windows,
+        Symbol.of("take") to FunctionValue.Take,
+        Symbol.of("map") to FunctionValue.MapFn,
+        Symbol.of("sum") to FunctionValue.Sum,
     )
 
     override fun getValueType(
