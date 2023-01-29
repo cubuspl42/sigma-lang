@@ -83,4 +83,16 @@ data class OrderedTupleType(
             it.substituteTypeVariables(resolution = resolution)
         },
     )
+
+    override val asArray: ArrayType by lazy {
+        val elementType = elements.map { it.type }.fold(
+            initial = NeverType as Type,
+        ) { accType, elementType ->
+            accType.findLowestCommonSupertype(elementType)
+        }
+
+        ArrayType(
+            elementType = elementType,
+        )
+    }
 }

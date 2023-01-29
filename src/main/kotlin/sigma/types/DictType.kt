@@ -17,7 +17,7 @@ data class DictType(
         assignedType: Type,
     ): TypeVariableResolution {
         if (assignedType !is DictType) throw TypeError(
-            message = "Cannot resolve type variables, non-array is assigned",
+            message = "Cannot resolve type variables, non-dict is assigned",
         )
 
         val keyResolution = keyType.resolveTypeVariables(

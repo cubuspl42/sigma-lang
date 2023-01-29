@@ -1,10 +1,10 @@
 package sigma.types
 
-import sigma.values.TypeError
-
 data class ArrayType(
     val elementType: Type,
 ) : TableType() {
+    override val asArray = this
+
     override val keyType = IntCollectiveType
 
     override val valueType: Type = elementType
@@ -12,12 +12,12 @@ data class ArrayType(
     override fun isDefinitelyEmpty(): Boolean = false
 
     override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution {
-        if (assignedType !is ArrayType) throw TypeVariableResolutionError(
+        val assignedArrayType = assignedType.asArray ?: throw TypeVariableResolutionError(
             message = "Cannot resolve type variables, non-array is assigned",
         )
 
         return elementType.resolveTypeVariables(
-            assignedType = assignedType.elementType,
+            assignedType = assignedArrayType.elementType,
         )
     }
 

@@ -9,6 +9,12 @@ sealed class Type {
 
     open val asLiteral: PrimitiveLiteralType? = null
 
+    open val asArray: ArrayType? = null
+
+    abstract fun findLowestCommonSupertype(
+        other: Type,
+    ): Type
+
     abstract fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution
@@ -21,6 +27,10 @@ sealed class Type {
 }
 
 object AnyType : Type() {
+    override fun findLowestCommonSupertype(
+        other: Type,
+    ): Type = AnyType
+
     override fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution = TypeVariableResolution.Empty
@@ -50,20 +60,55 @@ sealed class PrimitiveType : Type() {
 }
 
 object UndefinedType : PrimitiveType() {
+    override fun findLowestCommonSupertype(
+        other: Type,
+    ): Type = when (other) {
+        is UndefinedType -> UndefinedType
+        else -> AnyType
+    }
+
     override fun dump(): String = "Undefined"
 }
 
-object NeverType : PrimitiveType() {
+object NeverType : Type() {
+    override fun findLowestCommonSupertype(
+        other: Type,
+    ): Type = other
+
+    override fun resolveTypeVariables(
+        assignedType: Type,
+    ): TypeVariableResolution = TypeVariableResolution.Empty
+
+    override fun substituteTypeVariables(
+        resolution: TypeVariableResolution,
+    ): Type {
+        return this
+    }
+
     override fun dump(): String = "Never"
 }
 
 object BoolType : PrimitiveType() {
+    override fun findLowestCommonSupertype(
+        other: Type,
+    ) = when (other) {
+        is BoolType -> BoolType
+        else -> AnyType
+    }
+
     override fun dump(): String = "Bool"
 }
 
 sealed class IntType : PrimitiveType()
 
 object IntCollectiveType : IntType() {
+    override fun findLowestCommonSupertype(
+        other: Type,
+    ): Type = when (other) {
+        is IntType -> IntCollectiveType
+        else -> AnyType
+    }
+
     override fun dump(): String = "Int"
 }
 
@@ -76,6 +121,14 @@ data class IntLiteralType(
         ): IntLiteralType = IntLiteralType(
             value = IntValue(value = value),
         )
+    }
+
+    override fun findLowestCommonSupertype(
+        other: Type,
+    ): Type = when (other) {
+        this -> this
+        is IntType -> IntCollectiveType
+        else -> AnyType
     }
 
     override fun dump(): String = "${value.value}"
@@ -99,6 +152,13 @@ data class SymbolType(
     override fun dump(): String = value.dump()
 
     override val asLiteral = this
+
+    override fun findLowestCommonSupertype(
+        other: Type,
+    ): Type = when (other) {
+        this -> this
+        else -> AnyType
+    }
 
     override val asType: PrimitiveType = this
 }
