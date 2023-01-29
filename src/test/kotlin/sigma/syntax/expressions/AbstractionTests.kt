@@ -53,7 +53,7 @@ class AbstractionTests {
             assertEquals(
                 expected = Abstraction(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    metaArgument = GenericParametersTuple(
+                    genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         parameterNames = listOf(
                             Symbol.of("a"),
@@ -96,7 +96,7 @@ class AbstractionTests {
             assertEquals(
                 expected = Abstraction(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    metaArgument = GenericParametersTuple(
+                    genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         parameterNames = listOf(
                             Symbol.of("t"),

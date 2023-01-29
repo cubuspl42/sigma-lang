@@ -16,7 +16,7 @@ import sigma.values.tables.Scope
 
 data class Abstraction(
     override val location: SourceLocation,
-    val metaArgument: GenericParametersTuple? = null,
+    val genericParametersTuple: GenericParametersTuple? = null,
     val argumentType: TupleTypeLiteral,
     val image: Expression,
 ) : Expression() {
@@ -46,7 +46,7 @@ data class Abstraction(
             ctx: AbstractionContext,
         ): Abstraction = Abstraction(
             location = SourceLocation.build(ctx),
-            metaArgument = ctx.genericParametersTuple()?.let {
+            genericParametersTuple = ctx.genericParametersTuple()?.let {
                 GenericParametersTuple.build(it)
             },
             argumentType = ctx.argumentType.let {
@@ -60,7 +60,7 @@ data class Abstraction(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type {
-        val innerTypeScope = metaArgument?.toStaticTypeScope()?.chainWith(
+        val innerTypeScope = genericParametersTuple?.toStaticTypeScope()?.chainWith(
             backScope = typeScope,
         ) ?: typeScope
 

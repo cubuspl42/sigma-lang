@@ -30,7 +30,7 @@ data class OrderedTupleType(
     override fun dump(): String {
         val dumpedEntries = elements.map { (name, type) ->
             listOfNotNull(
-                name?.let { "${it.name}: " }, type.dump()
+                name?.let { "${it.name}:" }, type.dump()
             ).joinToString(
                 separator = " ",
             )

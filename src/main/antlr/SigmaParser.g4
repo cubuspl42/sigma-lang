@@ -57,21 +57,9 @@ declaration
 
 // end
 
-// Abstraction
-
 abstraction
-    : (Bang genericParametersTuple)? argumentType=tupleTypeLiteral Arrow image=expression
+    : (Bang genericParametersTuple)? argumentType=tupleTypeLiteral FatArrow image=expression
     ;
-
-genericParametersTuple
-    : LeftBracket genericParameterDeclaration ((Comma genericParameterDeclaration)+ Comma?)? RightBracket
-    ;
-
-genericParameterDeclaration
-    : name=identifier
-    ;
-
-// end
 
 // Unordered tuple literal
 
@@ -119,14 +107,19 @@ reference
 // Type expressions
 
 typeExpression
-    : reference
+    : functionTypeDepiction
     | tupleTypeLiteral
     | arrayTypeLiteral
+    | reference
     ;
 
 tupleTypeLiteral
     : unorderedTupleTypeLiteral
     | orderedTupleTypeLiteral
+    ;
+
+functionTypeDepiction
+    : (Bang genericParametersTuple)? argumentType=tupleTypeLiteral ThinArrow imageType=typeExpression
     ;
 
 // Unordered tuple type literal
@@ -157,6 +150,14 @@ arrayTypeLiteral
     ;
 
 // Other
+
+genericParametersTuple
+    : LeftBracket genericParameterDeclaration ((Comma genericParameterDeclaration)+ Comma?)? RightBracket
+    ;
+
+genericParameterDeclaration
+    : name=identifier
+    ;
 
 identifier
     : Identifier ;

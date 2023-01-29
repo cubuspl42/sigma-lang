@@ -6,6 +6,7 @@ import sigma.StaticTypeScope
 import sigma.TypeReference
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
+import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
@@ -19,20 +20,24 @@ abstract class TypeExpression : Term() {
         fun build(
             ctx: TypeExpressionContext,
         ): TypeExpression = object : SigmaParserBaseVisitor<TypeExpression>() {
+            override fun visitTupleTypeLiteral(
+                ctx: SigmaParser.TupleTypeLiteralContext,
+            ): TypeExpression = TupleTypeLiteral.build(ctx)
+
+            override fun visitFunctionTypeDepiction(
+                ctx: FunctionTypeDepictionContext,
+            ): TypeExpression = FunctionTypeDepiction.build(ctx)
+
+            override fun visitArrayTypeLiteral(
+                ctx: SigmaParser.ArrayTypeLiteralContext,
+            ): TypeExpression = ArrayTypeLiteral.build(ctx)
+
             override fun visitReference(
                 ctx: ReferenceContext,
             ): TypeExpression = TypeReference(
                 location = SourceLocation.build(ctx),
                 referee = Symbol.of(ctx.referee.text),
             )
-
-            override fun visitTupleTypeLiteral(
-                ctx: SigmaParser.TupleTypeLiteralContext,
-            ): TypeExpression = TupleTypeLiteral.build(ctx)
-
-            override fun visitArrayTypeLiteral(
-                ctx: SigmaParser.ArrayTypeLiteralContext,
-            ): TypeExpression = ArrayTypeLiteral.build(ctx)
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match type expression ${ctx::class}")
 
         fun parse(
