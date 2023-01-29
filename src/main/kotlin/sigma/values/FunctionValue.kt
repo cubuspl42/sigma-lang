@@ -170,6 +170,22 @@ abstract class FunctionValue : Value() {
         }
     }
 
+    object Max : BuiltinOrderedFunction() {
+        override val argTypes = listOf(
+            ArrayType(elementType = IntCollectiveType),
+        )
+
+        override val imageType = IntCollectiveType
+
+        override fun compute(args: List<Thunk>): Thunk {
+            val elements = (args[0] as FunctionValue).toList()
+
+            val result = elements.maxOf { (it as IntValue).value }
+
+            return IntValue(value = result)
+        }
+    }
+
     fun toList(): List<Value> = generateSequence(0) { it + 1 }.map {
         apply(IntValue(value = it)).toEvaluatedValue
     }.takeWhile { it !is UndefinedValue }.toList()
