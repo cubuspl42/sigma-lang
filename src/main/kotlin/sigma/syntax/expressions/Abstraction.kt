@@ -6,6 +6,7 @@ import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TupleTypeLiteral
+import sigma.syntax.typeExpressions.TypeExpression
 import sigma.types.UniversalFunctionType
 import sigma.types.Type
 import sigma.types.TypeVariable
@@ -18,6 +19,7 @@ data class Abstraction(
     override val location: SourceLocation,
     val genericParametersTuple: GenericParametersTuple? = null,
     val argumentType: TupleTypeLiteral,
+    val declaredImageType: TypeExpression? = null,
     val image: Expression,
 ) : Expression() {
     data class GenericParametersTuple(
@@ -52,6 +54,9 @@ data class Abstraction(
             argumentType = ctx.argumentType.let {
                 TupleTypeLiteral.build(it)
             },
+            declaredImageType = ctx.imageType?.let {
+                TypeExpression.build(it)
+            },
             image = Expression.build(ctx.image),
         )
     }
@@ -68,11 +73,15 @@ data class Abstraction(
             typeScope = innerTypeScope,
         )
 
+        val declaredImageType = declaredImageType?.evaluate(
+            typeScope = innerTypeScope,
+        )
+
         val innerValueScope = argumentType.toStaticValueScope().chainWith(
             valueScope,
         )
 
-        val imageType = image.inferType(
+        val imageType = declaredImageType ?: image.inferType(
             typeScope = innerTypeScope,
             valueScope = innerValueScope,
         )

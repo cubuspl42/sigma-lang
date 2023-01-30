@@ -58,7 +58,8 @@ declaration
 // end
 
 abstraction
-    : (Bang genericParametersTuple)? argumentType=tupleTypeLiteral FatArrow image=expression
+    :   (Bang genericParametersTuple)? argumentType=tupleTypeLiteral
+        (ThinArrow imageType=typeExpression)? FatArrow image=expression
     ;
 
 // Unordered tuple literal
