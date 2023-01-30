@@ -6,6 +6,8 @@ import sigma.StaticTypeScope
 import sigma.TypeReference
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
+import sigma.parser.antlr.SigmaParser.ArrayTypeLiteralContext
+import sigma.parser.antlr.SigmaParser.DictTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
@@ -29,8 +31,12 @@ abstract class TypeExpression : Term() {
             ): TypeExpression = FunctionTypeDepiction.build(ctx)
 
             override fun visitArrayTypeLiteral(
-                ctx: SigmaParser.ArrayTypeLiteralContext,
+                ctx: ArrayTypeLiteralContext,
             ): TypeExpression = ArrayTypeLiteral.build(ctx)
+
+            override fun visitDictTypeDepiction(
+                ctx: DictTypeDepictionContext,
+            ): TypeExpression = DictTypeDepiction.build(ctx)
 
             override fun visitReference(
                 ctx: ReferenceContext,

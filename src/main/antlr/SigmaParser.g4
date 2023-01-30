@@ -111,6 +111,7 @@ typeExpression
     : functionTypeDepiction
     | tupleTypeLiteral
     | arrayTypeLiteral
+    | dictTypeDepiction
     | reference
     ;
 
@@ -148,6 +149,10 @@ orderedTupleTypeElement
 
 arrayTypeLiteral
     : LeftBracket type=typeExpression Asterisk RightBracket
+    ;
+
+dictTypeDepiction
+    : LeftBrace LeftBracket keyType=typeExpression RightBracket Colon valueType=typeExpression RightBrace
     ;
 
 // Other
