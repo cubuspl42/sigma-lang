@@ -9,6 +9,7 @@ import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
 import sigma.syntax.SourceLocation
+import sigma.types.FunctionType
 import sigma.types.UniversalFunctionType
 import sigma.types.Type
 import sigma.types.TypeVariableResolution
@@ -81,7 +82,7 @@ data class Call(
         val subjectType = subject.inferType(
             typeScope = typeScope,
             valueScope = valueScope,
-        ) as? UniversalFunctionType ?: throw TypeError(
+        ) as? FunctionType ?: throw TypeError(
             location = location,
             message = "Only functions can be called",
         )
