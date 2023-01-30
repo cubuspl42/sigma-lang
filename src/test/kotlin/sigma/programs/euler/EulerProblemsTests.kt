@@ -4,7 +4,6 @@ import sigma.compiler.Compiler
 import sigma.values.BoolValue
 import sigma.values.IntValue
 import sigma.values.Value
-import sigma.values.tables.DictTable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -29,9 +28,11 @@ class EulerProblemsTests {
 
     @Test
     fun testProblem8() {
+        val actual = solveProblem(8)
+
         assertEquals(
-            expected = BoolValue.False,
-            actual = solveProblem(8),
+            expected = IntValue(value = 23514624000L),
+            actual = actual,
         )
     }
 
@@ -57,10 +58,15 @@ private fun solveProblem(n: Int): Value {
 
     val source = getResourceAsText(sourceName) ?: throw RuntimeException("Couldn't load the source file `$sourceName`")
 
-    return Compiler.initialize().load(
+    val program = Compiler.initialize().load(
         sourceName = sourceName,
         source = source,
-    ).evaluate()
+    )
+
+    // TODO: Validate program
+    // program.inferResultType()
+
+    return program.evaluateResult()
 }
 
 private fun getResourceAsText(

@@ -51,7 +51,7 @@ data class OrderedTupleTypeLiteral(
         override fun get(name: Symbol): Thunk? {
             val index = elements.indexOfOrNull { it.name == name } ?: return null
 
-            return argument.read(IntValue(index))
+            return argument.read(IntValue(value = index.toLong()))
         }
     }
 }

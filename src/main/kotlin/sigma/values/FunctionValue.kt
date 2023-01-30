@@ -89,7 +89,7 @@ abstract class FunctionValue : Value() {
             val elements = (args[0] as FunctionValue).toList()
             val n = (args[1] as IntValue).value
 
-            val result = elements.take(n)
+            val result = elements.take(n.toInt())
 
             return DictTable.fromList(result)
         }
@@ -111,7 +111,7 @@ abstract class FunctionValue : Value() {
             fun computeRecursive(
                 elementsTail: List<Value>,
             ): List<List<Value>> {
-                val (window) = elementsTail.cutOffFront(n) ?: return emptyList()
+                val (window) = elementsTail.cutOffFront(n.toInt()) ?: return emptyList()
                 return listOf(window) + computeRecursive(elementsTail.drop(1))
             }
 
@@ -174,6 +174,26 @@ abstract class FunctionValue : Value() {
         }
     }
 
+    object Product : BuiltinOrderedFunction() {
+        override val argTypes = listOf(
+            ArrayType(elementType = IntCollectiveType),
+        )
+
+        override val imageType = IntCollectiveType
+
+        override fun compute(args: List<Thunk>): Thunk {
+            val elements = (args[0] as FunctionValue).toList()
+
+            return IntValue(
+                value = elements.fold(
+                    initial = 1,
+                ) { acc, it ->
+                    acc * (it as IntValue).value
+                },
+            )
+        }
+    }
+
     object Max : BuiltinOrderedFunction() {
         override val argTypes = listOf(
             ArrayType(elementType = IntCollectiveType),
@@ -191,7 +211,7 @@ abstract class FunctionValue : Value() {
     }
 
     fun toList(): List<Value> = generateSequence(0) { it + 1 }.map {
-        apply(IntValue(value = it)).toEvaluatedValue
+        apply(IntValue(value = it.toLong())).toEvaluatedValue
     }.takeWhile { it !is UndefinedValue }.toList()
 
     abstract fun apply(

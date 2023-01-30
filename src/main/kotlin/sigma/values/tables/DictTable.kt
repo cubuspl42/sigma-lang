@@ -14,7 +14,7 @@ data class DictTable(
             list: List<Value>,
         ): DictTable = DictTable(
             entries = list.withIndex().associate { (index, element) ->
-                IntValue(value = index) to element
+                IntValue(value = index.toLong()) to element
             },
         )
 
@@ -49,7 +49,7 @@ data class DictTable(
         else -> "[${key.dump()}]"
     }
 
-    fun toMapDebug(): Map<Int, Thunk> = entries.map { (key, value) ->
+    fun toMapDebug(): Map<Long, Thunk> = entries.map { (key, value) ->
         (key as IntValue).value to value
     }.toMap()
 
@@ -69,6 +69,6 @@ fun ArrayTable(
     elements: List<Thunk>,
 ) = DictTable(
     entries = elements.withIndex().associate { (index, thunk) ->
-        IntValue(index) to thunk
+        IntValue(value = index.toLong()) to thunk
     },
 )

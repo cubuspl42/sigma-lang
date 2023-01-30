@@ -20,7 +20,7 @@ data class IntLiteral(
             ctx: IntLiteralAltContext,
         ): IntLiteral = IntLiteral(
             location = SourceLocation.build(ctx),
-            value = IntValue(value = ctx.text.toInt()),
+            value = IntValue(value = ctx.text.toLong()),
         )
     }
 
