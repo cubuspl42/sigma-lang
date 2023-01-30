@@ -128,13 +128,6 @@ object BuiltinScope : StaticValueScope, Scope {
             ),
             value = FunctionValue.Link,
         ),
-        Symbol.of("isUndefined") to SimpleBuiltinValue(
-            type = UniversalFunctionType(
-                argumentType = UnorderedTupleType.Empty,
-                imageType = BoolType,
-            ),
-            value = UndefinedValue.IsUndefined,
-        ),
         Symbol.of("chunked4") to FunctionValue.Chunked4,
         Symbol.of("dropFirst") to FunctionValue.DropFirst,
         Symbol.of("windows") to FunctionValue.Windows,

@@ -21,6 +21,7 @@ import sigma.parser.antlr.SigmaParser.CallableReferenceAltContext
 import sigma.parser.antlr.SigmaParser.DictLiteralAltContext
 import sigma.parser.antlr.SigmaParser.TupleLiteralAltContext
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
+import sigma.parser.antlr.SigmaParser.IsUndefinedCheckAltContext
 import sigma.parser.antlr.SigmaParser.LetExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ParenExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ReferenceAltContext
@@ -74,6 +75,10 @@ sealed class Expression : Term() {
             override fun visitLetExpressionAlt(
                 ctx: LetExpressionAltContext,
             ): Expression = LetExpression.build(ctx.letExpression())
+
+            override fun visitIsUndefinedCheckAlt(
+                ctx: IsUndefinedCheckAltContext,
+            ): Expression = IsUndefinedCheck.build(ctx.isUndefinedCheck)
 
             override fun visitSymbolLiteralAlt(
                 ctx: SymbolLiteralAltContext,
