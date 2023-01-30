@@ -133,6 +133,7 @@ sealed class Expression : Term() {
         return inferType(typeScope = typeScope, valueScope = valueScope)
     }
 
+    // Thought: Rename to `determineType`? Or not?
     abstract fun inferType(
         // Idea: Rename to metaScope?
         typeScope: StaticTypeScope,
