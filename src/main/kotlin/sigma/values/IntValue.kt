@@ -4,7 +4,7 @@ import sigma.BinaryOperationPrototype
 import sigma.values.tables.Table
 
 data class IntValue(
-    val value: Int,
+    val value: Long,
 ) : PrimitiveValue() {
     companion object {
         val Zero = IntValue(0)
@@ -30,14 +30,14 @@ data class IntValue(
 
         abstract val prototype: BinaryOperationPrototype
 
-        abstract fun calculate(left: Int, right: Int): Value
+        abstract fun calculate(left: Long, right: Long): Value
     }
 
     object Mul : BinaryIntFunction() {
         override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.multiplication
 
         override fun calculate(
-            left: Int, right: Int,
+            left: Long, right: Long,
         ): Value = IntValue(left * right)
     }
 
@@ -45,7 +45,7 @@ data class IntValue(
         override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.division
 
         override fun calculate(
-            left: Int, right: Int,
+            left: Long, right: Long,
         ): Value = IntValue(left / right)
     }
 
@@ -53,7 +53,7 @@ data class IntValue(
         override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.addition
 
         override fun calculate(
-            left: Int, right: Int,
+            left: Long, right: Long,
         ): Value = IntValue(left + right)
     }
 
@@ -61,7 +61,7 @@ data class IntValue(
         override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.subtraction
 
         override fun calculate(
-            left: Int, right: Int,
+            left: Long, right: Long,
         ): Value = IntValue(left - right)
     }
 
@@ -79,8 +79,8 @@ data class IntValue(
         override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.equals
 
         override fun calculate(
-            left: Int,
-            right: Int,
+            left: Long,
+            right: Long,
         ): Value = BoolValue(left == right)
     }
 
@@ -88,8 +88,8 @@ data class IntValue(
         override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.lessThan
 
         override fun calculate(
-            left: Int,
-            right: Int,
+            left: Long,
+            right: Long,
         ): Value = BoolValue(left < right)
     }
 
@@ -97,8 +97,8 @@ data class IntValue(
         override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.lessThanOrEqual
 
         override fun calculate(
-            left: Int,
-            right: Int,
+            left: Long,
+            right: Long,
         ): Value = BoolValue(left < right)
     }
 
@@ -106,8 +106,8 @@ data class IntValue(
         override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.greaterThan
 
         override fun calculate(
-            left: Int,
-            right: Int,
+            left: Long,
+            right: Long,
         ): Value = BoolValue(left > right)
     }
 
@@ -115,8 +115,8 @@ data class IntValue(
         override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.greaterThanOrEqual
 
         override fun calculate(
-            left: Int,
-            right: Int,
+            left: Long,
+            right: Long,
         ): Value = BoolValue(left >= right)
     }
 

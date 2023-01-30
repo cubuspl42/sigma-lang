@@ -25,12 +25,12 @@ class Program(
         }
     }
 
-    fun inferType(): Type = root.inferType(
+    fun inferResultType(): Type = root.inferType(
         typeScope = BuiltinTypeScope,
         valueScope = prelude.valueScope,
     )
 
-    fun evaluate(): Value {
+    fun evaluateResult(): Value {
         root.validate(
             typeScope = BuiltinTypeScope,
             valueScope = prelude.valueScope,

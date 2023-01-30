@@ -32,14 +32,14 @@ data class UnorderedTupleType(
     override fun isDefinitelyEmpty(): Boolean = valueTypeByName.isEmpty()
 
     override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution {
-        if (assignedType !is UnorderedTupleType) throw TypeError(
+        if (assignedType !is UnorderedTupleType) throw TypeVariableResolutionError(
             message = "Cannot resolve type variables, non-(unordered tuple) is assigned",
         )
 
         return valueTypeByName.entries.fold(
             initial = TypeVariableResolution.Empty,
         ) { accumulatedResolution, (key, valueType) ->
-            val assignedValueType = assignedType.valueTypeByName[key] ?: throw TypeError(
+            val assignedValueType = assignedType.valueTypeByName[key] ?: throw TypeVariableResolutionError(
                 message = "Cannot resolve type variables, assigned tuple lacks key $key",
             )
 

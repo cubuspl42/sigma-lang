@@ -117,7 +117,7 @@ data class IntLiteralType(
 ) : IntType(), PrimitiveLiteralType {
     companion object {
         fun of(
-            value: Int,
+            value: Long,
         ): IntLiteralType = IntLiteralType(
             value = IntValue(value = value),
         )
