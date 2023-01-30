@@ -1,12 +1,12 @@
 let {
     N: Int = 100,
 
-    sumOfSquares = [n: Int] => if[n == 1] {
+    sumOfSquares = [n: Int] -> Int => if[n == 1] {
         then: 1,
         else: sumOfSquares[n - 1] + sq[n],
     },
 
-    sumOf = [n: Int] => if [n == 1] {
+    sumOf = [n: Int] -> Int => if [n == 1] {
         then: 1,
         else: sumOf[n - 1] + n,
     },

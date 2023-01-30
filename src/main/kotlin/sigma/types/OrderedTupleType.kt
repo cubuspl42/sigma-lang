@@ -49,7 +49,7 @@ data class OrderedTupleType(
     override fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution {
-        if (assignedType !is OrderedTupleType) throw TypeError(
+        if (assignedType !is OrderedTupleType) throw TypeVariableResolutionError(
             message = "Cannot resolve type variables, non-(ordered tuple) is assigned",
         )
 

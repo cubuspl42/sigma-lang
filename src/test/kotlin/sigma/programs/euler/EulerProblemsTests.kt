@@ -17,7 +17,6 @@ class EulerProblemsTests {
     }
 
     @Test
-    // TODO: Re-support dict literals
     fun testProblem7() {
         // For 20th prime (for performance reasons)
         assertEquals(
@@ -63,8 +62,7 @@ private fun solveProblem(n: Int): Value {
         source = source,
     )
 
-    // TODO: Validate program
-    // program.inferResultType()
+    program.inferResultType()
 
     return program.evaluateResult()
 }

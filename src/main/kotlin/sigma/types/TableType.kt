@@ -5,7 +5,7 @@ sealed class TableType : FunctionType() {
         get() = keyType
 
     final override val imageType: Type
-        get() = TODO("valueType | UndefinedType")
+        get() = valueType // TODO: | undefined
 
     abstract val keyType: PrimitiveType
 

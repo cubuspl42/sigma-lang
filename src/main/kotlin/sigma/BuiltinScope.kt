@@ -1,9 +1,12 @@
 package sigma
 
+import sigma.types.AnyType
 import sigma.types.BoolType
 import sigma.types.UniversalFunctionType
 import sigma.types.IntCollectiveType
+import sigma.types.OrderedTupleType
 import sigma.types.Type
+import sigma.types.TypeVariable
 import sigma.types.UndefinedType
 import sigma.types.UnorderedTupleType
 import sigma.values.BoolValue
@@ -36,11 +39,22 @@ object BuiltinScope : StaticValueScope, Scope {
         ),
         Symbol.of("if") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = OrderedTupleType(
+                    elements = listOf(
+                        OrderedTupleType.Element(
+                            name = Symbol.of("guard"),
+                            type = BoolType,
+                        ),
+                    ),
+                ),
                 imageType = UniversalFunctionType(
-                    // TODO: Improve this typing
-                    argumentType = UnorderedTupleType.Empty,
-                    imageType = UndefinedType,
+                    argumentType = UnorderedTupleType(
+                        valueTypeByName = mapOf(
+                            Symbol.of("then") to TypeVariable,
+                            Symbol.of("else") to TypeVariable,
+                        )
+                    ),
+                    imageType = TypeVariable,
                 ),
             ),
             value = BoolValue.If,
@@ -61,7 +75,6 @@ object BuiltinScope : StaticValueScope, Scope {
         ),
         Symbol.of("add") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
@@ -69,7 +82,6 @@ object BuiltinScope : StaticValueScope, Scope {
         ),
         Symbol.of("sub") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
@@ -77,15 +89,20 @@ object BuiltinScope : StaticValueScope, Scope {
         ),
         Symbol.of("sq") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = OrderedTupleType(
+                    elements = listOf(
+                        OrderedTupleType.Element(
+                            name = null,
+                            type = IntCollectiveType,
+                        ),
+                    ),
+                ),
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Sq,
         ),
         Symbol.of("eq") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
