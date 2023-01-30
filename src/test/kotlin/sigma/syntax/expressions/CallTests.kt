@@ -3,6 +3,7 @@ package sigma.syntax.expressions
 import sigma.Thunk
 import sigma.syntax.SourceLocation
 import sigma.values.ComputableFunctionValue
+import sigma.values.FunctionValue
 import sigma.values.IntValue
 import sigma.values.Symbol
 import sigma.values.Value
@@ -14,7 +15,7 @@ import kotlin.test.assertEquals
 class CallTests {
     object ParsingTests {
         @Test
-        fun testSimple() {
+        fun testDirect() {
             assertEquals(
                 expected = Call(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
@@ -32,7 +33,7 @@ class CallTests {
         }
 
         @Test
-        fun testUnorderedTupleArgumentSugar() {
+        fun testUnordered() {
             assertEquals(
                 expected = Call(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
@@ -65,7 +66,7 @@ class CallTests {
         }
 
         @Test
-        fun testOrderedTupleArgumentSugar() {
+        fun testOrdered() {
             assertEquals(
                 expected = Call(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
@@ -94,7 +95,7 @@ class CallTests {
 
     object EvaluationTests {
         @Test
-        fun testSimple() {
+        fun testDirect() {
             val sq = object : ComputableFunctionValue() {
                 override fun apply(argument: Value): Thunk {
                     val n = argument as IntValue
@@ -115,7 +116,7 @@ class CallTests {
         }
 
         @Test
-        fun testDictSubject() {
+        fun testUnordered() {
             assertEquals(
                 expected = Symbol.of("two"),
                 actual = Expression.parse("dict(2)").evaluate(
@@ -128,6 +129,30 @@ class CallTests {
                                     IntValue(3) to Symbol.of("three"),
                                 ),
                             ),
+                        ),
+                    ),
+                ),
+            )
+        }
+
+        @Test
+        fun testOrdered() {
+            val f = object : ComputableFunctionValue() {
+                override fun apply(argument: Value): Thunk {
+                    val args = argument as FunctionValue
+                    val arg0 = args.apply(IntValue(value = 0)).toEvaluatedValue as IntValue
+                    val arg1 = args.apply(IntValue(value = 1)).toEvaluatedValue as IntValue
+
+                    return IntValue(value = arg0.value + arg1.value)
+                }
+            }
+
+            assertEquals(
+                expected = IntValue(value = 5),
+                actual = Expression.parse("f[2, 3]").evaluate(
+                    scope = FixedScope(
+                        entries = mapOf(
+                            Symbol.of("f") to f,
                         ),
                     ),
                 ),
