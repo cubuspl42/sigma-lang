@@ -2,6 +2,7 @@ lexer grammar SigmaLexer;
 
 LetKeyword : 'let' ;
 InKeyword : 'in' ;
+IsUndefinedKeyword : 'isUndefined' ;
 
 LeftParen : '(' ;
 RightParen : ')' ;

@@ -24,6 +24,7 @@ expression
     | tupleLiteral # tupleLiteralAlt
     | dictLiteral # dictLiteralAlt
     | letExpression # letExpressionAlt
+    | isUndefinedCheck # isUndefinedCheckAlt
     | SymbolLiteral # symbolLiteralAlt
     | IntLiteral # intLiteralAlt
     | callableExpression # callableExpressionAlt
@@ -96,6 +97,10 @@ dictAssociation
     ;
 
 // end
+
+isUndefinedCheck
+    : IsUndefinedKeyword argument=expression
+    ;
 
 parenExpression
     : LeftParen expression RightParen
