@@ -22,6 +22,12 @@ data class OrderedTupleType(
     }
 
     companion object {
+        fun of(
+            vararg elements: Element,
+        ): OrderedTupleType = OrderedTupleType(
+            elements = elements.toList(),
+        )
+
         val Empty = OrderedTupleType(
             elements = emptyList(),
         )

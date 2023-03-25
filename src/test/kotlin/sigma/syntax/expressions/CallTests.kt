@@ -1,8 +1,15 @@
 package sigma.syntax.expressions
 
+import sigma.StaticTypeScope
 import sigma.Thunk
 import sigma.syntax.SourceLocation
+import sigma.types.BoolType
+import sigma.types.IntCollectiveType
+import sigma.types.IntLiteralType
+import sigma.types.OrderedTupleType
+import sigma.types.UniversalFunctionType
 import sigma.values.ComputableFunctionValue
+import sigma.values.FixedStaticValueScope
 import sigma.values.FunctionValue
 import sigma.values.IntValue
 import sigma.values.Symbol
@@ -89,6 +96,36 @@ class CallTests {
                     ),
                 ),
                 actual = Expression.parse("foo[value1, value2]"),
+            )
+        }
+    }
+
+    object TypeCheckingTests {
+        @Test
+        fun testValid() {
+            assertEquals(
+                expected = BoolType,
+                actual = Expression.parse(
+                    source = "f[x]",
+                ).inferType(
+                    typeScope = StaticTypeScope.Empty,
+                    valueScope = FixedStaticValueScope(
+                        entries = mapOf(
+                            Symbol.of("f") to UniversalFunctionType(
+                                argumentType = OrderedTupleType.of(
+                                    OrderedTupleType.Element(
+                                        name = null,
+                                        type = IntCollectiveType,
+                                    ),
+                                ),
+                                imageType = BoolType,
+                            ),
+                            Symbol.of("x") to IntLiteralType.of(
+                                value = 0,
+                            ),
+                        ),
+                    ),
+                ),
             )
         }
     }
