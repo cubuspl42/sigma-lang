@@ -1,4 +1,4 @@
-package sigma.compiler
+package sigma.semantics
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
@@ -9,7 +9,7 @@ import sigma.parser.antlr.SigmaParser
 import sigma.types.Type
 import sigma.values.Value
 
-class Program(
+class Program internal  constructor(
     private val prelude: Prelude,
     private val root: Expression,
 ) {

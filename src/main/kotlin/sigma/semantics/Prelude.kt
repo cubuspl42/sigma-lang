@@ -1,4 +1,4 @@
-package sigma.compiler
+package sigma.semantics
 
 import getResourceAsText
 import sigma.BuiltinScope

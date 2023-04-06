@@ -1,6 +1,6 @@
 package sigma.programs.euler
 
-import sigma.compiler.Compiler
+import sigma.semantics.Project
 import sigma.values.BoolValue
 import sigma.values.IntValue
 import sigma.values.Value
@@ -53,14 +53,9 @@ class EulerProblemsTests {
 }
 
 private fun solveProblem(n: Int): Value {
-    val sourceName = "problem$n.sigma"
-
-    val source = getResourceAsText(sourceName) ?: throw RuntimeException("Couldn't load the source file `$sourceName`")
-
-    val program = Compiler.initialize().load(
-        sourceName = sourceName,
-        source = source,
-    )
+    val store = Project.ResourceStore(javaClass = EulerProblemsTests::class.java)
+    val loader = Project.Loader.create(store = store)
+    val program = loader.load(fileBaseName = "problem$n")
 
     program.inferResultType()
 

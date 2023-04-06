@@ -1,14 +1,9 @@
-import sigma.compiler.Compiler
-
-const val sourceName = "problem.sigma"
+import sigma.semantics.Project
 
 fun main() {
-    val source = getResourceAsText(sourceName) ?: throw RuntimeException("Couldn't load the source file")
-
-    val program = Compiler.initialize().load(
-        sourceName = sourceName,
-        source = source,
-    )
+    val store = Project.ResourceStore(javaClass = object {}.javaClass)
+    val loader = Project.Loader.create(store = store)
+    val program = loader.load(fileBaseName = "problem")
 
     println("Type: ${program.inferResultType().dump()}")
 

@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.compiler.Program
+import sigma.semantics.Program
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser
