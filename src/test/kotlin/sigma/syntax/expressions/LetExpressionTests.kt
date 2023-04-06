@@ -9,6 +9,7 @@ import sigma.TypeReference
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
+import sigma.syntax.Declaration
 import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,6 +25,7 @@ class LetExpressionTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         declarations = listOf(
                             Declaration(
+                                location = SourceLocation(lineIndex = 2, columnIndex = 4),
                                 name = Symbol.of("g"),
                                 value = Call(
                                     location = SourceLocation(lineIndex = 2, columnIndex = 8),
@@ -38,6 +40,7 @@ class LetExpressionTests {
                                 ),
                             ),
                             Declaration(
+                                location = SourceLocation(lineIndex = 3, columnIndex = 4),
                                 name = Symbol.of("f"),
                                 value = Reference(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 8),
@@ -78,6 +81,7 @@ class LetExpressionTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         declarations = listOf(
                             Declaration(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 name = Symbol.of("a"),
                                 valueType = TypeReference(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),

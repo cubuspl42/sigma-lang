@@ -2,8 +2,25 @@ parser grammar SigmaParser;
 
 options { tokenVocab = SigmaLexer; }
 
-program
-    : letExpression ;
+module
+    : importSection moduleBody
+    ;
+
+importSection
+    : importStatement*
+    ;
+
+importStatement
+    : ImportKeyword importPath
+    ;
+
+importPath
+    : identifier (Dot identifier)*
+    ;
+
+moduleBody
+    : declaration*
+    ;
 
 // Expressions
 

@@ -57,7 +57,7 @@ private fun solveProblem(n: Int): Value {
     val loader = Project.Loader.create(store = store)
     val program = loader.load(fileBaseName = "problem$n")
 
-    program.inferResultType()
+    program.validate()
 
     return program.evaluateResult()
 }

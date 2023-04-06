@@ -3,15 +3,14 @@ package sigma.semantics
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.BuiltinTypeScope
-import sigma.syntax.expressions.Expression
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
-import sigma.semantics.types.Type
+import sigma.syntax.Module
 import sigma.values.Value
 
-class Program internal  constructor(
+class Program internal constructor(
     private val prelude: Prelude,
-    private val root: Expression,
+    private val root: Module,
 ) {
     companion object {
         internal fun buildParser(
@@ -25,10 +24,12 @@ class Program internal  constructor(
         }
     }
 
-    fun inferResultType(): Type = root.inferType(
-        typeScope = BuiltinTypeScope,
-        valueScope = prelude.valueScope,
-    )
+    fun validate() {
+        root.validate(
+            typeScope = BuiltinTypeScope,
+            valueScope = prelude.valueScope,
+        )
+    }
 
     fun evaluateResult(): Value {
         root.validate(
@@ -36,7 +37,8 @@ class Program internal  constructor(
             valueScope = prelude.valueScope,
         )
 
-        val result = root.evaluate(
+        val result = root.evaluateDeclaration(
+            name = "main",
             scope = prelude.scope,
         )
 

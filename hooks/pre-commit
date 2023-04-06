@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Check for files in any 'gen' directory with the given extensions
+forbidden_files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^.*\/gen\/.*\.(interp|java|tokens)$')
+
+# If any such files are found, show an error message and exit with a non-zero status
+if [ ! -z "$forbidden_files" ]; then
+  echo "Error: Your commit contains files that should not be committed:"
+  echo "$forbidden_files"
+  echo "Please remove them from your commit and try again."
+  exit 1
+fi
+
+# If no such files are found, exit with a zero status, allowing the commit to proceed
+exit 0

@@ -1,4 +1,7 @@
-let {
+import core.if
+import core.sq
+
+main = let {
     N: Int = 100,
 
     sumOfSquares = [n: Int] -> Int => if[n == 1] {

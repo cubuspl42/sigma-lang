@@ -5,7 +5,5 @@ fun main() {
     val loader = Project.Loader.create(store = store)
     val program = loader.load(fileBaseName = "problem")
 
-    println("Type: ${program.inferResultType().dump()}")
-
     println("Result: ${program.evaluateResult().dump()}")
 }

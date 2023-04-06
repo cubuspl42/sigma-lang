@@ -10,6 +10,7 @@ import sigma.syntax.typeExpressions.TypeExpression
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
+import sigma.syntax.Term
 import sigma.values.Closure
 import sigma.values.FixedStaticTypeScope
 import sigma.values.Symbol

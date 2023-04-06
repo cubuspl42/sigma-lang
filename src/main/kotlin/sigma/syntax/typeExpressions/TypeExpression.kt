@@ -13,7 +13,7 @@ import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.Term
+import sigma.syntax.Term
 import sigma.semantics.types.Type
 import sigma.values.Symbol
 

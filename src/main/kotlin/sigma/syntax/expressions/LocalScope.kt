@@ -4,7 +4,9 @@ import sigma.semantics.Program
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser
+import sigma.syntax.Declaration
 import sigma.syntax.SourceLocation
+import sigma.syntax.Term
 import sigma.values.LoopedStaticValueScope
 import sigma.values.tables.LoopedScope
 import sigma.values.tables.Scope
@@ -32,6 +34,23 @@ data class LocalScope(
                 Declaration.build(it)
             },
         )
+    }
+
+    override fun validate(
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
+    ) {
+        val newValueScope = evaluateStatically(
+            typeScope = typeScope,
+            valueScope = valueScope,
+        )
+
+        declarations.forEach {
+            it.validate(
+                typeScope = typeScope,
+                valueScope = newValueScope,
+            )
+        }
     }
 
     fun evaluateStatically(

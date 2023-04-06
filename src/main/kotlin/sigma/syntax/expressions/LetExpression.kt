@@ -25,6 +25,16 @@ data class LetExpression(
 
     override fun dump(): String = "(let expression)"
 
+    override fun validate(
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
+    ) {
+        localScope.validate(
+            typeScope = typeScope,
+            valueScope = valueScope
+        )
+    }
+
     override fun inferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,

@@ -28,6 +28,7 @@ import sigma.parser.antlr.SigmaParser.ReferenceAltContext
 import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.semantics.types.Type
+import sigma.syntax.Term
 import sigma.values.Value
 import sigma.values.tables.Scope
 
@@ -145,13 +146,6 @@ sealed class Expression : Term() {
         // Idea: Rename to staticScope?
         valueScope: StaticValueScope,
     ): Type
-
-    // TODO: Improve this! Merge with `inferType`?
-    open fun validate(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
-    ) {
-    }
 
     // Idea for naming:
     // "environment" - scope in which an expression is evaluated

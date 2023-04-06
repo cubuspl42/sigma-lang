@@ -2,6 +2,7 @@ lexer grammar SigmaLexer;
 
 LetKeyword : 'let' ;
 InKeyword : 'in' ;
+ImportKeyword : 'import' ;
 IsUndefinedKeyword : 'isUndefined' ;
 
 LeftParen : '(' ;
@@ -16,6 +17,7 @@ Gt : '>' ;
 Lte : '<=' ;
 Gte : '>=' ;
 Equals : '==' ;
+Dot : '.' ;
 Link : '..' ;
 Colon : ':' ;
 Comma : ',' ;
