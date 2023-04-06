@@ -7,11 +7,11 @@ import sigma.TypeReference
 import sigma.syntax.expressions.Abstraction.GenericParametersTuple
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.OrderedTupleTypeLiteral
-import sigma.types.UniversalFunctionType
-import sigma.types.BoolType
-import sigma.types.IntCollectiveType
-import sigma.types.OrderedTupleType
-import sigma.types.TypeVariable
+import sigma.semantics.types.UniversalFunctionType
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.TypeVariable
 import sigma.values.IntValue
 import sigma.values.Symbol
 import sigma.values.tables.ArrayTable

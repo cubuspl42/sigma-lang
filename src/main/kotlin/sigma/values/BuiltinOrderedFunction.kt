@@ -2,9 +2,9 @@ package sigma.values
 
 import sigma.BuiltinValue
 import sigma.Thunk
-import sigma.types.UniversalFunctionType
-import sigma.types.OrderedTupleType
-import sigma.types.Type
+import sigma.semantics.types.UniversalFunctionType
+import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.Type
 
 abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
     final override fun dump(): String = "(builtin ordered function)"

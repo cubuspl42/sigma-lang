@@ -1,8 +1,8 @@
 package sigma
 
-import sigma.types.BoolType
-import sigma.types.IntCollectiveType
-import sigma.types.Type
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.Type
 import sigma.values.Symbol
 
 private val builtinTypes = mapOf(

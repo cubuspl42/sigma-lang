@@ -3,7 +3,7 @@ package sigma.syntax.typeExpressions
 import sigma.StaticTypeScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
-import sigma.types.ArrayType
+import sigma.semantics.types.ArrayType
 
 data class ArrayTypeLiteral(
     override val location: SourceLocation,

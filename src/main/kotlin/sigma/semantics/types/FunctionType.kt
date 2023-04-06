@@ -1,4 +1,4 @@
-package sigma.types
+package sigma.semantics.types
 
 sealed class FunctionType : Type() {
     // This can be improved

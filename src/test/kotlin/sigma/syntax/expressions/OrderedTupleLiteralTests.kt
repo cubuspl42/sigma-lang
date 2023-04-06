@@ -3,9 +3,9 @@ package sigma.syntax.expressions
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.syntax.SourceLocation
-import sigma.types.BoolType
-import sigma.types.IntCollectiveType
-import sigma.types.OrderedTupleType
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.OrderedTupleType
 import sigma.values.BoolValue
 import sigma.values.FixedStaticValueScope
 import sigma.values.IntValue

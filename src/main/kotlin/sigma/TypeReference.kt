@@ -2,7 +2,7 @@ package sigma
 
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TypeExpression
-import sigma.types.Type
+import sigma.semantics.types.Type
 import sigma.values.Symbol
 import sigma.values.TypeError
 

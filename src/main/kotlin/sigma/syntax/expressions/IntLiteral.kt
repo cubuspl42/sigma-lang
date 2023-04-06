@@ -5,8 +5,8 @@ import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.syntax.SourceLocation
-import sigma.types.IntLiteralType
-import sigma.types.Type
+import sigma.semantics.types.IntLiteralType
+import sigma.semantics.types.Type
 import sigma.values.IntValue
 import sigma.values.Value
 import sigma.values.tables.Scope

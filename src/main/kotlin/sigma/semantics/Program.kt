@@ -6,7 +6,7 @@ import sigma.BuiltinTypeScope
 import sigma.syntax.expressions.Expression
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
-import sigma.types.Type
+import sigma.semantics.types.Type
 import sigma.values.Value
 
 class Program internal  constructor(

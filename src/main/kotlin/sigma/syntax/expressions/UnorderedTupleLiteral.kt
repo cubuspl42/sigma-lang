@@ -5,11 +5,11 @@ import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.UnorderedTupleLiteralContext
 import sigma.syntax.SourceLocation
-import sigma.types.UnorderedTupleType
+import sigma.semantics.types.UnorderedTupleType
 import sigma.values.PrimitiveValue
 import sigma.values.tables.DictTable
 import sigma.values.tables.Scope
-import sigma.types.Type
+import sigma.semantics.types.Type
 import sigma.values.Symbol
 import sigma.values.TypeError
 

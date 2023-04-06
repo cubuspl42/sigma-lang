@@ -4,8 +4,8 @@ import sigma.syntax.typeExpressions.TypeExpression
 import sigma.TypeReference
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.ArrayTypeLiteral
-import sigma.types.ArrayType
-import sigma.types.BoolType
+import sigma.semantics.types.ArrayType
+import sigma.semantics.types.BoolType
 import sigma.values.FixedStaticTypeScope
 import sigma.values.Symbol
 import kotlin.test.Test

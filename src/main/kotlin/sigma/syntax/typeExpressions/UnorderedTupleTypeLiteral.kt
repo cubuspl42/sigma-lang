@@ -4,7 +4,7 @@ import sigma.StaticTypeScope
 import sigma.Thunk
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
-import sigma.types.UnorderedTupleType
+import sigma.semantics.types.UnorderedTupleType
 import sigma.values.PrimitiveValue
 import sigma.values.Symbol
 import sigma.values.TypeError

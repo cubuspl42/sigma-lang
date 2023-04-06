@@ -14,7 +14,7 @@ import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.Term
-import sigma.types.Type
+import sigma.semantics.types.Type
 import sigma.values.Symbol
 
 abstract class TypeExpression : Term() {

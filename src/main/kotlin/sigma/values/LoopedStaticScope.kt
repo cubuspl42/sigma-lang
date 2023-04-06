@@ -3,7 +3,7 @@ package sigma.values
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.syntax.expressions.Declaration
-import sigma.types.Type
+import sigma.semantics.types.Type
 
 data class FixedStaticValueScope(
     private val entries: Map<Symbol, Type>,

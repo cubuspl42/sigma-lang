@@ -1,4 +1,4 @@
-package sigma.types
+package sigma.semantics.types
 
 sealed class TableType : FunctionType() {
     final override val argumentType: Type

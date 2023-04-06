@@ -6,9 +6,9 @@ import sigma.syntax.expressions.Expression
 import sigma.syntax.expressions.Reference
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.UnorderedTupleLiteral.DuplicatedNameError
-import sigma.types.BoolType
-import sigma.types.IntCollectiveType
-import sigma.types.UnorderedTupleType
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.UnorderedTupleType
 import sigma.values.FixedStaticValueScope
 import sigma.values.Symbol
 import kotlin.test.Test

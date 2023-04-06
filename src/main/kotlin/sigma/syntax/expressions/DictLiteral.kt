@@ -5,12 +5,12 @@ import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser.DictAssociationContext
 import sigma.parser.antlr.SigmaParser.DictLiteralContext
 import sigma.syntax.SourceLocation
-import sigma.types.DictType
-import sigma.types.PrimitiveType
+import sigma.semantics.types.DictType
+import sigma.semantics.types.PrimitiveType
 import sigma.values.PrimitiveValue
 import sigma.values.tables.DictTable
 import sigma.values.tables.Scope
-import sigma.types.Type
+import sigma.semantics.types.Type
 import sigma.values.TypeError
 
 data class DictLiteral(

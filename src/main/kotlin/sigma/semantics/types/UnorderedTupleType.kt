@@ -1,4 +1,4 @@
-package sigma.types
+package sigma.semantics.types
 
 import sigma.StaticValueScope
 import sigma.values.Symbol

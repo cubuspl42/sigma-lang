@@ -1,7 +1,7 @@
 package sigma.values
 
 import sigma.StaticTypeScope
-import sigma.types.Type
+import sigma.semantics.types.Type
 
 data class FixedStaticTypeScope(
     private val entries: Map<Symbol, Type>,

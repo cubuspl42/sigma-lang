@@ -6,7 +6,7 @@ import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
 import sigma.syntax.SourceLocation
 import sigma.values.tables.Scope
-import sigma.types.Type
+import sigma.semantics.types.Type
 
 data class LetExpression(
     override val location: SourceLocation,

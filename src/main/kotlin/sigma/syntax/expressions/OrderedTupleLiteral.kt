@@ -4,9 +4,9 @@ import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser.OrderedTupleLiteralContext
 import sigma.syntax.SourceLocation
-import sigma.types.OrderedTupleType
+import sigma.semantics.types.OrderedTupleType
 import sigma.values.tables.Scope
-import sigma.types.Type
+import sigma.semantics.types.Type
 import sigma.values.tables.ArrayTable
 
 data class OrderedTupleLiteral(

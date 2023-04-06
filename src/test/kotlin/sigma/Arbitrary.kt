@@ -1,9 +1,9 @@
 package sigma
 
-import sigma.types.BoolType
-import sigma.types.IntCollectiveType
-import sigma.types.OrderedTupleType
-import sigma.types.UnorderedTupleType
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.UnorderedTupleType
 import sigma.values.Symbol
 
 object Arbitrary {

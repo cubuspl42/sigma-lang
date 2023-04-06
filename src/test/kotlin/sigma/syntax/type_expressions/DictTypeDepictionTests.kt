@@ -6,10 +6,10 @@ import sigma.TypeReference
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.ArrayTypeLiteral
 import sigma.syntax.typeExpressions.DictTypeDepiction
-import sigma.types.ArrayType
-import sigma.types.BoolType
-import sigma.types.DictType
-import sigma.types.IntCollectiveType
+import sigma.semantics.types.ArrayType
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.DictType
+import sigma.semantics.types.IntCollectiveType
 import sigma.values.FixedStaticTypeScope
 import sigma.values.Symbol
 import kotlin.test.Test

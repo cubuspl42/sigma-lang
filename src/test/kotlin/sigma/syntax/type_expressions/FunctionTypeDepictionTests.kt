@@ -7,11 +7,11 @@ import sigma.TypeReference
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.FunctionTypeDepiction
 import sigma.syntax.typeExpressions.OrderedTupleTypeLiteral
-import sigma.types.ArrayType
-import sigma.types.BoolType
-import sigma.types.IntCollectiveType
-import sigma.types.OrderedTupleType
-import sigma.types.UniversalFunctionType
+import sigma.semantics.types.ArrayType
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.UniversalFunctionType
 import sigma.values.FixedStaticTypeScope
 import sigma.values.Symbol
 import kotlin.test.Test

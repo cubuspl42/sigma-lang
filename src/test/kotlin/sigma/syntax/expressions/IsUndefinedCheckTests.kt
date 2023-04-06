@@ -3,7 +3,7 @@ package sigma.syntax.expressions
 import sigma.BuiltinTypeScope
 import sigma.StaticValueScope
 import sigma.syntax.SourceLocation
-import sigma.types.BoolType
+import sigma.semantics.types.BoolType
 import sigma.values.BoolValue
 import sigma.values.Symbol
 import sigma.values.tables.DictTable

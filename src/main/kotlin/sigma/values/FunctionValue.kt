@@ -2,12 +2,12 @@ package sigma.values
 
 import cutOffFront
 import sigma.Thunk
-import sigma.types.UniversalFunctionType
-import sigma.types.ArrayType
-import sigma.types.IntCollectiveType
-import sigma.types.OrderedTupleType
-import sigma.types.Type
-import sigma.types.TypeVariable
+import sigma.semantics.types.UniversalFunctionType
+import sigma.semantics.types.ArrayType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.Type
+import sigma.semantics.types.TypeVariable
 import sigma.values.tables.DictTable
 
 abstract class FunctionValue : Value() {

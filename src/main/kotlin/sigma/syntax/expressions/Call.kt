@@ -9,11 +9,11 @@ import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
 import sigma.syntax.SourceLocation
-import sigma.types.FunctionType
-import sigma.types.UniversalFunctionType
-import sigma.types.Type
-import sigma.types.TypeVariableResolution
-import sigma.types.TypeVariableResolutionError
+import sigma.semantics.types.FunctionType
+import sigma.semantics.types.UniversalFunctionType
+import sigma.semantics.types.Type
+import sigma.semantics.types.TypeVariableResolution
+import sigma.semantics.types.TypeVariableResolutionError
 import sigma.values.FunctionValue
 import sigma.values.Symbol
 import sigma.values.TypeError

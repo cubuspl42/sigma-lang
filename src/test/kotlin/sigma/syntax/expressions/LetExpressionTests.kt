@@ -7,8 +7,8 @@ import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.TypeReference
 import sigma.syntax.SourceLocation
-import sigma.types.BoolType
-import sigma.types.IntCollectiveType
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.IntCollectiveType
 import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals

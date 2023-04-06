@@ -5,9 +5,9 @@ import sigma.syntax.typeExpressions.TypeExpression
 import sigma.TypeReference
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.OrderedTupleTypeLiteral
-import sigma.types.BoolType
-import sigma.types.IntCollectiveType
-import sigma.types.OrderedTupleType
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.OrderedTupleType
 import sigma.values.FixedStaticTypeScope
 import sigma.values.Symbol
 import kotlin.test.Test

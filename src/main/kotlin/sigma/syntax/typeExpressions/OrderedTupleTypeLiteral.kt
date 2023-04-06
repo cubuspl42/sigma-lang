@@ -5,7 +5,7 @@ import sigma.StaticTypeScope
 import sigma.Thunk
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeLiteralContext
-import sigma.types.OrderedTupleType
+import sigma.semantics.types.OrderedTupleType
 import sigma.values.IntValue
 import sigma.values.Symbol
 import sigma.values.tables.Scope

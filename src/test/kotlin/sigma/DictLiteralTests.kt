@@ -5,9 +5,9 @@ import sigma.syntax.expressions.DictLiteral
 import sigma.syntax.expressions.Expression
 import sigma.syntax.expressions.Reference
 import sigma.syntax.SourceLocation
-import sigma.types.BoolType
-import sigma.types.DictType
-import sigma.types.IntCollectiveType
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.DictType
+import sigma.semantics.types.IntCollectiveType
 import sigma.values.FixedStaticValueScope
 import sigma.values.Symbol
 import kotlin.test.Test

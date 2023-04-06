@@ -3,9 +3,9 @@ package sigma.syntax.typeExpressions
 import sigma.StaticTypeScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
-import sigma.types.ArrayType
-import sigma.types.DictType
-import sigma.types.PrimitiveType
+import sigma.semantics.types.ArrayType
+import sigma.semantics.types.DictType
+import sigma.semantics.types.PrimitiveType
 import sigma.values.TypeError
 
 data class DictTypeDepiction(

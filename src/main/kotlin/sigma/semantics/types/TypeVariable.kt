@@ -1,4 +1,4 @@
-package sigma.types
+package sigma.semantics.types
 
 // TODO: Identify type variables somehow
 object TypeVariable : Type() {

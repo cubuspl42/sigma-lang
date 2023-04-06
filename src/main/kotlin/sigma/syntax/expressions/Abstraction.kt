@@ -7,9 +7,9 @@ import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TupleTypeLiteral
 import sigma.syntax.typeExpressions.TypeExpression
-import sigma.types.UniversalFunctionType
-import sigma.types.Type
-import sigma.types.TypeVariable
+import sigma.semantics.types.UniversalFunctionType
+import sigma.semantics.types.Type
+import sigma.semantics.types.TypeVariable
 import sigma.values.Closure
 import sigma.values.FixedStaticTypeScope
 import sigma.values.Symbol

@@ -1,4 +1,4 @@
-package sigma.types
+package sigma.semantics.types
 
 data class ArrayType(
     val elementType: Type,

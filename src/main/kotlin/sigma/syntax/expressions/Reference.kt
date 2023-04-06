@@ -6,7 +6,7 @@ import sigma.StaticValueScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.syntax.SourceLocation
-import sigma.types.Type
+import sigma.semantics.types.Type
 import sigma.values.Symbol
 import sigma.values.TypeError
 import sigma.values.tables.Scope

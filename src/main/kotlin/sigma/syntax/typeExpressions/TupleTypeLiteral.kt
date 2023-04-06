@@ -5,7 +5,7 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeLiteralContext
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
-import sigma.types.TupleType
+import sigma.semantics.types.TupleType
 import sigma.values.tables.Scope
 import sigma.values.tables.Table
 

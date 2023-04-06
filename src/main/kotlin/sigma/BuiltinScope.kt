@@ -1,14 +1,14 @@
 package sigma
 
-import sigma.types.AnyType
-import sigma.types.BoolType
-import sigma.types.UniversalFunctionType
-import sigma.types.IntCollectiveType
-import sigma.types.OrderedTupleType
-import sigma.types.Type
-import sigma.types.TypeVariable
-import sigma.types.UndefinedType
-import sigma.types.UnorderedTupleType
+import sigma.semantics.types.AnyType
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.UniversalFunctionType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.Type
+import sigma.semantics.types.TypeVariable
+import sigma.semantics.types.UndefinedType
+import sigma.semantics.types.UnorderedTupleType
 import sigma.values.BoolValue
 import sigma.values.FunctionValue
 import sigma.values.IntValue

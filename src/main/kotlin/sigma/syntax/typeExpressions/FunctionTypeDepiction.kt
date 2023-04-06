@@ -4,7 +4,7 @@ import sigma.StaticTypeScope
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.Abstraction
-import sigma.types.UniversalFunctionType
+import sigma.semantics.types.UniversalFunctionType
 
 data class FunctionTypeDepiction(
     override val location: SourceLocation,

@@ -1,7 +1,7 @@
 package sigma
 
 import sigma.values.Symbol
-import sigma.types.Type
+import sigma.semantics.types.Type
 
 interface StaticTypeScope {
     object Empty : StaticTypeScope {

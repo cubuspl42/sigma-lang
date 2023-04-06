@@ -27,7 +27,7 @@ import sigma.parser.antlr.SigmaParser.ParenExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ReferenceAltContext
 import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
-import sigma.types.Type
+import sigma.semantics.types.Type
 import sigma.values.Value
 import sigma.values.tables.Scope
 
