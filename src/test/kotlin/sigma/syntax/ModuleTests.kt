@@ -14,7 +14,7 @@ class ModuleTests {
     object ParsingTests {
         @Test
         fun test() {
-            val module = Module.parse(
+            val module = ModuleTerm.parse(
                 source = """
                     import foo
                     import foo.bar.baz
@@ -33,15 +33,15 @@ class ModuleTests {
 
             assertEquals(
                 expected = listOf(
-                    Module.Import(
+                    ModuleTerm.Import(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         path = listOf("foo"),
                     ),
-                    Module.Import(
+                    ModuleTerm.Import(
                         location = SourceLocation(lineIndex = 2, columnIndex = 0),
                         path = listOf("foo", "bar", "baz"),
                     ),
-                    Module.Import(
+                    ModuleTerm.Import(
                         location = SourceLocation(lineIndex = 3, columnIndex = 0),
                         path = listOf("foo", "bar"),
                     ),

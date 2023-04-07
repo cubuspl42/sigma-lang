@@ -6,7 +6,6 @@ import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
-import sigma.parser.antlr.SigmaParser.ImportPathContext
 import sigma.parser.antlr.SigmaParser.ImportStatementContext
 import sigma.parser.antlr.SigmaParser.ModuleContext
 import sigma.values.LoopedStaticValueScope
@@ -15,7 +14,7 @@ import sigma.values.Value
 import sigma.values.tables.LoopedScope
 import sigma.values.tables.Scope
 
-data class Module(
+data class ModuleTerm(
     override val location: SourceLocation,
     val imports: List<Import>,
     val declarations: List<Declaration>,
@@ -59,7 +58,7 @@ data class Module(
     companion object {
         fun parse(
             source: String,
-        ): Module {
+        ): ModuleTerm {
             val sourceName = "__module__"
 
             val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
@@ -69,8 +68,8 @@ data class Module(
             return build(parser.module())
         }
 
-        fun build(ctx: ModuleContext): Module {
-            return Module(
+        fun build(ctx: ModuleContext): ModuleTerm {
+            return ModuleTerm(
                 location = SourceLocation.build(ctx),
                 imports = ctx.importSection().importStatement().map {
                     Import.build(it)

@@ -5,12 +5,12 @@ import org.antlr.v4.runtime.CommonTokenStream
 import sigma.BuiltinTypeScope
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
-import sigma.syntax.Module
+import sigma.syntax.ModuleTerm
 import sigma.values.Value
 
 class Program internal constructor(
     private val prelude: Prelude,
-    private val root: Module,
+    private val root: ModuleTerm,
 ) {
     companion object {
         internal fun buildParser(

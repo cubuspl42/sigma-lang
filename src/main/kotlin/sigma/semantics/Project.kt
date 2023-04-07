@@ -1,8 +1,6 @@
 package sigma.semantics
 
-import getResourceAsText
-import sigma.syntax.Module
-import sigma.syntax.expressions.LetExpression
+import sigma.syntax.ModuleTerm
 
 class Project {
     interface Store {
@@ -37,7 +35,7 @@ class Project {
             val fileName = "${fileBaseName}.sigma"
             val source = store.load(fileName)
 
-            val root = Module.build(
+            val root = ModuleTerm.build(
                 ctx = Program.buildParser(
                     sourceName = fileName,
                     source = source,
