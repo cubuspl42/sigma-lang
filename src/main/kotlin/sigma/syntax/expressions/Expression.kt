@@ -115,7 +115,7 @@ sealed class Expression : Term() {
 
             override fun visitFieldReadAlt(
                 ctx: FieldReadAltContext,
-            ): Expression = FieldRead.build(ctx.fieldRead())
+            ): Expression = FieldRead.build(ctx)
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class}")
     }
 

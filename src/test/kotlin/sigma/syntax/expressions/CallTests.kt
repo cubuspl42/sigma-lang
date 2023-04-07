@@ -32,6 +32,29 @@ class CallTests {
         }
 
         @Test
+        fun testFieldReadSubject() {
+            assertEquals(
+                expected = Call(
+                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                    subject = FieldRead(
+
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                        subject = Reference(
+                            location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                            referee = Symbol.of("foo"),
+                        ),
+                        fieldName = Symbol.of("bar"),
+                    ),
+                    argument = Reference(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 8),
+                        referee = Symbol.of("baz"),
+                    ),
+                ),
+                actual = Expression.parse("foo.bar(baz)"),
+            )
+        }
+
+        @Test
         fun testUnorderedTupleArgumentSugar() {
             assertEquals(
                 expected = Call(

@@ -42,7 +42,6 @@ expression
     | dictLiteral # dictLiteralAlt
     | letExpression # letExpressionAlt
     | isUndefinedCheck # isUndefinedCheckAlt
-    | fieldRead # fieldReadAlt
     | SymbolLiteral # symbolLiteralAlt
     | IntLiteral # intLiteralAlt
     | callableExpression # callableExpressionAlt
@@ -52,6 +51,7 @@ expression
 callableExpression
     : callee=callableExpression LeftParen argument=expression RightParen # callExpressionAlt
     | callee=callableExpression argument=tupleLiteral # callExpressionTupleLiteralAlt
+    | subject=callableExpression Dot fieldName=Identifier # fieldReadAlt
     | parenExpression # callableParenAlt
     | reference # callableReferenceAlt
     | tupleLiteral # callableTupleLiteralAlt
@@ -118,10 +118,6 @@ dictAssociation
 
 isUndefinedCheck
     : IsUndefinedKeyword argument=expression
-    ;
-
-fieldRead
-    : subject=callableExpression Dot fieldName=Identifier
     ;
 
 parenExpression

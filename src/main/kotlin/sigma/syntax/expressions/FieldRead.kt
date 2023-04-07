@@ -3,7 +3,7 @@ package sigma.syntax.expressions
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.Thunk
-import sigma.parser.antlr.SigmaParser.FieldReadContext
+import sigma.parser.antlr.SigmaParser.FieldReadAltContext
 import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
@@ -19,7 +19,7 @@ data class FieldRead(
 ) : Expression() {
     companion object {
         fun build(
-            ctx: FieldReadContext,
+            ctx: FieldReadAltContext,
         ): FieldRead = FieldRead(
             location = SourceLocation.build(ctx),
             subject = build(ctx.subject),
