@@ -130,17 +130,18 @@ sealed class Expression : Term() {
 
     fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).toEvaluatedValue
 
-    fun validateAndInferType(
+    final override fun validate(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
-    ): Type {
-        validate(typeScope = typeScope, valueScope = valueScope)
-
-        return inferType(typeScope = typeScope, valueScope = valueScope)
+    ) {
+        this.validateAndInferType(
+            typeScope = typeScope,
+            valueScope = valueScope,
+        )
     }
 
     // Thought: Rename to `determineType`? Or not?
-    abstract fun inferType(
+    abstract fun validateAndInferType(
         // Idea: Rename to metaScope?
         typeScope: StaticTypeScope,
         // Idea: Rename to staticScope?

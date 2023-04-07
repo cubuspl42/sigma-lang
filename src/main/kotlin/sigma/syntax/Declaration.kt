@@ -7,7 +7,6 @@ import sigma.values.Symbol
 import sigma.parser.antlr.SigmaParser.DeclarationContext
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.Expression
-import sigma.values.LoopedStaticValueScope
 
 data class Declaration(
     override val location: SourceLocation,
@@ -57,7 +56,7 @@ data class Declaration(
     fun inferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
-    ): Type = value.inferType(
+    ): Type = value.validateAndInferType(
         typeScope = typeScope,
         valueScope = valueScope,
     )

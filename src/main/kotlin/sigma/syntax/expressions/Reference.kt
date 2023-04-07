@@ -24,7 +24,7 @@ data class Reference(
         )
     }
 
-    override fun inferType(
+    override fun validateAndInferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type = valueScope.getValueType(

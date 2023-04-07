@@ -44,7 +44,7 @@ class Project {
 
             return Program(
                 prelude = prelude,
-                root = root,
+                module = root,
             )
         }
     }

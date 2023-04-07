@@ -89,7 +89,7 @@ class OrderedTupleLiteralTests {
         fun testEmpty() {
             val type = Expression.parse(
                 source = "[]",
-            ).inferType(
+            ).validateAndInferType(
                 typeScope = StaticTypeScope.Empty,
                 valueScope = StaticValueScope.Empty,
             )
@@ -106,7 +106,7 @@ class OrderedTupleLiteralTests {
         fun testNonEmpty() {
             val type = Expression.parse(
                 source = "[a, b]",
-            ).inferType(
+            ).validateAndInferType(
                 typeScope = StaticTypeScope.Empty,
                 valueScope = FixedStaticValueScope(
                     entries = mapOf(

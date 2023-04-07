@@ -166,7 +166,7 @@ class LetExpressionTests {
 
             assertEquals(
                 expected = IntCollectiveType,
-                actual = expression.inferType(
+                actual = expression.validateAndInferType(
                     typeScope = BuiltinTypeScope,
                     valueScope = StaticValueScope.Empty,
                 ),
@@ -184,7 +184,7 @@ class LetExpressionTests {
                             b = a,
                         } in a
                     """.trimIndent()
-                ).inferType(
+                ).validateAndInferType(
                     typeScope = StaticTypeScope.Empty,
                     valueScope = StaticValueScope.Empty,
                 )

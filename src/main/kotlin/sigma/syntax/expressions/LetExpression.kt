@@ -25,26 +25,23 @@ data class LetExpression(
 
     override fun dump(): String = "(let expression)"
 
-    override fun validate(
+    override fun validateAndInferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
-    ) {
+    ): Type {
         localScope.validate(
             typeScope = typeScope,
             valueScope = valueScope
         )
-    }
 
-    override fun inferType(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
-    ): Type = result.inferType(
-        typeScope = typeScope,
-        valueScope = localScope.evaluateStatically(
+        return result.validateAndInferType(
             typeScope = typeScope,
-            valueScope = valueScope,
-        ),
-    )
+            valueScope = localScope.evaluateStatically(
+                typeScope = typeScope,
+                valueScope = valueScope,
+            ),
+        )
+    }
 
     override fun evaluate(
         scope: Scope,

@@ -38,7 +38,7 @@ class IsUndefinedCheckTests {
                 expected = BoolType,
                 actual = Expression.parse(
                     source = "isUndefined foo",
-                ).inferType(
+                ).validateAndInferType(
                     typeScope = BuiltinTypeScope,
                     valueScope = StaticValueScope.Empty,
                 ),

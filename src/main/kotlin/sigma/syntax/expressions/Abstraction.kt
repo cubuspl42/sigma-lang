@@ -62,7 +62,7 @@ data class Abstraction(
         )
     }
 
-    override fun inferType(
+    override fun validateAndInferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type {
@@ -82,7 +82,7 @@ data class Abstraction(
             valueScope,
         )
 
-        val imageType = declaredImageType ?: image.inferType(
+        val imageType = declaredImageType ?: image.validateAndInferType(
             typeScope = innerTypeScope,
             valueScope = innerValueScope,
         )

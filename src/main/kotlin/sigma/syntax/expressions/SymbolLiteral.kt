@@ -26,7 +26,7 @@ data class SymbolLiteral(
         )
     }
 
-    override fun inferType(
+    override fun validateAndInferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type = SymbolType(

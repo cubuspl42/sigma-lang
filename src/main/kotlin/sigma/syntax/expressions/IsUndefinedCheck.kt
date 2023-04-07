@@ -32,7 +32,7 @@ data class IsUndefinedCheck(
         )
     }
 
-    override fun inferType(
+    override fun validateAndInferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type = BoolType

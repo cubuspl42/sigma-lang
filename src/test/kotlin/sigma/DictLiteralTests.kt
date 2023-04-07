@@ -62,7 +62,7 @@ object DictLiteralTests {
                                 [key1]: value1,
                             }
                         """.trimIndent(),
-                ).inferType(
+                ).validateAndInferType(
                     typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
@@ -88,7 +88,7 @@ object DictLiteralTests {
                                 [key2]: value2,
                             }
                         """.trimIndent(),
-                ).inferType(
+                ).validateAndInferType(
                     typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
@@ -112,7 +112,7 @@ object DictLiteralTests {
                                 [key2]: value2,
                             }
                         """.trimIndent(),
-                ).inferType(
+                ).validateAndInferType(
                     typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
@@ -136,7 +136,7 @@ object DictLiteralTests {
                                 [key2]: value2,
                             }
                         """.trimIndent(),
-                ).inferType(
+                ).validateAndInferType(
                     typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
@@ -159,7 +159,7 @@ object DictLiteralTests {
                                 [key1]: value1,
                             }
                         """.trimIndent(),
-                ).inferType(
+                ).validateAndInferType(
                     typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(

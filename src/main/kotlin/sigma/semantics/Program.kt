@@ -10,7 +10,7 @@ import sigma.values.Value
 
 class Program internal constructor(
     private val prelude: Prelude,
-    private val root: ModuleTerm,
+    private val module: ModuleTerm,
 ) {
     companion object {
         internal fun buildParser(
@@ -25,19 +25,19 @@ class Program internal constructor(
     }
 
     fun validate() {
-        root.validate(
+        module.validate(
             typeScope = BuiltinTypeScope,
             valueScope = prelude.valueScope,
         )
     }
 
     fun evaluateResult(): Value {
-        root.validate(
+        module.validate(
             typeScope = BuiltinTypeScope,
             valueScope = prelude.valueScope,
         )
 
-        val result = root.evaluateDeclaration(
+        val result = module.evaluateDeclaration(
             name = "main",
             scope = prelude.scope,
         )

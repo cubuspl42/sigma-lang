@@ -143,7 +143,7 @@ class AbstractionTests {
                 ),
                 actual = Expression.parse(
                     source = "[n: Int] => n",
-                ).inferType(
+                ).validateAndInferType(
                     typeScope = BuiltinTypeScope,
                     valueScope = StaticValueScope.Empty,
                 ),

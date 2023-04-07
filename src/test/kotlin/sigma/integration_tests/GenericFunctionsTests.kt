@@ -23,7 +23,7 @@ internal class GenericFunctionsTests {
             expected = IntLiteralType(
                 value = IntValue(value = 1),
             ),
-            actual = result.inferType(
+            actual = result.validateAndInferType(
                 typeScope = StaticTypeScope.Empty,
                 valueScope = StaticValueScope.Empty,
             ),

@@ -24,7 +24,7 @@ data class IntLiteral(
         )
     }
 
-    override fun inferType(
+    override fun validateAndInferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type = IntLiteralType(

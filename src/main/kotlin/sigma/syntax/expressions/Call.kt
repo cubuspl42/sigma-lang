@@ -10,9 +10,7 @@ import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.FunctionType
-import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.Type
-import sigma.semantics.types.TypeVariableResolution
 import sigma.semantics.types.TypeVariableResolutionError
 import sigma.values.FunctionValue
 import sigma.values.Symbol
@@ -73,13 +71,13 @@ data class Call(
         )
     }
 
-    override fun inferType(
+    override fun validateAndInferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type {
         // TODO: Validate passed argument
 
-        val subjectType = subject.inferType(
+        val subjectType = subject.validateAndInferType(
             typeScope = typeScope,
             valueScope = valueScope,
         ) as? FunctionType ?: throw TypeError(
@@ -87,7 +85,7 @@ data class Call(
             message = "Only functions can be called",
         )
 
-        val argumentType = argument.inferType(
+        val argumentType = argument.validateAndInferType(
             typeScope = typeScope,
             valueScope = valueScope,
         )
