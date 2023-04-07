@@ -27,11 +27,11 @@ data class FieldRead(
         )
     }
 
-    override fun validateAndInferType(
+    override fun determineType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type {
-        val subjectType = subject.validateAndInferType(
+        val subjectType = subject.determineType(
             typeScope = typeScope,
             valueScope = valueScope,
         ) as? UnorderedTupleType ?: throw TypeError(

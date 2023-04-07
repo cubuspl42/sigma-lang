@@ -66,12 +66,12 @@ data class DictLiteral(
 
     override fun dump(): String = "(dict literal)"
 
-    override fun validateAndInferType(
+    override fun determineType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type {
         val keyTypes = associations.map {
-            it.key.validateAndInferType(typeScope = typeScope, valueScope = valueScope)
+            it.key.determineType(typeScope = typeScope, valueScope = valueScope)
         }.toSet()
 
         val keyType = (keyTypes.singleOrNull() ?: throw InconsistentKeyTypesError(
@@ -82,7 +82,7 @@ data class DictLiteral(
         )
 
         val valueTypes = associations.map {
-            it.value.validateAndInferType(typeScope = typeScope, valueScope = valueScope)
+            it.value.determineType(typeScope = typeScope, valueScope = valueScope)
         }.toSet()
 
         val valueType = valueTypes.singleOrNull() ?: throw InconsistentValueTypesError(

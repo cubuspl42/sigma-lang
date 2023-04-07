@@ -90,7 +90,6 @@ class AbstractionTests {
             )
         }
 
-
         @Test
         fun testGenericWithSingleParameter() {
             assertEquals(
@@ -143,7 +142,7 @@ class AbstractionTests {
                 ),
                 actual = Expression.parse(
                     source = "[n: Int] => n",
-                ).validateAndInferType(
+                ).determineType(
                     typeScope = BuiltinTypeScope,
                     valueScope = StaticValueScope.Empty,
                 ),
@@ -154,7 +153,7 @@ class AbstractionTests {
         fun testGenericSingleParameter() {
             val type = Expression.parse(
                 source = "![t] [t: t] => false",
-            ).validateAndInferType(
+            ).determineType(
                 typeScope = BuiltinTypeScope,
                 valueScope = BuiltinScope,
             )
@@ -166,6 +165,35 @@ class AbstractionTests {
                             OrderedTupleType.Element(
                                 name = Symbol.of("t"),
                                 type = TypeVariable,
+                            ),
+                        ),
+                    ),
+                    imageType = BoolType,
+                ),
+                actual = type,
+            )
+        }
+
+        @Test
+        fun testRecursiveCallTest() {
+            val type = Expression.parse(
+                source = """
+                    let {
+                        f = [n: Int] -> Bool => f[n + 1]
+                    } in f
+                """.trimIndent(),
+            ).determineType(
+                typeScope = BuiltinTypeScope,
+                valueScope = BuiltinScope,
+            )
+
+            assertEquals(
+                expected = UniversalFunctionType(
+                    argumentType = OrderedTupleType(
+                        elements = listOf(
+                            OrderedTupleType.Element(
+                                name = Symbol.of("n"),
+                                type = IntCollectiveType,
                             ),
                         ),
                     ),

@@ -4,6 +4,7 @@ import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
+import sigma.semantics.types.TupleType
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TupleTypeLiteral
 import sigma.syntax.typeExpressions.TypeExpression
@@ -62,19 +63,80 @@ data class Abstraction(
         )
     }
 
-    override fun validateAndInferType(
+    override fun validateAdditionally(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
-    ): Type {
-        val innerTypeScope = genericParametersTuple?.toStaticTypeScope()?.chainWith(
-            backScope = typeScope,
-        ) ?: typeScope
+    ) = enter(
+        typeScope,
+        valueScope,
+    ) {
+            _: TupleType,
+            innerTypeScope: StaticTypeScope,
+            innerValueScope: StaticValueScope,
+        ->
 
-        val argumentType = argumentType.evaluate(
+        argumentType.validate(
+            typeScope = innerTypeScope,
+            // The outer value scope is used here on purpose
+            valueScope = valueScope,
+        )
+
+        declaredImageType?.validate(
+            typeScope = innerTypeScope,
+            valueScope = innerValueScope,
+        )
+
+        image.validate(
+            typeScope = innerTypeScope,
+            valueScope = innerValueScope,
+        )
+    }
+
+    override fun determineType(
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
+    ): Type = enter(
+        typeScope,
+        valueScope,
+    ) {
+            argumentType: TupleType,
+            innerTypeScope: StaticTypeScope,
+            innerValueScope: StaticValueScope,
+        ->
+
+        val declaredImageType = declaredImageType?.evaluate(
             typeScope = innerTypeScope,
         )
 
-        val declaredImageType = declaredImageType?.evaluate(
+        val imageType = declaredImageType ?: image.determineType(
+            typeScope = innerTypeScope,
+            valueScope = innerValueScope,
+        )
+
+        return@enter UniversalFunctionType(
+            argumentType = argumentType,
+            imageType = imageType,
+        )
+    }
+
+    private fun buildInnerTypeScope(
+        typeScope: StaticTypeScope,
+    ) = genericParametersTuple?.toStaticTypeScope()?.chainWith(
+        backScope = typeScope,
+    ) ?: typeScope
+
+    private fun <R> enter(
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
+        block: (
+            argumentType: TupleType,
+            innerTypeScope: StaticTypeScope,
+            innerValueScope: StaticValueScope,
+        ) -> R,
+    ): R {
+        val innerTypeScope = buildInnerTypeScope(typeScope = typeScope)
+
+        val argumentType = argumentType.evaluate(
             typeScope = innerTypeScope,
         )
 
@@ -82,14 +144,10 @@ data class Abstraction(
             valueScope,
         )
 
-        val imageType = declaredImageType ?: image.validateAndInferType(
-            typeScope = innerTypeScope,
-            valueScope = innerValueScope,
-        )
-
-        return UniversalFunctionType(
-            argumentType = argumentType,
-            imageType = imageType,
+        return block(
+            argumentType,
+            innerTypeScope,
+            innerValueScope,
         )
     }
 

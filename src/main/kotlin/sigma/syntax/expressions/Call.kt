@@ -71,13 +71,18 @@ data class Call(
         )
     }
 
-    override fun validateAndInferType(
+    override fun validateAdditionally(
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
+    ) {
+        // TODO: Validate passed argument
+    }
+
+    override fun determineType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type {
-        // TODO: Validate passed argument
-
-        val subjectType = subject.validateAndInferType(
+        val subjectType = subject.determineType(
             typeScope = typeScope,
             valueScope = valueScope,
         ) as? FunctionType ?: throw TypeError(
@@ -85,7 +90,7 @@ data class Call(
             message = "Only functions can be called",
         )
 
-        val argumentType = argument.validateAndInferType(
+        val argumentType = argument.determineType(
             typeScope = typeScope,
             valueScope = valueScope,
         )

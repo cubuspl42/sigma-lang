@@ -82,7 +82,7 @@ object UnorderedTupleLiteralTests {
                 ),
                 actual = Expression.parse(
                     source = "{}".trimIndent(),
-                ).validateAndInferType(
+                ).determineType(
                     typeScope = BuiltinTypeScope,
                     valueScope = StaticValueScope.Empty,
                 ),
@@ -105,7 +105,7 @@ object UnorderedTupleLiteralTests {
                                 key2: value2,
                             }
                         """.trimIndent(),
-                ).validateAndInferType(
+                ).determineType(
                     typeScope = BuiltinTypeScope,
                     valueScope = FixedStaticValueScope(
                         mapOf(
@@ -127,7 +127,7 @@ object UnorderedTupleLiteralTests {
                             key1: value2,
                         }
                     """.trimIndent(),
-                ).validateAndInferType(
+                ).determineType(
                     typeScope = StaticTypeScope.Empty,
                     valueScope = FixedStaticValueScope(
                         mapOf(

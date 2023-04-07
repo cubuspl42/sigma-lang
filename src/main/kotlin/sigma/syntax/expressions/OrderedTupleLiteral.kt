@@ -26,12 +26,12 @@ data class OrderedTupleLiteral(
 
     override fun dump(): String = "(dict constructor)"
 
-    override fun validateAndInferType(
+    override fun determineType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): Type = OrderedTupleType(
         elements = elements.map {
-            val type = it.validateAndInferType(
+            val type = it.determineType(
                 typeScope = typeScope,
                 valueScope = valueScope,
             )

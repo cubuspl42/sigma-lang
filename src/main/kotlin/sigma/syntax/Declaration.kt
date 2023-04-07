@@ -56,7 +56,7 @@ data class Declaration(
     fun inferType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
-    ): Type = value.validateAndInferType(
+    ): Type = value.determineType(
         typeScope = typeScope,
         valueScope = valueScope,
     )

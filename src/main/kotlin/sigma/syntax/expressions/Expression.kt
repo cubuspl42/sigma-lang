@@ -138,14 +138,24 @@ sealed class Expression : Term() {
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ) {
-        this.validateAndInferType(
+        determineType(
+            typeScope = typeScope,
+            valueScope = valueScope,
+        )
+
+        validateAdditionally(
             typeScope = typeScope,
             valueScope = valueScope,
         )
     }
 
-    // Thought: Rename to `determineType`? Or not?
-    abstract fun validateAndInferType(
+    open fun validateAdditionally(
+        typeScope: StaticTypeScope,
+        valueScope: StaticValueScope,
+    ) {
+    }
+
+    abstract fun determineType(
         // Idea: Rename to metaScope?
         typeScope: StaticTypeScope,
         // Idea: Rename to staticScope?

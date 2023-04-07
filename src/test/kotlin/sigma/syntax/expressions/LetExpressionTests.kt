@@ -118,7 +118,7 @@ class LetExpressionTests {
                         b = a,
                     } in b
                 """.trimIndent()
-            ).validateAndInferType(
+            ).determineType(
                 typeScope = BuiltinTypeScope,
                 valueScope = BuiltinScope,
             )
@@ -138,7 +138,7 @@ class LetExpressionTests {
                         a = f[0],
                     } in a
                 """.trimIndent()
-            ).validateAndInferType(
+            ).determineType(
                 typeScope = BuiltinTypeScope,
                 valueScope = BuiltinScope,
             )
@@ -166,7 +166,7 @@ class LetExpressionTests {
 
             assertEquals(
                 expected = IntCollectiveType,
-                actual = expression.validateAndInferType(
+                actual = expression.determineType(
                     typeScope = BuiltinTypeScope,
                     valueScope = StaticValueScope.Empty,
                 ),
@@ -184,7 +184,7 @@ class LetExpressionTests {
                             b = a,
                         } in a
                     """.trimIndent()
-                ).validateAndInferType(
+                ).determineType(
                     typeScope = StaticTypeScope.Empty,
                     valueScope = StaticValueScope.Empty,
                 )

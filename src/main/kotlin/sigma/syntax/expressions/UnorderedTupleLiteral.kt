@@ -56,12 +56,12 @@ data class UnorderedTupleLiteral(
 
     override fun dump(): String = "(dict constructor)"
 
-    override fun validateAndInferType(
+    override fun determineType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
     ): UnorderedTupleType {
         val entryTypes = entries.map {
-            val valueType = it.value.validateAndInferType(
+            val valueType = it.value.determineType(
                 typeScope = typeScope,
                 valueScope = valueScope,
             )

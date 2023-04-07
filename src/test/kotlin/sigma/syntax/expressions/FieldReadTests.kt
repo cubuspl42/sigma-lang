@@ -2,20 +2,16 @@ package sigma.syntax.expressions
 
 import org.junit.jupiter.api.assertThrows
 import sigma.BuiltinTypeScope
-import sigma.StaticTypeScope
-import sigma.Thunk
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
-import sigma.values.ComputableFunctionValue
 import sigma.values.FixedStaticValueScope
 import sigma.values.IntValue
 import sigma.values.Symbol
 import sigma.values.TypeError
-import sigma.values.Value
 import sigma.values.tables.DictTable
 import sigma.values.tables.FixedScope
 import kotlin.test.Test
@@ -78,7 +74,7 @@ class FieldReadTests {
         fun testSimple() {
             assertEquals(
                 expected = IntCollectiveType,
-                actual = Expression.parse("foo.bar").validateAndInferType(
+                actual = Expression.parse("foo.bar").determineType(
                     typeScope = BuiltinTypeScope,
                     valueScope = valueScope,
                 ),
@@ -90,7 +86,7 @@ class FieldReadTests {
             assertThrows<TypeError> {
                 assertEquals(
                     expected = IntCollectiveType,
-                    actual = Expression.parse("foo.baz").validateAndInferType(
+                    actual = Expression.parse("foo.baz").determineType(
                         typeScope = BuiltinTypeScope,
                         valueScope = valueScope,
                     ),
@@ -103,7 +99,7 @@ class FieldReadTests {
             assertThrows<TypeError> {
                 assertEquals(
                     expected = IntCollectiveType,
-                    actual = Expression.parse("foo.baz").validateAndInferType(
+                    actual = Expression.parse("foo.baz").determineType(
                         typeScope = BuiltinTypeScope,
                         valueScope = FixedStaticValueScope(
                             entries = mapOf(
