@@ -23,6 +23,10 @@ data class UnorderedTupleType(
         return "{${dumpedEntries.joinToString()}}"
     }
 
+    fun getFieldType(key: Symbol): Type? {
+        return valueTypeByName[key];
+    }
+
     override val keyType: PrimitiveType
         get() = TODO("key1 | key2 | ...")
 

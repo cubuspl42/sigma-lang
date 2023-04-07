@@ -6,7 +6,6 @@ import org.antlr.v4.runtime.ParserRuleContext
 import sigma.BuiltinScope
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
-
 import sigma.Thunk
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
@@ -14,18 +13,19 @@ import sigma.parser.antlr.SigmaParser.AbstractionAltContext
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
-import sigma.parser.antlr.SigmaParser.CallableTupleLiteralAltContext
 import sigma.parser.antlr.SigmaParser.CallableExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallableParenAltContext
 import sigma.parser.antlr.SigmaParser.CallableReferenceAltContext
+import sigma.parser.antlr.SigmaParser.CallableTupleLiteralAltContext
 import sigma.parser.antlr.SigmaParser.DictLiteralAltContext
-import sigma.parser.antlr.SigmaParser.TupleLiteralAltContext
+import sigma.parser.antlr.SigmaParser.FieldReadAltContext
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.parser.antlr.SigmaParser.IsUndefinedCheckAltContext
 import sigma.parser.antlr.SigmaParser.LetExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ParenExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ReferenceAltContext
 import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
+import sigma.parser.antlr.SigmaParser.TupleLiteralAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.semantics.types.Type
 import sigma.syntax.Term
@@ -112,6 +112,10 @@ sealed class Expression : Term() {
             override fun visitCallableTupleLiteralAlt(
                 ctx: CallableTupleLiteralAltContext,
             ): Expression = TupleLiteral.build(ctx.tupleLiteral())
+
+            override fun visitFieldReadAlt(
+                ctx: FieldReadAltContext,
+            ): Expression = FieldRead.build(ctx.fieldRead())
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class}")
     }
 
