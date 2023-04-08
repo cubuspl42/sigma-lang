@@ -1,6 +1,5 @@
 package sigma.syntax.expressions
 
-
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
 import sigma.Thunk
@@ -30,6 +29,7 @@ data class Reference(
     ): Type = valueScope.getValueType(
         valueName = referee,
     ) ?: throw TypeError(
+        location = location,
         message = "Unresolved reference: $referee"
     )
 

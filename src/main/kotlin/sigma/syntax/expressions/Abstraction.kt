@@ -81,6 +81,8 @@ data class Abstraction(
             valueScope = valueScope,
         )
 
+        // TODO: Verify that the declared image type matches the inferred one
+
         declaredImageType?.validate(
             typeScope = innerTypeScope,
             valueScope = innerValueScope,

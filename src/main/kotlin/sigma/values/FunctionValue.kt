@@ -8,6 +8,7 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
+import sigma.values.tables.ArrayTable
 import sigma.values.tables.DictTable
 
 abstract class FunctionValue : Value() {
@@ -155,6 +156,36 @@ abstract class FunctionValue : Value() {
                     DictTable.fromList(listOf(it)),
                 ).toEvaluatedValue
             })
+        }
+    }
+
+    object LengthFunction : BuiltinOrderedFunction() {
+        override val argTypes = listOf(
+            ArrayType(elementType = TypeVariable),
+        )
+
+        override val imageType = IntCollectiveType
+
+        override fun compute(args: List<Thunk>): Thunk {
+            val list = (args[0] as FunctionValue).toList()
+
+            return IntValue(value = list.size.toLong())
+        }
+    }
+
+    object ConcatFunction : BuiltinOrderedFunction() {
+        override val argTypes = listOf(
+            ArrayType(elementType = TypeVariable),
+            ArrayType(elementType = TypeVariable),
+        )
+
+        override val imageType = ArrayType(elementType = TypeVariable)
+
+        override fun compute(args: List<Thunk>): Thunk {
+            val front = (args[0] as FunctionValue).toList()
+            val back = (args[1] as FunctionValue).toList()
+
+            return ArrayTable(front + back)
         }
     }
 
