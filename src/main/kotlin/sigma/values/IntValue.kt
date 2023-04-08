@@ -120,10 +120,5 @@ data class IntValue(
         ): Value = BoolValue(left >= right)
     }
 
-    override fun isSame(other: Value): Boolean {
-        if (other !is IntValue) return false
-        return value == other.value
-    }
-
     override fun dump(): String = value.toString()
 }

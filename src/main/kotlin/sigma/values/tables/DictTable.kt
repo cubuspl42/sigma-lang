@@ -42,6 +42,16 @@ data class DictTable(
         }
     }
 
+    override fun equalsTo(other: Value): Boolean {
+        if (other !is DictTable) return  false
+
+        return this.entries.keys == other.entries.keys && entries.all { (key, value) ->
+            val otherValue = other.read(key)!!
+
+            value.toEvaluatedValue.equalsTo(otherValue.toEvaluatedValue)
+        }
+    }
+
     private fun dumpKey(
         key: Value,
     ): String = when (key) {

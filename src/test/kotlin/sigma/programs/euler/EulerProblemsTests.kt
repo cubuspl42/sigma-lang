@@ -8,6 +8,7 @@ import sigma.values.Value
 import sigma.values.tables.DictTable
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class EulerProblemsTests {
     @Test
@@ -41,16 +42,17 @@ class EulerProblemsTests {
     fun testProblem9() {
         val actual = solveProblem(9)
 
-//        assertEquals(
-//            expected = DictTable(
-//                entries = mapOf(
-//                    Symbol.of("a") to IntValue(value = 1L),
-//                    Symbol.of("b") to IntValue(value = 1L),
-//                    Symbol.of("c") to IntValue(value = 8L),
-//                ),
-//            ),
-//            actual = actual,
-//        )
+        assertTrue {
+            actual.equalsTo(
+                DictTable(
+                    entries = mapOf(
+                        Symbol.of("a") to IntValue(value = 1L),
+                        Symbol.of("b") to IntValue(value = 1L),
+                        Symbol.of("c") to IntValue(value = 8L),
+                    ),
+                ),
+            )
+        }
     }
 
     @Test

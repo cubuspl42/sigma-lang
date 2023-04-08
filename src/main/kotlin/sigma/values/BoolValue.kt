@@ -34,9 +34,4 @@ data class BoolValue(
     }
 
     override fun dump(): String = value.toString()
-
-    override fun isSame(other: Value): Boolean {
-        if (other !is BoolValue) return false
-        return value == other.value
-    }
 }

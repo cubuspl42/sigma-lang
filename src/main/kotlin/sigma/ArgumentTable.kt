@@ -11,5 +11,5 @@ class ArgumentTable(
 ) : Scope {
     override fun get(
         name: Symbol,
-    ): Value? = value.takeIf { name.isSame(this.name) }
+    ): Value? = value.takeIf { name == this.name }
 }

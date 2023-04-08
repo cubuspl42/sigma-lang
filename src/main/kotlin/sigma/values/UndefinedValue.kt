@@ -11,6 +11,8 @@ class UndefinedValue private constructor(
 
     override fun equals(other: Any?): Boolean = other is UndefinedValue
 
+    override fun equalsTo(other: Value): Boolean = this == other
+
     override fun hashCode(): Int = name.hashCode()
 
     override fun toString(): String = listOf(

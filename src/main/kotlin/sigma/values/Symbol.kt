@@ -12,9 +12,4 @@ data class Symbol(
     }
 
     override fun dump(): String = "`$name`"
-
-    override fun isSame(other: Value): Boolean {
-        if (other !is Symbol) return false
-        return name == other.name
-    }
 }
