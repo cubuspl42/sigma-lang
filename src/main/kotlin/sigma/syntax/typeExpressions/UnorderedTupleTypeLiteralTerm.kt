@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.StaticTypeScope
+import sigma.SyntaxTypeScope
 import sigma.Thunk
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
@@ -41,7 +41,7 @@ data class UnorderedTupleTypeLiteralTerm(
     }
 
     override fun evaluate(
-        typeScope: StaticTypeScope,
+        typeScope: SyntaxTypeScope,
     ): UnorderedTupleType = UnorderedTupleType(
         valueTypeByName = entries.groupBy {
             it.name

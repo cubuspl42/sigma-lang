@@ -3,12 +3,12 @@ package sigma.semantics
 import getResourceAsText
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxValueScope
 import sigma.syntax.expressions.LocalScopeTerm
 import sigma.values.tables.Scope
 
 data class Prelude(
-    val valueScope: StaticValueScope,
+    val valueScope: SyntaxValueScope,
     val scope: Scope,
 ) {
     companion object {

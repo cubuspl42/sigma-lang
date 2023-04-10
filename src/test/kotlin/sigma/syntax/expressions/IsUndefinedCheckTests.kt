@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
 import sigma.BuiltinTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxValueScope
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
 import sigma.values.BoolValue
@@ -40,7 +40,7 @@ class IsUndefinedCheckTests {
                     source = "isUndefined foo",
                 ).determineType(
                     typeScope = BuiltinTypeScope,
-                    valueScope = StaticValueScope.Empty,
+                    valueScope = SyntaxValueScope.Empty,
                 ),
             )
         }

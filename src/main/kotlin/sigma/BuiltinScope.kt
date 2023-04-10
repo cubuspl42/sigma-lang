@@ -20,7 +20,7 @@ interface BuiltinValue {
     val value: Value
 }
 
-object BuiltinScope : StaticValueScope, Scope {
+object BuiltinScope : SyntaxValueScope, Scope {
     private data class SimpleBuiltinValue(
         override val type: Type,
         override val value: Value,

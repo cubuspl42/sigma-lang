@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.DictAssociationContext
 import sigma.parser.antlr.SigmaParser.DictLiteralContext
 import sigma.syntax.SourceLocation
@@ -67,8 +67,8 @@ data class DictLiteralTerm(
     override fun dump(): String = "(dict literal)"
 
     override fun determineType(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ): Type {
         val keyTypes = associations.map {
             it.key.determineType(typeScope = typeScope, valueScope = valueScope)

@@ -1,8 +1,8 @@
 package sigma.syntax.expressions
 
 
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.SymbolType
@@ -27,8 +27,8 @@ data class SymbolLiteralTerm(
     }
 
     override fun determineType(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ): Type = SymbolType(
         value = symbol,
     )

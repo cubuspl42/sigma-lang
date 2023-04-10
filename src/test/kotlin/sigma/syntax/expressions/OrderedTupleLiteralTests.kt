@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
@@ -90,8 +90,8 @@ class OrderedTupleLiteralTests {
             val type = ExpressionTerm.parse(
                 source = "[]",
             ).determineType(
-                typeScope = StaticTypeScope.Empty,
-                valueScope = StaticValueScope.Empty,
+                typeScope = SyntaxTypeScope.Empty,
+                valueScope = SyntaxValueScope.Empty,
             )
 
             assertEquals(
@@ -107,7 +107,7 @@ class OrderedTupleLiteralTests {
             val type = ExpressionTerm.parse(
                 source = "[a, b]",
             ).determineType(
-                typeScope = StaticTypeScope.Empty,
+                typeScope = SyntaxTypeScope.Empty,
                 valueScope = FixedStaticValueScope(
                     entries = mapOf(
                         Symbol.of("a") to BoolType,

@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.StaticTypeScope
+import sigma.SyntaxTypeScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.DictType
@@ -23,7 +23,7 @@ data class DictTypeTerm(
     }
 
     override fun evaluate(
-        typeScope: StaticTypeScope,
+        typeScope: SyntaxTypeScope,
     ): DictType = DictType(
         keyType = keyType.evaluate(
             typeScope = typeScope,

@@ -1,11 +1,11 @@
 package sigma.values
 
-import sigma.StaticTypeScope
+import sigma.SyntaxTypeScope
 import sigma.semantics.types.Type
 
-data class FixedStaticTypeScope(
+data class FixedSyntaxTypeScope(
     private val entries: Map<Symbol, Type>,
-) : StaticTypeScope {
+) : SyntaxTypeScope {
     override fun getType(
         typeName: Symbol,
     ): Type? = entries[typeName]

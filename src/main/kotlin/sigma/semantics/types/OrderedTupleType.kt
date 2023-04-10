@@ -1,8 +1,7 @@
 package sigma.semantics.types
 
-import sigma.StaticValueScope
+import sigma.SyntaxValueScope
 import sigma.values.Symbol
-import sigma.values.TypeError
 
 data class OrderedTupleType(
     val elements: List<Element>,
@@ -68,7 +67,7 @@ data class OrderedTupleType(
         }
     }
 
-    override fun toStaticValueScope(): StaticValueScope = object : StaticValueScope {
+    override fun toStaticValueScope(): SyntaxValueScope = object : SyntaxValueScope {
         override fun getValueType(
             valueName: Symbol,
         ): Type? = elements.singleOrNull { entry ->

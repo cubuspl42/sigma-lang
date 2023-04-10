@@ -2,7 +2,7 @@ package sigma.syntax.typeExpressions
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.StaticTypeScope
+import sigma.SyntaxTypeScope
 import sigma.TypeReferenceTerm
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
@@ -60,6 +60,6 @@ abstract class TypeExpressionTerm : Term() {
     }
 
     abstract fun evaluate(
-        typeScope: StaticTypeScope,
+        typeScope: SyntaxTypeScope,
     ): Type
 }

@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.UnorderedTupleLiteralContext
 import sigma.syntax.SourceLocation
@@ -57,8 +57,8 @@ data class UnorderedTupleLiteralTerm(
     override fun dump(): String = "(dict constructor)"
 
     override fun determineType(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ): UnorderedTupleType {
         val entryTypes = entries.map {
             val valueType = it.value.determineType(

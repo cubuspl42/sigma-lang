@@ -2,7 +2,7 @@ package sigma.syntax.expressions
 
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxValueScope
 import sigma.TypeReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
@@ -144,7 +144,7 @@ class AbstractionTests {
                     source = "[n: Int] => n",
                 ).determineType(
                     typeScope = BuiltinTypeScope,
-                    valueScope = StaticValueScope.Empty,
+                    valueScope = SyntaxValueScope.Empty,
                 ),
             )
         }

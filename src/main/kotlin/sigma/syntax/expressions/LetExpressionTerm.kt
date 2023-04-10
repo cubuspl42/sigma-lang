@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
 import sigma.syntax.SourceLocation
@@ -26,8 +26,8 @@ data class LetExpressionTerm(
     override fun dump(): String = "(let expression)"
 
     override fun validateAdditionally(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ) {
         localScope.validate(
             typeScope = typeScope,
@@ -46,8 +46,8 @@ data class LetExpressionTerm(
     }
 
     override fun determineType(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ): Type {
         val innerValueScope = localScope.evaluateStatically(
             typeScope = typeScope,

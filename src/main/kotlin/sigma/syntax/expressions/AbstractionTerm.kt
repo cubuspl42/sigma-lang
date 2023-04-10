@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.semantics.types.TupleType
@@ -13,7 +13,7 @@ import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.Term
 import sigma.values.Closure
-import sigma.values.FixedStaticTypeScope
+import sigma.values.FixedSyntaxTypeScope
 import sigma.values.Symbol
 import sigma.values.tables.Scope
 
@@ -39,7 +39,7 @@ data class AbstractionTerm(
             )
         }
 
-        fun toStaticTypeScope(): StaticTypeScope = FixedStaticTypeScope(
+        fun toStaticTypeScope(): SyntaxTypeScope = FixedSyntaxTypeScope(
             // TODO: Identify type variables
             entries = parameterNames.associateWith { TypeVariable },
         )
@@ -64,15 +64,15 @@ data class AbstractionTerm(
     }
 
     override fun validateAdditionally(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ) = enter(
         typeScope,
         valueScope,
     ) {
             _: TupleType,
-            innerTypeScope: StaticTypeScope,
-            innerValueScope: StaticValueScope,
+            innerTypeScope: SyntaxTypeScope,
+            innerValueScope: SyntaxValueScope,
         ->
 
         argumentType.validate(
@@ -95,15 +95,15 @@ data class AbstractionTerm(
     }
 
     override fun determineType(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ): Type = enter(
         typeScope,
         valueScope,
     ) {
             argumentType: TupleType,
-            innerTypeScope: StaticTypeScope,
-            innerValueScope: StaticValueScope,
+            innerTypeScope: SyntaxTypeScope,
+            innerValueScope: SyntaxValueScope,
         ->
 
         val declaredImageType = declaredImageType?.evaluate(
@@ -122,18 +122,18 @@ data class AbstractionTerm(
     }
 
     private fun buildInnerTypeScope(
-        typeScope: StaticTypeScope,
+        typeScope: SyntaxTypeScope,
     ) = genericParametersTuple?.toStaticTypeScope()?.chainWith(
         backScope = typeScope,
     ) ?: typeScope
 
     private fun <R> enter(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
         block: (
             argumentType: TupleType,
-            innerTypeScope: StaticTypeScope,
-            innerValueScope: StaticValueScope,
+            innerTypeScope: SyntaxTypeScope,
+            innerValueScope: SyntaxValueScope,
         ) -> R,
     ): R {
         val innerTypeScope = buildInnerTypeScope(typeScope = typeScope)

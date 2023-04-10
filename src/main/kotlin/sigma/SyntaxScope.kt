@@ -3,19 +3,19 @@ package sigma
 import sigma.values.Symbol
 import sigma.semantics.types.Type
 
-interface StaticTypeScope {
-    object Empty : StaticTypeScope {
+interface SyntaxTypeScope {
+    object Empty : SyntaxTypeScope {
         override fun getType(typeName: Symbol): Type? = null
     }
 
     fun getType(typeName: Symbol): Type?
 
     fun chainWith(
-        backScope: StaticTypeScope,
-    ): StaticTypeScope = object : StaticTypeScope {
+        backScope: SyntaxTypeScope,
+    ): SyntaxTypeScope = object : SyntaxTypeScope {
         override fun getType(
             typeName: Symbol,
-        ): Type? = this@StaticTypeScope.getType(
+        ): Type? = this@SyntaxTypeScope.getType(
             typeName = typeName,
         ) ?: backScope.getType(
             typeName = typeName,
@@ -23,8 +23,8 @@ interface StaticTypeScope {
     }
 }
 
-interface StaticValueScope {
-    object Empty : StaticValueScope {
+interface SyntaxValueScope {
+    object Empty : SyntaxValueScope {
         override fun getValueType(
             valueName: Symbol,
         ): Type? = null
@@ -34,11 +34,11 @@ interface StaticValueScope {
     fun getValueType(valueName: Symbol): Type?
 
     fun chainWith(
-        backScope: StaticValueScope,
-    ): StaticValueScope = object : StaticValueScope {
+        backScope: SyntaxValueScope,
+    ): SyntaxValueScope = object : SyntaxValueScope {
         override fun getValueType(
             valueName: Symbol,
-        ): Type? = this@StaticValueScope.getValueType(
+        ): Type? = this@SyntaxValueScope.getValueType(
             valueName = valueName,
         ) ?: backScope.getValueType(
             valueName = valueName,

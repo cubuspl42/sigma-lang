@@ -11,7 +11,7 @@ data class TypeReferenceTerm(
     val referee: Symbol,
 ) : TypeExpressionTerm() {
     override fun evaluate(
-        typeScope: StaticTypeScope,
+        typeScope: SyntaxTypeScope,
     ): Type = typeScope.getType(
         typeName = referee,
     ) ?: throw TypeError(

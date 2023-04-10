@@ -4,8 +4,8 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import sigma.BuiltinScope
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
@@ -135,8 +135,8 @@ sealed class ExpressionTerm : Term() {
     fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).toEvaluatedValue
 
     final override fun validate(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ) {
         determineType(
             typeScope = typeScope,
@@ -150,16 +150,16 @@ sealed class ExpressionTerm : Term() {
     }
 
     open fun validateAdditionally(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ) {
     }
 
     abstract fun determineType(
         // Idea: Rename to metaScope?
-        typeScope: StaticTypeScope,
+        typeScope: SyntaxTypeScope,
         // Idea: Rename to staticScope?
-        valueScope: StaticValueScope,
+        valueScope: SyntaxValueScope,
     ): Type
 
     // Idea for naming:

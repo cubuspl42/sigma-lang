@@ -1,15 +1,15 @@
 package sigma.syntax
 
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 
 abstract class Term {
     abstract val location: SourceLocation
 
     // TODO: Improve this! Merge with `inferType`?
     open fun validate(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ) {
     }
 }

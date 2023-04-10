@@ -1,6 +1,6 @@
 package sigma.syntax.type_expressions
 
-import sigma.StaticTypeScope
+import sigma.SyntaxTypeScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.TypeReferenceTerm
 import sigma.syntax.SourceLocation
@@ -8,7 +8,7 @@ import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
-import sigma.values.FixedStaticTypeScope
+import sigma.values.FixedSyntaxTypeScope
 import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -134,7 +134,7 @@ class OrderedTupleTypeLiteralTests {
             val type = TypeExpressionTerm.parse(
                 source = "[]",
             ).evaluate(
-                typeScope = StaticTypeScope.Empty,
+                typeScope = SyntaxTypeScope.Empty,
             )
 
             assertEquals(
@@ -148,7 +148,7 @@ class OrderedTupleTypeLiteralTests {
             val type = TypeExpressionTerm.parse(
                 source = "[a: A, B]",
             ).evaluate(
-                typeScope = FixedStaticTypeScope(
+                typeScope = FixedSyntaxTypeScope(
                     entries = mapOf(
                         Symbol.of("A") to BoolType,
                         Symbol.of("B") to IntCollectiveType,

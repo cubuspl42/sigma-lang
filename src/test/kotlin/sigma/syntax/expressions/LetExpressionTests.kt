@@ -3,8 +3,8 @@ package sigma.syntax.expressions
 import org.junit.jupiter.api.assertThrows
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.TypeReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
@@ -161,14 +161,14 @@ class LetExpressionTests {
 
             expression.validate(
                 typeScope = BuiltinTypeScope,
-                valueScope = StaticValueScope.Empty,
+                valueScope = SyntaxValueScope.Empty,
             )
 
             assertEquals(
                 expected = IntCollectiveType,
                 actual = expression.determineType(
                     typeScope = BuiltinTypeScope,
-                    valueScope = StaticValueScope.Empty,
+                    valueScope = SyntaxValueScope.Empty,
                 ),
             )
         }
@@ -185,8 +185,8 @@ class LetExpressionTests {
                         } in a
                     """.trimIndent()
                 ).determineType(
-                    typeScope = StaticTypeScope.Empty,
-                    valueScope = StaticValueScope.Empty,
+                    typeScope = SyntaxTypeScope.Empty,
+                    valueScope = SyntaxValueScope.Empty,
                 )
             }
         }

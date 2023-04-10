@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.IsUndefinedCheckContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
@@ -24,8 +24,8 @@ data class IsUndefinedCheckTerm(
     }
 
     override fun determineType(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ): Type = BoolType
 
     override fun evaluate(

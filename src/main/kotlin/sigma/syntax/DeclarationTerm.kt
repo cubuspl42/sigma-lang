@@ -1,7 +1,7 @@
 package sigma.syntax
 
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.values.Symbol
 import sigma.parser.antlr.SigmaParser.DeclarationContext
@@ -26,8 +26,8 @@ data class DeclarationTerm(
     }
 
     override fun validate(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ) {
         value.validate(
             typeScope = typeScope,
@@ -38,8 +38,8 @@ data class DeclarationTerm(
     }
 
     fun determineAssumedType(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ): Type = determineDeclaredType(
         typeScope = typeScope,
     ) ?: inferType(
@@ -48,14 +48,14 @@ data class DeclarationTerm(
     )
 
     private fun determineDeclaredType(
-        typeScope: StaticTypeScope,
+        typeScope: SyntaxTypeScope,
     ): Type? = valueType?.evaluate(
         typeScope = typeScope,
     )
 
     fun inferType(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ): Type = value.determineType(
         typeScope = typeScope,
         valueScope = valueScope,

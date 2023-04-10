@@ -1,23 +1,23 @@
 package sigma.values
 
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.syntax.DeclarationTerm
 import sigma.semantics.types.Type
 
 data class FixedStaticValueScope(
     private val entries: Map<Symbol, Type>,
-) : StaticValueScope {
+) : SyntaxValueScope {
     override fun getValueType(
         valueName: Symbol,
     ): Type? = entries[valueName]
 }
 
 class LoopedStaticValueScope(
-    private val typeContext: StaticTypeScope,
-    private val valueContext: StaticValueScope,
+    private val typeContext: SyntaxTypeScope,
+    private val valueContext: SyntaxValueScope,
     declarations: Iterable<DeclarationTerm>,
-) : StaticValueScope {
+) : SyntaxValueScope {
     private val declarationByName = declarations.associateBy { it.name }
 
     // TODO: Validate this stuff again?

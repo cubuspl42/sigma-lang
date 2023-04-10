@@ -1,8 +1,8 @@
 package sigma.syntax.expressions
 
 import sigma.BinaryOperationPrototype
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
@@ -72,15 +72,15 @@ data class CallTerm(
     }
 
     override fun validateAdditionally(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ) {
         // TODO: Validate passed argument
     }
 
     override fun determineType(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ): Type {
         val subjectType = subject.determineType(
             typeScope = typeScope,

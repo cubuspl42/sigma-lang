@@ -1,8 +1,8 @@
 package sigma.syntax.expressions
 
 import sigma.semantics.Program
-import sigma.StaticTypeScope
-import sigma.StaticValueScope
+import sigma.SyntaxTypeScope
+import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser
 import sigma.syntax.DeclarationTerm
 import sigma.syntax.SourceLocation
@@ -37,8 +37,8 @@ data class LocalScopeTerm(
     }
 
     override fun validate(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
     ) {
         val newValueScope = evaluateStatically(
             typeScope = typeScope,
@@ -54,9 +54,9 @@ data class LocalScopeTerm(
     }
 
     fun evaluateStatically(
-        typeScope: StaticTypeScope,
-        valueScope: StaticValueScope,
-    ): StaticValueScope = LoopedStaticValueScope(
+        typeScope: SyntaxTypeScope,
+        valueScope: SyntaxValueScope,
+    ): SyntaxValueScope = LoopedStaticValueScope(
         typeContext = typeScope,
         valueContext = valueScope,
         declarations = declarations,
