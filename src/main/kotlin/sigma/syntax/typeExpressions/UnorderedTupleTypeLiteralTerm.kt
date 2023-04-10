@@ -11,10 +11,10 @@ import sigma.values.TypeError
 import sigma.values.tables.Scope
 import sigma.values.tables.Table
 
-data class UnorderedTupleTypeLiteral(
+data class UnorderedTupleTypeLiteralTerm(
     override val location: SourceLocation,
     val entries: List<Entry>,
-) : TupleTypeLiteral() {
+) : TupleTypeLiteralTerm() {
     class DuplicateKeyError(
         key: PrimitiveValue,
     ) : TypeError(
@@ -23,13 +23,13 @@ data class UnorderedTupleTypeLiteral(
 
     data class Entry(
         val name: Symbol,
-        val valueType: TypeExpression,
+        val valueType: TypeExpressionTerm,
     )
 
     companion object {
         fun build(
             ctx: UnorderedTupleTypeLiteralContext,
-        ): UnorderedTupleTypeLiteral = UnorderedTupleTypeLiteral(
+        ): UnorderedTupleTypeLiteralTerm = UnorderedTupleTypeLiteralTerm(
             location = SourceLocation.build(ctx),
             entries = ctx.unorderedTupleTypeEntry().map {
                 Entry(

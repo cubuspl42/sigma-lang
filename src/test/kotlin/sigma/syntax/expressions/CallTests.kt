@@ -16,66 +16,66 @@ class CallTests {
         @Test
         fun testSimple() {
             assertEquals(
-                expected = Call(
+                expected = CallTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = Reference(
+                    subject = ReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo"),
                     ),
-                    argument = Reference(
+                    argument = ReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         referee = Symbol.of("bar"),
                     ),
                 ),
-                actual = Expression.parse("foo(bar)"),
+                actual = ExpressionTerm.parse("foo(bar)"),
             )
         }
 
         @Test
         fun testFieldReadSubject() {
             assertEquals(
-                expected = Call(
+                expected = CallTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = FieldRead(
+                    subject = FieldReadTerm(
 
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        subject = Reference(
+                        subject = ReferenceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 0),
                             referee = Symbol.of("foo"),
                         ),
                         fieldName = Symbol.of("bar"),
                     ),
-                    argument = Reference(
+                    argument = ReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 8),
                         referee = Symbol.of("baz"),
                     ),
                 ),
-                actual = Expression.parse("foo.bar(baz)"),
+                actual = ExpressionTerm.parse("foo.bar(baz)"),
             )
         }
 
         @Test
         fun testUnorderedTupleArgumentSugar() {
             assertEquals(
-                expected = Call(
+                expected = CallTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = Reference(
+                    subject = ReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo"),
                     ),
-                    argument = UnorderedTupleLiteral(
+                    argument = UnorderedTupleLiteralTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         entries = listOf(
-                            UnorderedTupleLiteral.Entry(
+                            UnorderedTupleLiteralTerm.Entry(
                                 name = Symbol.of("arg1"),
-                                value = Reference(
+                                value = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                     referee = Symbol.of("value1"),
                                 ),
                             ),
-                            UnorderedTupleLiteral.Entry(
+                            UnorderedTupleLiteralTerm.Entry(
                                 name = Symbol.of("arg2"),
-                                value = Reference(
+                                value = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 24),
                                     referee = Symbol.of("value2"),
                                 ),
@@ -83,34 +83,34 @@ class CallTests {
                         ),
                     ),
                 ),
-                actual = Expression.parse("foo{arg1: value1, arg2: value2}"),
+                actual = ExpressionTerm.parse("foo{arg1: value1, arg2: value2}"),
             )
         }
 
         @Test
         fun testOrderedTupleArgumentSugar() {
             assertEquals(
-                expected = Call(
+                expected = CallTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = Reference(
+                    subject = ReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo"),
                     ),
-                    argument = OrderedTupleLiteral(
+                    argument = OrderedTupleLiteralTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         elements = listOf(
-                            Reference(
+                            ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("value1"),
                             ),
-                            Reference(
+                            ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 12),
                                 referee = Symbol.of("value2"),
                             ),
                         ),
                     ),
                 ),
-                actual = Expression.parse("foo[value1, value2]"),
+                actual = ExpressionTerm.parse("foo[value1, value2]"),
             )
         }
     }
@@ -127,7 +127,7 @@ class CallTests {
 
             assertEquals(
                 expected = IntValue(9),
-                actual = Expression.parse("sq(3)").evaluate(
+                actual = ExpressionTerm.parse("sq(3)").evaluate(
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("sq") to sq,
@@ -141,7 +141,7 @@ class CallTests {
         fun testDictSubject() {
             assertEquals(
                 expected = Symbol.of("two"),
-                actual = Expression.parse("dict(2)").evaluate(
+                actual = ExpressionTerm.parse("dict(2)").evaluate(
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("dict") to DictTable(

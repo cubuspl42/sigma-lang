@@ -9,18 +9,18 @@ import sigma.semantics.types.TupleType
 import sigma.values.tables.Scope
 import sigma.values.tables.Table
 
-abstract class TupleTypeLiteral : TypeExpression() {
+abstract class TupleTypeLiteralTerm : TypeExpressionTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.TupleTypeLiteralContext,
-        ): TupleTypeLiteral = object : SigmaParserBaseVisitor<TupleTypeLiteral>() {
+        ): TupleTypeLiteralTerm = object : SigmaParserBaseVisitor<TupleTypeLiteralTerm>() {
             override fun visitUnorderedTupleTypeLiteral(
                 ctx: UnorderedTupleTypeLiteralContext,
-            ): TupleTypeLiteral = UnorderedTupleTypeLiteral.build(ctx)
+            ): TupleTypeLiteralTerm = UnorderedTupleTypeLiteralTerm.build(ctx)
 
             override fun visitOrderedTupleTypeLiteral(
                 ctx: OrderedTupleTypeLiteralContext,
-            ): TupleTypeLiteral = OrderedTupleTypeLiteral.build(ctx)
+            ): TupleTypeLiteralTerm = OrderedTupleTypeLiteralTerm.build(ctx)
         }.visit(ctx)
     }
 

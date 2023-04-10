@@ -3,20 +3,19 @@ package sigma.syntax.typeExpressions
 import sigma.StaticTypeScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
-import sigma.semantics.types.ArrayType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.PrimitiveType
 import sigma.values.TypeError
 
-data class DictTypeDepiction(
+data class DictTypeTerm(
     override val location: SourceLocation,
-    val keyType: TypeExpression,
-    val valueType: TypeExpression,
-) : TypeExpression() {
+    val keyType: TypeExpressionTerm,
+    val valueType: TypeExpressionTerm,
+) : TypeExpressionTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.DictTypeDepictionContext,
-        ): DictTypeDepiction = DictTypeDepiction(
+        ): DictTypeTerm = DictTypeTerm(
             location = SourceLocation.build(ctx),
             keyType = build(ctx.keyType),
             valueType = build(ctx.valueType),

@@ -1,12 +1,12 @@
 package sigma.values.tables
 
 import sigma.Thunk
-import sigma.syntax.expressions.Expression
+import sigma.syntax.expressions.ExpressionTerm
 import sigma.values.Symbol
 
 class LoopedScope(
     private val context: Scope,
-    private val declarations: Map<Symbol, Expression>,
+    private val declarations: Map<Symbol, ExpressionTerm>,
 ) : Scope {
     override fun get(
         name: Symbol,

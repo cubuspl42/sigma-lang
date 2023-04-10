@@ -1,10 +1,10 @@
 package sigma.syntax
 
-import sigma.TypeReference
-import sigma.syntax.expressions.Abstraction
-import sigma.syntax.expressions.IntLiteral
-import sigma.syntax.expressions.UnorderedTupleLiteral
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteral
+import sigma.TypeReferenceTerm
+import sigma.syntax.expressions.AbstractionTerm
+import sigma.syntax.expressions.IntLiteralTerm
+import sigma.syntax.expressions.UnorderedTupleLiteralTerm
+import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
 import sigma.values.IntValue
 import sigma.values.Symbol
 import kotlin.test.Test
@@ -51,53 +51,53 @@ class ModuleTests {
 
             assertEquals(
                 expected = listOf(
-                    Declaration(
+                    DeclarationTerm(
                         location = SourceLocation(lineIndex = 5, columnIndex = 0),
                         name = Symbol.of("name1"),
                         valueType = null,
-                        value = IntLiteral(
+                        value = IntLiteralTerm(
                             location = SourceLocation(lineIndex = 5, columnIndex = 8),
                             value = IntValue(value = 123L),
                         ),
                     ),
-                    Declaration(
+                    DeclarationTerm(
                         location = SourceLocation(lineIndex = 7, columnIndex = 0),
                         name = Symbol.of("name2"), valueType = null,
-                        value = Abstraction(
+                        value = AbstractionTerm(
                             location = SourceLocation(lineIndex = 7, columnIndex = 8),
-                            argumentType = OrderedTupleTypeLiteral(
+                            argumentType = OrderedTupleTypeLiteralTerm(
                                 location = SourceLocation(lineIndex = 7, columnIndex = 8),
                                 elements = listOf(
-                                    OrderedTupleTypeLiteral.Element(
+                                    OrderedTupleTypeLiteralTerm.Element(
                                         name = Symbol.of("a"),
-                                        type = TypeReference(
+                                        type = TypeReferenceTerm(
                                             location = SourceLocation(lineIndex = 7, columnIndex = 12),
                                             referee = Symbol.of("Int"),
                                         ),
                                     ),
                                 ),
                             ),
-                            image = IntLiteral(
+                            image = IntLiteralTerm(
                                 location = SourceLocation(lineIndex = 7, columnIndex = 20),
                                 value = IntValue(value = 42L),
                             ),
                         ),
                     ),
-                    Declaration(
+                    DeclarationTerm(
                         location = SourceLocation(lineIndex = 9, columnIndex = 0),
-                        name = Symbol.of("name3"), value = UnorderedTupleLiteral(
+                        name = Symbol.of("name3"), value = UnorderedTupleLiteralTerm(
                             location = SourceLocation(lineIndex = 9, columnIndex = 8),
                             entries = listOf(
-                                UnorderedTupleLiteral.Entry(
+                                UnorderedTupleLiteralTerm.Entry(
                                     name = Symbol.of("a"),
-                                    value = IntLiteral(
+                                    value = IntLiteralTerm(
                                         location = SourceLocation(lineIndex = 10, columnIndex = 7),
                                         value = IntValue(value = 1L),
                                     ),
                                 ),
-                                UnorderedTupleLiteral.Entry(
+                                UnorderedTupleLiteralTerm.Entry(
                                     name = Symbol.of("b"),
-                                    value = IntLiteral(
+                                    value = IntLiteralTerm(
                                         location = SourceLocation(lineIndex = 11, columnIndex = 7),
                                         value = IntValue(value = 2L),
                                     ),

@@ -6,8 +6,8 @@ import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.semantics.types.TupleType
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.TupleTypeLiteral
-import sigma.syntax.typeExpressions.TypeExpression
+import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
+import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
@@ -17,13 +17,13 @@ import sigma.values.FixedStaticTypeScope
 import sigma.values.Symbol
 import sigma.values.tables.Scope
 
-data class Abstraction(
+data class AbstractionTerm(
     override val location: SourceLocation,
     val genericParametersTuple: GenericParametersTuple? = null,
-    val argumentType: TupleTypeLiteral,
-    val declaredImageType: TypeExpression? = null,
-    val image: Expression,
-) : Expression() {
+    val argumentType: TupleTypeLiteralTerm,
+    val declaredImageType: TypeExpressionTerm? = null,
+    val image: ExpressionTerm,
+) : ExpressionTerm() {
     data class GenericParametersTuple(
         override val location: SourceLocation,
         val parameterNames: List<Symbol>,
@@ -48,18 +48,18 @@ data class Abstraction(
     companion object {
         fun build(
             ctx: AbstractionContext,
-        ): Abstraction = Abstraction(
+        ): AbstractionTerm = AbstractionTerm(
             location = SourceLocation.build(ctx),
             genericParametersTuple = ctx.genericParametersTuple()?.let {
                 GenericParametersTuple.build(it)
             },
             argumentType = ctx.argumentType.let {
-                TupleTypeLiteral.build(it)
+                TupleTypeLiteralTerm.build(it)
             },
             declaredImageType = ctx.imageType?.let {
-                TypeExpression.build(it)
+                TypeExpressionTerm.build(it)
             },
-            image = Expression.build(ctx.image),
+            image = ExpressionTerm.build(ctx.image),
         )
     }
 

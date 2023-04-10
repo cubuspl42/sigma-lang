@@ -17,7 +17,7 @@ import sigma.values.tables.Scope
 data class ModuleTerm(
     override val location: SourceLocation,
     val imports: List<Import>,
-    val declarations: List<Declaration>,
+    val declarations: List<DeclarationTerm>,
 ) : Term() {
     override fun validate(
         typeScope: StaticTypeScope,
@@ -75,7 +75,7 @@ data class ModuleTerm(
                     Import.build(it)
                 },
                 declarations = ctx.moduleBody().declaration().map {
-                    Declaration.build(it)
+                    DeclarationTerm.build(it)
                 },
             )
         }

@@ -12,15 +12,15 @@ import sigma.values.TypeError
 import sigma.values.tables.DictTable
 import sigma.values.tables.Scope
 
-data class FieldRead(
+data class FieldReadTerm(
     override val location: SourceLocation,
-    val subject: Expression,
+    val subject: ExpressionTerm,
     val fieldName: Symbol,
-) : Expression() {
+) : ExpressionTerm() {
     companion object {
         fun build(
             ctx: FieldReadAltContext,
-        ): FieldRead = FieldRead(
+        ): FieldReadTerm = FieldReadTerm(
             location = SourceLocation.build(ctx),
             subject = build(ctx.subject),
             fieldName = Symbol.of(ctx.fieldName.text),

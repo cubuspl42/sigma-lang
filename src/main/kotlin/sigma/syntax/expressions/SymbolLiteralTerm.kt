@@ -3,37 +3,39 @@ package sigma.syntax.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
-import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
+import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.IntLiteralType
+import sigma.semantics.types.SymbolType
 import sigma.semantics.types.Type
-import sigma.values.IntValue
+import sigma.values.Symbol
 import sigma.values.Value
 import sigma.values.tables.Scope
 
-data class IntLiteral(
+data class SymbolLiteralTerm(
     override val location: SourceLocation,
-    val value: IntValue,
-) : Expression() {
+    val symbol: Symbol,
+) : ExpressionTerm() {
     companion object {
         fun build(
-            ctx: IntLiteralAltContext,
-        ): IntLiteral = IntLiteral(
+            ctx: SymbolLiteralAltContext,
+        ): SymbolLiteralTerm = SymbolLiteralTerm(
             location = SourceLocation.build(ctx),
-            value = IntValue(value = ctx.text.toLong()),
+            symbol = Symbol(
+                name = ctx.text.drop(1).dropLast(1),
+            ),
         )
     }
 
     override fun determineType(
         typeScope: StaticTypeScope,
         valueScope: StaticValueScope,
-    ): Type = IntLiteralType(
-        value = value,
+    ): Type = SymbolType(
+        value = symbol,
     )
 
     override fun evaluate(
         scope: Scope,
-    ): Value = value
+    ): Value = symbol
 
-    override fun dump(): String = value.toString()
+    override fun dump(): String = symbol.dump()
 }

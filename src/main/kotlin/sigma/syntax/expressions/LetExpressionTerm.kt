@@ -8,18 +8,18 @@ import sigma.syntax.SourceLocation
 import sigma.values.tables.Scope
 import sigma.semantics.types.Type
 
-data class LetExpression(
+data class LetExpressionTerm(
     override val location: SourceLocation,
-    val localScope: LocalScope,
-    val result: Expression,
-) : Expression() {
+    val localScope: LocalScopeTerm,
+    val result: ExpressionTerm,
+) : ExpressionTerm() {
     companion object {
         fun build(
             ctx: LetExpressionContext,
-        ): LetExpression = LetExpression(
+        ): LetExpressionTerm = LetExpressionTerm(
             location = SourceLocation.build(ctx),
-            localScope = LocalScope.build(ctx.scope),
-            result = Expression.build(ctx.result),
+            localScope = LocalScopeTerm.build(ctx.scope),
+            result = ExpressionTerm.build(ctx.result),
         )
     }
 

@@ -17,35 +17,35 @@ import sigma.values.Symbol
 import sigma.values.TypeError
 import sigma.values.tables.Scope
 
-data class Call(
+data class CallTerm(
     override val location: SourceLocation,
     // Idea: Rename to `callee`? (again?)
-    val subject: Expression,
-    val argument: Expression,
-) : Expression() {
+    val subject: ExpressionTerm,
+    val argument: ExpressionTerm,
+) : ExpressionTerm() {
     companion object {
         fun build(
             ctx: BinaryOperationAltContext,
-        ): Call {
-            val leftExpression = Expression.build(ctx.left)
-            val rightExpression = Expression.build(ctx.right)
+        ): CallTerm {
+            val leftExpression = ExpressionTerm.build(ctx.left)
+            val rightExpression = ExpressionTerm.build(ctx.right)
 
             val prototype = BinaryOperationPrototype.build(ctx)
 
-            return Call(
+            return CallTerm(
                 location = SourceLocation.build(ctx),
-                subject = Reference(
+                subject = ReferenceTerm(
                     location = SourceLocation.build(ctx),
                     referee = Symbol.of(prototype.functionName),
                 ),
-                argument = UnorderedTupleLiteral(
+                argument = UnorderedTupleLiteralTerm(
                     location = SourceLocation.build(ctx),
                     entries = listOf(
-                        UnorderedTupleLiteral.Entry(
+                        UnorderedTupleLiteralTerm.Entry(
                             name = prototype.leftArgument,
                             value = leftExpression,
                         ),
-                        UnorderedTupleLiteral.Entry(
+                        UnorderedTupleLiteralTerm.Entry(
                             name = prototype.rightArgument,
                             value = rightExpression,
                         ),
@@ -56,18 +56,18 @@ data class Call(
 
         fun build(
             ctx: CallExpressionAltContext,
-        ): Call = Call(
+        ): CallTerm = CallTerm(
             location = SourceLocation.build(ctx),
-            subject = Expression.build(ctx.callee),
-            argument = Expression.build(ctx.argument),
+            subject = ExpressionTerm.build(ctx.callee),
+            argument = ExpressionTerm.build(ctx.argument),
         )
 
         fun build(
             ctx: CallExpressionTupleLiteralAltContext,
-        ): Call = Call(
+        ): CallTerm = CallTerm(
             location = SourceLocation.build(ctx),
-            subject = Expression.build(ctx.callee),
-            argument = TupleLiteral.build(ctx.argument),
+            subject = ExpressionTerm.build(ctx.callee),
+            argument = TupleLiteralTerm.build(ctx.argument),
         )
     }
 

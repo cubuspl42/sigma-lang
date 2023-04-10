@@ -22,15 +22,15 @@ class FieldReadTests {
         @Test
         fun testSimple() {
             assertEquals(
-                expected = FieldRead(
+                expected = FieldReadTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = Reference(
+                    subject = ReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo"),
                     ),
                     fieldName = Symbol.of("bar"),
                 ),
-                actual = Expression.parse("foo.bar"),
+                actual = ExpressionTerm.parse("foo.bar"),
             )
         }
     }
@@ -46,7 +46,7 @@ class FieldReadTests {
 
             assertEquals(
                 expected = IntValue(value = 123L),
-                actual = Expression.parse("foo.bar").evaluate(
+                actual = ExpressionTerm.parse("foo.bar").evaluate(
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("foo") to foo,
@@ -74,7 +74,7 @@ class FieldReadTests {
         fun testSimple() {
             assertEquals(
                 expected = IntCollectiveType,
-                actual = Expression.parse("foo.bar").determineType(
+                actual = ExpressionTerm.parse("foo.bar").determineType(
                     typeScope = BuiltinTypeScope,
                     valueScope = valueScope,
                 ),
@@ -86,7 +86,7 @@ class FieldReadTests {
             assertThrows<TypeError> {
                 assertEquals(
                     expected = IntCollectiveType,
-                    actual = Expression.parse("foo.baz").determineType(
+                    actual = ExpressionTerm.parse("foo.baz").determineType(
                         typeScope = BuiltinTypeScope,
                         valueScope = valueScope,
                     ),
@@ -99,7 +99,7 @@ class FieldReadTests {
             assertThrows<TypeError> {
                 assertEquals(
                     expected = IntCollectiveType,
-                    actual = Expression.parse("foo.baz").determineType(
+                    actual = ExpressionTerm.parse("foo.baz").determineType(
                         typeScope = BuiltinTypeScope,
                         valueScope = FixedStaticValueScope(
                             entries = mapOf(

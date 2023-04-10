@@ -10,14 +10,14 @@ import sigma.values.Symbol
 import sigma.values.TypeError
 import sigma.values.tables.Scope
 
-data class Reference(
+data class ReferenceTerm(
     override val location: SourceLocation,
     val referee: Symbol,
-) : Expression() {
+) : ExpressionTerm() {
     companion object {
         fun build(
             ctx: ReferenceContext,
-        ): Reference = Reference(
+        ): ReferenceTerm = ReferenceTerm(
             location = SourceLocation.build(ctx),
             referee = Symbol(name = ctx.referee.text),
         )

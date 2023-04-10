@@ -32,11 +32,11 @@ import sigma.syntax.Term
 import sigma.values.Value
 import sigma.values.tables.Scope
 
-sealed class Expression : Term() {
+sealed class ExpressionTerm : Term() {
     companion object {
         fun parse(
             source: String,
-        ): Expression {
+        ): ExpressionTerm {
             val sourceName = "__main__"
 
             val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
@@ -48,80 +48,80 @@ sealed class Expression : Term() {
 
         fun build(
             ctx: ParserRuleContext,
-        ): Expression = object : SigmaParserBaseVisitor<Expression>() {
+        ): ExpressionTerm = object : SigmaParserBaseVisitor<ExpressionTerm>() {
             override fun visitBinaryOperationAlt(
                 ctx: BinaryOperationAltContext,
-            ): Expression = Call.build(ctx)
+            ): ExpressionTerm = CallTerm.build(ctx)
 
             override fun visitParenExpressionAlt(
                 ctx: ParenExpressionAltContext,
-            ): Expression = build(ctx.parenExpression().expression())
+            ): ExpressionTerm = build(ctx.parenExpression().expression())
 
             override fun visitReferenceAlt(
                 ctx: ReferenceAltContext,
-            ): Expression = Reference.build(ctx.reference())
+            ): ExpressionTerm = ReferenceTerm.build(ctx.reference())
 
             override fun visitAbstractionAlt(
                 ctx: AbstractionAltContext,
-            ): Expression = Abstraction.build(ctx.abstraction())
+            ): ExpressionTerm = AbstractionTerm.build(ctx.abstraction())
 
             override fun visitTupleLiteralAlt(
                 ctx: TupleLiteralAltContext,
-            ): Expression = TupleLiteral.build(ctx.tupleLiteral())
+            ): ExpressionTerm = TupleLiteralTerm.build(ctx.tupleLiteral())
 
             override fun visitDictLiteralAlt(
                 ctx: DictLiteralAltContext,
-            ): Expression = DictLiteral.build(ctx.dictLiteral())
+            ): ExpressionTerm = DictLiteralTerm.build(ctx.dictLiteral())
 
             override fun visitLetExpressionAlt(
                 ctx: LetExpressionAltContext,
-            ): Expression = LetExpression.build(ctx.letExpression())
+            ): ExpressionTerm = LetExpressionTerm.build(ctx.letExpression())
 
             override fun visitIsUndefinedCheckAlt(
                 ctx: IsUndefinedCheckAltContext,
-            ): Expression = IsUndefinedCheck.build(ctx.isUndefinedCheck)
+            ): ExpressionTerm = IsUndefinedCheckTerm.build(ctx.isUndefinedCheck)
 
             override fun visitSymbolLiteralAlt(
                 ctx: SymbolLiteralAltContext,
-            ): Expression = SymbolLiteral.build(ctx)
+            ): ExpressionTerm = SymbolLiteralTerm.build(ctx)
 
             override fun visitIntLiteralAlt(
                 ctx: IntLiteralAltContext,
-            ): Expression = IntLiteral.build(ctx)
+            ): ExpressionTerm = IntLiteralTerm.build(ctx)
 
             override fun visitCallableExpressionAlt(
                 ctx: CallableExpressionAltContext,
-            ): Expression = build(ctx.callableExpression())
+            ): ExpressionTerm = build(ctx.callableExpression())
 
             override fun visitCallExpressionAlt(
                 ctx: CallExpressionAltContext,
-            ): Expression = Call.build(ctx)
+            ): ExpressionTerm = CallTerm.build(ctx)
 
             override fun visitCallExpressionTupleLiteralAlt(
                 ctx: CallExpressionTupleLiteralAltContext,
-            ): Expression = Call.build(ctx)
+            ): ExpressionTerm = CallTerm.build(ctx)
 
             override fun visitCallableParenAlt(
                 ctx: CallableParenAltContext,
-            ): Expression = build(ctx.parenExpression().expression())
+            ): ExpressionTerm = build(ctx.parenExpression().expression())
 
             override fun visitCallableReferenceAlt(
                 ctx: CallableReferenceAltContext,
-            ): Expression = Reference.build(ctx.reference())
+            ): ExpressionTerm = ReferenceTerm.build(ctx.reference())
 
             override fun visitCallableTupleLiteralAlt(
                 ctx: CallableTupleLiteralAltContext,
-            ): Expression = TupleLiteral.build(ctx.tupleLiteral())
+            ): ExpressionTerm = TupleLiteralTerm.build(ctx.tupleLiteral())
 
             override fun visitFieldReadAlt(
                 ctx: FieldReadAltContext,
-            ): Expression = FieldRead.build(ctx)
+            ): ExpressionTerm = FieldReadTerm.build(ctx)
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class}")
     }
 
     inner class BoundThunk(private val scope: Scope) : Thunk() {
         override val toEvaluatedValue: Value by lazy {
-            this@Expression.evaluate(
+            this@ExpressionTerm.evaluate(
                 scope = scope,
             ).toEvaluatedValue
         }

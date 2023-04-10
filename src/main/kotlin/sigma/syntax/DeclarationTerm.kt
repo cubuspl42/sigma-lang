@@ -2,26 +2,26 @@ package sigma.syntax
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
-import sigma.syntax.typeExpressions.TypeExpression
+import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.values.Symbol
 import sigma.parser.antlr.SigmaParser.DeclarationContext
 import sigma.semantics.types.Type
-import sigma.syntax.expressions.Expression
+import sigma.syntax.expressions.ExpressionTerm
 
-data class Declaration(
+data class DeclarationTerm(
     override val location: SourceLocation,
     val name: Symbol,
-    val valueType: TypeExpression? = null,
-    val value: Expression,
+    val valueType: TypeExpressionTerm? = null,
+    val value: ExpressionTerm,
 ): Term() {
     companion object {
         fun build(
             ctx: DeclarationContext,
-        ): Declaration = Declaration(
+        ): DeclarationTerm = DeclarationTerm(
             location = SourceLocation.build(ctx),
             name = Symbol.of(ctx.name.text),
-            valueType = ctx.valueType?.let { TypeExpression.build(it) },
-            value = Expression.build(ctx.value),
+            valueType = ctx.valueType?.let { TypeExpressionTerm.build(it) },
+            value = ExpressionTerm.build(ctx.value),
         )
     }
 

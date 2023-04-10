@@ -4,7 +4,7 @@ import getResourceAsText
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.StaticValueScope
-import sigma.syntax.expressions.LocalScope
+import sigma.syntax.expressions.LocalScopeTerm
 import sigma.values.tables.Scope
 
 data class Prelude(
@@ -15,7 +15,7 @@ data class Prelude(
         fun load(): Prelude {
             val preludeSource = getResourceAsText("prelude.sigma") ?: throw RuntimeException("Couldn't load prelude")
 
-            val prelude = LocalScope.parse(
+            val prelude = LocalScopeTerm.parse(
                 sourceName = "prelude",
                 source = preludeSource,
             )

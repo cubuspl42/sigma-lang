@@ -1,15 +1,15 @@
 package sigma
 
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.TypeExpression
+import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.semantics.types.Type
 import sigma.values.Symbol
 import sigma.values.TypeError
 
-data class TypeReference(
+data class TypeReferenceTerm(
     override val location: SourceLocation,
     val referee: Symbol,
-) : TypeExpression() {
+) : TypeExpressionTerm() {
     override fun evaluate(
         typeScope: StaticTypeScope,
     ): Type = typeScope.getType(

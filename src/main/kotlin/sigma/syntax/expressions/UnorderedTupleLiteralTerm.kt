@@ -13,20 +13,20 @@ import sigma.semantics.types.Type
 import sigma.values.Symbol
 import sigma.values.TypeError
 
-data class UnorderedTupleLiteral(
+data class UnorderedTupleLiteralTerm(
     override val location: SourceLocation,
     val entries: List<Entry>,
-) : TupleLiteral() {
+) : TupleLiteralTerm() {
     data class Entry(
         val name: Symbol,
-        val value: Expression,
+        val value: ExpressionTerm,
     ) {
         companion object {
             fun build(
                 ctx: SigmaParser.UnorderedTupleAssociationContext,
             ): Entry = Entry(
                 name = Symbol.of(ctx.name.text),
-                value = Expression.build(ctx.value),
+                value = ExpressionTerm.build(ctx.value),
             )
         }
     }
@@ -46,7 +46,7 @@ data class UnorderedTupleLiteral(
     companion object {
         fun build(
             ctx: UnorderedTupleLiteralContext,
-        ): UnorderedTupleLiteral = UnorderedTupleLiteral(
+        ): UnorderedTupleLiteralTerm = UnorderedTupleLiteralTerm(
             location = SourceLocation.build(ctx),
             entries = ctx.unorderedTupleAssociation().map {
                 Entry.build(it)

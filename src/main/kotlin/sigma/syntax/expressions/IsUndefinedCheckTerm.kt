@@ -2,33 +2,24 @@ package sigma.syntax.expressions
 
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
-import sigma.parser.antlr.SigmaParser.AbstractionContext
-import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.parser.antlr.SigmaParser.IsUndefinedCheckContext
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.TupleTypeLiteral
-import sigma.syntax.typeExpressions.TypeExpression
 import sigma.semantics.types.BoolType
-import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.Type
-import sigma.semantics.types.TypeVariable
 import sigma.values.BoolValue
-import sigma.values.Closure
-import sigma.values.FixedStaticTypeScope
-import sigma.values.Symbol
 import sigma.values.UndefinedValue
 import sigma.values.tables.Scope
 
-data class IsUndefinedCheck(
+data class IsUndefinedCheckTerm(
     override val location: SourceLocation,
-    val argument: Expression,
-) : Expression() {
+    val argument: ExpressionTerm,
+) : ExpressionTerm() {
     companion object {
         fun build(
             ctx: IsUndefinedCheckContext,
-        ): IsUndefinedCheck = IsUndefinedCheck(
+        ): IsUndefinedCheckTerm = IsUndefinedCheckTerm(
             location = SourceLocation.build(ctx),
-            argument = Expression.build(ctx),
+            argument = ExpressionTerm.build(ctx),
         )
     }
 

@@ -1,9 +1,9 @@
 package sigma.syntax.type_expressions
 
-import sigma.syntax.typeExpressions.TypeExpression
-import sigma.TypeReference
+import sigma.syntax.typeExpressions.TypeExpressionTerm
+import sigma.TypeReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.ArrayTypeLiteral
+import sigma.syntax.typeExpressions.ArrayTypeLiteralTerm
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
 import sigma.values.FixedStaticTypeScope
@@ -15,14 +15,14 @@ class ArrayTypeLiteralTests {
     object ParsingTests {
         @Test
         fun test() {
-            val expression = TypeExpression.parse(
+            val expression = TypeExpressionTerm.parse(
                 source = "[A*]",
             )
 
             assertEquals(
-                expected = ArrayTypeLiteral(
+                expected = ArrayTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    elementType = TypeReference(
+                    elementType = TypeReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         referee = Symbol.of("A"),
                     ),
@@ -35,7 +35,7 @@ class ArrayTypeLiteralTests {
     object EvaluationTests {
         @Test
         fun test() {
-            val type = TypeExpression.parse(
+            val type = TypeExpressionTerm.parse(
                 source = "[A*]",
             ).evaluate(
                 typeScope = FixedStaticTypeScope(

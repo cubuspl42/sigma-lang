@@ -5,11 +5,11 @@ import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.StaticTypeScope
 import sigma.StaticValueScope
-import sigma.TypeReference
-import sigma.syntax.SourceLocation
+import sigma.TypeReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
-import sigma.syntax.Declaration
+import sigma.syntax.DeclarationTerm
+import sigma.syntax.SourceLocation
 import sigma.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,49 +19,49 @@ class LetExpressionTests {
         @Test
         fun testSimple() {
             assertEquals(
-                expected = LetExpression(
+                expected = LetExpressionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    localScope = LocalScope(
+                    localScope = LocalScopeTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         declarations = listOf(
-                            Declaration(
+                            DeclarationTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 4),
                                 name = Symbol.of("g"),
-                                value = Call(
+                                value = CallTerm(
                                     location = SourceLocation(lineIndex = 2, columnIndex = 8),
-                                    subject = Reference(
+                                    subject = ReferenceTerm(
                                         location = SourceLocation(lineIndex = 2, columnIndex = 8),
                                         referee = Symbol.of("h"),
                                     ),
-                                    argument = Reference(
+                                    argument = ReferenceTerm(
                                         location = SourceLocation(lineIndex = 2, columnIndex = 10),
                                         referee = Symbol.of("a"),
                                     ),
                                 ),
                             ),
-                            Declaration(
+                            DeclarationTerm(
                                 location = SourceLocation(lineIndex = 3, columnIndex = 4),
                                 name = Symbol.of("f"),
-                                value = Reference(
+                                value = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 8),
                                     referee = Symbol.of("g"),
                                 ),
                             ),
                         ),
                     ),
-                    result = Call(
+                    result = CallTerm(
                         location = SourceLocation(lineIndex = 4, columnIndex = 5),
-                        subject = Reference(
+                        subject = ReferenceTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 5),
                             referee = Symbol.of("f"),
                         ),
-                        argument = Reference(
+                        argument = ReferenceTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 7),
                             referee = Symbol.of("x"),
                         ),
                     ),
                 ),
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = """
                         let {
                             g = h(a),
@@ -75,31 +75,31 @@ class LetExpressionTests {
         @Test
         fun testWithTypeAnnotation() {
             assertEquals(
-                expected = LetExpression(
+                expected = LetExpressionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    localScope = LocalScope(
+                    localScope = LocalScopeTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         declarations = listOf(
-                            Declaration(
+                            DeclarationTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 name = Symbol.of("a"),
-                                valueType = TypeReference(
+                                valueType = TypeReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),
                                     referee = Symbol.of("Int"),
                                 ),
-                                value = Reference(
+                                value = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 15),
                                     referee = Symbol.of("b"),
                                 ),
                             ),
                         ),
                     ),
-                    result = Reference(
+                    result = ReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 22),
                         referee = Symbol.of("a"),
                     ),
                 ),
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = """
                         let { a: Int = b } in a
                     """.trimIndent()
@@ -111,7 +111,7 @@ class LetExpressionTests {
     object TypeCheckingTests {
         @Test
         fun testInferred() {
-            val type = Expression.parse(
+            val type = ExpressionTerm.parse(
                 source = """
                     let {
                         a: Bool = false,
@@ -131,7 +131,7 @@ class LetExpressionTests {
 
         @Test
         fun testInferredFunctionType() {
-            val type = Expression.parse(
+            val type = ExpressionTerm.parse(
                 source = """
                     let {
                         f = [n: Int] => false,
@@ -151,7 +151,7 @@ class LetExpressionTests {
 
         @Test
         fun testAssignment() {
-            val expression = Expression.parse(
+            val expression = ExpressionTerm.parse(
                 source = """
                     let {
                         a: Int = 0,
@@ -177,7 +177,7 @@ class LetExpressionTests {
         fun testCyclic() {
             // TODO: Improve this
             assertThrows<StackOverflowError> {
-                Expression.parse(
+                ExpressionTerm.parse(
                     source = """
                         let {
                             a = b,

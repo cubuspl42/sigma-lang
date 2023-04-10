@@ -1,13 +1,13 @@
 package sigma
 
 import org.junit.jupiter.api.assertThrows
-import sigma.syntax.expressions.DictLiteral
-import sigma.syntax.expressions.Expression
-import sigma.syntax.expressions.Reference
+import sigma.syntax.expressions.DictLiteralTerm
+import sigma.syntax.expressions.ReferenceTerm
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
+import sigma.syntax.expressions.ExpressionTerm
 import sigma.values.FixedStaticValueScope
 import sigma.values.Symbol
 import kotlin.test.Test
@@ -18,32 +18,32 @@ object DictLiteralTests {
         @Test
         fun testSimple() {
             assertEquals(
-                expected = DictLiteral(
+                expected = DictLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     associations = listOf(
-                        DictLiteral.Association(
-                            key = Reference(
+                        DictLiteralTerm.Association(
+                            key = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 2),
                                 referee = Symbol.of("foo"),
                             ),
-                            value = Reference(
+                            value = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 8),
                                 referee = Symbol.of("value1"),
                             ),
                         ),
-                        DictLiteral.Association(
-                            key = Reference(
+                        DictLiteralTerm.Association(
+                            key = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
                                 referee = Symbol.of("baz"),
                             ),
-                            value = Reference(
+                            value = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 23),
                                 referee = Symbol.of("value2"),
                             ),
                         ),
                     ),
                 ),
-                actual = Expression.parse("{[foo]: value1, [baz]: value2}"),
+                actual = ExpressionTerm.parse("{[foo]: value1, [baz]: value2}"),
             )
         }
     }
@@ -56,7 +56,7 @@ object DictLiteralTests {
                     keyType = IntCollectiveType,
                     valueType = BoolType,
                 ),
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = """
                             {
                                 [key1]: value1,
@@ -81,7 +81,7 @@ object DictLiteralTests {
                     keyType = IntCollectiveType,
                     valueType = BoolType,
                 ),
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = """
                             {
                                 [key1]: value1,
@@ -104,8 +104,8 @@ object DictLiteralTests {
 
         @Test
         fun testMultipleEntriesIncompatibleKeys() {
-            assertThrows<DictLiteral.InconsistentKeyTypesError> {
-                Expression.parse(
+            assertThrows<DictLiteralTerm.InconsistentKeyTypesError> {
+                ExpressionTerm.parse(
                     source = """
                             {
                                 [key1]: value1,
@@ -128,8 +128,8 @@ object DictLiteralTests {
 
         @Test
         fun testMultipleEntriesIncompatibleValues() {
-            assertThrows<DictLiteral.InconsistentValueTypesError> {
-                Expression.parse(
+            assertThrows<DictLiteralTerm.InconsistentValueTypesError> {
+                ExpressionTerm.parse(
                     source = """
                             {
                                 [key1]: value1,
@@ -152,8 +152,8 @@ object DictLiteralTests {
 
         @Test
         fun testMultipleEntriesNonPrimitiveKey() {
-            assertThrows<DictLiteral.NonPrimitiveKeyTypeError> {
-                Expression.parse(
+            assertThrows<DictLiteralTerm.NonPrimitiveKeyTypeError> {
+                ExpressionTerm.parse(
                     source = """
                             {
                                 [key1]: value1,

@@ -4,20 +4,20 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.TupleLiteralContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
-abstract class TupleLiteral : Expression() {
+abstract class TupleLiteralTerm : ExpressionTerm() {
     companion object {
         fun build(
             ctx: TupleLiteralContext,
-        ): TupleLiteral = object : SigmaParserBaseVisitor<TupleLiteral>() {
+        ): TupleLiteralTerm = object : SigmaParserBaseVisitor<TupleLiteralTerm>() {
             override fun visitOrderedTupleLiteral(
                 ctx: SigmaParser.OrderedTupleLiteralContext,
-            ): OrderedTupleLiteral {
-                return OrderedTupleLiteral.build(ctx)
+            ): OrderedTupleLiteralTerm {
+                return OrderedTupleLiteralTerm.build(ctx)
             }
 
             override fun visitUnorderedTupleLiteral(
                 ctx: SigmaParser.UnorderedTupleLiteralContext,
-            ): UnorderedTupleLiteral = UnorderedTupleLiteral.build(ctx)
+            ): UnorderedTupleLiteralTerm = UnorderedTupleLiteralTerm.build(ctx)
         }.visit(ctx)
     }
 }

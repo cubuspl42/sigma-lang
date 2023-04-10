@@ -10,11 +10,11 @@ class IntLiteralTests {
         @Test
         fun test() {
             assertEquals(
-                expected = IntLiteral(
+                expected = IntLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     IntValue(123),
                 ),
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = "123",
                 ),
             )
@@ -26,7 +26,7 @@ class IntLiteralTests {
         fun test() {
             assertEquals(
                 expected = IntValue(123),
-                actual = Expression.parse(source = "123").evaluateAsRoot(),
+                actual = ExpressionTerm.parse(source = "123").evaluateAsRoot(),
             )
         }
     }

@@ -3,7 +3,7 @@ package sigma.syntax.typeExpressions
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.StaticTypeScope
-import sigma.TypeReference
+import sigma.TypeReferenceTerm
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ArrayTypeLiteralContext
@@ -17,30 +17,30 @@ import sigma.syntax.Term
 import sigma.semantics.types.Type
 import sigma.values.Symbol
 
-abstract class TypeExpression : Term() {
+abstract class TypeExpressionTerm : Term() {
     companion object {
         fun build(
             ctx: TypeExpressionContext,
-        ): TypeExpression = object : SigmaParserBaseVisitor<TypeExpression>() {
+        ): TypeExpressionTerm = object : SigmaParserBaseVisitor<TypeExpressionTerm>() {
             override fun visitTupleTypeLiteral(
                 ctx: SigmaParser.TupleTypeLiteralContext,
-            ): TypeExpression = TupleTypeLiteral.build(ctx)
+            ): TypeExpressionTerm = TupleTypeLiteralTerm.build(ctx)
 
             override fun visitFunctionTypeDepiction(
                 ctx: FunctionTypeDepictionContext,
-            ): TypeExpression = FunctionTypeDepiction.build(ctx)
+            ): TypeExpressionTerm = FunctionTypeTerm.build(ctx)
 
             override fun visitArrayTypeLiteral(
                 ctx: ArrayTypeLiteralContext,
-            ): TypeExpression = ArrayTypeLiteral.build(ctx)
+            ): TypeExpressionTerm = ArrayTypeLiteralTerm.build(ctx)
 
             override fun visitDictTypeDepiction(
                 ctx: DictTypeDepictionContext,
-            ): TypeExpression = DictTypeDepiction.build(ctx)
+            ): TypeExpressionTerm = DictTypeTerm.build(ctx)
 
             override fun visitReference(
                 ctx: ReferenceContext,
-            ): TypeExpression = TypeReference(
+            ): TypeExpressionTerm = TypeReferenceTerm(
                 location = SourceLocation.build(ctx),
                 referee = Symbol.of(ctx.referee.text),
             )
@@ -48,7 +48,7 @@ abstract class TypeExpression : Term() {
 
         fun parse(
             source: String,
-        ): TypeExpression {
+        ): TypeExpressionTerm {
             val sourceName = "__type_expression__"
 
             val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))

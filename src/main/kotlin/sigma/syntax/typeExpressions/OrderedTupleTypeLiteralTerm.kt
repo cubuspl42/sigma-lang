@@ -11,19 +11,19 @@ import sigma.values.Symbol
 import sigma.values.tables.Scope
 import sigma.values.tables.Table
 
-data class OrderedTupleTypeLiteral(
+data class OrderedTupleTypeLiteralTerm(
     override val location: SourceLocation,
     val elements: List<Element>,
-) : TupleTypeLiteral() {
+) : TupleTypeLiteralTerm() {
     data class Element(
         val name: Symbol?,
-        val type: TypeExpression,
+        val type: TypeExpressionTerm,
     )
 
     companion object {
         fun build(
             ctx: OrderedTupleTypeLiteralContext,
-        ): OrderedTupleTypeLiteral = OrderedTupleTypeLiteral(
+        ): OrderedTupleTypeLiteralTerm = OrderedTupleTypeLiteralTerm(
             location = SourceLocation.build(ctx),
             elements = ctx.orderedTupleTypeElement().map { elementCtx ->
                 Element(

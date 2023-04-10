@@ -3,27 +3,27 @@ package sigma.syntax.typeExpressions
 import sigma.StaticTypeScope
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.Abstraction
+import sigma.syntax.expressions.AbstractionTerm
 import sigma.semantics.types.UniversalFunctionType
 
-data class FunctionTypeDepiction(
+data class FunctionTypeTerm(
     override val location: SourceLocation,
-    val genericParametersTuple: Abstraction.GenericParametersTuple? = null,
-    val argumentType: TupleTypeLiteral,
-    val imageType: TypeExpression,
-) : TypeExpression() {
+    val genericParametersTuple: AbstractionTerm.GenericParametersTuple? = null,
+    val argumentType: TupleTypeLiteralTerm,
+    val imageType: TypeExpressionTerm,
+) : TypeExpressionTerm() {
     companion object {
         fun build(
             ctx: FunctionTypeDepictionContext,
-        ): FunctionTypeDepiction = FunctionTypeDepiction(
+        ): FunctionTypeTerm = FunctionTypeTerm(
             location = SourceLocation.build(ctx),
             genericParametersTuple = ctx.genericParametersTuple()?.let {
-                Abstraction.GenericParametersTuple.build(it)
+                AbstractionTerm.GenericParametersTuple.build(it)
             },
             argumentType = ctx.argumentType.let {
-                TupleTypeLiteral.build(it)
+                TupleTypeLiteralTerm.build(it)
             },
-            imageType = TypeExpression.build(ctx.imageType),
+            imageType = TypeExpressionTerm.build(ctx.imageType),
         )
     }
 

@@ -13,19 +13,19 @@ import sigma.values.tables.Scope
 import sigma.semantics.types.Type
 import sigma.values.TypeError
 
-data class DictLiteral(
+data class DictLiteralTerm(
     override val location: SourceLocation,
     val associations: List<Association>,
-) : TupleLiteral() {
+) : TupleLiteralTerm() {
     data class Association(
-        val key: Expression,
-        val value: Expression,
+        val key: ExpressionTerm,
+        val value: ExpressionTerm,
     ) {
         companion object {
             fun build(ctx: DictAssociationContext): Association {
                 return Association(
-                    key = Expression.build(ctx.key),
-                    value = Expression.build(ctx.value),
+                    key = ExpressionTerm.build(ctx.key),
+                    value = ExpressionTerm.build(ctx.value),
                 )
             }
         }
@@ -56,7 +56,7 @@ data class DictLiteral(
     companion object {
         fun build(
             ctx: DictLiteralContext,
-        ): DictLiteral = DictLiteral(
+        ): DictLiteralTerm = DictLiteralTerm(
             location = SourceLocation.build(ctx),
             associations = ctx.dictAssociation().map {
                 Association.build(it)

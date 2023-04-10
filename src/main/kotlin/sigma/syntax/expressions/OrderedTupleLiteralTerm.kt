@@ -9,17 +9,17 @@ import sigma.values.tables.Scope
 import sigma.semantics.types.Type
 import sigma.values.tables.ArrayTable
 
-data class OrderedTupleLiteral(
+data class OrderedTupleLiteralTerm(
     override val location: SourceLocation,
-    val elements: List<Expression>,
-) : TupleLiteral() {
+    val elements: List<ExpressionTerm>,
+) : TupleLiteralTerm() {
     companion object {
         fun build(
             ctx: OrderedTupleLiteralContext,
-        ): OrderedTupleLiteral = OrderedTupleLiteral(
+        ): OrderedTupleLiteralTerm = OrderedTupleLiteralTerm(
             location = SourceLocation.build(ctx),
             elements = ctx.orderedTupleElement().map {
-                Expression.build(it)
+                ExpressionTerm.build(it)
             },
         )
     }

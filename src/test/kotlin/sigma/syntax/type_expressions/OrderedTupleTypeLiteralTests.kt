@@ -1,10 +1,10 @@
 package sigma.syntax.type_expressions
 
 import sigma.StaticTypeScope
-import sigma.syntax.typeExpressions.TypeExpression
-import sigma.TypeReference
+import sigma.syntax.typeExpressions.TypeExpressionTerm
+import sigma.TypeReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteral
+import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
@@ -17,12 +17,12 @@ class OrderedTupleTypeLiteralTests {
     object ParsingTests {
         @Test
         fun testEmpty() {
-            val expression = TypeExpression.parse(
+            val expression = TypeExpressionTerm.parse(
                 source = "[]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeLiteral(
+                expected = OrderedTupleTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elements = emptyList(),
                 ),
@@ -32,17 +32,17 @@ class OrderedTupleTypeLiteralTests {
 
         @Test
         fun testSingleUnnamed() {
-            val expression = TypeExpression.parse(
+            val expression = TypeExpressionTerm.parse(
                 source = "[A]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeLiteral(
+                expected = OrderedTupleTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elements = listOf(
-                        OrderedTupleTypeLiteral.Element(
+                        OrderedTupleTypeLiteralTerm.Element(
                             name = null,
-                            type = TypeReference(
+                            type = TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 1),
                                 referee = Symbol.of("A"),
                             ),
@@ -55,31 +55,31 @@ class OrderedTupleTypeLiteralTests {
 
         @Test
         fun testAllUnnamed() {
-            val expression = TypeExpression.parse(
+            val expression = TypeExpressionTerm.parse(
                 source = "[A, B, C]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeLiteral(
+                expected = OrderedTupleTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elements = listOf(
-                        OrderedTupleTypeLiteral.Element(
+                        OrderedTupleTypeLiteralTerm.Element(
                             name = null,
-                            type = TypeReference(
+                            type = TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 1),
                                 referee = Symbol.of("A"),
                             ),
                         ),
-                        OrderedTupleTypeLiteral.Element(
+                        OrderedTupleTypeLiteralTerm.Element(
                             name = null,
-                            type = TypeReference(
+                            type = TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("B"),
                             ),
                         ),
-                        OrderedTupleTypeLiteral.Element(
+                        OrderedTupleTypeLiteralTerm.Element(
                             name = null,
-                            type = TypeReference(
+                            type = TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 7),
                                 referee = Symbol.of("C"),
                             ),
@@ -92,31 +92,31 @@ class OrderedTupleTypeLiteralTests {
 
         @Test
         fun testSomeNamed() {
-            val expression = TypeExpression.parse(
+            val expression = TypeExpressionTerm.parse(
                 source = "[a: A, B, c: C]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeLiteral(
+                expected = OrderedTupleTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elements = listOf(
-                        OrderedTupleTypeLiteral.Element(
+                        OrderedTupleTypeLiteralTerm.Element(
                             name = Symbol.of("a"),
-                            type = TypeReference(
+                            type = TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("A"),
                             ),
                         ),
-                        OrderedTupleTypeLiteral.Element(
+                        OrderedTupleTypeLiteralTerm.Element(
                             name = null,
-                            type = TypeReference(
+                            type = TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 7),
                                 referee = Symbol.of("B"),
                             ),
                         ),
-                        OrderedTupleTypeLiteral.Element(
+                        OrderedTupleTypeLiteralTerm.Element(
                             name = Symbol.of("c"),
-                            type = TypeReference(
+                            type = TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                 referee = Symbol.of("C"),
                             ),
@@ -131,7 +131,7 @@ class OrderedTupleTypeLiteralTests {
     object EvaluationTests {
         @Test
         fun testEmpty() {
-            val type = TypeExpression.parse(
+            val type = TypeExpressionTerm.parse(
                 source = "[]",
             ).evaluate(
                 typeScope = StaticTypeScope.Empty,
@@ -145,7 +145,7 @@ class OrderedTupleTypeLiteralTests {
 
         @Test
         fun testNonEmpty() {
-            val type = TypeExpression.parse(
+            val type = TypeExpressionTerm.parse(
                 source = "[a: A, B]",
             ).evaluate(
                 typeScope = FixedStaticTypeScope(

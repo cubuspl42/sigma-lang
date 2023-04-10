@@ -10,11 +10,11 @@ class SymbolLiteralTests {
         @Test
         fun test() {
             assertEquals(
-                expected = SymbolLiteral(
+                expected = SymbolLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     symbol = Symbol.of("foo"),
                 ),
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = "`foo`",
                 ),
             )

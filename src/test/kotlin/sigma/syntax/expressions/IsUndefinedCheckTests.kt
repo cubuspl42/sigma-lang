@@ -17,14 +17,14 @@ class IsUndefinedCheckTests {
         @Test
         fun test() {
             assertEquals(
-                expected = IsUndefinedCheck(
+                expected = IsUndefinedCheckTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    argument = Reference(
+                    argument = ReferenceTerm(
                         SourceLocation(lineIndex = 1, columnIndex = 12),
                         referee = Symbol.of("foo"),
                     ),
                 ),
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = "isUndefined foo",
                 ),
             )
@@ -36,7 +36,7 @@ class IsUndefinedCheckTests {
         fun test() {
             assertEquals(
                 expected = BoolType,
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = "isUndefined foo",
                 ).determineType(
                     typeScope = BuiltinTypeScope,
@@ -51,7 +51,7 @@ class IsUndefinedCheckTests {
         fun testNotUndefined() {
             assertEquals(
                 expected = BoolValue.False,
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = "isUndefined 0",
                 ).evaluate(
                     scope = Scope.Empty,
@@ -63,7 +63,7 @@ class IsUndefinedCheckTests {
         fun testUndefined() {
             assertEquals(
                 expected = BoolValue.True,
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = "isUndefined d(0)",
                 ).evaluate(
                     scope = FixedScope(

@@ -1,14 +1,14 @@
 package sigma
 
 import org.junit.jupiter.api.assertThrows
-import sigma.syntax.expressions.UnorderedTupleLiteral
-import sigma.syntax.expressions.Expression
-import sigma.syntax.expressions.Reference
+import sigma.syntax.expressions.UnorderedTupleLiteralTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.UnorderedTupleLiteral.DuplicatedNameError
+import sigma.syntax.expressions.UnorderedTupleLiteralTerm.DuplicatedNameError
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.UnorderedTupleType
+import sigma.syntax.expressions.ExpressionTerm
+import sigma.syntax.expressions.ReferenceTerm
 import sigma.values.FixedStaticValueScope
 import sigma.values.Symbol
 import kotlin.test.Test
@@ -19,56 +19,56 @@ object UnorderedTupleLiteralTests {
         @Test
         fun testEmpty() {
             assertEquals(
-                expected = UnorderedTupleLiteral(
+                expected = UnorderedTupleLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = emptyList()
                 ),
-                actual = Expression.parse("{}"),
+                actual = ExpressionTerm.parse("{}"),
             )
         }
 
         @Test
         fun testSingleEntry() {
             assertEquals(
-                expected = UnorderedTupleLiteral(
+                expected = UnorderedTupleLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        UnorderedTupleLiteral.Entry(
+                        UnorderedTupleLiteralTerm.Entry(
                             name = Symbol.of("foo"),
-                            value = Reference(
+                            value = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 referee = Symbol.of("baz1"),
                             ),
                         ),
                     ),
                 ),
-                actual = Expression.parse("{foo: baz1}"),
+                actual = ExpressionTerm.parse("{foo: baz1}"),
             )
         }
 
         @Test
         fun testMultipleEntries() {
             assertEquals(
-                expected = UnorderedTupleLiteral(
+                expected = UnorderedTupleLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        UnorderedTupleLiteral.Entry(
+                        UnorderedTupleLiteralTerm.Entry(
                             name = Symbol.of("foo"),
-                            value = Reference(
+                            value = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 referee = Symbol.of("baz1"),
                             ),
                         ),
-                        UnorderedTupleLiteral.Entry(
+                        UnorderedTupleLiteralTerm.Entry(
                             name = Symbol.of("bar"),
-                            value = Reference(
+                            value = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
                                 referee = Symbol.of("baz2"),
                             ),
                         ),
                     ),
                 ),
-                actual = Expression.parse("{foo: baz1, bar: baz2}"),
+                actual = ExpressionTerm.parse("{foo: baz1, bar: baz2}"),
             )
         }
     }
@@ -80,7 +80,7 @@ object UnorderedTupleLiteralTests {
                 expected = UnorderedTupleType(
                     valueTypeByName = emptyMap(),
                 ),
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = "{}".trimIndent(),
                 ).determineType(
                     typeScope = BuiltinTypeScope,
@@ -98,7 +98,7 @@ object UnorderedTupleLiteralTests {
                         Symbol.of("key2") to IntCollectiveType,
                     ),
                 ),
-                actual = Expression.parse(
+                actual = ExpressionTerm.parse(
                     source = """
                             {
                                 key1: value1,
@@ -120,7 +120,7 @@ object UnorderedTupleLiteralTests {
         @Test
         fun testDuplicatedName() {
             assertThrows<DuplicatedNameError> {
-                Expression.parse(
+                ExpressionTerm.parse(
                     source = """
                         {
                             key1: value1,

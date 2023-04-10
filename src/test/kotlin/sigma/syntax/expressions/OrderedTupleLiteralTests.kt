@@ -20,12 +20,12 @@ class OrderedTupleLiteralTests {
     object ParsingTests {
         @Test
         fun testEmpty() {
-            val expression = Expression.parse(
+            val expression = ExpressionTerm.parse(
                 source = "[]",
             )
 
             assertEquals(
-                expected = OrderedTupleLiteral(
+                expected = OrderedTupleLiteralTerm(
                     location = SourceLocation(1, 0),
                     elements = emptyList(),
                 ),
@@ -35,15 +35,15 @@ class OrderedTupleLiteralTests {
 
         @Test
         fun testSingleElement() {
-            val expression = Expression.parse(
+            val expression = ExpressionTerm.parse(
                 source = "[a]",
             )
 
             assertEquals(
-                expected = OrderedTupleLiteral(
+                expected = OrderedTupleLiteralTerm(
                     location = SourceLocation(1, 0),
                     elements = listOf(
-                        Reference(
+                        ReferenceTerm(
                             location = SourceLocation(1, 1),
                             referee = Symbol.of("a"),
                         ),
@@ -55,25 +55,25 @@ class OrderedTupleLiteralTests {
 
         @Test
         fun testMultipleElements() {
-            val expression = Expression.parse(
+            val expression = ExpressionTerm.parse(
                 source = "[a, b, c]",
             )
 
             assertEquals(
-                expected = OrderedTupleLiteral(
+                expected = OrderedTupleLiteralTerm(
                     location = SourceLocation(1, 0),
                     elements = listOf(
-                        Reference(
+                        ReferenceTerm(
                             location = SourceLocation(1, 1),
                             referee = Symbol.of("a"),
                         ),
 
-                        Reference(
+                        ReferenceTerm(
                             location = SourceLocation(1, 4),
                             referee = Symbol.of("b"),
                         ),
 
-                        Reference(
+                        ReferenceTerm(
                             location = SourceLocation(1, 7),
                             referee = Symbol.of("c"),
                         ),
@@ -87,7 +87,7 @@ class OrderedTupleLiteralTests {
     object TypeInferenceTests {
         @Test
         fun testEmpty() {
-            val type = Expression.parse(
+            val type = ExpressionTerm.parse(
                 source = "[]",
             ).determineType(
                 typeScope = StaticTypeScope.Empty,
@@ -104,7 +104,7 @@ class OrderedTupleLiteralTests {
 
         @Test
         fun testNonEmpty() {
-            val type = Expression.parse(
+            val type = ExpressionTerm.parse(
                 source = "[a, b]",
             ).determineType(
                 typeScope = StaticTypeScope.Empty,
@@ -131,7 +131,7 @@ class OrderedTupleLiteralTests {
     object EvaluationTests {
         @Test
         fun testEmpty() {
-            val value = Expression.parse(
+            val value = ExpressionTerm.parse(
                 source = "[]",
             ).evaluate(
                 scope = Scope.Empty,
@@ -147,7 +147,7 @@ class OrderedTupleLiteralTests {
 
         @Test
         fun testNonEmpty() {
-            val value = Expression.parse(
+            val value = ExpressionTerm.parse(
                 source = "[a, b]",
             ).evaluate(
                 scope = FixedScope(
