@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeLiteralContext
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
@@ -24,7 +24,7 @@ abstract class TupleTypeLiteralTerm : TypeExpressionTerm() {
         }.visit(ctx)
     }
 
-    abstract override fun evaluate(typeScope: SyntaxTypeScope): TupleType
+    abstract override fun evaluate(typeScope: TypeScope): TupleType
 
     abstract fun toArgumentScope(argument: Table): Scope
 }

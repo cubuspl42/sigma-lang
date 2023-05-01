@@ -2,7 +2,7 @@ package sigma.values
 
 import sigma.syntax.SourceLocation
 
-open class TypeError(
+open class TypeErrorException(
     location: SourceLocation? = null,
     message: String,
 ) : Exception(

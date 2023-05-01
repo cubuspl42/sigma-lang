@@ -1,6 +1,6 @@
 package sigma.semantics.types
 
-import sigma.values.TypeError
+import sigma.values.TypeErrorException
 
 data class UniversalFunctionType(
     override val argumentType: TupleType,
@@ -9,7 +9,7 @@ data class UniversalFunctionType(
     override fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution {
-        if (assignedType !is UniversalFunctionType) throw TypeError(
+        if (assignedType !is UniversalFunctionType) throw TypeErrorException(
             message = "Cannot resolve type variables, non-abstraction is assigned",
         )
 

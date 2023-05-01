@@ -1,11 +1,11 @@
 package sigma.syntax.typeExpressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.DictType
 import sigma.semantics.types.PrimitiveType
-import sigma.values.TypeError
+import sigma.values.TypeErrorException
 
 data class DictTypeTerm(
     override val location: SourceLocation,
@@ -23,11 +23,11 @@ data class DictTypeTerm(
     }
 
     override fun evaluate(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
     ): DictType = DictType(
         keyType = keyType.evaluate(
             typeScope = typeScope,
-        ) as? PrimitiveType ?: throw TypeError(
+        ) as? PrimitiveType ?: throw TypeErrorException(
             location = keyType.location,
             message = "Dict key type is not primitive",
         ),

@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
@@ -28,7 +28,7 @@ data class FunctionTypeTerm(
     }
 
     override fun evaluate(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
     ): UniversalFunctionType {
         val innerTypeScope = genericParametersTuple?.toStaticTypeScope()?.chainWith(
             backScope = typeScope,

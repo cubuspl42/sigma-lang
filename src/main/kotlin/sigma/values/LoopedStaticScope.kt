@@ -1,8 +1,8 @@
 package sigma.values
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
-import sigma.syntax.DeclarationTerm
+import sigma.syntax.DefinitionTerm
 import sigma.semantics.types.Type
 
 data class FixedStaticValueScope(
@@ -14,9 +14,9 @@ data class FixedStaticValueScope(
 }
 
 class LoopedStaticValueScope(
-    private val typeContext: SyntaxTypeScope,
+    private val typeContext: TypeScope,
     private val valueContext: SyntaxValueScope,
-    declarations: Iterable<DeclarationTerm>,
+    declarations: Iterable<DefinitionTerm>,
 ) : SyntaxValueScope {
     private val declarationByName = declarations.associateBy { it.name }
 

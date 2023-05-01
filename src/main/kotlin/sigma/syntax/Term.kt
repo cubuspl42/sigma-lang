@@ -1,6 +1,6 @@
 package sigma.syntax
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 
 abstract class Term {
@@ -8,7 +8,7 @@ abstract class Term {
 
     // TODO: Improve this! Merge with `inferType`?
     open fun validate(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ) {
     }

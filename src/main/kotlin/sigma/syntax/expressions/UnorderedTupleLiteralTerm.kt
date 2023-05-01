@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.UnorderedTupleLiteralContext
@@ -11,7 +11,7 @@ import sigma.values.tables.DictTable
 import sigma.values.tables.Scope
 import sigma.semantics.types.Type
 import sigma.values.Symbol
-import sigma.values.TypeError
+import sigma.values.TypeErrorException
 
 data class UnorderedTupleLiteralTerm(
     override val location: SourceLocation,
@@ -39,7 +39,7 @@ data class UnorderedTupleLiteralTerm(
 
     class DuplicatedNameError(
         duplicatedKey: PrimitiveValue,
-    ) : TypeError(
+    ) : TypeErrorException(
         message = "Duplicate key: ${duplicatedKey.dump()}",
     )
 
@@ -57,7 +57,7 @@ data class UnorderedTupleLiteralTerm(
     override fun dump(): String = "(dict constructor)"
 
     override fun determineType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): UnorderedTupleType {
         val entryTypes = entries.map {

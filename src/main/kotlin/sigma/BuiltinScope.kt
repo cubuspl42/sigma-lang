@@ -1,5 +1,8 @@
 package sigma
 
+import sigma.semantics.BuiltinDefinition
+import sigma.semantics.Definition
+import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
@@ -20,7 +23,7 @@ interface BuiltinValue {
     val value: Value
 }
 
-object BuiltinScope : SyntaxValueScope, Scope {
+object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
     private data class SimpleBuiltinValue(
         override val type: Type,
         override val value: Value,
@@ -155,6 +158,14 @@ object BuiltinScope : SyntaxValueScope, Scope {
         Symbol.of("concat") to FunctionValue.ConcatFunction,
     )
 
+    private val builtinDefinitions = builtinValues.entries.associate { (name, builtinValue) ->
+        name to BuiltinDefinition(
+            name = name,
+            type = builtinValue.type,
+            value = builtinValue.value,
+        )
+    }
+
     override fun getValueType(
         valueName: Symbol,
     ): Type? = getBuiltin(
@@ -170,4 +181,6 @@ object BuiltinScope : SyntaxValueScope, Scope {
     private fun getBuiltin(
         name: Symbol,
     ): BuiltinValue? = builtinValues[name]
+
+    override fun resolveDeclaration(name: Symbol): BuiltinDefinition? = builtinDefinitions[name]
 }

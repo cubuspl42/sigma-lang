@@ -1,6 +1,6 @@
 package sigma.integration_tests
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.semantics.types.IntLiteralType
@@ -24,7 +24,7 @@ internal class GenericFunctionsTests {
                 value = IntValue(value = 1),
             ),
             actual = result.determineType(
-                typeScope = SyntaxTypeScope.Empty,
+                typeScope = TypeScope.Empty,
                 valueScope = SyntaxValueScope.Empty,
             ),
         )

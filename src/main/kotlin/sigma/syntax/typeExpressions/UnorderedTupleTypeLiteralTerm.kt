@@ -1,13 +1,13 @@
 package sigma.syntax.typeExpressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.Thunk
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
 import sigma.semantics.types.UnorderedTupleType
 import sigma.values.PrimitiveValue
 import sigma.values.Symbol
-import sigma.values.TypeError
+import sigma.values.TypeErrorException
 import sigma.values.tables.Scope
 import sigma.values.tables.Table
 
@@ -17,7 +17,7 @@ data class UnorderedTupleTypeLiteralTerm(
 ) : TupleTypeLiteralTerm() {
     class DuplicateKeyError(
         key: PrimitiveValue,
-    ) : TypeError(
+    ) : TypeErrorException(
         message = "Duplicate key: ${key.dump()}",
     )
 
@@ -41,7 +41,7 @@ data class UnorderedTupleTypeLiteralTerm(
     }
 
     override fun evaluate(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
     ): UnorderedTupleType = UnorderedTupleType(
         valueTypeByName = entries.groupBy {
             it.name

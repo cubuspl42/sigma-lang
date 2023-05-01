@@ -11,7 +11,7 @@ import sigma.syntax.SourceLocation
 import sigma.values.FixedStaticValueScope
 import sigma.values.IntValue
 import sigma.values.Symbol
-import sigma.values.TypeError
+import sigma.values.TypeErrorException
 import sigma.values.tables.DictTable
 import sigma.values.tables.FixedScope
 import kotlin.test.Test
@@ -83,7 +83,7 @@ class FieldReadTests {
 
         @Test
         fun testMissingKey() {
-            assertThrows<TypeError> {
+            assertThrows<TypeErrorException> {
                 assertEquals(
                     expected = IntCollectiveType,
                     actual = ExpressionTerm.parse("foo.baz").determineType(
@@ -96,7 +96,7 @@ class FieldReadTests {
 
         @Test
         fun testBadSubject() {
-            assertThrows<TypeError> {
+            assertThrows<TypeErrorException> {
                 assertEquals(
                     expected = IntCollectiveType,
                     actual = ExpressionTerm.parse("foo.baz").determineType(

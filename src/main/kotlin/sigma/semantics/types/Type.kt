@@ -162,3 +162,19 @@ data class SymbolType(
 
     override val asType: PrimitiveType = this
 }
+
+/**
+ * A symbol for an illegal type, a result of a typing error.
+ */
+object IllType : Type() {
+    override fun findLowestCommonSupertype(other: Type): Type = IllType
+
+    override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution {
+        // Note: This might need an improvement
+        return TypeVariableResolution.Empty
+    }
+
+    override fun substituteTypeVariables(resolution: TypeVariableResolution): Type = IllType
+
+    override fun dump(): String = "IllType"
+}

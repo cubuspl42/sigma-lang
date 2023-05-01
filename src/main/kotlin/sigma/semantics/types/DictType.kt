@@ -1,6 +1,6 @@
 package sigma.semantics.types
 
-import sigma.values.TypeError
+import sigma.values.TypeErrorException
 
 // Type of tables with keys of a single primitive type and values of a single
 // specific type
@@ -16,7 +16,7 @@ data class DictType(
     override fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution {
-        if (assignedType !is DictType) throw TypeError(
+        if (assignedType !is DictType) throw TypeErrorException(
             message = "Cannot resolve type variables, non-dict is assigned",
         )
 

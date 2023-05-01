@@ -51,7 +51,7 @@ class ModuleTests {
 
             assertEquals(
                 expected = listOf(
-                    DeclarationTerm(
+                    DefinitionTerm(
                         location = SourceLocation(lineIndex = 5, columnIndex = 0),
                         name = Symbol.of("name1"),
                         valueType = null,
@@ -60,7 +60,7 @@ class ModuleTests {
                             value = IntValue(value = 123L),
                         ),
                     ),
-                    DeclarationTerm(
+                    DefinitionTerm(
                         location = SourceLocation(lineIndex = 7, columnIndex = 0),
                         name = Symbol.of("name2"), valueType = null,
                         value = AbstractionTerm(
@@ -83,7 +83,7 @@ class ModuleTests {
                             ),
                         ),
                     ),
-                    DeclarationTerm(
+                    DefinitionTerm(
                         location = SourceLocation(lineIndex = 9, columnIndex = 0),
                         name = Symbol.of("name3"), value = UnorderedTupleLiteralTerm(
                             location = SourceLocation(lineIndex = 9, columnIndex = 8),
