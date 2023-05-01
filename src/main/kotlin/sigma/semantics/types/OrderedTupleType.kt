@@ -1,6 +1,7 @@
 package sigma.semantics.types
 
 import sigma.SyntaxValueScope
+import sigma.semantics.expressions.Abstraction
 import sigma.values.Symbol
 
 data class OrderedTupleType(
@@ -18,6 +19,13 @@ data class OrderedTupleType(
                 resolution = resolution,
             )
         )
+
+        fun toArgumentDeclaration(): Abstraction.ArgumentDeclaration? = name?.let {
+            Abstraction.ArgumentDeclaration(
+                name = it,
+                type = type,
+            )
+        }
     }
 
     companion object {
@@ -74,6 +82,12 @@ data class OrderedTupleType(
             valueName == entry.name
         }?.type
     }
+
+    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentDeclarationBlock = Abstraction.ArgumentDeclarationBlock(
+        argumentDeclarations = elements.mapNotNull { element ->
+            element.toArgumentDeclaration()
+        },
+    )
 
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,

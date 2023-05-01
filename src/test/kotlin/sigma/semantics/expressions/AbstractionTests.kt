@@ -21,7 +21,7 @@ class AbstractionTests {
 
                 val abstraction = Abstraction.build(
                     outerTypeScope = BuiltinTypeScope,
-                    declarationScope = BuiltinScope,
+                    outerDeclarationScope = BuiltinScope,
                     term = term,
                 )
 
@@ -42,7 +42,7 @@ class AbstractionTests {
 
                 val abstraction = Abstraction.build(
                     outerTypeScope = BuiltinTypeScope,
-                    declarationScope = BuiltinScope,
+                    outerDeclarationScope = BuiltinScope,
                     term = term,
                 )
 
@@ -51,6 +51,27 @@ class AbstractionTests {
                 )
 
                 assertIs<BoolType>(
+                    value = inferredType.imageType,
+                )
+            }
+
+            @Test
+            fun testInferredFromArguments() {
+                val term = ExpressionTerm.parse(
+                    source = "[a: Int] => a",
+                ) as AbstractionTerm
+
+                val abstraction = Abstraction.build(
+                    outerTypeScope = BuiltinTypeScope,
+                    outerDeclarationScope = BuiltinScope,
+                    term = term,
+                )
+
+                val inferredType = assertIs<FunctionType>(
+                    value = abstraction.inferredType.value,
+                )
+
+                assertIs<IntType>(
                     value = inferredType.imageType,
                 )
             }
