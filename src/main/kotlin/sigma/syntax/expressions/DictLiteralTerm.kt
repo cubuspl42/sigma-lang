@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.DictAssociationContext
 import sigma.parser.antlr.SigmaParser.DictLiteralContext
@@ -11,12 +11,12 @@ import sigma.values.PrimitiveValue
 import sigma.values.tables.DictTable
 import sigma.values.tables.Scope
 import sigma.semantics.types.Type
-import sigma.values.TypeError
+import sigma.values.TypeErrorException
 
 data class DictLiteralTerm(
     override val location: SourceLocation,
     val associations: List<Association>,
-) : TupleLiteralTerm() {
+) : ExpressionTerm() {
     data class Association(
         val key: ExpressionTerm,
         val value: ExpressionTerm,
@@ -34,21 +34,21 @@ data class DictLiteralTerm(
     class InconsistentKeyTypesError(
         inconsistentKeyTypes: Set<Type>,
         location: SourceLocation,
-    ) : TypeError(
+    ) : TypeErrorException(
         location = location,
         message = "Dict literal keys have different types: ${inconsistentKeyTypes}",
     )
 
     class InconsistentValueTypesError(
         location: SourceLocation,
-    ) : TypeError(
+    ) : TypeErrorException(
         location = location,
         message = "Dict literal values have different types",
     )
 
     class NonPrimitiveKeyTypeError(
         location: SourceLocation,
-    ) : TypeError(
+    ) : TypeErrorException(
         location = location,
         message = "Dict literal key type is not primitive",
     )
@@ -67,7 +67,7 @@ data class DictLiteralTerm(
     override fun dump(): String = "(dict literal)"
 
     override fun determineType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): Type {
         val keyTypes = associations.map {

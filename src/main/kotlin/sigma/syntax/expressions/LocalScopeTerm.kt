@@ -1,10 +1,10 @@
 package sigma.syntax.expressions
 
 import sigma.semantics.Program
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser
-import sigma.syntax.DeclarationTerm
+import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
 import sigma.syntax.Term
 import sigma.values.LoopedStaticValueScope
@@ -13,7 +13,7 @@ import sigma.values.tables.Scope
 
 data class LocalScopeTerm(
     override val location: SourceLocation,
-    val declarations: List<DeclarationTerm>,
+    val declarations: List<DefinitionTerm>,
 ) : Term() {
     companion object {
         fun parse(
@@ -31,13 +31,13 @@ data class LocalScopeTerm(
         ): LocalScopeTerm = LocalScopeTerm(
             location = SourceLocation.build(ctx),
             declarations = ctx.declaration().map {
-                DeclarationTerm.build(it)
+                DefinitionTerm.build(it)
             },
         )
     }
 
     override fun validate(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ) {
         val newValueScope = evaluateStatically(
@@ -54,7 +54,7 @@ data class LocalScopeTerm(
     }
 
     fun evaluateStatically(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): SyntaxValueScope = LoopedStaticValueScope(
         typeContext = typeScope,

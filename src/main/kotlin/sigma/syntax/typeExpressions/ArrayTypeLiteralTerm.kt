@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.ArrayType
@@ -19,7 +19,7 @@ data class ArrayTypeLiteralTerm(
     }
 
     override fun evaluate(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
     ): ArrayType = ArrayType(
         elementType = elementType.evaluate(typeScope = typeScope),
     )

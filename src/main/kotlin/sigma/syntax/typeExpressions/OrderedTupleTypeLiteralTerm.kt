@@ -1,7 +1,7 @@
 package sigma.syntax.typeExpressions
 
 import indexOfOrNull
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.Thunk
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeLiteralContext
@@ -35,7 +35,7 @@ data class OrderedTupleTypeLiteralTerm(
     }
 
     override fun evaluate(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
     ): OrderedTupleType = OrderedTupleType(
         elements = elements.map {
             OrderedTupleType.Element(

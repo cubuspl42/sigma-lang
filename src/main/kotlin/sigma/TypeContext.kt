@@ -10,7 +10,7 @@ private val builtinTypes = mapOf(
     Symbol.of("Int") to IntCollectiveType,
 )
 
-val BuiltinTypeScope = object : SyntaxTypeScope {
+val BuiltinTypeScope = object : TypeScope {
     override fun getType(
         typeName: Symbol,
     ): Type? = builtinTypes[typeName]

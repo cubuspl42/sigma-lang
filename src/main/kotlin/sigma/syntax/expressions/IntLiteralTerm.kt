@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.syntax.SourceLocation
@@ -25,7 +25,7 @@ data class IntLiteralTerm(
     }
 
     override fun determineType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): Type = IntLiteralType(
         value = value,

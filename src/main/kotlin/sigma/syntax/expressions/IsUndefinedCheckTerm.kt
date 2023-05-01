@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.IsUndefinedCheckContext
 import sigma.syntax.SourceLocation
@@ -24,7 +24,7 @@ data class IsUndefinedCheckTerm(
     }
 
     override fun determineType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): Type = BoolType
 

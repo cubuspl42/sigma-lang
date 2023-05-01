@@ -128,7 +128,7 @@ object UnorderedTupleLiteralTests {
                         }
                     """.trimIndent(),
                 ).determineType(
-                    typeScope = SyntaxTypeScope.Empty,
+                    typeScope = TypeScope.Empty,
                     valueScope = FixedStaticValueScope(
                         mapOf(
                             Symbol.of("value1") to BoolType,

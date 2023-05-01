@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.OrderedTupleLiteralContext
 import sigma.syntax.SourceLocation
@@ -27,7 +27,7 @@ data class OrderedTupleLiteralTerm(
     override fun dump(): String = "(dict constructor)"
 
     override fun determineType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): Type = OrderedTupleType(
         elements = elements.map {

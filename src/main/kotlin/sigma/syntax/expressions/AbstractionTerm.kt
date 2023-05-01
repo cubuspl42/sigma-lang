@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
@@ -13,7 +13,7 @@ import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.Term
 import sigma.values.Closure
-import sigma.values.FixedSyntaxTypeScope
+import sigma.values.FixedTypeScope
 import sigma.values.Symbol
 import sigma.values.tables.Scope
 
@@ -39,7 +39,7 @@ data class AbstractionTerm(
             )
         }
 
-        fun toStaticTypeScope(): SyntaxTypeScope = FixedSyntaxTypeScope(
+        fun toStaticTypeScope(): TypeScope = FixedTypeScope(
             // TODO: Identify type variables
             entries = parameterNames.associateWith { TypeVariable },
         )
@@ -64,14 +64,14 @@ data class AbstractionTerm(
     }
 
     override fun validateAdditionally(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ) = enter(
         typeScope,
         valueScope,
     ) {
             _: TupleType,
-            innerTypeScope: SyntaxTypeScope,
+            innerTypeScope: TypeScope,
             innerValueScope: SyntaxValueScope,
         ->
 
@@ -95,14 +95,14 @@ data class AbstractionTerm(
     }
 
     override fun determineType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): Type = enter(
         typeScope,
         valueScope,
     ) {
             argumentType: TupleType,
-            innerTypeScope: SyntaxTypeScope,
+            innerTypeScope: TypeScope,
             innerValueScope: SyntaxValueScope,
         ->
 
@@ -122,17 +122,17 @@ data class AbstractionTerm(
     }
 
     private fun buildInnerTypeScope(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
     ) = genericParametersTuple?.toStaticTypeScope()?.chainWith(
         backScope = typeScope,
     ) ?: typeScope
 
     private fun <R> enter(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
         block: (
             argumentType: TupleType,
-            innerTypeScope: SyntaxTypeScope,
+            innerTypeScope: TypeScope,
             innerValueScope: SyntaxValueScope,
         ) -> R,
     ): R {

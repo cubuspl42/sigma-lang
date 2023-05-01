@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.FieldReadAltContext
@@ -8,7 +8,7 @@ import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
 import sigma.values.Symbol
-import sigma.values.TypeError
+import sigma.values.TypeErrorException
 import sigma.values.tables.DictTable
 import sigma.values.tables.Scope
 
@@ -28,18 +28,18 @@ data class FieldReadTerm(
     }
 
     override fun determineType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): Type {
         val subjectType = subject.determineType(
             typeScope = typeScope,
             valueScope = valueScope,
-        ) as? UnorderedTupleType ?: throw TypeError(
+        ) as? UnorderedTupleType ?: throw TypeErrorException(
             location = location,
             message = "Fields can be read only from unordered tuples",
         )
 
-        val fieldType = subjectType.getFieldType(key = fieldName) ?: throw TypeError(
+        val fieldType = subjectType.getFieldType(key = fieldName) ?: throw TypeErrorException(
             location = location,
             message = "Key ${fieldName.dump()} is missing ing ${subjectType.dump()}",
         )

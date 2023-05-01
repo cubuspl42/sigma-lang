@@ -1,6 +1,6 @@
 package sigma.syntax
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.values.Symbol
@@ -8,7 +8,7 @@ import sigma.parser.antlr.SigmaParser.DeclarationContext
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.ExpressionTerm
 
-data class DeclarationTerm(
+data class DefinitionTerm(
     override val location: SourceLocation,
     val name: Symbol,
     val valueType: TypeExpressionTerm? = null,
@@ -17,7 +17,7 @@ data class DeclarationTerm(
     companion object {
         fun build(
             ctx: DeclarationContext,
-        ): DeclarationTerm = DeclarationTerm(
+        ): DefinitionTerm = DefinitionTerm(
             location = SourceLocation.build(ctx),
             name = Symbol.of(ctx.name.text),
             valueType = ctx.valueType?.let { TypeExpressionTerm.build(it) },
@@ -26,7 +26,7 @@ data class DeclarationTerm(
     }
 
     override fun validate(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ) {
         value.validate(
@@ -38,7 +38,7 @@ data class DeclarationTerm(
     }
 
     fun determineAssumedType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): Type = determineDeclaredType(
         typeScope = typeScope,
@@ -48,13 +48,13 @@ data class DeclarationTerm(
     )
 
     private fun determineDeclaredType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
     ): Type? = valueType?.evaluate(
         typeScope = typeScope,
     )
 
     fun inferType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): Type = value.determineType(
         typeScope = typeScope,

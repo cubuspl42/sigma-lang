@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
 import sigma.BinaryOperationPrototype
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 
 import sigma.Thunk
@@ -14,7 +14,7 @@ import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariableResolutionError
 import sigma.values.FunctionValue
 import sigma.values.Symbol
-import sigma.values.TypeError
+import sigma.values.TypeErrorException
 import sigma.values.tables.Scope
 
 data class CallTerm(
@@ -72,20 +72,20 @@ data class CallTerm(
     }
 
     override fun validateAdditionally(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ) {
         // TODO: Validate passed argument
     }
 
     override fun determineType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): Type {
         val subjectType = subject.determineType(
             typeScope = typeScope,
             valueScope = valueScope,
-        ) as? FunctionType ?: throw TypeError(
+        ) as? FunctionType ?: throw TypeErrorException(
             location = location,
             message = "Only functions can be called",
         )
@@ -100,7 +100,7 @@ data class CallTerm(
                 assignedType = argumentType
             )
         } catch (e: TypeVariableResolutionError) {
-            throw TypeError(
+            throw TypeErrorException(
                 location = location,
                 message = e.message,
             )

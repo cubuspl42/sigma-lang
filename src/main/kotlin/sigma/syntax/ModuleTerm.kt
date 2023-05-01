@@ -2,8 +2,8 @@ package sigma.syntax
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.SyntaxTypeScope
 import sigma.SyntaxValueScope
+import sigma.TypeScope
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ImportStatementContext
@@ -17,10 +17,10 @@ import sigma.values.tables.Scope
 data class ModuleTerm(
     override val location: SourceLocation,
     val imports: List<Import>,
-    val declarations: List<DeclarationTerm>,
+    val declarations: List<DefinitionTerm>,
 ) : Term() {
     override fun validate(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ) {
         val newValueScope = LoopedStaticValueScope(
@@ -75,7 +75,7 @@ data class ModuleTerm(
                     Import.build(it)
                 },
                 declarations = ctx.moduleBody().declaration().map {
-                    DeclarationTerm.build(it)
+                    DefinitionTerm.build(it)
                 },
             )
         }

@@ -1,13 +1,13 @@
 package sigma.syntax.expressions
 
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.Type
 import sigma.values.Symbol
-import sigma.values.TypeError
+import sigma.values.TypeErrorException
 import sigma.values.tables.Scope
 
 data class ReferenceTerm(
@@ -24,11 +24,11 @@ data class ReferenceTerm(
     }
 
     override fun determineType(
-        typeScope: SyntaxTypeScope,
+        typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): Type = valueScope.getValueType(
         valueName = referee,
-    ) ?: throw TypeError(
+    ) ?: throw TypeErrorException(
         location = location,
         message = "Unresolved reference: $referee"
     )

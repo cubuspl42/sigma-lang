@@ -3,12 +3,12 @@ package sigma.syntax.expressions
 import org.junit.jupiter.api.assertThrows
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
-import sigma.SyntaxTypeScope
+import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.TypeReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
-import sigma.syntax.DeclarationTerm
+import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
 import sigma.values.Symbol
 import kotlin.test.Test
@@ -24,7 +24,7 @@ class LetExpressionTests {
                     localScope = LocalScopeTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         declarations = listOf(
-                            DeclarationTerm(
+                            DefinitionTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 4),
                                 name = Symbol.of("g"),
                                 value = CallTerm(
@@ -39,7 +39,7 @@ class LetExpressionTests {
                                     ),
                                 ),
                             ),
-                            DeclarationTerm(
+                            DefinitionTerm(
                                 location = SourceLocation(lineIndex = 3, columnIndex = 4),
                                 name = Symbol.of("f"),
                                 value = ReferenceTerm(
@@ -80,7 +80,7 @@ class LetExpressionTests {
                     localScope = LocalScopeTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         declarations = listOf(
-                            DeclarationTerm(
+                            DefinitionTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 name = Symbol.of("a"),
                                 valueType = TypeReferenceTerm(
@@ -185,7 +185,7 @@ class LetExpressionTests {
                         } in a
                     """.trimIndent()
                 ).determineType(
-                    typeScope = SyntaxTypeScope.Empty,
+                    typeScope = TypeScope.Empty,
                     valueScope = SyntaxValueScope.Empty,
                 )
             }
