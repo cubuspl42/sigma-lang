@@ -1,11 +1,7 @@
 package sigma.semantics.expressions
 
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
 import sigma.Computation
 import sigma.TypeScope
-import sigma.parser.antlr.SigmaLexer
-import sigma.parser.antlr.SigmaParser
 import sigma.semantics.DeclarationScope
 import sigma.semantics.Entity
 import sigma.semantics.types.Type
@@ -31,7 +27,7 @@ abstract class Expression : Entity() {
         ): Expression = when (term) {
             is AbstractionTerm -> Abstraction.build(
                 outerTypeScope = typeScope,
-                declarationScope = declarationScope,
+                outerDeclarationScope = declarationScope,
                 term = term,
             )
 

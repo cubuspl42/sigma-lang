@@ -4,41 +4,47 @@ import sigma.TypeScope
 import sigma.syntax.DefinitionTerm
 import sigma.values.Symbol
 
+interface DeclarationBlock {
+    companion object {
+        fun looped(
+            build: (DeclarationBlock) -> DeclarationBlock,
+        ): DeclarationBlock = object : DeclarationBlock {
+            val resultBlock = build(this)
+
+            override fun getDeclaration(name: Symbol): Declaration? =
+                resultBlock.getDeclaration(name = name)
+        }.resultBlock
+    }
+
+    fun getDeclaration(name: Symbol): Declaration?
+}
+
 class DefinitionBlock(
     private val typeScope: TypeScope,
-    private val outerDeclarationScope: DeclarationScope,
+    private val declarationScope: DeclarationScope,
     private val declarations: List<DefinitionTerm>,
-) : DeclarationScope, Entity() {
+) : DeclarationBlock {
     companion object {
         fun build(
             typeScope: TypeScope,
             outerDeclarationScope: DeclarationScope,
-            declarations: List<DefinitionTerm>,
+            definitions: List<DefinitionTerm>,
         ): DefinitionBlock = DefinitionBlock(
             typeScope = typeScope,
-            outerDeclarationScope = outerDeclarationScope,
-            declarations = declarations,
+            declarationScope = outerDeclarationScope,
+            declarations = definitions,
         )
     }
 
     private val definitionByName = declarations.associate {
         it.name to Definition.build(
             typeScope = typeScope,
-            declarationScope = this,
+            declarationScope = declarationScope,
             term = it,
         )
     }
 
+    override fun getDeclaration(name: Symbol): Declaration? = getDefinition(name = name)
+
     fun getDefinition(name: Symbol): Definition? = definitionByName[name]
-
-    override fun resolveDeclaration(
-        name: Symbol,
-    ): Declaration? = getDefinition(
-        name = name,
-    ) ?: outerDeclarationScope.resolveDeclaration(
-        name = name,
-    )
-
-    override val errors: Set<SemanticError>
-        get() = TODO("Not yet implemented")
 }
