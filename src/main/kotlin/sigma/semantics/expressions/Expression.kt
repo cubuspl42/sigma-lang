@@ -66,7 +66,11 @@ abstract class Expression : Entity() {
                 term = term,
             )
 
-            is DictLiteralTerm -> TODO()
+            is DictLiteralTerm -> DictLiteral.build(
+                typeScope = typeScope,
+                declarationScope = declarationScope,
+                term = term,
+            )
         }
 
         fun parse(
