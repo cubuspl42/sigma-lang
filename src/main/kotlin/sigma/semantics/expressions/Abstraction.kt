@@ -30,7 +30,7 @@ class Abstraction(
 
     class ArgumentDeclarationBlock(
         argumentDeclarations: List<ArgumentDeclaration>,
-    ) : DeclarationBlock {
+    ) : DeclarationBlock() {
         private val declarationByName = argumentDeclarations.associateBy { it.name }
 
         override fun getDeclaration(name: Symbol): Declaration? = declarationByName[name]

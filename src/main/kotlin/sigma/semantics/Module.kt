@@ -2,6 +2,8 @@ package sigma.semantics
 
 import sigma.TypeScope
 import sigma.syntax.ModuleTerm
+import sigma.values.Value
+import sigma.values.tables.Scope
 
 class Module(
     private val term: ModuleTerm,
@@ -21,6 +23,16 @@ class Module(
                     term = it,
                 )
             }.toSet(),
+        )
+    }
+
+    fun evaluateDeclaration(
+        name: String,
+        scope: Scope,
+    ): Value {
+        return term.evaluateDeclaration(
+            name = name,
+            scope = scope,
         )
     }
 

@@ -4,11 +4,11 @@ import sigma.TypeScope
 import sigma.syntax.DefinitionTerm
 import sigma.values.Symbol
 
-interface DeclarationBlock {
+abstract class DeclarationBlock : DeclarationScope {
     companion object {
         fun looped(
             build: (DeclarationBlock) -> DeclarationBlock,
-        ): DeclarationBlock = object : DeclarationBlock {
+        ): DeclarationBlock = object : DeclarationBlock() {
             val resultBlock = build(this)
 
             override fun getDeclaration(name: Symbol): Declaration? =
@@ -16,14 +16,17 @@ interface DeclarationBlock {
         }.resultBlock
     }
 
-    fun getDeclaration(name: Symbol): Declaration?
+    abstract fun getDeclaration(name: Symbol): Declaration?
+
+    final override fun resolveDeclaration(name: Symbol): Declaration? =
+        getDeclaration(name = name)
 }
 
 class DefinitionBlock(
     private val typeScope: TypeScope,
     private val declarationScope: DeclarationScope,
     private val declarations: List<DefinitionTerm>,
-) : DeclarationBlock {
+) : DeclarationBlock() {
     companion object {
         fun build(
             typeScope: TypeScope,
