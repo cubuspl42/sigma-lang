@@ -1,9 +1,8 @@
 package sigma
 
-import sigma.values.Symbol
-import sigma.values.tables.Table
-import sigma.values.Value
-import sigma.values.tables.Scope
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.tables.Scope
 
 class ArgumentTable(
     private val name: Symbol,

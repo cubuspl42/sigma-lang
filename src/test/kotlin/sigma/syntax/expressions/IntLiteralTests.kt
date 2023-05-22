@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
 import sigma.syntax.SourceLocation
-import sigma.values.IntValue
+import sigma.evaluation.values.IntValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

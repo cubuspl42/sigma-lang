@@ -6,10 +6,10 @@ import sigma.Thunk
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeLiteralContext
 import sigma.semantics.types.OrderedTupleType
-import sigma.values.IntValue
-import sigma.values.Symbol
-import sigma.values.tables.Scope
-import sigma.values.tables.Table
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.values.tables.Table
 
 data class OrderedTupleTypeLiteralTerm(
     override val location: SourceLocation,

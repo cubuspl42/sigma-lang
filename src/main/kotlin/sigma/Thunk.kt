@@ -1,6 +1,6 @@
 package sigma
 
-import sigma.values.Value
+import sigma.evaluation.values.Value
 
 abstract class Thunk {
     override fun equals(other: Any?): Boolean {

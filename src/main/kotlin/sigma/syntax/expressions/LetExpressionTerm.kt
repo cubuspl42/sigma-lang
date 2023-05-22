@@ -5,7 +5,7 @@ import sigma.SyntaxValueScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
 import sigma.syntax.SourceLocation
-import sigma.values.tables.Scope
+import sigma.evaluation.values.tables.Scope
 import sigma.semantics.types.Type
 
 data class LetExpressionTerm(

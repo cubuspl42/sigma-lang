@@ -6,8 +6,8 @@ import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.ArrayTypeLiteralTerm
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
-import sigma.values.FixedTypeScope
-import sigma.values.Symbol
+import sigma.evaluation.values.FixedTypeScope
+import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -1,8 +1,8 @@
 package sigma.semantics.types
 
-import sigma.values.IntValue
-import sigma.values.PrimitiveValue
-import sigma.values.Symbol
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.PrimitiveValue
+import sigma.evaluation.values.Symbol
 
 sealed class Type {
     final override fun toString(): String = dump()

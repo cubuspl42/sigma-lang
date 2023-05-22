@@ -1,10 +1,10 @@
-package sigma.values.tables
+package sigma.evaluation.values.tables
 
 import sigma.Thunk
-import sigma.values.IntValue
-import sigma.values.PrimitiveValue
-import sigma.values.Symbol
-import sigma.values.Value
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.PrimitiveValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 
 data class DictTable(
     private val entries: Map<PrimitiveValue, Thunk>,

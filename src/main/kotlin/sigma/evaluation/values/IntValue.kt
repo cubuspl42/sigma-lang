@@ -1,7 +1,7 @@
-package sigma.values
+package sigma.evaluation.values
 
 import sigma.BinaryOperationPrototype
-import sigma.values.tables.Table
+import sigma.evaluation.values.tables.Table
 
 data class IntValue(
     val value: Long,
@@ -67,7 +67,7 @@ data class IntValue(
 
     object Sq : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
-            val arg = (argument as Table).read(IntValue.Zero)!!.toEvaluatedValue as IntValue
+            val arg = (argument as Table).read(Zero)!!.toEvaluatedValue as IntValue
 
             return IntValue(arg.value * arg.value)
         }

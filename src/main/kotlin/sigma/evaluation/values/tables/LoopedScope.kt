@@ -1,8 +1,8 @@
-package sigma.values.tables
+package sigma.evaluation.values.tables
 
 import sigma.Thunk
 import sigma.syntax.expressions.ExpressionTerm
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 class LoopedScope(
     private val context: Scope,

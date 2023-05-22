@@ -7,9 +7,9 @@ import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.IntLiteralType
 import sigma.semantics.types.Type
-import sigma.values.IntValue
-import sigma.values.Value
-import sigma.values.tables.Scope
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.tables.Scope
 
 data class IntLiteralTerm(
     override val location: SourceLocation,

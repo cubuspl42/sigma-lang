@@ -9,7 +9,7 @@ import sigma.semantics.types.Type
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.OrderedTupleLiteralTerm
 import sigma.syntax.expressions.UnorderedTupleLiteralTerm
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 class UnorderedTupleLiteral(
     override val term: UnorderedTupleLiteralTerm,

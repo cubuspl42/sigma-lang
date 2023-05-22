@@ -3,8 +3,8 @@ package sigma
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.semantics.types.Type
-import sigma.values.Symbol
-import sigma.values.TypeErrorException
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.TypeErrorException
 
 data class TypeReferenceTerm(
     override val location: SourceLocation,

@@ -5,7 +5,7 @@ import sigma.semantics.Declaration
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 class FakeDeclaration(
     override val name: Symbol,

@@ -6,12 +6,12 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.UnorderedTupleLiteralContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.UnorderedTupleType
-import sigma.values.PrimitiveValue
-import sigma.values.tables.DictTable
-import sigma.values.tables.Scope
+import sigma.evaluation.values.PrimitiveValue
+import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.tables.Scope
 import sigma.semantics.types.Type
-import sigma.values.Symbol
-import sigma.values.TypeErrorException
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.TypeErrorException
 
 data class UnorderedTupleLiteralTerm(
     override val location: SourceLocation,

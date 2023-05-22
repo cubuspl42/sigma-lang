@@ -1,6 +1,6 @@
 package sigma.semantics
 
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 interface DeclarationScope {
 

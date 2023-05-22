@@ -6,9 +6,9 @@ import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.Type
-import sigma.values.Symbol
-import sigma.values.TypeErrorException
-import sigma.values.tables.Scope
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.TypeErrorException
+import sigma.evaluation.values.tables.Scope
 
 data class ReferenceTerm(
     override val location: SourceLocation,

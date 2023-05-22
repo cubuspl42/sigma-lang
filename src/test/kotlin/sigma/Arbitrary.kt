@@ -4,7 +4,7 @@ import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.UnorderedTupleType
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 object Arbitrary {
     val unorderedTupleType = UnorderedTupleType(

@@ -6,7 +6,7 @@ import sigma.BuiltinTypeScope
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.syntax.ModuleTerm
-import sigma.values.Value
+import sigma.evaluation.values.Value
 
 class Program internal constructor(
     private val prelude: Prelude,

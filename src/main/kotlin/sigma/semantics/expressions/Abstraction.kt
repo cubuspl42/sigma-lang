@@ -11,7 +11,7 @@ import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.expressions.AbstractionTerm
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 class Abstraction(
     private val outerTypeScope: TypeScope,

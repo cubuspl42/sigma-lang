@@ -2,7 +2,7 @@ package sigma.semantics
 
 import sigma.TypeScope
 import sigma.syntax.DefinitionTerm
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 abstract class DeclarationBlock : DeclarationScope {
     companion object {

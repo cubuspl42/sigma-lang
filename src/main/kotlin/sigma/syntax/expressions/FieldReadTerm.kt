@@ -7,10 +7,10 @@ import sigma.parser.antlr.SigmaParser.FieldReadAltContext
 import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
-import sigma.values.Symbol
-import sigma.values.TypeErrorException
-import sigma.values.tables.DictTable
-import sigma.values.tables.Scope
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.TypeErrorException
+import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.tables.Scope
 
 data class FieldReadTerm(
     override val location: SourceLocation,

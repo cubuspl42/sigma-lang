@@ -8,8 +8,8 @@ import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
 import sigma.syntax.expressions.ExpressionTerm
-import sigma.values.FixedStaticValueScope
-import sigma.values.Symbol
+import sigma.evaluation.values.FixedStaticValueScope
+import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

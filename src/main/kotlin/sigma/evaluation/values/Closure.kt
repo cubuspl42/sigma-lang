@@ -1,11 +1,11 @@
-package sigma.values
+package sigma.evaluation.values
 
 import sigma.Thunk
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
-import sigma.values.tables.Scope
-import sigma.values.tables.Table
-import sigma.values.tables.chainWith
+import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.values.tables.Table
+import sigma.evaluation.values.tables.chainWith
 
 class Closure(
     private val context: Scope,

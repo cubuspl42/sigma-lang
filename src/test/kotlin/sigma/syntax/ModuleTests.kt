@@ -5,8 +5,8 @@ import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.IntLiteralTerm
 import sigma.syntax.expressions.UnorderedTupleLiteralTerm
 import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
-import sigma.values.IntValue
-import sigma.values.Symbol
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

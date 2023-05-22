@@ -18,8 +18,8 @@ import sigma.syntax.expressions.LetExpressionTerm
 import sigma.syntax.expressions.ReferenceTerm
 import sigma.syntax.expressions.SymbolLiteralTerm
 import sigma.syntax.expressions.TupleLiteralTerm
-import sigma.values.Value
-import sigma.values.tables.Scope
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.tables.Scope
 
 abstract class Expression : Entity() {
     companion object {
