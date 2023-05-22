@@ -1,6 +1,7 @@
 package sigma.semantics.types
 
 import sigma.SyntaxValueScope
+import sigma.semantics.expressions.Abstraction
 import sigma.values.Symbol
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
@@ -57,6 +58,15 @@ data class UnorderedTupleType(
     override fun toStaticValueScope(): SyntaxValueScope = object : SyntaxValueScope {
         override fun getValueType(valueName: Symbol): Type? = valueTypeByName[valueName]
     }
+
+    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentDeclarationBlock = Abstraction.ArgumentDeclarationBlock(
+        argumentDeclarations = valueTypeByName.map { (name, type) ->
+            Abstraction.ArgumentDeclaration(
+                name = name,
+                type = type,
+            )
+        },
+    )
 
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,

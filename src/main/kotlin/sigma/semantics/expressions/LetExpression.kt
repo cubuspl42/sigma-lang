@@ -19,18 +19,30 @@ data class LetExpression(
             outerDeclarationScope: DeclarationScope,
             term: LetExpressionTerm,
         ): LetExpression {
-            val definitionBlock = DefinitionBlock.build(
-                typeScope = typeScope,
-                outerDeclarationScope = outerDeclarationScope,
-                declarations = term.localScope.declarations,
-            )
+            val (definitionBlock, innerDeclarationScope) = DeclarationScope.looped { innerDeclarationScopeLooped ->
+                val definitionBlock = DefinitionBlock.build(
+                    typeScope = typeScope,
+                    outerDeclarationScope = innerDeclarationScopeLooped,
+                    definitions = term.localScope.declarations,
+                )
+
+                val innerDeclarationScope = DeclarationScope.Chained(
+                    outerScope = outerDeclarationScope,
+                    declarationBlock = definitionBlock,
+                )
+
+                return@looped Pair(
+                    definitionBlock,
+                    innerDeclarationScope,
+                )
+            }
 
             return LetExpression(
                 term = term,
                 definitionBlock = definitionBlock,
                 result = Expression.build(
                     typeScope = typeScope,
-                    declarationScope = definitionBlock,
+                    declarationScope = innerDeclarationScope,
                     term = term.result,
                 ),
             )
