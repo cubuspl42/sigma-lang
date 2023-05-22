@@ -171,7 +171,7 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
         name = valueName,
     )?.type
 
-    override fun get(
+    override fun getValue(
         name: Symbol,
     ): Value? = getBuiltin(
         name = name,

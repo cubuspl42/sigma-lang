@@ -3,14 +3,14 @@ package sigma.semantics.expressions
 import sigma.Computation
 import sigma.TypeScope
 import sigma.semantics.DeclarationScope
-import sigma.semantics.DefinitionBlock
+import sigma.semantics.LocalDefinitionBlock
 import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.LetExpressionTerm
 
 data class LetExpression(
     override val term: LetExpressionTerm,
-    val definitionBlock: DefinitionBlock,
+    val definitionBlock: LocalDefinitionBlock,
     val result: Expression,
 ) : Expression() {
     companion object {
@@ -20,15 +20,14 @@ data class LetExpression(
             term: LetExpressionTerm,
         ): LetExpression {
             val (definitionBlock, innerDeclarationScope) = DeclarationScope.looped { innerDeclarationScopeLooped ->
-                val definitionBlock = DefinitionBlock.build(
+                val definitionBlock = LocalDefinitionBlock.build(
                     typeScope = typeScope,
                     outerDeclarationScope = innerDeclarationScopeLooped,
                     definitions = term.localScope.declarations,
                 )
 
-                val innerDeclarationScope = DeclarationScope.Chained(
+                val innerDeclarationScope = definitionBlock.chainWith(
                     outerScope = outerDeclarationScope,
-                    declarationBlock = definitionBlock,
                 )
 
                 return@looped Pair(

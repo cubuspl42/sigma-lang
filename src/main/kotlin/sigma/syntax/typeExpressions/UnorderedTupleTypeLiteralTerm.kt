@@ -55,6 +55,6 @@ data class UnorderedTupleTypeLiteralTerm(
     )
 
     override fun toArgumentScope(argument: Table): Scope = object : Scope {
-        override fun get(name: Symbol): Thunk? = argument.read(name)
+        override fun getValue(name: Symbol): Thunk? = argument.read(name)
     }
 }

@@ -8,7 +8,7 @@ class ArgumentTable(
     private val name: Symbol,
     private val value: Value,
 ) : Scope {
-    override fun get(
+    override fun getValue(
         name: Symbol,
     ): Value? = value.takeIf { name == this.name }
 }

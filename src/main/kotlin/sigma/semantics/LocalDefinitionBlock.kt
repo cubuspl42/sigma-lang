@@ -20,19 +20,42 @@ abstract class DeclarationBlock : DeclarationScope {
 
     final override fun resolveDeclaration(name: Symbol): Declaration? =
         getDeclaration(name = name)
+
+    fun chainWith(outerScope: DeclarationScope): DeclarationScope = DeclarationScope.Chained(
+        outerScope = outerScope,
+        declarationBlock = this,
+    )
 }
 
-class DefinitionBlock(
-    private val typeScope: TypeScope,
-    private val declarationScope: DeclarationScope,
-    private val declarations: List<DefinitionTerm>,
-) : DeclarationBlock() {
+abstract class DefinitionBlock : DeclarationBlock() {
     companion object {
         fun build(
             typeScope: TypeScope,
             outerDeclarationScope: DeclarationScope,
             definitions: List<DefinitionTerm>,
-        ): DefinitionBlock = DefinitionBlock(
+        ): LocalDefinitionBlock = LocalDefinitionBlock(
+            typeScope = typeScope,
+            declarationScope = outerDeclarationScope,
+            declarations = definitions,
+        )
+    }
+
+    override fun getDeclaration(name: Symbol): Declaration? = getDefinition(name = name)
+
+    abstract fun getDefinition(name: Symbol): Definition?
+}
+
+class LocalDefinitionBlock(
+    private val typeScope: TypeScope,
+    private val declarationScope: DeclarationScope,
+    private val declarations: List<DefinitionTerm>,
+) : DefinitionBlock() {
+    companion object {
+        fun build(
+            typeScope: TypeScope,
+            outerDeclarationScope: DeclarationScope,
+            definitions: List<DefinitionTerm>,
+        ): LocalDefinitionBlock = LocalDefinitionBlock(
             typeScope = typeScope,
             declarationScope = outerDeclarationScope,
             declarations = definitions,
@@ -40,7 +63,7 @@ class DefinitionBlock(
     }
 
     private val definitionByName = declarations.associate {
-        it.name to Definition.build(
+        it.name to LocalDefinition.build(
             typeScope = typeScope,
             declarationScope = declarationScope,
             term = it,
@@ -49,5 +72,5 @@ class DefinitionBlock(
 
     override fun getDeclaration(name: Symbol): Declaration? = getDefinition(name = name)
 
-    fun getDefinition(name: Symbol): Definition? = definitionByName[name]
+    override fun getDefinition(name: Symbol): LocalDefinition? = definitionByName[name]
 }

@@ -44,13 +44,11 @@ class Project {
             )
 
             val module = Module.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = prelude.definitionBlock,
+                prelude = prelude,
                 term = moduleTerm,
             )
 
             return Program(
-                prelude = prelude,
                 module = module,
             )
         }
