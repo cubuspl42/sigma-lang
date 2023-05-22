@@ -30,7 +30,7 @@ import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.semantics.types.Type
 import sigma.syntax.Term
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 sealed class ExpressionTerm : Term() {
     companion object {

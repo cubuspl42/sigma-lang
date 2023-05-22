@@ -15,7 +15,7 @@ import sigma.semantics.types.TypeVariableResolutionError
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 data class CallTerm(
     override val location: SourceLocation,

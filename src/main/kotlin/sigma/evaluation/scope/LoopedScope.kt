@@ -1,4 +1,4 @@
-package sigma.evaluation.values.tables
+package sigma.evaluation.scope
 
 import sigma.Thunk
 import sigma.syntax.expressions.ExpressionTerm

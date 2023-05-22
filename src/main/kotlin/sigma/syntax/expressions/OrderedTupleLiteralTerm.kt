@@ -5,7 +5,7 @@ import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.OrderedTupleLiteralContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.OrderedTupleType
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 import sigma.semantics.types.Type
 import sigma.evaluation.values.tables.ArrayTable
 

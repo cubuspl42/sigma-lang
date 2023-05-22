@@ -1,21 +1,12 @@
 package sigma.semantics.expressions
 
 import sigma.TypeScope
-import sigma.SyntaxValueScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.OrderedTupleLiteralTerm
-import sigma.syntax.expressions.UnorderedTupleLiteralTerm
-import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.FixedStaticValueScope
-import sigma.evaluation.values.IntValue
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.tables.ArrayTable
-import sigma.evaluation.values.tables.FixedScope
-import sigma.evaluation.values.tables.Scope
 import utils.FakeDeclarationScope
 import kotlin.test.Test
 import kotlin.test.assertEquals

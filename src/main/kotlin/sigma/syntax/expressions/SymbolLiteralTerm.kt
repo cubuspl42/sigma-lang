@@ -9,7 +9,7 @@ import sigma.semantics.types.SymbolType
 import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 data class SymbolLiteralTerm(
     override val location: SourceLocation,

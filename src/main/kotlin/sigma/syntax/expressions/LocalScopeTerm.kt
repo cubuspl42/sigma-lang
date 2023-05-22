@@ -8,8 +8,8 @@ import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
 import sigma.syntax.Term
 import sigma.evaluation.values.LoopedStaticValueScope
-import sigma.evaluation.values.tables.LoopedScope
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.LoopedScope
+import sigma.evaluation.scope.Scope
 
 data class LocalScopeTerm(
     override val location: SourceLocation,

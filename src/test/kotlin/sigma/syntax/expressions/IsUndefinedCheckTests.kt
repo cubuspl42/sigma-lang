@@ -7,8 +7,8 @@ import sigma.semantics.types.BoolType
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.tables.DictTable
-import sigma.evaluation.values.tables.FixedScope
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.FixedScope
+import sigma.evaluation.scope.Scope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -3,9 +3,8 @@ package sigma.semantics
 import getResourceAsText
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
-import sigma.SyntaxValueScope
 import sigma.syntax.expressions.LocalScopeTerm
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 data class Prelude(
     val definitionBlock: DefinitionBlock,

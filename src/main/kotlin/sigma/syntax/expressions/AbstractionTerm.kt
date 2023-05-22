@@ -15,7 +15,7 @@ import sigma.syntax.Term
 import sigma.evaluation.values.Closure
 import sigma.evaluation.values.FixedTypeScope
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 data class AbstractionTerm(
     override val location: SourceLocation,
