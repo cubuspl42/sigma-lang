@@ -1,6 +1,6 @@
 package sigma
 
-abstract class Computation<out A : Any> {
+abstract class Computation<out A> {
     sealed interface Result<out A> {
         data class Computed<A>(
             val value: A,
@@ -43,7 +43,7 @@ abstract class Computation<out A : Any> {
             ): Result<A> = Result.Computed(value = value)
         }
 
-        fun <A : Any, B : Any, C : Any> combine2(
+        fun <A : Any, B : Any, C> combine2(
             computation1: Computation<A>,
             computation2: Computation<B>,
             combine: (A, B) -> C,
@@ -116,6 +116,7 @@ abstract class Computation<out A : Any> {
     private lateinit var cachedResult: Result<A>
 
     protected abstract fun computeDirectly(innerContext: Context): Result<A>
+
     fun <B : Any> thenJust(
         transform: (A) -> B,
     ): Computation<B> = object : Computation<B>() {

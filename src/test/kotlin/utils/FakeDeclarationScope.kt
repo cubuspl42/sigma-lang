@@ -6,6 +6,7 @@ import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
+import sigma.semantics.DeclarationBlock
 
 class FakeDeclaration(
     override val name: Symbol,
@@ -19,7 +20,7 @@ class FakeDeclaration(
 
 class FakeDeclarationScope(
     typeByName: Map<String, Type>,
-) : DeclarationScope {
+) : DeclarationBlock() {
     private val declarationByScope = typeByName.entries.associate { (name, type) ->
         val nameSymbol = Symbol.of(name)
 
@@ -29,5 +30,5 @@ class FakeDeclarationScope(
         )
     }
 
-    override fun resolveDeclaration(name: Symbol): Declaration? = declarationByScope[name]
+    override fun getDeclaration(name: Symbol): Declaration? = declarationByScope[name]
 }

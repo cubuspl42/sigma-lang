@@ -2,18 +2,19 @@ package sigma.semantics.expressions
 
 import sigma.Computation
 import sigma.TypeScope
-import sigma.parser.antlr.SigmaParser
+import sigma.evaluation.values.PrimitiveValue
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.OrderedTupleLiteralTerm
 import sigma.syntax.expressions.UnorderedTupleLiteralTerm
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.TypeErrorException
+import sigma.semantics.types.IllType
+import sigma.semantics.types.UnorderedTupleType
 
 class UnorderedTupleLiteral(
     override val term: UnorderedTupleLiteralTerm,
-    val elements: List<Entry>,
+    val entries: Set<Entry>,
 ) : TupleLiteral() {
     data class Entry(
         val name: Symbol,
@@ -35,6 +36,16 @@ class UnorderedTupleLiteral(
         }
     }
 
+    sealed interface InferredTypeOutcome
+
+    data class InferredTypeResult(
+        val type: UnorderedTupleType,
+    ) : InferredTypeOutcome
+
+    data class DuplicatedKeyError(
+        val duplicatedKey: PrimitiveValue,
+    ) : InferredTypeOutcome, SemanticError
+
     companion object {
         fun build(
             typeScope: TypeScope,
@@ -42,20 +53,51 @@ class UnorderedTupleLiteral(
             term: UnorderedTupleLiteralTerm,
         ): UnorderedTupleLiteral = UnorderedTupleLiteral(
             term = term,
-            elements = term.entries.map {
+            entries = term.entries.map {
                 Entry.build(
                     typeScope = typeScope,
                     declarationScope = declarationScope,
                     entry = it,
                 )
-            },
+            }.toSet(),
         )
     }
 
-    override val inferredType: Computation<Type>
-        get() = TODO("Not yet implemented")
+    private val inferredTypeOutcome: Computation<InferredTypeOutcome> = Computation.traverseList(
+        entries.toList()
+    ) { entry ->
+        entry.value.inferredType.thenJust { entry.name to it }
+    }.thenJust { entryPairs ->
+        val entryPairByName = entryPairs.groupBy { it.first }
 
-    override val errors: Set<SemanticError>
-        get() = TODO("Not yet implemented")
+        val firstDuplicatedKey =
+            entryPairByName.entries.firstNotNullOfOrNull { (name, entryPairs) -> name.takeIf { entryPairs.size > 1 } }
+
+        if (firstDuplicatedKey == null) {
+            InferredTypeResult(
+                type = UnorderedTupleType(
+                    valueTypeByName = entryPairs.toMap()
+                ),
+            )
+        } else {
+            DuplicatedKeyError(
+                duplicatedKey = firstDuplicatedKey,
+            )
+        }
+
+    }
+
+    override val inferredType: Computation<Type> = inferredTypeOutcome.thenJust {
+        when (it) {
+            is InferredTypeResult -> it.type
+            is DuplicatedKeyError -> IllType
+        }
+    }
+
+    override val errors: Set<SemanticError> by lazy {
+        setOfNotNull(
+            inferredTypeOutcome.value as? DuplicatedKeyError,
+        )
+    }
 }
 
