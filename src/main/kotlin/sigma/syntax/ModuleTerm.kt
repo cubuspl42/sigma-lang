@@ -11,8 +11,8 @@ import sigma.parser.antlr.SigmaParser.ModuleContext
 import sigma.evaluation.values.LoopedStaticValueScope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.LoopedScope
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.LoopedScope
+import sigma.evaluation.scope.Scope
 
 data class ModuleTerm(
     override val location: SourceLocation,

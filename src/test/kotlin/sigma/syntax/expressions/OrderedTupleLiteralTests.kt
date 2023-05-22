@@ -11,8 +11,8 @@ import sigma.evaluation.values.FixedStaticValueScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.tables.ArrayTable
-import sigma.evaluation.values.tables.FixedScope
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.FixedScope
+import sigma.evaluation.scope.Scope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

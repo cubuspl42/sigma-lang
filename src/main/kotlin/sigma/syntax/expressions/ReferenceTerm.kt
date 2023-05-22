@@ -8,7 +8,7 @@ import sigma.syntax.SourceLocation
 import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 data class ReferenceTerm(
     override val location: SourceLocation,

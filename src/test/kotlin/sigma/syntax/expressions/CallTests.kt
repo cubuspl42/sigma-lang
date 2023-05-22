@@ -7,7 +7,7 @@ import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.tables.DictTable
-import sigma.evaluation.values.tables.FixedScope
+import sigma.evaluation.scope.FixedScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

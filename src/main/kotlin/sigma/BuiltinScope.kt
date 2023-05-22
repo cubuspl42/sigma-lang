@@ -1,7 +1,6 @@
 package sigma
 
 import sigma.semantics.BuiltinDefinition
-import sigma.semantics.Definition
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
@@ -16,7 +15,7 @@ import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 interface BuiltinValue {
     val type: Type

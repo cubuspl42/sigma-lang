@@ -10,7 +10,7 @@ import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.evaluation.values.tables.DictTable
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 data class FieldReadTerm(
     override val location: SourceLocation,

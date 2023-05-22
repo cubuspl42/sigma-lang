@@ -9,7 +9,7 @@ import sigma.semantics.types.DictType
 import sigma.semantics.types.PrimitiveType
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.tables.DictTable
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 import sigma.semantics.types.Type
 import sigma.evaluation.values.TypeErrorException
 

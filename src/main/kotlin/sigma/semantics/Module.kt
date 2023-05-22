@@ -3,7 +3,7 @@ package sigma.semantics
 import sigma.TypeScope
 import sigma.syntax.ModuleTerm
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 class Module(
     private val term: ModuleTerm,

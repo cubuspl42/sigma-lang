@@ -8,7 +8,7 @@ import sigma.semantics.types.BoolType
 import sigma.semantics.types.Type
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.UndefinedValue
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 data class IsUndefinedCheckTerm(
     override val location: SourceLocation,

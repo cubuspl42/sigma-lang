@@ -9,7 +9,7 @@ import sigma.semantics.types.IntLiteralType
 import sigma.semantics.types.Type
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 data class IntLiteralTerm(
     override val location: SourceLocation,

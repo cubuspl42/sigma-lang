@@ -2,7 +2,7 @@ package sigma
 
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.scope.Scope
 
 class ArgumentTable(
     private val name: Symbol,
