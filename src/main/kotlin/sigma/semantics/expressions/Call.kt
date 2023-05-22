@@ -34,31 +34,63 @@ class Call(
         )
     }
 
-    sealed interface SubjectCall {
-        class Function(
-            val calleeType: FunctionType,
-        ) : SubjectCall {
-            val errors: Set<SemanticError> = emptySet()
-        }
+    sealed interface SubjectCallOutcome
 
-        class Illegal(
-            val illegalSubjectType: Type,
-        ) : SubjectCall, SemanticError
-    }
+    data class LegalSubjectCallResult(
+        val calleeType: FunctionType,
+    ) : SubjectCallOutcome
 
-    private val subjectCall: Computation<SubjectCall> by lazy {
+    data class IllegalSubjectCallError(
+        val illegalSubjectType: Type,
+    ) : SubjectCallOutcome, SemanticError
+
+    sealed interface ArgumentValidationOutcome
+
+    object ValidArgumentResult : ArgumentValidationOutcome
+
+    object InvalidArgumentError : ArgumentValidationOutcome, SemanticError
+
+    private val subjectCallOutcome: Computation<SubjectCallOutcome> by lazy {
         subject.inferredType.thenJust { subjectType ->
-            if (subjectType is FunctionType) {
-                return@thenJust SubjectCall.Function(calleeType = subjectType)
-            } else {
-                return@thenJust SubjectCall.Illegal(illegalSubjectType = subjectType)
+            when (subjectType) {
+                is FunctionType -> LegalSubjectCallResult(
+                    calleeType = subjectType,
+                )
+
+                else -> IllegalSubjectCallError(
+                    illegalSubjectType = subjectType,
+                )
             }
         }
     }
 
+    private val argumentValidationOutcome: Computation<ArgumentValidationOutcome?> = Computation.combine2(
+        subjectCallOutcome,
+        argument.inferredType,
+    ) {
+            subjectCallOutcome,
+            argumentType,
+        ->
+
+        when (subjectCallOutcome) {
+            is LegalSubjectCallResult -> {
+                val subjectType = subjectCallOutcome.calleeType
+
+                if (argumentType == subjectType.argumentType) {
+                    ValidArgumentResult
+                } else {
+                    InvalidArgumentError
+                }
+
+            }
+
+            is IllegalSubjectCallError -> null
+        }
+    }
+
     override val inferredType: Computation<Type> by lazy {
-        subjectCall.thenJust { subjectCall ->
-            if (subjectCall is SubjectCall.Function) {
+        subjectCallOutcome.thenJust { subjectCall ->
+            if (subjectCall is LegalSubjectCallResult) {
                 subjectCall.calleeType.imageType
             } else {
                 IllType
@@ -67,10 +99,9 @@ class Call(
     }
 
     override val errors: Set<SemanticError> by lazy {
-        when (val it = subjectCall.value) {
-            is SubjectCall.Function -> it.errors
-            is SubjectCall.Illegal -> setOf(it)
-            null -> emptySet()
-        }
+        setOfNotNull(
+            subjectCallOutcome.value as? IllegalSubjectCallError,
+            argumentValidationOutcome.value as? InvalidArgumentError,
+        )
     }
 }

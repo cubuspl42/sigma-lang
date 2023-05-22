@@ -60,29 +60,7 @@ data class UnorderedTupleLiteralTerm(
         typeScope: TypeScope,
         valueScope: SyntaxValueScope,
     ): UnorderedTupleType {
-        val entryTypes = entries.map {
-            val valueType = it.value.determineType(
-                typeScope = typeScope,
-                valueScope = valueScope,
-            )
-
-            EntryType(
-                name = it.name,
-                valueType = valueType,
-            )
-        }
-
-        val entryTypeByName = entryTypes.groupBy { it.name }
-
-        return UnorderedTupleType(
-            valueTypeByName = entryTypeByName.mapValues { (name, entryTypes) ->
-                val entryType = entryTypes.singleOrNull() ?: throw DuplicatedNameError(
-                    duplicatedKey = name,
-                )
-
-                entryType.valueType
-            },
-        )
+        TODO()
     }
 
     override fun evaluate(
