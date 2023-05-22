@@ -8,7 +8,7 @@ import sigma.syntax.expressions.LocalScopeTerm
 import sigma.values.tables.Scope
 
 data class Prelude(
-    val valueScope: SyntaxValueScope,
+    val definitionBlock: DefinitionBlock,
     val scope: Scope,
 ) {
     companion object {
@@ -20,17 +20,26 @@ data class Prelude(
                 source = preludeSource,
             )
 
-            val preludeValueScope = prelude.evaluateStatically(
-                typeScope = BuiltinTypeScope,
-                valueScope = BuiltinScope,
-            )
+            val (definitionBlock, _) = DeclarationScope.looped { innerDeclarationScopeLooped ->
+                val definitionBlock = DefinitionBlock.build(
+                    typeScope = BuiltinTypeScope,
+                    outerDeclarationScope = innerDeclarationScopeLooped,
+                    definitions = prelude.declarations,
+                )
+
+
+                return@looped Pair(
+                    definitionBlock,
+                    definitionBlock,
+                )
+            }
 
             val preludeScope = prelude.evaluateDynamically(
                 scope = BuiltinScope,
             )
 
             return Prelude(
-                valueScope = preludeValueScope,
+                definitionBlock = definitionBlock,
                 scope = preludeScope,
             )
         }

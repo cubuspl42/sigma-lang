@@ -1,5 +1,6 @@
 package sigma.semantics
 
+import sigma.BuiltinTypeScope
 import sigma.syntax.ModuleTerm
 
 class Project {
@@ -35,16 +36,22 @@ class Project {
             val fileName = "${fileBaseName}.sigma"
             val source = store.load(fileName)
 
-            val root = ModuleTerm.build(
+            val moduleTerm = ModuleTerm.build(
                 ctx = Program.buildParser(
                     sourceName = fileName,
                     source = source,
                 ).module(),
             )
 
+            val module = Module.build(
+                typeScope = BuiltinTypeScope,
+                declarationScope = prelude.definitionBlock,
+                term = moduleTerm,
+            )
+
             return Program(
                 prelude = prelude,
-                module = root,
+                module = module,
             )
         }
     }
