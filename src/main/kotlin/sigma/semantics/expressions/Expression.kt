@@ -39,7 +39,11 @@ abstract class Expression : Entity() {
                 term = term,
             )
 
-            is FieldReadTerm -> TODO()
+            is FieldReadTerm -> FieldRead.build(
+                typeScope = typeScope,
+                declarationScope = declarationScope,
+                term = term,
+            )
 
             is IntLiteralTerm -> IntLiteral.build(
                 term = term,
