@@ -14,7 +14,7 @@ import sigma.syntax.expressions.AbstractionTerm
 import sigma.evaluation.values.Symbol
 
 class Abstraction(
-    private val outerTypeScope: TypeScope,
+    private val innerTypeScope: TypeScope,
     override val term: AbstractionTerm,
     val argumentType: TupleType,
     val image: Expression,
@@ -55,11 +55,11 @@ class Abstraction(
             )
 
             return Abstraction(
-                outerTypeScope = outerTypeScope,
+                innerTypeScope = innerTypeScope,
                 term = term,
                 argumentType = argumentType,
                 image = build(
-                    typeScope = outerTypeScope,
+                    typeScope = innerTypeScope,
                     declarationScope = innerDeclarationScope,
                     term = term.image,
                 ),
@@ -69,7 +69,7 @@ class Abstraction(
 
     private val declaredImageType: Type? by lazy {
         term.declaredImageType?.evaluate(
-            typeScope = outerTypeScope,
+            typeScope = innerTypeScope,
         )
     }
 
