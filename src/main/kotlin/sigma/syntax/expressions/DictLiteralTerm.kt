@@ -31,28 +31,6 @@ data class DictLiteralTerm(
         }
     }
 
-    class InconsistentKeyTypesError(
-        inconsistentKeyTypes: Set<Type>,
-        location: SourceLocation,
-    ) : TypeErrorException(
-        location = location,
-        message = "Dict literal keys have different types: ${inconsistentKeyTypes}",
-    )
-
-    class InconsistentValueTypesError(
-        location: SourceLocation,
-    ) : TypeErrorException(
-        location = location,
-        message = "Dict literal values have different types",
-    )
-
-    class NonPrimitiveKeyTypeError(
-        location: SourceLocation,
-    ) : TypeErrorException(
-        location = location,
-        message = "Dict literal key type is not primitive",
-    )
-
     companion object {
         fun build(
             ctx: DictLiteralContext,
@@ -65,34 +43,8 @@ data class DictLiteralTerm(
     }
 
     override fun dump(): String = "(dict literal)"
-
-    override fun determineType(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ): Type {
-        val keyTypes = associations.map {
-            it.key.determineType(typeScope = typeScope, valueScope = valueScope)
-        }.toSet()
-
-        val keyType = (keyTypes.singleOrNull() ?: throw InconsistentKeyTypesError(
-            inconsistentKeyTypes = keyTypes,
-            location = location,
-        )) as? PrimitiveType ?: throw NonPrimitiveKeyTypeError(
-            location = location,
-        )
-
-        val valueTypes = associations.map {
-            it.value.determineType(typeScope = typeScope, valueScope = valueScope)
-        }.toSet()
-
-        val valueType = valueTypes.singleOrNull() ?: throw InconsistentValueTypesError(
-            location = location,
-        )
-
-        return DictType(
-            keyType = keyType,
-            valueType = valueType,
-        )
+    override fun determineType(typeScope: TypeScope, valueScope: SyntaxValueScope): Type {
+        TODO("Not yet implemented")
     }
 
     override fun evaluate(
