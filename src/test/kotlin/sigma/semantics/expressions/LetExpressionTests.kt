@@ -7,7 +7,7 @@ import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntType
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.LetExpressionTerm
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull

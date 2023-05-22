@@ -6,13 +6,13 @@ import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
-import sigma.values.BoolValue
-import sigma.values.FixedStaticValueScope
-import sigma.values.IntValue
-import sigma.values.Symbol
-import sigma.values.tables.ArrayTable
-import sigma.values.tables.FixedScope
-import sigma.values.tables.Scope
+import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.FixedStaticValueScope
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.tables.ArrayTable
+import sigma.evaluation.values.tables.FixedScope
+import sigma.evaluation.values.tables.Scope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

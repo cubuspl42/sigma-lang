@@ -12,9 +12,9 @@ import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm.GenericParametersTuple
 import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
-import sigma.values.IntValue
-import sigma.values.Symbol
-import sigma.values.tables.ArrayTable
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.tables.ArrayTable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

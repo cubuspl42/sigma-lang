@@ -2,8 +2,8 @@ package sigma.semantics
 
 import sigma.TypeScope
 import sigma.syntax.ModuleTerm
-import sigma.values.Value
-import sigma.values.tables.Scope
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.tables.Scope
 
 class Module(
     private val term: ModuleTerm,

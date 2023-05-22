@@ -8,11 +8,11 @@ import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ImportStatementContext
 import sigma.parser.antlr.SigmaParser.ModuleContext
-import sigma.values.LoopedStaticValueScope
-import sigma.values.Symbol
-import sigma.values.Value
-import sigma.values.tables.LoopedScope
-import sigma.values.tables.Scope
+import sigma.evaluation.values.LoopedStaticValueScope
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.tables.LoopedScope
+import sigma.evaluation.values.tables.Scope
 
 data class ModuleTerm(
     override val location: SourceLocation,

@@ -1,4 +1,4 @@
-package sigma.values
+package sigma.evaluation.values
 
 import cutOffFront
 import sigma.Thunk
@@ -8,8 +8,8 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
-import sigma.values.tables.ArrayTable
-import sigma.values.tables.DictTable
+import sigma.evaluation.values.tables.ArrayTable
+import sigma.evaluation.values.tables.DictTable
 
 abstract class FunctionValue : Value() {
     object Link : ComputableFunctionValue() {

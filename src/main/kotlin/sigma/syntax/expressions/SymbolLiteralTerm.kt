@@ -7,9 +7,9 @@ import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.SymbolType
 import sigma.semantics.types.Type
-import sigma.values.Symbol
-import sigma.values.Value
-import sigma.values.tables.Scope
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.tables.Scope
 
 data class SymbolLiteralTerm(
     override val location: SourceLocation,

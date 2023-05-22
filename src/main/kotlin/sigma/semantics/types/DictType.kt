@@ -1,6 +1,6 @@
 package sigma.semantics.types
 
-import sigma.values.TypeErrorException
+import sigma.evaluation.values.TypeErrorException
 
 // Type of tables with keys of a single primitive type and values of a single
 // specific type

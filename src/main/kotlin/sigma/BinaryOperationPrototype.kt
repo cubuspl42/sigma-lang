@@ -2,7 +2,7 @@ package sigma
 
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 data class BinaryOperationPrototype(
     val functionName: String,

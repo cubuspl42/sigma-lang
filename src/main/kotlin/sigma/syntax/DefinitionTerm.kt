@@ -3,7 +3,7 @@ package sigma.syntax
 import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser.DeclarationContext
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.ExpressionTerm

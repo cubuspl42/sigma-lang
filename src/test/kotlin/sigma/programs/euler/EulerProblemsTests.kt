@@ -1,11 +1,11 @@
 package sigma.programs.euler
 
 import sigma.semantics.Project
-import sigma.values.BoolValue
-import sigma.values.IntValue
-import sigma.values.Symbol
-import sigma.values.Value
-import sigma.values.tables.DictTable
+import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.tables.DictTable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

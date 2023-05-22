@@ -5,7 +5,7 @@ import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.SyntaxValueScope
 import sigma.syntax.expressions.LocalScopeTerm
-import sigma.values.tables.Scope
+import sigma.evaluation.values.tables.Scope
 
 data class Prelude(
     val definitionBlock: DefinitionBlock,

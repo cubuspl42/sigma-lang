@@ -5,7 +5,7 @@ import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.DictType
 import sigma.semantics.types.PrimitiveType
-import sigma.values.TypeErrorException
+import sigma.evaluation.values.TypeErrorException
 
 data class DictTypeTerm(
     override val location: SourceLocation,

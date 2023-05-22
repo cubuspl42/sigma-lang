@@ -1,6 +1,6 @@
 package sigma
 
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 import sigma.semantics.types.Type
 
 interface TypeScope {

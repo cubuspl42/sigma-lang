@@ -11,12 +11,12 @@ import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UndefinedType
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.UnorderedTupleType
-import sigma.values.BoolValue
-import sigma.values.FunctionValue
-import sigma.values.IntValue
-import sigma.values.Symbol
-import sigma.values.Value
-import sigma.values.tables.Scope
+import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.FunctionValue
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.tables.Scope
 
 interface BuiltinValue {
     val type: Type

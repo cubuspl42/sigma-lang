@@ -15,7 +15,7 @@ import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.syntax.SourceLocation
 import sigma.syntax.Term
 import sigma.semantics.types.Type
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 abstract class TypeExpressionTerm : Term() {
     companion object {

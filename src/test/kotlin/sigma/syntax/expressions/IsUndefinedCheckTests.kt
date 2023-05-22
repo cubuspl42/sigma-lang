@@ -4,11 +4,11 @@ import sigma.BuiltinTypeScope
 import sigma.SyntaxValueScope
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
-import sigma.values.BoolValue
-import sigma.values.Symbol
-import sigma.values.tables.DictTable
-import sigma.values.tables.FixedScope
-import sigma.values.tables.Scope
+import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.tables.FixedScope
+import sigma.evaluation.values.tables.Scope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

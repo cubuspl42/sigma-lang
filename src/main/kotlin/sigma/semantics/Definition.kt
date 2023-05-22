@@ -5,8 +5,8 @@ import sigma.TypeScope
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.Type
 import sigma.syntax.DefinitionTerm
-import sigma.values.Symbol
-import sigma.values.Value
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 
 abstract class Declaration : Entity() {
     abstract val name: Symbol

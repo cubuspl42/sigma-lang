@@ -5,11 +5,11 @@ import sigma.Thunk
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeLiteralContext
 import sigma.semantics.types.UnorderedTupleType
-import sigma.values.PrimitiveValue
-import sigma.values.Symbol
-import sigma.values.TypeErrorException
-import sigma.values.tables.Scope
-import sigma.values.tables.Table
+import sigma.evaluation.values.PrimitiveValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.TypeErrorException
+import sigma.evaluation.values.tables.Scope
+import sigma.evaluation.values.tables.Table
 
 data class UnorderedTupleTypeLiteralTerm(
     override val location: SourceLocation,

@@ -12,10 +12,10 @@ import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.Term
-import sigma.values.Closure
-import sigma.values.FixedTypeScope
-import sigma.values.Symbol
-import sigma.values.tables.Scope
+import sigma.evaluation.values.Closure
+import sigma.evaluation.values.FixedTypeScope
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.tables.Scope
 
 data class AbstractionTerm(
     override val location: SourceLocation,

@@ -8,8 +8,8 @@ import sigma.syntax.typeExpressions.UnorderedTupleTypeLiteralTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.UnorderedTupleType
-import sigma.values.FixedTypeScope
-import sigma.values.Symbol
+import sigma.evaluation.values.FixedTypeScope
+import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

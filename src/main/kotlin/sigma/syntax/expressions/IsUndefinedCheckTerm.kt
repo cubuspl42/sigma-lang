@@ -6,9 +6,9 @@ import sigma.parser.antlr.SigmaParser.IsUndefinedCheckContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.Type
-import sigma.values.BoolValue
-import sigma.values.UndefinedValue
-import sigma.values.tables.Scope
+import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.UndefinedValue
+import sigma.evaluation.values.tables.Scope
 
 data class IsUndefinedCheckTerm(
     override val location: SourceLocation,

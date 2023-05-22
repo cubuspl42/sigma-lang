@@ -4,7 +4,7 @@ import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.semantics.types.IntLiteralType
-import sigma.values.IntValue
+import sigma.evaluation.values.IntValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

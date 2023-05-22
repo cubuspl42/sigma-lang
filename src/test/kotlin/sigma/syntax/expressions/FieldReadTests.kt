@@ -8,12 +8,12 @@ import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
-import sigma.values.FixedStaticValueScope
-import sigma.values.IntValue
-import sigma.values.Symbol
-import sigma.values.TypeErrorException
-import sigma.values.tables.DictTable
-import sigma.values.tables.FixedScope
+import sigma.evaluation.values.FixedStaticValueScope
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.TypeErrorException
+import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.tables.FixedScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

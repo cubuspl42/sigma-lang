@@ -1,4 +1,4 @@
-package sigma.values
+package sigma.evaluation.values
 
 data class Symbol(
     val name: String,

@@ -10,7 +10,7 @@ import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

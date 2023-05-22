@@ -2,7 +2,7 @@ package sigma.semantics.types
 
 import sigma.SyntaxValueScope
 import sigma.semantics.expressions.Abstraction
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 data class OrderedTupleType(
     val elements: List<Element>,

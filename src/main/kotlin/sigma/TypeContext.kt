@@ -3,7 +3,7 @@ package sigma
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.Type
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 private val builtinTypes = mapOf(
     Symbol.of("Bool") to BoolType,

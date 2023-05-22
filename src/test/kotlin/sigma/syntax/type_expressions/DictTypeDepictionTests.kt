@@ -8,7 +8,7 @@ import sigma.syntax.typeExpressions.DictTypeTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

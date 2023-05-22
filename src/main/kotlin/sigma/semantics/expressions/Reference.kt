@@ -8,7 +8,7 @@ import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ReferenceTerm
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 class Reference(
     private val declarationScope: DeclarationScope,

@@ -12,10 +12,10 @@ import sigma.syntax.SourceLocation
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariableResolutionError
-import sigma.values.FunctionValue
-import sigma.values.Symbol
-import sigma.values.TypeErrorException
-import sigma.values.tables.Scope
+import sigma.evaluation.values.FunctionValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.TypeErrorException
+import sigma.evaluation.values.tables.Scope
 
 data class CallTerm(
     override val location: SourceLocation,

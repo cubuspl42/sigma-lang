@@ -14,7 +14,7 @@ import sigma.semantics.types.Type
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.expressions.CallTerm
 import sigma.syntax.expressions.ExpressionTerm
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 import utils.FakeDeclarationScope
 import kotlin.test.Test
 import kotlin.test.assertIs

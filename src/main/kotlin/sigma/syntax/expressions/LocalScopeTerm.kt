@@ -7,9 +7,9 @@ import sigma.parser.antlr.SigmaParser
 import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
 import sigma.syntax.Term
-import sigma.values.LoopedStaticValueScope
-import sigma.values.tables.LoopedScope
-import sigma.values.tables.Scope
+import sigma.evaluation.values.LoopedStaticValueScope
+import sigma.evaluation.values.tables.LoopedScope
+import sigma.evaluation.values.tables.Scope
 
 data class LocalScopeTerm(
     override val location: SourceLocation,

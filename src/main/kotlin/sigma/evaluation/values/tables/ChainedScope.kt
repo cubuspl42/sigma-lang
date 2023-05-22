@@ -1,7 +1,7 @@
-package sigma.values.tables
+package sigma.evaluation.values.tables
 
 import sigma.Thunk
-import sigma.values.Symbol
+import sigma.evaluation.values.Symbol
 
 class ChainedScope(
     private val context: Scope,

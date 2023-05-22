@@ -2,12 +2,12 @@ package sigma.syntax.expressions
 
 import sigma.Thunk
 import sigma.syntax.SourceLocation
-import sigma.values.ComputableFunctionValue
-import sigma.values.IntValue
-import sigma.values.Symbol
-import sigma.values.Value
-import sigma.values.tables.DictTable
-import sigma.values.tables.FixedScope
+import sigma.evaluation.values.ComputableFunctionValue
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.tables.FixedScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

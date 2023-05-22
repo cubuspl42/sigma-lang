@@ -1,6 +1,6 @@
 package sigma.semantics.types
 
-import sigma.values.TypeErrorException
+import sigma.evaluation.values.TypeErrorException
 
 data class UniversalFunctionType(
     override val argumentType: TupleType,
