@@ -26,7 +26,7 @@ data class IsUndefinedCheckTerm(
     override fun determineType(
         typeScope: TypeScope,
         valueScope: SyntaxValueScope,
-    ): Type = BoolType
+    ): Type = TODO()
 
     override fun evaluate(
         scope: Scope,
