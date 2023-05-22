@@ -39,6 +39,6 @@ jobs:
           accessToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build & test the Gradle project
-        uses: gradle/gradle-build-action@v2.3.0
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: test
