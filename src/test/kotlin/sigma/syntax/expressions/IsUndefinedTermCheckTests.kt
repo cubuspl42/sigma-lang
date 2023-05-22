@@ -12,7 +12,7 @@ import sigma.evaluation.scope.Scope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class IsUndefinedCheckTests {
+class IsUndefinedTermCheckTests {
     object ParsingTests {
         @Test
         fun test() {
@@ -26,21 +26,6 @@ class IsUndefinedCheckTests {
                 ),
                 actual = ExpressionTerm.parse(
                     source = "isUndefined foo",
-                ),
-            )
-        }
-    }
-
-    object TypeCheckingTests {
-        @Test
-        fun test() {
-            assertEquals(
-                expected = BoolType,
-                actual = ExpressionTerm.parse(
-                    source = "isUndefined foo",
-                ).determineType(
-                    typeScope = BuiltinTypeScope,
-                    valueScope = SyntaxValueScope.Empty,
                 ),
             )
         }

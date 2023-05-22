@@ -45,7 +45,11 @@ abstract class Expression : Entity() {
                 term = term,
             )
 
-            is IsUndefinedCheckTerm -> TODO()
+            is IsUndefinedCheckTerm -> IsUndefinedCheck.build(
+                typeScope = typeScope,
+                declarationScope = declarationScope,
+                term = term,
+            )
 
             is LetExpressionTerm -> LetExpression.build(
                 typeScope = typeScope,
