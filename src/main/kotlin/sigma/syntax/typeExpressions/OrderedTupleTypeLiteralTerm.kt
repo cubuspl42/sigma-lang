@@ -48,7 +48,7 @@ data class OrderedTupleTypeLiteralTerm(
     )
 
     override fun toArgumentScope(argument: Table): Scope = object : Scope {
-        override fun get(name: Symbol): Thunk? {
+        override fun getValue(name: Symbol): Thunk? {
             val index = elements.indexOfOrNull { it.name == name } ?: return null
 
             return argument.read(IntValue(value = index.toLong()))

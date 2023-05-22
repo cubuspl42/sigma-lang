@@ -8,11 +8,11 @@ class LoopedScope(
     private val context: Scope,
     private val declarations: Map<Symbol, ExpressionTerm>,
 ) : Scope {
-    override fun get(
+    override fun getValue(
         name: Symbol,
     ): Thunk? = declarations[name]?.evaluate(
         scope = this,
-    ) ?: context.get(
+    ) ?: context.getValue(
         name = name,
     )
 }

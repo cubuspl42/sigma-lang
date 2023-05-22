@@ -7,11 +7,11 @@ class ChainedScope(
     private val context: Scope,
     private val scope: Scope,
 ) : Scope {
-    override fun get(
+    override fun getValue(
         name: Symbol,
-    ): Thunk? = scope.get(
+    ): Thunk? = scope.getValue(
         name = name,
-    ) ?: context.get(
+    ) ?: context.getValue(
         name = name,
     )
 }

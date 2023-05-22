@@ -48,7 +48,7 @@ data class ModuleTerm(
             },
         )
 
-        val thunk = newScope.get(
+        val thunk = newScope.getValue(
             name = Symbol.of(name),
         ) ?: throw IllegalStateException("Can't find symbol `${name}`")
 

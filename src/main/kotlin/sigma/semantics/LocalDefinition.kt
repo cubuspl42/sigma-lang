@@ -24,38 +24,48 @@ class BuiltinDefinition(
     override val errors: Set<SemanticError> = emptySet()
 }
 
-class Definition(
-    private val typeScope: TypeScope,
-    private val term: DefinitionTerm,
+abstract class Definition : Declaration() {
+    protected abstract val term: DefinitionTerm
+
+    protected abstract val typeScope: TypeScope
+
+    abstract val meaningExpression: Expression
+
+    private val declaredValueType by lazy {
+        term.valueType?.evaluate(
+            typeScope = typeScope,
+        )
+    }
+
+    final override val inferredValueType: Computation<Type> by lazy {
+        when (val it = declaredValueType) {
+            null -> meaningExpression.inferredType
+            else -> Computation.pure(it)
+        }
+    }
+}
+
+class LocalDefinition(
+    override val typeScope: TypeScope,
+    override val term: DefinitionTerm,
     override val name: Symbol,
-    val value: Expression,
-) : Declaration() {
+    override val meaningExpression: Expression,
+) : Definition() {
     companion object {
         fun build(
             typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: DefinitionTerm,
-        ): Definition = Definition(
+        ): LocalDefinition = LocalDefinition(
             typeScope = typeScope,
             term = term,
             name = term.name,
-            value = Expression.build(
+            meaningExpression = Expression.build(
                 typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term.value,
             ),
         )
-    }
-
-    private val declaredValueType = term.valueType?.evaluate(
-        typeScope = typeScope,
-    )
-
-    override val inferredValueType: Computation<Type> by lazy {
-        when (val it = declaredValueType) {
-            null -> value.inferredType
-            else -> Computation.pure(it)
-        }
     }
 
     override val errors: Set<SemanticError>

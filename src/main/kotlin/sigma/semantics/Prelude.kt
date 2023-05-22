@@ -7,7 +7,7 @@ import sigma.syntax.expressions.LocalScopeTerm
 import sigma.evaluation.scope.Scope
 
 data class Prelude(
-    val definitionBlock: DefinitionBlock,
+    val definitionBlock: LocalDefinitionBlock,
     val scope: Scope,
 ) {
     companion object {
@@ -20,7 +20,7 @@ data class Prelude(
             )
 
             val (definitionBlock, _) = DeclarationScope.looped { innerDeclarationScopeLooped ->
-                val definitionBlock = DefinitionBlock.build(
+                val definitionBlock = LocalDefinitionBlock.build(
                     typeScope = BuiltinTypeScope,
                     outerDeclarationScope = innerDeclarationScopeLooped,
                     definitions = prelude.declarations,

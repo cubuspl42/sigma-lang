@@ -50,9 +50,8 @@ class Abstraction(
                 typeScope = innerTypeScope,
             )
 
-            val innerDeclarationScope = DeclarationScope.Chained(
+            val innerDeclarationScope = argumentType.toArgumentDeclarationBlock().chainWith(
                 outerScope = outerDeclarationScope,
-                declarationBlock = argumentType.toArgumentDeclarationBlock(),
             )
 
             return Abstraction(
