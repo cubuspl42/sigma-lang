@@ -5,12 +5,12 @@ import sigma.SyntaxValueScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.FieldReadAltContext
 import sigma.semantics.types.Type
-import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.evaluation.values.tables.DictTable
 import sigma.evaluation.scope.Scope
+import sigma.semantics.types.TupleType
 
 data class FieldReadTerm(
     override val location: SourceLocation,
@@ -34,14 +34,14 @@ data class FieldReadTerm(
         val subjectType = subject.determineType(
             typeScope = typeScope,
             valueScope = valueScope,
-        ) as? UnorderedTupleType ?: throw TypeErrorException(
+        ) as? TupleType ?: throw TypeErrorException(
             location = location,
-            message = "Fields can be read only from unordered tuples",
+            message = "Fields can be read only from tuple tuples",
         )
 
-        val fieldType = subjectType.getFieldType(key = fieldName) ?: throw TypeErrorException(
+        val fieldType = subjectType.getFieldTypeByName(key = fieldName) ?: throw TypeErrorException(
             location = location,
-            message = "Key ${fieldName.dump()} is missing ing ${subjectType.dump()}",
+            message = "Key ${fieldName.dump()} is missing in ${subjectType.dump()}",
         )
 
         return fieldType

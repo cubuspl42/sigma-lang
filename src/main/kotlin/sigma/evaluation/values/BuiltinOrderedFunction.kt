@@ -3,7 +3,7 @@ package sigma.evaluation.values
 import sigma.BuiltinValue
 import sigma.Thunk
 import sigma.semantics.types.UniversalFunctionType
-import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
 
 abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
@@ -19,13 +19,15 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
 
     final override val type: Type
         get() = UniversalFunctionType(
-            argumentType = OrderedTupleType(
-                elements = argTypes.map {
-                    OrderedTupleType.Element(
+            argumentType = TupleType(
+                orderedEntries = argTypes.mapIndexed { index, it ->
+                    TupleType.OrderedEntry(
+                        index = index,
                         name = null,
                         type = it,
                     )
                 },
+                unorderedEntries = emptySet(),
             ),
             imageType = imageType,
         )

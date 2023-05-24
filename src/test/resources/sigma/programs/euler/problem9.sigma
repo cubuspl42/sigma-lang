@@ -1,57 +1,54 @@
 main = let {
-    concatAllOf = ![e, te] [
+    concatAllOf = ![e, te] {(
         list: [e*],
-        transform: [e] -> [te*],
-    ] -> [te*] =>
+        transform: {(e: e)} -> [te*]
+    )} -> [te*] =>
         concatAll[map[list, transform]],
 
-    concatAll = ![e] [
-        lists: [[e*]*],
-    ] -> [e*] => let {
+    concatAll = ![e] {(
+        lists: [[e*]*]
+    )} -> [e*] => let {
         recurse = {
             listAccumulated: [e*],
             listsRemaining: [[e*]*],
-        } -> [e*] => extractHead[listsRemaining, {
-            ifExtracted: [
+        } -> [e*] => extractHead[listsRemaining, [
+            ifExtracted: {(
                 listsRemainingHead: [e*],
-                listsRemainingTail: [[e*]*],
-            ] => recurse {
+                listsRemainingTail: [[e*]*]
+            )} => recurse[
                 listAccumulated: concat[listAccumulated, listsRemainingHead],
                 listsRemaining: listsRemainingTail,
-            },
+            ],
             ifEmpty: listAccumulated,
-        }]
-    } in recurse {
+        ]]
+    } in recurse[
         listAccumulated: [],
         listsRemaining: lists,
-    },
+    ],
 
-    range = [start: Int, end: Int] -> [Int*] => if[end < start]{
+    range = {(start: Int, end: Int)} -> [Int*] => if[end < start][
         then: [],
         else: concat[[start], range[start + 1, end]],
-    },
+    ],
 
-    tripletsSummingTo = [n: Int] =>
-        concatAllOf[range[1, n], [a: Int] =>
-            map[range[1, n], [b: Int] =>
-                {a: a, b: b, c: n - a - b}
+    tripletsSummingTo = {(n: Int)} =>
+        concatAllOf[range[1, n], {(a: Int)} =>
+            map[range[1, n], {(b: Int)} =>
+                [a: a, b: b, c: n - a - b]
             ]
         ],
 
-    extractHead = ![e, r] [
+    extractHead = ![e, r] {(
         list: [e*],
         branches: {
-            ifExtracted: [
-                head: e,
-                tail: [e*],
-            ] -> r,
+            ifExtracted: {(head: e, tail: [e*])} -> r,
             ifEmpty: r,
-        },
-    ] => if[length[list] > 0]{
+        }
+    )} => if[length[list] > 0][
         then: branches.ifExtracted[
             list(0),
             dropFirst[list],
         ],
         else: branches.ifEmpty,
-    }
+    ],
 } in tripletsSummingTo[10](0)

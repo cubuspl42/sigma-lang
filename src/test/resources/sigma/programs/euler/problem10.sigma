@@ -1,2 +1,1 @@
-main = let {
-} in false
+main = false

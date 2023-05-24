@@ -2,18 +2,17 @@ package sigma.syntax.expressions
 
 import org.junit.jupiter.api.assertThrows
 import sigma.BuiltinTypeScope
-import sigma.semantics.types.BoolType
-import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.OrderedTupleType
-import sigma.semantics.types.UniversalFunctionType
-import sigma.semantics.types.UnorderedTupleType
-import sigma.syntax.SourceLocation
+import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.FixedStaticValueScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.evaluation.values.tables.DictTable
-import sigma.evaluation.scope.FixedScope
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.TupleType
+import sigma.semantics.types.UniversalFunctionType
+import sigma.syntax.SourceLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -58,10 +57,11 @@ class FieldReadTests {
     }
 
     object TypeCheckingTests {
-        private val subjectType = UnorderedTupleType(
-            valueTypeByName = mapOf(
-                Symbol.of("bar") to IntCollectiveType,
-            ),
+        private val subjectType = TupleType.unordered(
+            TupleType.UnorderedEntry(
+                name = Symbol.of("bar"),
+                type = IntCollectiveType,
+            )
         )
 
         private val valueScope = FixedStaticValueScope(
@@ -104,12 +104,11 @@ class FieldReadTests {
                         valueScope = FixedStaticValueScope(
                             entries = mapOf(
                                 Symbol.of("foo") to UniversalFunctionType(
-                                    argumentType = OrderedTupleType(
-                                        elements = listOf(
-                                            OrderedTupleType.Element(
-                                                name = null,
-                                                type = IntCollectiveType,
-                                            ),
+                                    argumentType = TupleType.ordered(
+                                        TupleType.OrderedEntry(
+                                            index = 0,
+                                            name = null,
+                                            type = IntCollectiveType,
                                         ),
                                     ),
                                     imageType = BoolType,
