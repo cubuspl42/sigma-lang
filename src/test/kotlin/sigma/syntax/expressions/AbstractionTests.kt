@@ -4,17 +4,17 @@ import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.SyntaxValueScope
 import sigma.TypeReferenceTerm
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.tables.ArrayTable
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.TupleType
 import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm.GenericParametersTuple
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
-import sigma.evaluation.values.IntValue
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.tables.ArrayTable
+import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -25,25 +25,26 @@ class AbstractionTests {
             assertEquals(
                 expected = AbstractionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    argumentType = OrderedTupleTypeLiteralTerm(
+                    argumentType = TupleTypeLiteralTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        elements = listOf(
-                            OrderedTupleTypeLiteralTerm.Element(
+                        orderedEntries = listOf(
+                            TupleTypeLiteralTerm.Entry(
                                 name = Symbol.of("n"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
                         ),
+                        unorderedEntries = emptyList(),
                     ),
                     image = IntLiteralTerm(
-                        SourceLocation(lineIndex = 1, columnIndex = 12),
+                        SourceLocation(lineIndex = 1, columnIndex = 14),
                         value = IntValue(0),
                     ),
                 ),
                 actual = ExpressionTerm.parse(
-                    source = "[n: Int] => 0",
+                    source = "{(n: Int)} => 0",
                 ),
             )
         }
@@ -60,32 +61,33 @@ class AbstractionTests {
                             Symbol.of("b"),
                         )
                     ),
-                    argumentType = OrderedTupleTypeLiteralTerm(
+                    argumentType = TupleTypeLiteralTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 8),
-                        elements = listOf(
-                            OrderedTupleTypeLiteralTerm.Element(
+                        orderedEntries = listOf(
+                            TupleTypeLiteralTerm.Entry(
                                 name = Symbol.of("a"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 12),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                     referee = Symbol.of("a"),
                                 ),
                             ),
-                            OrderedTupleTypeLiteralTerm.Element(
+                            TupleTypeLiteralTerm.Entry(
                                 name = Symbol.of("b"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 18),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 19),
                                     referee = Symbol.of("b"),
                                 ),
                             ),
                         ),
+                        unorderedEntries = emptyList(),
                     ),
                     image = IntLiteralTerm(
-                        SourceLocation(lineIndex = 1, columnIndex = 24),
+                        SourceLocation(lineIndex = 1, columnIndex = 26),
                         value = IntValue(0),
                     ),
                 ),
                 actual = ExpressionTerm.parse(
-                    source = "![a, b] [a: a, b: b] => 0",
+                    source = "![a, b] {(a: a, b: b)} => 0",
                 ),
             )
         }
@@ -101,25 +103,26 @@ class AbstractionTests {
                             Symbol.of("t"),
                         )
                     ),
-                    argumentType = OrderedTupleTypeLiteralTerm(
+                    argumentType = TupleTypeLiteralTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 5),
-                        elements = listOf(
-                            OrderedTupleTypeLiteralTerm.Element(
+                        orderedEntries = listOf(
+                            TupleTypeLiteralTerm.Entry(
                                 name = Symbol.of("n"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 9),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
                         ),
+                        unorderedEntries = emptyList(),
                     ),
                     image = IntLiteralTerm(
-                        SourceLocation(lineIndex = 1, columnIndex = 17),
+                        SourceLocation(lineIndex = 1, columnIndex = 19),
                         value = IntValue(0),
                     ),
                 ),
                 actual = ExpressionTerm.parse(
-                    source = "![t] [n: Int] => 0",
+                    source = "![t] {(n: Int)} => 0",
                 ),
             )
         }
@@ -130,18 +133,17 @@ class AbstractionTests {
         fun test() {
             assertEquals(
                 expected = UniversalFunctionType(
-                    argumentType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Symbol.of("n"),
-                                type = IntCollectiveType,
-                            ),
+                    argumentType = TupleType.ordered(
+                        TupleType.OrderedEntry(
+                            index = 0,
+                            name = Symbol.of("n"),
+                            type = IntCollectiveType,
                         ),
                     ),
                     imageType = IntCollectiveType,
                 ),
                 actual = ExpressionTerm.parse(
-                    source = "[n: Int] => n",
+                    source = "{(n: Int)} => n",
                 ).determineType(
                     typeScope = BuiltinTypeScope,
                     valueScope = SyntaxValueScope.Empty,
@@ -152,7 +154,7 @@ class AbstractionTests {
         @Test
         fun testGenericSingleParameter() {
             val type = ExpressionTerm.parse(
-                source = "![t] [t: t] => false",
+                source = "![t] {(t: t)} => false",
             ).determineType(
                 typeScope = BuiltinTypeScope,
                 valueScope = BuiltinScope,
@@ -160,12 +162,11 @@ class AbstractionTests {
 
             assertEquals(
                 expected = UniversalFunctionType(
-                    argumentType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Symbol.of("t"),
-                                type = TypeVariable,
-                            ),
+                    argumentType = TupleType.ordered(
+                        TupleType.OrderedEntry(
+                            index = 0,
+                            name = Symbol.of("t"),
+                            type = TypeVariable,
                         ),
                     ),
                     imageType = BoolType,
@@ -179,7 +180,7 @@ class AbstractionTests {
             val type = ExpressionTerm.parse(
                 source = """
                     let {
-                        f = [n: Int] -> Bool => f[n + 1]
+                        f = {(n: Int)} -> Bool => f[n + 1]
                     } in f
                 """.trimIndent(),
             ).determineType(
@@ -189,13 +190,15 @@ class AbstractionTests {
 
             assertEquals(
                 expected = UniversalFunctionType(
-                    argumentType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
+                    argumentType = TupleType(
+                        orderedEntries = listOf(
+                            TupleType.OrderedEntry(
+                                index = 0,
                                 name = Symbol.of("n"),
                                 type = IntCollectiveType,
                             ),
                         ),
+                        unorderedEntries = emptySet(),
                     ),
                     imageType = BoolType,
                 ),
@@ -208,7 +211,7 @@ class AbstractionTests {
         @Test
         fun testUnorderedArgumentTuple() {
             val abstraction = ExpressionTerm.parse(
-                source = "[n: Int, m: Int] => n * m",
+                source = "{(n: Int, m: Int)} => n * m",
             ) as AbstractionTerm
 
             val closure = abstraction.evaluate(

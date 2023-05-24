@@ -4,12 +4,11 @@ import sigma.semantics.BuiltinDefinition
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UndefinedType
 import sigma.semantics.types.UniversalFunctionType
-import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
@@ -39,20 +38,19 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
         ),
         Symbol.of("if") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = OrderedTupleType(
-                    elements = listOf(
-                        OrderedTupleType.Element(
-                            name = Symbol.of("guard"),
-                            type = BoolType,
-                        ),
+                argumentType = TupleType.ordered(
+                    TupleType.OrderedEntry(
+                        index = 0,
+                        name = Symbol.of("guard"),
+                        type = BoolType,
                     ),
                 ),
                 imageType = UniversalFunctionType(
-                    argumentType = UnorderedTupleType(
-                        valueTypeByName = mapOf(
-                            Symbol.of("then") to TypeVariable,
-                            Symbol.of("else") to TypeVariable,
-                        )
+                    argumentType = TupleType.unordered(
+                        TupleType.UnorderedEntry(
+                            name = Symbol.of("then"),
+                            type = TypeVariable,
+                        ),
                     ),
                     imageType = TypeVariable,
                 ),
@@ -61,40 +59,39 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
         ),
         Symbol.of("mul") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = TupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Mul,
         ),
         Symbol.of("div") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = TupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Div,
         ),
         Symbol.of("add") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = TupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Add,
         ),
         Symbol.of("sub") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = TupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Sub,
         ),
         Symbol.of("sq") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = OrderedTupleType(
-                    elements = listOf(
-                        OrderedTupleType.Element(
-                            name = null,
-                            type = IntCollectiveType,
-                        ),
+                argumentType = TupleType.ordered(
+                    TupleType.OrderedEntry(
+                        index = 0,
+                        name = Symbol.of("n"),
+                        type = IntCollectiveType,
                     ),
                 ),
                 imageType = IntCollectiveType,
@@ -103,36 +100,35 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
         ),
         Symbol.of("eq") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = TupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Eq,
         ),
         Symbol.of("lt") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = TupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Lt,
         ),
         Symbol.of("lte") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = TupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Lte,
         ),
         Symbol.of("gt") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = TupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Gt,
         ),
         Symbol.of("gte") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = TupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Gte,
@@ -140,7 +136,7 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
         Symbol.of("link") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 // TODO: Improve this typing
-                argumentType = UnorderedTupleType.Empty,
+                argumentType = TupleType.Empty,
                 imageType = UndefinedType,
             ),
             value = FunctionValue.Link,

@@ -1,12 +1,12 @@
 package sigma.syntax
 
 import sigma.TypeReferenceTerm
-import sigma.syntax.expressions.AbstractionTerm
-import sigma.syntax.expressions.IntLiteralTerm
-import sigma.syntax.expressions.UnorderedTupleLiteralTerm
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
+import sigma.syntax.expressions.AbstractionTerm
+import sigma.syntax.expressions.IntLiteralTerm
+import sigma.syntax.expressions.TupleLiteralTerm
+import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -22,12 +22,12 @@ class ModuleTests {
                     
                     name1 = 123
                     
-                    name2 = [a: Int] => 42
+                    name2 = {(a: Int)} => 42
                     
-                    name3 = {
+                    name3 = [
                         a: 1,
                         b: 2,
-                    }
+                    ]
                 """.trimIndent()
             )
 
@@ -65,45 +65,47 @@ class ModuleTests {
                         name = Symbol.of("name2"), valueType = null,
                         value = AbstractionTerm(
                             location = SourceLocation(lineIndex = 7, columnIndex = 8),
-                            argumentType = OrderedTupleTypeLiteralTerm(
+                            argumentType = TupleTypeLiteralTerm(
                                 location = SourceLocation(lineIndex = 7, columnIndex = 8),
-                                elements = listOf(
-                                    OrderedTupleTypeLiteralTerm.Element(
+                                orderedEntries = listOf(
+                                    TupleTypeLiteralTerm.Entry(
                                         name = Symbol.of("a"),
                                         type = TypeReferenceTerm(
-                                            location = SourceLocation(lineIndex = 7, columnIndex = 12),
+                                            location = SourceLocation(lineIndex = 7, columnIndex = 13),
                                             referee = Symbol.of("Int"),
                                         ),
                                     ),
                                 ),
+                                unorderedEntries = emptyList(),
                             ),
                             image = IntLiteralTerm(
-                                location = SourceLocation(lineIndex = 7, columnIndex = 20),
+                                location = SourceLocation(lineIndex = 7, columnIndex = 22),
                                 value = IntValue(value = 42L),
                             ),
                         ),
                     ),
                     DefinitionTerm(
                         location = SourceLocation(lineIndex = 9, columnIndex = 0),
-                        name = Symbol.of("name3"), value = UnorderedTupleLiteralTerm(
+                        name = Symbol.of("name3"),
+                        value = TupleLiteralTerm(
                             location = SourceLocation(lineIndex = 9, columnIndex = 8),
-                            entries = listOf(
-                                UnorderedTupleLiteralTerm.Entry(
-                                    name = Symbol.of("a"),
-                                    value = IntLiteralTerm(
+                            associations = listOf(
+                                TupleLiteralTerm.UnorderedAssociation(
+                                    targetName = Symbol.of("a"),
+                                    passedValue = IntLiteralTerm(
                                         location = SourceLocation(lineIndex = 10, columnIndex = 7),
                                         value = IntValue(value = 1L),
                                     ),
                                 ),
-                                UnorderedTupleLiteralTerm.Entry(
-                                    name = Symbol.of("b"),
-                                    value = IntLiteralTerm(
+                                TupleLiteralTerm.UnorderedAssociation(
+                                    targetName = Symbol.of("b"),
+                                    passedValue = IntLiteralTerm(
                                         location = SourceLocation(lineIndex = 11, columnIndex = 7),
                                         value = IntValue(value = 2L),
                                     ),
                                 ),
                             ),
-                        )
+                        ),
                     ),
                 ),
                 actual = module.declarations,

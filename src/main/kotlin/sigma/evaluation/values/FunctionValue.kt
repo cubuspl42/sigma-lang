@@ -5,7 +5,7 @@ import sigma.Thunk
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 import sigma.evaluation.values.tables.ArrayTable
@@ -132,13 +132,12 @@ abstract class FunctionValue : Value() {
 
     object MapFn : BuiltinOrderedFunction() {
         private val transformType = UniversalFunctionType(
-            argumentType = OrderedTupleType(
-                elements = listOf(
-                    OrderedTupleType.Element(
-                        name = null,
-                        type = TypeVariable,
-                    ),
-                )
+            argumentType = TupleType.ordered(
+                TupleType.OrderedEntry(
+                    index = 0,
+                    name = null,
+                    type = TypeVariable,
+                ),
             ),
             // TODO: Improve this typing, as it makes no sense
             imageType = TypeVariable,

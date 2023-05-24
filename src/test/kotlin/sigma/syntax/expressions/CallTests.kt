@@ -1,13 +1,13 @@
 package sigma.syntax.expressions
 
 import sigma.Thunk
-import sigma.syntax.SourceLocation
+import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.ComputableFunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.tables.DictTable
-import sigma.evaluation.scope.FixedScope
+import sigma.syntax.SourceLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -55,7 +55,7 @@ class CallTests {
         }
 
         @Test
-        fun testUnorderedTupleArgumentSugar() {
+        fun testTupleArgumentSugar() {
             assertEquals(
                 expected = CallTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
@@ -63,19 +63,19 @@ class CallTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo"),
                     ),
-                    argument = UnorderedTupleLiteralTerm(
+                    argument = TupleLiteralTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
-                        entries = listOf(
-                            UnorderedTupleLiteralTerm.Entry(
-                                name = Symbol.of("arg1"),
-                                value = ReferenceTerm(
+                        associations = listOf(
+                            TupleLiteralTerm.UnorderedAssociation(
+                                targetName = Symbol.of("arg1"),
+                                passedValue = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                     referee = Symbol.of("value1"),
                                 ),
                             ),
-                            UnorderedTupleLiteralTerm.Entry(
-                                name = Symbol.of("arg2"),
-                                value = ReferenceTerm(
+                            TupleLiteralTerm.UnorderedAssociation(
+                                targetName = Symbol.of("arg2"),
+                                passedValue = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 24),
                                     referee = Symbol.of("value2"),
                                 ),
@@ -83,7 +83,7 @@ class CallTests {
                         ),
                     ),
                 ),
-                actual = ExpressionTerm.parse("foo{arg1: value1, arg2: value2}"),
+                actual = ExpressionTerm.parse("foo[arg1: value1, arg2: value2]"),
             )
         }
 
@@ -96,16 +96,22 @@ class CallTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo"),
                     ),
-                    argument = OrderedTupleLiteralTerm(
+                    argument = TupleLiteralTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
-                        elements = listOf(
-                            ReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                                referee = Symbol.of("value1"),
+                        associations = listOf(
+                            TupleLiteralTerm.OrderedAssociation(
+                                targetIndex = 0,
+                                passedValue = ReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                                    referee = Symbol.of("value1"),
+                                ),
                             ),
-                            ReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 12),
-                                referee = Symbol.of("value2"),
+                            TupleLiteralTerm.OrderedAssociation(
+                                targetIndex = 1,
+                                passedValue = ReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 12),
+                                    referee = Symbol.of("value2"),
+                                ),
                             ),
                         ),
                     ),

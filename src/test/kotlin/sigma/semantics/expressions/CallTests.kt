@@ -3,17 +3,15 @@ package sigma.semantics.expressions
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.evaluation.values.Symbol
-import sigma.semantics.DeclarationBlock
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.IntType
-import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.TupleType
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.expressions.CallTerm
 import sigma.syntax.expressions.ExpressionTerm
 import utils.FakeDeclarationScope
-import kotlin.math.exp
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -31,12 +29,11 @@ class CallTests {
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(
                         "f" to UniversalFunctionType(
-                            argumentType = OrderedTupleType(
-                                elements = listOf(
-                                    OrderedTupleType.Element(
-                                        name = null,
-                                        type = BoolType,
-                                    ),
+                            argumentType = TupleType.ordered(
+                                TupleType.OrderedEntry(
+                                    index = 0,
+                                    name = null,
+                                    type = BoolType,
                                 ),
                             ),
                             imageType = IntCollectiveType,
@@ -69,12 +66,11 @@ class CallTests {
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(
                         "f" to UniversalFunctionType(
-                            argumentType = OrderedTupleType(
-                                elements = listOf(
-                                    OrderedTupleType.Element(
-                                        name = Symbol.of("a"),
-                                        type = BoolType,
-                                    ),
+                            argumentType = TupleType.ordered(
+                                TupleType.OrderedEntry(
+                                    index = 0,
+                                    name = Symbol.of("a"),
+                                    type = BoolType,
                                 ),
                             ),
                             imageType = IntCollectiveType,

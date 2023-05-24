@@ -6,6 +6,7 @@ import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.tables.Table
 import sigma.evaluation.scope.chainWith
+import sigma.semantics.types.TupleType
 
 class Closure(
     private val context: Scope,

@@ -6,9 +6,8 @@ import sigma.evaluation.values.Symbol
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntType
-import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.TupleType
 import sigma.semantics.types.TypeVariable
-import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.ExpressionTerm
 import kotlin.test.Test
@@ -21,7 +20,7 @@ class AbstractionTests {
             @Test
             fun testInferredFromValue() {
                 val term = ExpressionTerm.parse(
-                    source = "[a: Int] => 2 + 3",
+                    source = "{(a: Int)} => 2 + 3",
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
@@ -42,7 +41,7 @@ class AbstractionTests {
             @Test
             fun testInferredFromDeclaration() {
                 val term = ExpressionTerm.parse(
-                    source = "[a: Int] -> Bool => 3 + 4",
+                    source = "{(a: Int)} -> Bool => 3 + 4",
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
@@ -63,7 +62,7 @@ class AbstractionTests {
             @Test
             fun testInferredFromArguments() {
                 val term = ExpressionTerm.parse(
-                    source = "[a: Int] => a",
+                    source = "{(a: Int)} => a",
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
@@ -84,7 +83,7 @@ class AbstractionTests {
             @Test
             fun testDeclaredFromGenericArguments() {
                 val term = ExpressionTerm.parse(
-                    source = "![e] [a: e] -> e => a",
+                    source = "![e] {(a: e)} -> e => a",
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
@@ -99,14 +98,13 @@ class AbstractionTests {
 
                 assertEquals(
                     expected = inferredType.argumentType,
-                    actual = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Symbol.of("a"),
-                                type = TypeVariable,
-                            ),
+                    actual = TupleType.ordered(
+                        TupleType.OrderedEntry(
+                            index = 0,
+                            name = Symbol.of("a"),
+                            type = TypeVariable,
                         ),
-                    )
+                    ),
                 )
 
                 assertIs<TypeVariable>(
