@@ -22,6 +22,10 @@ abstract class TypeExpressionTerm : Term() {
         fun build(
             ctx: TypeExpressionContext,
         ): TypeExpressionTerm = object : SigmaParserBaseVisitor<TypeExpressionTerm>() {
+            override fun visitTupleTypeLiteral(
+                ctx: SigmaParser.TupleTypeLiteralContext,
+            ): TypeExpressionTerm = TupleTypeLiteralTerm.build(ctx)
+
             override fun visitFunctionTypeDepiction(
                 ctx: FunctionTypeDepictionContext,
             ): TypeExpressionTerm = FunctionTypeTerm.build(ctx)
@@ -40,10 +44,6 @@ abstract class TypeExpressionTerm : Term() {
                 location = SourceLocation.build(ctx),
                 referee = Symbol.of(ctx.referee.text),
             )
-
-            override fun visitTypeExpressionTupleTypeLiteralAlt(
-                ctx: SigmaParser.TypeExpressionTupleTypeLiteralAltContext
-            ): TypeExpressionTerm = TupleTypeLiteralTerm.build(ctx.tupleTypeLiteral())
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match type expression ${ctx::class}")
 
         fun parse(

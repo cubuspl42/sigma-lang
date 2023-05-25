@@ -19,8 +19,8 @@ class LetExpressionTests {
             val term = ExpressionTerm.parse(
                 source = """
                     let {
-                        f = {} -> Int => g[],
-                        g = {} => f[],
+                        f = [] -> Int => g[],
+                        g = [] => f[],
                     } in f[]
                 """.trimIndent(),
             ) as LetExpressionTerm
@@ -61,8 +61,8 @@ class LetExpressionTests {
             val term = ExpressionTerm.parse(
                 source = """
                     let {
-                        f = {} => g[],
-                        g = {} => f[],
+                        f = [] => g[],
+                        g = [] => f[],
                     } in f[]
                 """.trimIndent(),
             ) as LetExpressionTerm

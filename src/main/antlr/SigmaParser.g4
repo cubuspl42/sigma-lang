@@ -57,13 +57,18 @@ callableExpression
     | tupleLiteral # callableTupleLiteralAlt
     ;
 
+tupleLiteral
+    : unorderedTupleLiteral
+    | orderedTupleLiteral
+    ;
+
 // Let expression
 
 letExpression
     : LetKeyword scope=localScope InKeyword result=expression ;
 
 localScope
-    : LeftBrace declaration (Comma declaration)* Comma? RightBrace ;
+    : LeftBrace (declaration (Comma declaration)*)? Comma? RightBrace ;
 
 declaration
     : name=identifier (Colon valueType=typeExpression)? Assign value=expression
@@ -76,13 +81,25 @@ abstraction
         (ThinArrow imageType=typeExpression)? FatArrow image=expression
     ;
 
-// Tuple literal
+// Unordered tuple literal
 
-tupleLiteral
-    : LeftBracket (tupleAssociation (Comma tupleAssociation)*)? Comma? RightBracket ;
+unorderedTupleLiteral
+    : LeftBrace (unorderedTupleAssociation (Comma unorderedTupleAssociation)*)? Comma? RightBrace ;
 
-tupleAssociation
-    : (targetName=identifier Colon)? passedValue=expression
+unorderedTupleAssociation
+    : name=identifier Colon value=expression
+    ;
+
+// end
+
+// Ordered tuple literal
+
+orderedTupleLiteral
+    : LeftBracket (orderedTupleElement (Comma orderedTupleElement)* Comma?)? RightBracket
+    ;
+
+orderedTupleElement
+    : expression
     ;
 
 // end
@@ -114,36 +131,41 @@ reference
 // Type expressions
 
 typeExpression
-    : functionTypeDepiction # typeExpressionFunctionTypeDepictionAlt
-    | tupleTypeLiteral # typeExpressionTupleTypeLiteralAlt
-    | arrayTypeLiteral # typeExpressionArrayTypeLiteralAlt
-    | dictTypeDepiction # typeExpressionDictTypeDepictionAlt
-    | reference # typeExpressionReferenceAlt
+    : functionTypeDepiction
+    | tupleTypeLiteral
+    | arrayTypeLiteral
+    | dictTypeDepiction
+    | reference
+    ;
+
+tupleTypeLiteral
+    : unorderedTupleTypeLiteral
+    | orderedTupleTypeLiteral
     ;
 
 functionTypeDepiction
     : (Bang genericParametersTuple)? argumentType=tupleTypeLiteral ThinArrow imageType=typeExpression
     ;
 
-// Tuple type literal
+// Unordered tuple type literal
 
-tupleTypeLiteral
-    : LeftBrace RightBrace # emptyTupleTypeLiteralAlt
-    | LeftBrace tupleTypeLiteralOrderedPart Comma? RightBrace # orderedTupleTypeLiteralAlt
-    | LeftBrace tupleTypeLiteralUnorderedPart Comma? RightBrace # unorderedTupleTypeLiteralAlt
-    | LeftBrace tupleTypeLiteralOrderedPart Comma tupleTypeLiteralUnorderedPart Comma? RightBrace # mixedTupleTypeLiteralAlt
-    ;
+unorderedTupleTypeLiteral
+    : LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
 
-tupleTypeLiteralOrderedPart
-    : LeftParen entries+=tupleTypeLiteralEntry (Comma entries+=tupleTypeLiteralEntry)* RightParen
-    ;
-
-tupleTypeLiteralUnorderedPart
-    : entries+=tupleTypeLiteralEntry (Comma entries+=tupleTypeLiteralEntry)*
-    ;
-
-tupleTypeLiteralEntry
+unorderedTupleTypeEntry
     : name=identifier Colon valueType=typeExpression
+    ;
+
+// end
+
+// Ordered tuple type literal
+
+orderedTupleTypeLiteral
+    : LeftBracket (orderedTupleTypeElement (Comma orderedTupleTypeElement)* Comma?)? RightBracket
+    ;
+
+orderedTupleTypeElement
+    : (name=identifier Colon)? type=typeExpression
     ;
 
 // end

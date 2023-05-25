@@ -2,12 +2,14 @@ package sigma.semantics.expressions
 
 import sigma.Computation
 import sigma.TypeScope
+import sigma.SyntaxValueScope
+import sigma.semantics.types.Type
+import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.TypeErrorException
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
-import sigma.semantics.types.TupleType
-import sigma.semantics.types.Type
 import sigma.syntax.expressions.FieldReadTerm
 
 class FieldRead(
@@ -18,7 +20,7 @@ class FieldRead(
     sealed interface InferredSubjectTypeOutcome
 
     data class InferredSubjectTypeResult(
-        val subjectType: TupleType,
+        val subjectType: UnorderedTupleType,
     ) : InferredSubjectTypeOutcome
 
     data class InvalidSubjectTypeError(
@@ -32,7 +34,7 @@ class FieldRead(
     ) : InferredFieldTypeOutcome
 
     data class MissingFieldError(
-        val subjectType: TupleType,
+        val subjectType: UnorderedTupleType,
         val missingFieldName: Symbol,
     ) : InferredFieldTypeOutcome, SemanticError
 
@@ -58,7 +60,7 @@ class FieldRead(
 
     private val inferredSubjectTypeOutcome: Computation<InferredSubjectTypeOutcome> =
         subject.inferredType.thenJust { subjectType ->
-            val validSubjectType = subjectType as? TupleType
+            val validSubjectType = subjectType as? UnorderedTupleType
 
             if (validSubjectType != null) {
                 InferredSubjectTypeResult(
@@ -76,7 +78,7 @@ class FieldRead(
             is InferredSubjectTypeResult -> {
                 val subjectType = it.subjectType
 
-                val fieldType = subjectType.getFieldTypeByName(key = fieldName)
+                val fieldType = subjectType.getFieldType(key = fieldName)
 
                 if (fieldType != null) {
                     InferredFieldTypeResult(

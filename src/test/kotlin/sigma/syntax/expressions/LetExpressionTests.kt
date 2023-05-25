@@ -11,7 +11,6 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
-import sigma.semantics.expressions.Expression
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -132,24 +131,21 @@ class LetExpressionTests {
 
         @Test
         fun testInferredFunctionType() {
-            val term = ExpressionTerm.parse(
+            val type = ExpressionTerm.parse(
                 source = """
                     let {
-                        f = {(n: Int)} => false,
+                        f = [n: Int] => false,
                         a = f[0],
                     } in a
                 """.trimIndent()
-            )
-
-            val expression = Expression.build(
+            ).determineType(
                 typeScope = BuiltinTypeScope,
-                declarationScope = BuiltinScope,
-                term = term,
+                valueScope = BuiltinScope,
             )
 
             assertEquals(
                 expected = BoolType,
-                actual = expression.inferredType.value,
+                actual = type,
             )
         }
 
