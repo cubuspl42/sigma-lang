@@ -38,16 +38,16 @@ data class CallTerm(
                     location = SourceLocation.build(ctx),
                     referee = Symbol.of(prototype.functionName),
                 ),
-                argument = TupleLiteralTerm(
+                argument = UnorderedTupleLiteralTerm(
                     location = SourceLocation.build(ctx),
-                    associations = listOf(
-                        TupleLiteralTerm.UnorderedAssociation(
-                            targetName = prototype.leftArgument,
-                            passedValue = leftExpression,
+                    entries = listOf(
+                        UnorderedTupleLiteralTerm.Entry(
+                            name = prototype.leftArgument,
+                            value = leftExpression,
                         ),
-                        TupleLiteralTerm.UnorderedAssociation(
-                            targetName = prototype.rightArgument,
-                            passedValue = rightExpression,
+                        UnorderedTupleLiteralTerm.Entry(
+                            name = prototype.rightArgument,
+                            value = rightExpression,
                         ),
                     ),
                 ),

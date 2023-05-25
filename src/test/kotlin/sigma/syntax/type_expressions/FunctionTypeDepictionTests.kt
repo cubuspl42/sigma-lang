@@ -1,16 +1,16 @@
 package sigma.syntax.type_expressions
 
 import sigma.BuiltinTypeScope
+import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.TypeReferenceTerm
-import sigma.evaluation.values.Symbol
-import sigma.semantics.types.BoolType
-import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.TupleType
-import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.FunctionTypeTerm
-import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
-import sigma.syntax.typeExpressions.TypeExpressionTerm
+import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.UniversalFunctionType
+import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -19,34 +19,33 @@ class FunctionTypeDepictionTests {
         @Test
         fun test() {
             val typeExpression = TypeExpressionTerm.parse(
-                source = "{(a: A, b: B)} -> C",
+                source = "[a: A, b: B] -> C",
             )
 
             assertEquals(
                 expected = FunctionTypeTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    argumentType = TupleTypeLiteralTerm(
+                    argumentType = OrderedTupleTypeLiteralTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        orderedEntries = listOf(
-                            TupleTypeLiteralTerm.Entry(
+                        elements = listOf(
+                            OrderedTupleTypeLiteralTerm.Element(
                                 name = Symbol.of("a"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 5),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                     referee = Symbol.of("A"),
                                 ),
                             ),
-                            TupleTypeLiteralTerm.Entry(
+                            OrderedTupleTypeLiteralTerm.Element(
                                 name = Symbol.of("b"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 11),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                     referee = Symbol.of("B"),
                                 ),
                             ),
                         ),
-                        unorderedEntries = emptyList(),
                     ),
                     imageType = TypeReferenceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 18),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 16),
                         referee = Symbol.of("C"),
                     ),
                 ),
@@ -59,27 +58,24 @@ class FunctionTypeDepictionTests {
         @Test
         fun test() {
             val type = TypeExpressionTerm.parse(
-                source = "{(a: Int, b: Bool)} -> Bool",
+                source = "[a: Int, b: Bool] -> Bool",
             ).evaluate(
                 typeScope = BuiltinTypeScope,
             )
 
             assertEquals(
                 expected = UniversalFunctionType(
-                    argumentType = TupleType(
-                        orderedEntries = listOf(
-                            TupleType.OrderedEntry(
-                                index = 0,
+                    argumentType = OrderedTupleType(
+                        elements = listOf(
+                            OrderedTupleType.Element(
                                 name = Symbol.of("a"),
                                 type = IntCollectiveType,
                             ),
-                            TupleType.OrderedEntry(
-                                index = 1,
+                            OrderedTupleType.Element(
                                 name = Symbol.of("b"),
                                 type = BoolType,
                             ),
                         ),
-                        unorderedEntries = emptySet(),
                     ),
                     imageType = BoolType,
                 ),
