@@ -4,12 +4,13 @@ import sigma.TypeScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.TypeReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
+import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralBodyTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.evaluation.values.FixedTypeScope
 import sigma.evaluation.values.Symbol
+import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -18,13 +19,16 @@ class OrderedTupleTypeLiteralTests {
         @Test
         fun testEmpty() {
             val expression = TypeExpressionTerm.parse(
-                source = "[]",
+                source = "%[]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeLiteralTerm(
+                expected = TupleTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    elements = emptyList(),
+                    body = OrderedTupleTypeLiteralBodyTerm(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        elements = emptyList(),
+                    ),
                 ),
                 actual = expression,
             )
@@ -33,18 +37,21 @@ class OrderedTupleTypeLiteralTests {
         @Test
         fun testSingleUnnamed() {
             val expression = TypeExpressionTerm.parse(
-                source = "[A]",
+                source = "%[A]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeLiteralTerm(
+                expected = TupleTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    elements = listOf(
-                        OrderedTupleTypeLiteralTerm.Element(
-                            name = null,
-                            type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                                referee = Symbol.of("A"),
+                    body = OrderedTupleTypeLiteralBodyTerm(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        elements = listOf(
+                            OrderedTupleTypeLiteralBodyTerm.Element(
+                                name = null,
+                                type = TypeReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 2),
+                                    referee = Symbol.of("A"),
+                                ),
                             ),
                         ),
                     ),
@@ -56,35 +63,38 @@ class OrderedTupleTypeLiteralTests {
         @Test
         fun testAllUnnamed() {
             val expression = TypeExpressionTerm.parse(
-                source = "[A, B, C]",
+                source = "%[A, B, C]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeLiteralTerm(
+                expected = TupleTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    elements = listOf(
-                        OrderedTupleTypeLiteralTerm.Element(
-                            name = null,
-                            type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                                referee = Symbol.of("A"),
+                    body = OrderedTupleTypeLiteralBodyTerm(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        elements = listOf(
+                            OrderedTupleTypeLiteralBodyTerm.Element(
+                                name = null,
+                                type = TypeReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 2),
+                                    referee = Symbol.of("A"),
+                                ),
+                            ),
+                            OrderedTupleTypeLiteralBodyTerm.Element(
+                                name = null,
+                                type = TypeReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 5),
+                                    referee = Symbol.of("B"),
+                                ),
+                            ),
+                            OrderedTupleTypeLiteralBodyTerm.Element(
+                                name = null,
+                                type = TypeReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 8),
+                                    referee = Symbol.of("C"),
+                                ),
                             ),
                         ),
-                        OrderedTupleTypeLiteralTerm.Element(
-                            name = null,
-                            type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                                referee = Symbol.of("B"),
-                            ),
-                        ),
-                        OrderedTupleTypeLiteralTerm.Element(
-                            name = null,
-                            type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
-                                referee = Symbol.of("C"),
-                            ),
-                        ),
-                    ),
+                    )
                 ),
                 actual = expression,
             )
@@ -93,32 +103,35 @@ class OrderedTupleTypeLiteralTests {
         @Test
         fun testSomeNamed() {
             val expression = TypeExpressionTerm.parse(
-                source = "[a: A, B, c: C]",
+                source = "%[a: A, B, c: C]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeLiteralTerm(
+                expected = TupleTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    elements = listOf(
-                        OrderedTupleTypeLiteralTerm.Element(
-                            name = Symbol.of("a"),
-                            type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                                referee = Symbol.of("A"),
+                    body = OrderedTupleTypeLiteralBodyTerm(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        elements = listOf(
+                            OrderedTupleTypeLiteralBodyTerm.Element(
+                                name = Symbol.of("a"),
+                                type = TypeReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 5),
+                                    referee = Symbol.of("A"),
+                                ),
                             ),
-                        ),
-                        OrderedTupleTypeLiteralTerm.Element(
-                            name = null,
-                            type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
-                                referee = Symbol.of("B"),
+                            OrderedTupleTypeLiteralBodyTerm.Element(
+                                name = null,
+                                type = TypeReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 8),
+                                    referee = Symbol.of("B"),
+                                ),
                             ),
-                        ),
-                        OrderedTupleTypeLiteralTerm.Element(
-                            name = Symbol.of("c"),
-                            type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 13),
-                                referee = Symbol.of("C"),
+                            OrderedTupleTypeLiteralBodyTerm.Element(
+                                name = Symbol.of("c"),
+                                type = TypeReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 14),
+                                    referee = Symbol.of("C"),
+                                ),
                             ),
                         ),
                     ),
@@ -132,7 +145,7 @@ class OrderedTupleTypeLiteralTests {
         @Test
         fun testEmpty() {
             val type = TypeExpressionTerm.parse(
-                source = "[]",
+                source = "%[]",
             ).evaluate(
                 typeScope = TypeScope.Empty,
             )
@@ -146,7 +159,7 @@ class OrderedTupleTypeLiteralTests {
         @Test
         fun testNonEmpty() {
             val type = TypeExpressionTerm.parse(
-                source = "[a: A, B]",
+                source = "%[a: A, B]",
             ).evaluate(
                 typeScope = FixedTypeScope(
                     entries = mapOf(

@@ -4,12 +4,13 @@ import sigma.TypeScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.TypeReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.UnorderedTupleTypeLiteralTerm
+import sigma.syntax.typeExpressions.UnorderedTupleTypeLiteralBodyTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.FixedTypeScope
 import sigma.evaluation.values.Symbol
+import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -18,13 +19,16 @@ class UnorderedTupleTypeLiteralTests {
         @Test
         fun testEmpty() {
             val expression = TypeExpressionTerm.parse(
-                source = "{}",
+                source = "%{}",
             )
 
             assertEquals(
-                expected = UnorderedTupleTypeLiteralTerm(
+                expected = TupleTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    entries = emptyList(),
+                    body = UnorderedTupleTypeLiteralBodyTerm(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        entries = emptyList(),
+                    ),
                 ),
                 actual = expression,
             )
@@ -33,32 +37,35 @@ class UnorderedTupleTypeLiteralTests {
         @Test
         fun testNonEmpty() {
             val expression = TypeExpressionTerm.parse(
-                source = "{a: A, b: B, c: C}",
+                source = "%{a: A, b: B, c: C}",
             )
 
             assertEquals(
-                expected = UnorderedTupleTypeLiteralTerm(
+                expected = TupleTypeLiteralTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    entries = listOf(
-                        UnorderedTupleTypeLiteralTerm.Entry(
-                            name = Symbol.of("a"),
-                            valueType = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                                referee = Symbol.of("A"),
+                    body = UnorderedTupleTypeLiteralBodyTerm(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        entries = listOf(
+                            UnorderedTupleTypeLiteralBodyTerm.Entry(
+                                name = Symbol.of("a"),
+                                valueType = TypeReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 5),
+                                    referee = Symbol.of("A"),
+                                ),
                             ),
-                        ),
-                        UnorderedTupleTypeLiteralTerm.Entry(
-                            name = Symbol.of("b"),
-                            valueType = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 10),
-                                referee = Symbol.of("B"),
+                            UnorderedTupleTypeLiteralBodyTerm.Entry(
+                                name = Symbol.of("b"),
+                                valueType = TypeReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 11),
+                                    referee = Symbol.of("B"),
+                                ),
                             ),
-                        ),
-                        UnorderedTupleTypeLiteralTerm.Entry(
-                            name = Symbol.of("c"),
-                            valueType = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 16),
-                                referee = Symbol.of("C"),
+                            UnorderedTupleTypeLiteralBodyTerm.Entry(
+                                name = Symbol.of("c"),
+                                valueType = TypeReferenceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 17),
+                                    referee = Symbol.of("C"),
+                                ),
                             ),
                         ),
                     ),
@@ -72,7 +79,7 @@ class UnorderedTupleTypeLiteralTests {
         @Test
         fun testEmpty() {
             val type = TypeExpressionTerm.parse(
-                source = "{}",
+                source = "%{}",
             ).evaluate(
                 typeScope = TypeScope.Empty,
             )
@@ -86,7 +93,7 @@ class UnorderedTupleTypeLiteralTests {
         @Test
         fun testNonEmpty() {
             val type = TypeExpressionTerm.parse(
-                source = "{a: A, b: B, c: C}",
+                source = "%{a: A, b: B, c: C}",
             ).evaluate(
                 typeScope = FixedTypeScope(
                     entries = mapOf(

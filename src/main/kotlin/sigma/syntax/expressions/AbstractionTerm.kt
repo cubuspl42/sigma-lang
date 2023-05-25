@@ -6,7 +6,7 @@ import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.semantics.types.TupleType
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
+import sigma.syntax.typeExpressions.TupleTypeLiteralBodyTerm
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.Type
@@ -20,7 +20,7 @@ import sigma.evaluation.scope.Scope
 data class AbstractionTerm(
     override val location: SourceLocation,
     val genericParametersTuple: GenericParametersTuple? = null,
-    val argumentType: TupleTypeLiteralTerm,
+    val argumentBody: TupleTypeLiteralBodyTerm,
     val declaredImageType: TypeExpressionTerm? = null,
     val image: ExpressionTerm,
 ) : ExpressionTerm() {
@@ -53,8 +53,8 @@ data class AbstractionTerm(
             genericParametersTuple = ctx.genericParametersTuple()?.let {
                 GenericParametersTuple.build(it)
             },
-            argumentType = ctx.argumentType.let {
-                TupleTypeLiteralTerm.build(it)
+            argumentBody = ctx.argumentType.let {
+                TupleTypeLiteralBodyTerm.build(it)
             },
             declaredImageType = ctx.imageType?.let {
                 TypeExpressionTerm.build(it)
@@ -75,7 +75,7 @@ data class AbstractionTerm(
             innerValueScope: SyntaxValueScope,
         ->
 
-        argumentType.validate(
+        argumentBody.validate(
             typeScope = innerTypeScope,
             // The outer value scope is used here on purpose
             valueScope = valueScope,
@@ -138,7 +138,7 @@ data class AbstractionTerm(
     ): R {
         val innerTypeScope = buildInnerTypeScope(typeScope = typeScope)
 
-        val argumentType = argumentType.evaluate(
+        val argumentType = argumentBody.evaluate(
             typeScope = innerTypeScope,
         )
 
@@ -157,7 +157,7 @@ data class AbstractionTerm(
         scope: Scope,
     ): Closure = Closure(
         context = scope,
-        argumentType = argumentType,
+        argumentType = argumentBody,
         image = image,
     )
 
