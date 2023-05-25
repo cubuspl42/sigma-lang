@@ -2,7 +2,7 @@ package sigma.syntax.type_expressions
 
 import sigma.TypeScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.TypeReferenceTerm
+import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.UnorderedTupleTypeLiteralTerm
 import sigma.semantics.types.BoolType

@@ -131,11 +131,24 @@ reference
 // Type expressions
 
 typeExpression
-    : functionTypeDepiction
+    : typeCall
+    | typeReference
+    | functionTypeDepiction
     | tupleTypeLiteral
     | arrayTypeLiteral
     | dictTypeDepiction
-    | reference
+    ;
+
+typeCall
+    : callee=typeReference passedArgument=typeTupleLiteral
+    ;
+
+typeTupleLiteral
+    : LeftBracket (elements+=typeExpression (Comma elements+=typeExpression)* Comma?)? RightBracket
+    ;
+
+typeReference
+    : referee=identifier
     ;
 
 tupleTypeLiteral
