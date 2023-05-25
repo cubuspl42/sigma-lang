@@ -3,29 +3,24 @@ package sigma.syntax.type_expressions
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.ArrayTypeLiteralTerm
-import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
 import sigma.evaluation.values.FixedTypeScope
 import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ArrayTypeLiteralTests {
+class TypeReferenceTermTests {
     object ParsingTests {
         @Test
         fun test() {
             val expression = TypeExpressionTerm.parse(
-                source = "[A*]",
+                source = "Foo",
             )
 
             assertEquals(
-                expected = ArrayTypeLiteralTerm(
+                expected = TypeReferenceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    elementType = TypeReferenceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                        referee = Symbol.of("A"),
-                    ),
+                    referee = Symbol.of("Foo"),
                 ),
                 actual = expression,
             )
@@ -36,19 +31,17 @@ class ArrayTypeLiteralTests {
         @Test
         fun test() {
             val type = TypeExpressionTerm.parse(
-                source = "[A*]",
+                source = "Foo",
             ).evaluate(
                 typeScope = FixedTypeScope(
                     entries = mapOf(
-                        Symbol.of("A") to BoolType,
+                        Symbol.of("Foo") to BoolType,
                     ),
                 ),
             )
 
             assertEquals(
-                expected = ArrayType(
-                    elementType = BoolType,
-                ),
+                expected = BoolType,
                 actual = type,
             )
         }

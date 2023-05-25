@@ -1,6 +1,6 @@
 package sigma.syntax
 
-import sigma.TypeReferenceTerm
+import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.IntLiteralTerm
 import sigma.syntax.expressions.UnorderedTupleLiteralTerm

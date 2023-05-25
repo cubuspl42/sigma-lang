@@ -3,25 +3,29 @@ package sigma.syntax.typeExpressions
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.TypeScope
-import sigma.TypeReferenceTerm
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ArrayTypeLiteralContext
 import sigma.parser.antlr.SigmaParser.DictTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
-import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
-import sigma.syntax.SourceLocation
-import sigma.syntax.Term
 import sigma.semantics.types.Type
-import sigma.evaluation.values.Symbol
+import sigma.syntax.Term
 
 abstract class TypeExpressionTerm : Term() {
     companion object {
         fun build(
             ctx: TypeExpressionContext,
         ): TypeExpressionTerm = object : SigmaParserBaseVisitor<TypeExpressionTerm>() {
+            override fun visitTypeCall(
+                ctx: SigmaParser.TypeCallContext,
+            ): TypeExpressionTerm = TypeCallTerm.build(ctx)
+
+            override fun visitTypeReference(
+                ctx: SigmaParser.TypeReferenceContext,
+            ): TypeExpressionTerm = TypeReferenceTerm.build(ctx)
+
             override fun visitTupleTypeLiteral(
                 ctx: SigmaParser.TupleTypeLiteralContext,
             ): TypeExpressionTerm = TupleTypeLiteralTerm.build(ctx)
@@ -37,13 +41,6 @@ abstract class TypeExpressionTerm : Term() {
             override fun visitDictTypeDepiction(
                 ctx: DictTypeDepictionContext,
             ): TypeExpressionTerm = DictTypeTerm.build(ctx)
-
-            override fun visitReference(
-                ctx: ReferenceContext,
-            ): TypeExpressionTerm = TypeReferenceTerm(
-                location = SourceLocation.build(ctx),
-                referee = Symbol.of(ctx.referee.text),
-            )
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match type expression ${ctx::class}")
 
         fun parse(

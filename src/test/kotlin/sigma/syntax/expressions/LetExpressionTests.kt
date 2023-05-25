@@ -5,7 +5,7 @@ import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.TypeScope
 import sigma.SyntaxValueScope
-import sigma.TypeReferenceTerm
+import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.syntax.DefinitionTerm
