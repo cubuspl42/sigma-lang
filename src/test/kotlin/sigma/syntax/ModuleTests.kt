@@ -4,7 +4,7 @@ import sigma.TypeReferenceTerm
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.IntLiteralTerm
 import sigma.syntax.expressions.UnorderedTupleLiteralTerm
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
+import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralBodyTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import kotlin.test.Test
@@ -65,10 +65,10 @@ class ModuleTests {
                         name = Symbol.of("name2"), valueType = null,
                         value = AbstractionTerm(
                             location = SourceLocation(lineIndex = 7, columnIndex = 8),
-                            argumentType = OrderedTupleTypeLiteralTerm(
+                            argumentBody = OrderedTupleTypeLiteralBodyTerm(
                                 location = SourceLocation(lineIndex = 7, columnIndex = 8),
                                 elements = listOf(
-                                    OrderedTupleTypeLiteralTerm.Element(
+                                    OrderedTupleTypeLiteralBodyTerm.Element(
                                         name = Symbol.of("a"),
                                         type = TypeReferenceTerm(
                                             location = SourceLocation(lineIndex = 7, columnIndex = 12),

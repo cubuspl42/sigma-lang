@@ -77,8 +77,8 @@ declaration
 // end
 
 abstraction
-    :   (Bang genericParametersTuple)? argumentType=tupleTypeLiteral
-        (ThinArrow imageType=typeExpression)? FatArrow image=expression
+    :   (Bang genericParametersTuple)?
+        argumentType=tupleTypeLiteralBody (ThinArrow imageType=typeExpression)? FatArrow image=expression
     ;
 
 // Unordered tuple literal
@@ -139,17 +139,21 @@ typeExpression
     ;
 
 tupleTypeLiteral
-    : unorderedTupleTypeLiteral
-    | orderedTupleTypeLiteral
+    : Percent tupleTypeLiteralBody
+    ;
+
+tupleTypeLiteralBody
+    : unorderedTupleTypeLiteralBody
+    | orderedTupleTypeLiteralBody
     ;
 
 functionTypeDepiction
-    : (Bang genericParametersTuple)? argumentType=tupleTypeLiteral ThinArrow imageType=typeExpression
+    : (Bang genericParametersTuple)? argumentType=tupleTypeLiteralBody ThinArrow imageType=typeExpression
     ;
 
 // Unordered tuple type literal
 
-unorderedTupleTypeLiteral
+unorderedTupleTypeLiteralBody
     : LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
 
 unorderedTupleTypeEntry
@@ -160,7 +164,7 @@ unorderedTupleTypeEntry
 
 // Ordered tuple type literal
 
-orderedTupleTypeLiteral
+orderedTupleTypeLiteralBody
     : LeftBracket (orderedTupleTypeElement (Comma orderedTupleTypeElement)* Comma?)? RightBracket
     ;
 

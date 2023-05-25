@@ -13,6 +13,7 @@ LeftBracket : '[' ;
 RightBracket : ']' ;
 Lt : '<' ;
 Gt : '>' ;
+Percent : '%' ;
 
 Lte : '<=' ;
 Gte : '>=' ;

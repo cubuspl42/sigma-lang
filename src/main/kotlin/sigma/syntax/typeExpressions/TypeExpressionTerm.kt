@@ -24,7 +24,10 @@ abstract class TypeExpressionTerm : Term() {
         ): TypeExpressionTerm = object : SigmaParserBaseVisitor<TypeExpressionTerm>() {
             override fun visitTupleTypeLiteral(
                 ctx: SigmaParser.TupleTypeLiteralContext,
-            ): TypeExpressionTerm = TupleTypeLiteralTerm.build(ctx)
+            ): TypeExpressionTerm = TupleTypeLiteralTerm(
+                location = SourceLocation.build(ctx),
+                body = TupleTypeLiteralBodyTerm.build(ctx.tupleTypeLiteralBody()),
+            )
 
             override fun visitFunctionTypeDepiction(
                 ctx: FunctionTypeDepictionContext,

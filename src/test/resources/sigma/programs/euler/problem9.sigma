@@ -40,7 +40,7 @@ main = let {
 
     extractHead = ![e, r] [
         list: [e*],
-        branches: {
+        branches: %{
             ifExtracted: [
                 head: e,
                 tail: [e*],

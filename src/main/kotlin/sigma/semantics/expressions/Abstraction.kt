@@ -46,7 +46,7 @@ class Abstraction(
                 backScope = outerTypeScope,
             ) ?: outerTypeScope
 
-            val argumentType: TupleType = term.argumentType.evaluate(
+            val argumentType: TupleType = term.argumentBody.evaluate(
                 typeScope = innerTypeScope,
             )
 

@@ -9,7 +9,7 @@ import sigma.semantics.types.UniversalFunctionType
 data class FunctionTypeTerm(
     override val location: SourceLocation,
     val genericParametersTuple: AbstractionTerm.GenericParametersTuple? = null,
-    val argumentType: TupleTypeLiteralTerm,
+    val argumentBody: TupleTypeLiteralBodyTerm,
     val imageType: TypeExpressionTerm,
 ) : TypeExpressionTerm() {
     companion object {
@@ -20,8 +20,8 @@ data class FunctionTypeTerm(
             genericParametersTuple = ctx.genericParametersTuple()?.let {
                 AbstractionTerm.GenericParametersTuple.build(it)
             },
-            argumentType = ctx.argumentType.let {
-                TupleTypeLiteralTerm.build(it)
+            argumentBody = ctx.argumentType.let {
+                TupleTypeLiteralBodyTerm.build(it)
             },
             imageType = TypeExpressionTerm.build(ctx.imageType),
         )
@@ -34,7 +34,7 @@ data class FunctionTypeTerm(
             backScope = typeScope,
         ) ?: typeScope
 
-        val argumentType = argumentType.evaluate(
+        val argumentType = argumentBody.evaluate(
             typeScope = innerTypeScope,
         )
 

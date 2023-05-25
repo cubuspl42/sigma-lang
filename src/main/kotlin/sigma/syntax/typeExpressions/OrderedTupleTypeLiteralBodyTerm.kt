@@ -4,17 +4,17 @@ import indexOfOrNull
 import sigma.TypeScope
 import sigma.Thunk
 import sigma.syntax.SourceLocation
-import sigma.parser.antlr.SigmaParser.OrderedTupleTypeLiteralContext
+import sigma.parser.antlr.SigmaParser.OrderedTupleTypeLiteralBodyContext
 import sigma.semantics.types.OrderedTupleType
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.tables.Table
 
-data class OrderedTupleTypeLiteralTerm(
+data class OrderedTupleTypeLiteralBodyTerm(
     override val location: SourceLocation,
     val elements: List<Element>,
-) : TupleTypeLiteralTerm() {
+) : TupleTypeLiteralBodyTerm() {
     data class Element(
         val name: Symbol?,
         val type: TypeExpressionTerm,
@@ -22,13 +22,13 @@ data class OrderedTupleTypeLiteralTerm(
 
     companion object {
         fun build(
-            ctx: OrderedTupleTypeLiteralContext,
-        ): OrderedTupleTypeLiteralTerm = OrderedTupleTypeLiteralTerm(
+            ctx: OrderedTupleTypeLiteralBodyContext,
+        ): OrderedTupleTypeLiteralBodyTerm = OrderedTupleTypeLiteralBodyTerm(
             location = SourceLocation.build(ctx),
             elements = ctx.orderedTupleTypeElement().map { elementCtx ->
                 Element(
                     name = elementCtx.name?.let { Symbol.of(it.text) },
-                    type = build(elementCtx.type),
+                    type = TypeExpressionTerm.build(elementCtx.type),
                 )
             },
         )

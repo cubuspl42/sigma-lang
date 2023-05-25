@@ -11,7 +11,7 @@ import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm.GenericParametersTuple
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
+import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralBodyTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.tables.ArrayTable
@@ -25,10 +25,10 @@ class AbstractionTests {
             assertEquals(
                 expected = AbstractionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    argumentType = OrderedTupleTypeLiteralTerm(
+                    argumentBody = OrderedTupleTypeLiteralBodyTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         elements = listOf(
-                            OrderedTupleTypeLiteralTerm.Element(
+                            OrderedTupleTypeLiteralBodyTerm.Element(
                                 name = Symbol.of("n"),
                                 type = TypeReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 4),
@@ -60,17 +60,17 @@ class AbstractionTests {
                             Symbol.of("b"),
                         )
                     ),
-                    argumentType = OrderedTupleTypeLiteralTerm(
+                    argumentBody = OrderedTupleTypeLiteralBodyTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 8),
                         elements = listOf(
-                            OrderedTupleTypeLiteralTerm.Element(
+                            OrderedTupleTypeLiteralBodyTerm.Element(
                                 name = Symbol.of("a"),
                                 type = TypeReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 12),
                                     referee = Symbol.of("a"),
                                 ),
                             ),
-                            OrderedTupleTypeLiteralTerm.Element(
+                            OrderedTupleTypeLiteralBodyTerm.Element(
                                 name = Symbol.of("b"),
                                 type = TypeReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 18),
@@ -101,10 +101,10 @@ class AbstractionTests {
                             Symbol.of("t"),
                         )
                     ),
-                    argumentType = OrderedTupleTypeLiteralTerm(
+                    argumentBody = OrderedTupleTypeLiteralBodyTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 5),
                         elements = listOf(
-                            OrderedTupleTypeLiteralTerm.Element(
+                            OrderedTupleTypeLiteralBodyTerm.Element(
                                 name = Symbol.of("n"),
                                 type = TypeReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),
