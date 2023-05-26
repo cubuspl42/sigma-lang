@@ -1,4 +1,4 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.metaExpressions
 
 import sigma.TypeScope
 import sigma.syntax.SourceLocation
@@ -9,9 +9,9 @@ import sigma.evaluation.values.TypeErrorException
 
 data class DictTypeTerm(
     override val location: SourceLocation,
-    val keyType: TypeExpressionTerm,
-    val valueType: TypeExpressionTerm,
-) : TypeExpressionTerm() {
+    val keyType: MetaExpressionTerm,
+    val valueType: MetaExpressionTerm,
+) : MetaExpressionTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.DictTypeDepictionContext,

@@ -1,4 +1,4 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.metaExpressions
 
 import sigma.TypeScope
 import sigma.Thunk
@@ -23,7 +23,7 @@ data class UnorderedTupleTypeLiteralTerm(
 
     data class Entry(
         val name: Symbol,
-        val valueType: TypeExpressionTerm,
+        val valueType: MetaExpressionTerm,
     )
 
     companion object {

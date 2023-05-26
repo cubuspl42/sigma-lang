@@ -1,10 +1,10 @@
 package sigma.syntax.type_expressions
 
 import sigma.TypeScope
-import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
+import sigma.syntax.metaExpressions.MetaExpressionTerm
+import sigma.syntax.metaExpressions.MetaReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
+import sigma.syntax.metaExpressions.OrderedTupleTypeLiteralTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
@@ -17,7 +17,7 @@ class OrderedTupleTypeLiteralTests {
     object ParsingTests {
         @Test
         fun testEmpty() {
-            val expression = TypeExpressionTerm.parse(
+            val expression = MetaExpressionTerm.parse(
                 source = "[]",
             )
 
@@ -32,7 +32,7 @@ class OrderedTupleTypeLiteralTests {
 
         @Test
         fun testSingleUnnamed() {
-            val expression = TypeExpressionTerm.parse(
+            val expression = MetaExpressionTerm.parse(
                 source = "[A]",
             )
 
@@ -42,7 +42,7 @@ class OrderedTupleTypeLiteralTests {
                     elements = listOf(
                         OrderedTupleTypeLiteralTerm.Element(
                             name = null,
-                            type = TypeReferenceTerm(
+                            type = MetaReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 1),
                                 referee = Symbol.of("A"),
                             ),
@@ -55,7 +55,7 @@ class OrderedTupleTypeLiteralTests {
 
         @Test
         fun testAllUnnamed() {
-            val expression = TypeExpressionTerm.parse(
+            val expression = MetaExpressionTerm.parse(
                 source = "[A, B, C]",
             )
 
@@ -65,21 +65,21 @@ class OrderedTupleTypeLiteralTests {
                     elements = listOf(
                         OrderedTupleTypeLiteralTerm.Element(
                             name = null,
-                            type = TypeReferenceTerm(
+                            type = MetaReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 1),
                                 referee = Symbol.of("A"),
                             ),
                         ),
                         OrderedTupleTypeLiteralTerm.Element(
                             name = null,
-                            type = TypeReferenceTerm(
+                            type = MetaReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("B"),
                             ),
                         ),
                         OrderedTupleTypeLiteralTerm.Element(
                             name = null,
-                            type = TypeReferenceTerm(
+                            type = MetaReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 7),
                                 referee = Symbol.of("C"),
                             ),
@@ -92,7 +92,7 @@ class OrderedTupleTypeLiteralTests {
 
         @Test
         fun testSomeNamed() {
-            val expression = TypeExpressionTerm.parse(
+            val expression = MetaExpressionTerm.parse(
                 source = "[a: A, B, c: C]",
             )
 
@@ -102,21 +102,21 @@ class OrderedTupleTypeLiteralTests {
                     elements = listOf(
                         OrderedTupleTypeLiteralTerm.Element(
                             name = Symbol.of("a"),
-                            type = TypeReferenceTerm(
+                            type = MetaReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("A"),
                             ),
                         ),
                         OrderedTupleTypeLiteralTerm.Element(
                             name = null,
-                            type = TypeReferenceTerm(
+                            type = MetaReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 7),
                                 referee = Symbol.of("B"),
                             ),
                         ),
                         OrderedTupleTypeLiteralTerm.Element(
                             name = Symbol.of("c"),
-                            type = TypeReferenceTerm(
+                            type = MetaReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                 referee = Symbol.of("C"),
                             ),
@@ -131,7 +131,7 @@ class OrderedTupleTypeLiteralTests {
     object EvaluationTests {
         @Test
         fun testEmpty() {
-            val type = TypeExpressionTerm.parse(
+            val type = MetaExpressionTerm.parse(
                 source = "[]",
             ).evaluate(
                 typeScope = TypeScope.Empty,
@@ -145,7 +145,7 @@ class OrderedTupleTypeLiteralTests {
 
         @Test
         fun testNonEmpty() {
-            val type = TypeExpressionTerm.parse(
+            val type = MetaExpressionTerm.parse(
                 source = "[a: A, B]",
             ).evaluate(
                 typeScope = FixedTypeScope(

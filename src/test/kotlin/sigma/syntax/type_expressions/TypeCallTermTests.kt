@@ -1,13 +1,11 @@
 package sigma.syntax.type_expressions
 
-import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
+import sigma.syntax.metaExpressions.MetaExpressionTerm
+import sigma.syntax.metaExpressions.MetaReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.BoolType
-import sigma.evaluation.values.FixedTypeScope
 import sigma.evaluation.values.Symbol
-import sigma.syntax.typeExpressions.TypeCallTerm
-import sigma.syntax.typeExpressions.UnorderedTupleTypeLiteralTerm
+import sigma.syntax.metaExpressions.MetaCallTerm
+import sigma.syntax.metaExpressions.UnorderedTupleTypeLiteralTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -15,20 +13,20 @@ class TypeCallTermTests {
     object ParsingTests {
         @Test
         fun test() {
-            val term = TypeExpressionTerm.parse(
+            val term = MetaExpressionTerm.parse(
                 source = "Foo[Bar, {a: Int, b: Bool}]",
             )
 
             assertEquals(
-                expected = TypeCallTerm(
+                expected = MetaCallTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    callee = TypeReferenceTerm(
+                    callee = MetaReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("Foo"),
                     ),
-                    passedArgument = TypeCallTerm.TypeTupleLiteral(
+                    passedArgument = MetaCallTerm.TypeTupleLiteral(
                         elements = listOf(
-                            TypeReferenceTerm(
+                            MetaReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("Bar"),
                             ),
@@ -37,14 +35,14 @@ class TypeCallTermTests {
                                 entries = listOf(
                                     UnorderedTupleTypeLiteralTerm.Entry(
                                         name = Symbol.of("a"),
-                                        valueType = TypeReferenceTerm(
+                                        valueType = MetaReferenceTerm(
                                             location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                             referee = Symbol.of("Int"),
                                         ),
                                     ),
                                     UnorderedTupleTypeLiteralTerm.Entry(
                                         name = Symbol.of("b"),
-                                        valueType = TypeReferenceTerm(
+                                        valueType = MetaReferenceTerm(
                                             location = SourceLocation(lineIndex = 1, columnIndex = 21),
                                             referee = Symbol.of("Bool"),
                                         ),
@@ -62,7 +60,7 @@ class TypeCallTermTests {
     object EvaluationTests {
         @Test
         fun test() {
-            val term = TypeExpressionTerm.parse(
+            val term = MetaExpressionTerm.parse(
                 source = "Foo[Bar]",
             )
         }

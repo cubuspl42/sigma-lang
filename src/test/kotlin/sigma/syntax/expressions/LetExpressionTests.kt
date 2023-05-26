@@ -5,7 +5,7 @@ import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.TypeScope
 import sigma.SyntaxValueScope
-import sigma.syntax.typeExpressions.TypeReferenceTerm
+import sigma.syntax.metaExpressions.MetaReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.syntax.DefinitionTerm
@@ -83,7 +83,7 @@ class LetExpressionTests {
                             DefinitionTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 name = Symbol.of("a"),
-                                valueType = TypeReferenceTerm(
+                                valueType = MetaReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),
                                     referee = Symbol.of("Int"),
                                 ),

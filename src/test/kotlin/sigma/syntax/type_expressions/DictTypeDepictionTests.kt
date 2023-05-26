@@ -1,10 +1,10 @@
 package sigma.syntax.type_expressions
 
 import sigma.BuiltinTypeScope
-import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
+import sigma.syntax.metaExpressions.MetaExpressionTerm
+import sigma.syntax.metaExpressions.MetaReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.DictTypeTerm
+import sigma.syntax.metaExpressions.DictTypeTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
@@ -16,18 +16,18 @@ class DictTypeDepictionTests {
     object ParsingTests {
         @Test
         fun test() {
-            val expression = TypeExpressionTerm.parse(
+            val expression = MetaExpressionTerm.parse(
                 source = "{[K]: V}",
             )
 
             assertEquals(
                 expected = DictTypeTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    keyType = TypeReferenceTerm(
+                    keyType = MetaReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 2),
                         referee = Symbol.of("K"),
                     ),
-                    valueType = TypeReferenceTerm(
+                    valueType = MetaReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 6),
                         referee = Symbol.of("V"),
                     ),
@@ -40,7 +40,7 @@ class DictTypeDepictionTests {
     object EvaluationTests {
         @Test
         fun test() {
-            val type = TypeExpressionTerm.parse(
+            val type = MetaExpressionTerm.parse(
                 source = "{[Int]: Bool}",
             ).evaluate(
                 typeScope = BuiltinTypeScope,

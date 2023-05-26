@@ -2,7 +2,7 @@ package sigma.syntax
 
 import sigma.TypeScope
 import sigma.SyntaxValueScope
-import sigma.syntax.typeExpressions.TypeExpressionTerm
+import sigma.syntax.metaExpressions.MetaExpressionTerm
 import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser.DeclarationContext
 import sigma.semantics.types.Type
@@ -11,7 +11,7 @@ import sigma.syntax.expressions.ExpressionTerm
 data class DefinitionTerm(
     override val location: SourceLocation,
     val name: Symbol,
-    val valueType: TypeExpressionTerm? = null,
+    val valueType: MetaExpressionTerm? = null,
     val value: ExpressionTerm,
 ): Term() {
     companion object {
@@ -20,7 +20,7 @@ data class DefinitionTerm(
         ): DefinitionTerm = DefinitionTerm(
             location = SourceLocation.build(ctx),
             name = Symbol.of(ctx.name.text),
-            valueType = ctx.valueType?.let { TypeExpressionTerm.build(it) },
+            valueType = ctx.valueType?.let { MetaExpressionTerm.build(it) },
             value = ExpressionTerm.build(ctx.value),
         )
     }

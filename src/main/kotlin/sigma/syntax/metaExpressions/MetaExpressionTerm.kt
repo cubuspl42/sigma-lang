@@ -1,4 +1,4 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.metaExpressions
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
@@ -13,39 +13,39 @@ import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.semantics.types.Type
 import sigma.syntax.Term
 
-abstract class TypeExpressionTerm : Term() {
+abstract class MetaExpressionTerm : Term() {
     companion object {
         fun build(
             ctx: TypeExpressionContext,
-        ): TypeExpressionTerm = object : SigmaParserBaseVisitor<TypeExpressionTerm>() {
+        ): MetaExpressionTerm = object : SigmaParserBaseVisitor<MetaExpressionTerm>() {
             override fun visitTypeCall(
                 ctx: SigmaParser.TypeCallContext,
-            ): TypeExpressionTerm = TypeCallTerm.build(ctx)
+            ): MetaExpressionTerm = MetaCallTerm.build(ctx)
 
             override fun visitTypeReference(
                 ctx: SigmaParser.TypeReferenceContext,
-            ): TypeExpressionTerm = TypeReferenceTerm.build(ctx)
+            ): MetaExpressionTerm = MetaReferenceTerm.build(ctx)
 
             override fun visitTupleTypeLiteral(
                 ctx: SigmaParser.TupleTypeLiteralContext,
-            ): TypeExpressionTerm = TupleTypeLiteralTerm.build(ctx)
+            ): MetaExpressionTerm = TupleTypeLiteralTerm.build(ctx)
 
             override fun visitFunctionTypeDepiction(
                 ctx: FunctionTypeDepictionContext,
-            ): TypeExpressionTerm = FunctionTypeTerm.build(ctx)
+            ): MetaExpressionTerm = FunctionTypeTerm.build(ctx)
 
             override fun visitArrayTypeLiteral(
                 ctx: ArrayTypeLiteralContext,
-            ): TypeExpressionTerm = ArrayTypeLiteralTerm.build(ctx)
+            ): MetaExpressionTerm = ArrayTypeLiteralTerm.build(ctx)
 
             override fun visitDictTypeDepiction(
                 ctx: DictTypeDepictionContext,
-            ): TypeExpressionTerm = DictTypeTerm.build(ctx)
+            ): MetaExpressionTerm = DictTypeTerm.build(ctx)
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match type expression ${ctx::class}")
 
         fun parse(
             source: String,
-        ): TypeExpressionTerm {
+        ): MetaExpressionTerm {
             val sourceName = "__type_expression__"
 
             val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))

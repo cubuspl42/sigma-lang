@@ -1,4 +1,4 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.metaExpressions
 
 import indexOfOrNull
 import sigma.TypeScope
@@ -17,7 +17,7 @@ data class OrderedTupleTypeLiteralTerm(
 ) : TupleTypeLiteralTerm() {
     data class Element(
         val name: Symbol?,
-        val type: TypeExpressionTerm,
+        val type: MetaExpressionTerm,
     )
 
     companion object {

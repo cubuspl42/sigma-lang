@@ -1,4 +1,4 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.metaExpressions
 
 import sigma.TypeScope
 import sigma.syntax.SourceLocation
@@ -7,14 +7,14 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.parser.antlr.SigmaParser
 
-data class TypeReferenceTerm(
+data class MetaReferenceTerm(
     override val location: SourceLocation,
     val referee: Symbol,
-) : TypeExpressionTerm() {
+) : MetaExpressionTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.TypeReferenceContext,
-        ): TypeReferenceTerm = TypeReferenceTerm(
+        ): MetaReferenceTerm = MetaReferenceTerm(
             location = SourceLocation.build(ctx),
             referee = Symbol.of(ctx.referee.text),
         )

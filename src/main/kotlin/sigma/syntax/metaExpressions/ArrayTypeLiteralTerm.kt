@@ -1,4 +1,4 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.metaExpressions
 
 import sigma.TypeScope
 import sigma.syntax.SourceLocation
@@ -7,8 +7,8 @@ import sigma.semantics.types.ArrayType
 
 data class ArrayTypeLiteralTerm(
     override val location: SourceLocation,
-    val elementType: TypeExpressionTerm,
-) : TypeExpressionTerm() {
+    val elementType: MetaExpressionTerm,
+) : MetaExpressionTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.ArrayTypeLiteralContext,

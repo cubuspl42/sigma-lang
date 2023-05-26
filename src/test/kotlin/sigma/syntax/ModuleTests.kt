@@ -1,10 +1,10 @@
 package sigma.syntax
 
-import sigma.syntax.typeExpressions.TypeReferenceTerm
+import sigma.syntax.metaExpressions.MetaReferenceTerm
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.IntLiteralTerm
 import sigma.syntax.expressions.UnorderedTupleLiteralTerm
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
+import sigma.syntax.metaExpressions.OrderedTupleTypeLiteralTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import kotlin.test.Test
@@ -70,7 +70,7 @@ class ModuleTests {
                                 elements = listOf(
                                     OrderedTupleTypeLiteralTerm.Element(
                                         name = Symbol.of("a"),
-                                        type = TypeReferenceTerm(
+                                        type = MetaReferenceTerm(
                                             location = SourceLocation(lineIndex = 7, columnIndex = 12),
                                             referee = Symbol.of("Int"),
                                         ),

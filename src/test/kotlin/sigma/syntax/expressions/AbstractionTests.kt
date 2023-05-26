@@ -3,7 +3,7 @@ package sigma.syntax.expressions
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.SyntaxValueScope
-import sigma.syntax.typeExpressions.TypeReferenceTerm
+import sigma.syntax.metaExpressions.MetaReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
@@ -11,7 +11,7 @@ import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm.GenericParametersTuple
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
+import sigma.syntax.metaExpressions.OrderedTupleTypeLiteralTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.tables.ArrayTable
@@ -30,7 +30,7 @@ class AbstractionTests {
                         elements = listOf(
                             OrderedTupleTypeLiteralTerm.Element(
                                 name = Symbol.of("n"),
-                                type = TypeReferenceTerm(
+                                type = MetaReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                     referee = Symbol.of("Int"),
                                 ),
@@ -65,14 +65,14 @@ class AbstractionTests {
                         elements = listOf(
                             OrderedTupleTypeLiteralTerm.Element(
                                 name = Symbol.of("a"),
-                                type = TypeReferenceTerm(
+                                type = MetaReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 12),
                                     referee = Symbol.of("a"),
                                 ),
                             ),
                             OrderedTupleTypeLiteralTerm.Element(
                                 name = Symbol.of("b"),
-                                type = TypeReferenceTerm(
+                                type = MetaReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 18),
                                     referee = Symbol.of("b"),
                                 ),
@@ -106,7 +106,7 @@ class AbstractionTests {
                         elements = listOf(
                             OrderedTupleTypeLiteralTerm.Element(
                                 name = Symbol.of("n"),
-                                type = TypeReferenceTerm(
+                                type = MetaReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),
                                     referee = Symbol.of("Int"),
                                 ),

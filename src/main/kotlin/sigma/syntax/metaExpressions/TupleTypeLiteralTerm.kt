@@ -1,4 +1,4 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.metaExpressions
 
 import sigma.TypeScope
 import sigma.parser.antlr.SigmaParser
@@ -9,7 +9,7 @@ import sigma.semantics.types.TupleType
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.tables.Table
 
-abstract class TupleTypeLiteralTerm : TypeExpressionTerm() {
+abstract class TupleTypeLiteralTerm : MetaExpressionTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.TupleTypeLiteralContext,

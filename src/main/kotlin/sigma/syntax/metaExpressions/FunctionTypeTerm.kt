@@ -1,4 +1,4 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.metaExpressions
 
 import sigma.TypeScope
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
@@ -10,8 +10,8 @@ data class FunctionTypeTerm(
     override val location: SourceLocation,
     val genericParametersTuple: AbstractionTerm.GenericParametersTuple? = null,
     val argumentType: TupleTypeLiteralTerm,
-    val imageType: TypeExpressionTerm,
-) : TypeExpressionTerm() {
+    val imageType: MetaExpressionTerm,
+) : MetaExpressionTerm() {
     companion object {
         fun build(
             ctx: FunctionTypeDepictionContext,
@@ -23,7 +23,7 @@ data class FunctionTypeTerm(
             argumentType = ctx.argumentType.let {
                 TupleTypeLiteralTerm.build(it)
             },
-            imageType = TypeExpressionTerm.build(ctx.imageType),
+            imageType = MetaExpressionTerm.build(ctx.imageType),
         )
     }
 

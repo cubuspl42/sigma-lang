@@ -1,24 +1,23 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.metaExpressions
 
 import sigma.TypeScope
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.Type
-import sigma.evaluation.values.TypeErrorException
 import sigma.parser.antlr.SigmaParser
 
-data class TypeCallTerm(
+data class MetaCallTerm(
     override val location: SourceLocation,
-    val callee: TypeReferenceTerm,
+    val callee: MetaReferenceTerm,
     val passedArgument: TypeTupleLiteral,
-) : TypeExpressionTerm() {
+) : MetaExpressionTerm() {
     data class TypeTupleLiteral(
-        val elements: List<TypeExpressionTerm>,
+        val elements: List<MetaExpressionTerm>,
     ) {
         companion object {
             fun build(
                 ctx: SigmaParser.TypeTupleLiteralContext,
             ): TypeTupleLiteral = TypeTupleLiteral(
-                elements = ctx.elements.map { TypeExpressionTerm.build(it) },
+                elements = ctx.elements.map { MetaExpressionTerm.build(it) },
             )
         }
 
@@ -27,9 +26,9 @@ data class TypeCallTerm(
     companion object {
         fun build(
             ctx: SigmaParser.TypeCallContext,
-        ): TypeCallTerm = TypeCallTerm(
+        ): MetaCallTerm = MetaCallTerm(
             location = SourceLocation.build(ctx),
-            callee = TypeReferenceTerm.build(ctx.callee),
+            callee = MetaReferenceTerm.build(ctx.callee),
             passedArgument = TypeTupleLiteral.build(ctx.passedArgument),
         )
     }

@@ -1,7 +1,7 @@
 package sigma.syntax.type_expressions
 
-import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
+import sigma.syntax.metaExpressions.MetaExpressionTerm
+import sigma.syntax.metaExpressions.MetaReferenceTerm
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
 import sigma.evaluation.values.FixedTypeScope
@@ -13,12 +13,12 @@ class TypeReferenceTermTests {
     object ParsingTests {
         @Test
         fun test() {
-            val expression = TypeExpressionTerm.parse(
+            val expression = MetaExpressionTerm.parse(
                 source = "Foo",
             )
 
             assertEquals(
-                expected = TypeReferenceTerm(
+                expected = MetaReferenceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     referee = Symbol.of("Foo"),
                 ),
@@ -30,7 +30,7 @@ class TypeReferenceTermTests {
     object EvaluationTests {
         @Test
         fun test() {
-            val type = TypeExpressionTerm.parse(
+            val type = MetaExpressionTerm.parse(
                 source = "Foo",
             ).evaluate(
                 typeScope = FixedTypeScope(
