@@ -12,8 +12,7 @@ class FakeDeclaration(
     override val name: Symbol,
     type: Type,
 ) : Declaration() {
-
-    override val inferredValueType: Computation<Type> = Computation.pure(type)
+    override val inferredType: Computation<Type> = Computation.pure(type)
 
     override val errors: Set<SemanticError> = emptySet()
 }

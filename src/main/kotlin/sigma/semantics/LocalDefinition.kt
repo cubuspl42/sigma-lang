@@ -11,7 +11,7 @@ import sigma.evaluation.values.Value
 abstract class Declaration : Entity() {
     abstract val name: Symbol
 
-    abstract val inferredValueType: Computation<Type>
+    abstract val inferredType: Computation<Type>
 }
 
 class BuiltinDefinition(
@@ -19,7 +19,7 @@ class BuiltinDefinition(
     val type: Type,
     val value: Value,
 ) : Declaration() {
-    override val inferredValueType: Computation<Type> = Computation.pure(type)
+    override val inferredType: Computation<Type> = Computation.pure(type)
 
     override val errors: Set<SemanticError> = emptySet()
 }
@@ -29,7 +29,7 @@ abstract class Definition : Declaration() {
 
     protected abstract val typeScope: TypeScope
 
-    abstract val meaningExpression: Expression
+    abstract val definer: Expression
 
     private val declaredValueType by lazy {
         term.valueType?.evaluate(
@@ -37,9 +37,9 @@ abstract class Definition : Declaration() {
         )
     }
 
-    final override val inferredValueType: Computation<Type> by lazy {
+    final override val inferredType: Computation<Type> by lazy {
         when (val it = declaredValueType) {
-            null -> meaningExpression.inferredType
+            null -> definer.inferredType
             else -> Computation.pure(it)
         }
     }
@@ -49,7 +49,7 @@ class LocalDefinition(
     override val typeScope: TypeScope,
     override val term: DefinitionTerm,
     override val name: Symbol,
-    override val meaningExpression: Expression,
+    override val definer: Expression,
 ) : Definition() {
     companion object {
         fun build(
@@ -60,7 +60,7 @@ class LocalDefinition(
             typeScope = typeScope,
             term = term,
             name = term.name,
-            meaningExpression = Expression.build(
+            definer = Expression.build(
                 typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term.value,
