@@ -37,7 +37,7 @@ sealed class ExpressionTerm : Term() {
         fun parse(
             source: String,
         ): ExpressionTerm {
-            val sourceName = "__main__"
+            val sourceName = "__expression__"
 
             val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
             val tokenStream = CommonTokenStream(lexer)

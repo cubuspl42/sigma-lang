@@ -13,7 +13,7 @@ import sigma.evaluation.scope.Scope
 
 data class LocalScopeTerm(
     override val location: SourceLocation,
-    val declarations: List<DefinitionTerm>,
+    val definitions: List<DefinitionTerm>,
 ) : Term() {
     companion object {
         fun parse(
@@ -30,7 +30,7 @@ data class LocalScopeTerm(
             ctx: SigmaParser.LocalScopeContext,
         ): LocalScopeTerm = LocalScopeTerm(
             location = SourceLocation.build(ctx),
-            declarations = ctx.declaration().map {
+            definitions = ctx.declaration().map {
                 DefinitionTerm.build(it)
             },
         )
@@ -45,7 +45,7 @@ data class LocalScopeTerm(
             valueScope = valueScope,
         )
 
-        declarations.forEach {
+        definitions.forEach {
             it.validate(
                 typeScope = typeScope,
                 valueScope = newValueScope,
@@ -59,14 +59,14 @@ data class LocalScopeTerm(
     ): SyntaxValueScope = LoopedStaticValueScope(
         typeContext = typeScope,
         valueContext = valueScope,
-        declarations = declarations,
+        declarations = definitions,
     )
 
     fun evaluateDynamically(
         scope: Scope,
     ): Scope = LoopedScope(
         context = scope,
-        declarations = declarations.associate {
+        declarations = definitions.associate {
             it.name to it.value
         },
     )

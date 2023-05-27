@@ -23,7 +23,7 @@ data class LetExpression(
                 val definitionBlock = LocalDefinitionBlock.build(
                     typeScope = typeScope,
                     outerDeclarationScope = innerDeclarationScopeLooped,
-                    definitions = term.localScope.declarations,
+                    definitions = term.localScope.definitions,
                 )
 
                 val innerDeclarationScope = definitionBlock.chainWith(

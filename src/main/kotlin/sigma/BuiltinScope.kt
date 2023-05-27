@@ -1,7 +1,15 @@
 package sigma
 
-import sigma.semantics.BuiltinDefinition
+import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.FunctionValue
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
+import sigma.semantics.Declaration
 import sigma.semantics.DeclarationScope
+import sigma.semantics.Definition
+import sigma.semantics.SemanticError
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
@@ -10,16 +18,19 @@ import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UndefinedType
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.UnorderedTupleType
-import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.FunctionValue
-import sigma.evaluation.values.IntValue
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
-import sigma.evaluation.scope.Scope
 
 interface BuiltinValue {
     val type: Type
     val value: Value
+}
+
+private class BuiltinDefinition(
+    override val name: Symbol,
+    val type: Type,
+) : Declaration() {
+    override val inferredType: Computation<Type> = Computation.pure(type)
+
+    override val errors: Set<SemanticError> = emptySet()
 }
 
 object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
@@ -161,7 +172,6 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
         name to BuiltinDefinition(
             name = name,
             type = builtinValue.type,
-            value = builtinValue.value,
         )
     }
 
@@ -181,5 +191,5 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
         name: Symbol,
     ): BuiltinValue? = builtinValues[name]
 
-    override fun resolveDeclaration(name: Symbol): BuiltinDefinition? = builtinDefinitions[name]
+    override fun resolveDeclaration(name: Symbol): Declaration? = builtinDefinitions[name]
 }

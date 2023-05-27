@@ -32,21 +32,24 @@ class Module(
     }.toSet()
 
     val innerDeclarationScope: DeclarationScope = object : DefinitionBlock() {
-        override fun getDefinition(name: Symbol): Definition? = this@Module.getDefinition(name = name)
-    }.chainWith(outerScope = prelude.definitionBlock)
+        override fun getDefinition(name: Symbol): Definition? = this@Module.getGlobalDefinition(name = name)
+    }.chainWith(
+        outerScope = prelude.definitionBlock,
+    )
 
     val innerScope = object : Scope {
-        override fun getValue(name: Symbol): Thunk? = this@Module.getDefinition(name = name)?.meaningThunk
+        override fun getValue(name: Symbol): Thunk? = this@Module.getGlobalDefinition(name = name)?.definerThunk
     }.chainWith(
         context = prelude.scope,
     )
 
-    fun getDefinition(name: Symbol): GlobalDefinition? = globalDefinitions.singleOrNull {
+    fun getGlobalDefinition(name: Symbol): GlobalDefinition? = globalDefinitions.singleOrNull {
         it.name == name
     }
 
-    override val errors: Set<SemanticError>
-        get() = TODO("Not yet implemented")
+    override val errors: Set<SemanticError> by lazy {
+        globalDefinitions.fold(emptySet()) { acc, it -> acc + it.errors }
+    }
 }
 
 class GlobalDefinition(
@@ -75,12 +78,9 @@ class GlobalDefinition(
         )
     }
 
-    val meaningThunk: Thunk by lazy {
+    val definerThunk: Thunk by lazy {
         definer.evaluate(
             scope = containingModule.innerScope,
         )
     }
-
-    override val errors: Set<SemanticError>
-        get() = TODO("Not yet implemented")
 }

@@ -27,10 +27,10 @@ class Program internal constructor(
     }
 
     fun evaluateResult(): Value {
-        val result = module.getDefinition(
+        val result = module.getGlobalDefinition(
             name = Symbol.of("main")
         )!!
 
-        return result.meaningThunk.toEvaluatedValue
+        return result.definerThunk.toEvaluatedValue
     }
 }
