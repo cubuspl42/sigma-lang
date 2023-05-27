@@ -5,7 +5,6 @@ import sigma.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.OrderedTupleType
-import sigma.semantics.types.Type
 import sigma.syntax.expressions.OrderedTupleLiteralTerm
 
 class OrderedTupleLiteral(
@@ -44,7 +43,8 @@ class OrderedTupleLiteral(
         )
     }
 
-    override val errors: Set<SemanticError>
-        get() = TODO("Not yet implemented")
+    override val errors: Set<SemanticError> by lazy {
+        elements.fold(emptySet()) { acc, it -> acc + it.errors }
+    }
 }
 

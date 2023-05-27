@@ -69,11 +69,26 @@ private fun solveProblem(n: Int): Value {
     val loader = Project.Loader.create(store = store)
     val program = loader.load(fileBaseName = "problem$n")
 
-    program.validate()
+    val errors = program.errors
+
+    println()
+    println("[Problem $n]")
+    println()
+
+    if (errors.isNotEmpty()) {
+        println("Semantic errors:")
+        errors.forEach {
+            println(it)
+        }
+    }
 
     val result = program.evaluateResult()
 
+    println()
+    println("Result:")
     println(result.dump())
+
+    println()
 
     return result
 }
