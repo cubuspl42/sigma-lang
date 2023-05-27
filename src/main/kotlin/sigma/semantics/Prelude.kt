@@ -23,7 +23,7 @@ data class Prelude(
                 val definitionBlock = LocalDefinitionBlock.build(
                     typeScope = BuiltinTypeScope,
                     outerDeclarationScope = innerDeclarationScopeLooped,
-                    definitions = prelude.declarations,
+                    definitions = prelude.definitions,
                 )
 
 

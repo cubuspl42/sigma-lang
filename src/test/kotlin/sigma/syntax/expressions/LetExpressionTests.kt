@@ -27,7 +27,7 @@ class LetExpressionTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     localScope = LocalScopeTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                        declarations = listOf(
+                        definitions = listOf(
                             DefinitionTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 4),
                                 name = Symbol.of("g"),
@@ -83,7 +83,7 @@ class LetExpressionTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     localScope = LocalScopeTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                        declarations = listOf(
+                        definitions = listOf(
                             DefinitionTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 name = Symbol.of("a"),
