@@ -38,7 +38,7 @@ class Reference(
     override val inferredType: Computation<Type> = Computation.lazy {
         when (val it = referredDeclaration) {
             null -> Computation.pure(IllType)
-            else -> it.inferredValueType
+            else -> it.inferredType
         }
     }
 

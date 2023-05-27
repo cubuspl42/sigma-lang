@@ -67,7 +67,7 @@ class GlobalDefinition(
 
     override val typeScope: TypeScope = BuiltinTypeScope
 
-    override val meaningExpression: Expression by lazy {
+    override val definer: Expression by lazy {
         Expression.build(
             typeScope = typeScope,
             declarationScope = containingModule.innerDeclarationScope,
@@ -76,7 +76,7 @@ class GlobalDefinition(
     }
 
     val meaningThunk: Thunk by lazy {
-        meaningExpression.evaluate(
+        definer.evaluate(
             scope = containingModule.innerScope,
         )
     }
