@@ -48,7 +48,9 @@ class Call(
 
     object ValidArgumentResult : ArgumentValidationOutcome
 
-    object InvalidArgumentError : ArgumentValidationOutcome, SemanticError
+    object InvalidArgumentError : ArgumentValidationOutcome, SemanticError {
+        override fun toString(): String = "InvalidArgumentError"
+    }
 
     private val subjectCallOutcome: Computation<SubjectCallOutcome> by lazy {
         subject.inferredType.thenJust { subjectType ->

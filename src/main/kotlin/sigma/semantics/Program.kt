@@ -3,9 +3,9 @@ package sigma.semantics
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
-import sigma.evaluation.values.Value
 
 class Program internal constructor(
     private val module: Module,
@@ -22,9 +22,7 @@ class Program internal constructor(
         }
     }
 
-    fun validate() {
-
-    }
+    val errors: Set<SemanticError> by lazy { module.errors }
 
     fun evaluateResult(): Value {
         val result = module.getGlobalDefinition(

@@ -28,6 +28,5 @@ data class IntLiteral(
         )
     )
 
-    override val errors: Set<SemanticError>
-        get() = TODO("Not yet implemented")
+    override val errors: Set<SemanticError> = emptySet()
 }
