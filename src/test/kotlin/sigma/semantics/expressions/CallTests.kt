@@ -10,6 +10,7 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.IntType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.UniversalFunctionType
+import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.CallTerm
 import sigma.syntax.expressions.ExpressionTerm
 import utils.FakeDeclarationScope
@@ -87,7 +88,9 @@ class CallTests {
             assertEquals(
                 expected = call.errors,
                 actual = setOf(
-                    Call.InvalidArgumentError,
+                    Call.InvalidArgumentError(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                    ),
                 ),
             )
 
@@ -120,6 +123,7 @@ class CallTests {
             assertEquals(
                 expected = setOf(
                     Call.IllegalSubjectCallError(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         illegalSubjectType = BoolType,
                     ),
                 ),

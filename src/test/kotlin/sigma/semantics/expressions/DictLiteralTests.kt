@@ -102,10 +102,12 @@ object DictLiteralTests {
             )
 
             assertEquals(
-                expected = dictLiteral.errors,
-                actual = setOf(
-                    DictLiteral.InconsistentKeyTypeError,
-                )
+                expected = setOf(
+                    DictLiteral.InconsistentKeyTypeError(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                    ),
+                ),
+                actual = dictLiteral.errors,
             )
 
             assertEquals(
@@ -120,10 +122,10 @@ object DictLiteralTests {
                 typeScope = BuiltinTypeScope,
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(
-                       "key1" to IntCollectiveType,
-                       "value1" to BoolType,
-                       "key2" to IntCollectiveType,
-                       "value2" to Arbitrary.unorderedTupleType,
+                        "key1" to IntCollectiveType,
+                        "value1" to BoolType,
+                        "key2" to IntCollectiveType,
+                        "value2" to Arbitrary.unorderedTupleType,
                     ),
                 ),
                 term = ExpressionTerm.parse(
@@ -137,10 +139,12 @@ object DictLiteralTests {
             )
 
             assertEquals(
-                expected = dictLiteral.errors,
-                actual = setOf(
-                    DictLiteral.InconsistentValueTypeError,
-                )
+                expected = setOf(
+                    DictLiteral.InconsistentValueTypeError(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                    ),
+                ),
+                actual = dictLiteral.errors,
             )
 
             assertEquals(
@@ -172,7 +176,10 @@ object DictLiteralTests {
 
             assertEquals(
                 expected = setOf(
-                    DictLiteral.NonPrimitiveKeyTypeError(keyType = keyType),
+                    DictLiteral.NonPrimitiveKeyTypeError(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                        keyType = keyType,
+                    ),
                 ),
                 actual = dictLiteral.errors,
             )

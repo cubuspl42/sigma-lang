@@ -7,6 +7,7 @@ import sigma.semantics.SemanticError
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
+import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.CallTerm
 
 class Call(
@@ -41,6 +42,7 @@ class Call(
     ) : SubjectCallOutcome
 
     data class IllegalSubjectCallError(
+        override val location: SourceLocation,
         val illegalSubjectType: Type,
     ) : SubjectCallOutcome, SemanticError
 
@@ -48,9 +50,9 @@ class Call(
 
     object ValidArgumentResult : ArgumentValidationOutcome
 
-    object InvalidArgumentError : ArgumentValidationOutcome, SemanticError {
-        override fun toString(): String = "InvalidArgumentError"
-    }
+    data class InvalidArgumentError(
+        override val location: SourceLocation,
+    ) : ArgumentValidationOutcome, SemanticError
 
     private val subjectCallOutcome: Computation<SubjectCallOutcome> by lazy {
         subject.inferredType.thenJust { subjectType ->
@@ -60,6 +62,7 @@ class Call(
                 )
 
                 else -> IllegalSubjectCallError(
+                    location = subject.location,
                     illegalSubjectType = subjectType,
                 )
             }
@@ -81,7 +84,9 @@ class Call(
                 if (argumentType == subjectType.argumentType) {
                     ValidArgumentResult
                 } else {
-                    InvalidArgumentError
+                    InvalidArgumentError(
+                        location = argument.location,
+                    )
                 }
 
             }
