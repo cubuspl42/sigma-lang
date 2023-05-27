@@ -51,6 +51,7 @@ data class LetExpression(
     override val inferredType: Computation<Type>
         get() = result.inferredType
 
-    override val errors: Set<SemanticError>
-        get() = TODO("Not yet implemented")
+    override val errors: Set<SemanticError> by lazy {
+        definitionBlock.errors + result.errors
+    }
 }

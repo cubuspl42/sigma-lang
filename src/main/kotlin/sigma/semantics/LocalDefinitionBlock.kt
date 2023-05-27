@@ -11,15 +11,13 @@ abstract class DeclarationBlock : DeclarationScope {
         ): DeclarationBlock = object : DeclarationBlock() {
             val resultBlock = build(this)
 
-            override fun getDeclaration(name: Symbol): Declaration? =
-                resultBlock.getDeclaration(name = name)
+            override fun getDeclaration(name: Symbol): Declaration? = resultBlock.getDeclaration(name = name)
         }.resultBlock
     }
 
     abstract fun getDeclaration(name: Symbol): Declaration?
 
-    final override fun resolveDeclaration(name: Symbol): Declaration? =
-        getDeclaration(name = name)
+    final override fun resolveDeclaration(name: Symbol): Declaration? = getDeclaration(name = name)
 
     fun chainWith(outerScope: DeclarationScope): DeclarationScope = DeclarationScope.Chained(
         outerScope = outerScope,
@@ -73,4 +71,8 @@ class LocalDefinitionBlock(
     override fun getDeclaration(name: Symbol): Declaration? = getDefinition(name = name)
 
     override fun getDefinition(name: Symbol): LocalDefinition? = definitionByName[name]
+
+    val errors: Set<SemanticError> by lazy {
+        definitionByName.values.fold(emptySet()) { acc, it -> acc + it.errors }
+    }
 }
