@@ -34,7 +34,7 @@ class Module(
     val innerDeclarationScope: DeclarationScope = object : DefinitionBlock() {
         override fun getDefinition(name: Symbol): Definition? = this@Module.getGlobalDefinition(name = name)
     }.chainWith(
-        outerScope = prelude.definitionBlock,
+        outerScope = prelude.declarationScope,
     )
 
     val innerScope = object : Scope {

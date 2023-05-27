@@ -168,7 +168,6 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
         Symbol.of("concat") to FunctionValue.ConcatFunction,
     )
 
-    // TODO: Migrate to `BuiltinDefinition` fully? Currently things like "if" are untyped?
     private val builtinDefinitions = builtinValues.entries.associate { (name, builtinValue) ->
         name to BuiltinDefinition(
             name = name,
