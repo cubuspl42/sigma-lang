@@ -89,5 +89,7 @@ class Abstraction(
         }
     }
 
-    override val errors: Set<SemanticError> = emptySet()
+    override val errors: Set<SemanticError> by lazy {
+        image.errors
+    }
 }

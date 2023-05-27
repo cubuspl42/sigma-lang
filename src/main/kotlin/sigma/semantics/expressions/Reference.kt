@@ -45,7 +45,8 @@ class Reference(
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
             if (referredDeclaration == null) UnresolvedNameError(
-                location = term.location, name = term.referee
+                location = term.location,
+                name = term.referee,
             ) else null
         )
     }

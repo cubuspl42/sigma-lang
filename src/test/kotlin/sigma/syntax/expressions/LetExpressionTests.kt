@@ -3,14 +3,18 @@ package sigma.syntax.expressions
 import org.junit.jupiter.api.assertThrows
 import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
-import sigma.TypeScope
 import sigma.SyntaxValueScope
-import sigma.syntax.typeExpressions.TypeReferenceTerm
+import sigma.TypeScope
+import sigma.evaluation.values.Symbol
+import sigma.semantics.DeclarationScope
+import sigma.semantics.expressions.LetExpression
+import sigma.semantics.expressions.Reference
 import sigma.semantics.types.BoolType
+import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
 import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
-import sigma.evaluation.values.Symbol
+import sigma.syntax.typeExpressions.TypeReferenceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -190,5 +194,38 @@ class LetExpressionTests {
                 )
             }
         }
+
+        @Test
+        fun testDefinitionWithError() {
+            val term = ExpressionTerm.parse(
+                source = """
+                        let {
+                            a = asdf,
+                        } in a
+                    """.trimIndent()
+            ) as LetExpressionTerm
+
+            val expectation = LetExpression.build(
+                typeScope = TypeScope.Empty,
+                outerDeclarationScope = DeclarationScope.Empty,
+                term = term,
+            )
+
+            assertEquals(
+                expected = setOf(
+                    Reference.UnresolvedNameError(
+                        location = SourceLocation(lineIndex = 2, columnIndex = 8),
+                        name = Symbol.of("asdf"),
+                    ),
+                ),
+                actual = expectation.errors,
+            )
+
+            assertEquals(
+                expected = IllType,
+                actual = expectation.inferredType.value,
+            )
+        }
+
     }
 }

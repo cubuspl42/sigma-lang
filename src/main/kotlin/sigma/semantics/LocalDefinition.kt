@@ -2,11 +2,11 @@ package sigma.semantics
 
 import sigma.Computation
 import sigma.TypeScope
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.Type
 import sigma.syntax.DefinitionTerm
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
 
 abstract class Declaration : Entity() {
     abstract val name: Symbol
@@ -68,6 +68,6 @@ class LocalDefinition(
         )
     }
 
-    override val errors: Set<SemanticError>
-        get() = TODO("Not yet implemented")
+    // TODO: Check if the declared type matches the inferred one
+    override val errors: Set<SemanticError> by lazy { definer.errors }
 }
