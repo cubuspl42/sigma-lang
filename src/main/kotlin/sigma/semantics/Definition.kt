@@ -2,14 +2,14 @@ package sigma.semantics
 
 import sigma.Computation
 import sigma.TypeScope
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.Type
 import sigma.syntax.DefinitionTerm
+import sigma.syntax.SourceLocation
 
 abstract class Definition : Declaration() {
     data class UnmatchedInferredTypeError(
+        override val location: SourceLocation,
         val declaredType: Type,
         val inferredType: Type,
     ) : SemanticError
@@ -30,6 +30,7 @@ abstract class Definition : Declaration() {
 
         if (declaredType != null && inferredType != null && declaredType != inferredType) {
             UnmatchedInferredTypeError(
+                location = definer.location,
                 declaredType = declaredType,
                 inferredType = inferredType,
             )

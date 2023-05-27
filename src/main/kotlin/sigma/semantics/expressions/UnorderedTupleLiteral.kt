@@ -11,6 +11,7 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.semantics.types.IllType
 import sigma.semantics.types.UnorderedTupleType
+import sigma.syntax.SourceLocation
 
 class UnorderedTupleLiteral(
     override val term: UnorderedTupleLiteralTerm,
@@ -43,6 +44,7 @@ class UnorderedTupleLiteral(
     ) : InferredTypeOutcome
 
     data class DuplicatedKeyError(
+        override val location: SourceLocation,
         val duplicatedKey: PrimitiveValue,
     ) : InferredTypeOutcome, SemanticError
 
@@ -81,6 +83,7 @@ class UnorderedTupleLiteral(
             )
         } else {
             DuplicatedKeyError(
+                location = term.location,
                 duplicatedKey = firstDuplicatedKey,
             )
         }

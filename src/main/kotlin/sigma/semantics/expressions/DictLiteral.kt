@@ -8,6 +8,7 @@ import sigma.semantics.types.DictType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.PrimitiveType
 import sigma.semantics.types.Type
+import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.DictLiteralTerm
 
 class DictLiteral(
@@ -63,9 +64,12 @@ class DictLiteral(
 
     sealed interface InferredKeyTypeError : InferredKeyTypeOutcome, SemanticError
 
-    object InconsistentKeyTypeError : InferredKeyTypeError
+    data class InconsistentKeyTypeError(
+        override val location: SourceLocation,
+    ) : InferredKeyTypeError
 
     data class NonPrimitiveKeyTypeError(
+        override val location: SourceLocation,
         val keyType: Type,
     ) : InferredKeyTypeError, SemanticError
 
@@ -75,7 +79,9 @@ class DictLiteral(
         val valueType: Type,
     ) : InferredValueTypeOutcome
 
-    object InconsistentValueTypeError : InferredValueTypeOutcome, SemanticError
+    data class InconsistentValueTypeError(
+        override val location: SourceLocation,
+    ) : InferredValueTypeOutcome, SemanticError
 
     private val inferredKeyTypeOutcome: Computation<InferredKeyTypeOutcome> = Computation.traverseList(
         associations
@@ -95,11 +101,14 @@ class DictLiteral(
                 )
             } else {
                 NonPrimitiveKeyTypeError(
+                    location = term.location,
                     keyType = keyType,
                 )
             }
         } else {
-            InconsistentKeyTypeError
+            InconsistentKeyTypeError(
+                location = term.location,
+            )
         }
     }
 
@@ -117,7 +126,9 @@ class DictLiteral(
                 valueType = valueType,
             )
         } else {
-            InconsistentValueTypeError
+            InconsistentValueTypeError(
+                location = term.location,
+            )
         }
     }
 

@@ -15,7 +15,7 @@ class Reference(
     override val term: ReferenceTerm,
 ) : Expression() {
     data class UnresolvedNameError(
-        val location: SourceLocation,
+        override val location: SourceLocation,
         val name: Symbol,
     ) : SemanticError
 

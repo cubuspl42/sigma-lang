@@ -10,6 +10,7 @@ import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.UnorderedTupleType
+import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.UnorderedTupleLiteralTerm
 import sigma.syntax.expressions.UnorderedTupleLiteralTerm.DuplicatedNameError
@@ -97,6 +98,7 @@ object UnorderedTupleTests {
             assertEquals(
                 expected = setOf(
                     UnorderedTupleLiteral.DuplicatedKeyError(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         duplicatedKey = Symbol.of("key1"),
                     ),
                 ),

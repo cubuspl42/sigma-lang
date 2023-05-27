@@ -4,6 +4,7 @@ import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
+import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.LetExpressionTerm
 import kotlin.test.Test
@@ -32,6 +33,7 @@ class LocalDefinitionTests {
             assertEquals(
                 expected = setOf(
                     Definition.UnmatchedInferredTypeError(
+                        location = SourceLocation(lineIndex = 2, columnIndex = 13),
                         declaredType = IntCollectiveType,
                         inferredType = BoolType,
                     ),

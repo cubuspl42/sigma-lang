@@ -2,14 +2,13 @@ package sigma.semantics.expressions
 
 import sigma.Computation
 import sigma.TypeScope
-import sigma.SyntaxValueScope
-import sigma.semantics.types.Type
-import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.TypeErrorException
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
+import sigma.semantics.types.Type
+import sigma.semantics.types.UnorderedTupleType
+import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.FieldReadTerm
 
 class FieldRead(
@@ -24,6 +23,7 @@ class FieldRead(
     ) : InferredSubjectTypeOutcome
 
     data class InvalidSubjectTypeError(
+        override val location: SourceLocation,
         val invalidSubjectType: Type,
     ) : InferredSubjectTypeOutcome, SemanticError
 
@@ -34,6 +34,7 @@ class FieldRead(
     ) : InferredFieldTypeOutcome
 
     data class MissingFieldError(
+        override val location: SourceLocation,
         val subjectType: UnorderedTupleType,
         val missingFieldName: Symbol,
     ) : InferredFieldTypeOutcome, SemanticError
@@ -68,6 +69,7 @@ class FieldRead(
                 )
             } else {
                 InvalidSubjectTypeError(
+                    location = subject.location,
                     invalidSubjectType = subjectType,
                 )
             }
@@ -86,6 +88,7 @@ class FieldRead(
                     )
                 } else {
                     MissingFieldError(
+                        location = term.location,
                         subjectType = subjectType,
                         missingFieldName = fieldName,
                     )
