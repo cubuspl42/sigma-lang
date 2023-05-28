@@ -16,6 +16,11 @@ object TypeVariable : Type() {
         resolution: TypeVariableResolution,
     ): Type = resolution.resolvedTypeByVariable[this] ?: this
 
+    override fun match(assignedType: Type): MatchResult {
+        // TODO: Improve type variable matching
+        return TotalMatch
+    }
+
     override fun dump(): String = "#T"
 }
 

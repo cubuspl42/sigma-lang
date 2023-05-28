@@ -6,6 +6,19 @@ data class UniversalFunctionType(
     override val argumentType: TupleType,
     override val imageType: Type,
 ) : FunctionType() {
+    data class UniversalFunctionMatch(
+        val argumentMatch: Type.MatchResult,
+        val imageMatch: Type.MatchResult,
+    ) : PartialMatch() {
+        override fun isFull(): Boolean = argumentMatch.isFull() && imageMatch.isFull()
+
+        override fun dump(): String = when {
+            !argumentMatch.isFull() -> "argument: " + argumentMatch.dump()
+            !imageMatch.isFull() -> "image: " + imageMatch.dump()
+            else -> "(?)"
+        }
+    }
+
     override fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution {
@@ -31,9 +44,24 @@ data class UniversalFunctionType(
             resolution = resolution,
         ),
         imageType = imageType.substituteTypeVariables(
-            resolution  = resolution,
+            resolution = resolution,
         ),
     )
+
+    override fun match(
+        assignedType: Type,
+    ): MatchResult = when (assignedType) {
+        is UniversalFunctionType -> UniversalFunctionMatch(
+            argumentMatch = assignedType.argumentType.match(
+                assignedType = argumentType,
+            ),
+            imageMatch = imageType.match(
+                assignedType = assignedType.imageType,
+            ),
+        )
+
+        else -> TotalMismatch
+    }
 
     override fun dump() = "${argumentType.dump()} -> ${imageType.dump()}"
 }

@@ -5,6 +5,34 @@ import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 
 sealed class Type {
+    sealed class MatchResult {
+        abstract fun isFull(): Boolean
+
+        abstract fun dump(): String
+    }
+
+    sealed class Match : MatchResult()
+
+    sealed class PartialMatch : Match()
+
+    object TotalMatch : Match() {
+        override fun isFull(): Boolean = true
+
+        override fun dump(): String = "(total match)"
+
+        override fun toString(): String = "TotalMatch"
+    }
+
+    sealed class Mismatch : MatchResult() {
+        final override fun isFull(): Boolean = false
+    }
+
+    object TotalMismatch : Mismatch() {
+        override fun dump(): String = "(total mismatch)"
+
+        override fun toString(): String = "TotalMismatch"
+    }
+
     final override fun toString(): String = dump()
 
     open val asLiteral: PrimitiveLiteralType? = null
@@ -23,6 +51,10 @@ sealed class Type {
         resolution: TypeVariableResolution,
     ): Type
 
+    abstract fun match(
+        assignedType: Type,
+    ): MatchResult
+
     abstract fun dump(): String
 }
 
@@ -38,6 +70,10 @@ object AnyType : Type() {
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
     ): AnyType = this
+
+    override fun match(
+        assignedType: Type,
+    ): MatchResult = Type.TotalMatch
 
     override fun dump(): String = "Any"
 }
@@ -57,6 +93,13 @@ sealed class PrimitiveType : Type() {
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
     ): PrimitiveType = this
+
+    override fun match(
+        assignedType: Type,
+    ): MatchResult = when (assignedType) {
+        this -> TotalMatch
+        else -> TotalMismatch
+    }
 }
 
 object UndefinedType : PrimitiveType() {
@@ -84,6 +127,10 @@ object NeverType : Type() {
     ): Type {
         return this
     }
+
+    override fun match(
+        assignedType: Type,
+    ): MatchResult = TotalMismatch
 
     override fun dump(): String = "Never"
 }
@@ -175,6 +222,9 @@ object IllType : Type() {
     }
 
     override fun substituteTypeVariables(resolution: TypeVariableResolution): Type = IllType
+    override fun match(assignedType: Type): MatchResult {
+        TODO("Not yet implemented")
+    }
 
     override fun dump(): String = "IllType"
 }

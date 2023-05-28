@@ -78,7 +78,7 @@ private fun solveProblem(n: Int): Value {
     if (errors.isNotEmpty()) {
         println("Semantic errors:")
         errors.forEach {
-            println(it)
+            println(it.dump())
         }
     }
 
