@@ -63,6 +63,9 @@ data class DictType(
             ),
         )
 
-        else -> Type.TotalMismatch
+        else -> Type.TotalMismatch(
+            expectedType = this,
+            actualType = assignedType,
+        )
     }
 }

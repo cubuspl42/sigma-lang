@@ -121,7 +121,10 @@ data class OrderedTupleType(
             },
         )
 
-        else -> Type.TotalMismatch
+        else -> Type.TotalMismatch(
+            expectedType = this,
+            actualType = assignedType,
+        )
     }
 
     override fun toStaticValueScope(): SyntaxValueScope = object : SyntaxValueScope {

@@ -60,7 +60,10 @@ data class UniversalFunctionType(
             ),
         )
 
-        else -> TotalMismatch
+        else -> Type.TotalMismatch(
+            expectedType = this,
+            actualType = assignedType,
+        )
     }
 
     override fun dump() = "${argumentType.dump()} -> ${imageType.dump()}"
