@@ -81,7 +81,10 @@ data class ArrayType(
             },
         )
 
-        else -> Type.TotalMismatch
+        else -> Type.TotalMismatch(
+            expectedType = this,
+            actualType = assignedType,
+        )
     }
 
     override fun dump(): String = "[${elementType.dump()}*]"

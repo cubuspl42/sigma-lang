@@ -10,8 +10,7 @@ import sigma.syntax.SourceLocation
 abstract class Definition : Declaration() {
     data class UnmatchedInferredTypeError(
         override val location: SourceLocation,
-        val declaredType: Type,
-        val inferredType: Type,
+        val matchResult: Type.MatchResult,
     ) : SemanticError
 
     protected abstract val term: DefinitionTerm
@@ -28,11 +27,13 @@ abstract class Definition : Declaration() {
         val declaredType = this.declaredType
         val inferredType = definer.inferredType.value
 
-        if (declaredType != null && inferredType != null && declaredType != inferredType) {
-            UnmatchedInferredTypeError(
+        if (declaredType != null && inferredType != null) {
+            val matchResult = declaredType.match(inferredType)
+
+            if (matchResult.isFull()) null
+            else UnmatchedInferredTypeError(
                 location = definer.location,
-                declaredType = declaredType,
-                inferredType = inferredType,
+                matchResult = matchResult,
             )
         } else null
     }

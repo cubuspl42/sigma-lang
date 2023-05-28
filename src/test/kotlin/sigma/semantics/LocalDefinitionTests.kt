@@ -4,6 +4,7 @@ import sigma.BuiltinScope
 import sigma.BuiltinTypeScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.LetExpressionTerm
@@ -34,8 +35,10 @@ class LocalDefinitionTests {
                 expected = setOf(
                     Definition.UnmatchedInferredTypeError(
                         location = SourceLocation(lineIndex = 2, columnIndex = 13),
-                        declaredType = IntCollectiveType,
-                        inferredType = BoolType,
+                        matchResult = Type.TotalMismatch(
+                            expectedType = IntCollectiveType,
+                            actualType = BoolType,
+                        ),
                     ),
                 ),
                 actual = definition.errors,

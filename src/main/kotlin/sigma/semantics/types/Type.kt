@@ -27,8 +27,11 @@ sealed class Type {
         final override fun isFull(): Boolean = false
     }
 
-    object TotalMismatch : Mismatch() {
-        override fun dump(): String = "(total mismatch)"
+    data class TotalMismatch(
+        val expectedType: Type,
+        val actualType: Type,
+    ) : Mismatch() {
+        override fun dump(): String = "expected ${expectedType.dump()}, actual: ${actualType.dump()}"
 
         override fun toString(): String = "TotalMismatch"
     }
@@ -96,9 +99,12 @@ sealed class PrimitiveType : Type() {
 
     override fun match(
         assignedType: Type,
-    ): MatchResult = when (assignedType) {
+    ): MatchResult = when (this.findLowestCommonSupertype(assignedType)) {
         this -> TotalMatch
-        else -> TotalMismatch
+        else -> TotalMismatch(
+            expectedType = this,
+            actualType = assignedType,
+        )
     }
 }
 
@@ -114,6 +120,10 @@ object UndefinedType : PrimitiveType() {
 }
 
 object NeverType : Type() {
+    object AssignmentMismatch : Type.Mismatch() {
+        override fun dump(): String = "nothing can be assigned to Never"
+    }
+
     override fun findLowestCommonSupertype(
         other: Type,
     ): Type = other
@@ -130,7 +140,7 @@ object NeverType : Type() {
 
     override fun match(
         assignedType: Type,
-    ): MatchResult = TotalMismatch
+    ): MatchResult = AssignmentMismatch
 
     override fun dump(): String = "Never"
 }
