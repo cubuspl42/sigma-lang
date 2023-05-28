@@ -52,7 +52,10 @@ class Call(
 
     data class InvalidArgumentError(
         override val location: SourceLocation,
-    ) : ArgumentValidationOutcome, SemanticError
+        val matchResult: Type.MatchResult,
+    ) : ArgumentValidationOutcome, SemanticError {
+        override fun dump(): String = "$location: Invalid argument: ${matchResult.dump()}"
+    }
 
     private val subjectCallOutcome: Computation<SubjectCallOutcome> by lazy {
         subject.inferredType.thenJust { subjectType ->
@@ -81,14 +84,18 @@ class Call(
             is LegalSubjectCallResult -> {
                 val subjectType = subjectCallOutcome.calleeType
 
-                if (argumentType == subjectType.argumentType) {
-                    ValidArgumentResult
-                } else {
-                    InvalidArgumentError(
+                val matchResult = subjectType.argumentType.match(
+                    assignedType = argumentType,
+                )
+
+                when {
+                    matchResult.isFull() -> ValidArgumentResult
+
+                    else -> InvalidArgumentError(
                         location = argument.location,
+                        matchResult = matchResult,
                     )
                 }
-
             }
 
             is IllegalSubjectCallError -> null

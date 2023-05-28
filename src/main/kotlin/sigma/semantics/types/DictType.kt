@@ -8,6 +8,17 @@ data class DictType(
     override val keyType: PrimitiveType,
     override val valueType: Type,
 ) : TableType() {
+    data class DictMatch(
+        val keyMatch: Type.MatchResult,
+        val valueMatch: Type.MatchResult,
+    ) : Type.PartialMatch() {
+        override fun isFull(): Boolean = keyMatch.isFull() && valueMatch.isFull()
+        override fun dump(): String = when {
+            !keyMatch.isFull() -> "key: " + keyMatch.dump()
+            !valueMatch.isFull() -> "value: " + valueMatch.dump()
+            else -> "(?)"
+        }
+    }
 
     override fun dump(): String = "{${keyType.dump()} ~> ${valueType.dump()}}"
 
@@ -39,4 +50,19 @@ data class DictType(
             resolution = resolution,
         ),
     )
+
+    override fun match(
+        assignedType: Type,
+    ): MatchResult = when (assignedType) {
+        is DictType -> DictMatch(
+            keyMatch = assignedType.keyType.match(
+                assignedType = keyType,
+            ),
+            valueMatch = valueType.match(
+                assignedType = assignedType.valueType,
+            ),
+        )
+
+        else -> Type.TotalMismatch
+    }
 }

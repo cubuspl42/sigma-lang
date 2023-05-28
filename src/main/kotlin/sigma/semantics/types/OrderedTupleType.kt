@@ -7,6 +7,36 @@ import sigma.evaluation.values.Symbol
 data class OrderedTupleType(
     val elements: List<Element>,
 ) : TupleType() {
+    data class OrderedTupleMatch(
+        val elementsMatches: List<Type.MatchResult>,
+        val sizeMatch: SizeMatchResult,
+    ) : Type.PartialMatch() {
+        sealed class SizeMatchResult
+
+        object SizeMatch : SizeMatchResult() {
+            override fun toString(): String = "SizeMatch"
+        }
+
+        data class WrongSizeMismatch(
+            val size: Int,
+            val assignedSize: Int,
+        ) : SizeMatchResult()
+
+        override fun isFull(): Boolean = elementsMatches.all {
+            it.isFull()
+        } && sizeMatch is SizeMatch
+
+        override fun dump(): String {
+            if (sizeMatch is WrongSizeMismatch) {
+                return "wrong size (required: ${sizeMatch.size}, actual: ${sizeMatch.assignedSize})"
+            }
+
+            return ArrayType.OrderedTupleMatch.dumpElementsMatches(
+                elementsMatches = elementsMatches,
+            )
+        }
+    }
+
     data class Element(
         // Idea: "label"?
         val name: Symbol?,
@@ -75,6 +105,25 @@ data class OrderedTupleType(
         }
     }
 
+    override fun match(
+        assignedType: Type,
+    ): MatchResult = when (assignedType) {
+        is OrderedTupleType -> OrderedTupleMatch(
+            elementsMatches = elements.zip(assignedType.elements) { element, assignedElement ->
+                element.type.match(assignedType = assignedElement.type)
+            },
+            sizeMatch = when {
+                assignedType.elements.size >= elements.size -> OrderedTupleMatch.SizeMatch
+                else -> OrderedTupleMatch.WrongSizeMismatch(
+                    size = elements.size,
+                    assignedSize = assignedType.elements.size,
+                )
+            },
+        )
+
+        else -> Type.TotalMismatch
+    }
+
     override fun toStaticValueScope(): SyntaxValueScope = object : SyntaxValueScope {
         override fun getValueType(
             valueName: Symbol,
@@ -83,11 +132,12 @@ data class OrderedTupleType(
         }?.type
     }
 
-    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentDeclarationBlock = Abstraction.ArgumentDeclarationBlock(
-        argumentDeclarations = elements.mapNotNull { element ->
-            element.toArgumentDeclaration()
-        },
-    )
+    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentDeclarationBlock =
+        Abstraction.ArgumentDeclarationBlock(
+            argumentDeclarations = elements.mapNotNull { element ->
+                element.toArgumentDeclaration()
+            },
+        )
 
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
