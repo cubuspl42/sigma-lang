@@ -6,6 +6,8 @@ sealed class FunctionType : Type() {
         other: Type,
     ): Type = AnyType
 
+    abstract override fun substituteTypeVariables(resolution: TypeVariableResolution): FunctionType
+
     abstract val argumentType: Type
     abstract val imageType: Type
 }

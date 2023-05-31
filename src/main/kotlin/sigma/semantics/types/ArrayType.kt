@@ -62,7 +62,7 @@ data class ArrayType(
 
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
-    ): Type = ArrayType(
+    ): ArrayType = ArrayType(
         elementType = elementType.substituteTypeVariables(
             resolution = resolution,
         ),
