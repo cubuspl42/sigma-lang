@@ -65,6 +65,14 @@ data class DictType(
             ),
         )
 
+        is UnorderedTupleType -> when {
+            assignedType.isDefinitelyEmpty() -> TotalMatch
+            else -> Type.TotalMismatch(
+                expectedType = this,
+                actualType = assignedType,
+            )
+        }
+
         else -> Type.TotalMismatch(
             expectedType = this,
             actualType = assignedType,
