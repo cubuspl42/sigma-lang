@@ -1,7 +1,10 @@
 package sigma.semantics.types
 
-// TODO: Identify type variables somehow
-object TypeVariable : Type() {
+import sigma.evaluation.values.Symbol
+
+data class TypeVariable(
+    val name: Symbol,
+) : Type() {
     override fun findLowestCommonSupertype(
         other: Type,
     ): Type = AnyType
@@ -12,16 +15,20 @@ object TypeVariable : Type() {
         resolvedTypeByVariable = mapOf(this to assignedType),
     )
 
+    // Thought: Return an error if resolution misses this variable?
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
     ): Type = resolution.resolvedTypeByVariable[this] ?: this
 
-    override fun match(assignedType: Type): MatchResult {
-        // TODO: Improve type variable matching
-        return TotalMatch
+    override fun match(assignedType: Type): MatchResult = when (assignedType) {
+        this -> TotalMatch
+        else -> TotalMismatch(
+            expectedType = this,
+            actualType = assignedType,
+        )
     }
 
-    override fun dump(): String = "#T"
+    override fun dump(): String = "#${name.name}"
 }
 
 data class TypeVariableResolution(

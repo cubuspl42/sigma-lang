@@ -49,11 +49,19 @@ abstract class FunctionValue : Value() {
 
     object Chunked4 : BuiltinOrderedFunction() {
         override val argTypes: List<Type> = listOf(
-            ArrayType(elementType = TypeVariable),
+            ArrayType(
+                elementType = TypeVariable(
+                    name = Symbol.of("e"),
+                ),
+            ),
         )
 
         override val imageType: Type = ArrayType(
-            elementType = ArrayType(elementType = TypeVariable),
+            elementType = ArrayType(
+                elementType = TypeVariable(
+                    name = Symbol.of("e"),
+                ),
+            ),
         )
 
         override fun compute(args: List<Thunk>): Thunk {
@@ -69,10 +77,18 @@ abstract class FunctionValue : Value() {
 
     object DropFirst : BuiltinOrderedFunction() {
         override val argTypes: List<Type> = listOf(
-            ArrayType(elementType = TypeVariable),
+            ArrayType(
+                elementType = TypeVariable(
+                    name = Symbol.of("e"),
+                ),
+            ),
         )
 
-        override val imageType: Type = ArrayType(elementType = TypeVariable)
+        override val imageType: Type = ArrayType(
+            elementType = TypeVariable(
+                name = Symbol.of("e"),
+            ),
+        )
 
         override fun compute(args: List<Thunk>): Thunk {
             val elements = (args.first() as FunctionValue).toList()
@@ -85,10 +101,18 @@ abstract class FunctionValue : Value() {
 
     object Take : BuiltinOrderedFunction() {
         override val argTypes: List<Type> = listOf(
-            ArrayType(elementType = TypeVariable),
+            ArrayType(
+                elementType = TypeVariable(
+                    name = Symbol.of("e"),
+                ),
+            ),
         )
 
-        override val imageType: Type = ArrayType(elementType = TypeVariable)
+        override val imageType: Type = ArrayType(
+            elementType = TypeVariable(
+                name = Symbol.of("e"),
+            ),
+        )
 
         override fun compute(args: List<Thunk>): Thunk {
             val elements = (args[0] as FunctionValue).toList()
@@ -102,11 +126,19 @@ abstract class FunctionValue : Value() {
 
     object Windows : BuiltinOrderedFunction() {
         override val argTypes: List<Type> = listOf(
-            ArrayType(elementType = TypeVariable),
+            ArrayType(
+                elementType = TypeVariable(
+                    name = Symbol.of("e"),
+                ),
+            ),
         )
 
         override val imageType: Type = ArrayType(
-            elementType = ArrayType(elementType = TypeVariable),
+            elementType = ArrayType(
+                elementType = TypeVariable(
+                    name = Symbol.of("e"),
+                ),
+            ),
         )
 
         override fun compute(args: List<Thunk>): Thunk {
@@ -136,20 +168,32 @@ abstract class FunctionValue : Value() {
                 elements = listOf(
                     OrderedTupleType.Element(
                         name = null,
-                        type = TypeVariable,
+                        type = TypeVariable(
+                            name = Symbol.of("e"),
+                        ),
                     ),
                 )
             ),
             // TODO: Improve this typing, as it makes no sense
-            imageType = TypeVariable,
+            imageType = TypeVariable(
+                name = Symbol.of("r"),
+            ),
         )
 
         override val argTypes = listOf(
-            ArrayType(elementType = TypeVariable),
+            ArrayType(
+                elementType = TypeVariable(
+                    name = Symbol.of("e"),
+                ),
+            ),
             transformType,
         )
 
-        override val imageType = ArrayType(elementType = TypeVariable)
+        override val imageType = ArrayType(
+            elementType = TypeVariable(
+                name = Symbol.of("r"),
+            ),
+        )
 
         override fun compute(args: List<Thunk>): Thunk {
             val elements = (args[0] as FunctionValue).toList()
@@ -165,7 +209,11 @@ abstract class FunctionValue : Value() {
 
     object LengthFunction : BuiltinOrderedFunction() {
         override val argTypes = listOf(
-            ArrayType(elementType = TypeVariable),
+            ArrayType(
+                elementType = TypeVariable(
+                    name = Symbol.of("e"),
+                ),
+            ),
         )
 
         override val imageType = IntCollectiveType
@@ -179,11 +227,23 @@ abstract class FunctionValue : Value() {
 
     object ConcatFunction : BuiltinOrderedFunction() {
         override val argTypes = listOf(
-            ArrayType(elementType = TypeVariable),
-            ArrayType(elementType = TypeVariable),
+            ArrayType(
+                elementType = TypeVariable(
+                    name = Symbol.of("e"),
+                ),
+            ),
+            ArrayType(
+                elementType = TypeVariable(
+                    name = Symbol.of("e"),
+                ),
+            ),
         )
 
-        override val imageType = ArrayType(elementType = TypeVariable)
+        override val imageType = ArrayType(
+            elementType = TypeVariable(
+                name = Symbol.of("e"),
+            ),
+        )
 
         override fun compute(args: List<Thunk>): Thunk {
             val front = (args[0] as FunctionValue).toList()

@@ -30,8 +30,8 @@ data class FunctionTypeTerm(
     override fun evaluate(
         typeScope: TypeScope,
     ): UniversalFunctionType {
-        val innerTypeScope = genericParametersTuple?.toStaticTypeScope()?.chainWith(
-            backScope = typeScope,
+        val innerTypeScope = genericParametersTuple?.toStaticTypeScope(
+            typeScope = typeScope,
         ) ?: typeScope
 
         val argumentType = argumentType.evaluate(

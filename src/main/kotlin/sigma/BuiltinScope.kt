@@ -11,6 +11,7 @@ import sigma.semantics.DeclarationScope
 import sigma.semantics.Definition
 import sigma.semantics.SemanticError
 import sigma.semantics.types.BoolType
+import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.Type
@@ -61,11 +62,17 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
                 imageType = UniversalFunctionType(
                     argumentType = UnorderedTupleType(
                         valueTypeByName = mapOf(
-                            Symbol.of("then") to TypeVariable,
-                            Symbol.of("else") to TypeVariable,
+                            Symbol.of("then") to TypeVariable(
+                                name = Symbol.of("r"),
+                            ),
+                            Symbol.of("else") to TypeVariable(
+                                name = Symbol.of("r"),
+                            ),
                         )
                     ),
-                    imageType = TypeVariable,
+                    imageType = TypeVariable(
+                        name = Symbol.of("r"),
+                    ),
                 ),
             ),
             value = BoolValue.If,
@@ -150,9 +157,34 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
         ),
         Symbol.of("link") to SimpleBuiltinValue(
             type = UniversalFunctionType(
-                // TODO: Improve this typing
-                argumentType = UnorderedTupleType.Empty,
-                imageType = UndefinedType,
+                argumentType = UnorderedTupleType(
+                  valueTypeByName = mapOf(
+                      Symbol.of("primary") to DictType(
+                          keyType = TypeVariable(
+                              name = Symbol.of("K"),
+                          ),
+                          valueType = TypeVariable(
+                              name = Symbol.of("V"),
+                          ),
+                      ),
+                      Symbol.of("secondary") to DictType(
+                          keyType = TypeVariable(
+                              name = Symbol.of("K"),
+                          ),
+                          valueType = TypeVariable(
+                              name = Symbol.of("V"),
+                          ),
+                      ),
+                  )
+                ),
+                imageType = DictType(
+                    keyType = TypeVariable(
+                        name = Symbol.of("K"),
+                    ),
+                    valueType = TypeVariable(
+                        name = Symbol.of("V"),
+                    ),
+                ),
             ),
             value = FunctionValue.Link,
         ),

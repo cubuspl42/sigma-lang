@@ -39,9 +39,12 @@ data class AbstractionTerm(
             )
         }
 
-        fun toStaticTypeScope(): TypeScope = FixedTypeScope(
-            // TODO: Identify type variables
-            entries = parameterNames.associateWith { TypeVariable },
+        fun toStaticTypeScope(
+            typeScope: TypeScope,
+        ): TypeScope = FixedTypeScope(
+            entries = parameterNames.associateWith { TypeVariable(name = it) },
+        ).chainWith(
+            backScope = typeScope,
         )
     }
 
@@ -66,91 +69,15 @@ data class AbstractionTerm(
     override fun validateAdditionally(
         typeScope: TypeScope,
         valueScope: SyntaxValueScope,
-    ) = enter(
-        typeScope,
-        valueScope,
     ) {
-            _: TupleType,
-            innerTypeScope: TypeScope,
-            innerValueScope: SyntaxValueScope,
-        ->
-
-        argumentType.validate(
-            typeScope = innerTypeScope,
-            // The outer value scope is used here on purpose
-            valueScope = valueScope,
-        )
-
-        // TODO: Verify that the declared image type matches the inferred one
-
-        declaredImageType?.validate(
-            typeScope = innerTypeScope,
-            valueScope = innerValueScope,
-        )
-
-        image.validate(
-            typeScope = innerTypeScope,
-            valueScope = innerValueScope,
-        )
+        throw NotImplementedError()
     }
 
     override fun determineType(
         typeScope: TypeScope,
         valueScope: SyntaxValueScope,
-    ): Type = enter(
-        typeScope,
-        valueScope,
-    ) {
-            argumentType: TupleType,
-            innerTypeScope: TypeScope,
-            innerValueScope: SyntaxValueScope,
-        ->
-
-        val declaredImageType = declaredImageType?.evaluate(
-            typeScope = innerTypeScope,
-        )
-
-        val imageType = declaredImageType ?: image.determineType(
-            typeScope = innerTypeScope,
-            valueScope = innerValueScope,
-        )
-
-        return@enter UniversalFunctionType(
-            argumentType = argumentType,
-            imageType = imageType,
-        )
-    }
-
-    private fun buildInnerTypeScope(
-        typeScope: TypeScope,
-    ) = genericParametersTuple?.toStaticTypeScope()?.chainWith(
-        backScope = typeScope,
-    ) ?: typeScope
-
-    private fun <R> enter(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-        block: (
-            argumentType: TupleType,
-            innerTypeScope: TypeScope,
-            innerValueScope: SyntaxValueScope,
-        ) -> R,
-    ): R {
-        val innerTypeScope = buildInnerTypeScope(typeScope = typeScope)
-
-        val argumentType = argumentType.evaluate(
-            typeScope = innerTypeScope,
-        )
-
-        val innerValueScope = argumentType.toStaticValueScope().chainWith(
-            valueScope,
-        )
-
-        return block(
-            argumentType,
-            innerTypeScope,
-            innerValueScope,
-        )
+    ): Type {
+        throw NotImplementedError()
     }
 
     override fun evaluate(

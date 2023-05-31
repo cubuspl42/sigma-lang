@@ -15,6 +15,8 @@ import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.tables.ArrayTable
+import sigma.semantics.DeclarationScope
+import sigma.semantics.expressions.Expression
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -128,6 +130,18 @@ class AbstractionTests {
     object TypeCheckingTests {
         @Test
         fun test() {
+            val term = ExpressionTerm.parse(
+                source = "[n: Int] => n",
+            )
+
+            val expression = Expression.build(
+                typeScope = BuiltinTypeScope,
+                declarationScope = DeclarationScope.Empty,
+                term = term,
+            )
+
+            val type = expression.inferredType.value
+
             assertEquals(
                 expected = UniversalFunctionType(
                     argumentType = OrderedTupleType(
@@ -140,23 +154,23 @@ class AbstractionTests {
                     ),
                     imageType = IntCollectiveType,
                 ),
-                actual = ExpressionTerm.parse(
-                    source = "[n: Int] => n",
-                ).determineType(
-                    typeScope = BuiltinTypeScope,
-                    valueScope = SyntaxValueScope.Empty,
-                ),
+                actual = type,
             )
         }
 
         @Test
         fun testGenericSingleParameter() {
-            val type = ExpressionTerm.parse(
+            val term = ExpressionTerm.parse(
                 source = "![t] [t: t] => false",
-            ).determineType(
-                typeScope = BuiltinTypeScope,
-                valueScope = BuiltinScope,
             )
+
+            val expression = Expression.build(
+                typeScope = BuiltinTypeScope,
+                declarationScope = BuiltinScope,
+                term = term,
+            )
+
+            val type = expression.inferredType.value
 
             assertEquals(
                 expected = UniversalFunctionType(
@@ -164,7 +178,9 @@ class AbstractionTests {
                         elements = listOf(
                             OrderedTupleType.Element(
                                 name = Symbol.of("t"),
-                                type = TypeVariable,
+                                type = TypeVariable(
+                                    name = Symbol.of("t"),
+                                ),
                             ),
                         ),
                     ),
@@ -176,16 +192,21 @@ class AbstractionTests {
 
         @Test
         fun testRecursiveCallTest() {
-            val type = ExpressionTerm.parse(
+            val term = ExpressionTerm.parse(
                 source = """
                     let {
                         f = [n: Int] -> Bool => f[n + 1]
                     } in f
                 """.trimIndent(),
-            ).determineType(
-                typeScope = BuiltinTypeScope,
-                valueScope = BuiltinScope,
             )
+
+            val expression = Expression.build(
+                typeScope = BuiltinTypeScope,
+                declarationScope = DeclarationScope.Empty,
+                term = term,
+            )
+
+            val type = expression.inferredType.value
 
             assertEquals(
                 expected = UniversalFunctionType(
