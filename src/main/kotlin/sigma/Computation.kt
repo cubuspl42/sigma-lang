@@ -43,7 +43,7 @@ abstract class Computation<out A> {
             ): Result<A> = Result.Computed(value = value)
         }
 
-        fun <A : Any, B : Any, C> combine2(
+        fun <A, B, C> combine2(
             computation1: Computation<A>,
             computation2: Computation<B>,
             combine: (A, B) -> C,
@@ -117,7 +117,7 @@ abstract class Computation<out A> {
 
     protected abstract fun computeDirectly(innerContext: Context): Result<A>
 
-    fun <B : Any> thenJust(
+    fun <B> thenJust(
         transform: (A) -> B,
     ): Computation<B> = object : Computation<B>() {
         override fun computeDirectly(innerContext: Context): Result<B> {

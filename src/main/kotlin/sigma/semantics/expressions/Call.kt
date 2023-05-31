@@ -39,6 +39,7 @@ class Call(
 
     data class LegalSubjectCallResult(
         val calleeType: FunctionType,
+        val argumentType: Type,
     ) : SubjectCallOutcome
 
     data class IllegalSubjectCallError(
@@ -57,50 +58,61 @@ class Call(
         override fun dump(): String = "$location: Invalid argument: ${matchResult.dump()}"
     }
 
-    private val subjectCallOutcome: Computation<SubjectCallOutcome> by lazy {
-        subject.inferredType.thenJust { subjectType ->
-            when (subjectType) {
-                is FunctionType -> LegalSubjectCallResult(
-                    calleeType = subjectType,
-                )
-
-                else -> IllegalSubjectCallError(
-                    location = subject.location,
-                    illegalSubjectType = subjectType,
-                )
-            }
-        }
-    }
-
-    private val argumentValidationOutcome: Computation<ArgumentValidationOutcome?> = Computation.combine2(
-        subjectCallOutcome,
+    private val subjectCallOutcome: Computation<SubjectCallOutcome> = Computation.combine2(
+        subject.inferredType,
         argument.inferredType,
     ) {
-            subjectCallOutcome,
+            subjectType,
             argumentType,
         ->
 
-        when (subjectCallOutcome) {
-            is LegalSubjectCallResult -> {
-                val subjectType = subjectCallOutcome.calleeType
-
-                val matchResult = subjectType.argumentType.match(
+        when (subjectType) {
+            is FunctionType -> {
+                val typeVariableResolution = subjectType.argumentType.resolveTypeVariables(
                     assignedType = argumentType,
                 )
 
-                when {
-                    matchResult.isFull() -> ValidArgumentResult
+                val effectiveSubjectType = subjectType.substituteTypeVariables(
+                    resolution = typeVariableResolution,
+                )
 
-                    else -> InvalidArgumentError(
-                        location = argument.location,
-                        matchResult = matchResult,
-                    )
-                }
+                LegalSubjectCallResult(
+                    calleeType = effectiveSubjectType,
+                    argumentType = argumentType,
+                )
             }
 
-            is IllegalSubjectCallError -> null
+            else -> IllegalSubjectCallError(
+                location = subject.location,
+                illegalSubjectType = subjectType,
+            )
         }
     }
+
+    private val argumentValidationOutcome: Computation<ArgumentValidationOutcome?> =
+        this.subjectCallOutcome.thenJust { subjectCallOutcome ->
+            when (subjectCallOutcome) {
+                is LegalSubjectCallResult -> {
+                    val subjectType = subjectCallOutcome.calleeType
+                    val argumentType = subjectCallOutcome.argumentType
+
+                    val matchResult = subjectType.argumentType.match(
+                        assignedType = argumentType,
+                    )
+
+                    when {
+                        matchResult.isFull() -> ValidArgumentResult
+
+                        else -> InvalidArgumentError(
+                            location = argument.location,
+                            matchResult = matchResult,
+                        )
+                    }
+                }
+
+                is IllegalSubjectCallError -> null
+            }
+        }
 
     override val inferredType: Computation<Type> by lazy {
         subjectCallOutcome.thenJust { subjectCall ->

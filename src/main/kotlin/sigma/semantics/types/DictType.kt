@@ -44,7 +44,7 @@ data class DictType(
 
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
-    ): Type = DictType(
+    ): DictType = DictType(
         keyType = keyType,
         valueType = valueType.substituteTypeVariables(
             resolution = resolution,
