@@ -42,8 +42,8 @@ class Abstraction(
             outerDeclarationScope: DeclarationScope,
             term: AbstractionTerm,
         ): Abstraction {
-            val innerTypeScope: TypeScope = term.genericParametersTuple?.toStaticTypeScope()?.chainWith(
-                backScope = outerTypeScope,
+            val innerTypeScope = term.genericParametersTuple?.toStaticTypeScope(
+                typeScope = outerTypeScope,
             ) ?: outerTypeScope
 
             val argumentType: TupleType = term.argumentType.evaluate(

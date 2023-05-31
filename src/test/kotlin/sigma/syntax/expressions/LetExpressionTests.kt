@@ -7,6 +7,7 @@ import sigma.SyntaxValueScope
 import sigma.TypeScope
 import sigma.evaluation.values.Symbol
 import sigma.semantics.DeclarationScope
+import sigma.semantics.expressions.Expression
 import sigma.semantics.expressions.LetExpression
 import sigma.semantics.expressions.Reference
 import sigma.semantics.types.BoolType
@@ -135,17 +136,22 @@ class LetExpressionTests {
 
         @Test
         fun testInferredFunctionType() {
-            val type = ExpressionTerm.parse(
+            val term = ExpressionTerm.parse(
                 source = """
                     let {
                         f = [n: Int] => false,
                         a = f[0],
                     } in a
                 """.trimIndent()
-            ).determineType(
-                typeScope = BuiltinTypeScope,
-                valueScope = BuiltinScope,
             )
+
+            val expression = Expression.build(
+                typeScope = BuiltinTypeScope,
+                declarationScope = BuiltinScope,
+                term = term,
+            ) as LetExpression
+
+            val type = expression.inferredType.value
 
             assertEquals(
                 expected = BoolType,

@@ -5,7 +5,7 @@ import sigma.evaluation.values.TypeErrorException
 // Type of tables with keys of a single primitive type and values of a single
 // specific type
 data class DictType(
-    override val keyType: PrimitiveType,
+    override val keyType: Type,
     override val valueType: Type,
 ) : TableType() {
     data class DictMatch(
@@ -45,7 +45,9 @@ data class DictType(
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
     ): DictType = DictType(
-        keyType = keyType,
+        keyType = keyType.substituteTypeVariables(
+            resolution = resolution,
+        ),
         valueType = valueType.substituteTypeVariables(
             resolution = resolution,
         ),

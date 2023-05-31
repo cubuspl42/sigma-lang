@@ -103,7 +103,9 @@ class AbstractionTests {
                         elements = listOf(
                             OrderedTupleType.Element(
                                 name = Symbol.of("a"),
-                                type = TypeVariable,
+                                type = TypeVariable(
+                                    name = Symbol.of("e"),
+                                ),
                             ),
                         ),
                     )
