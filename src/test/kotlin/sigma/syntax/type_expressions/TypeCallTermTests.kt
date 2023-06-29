@@ -7,7 +7,7 @@ import sigma.semantics.types.BoolType
 import sigma.evaluation.values.FixedTypeScope
 import sigma.evaluation.values.Symbol
 import sigma.syntax.typeExpressions.TypeCallTerm
-import sigma.syntax.typeExpressions.UnorderedTupleTypeLiteralTerm
+import sigma.syntax.typeExpressions.UnorderedTupleTypeConstructorTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -26,23 +26,23 @@ class TypeCallTermTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("Foo"),
                     ),
-                    passedArgument = TypeCallTerm.TypeTupleLiteral(
+                    passedArgument = TypeCallTerm.TypeTupleConstructor(
                         elements = listOf(
                             TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("Bar"),
                             ),
-                            UnorderedTupleTypeLiteralTerm(
+                            UnorderedTupleTypeConstructorTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 9),
                                 entries = listOf(
-                                    UnorderedTupleTypeLiteralTerm.Entry(
+                                    UnorderedTupleTypeConstructorTerm.Entry(
                                         name = Symbol.of("a"),
                                         valueType = TypeReferenceTerm(
                                             location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                             referee = Symbol.of("Int"),
                                         ),
                                     ),
-                                    UnorderedTupleTypeLiteralTerm.Entry(
+                                    UnorderedTupleTypeConstructorTerm.Entry(
                                         name = Symbol.of("b"),
                                         valueType = TypeReferenceTerm(
                                             location = SourceLocation(lineIndex = 1, columnIndex = 21),

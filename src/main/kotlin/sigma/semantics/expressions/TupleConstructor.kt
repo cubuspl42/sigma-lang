@@ -2,24 +2,24 @@ package sigma.semantics.expressions
 
 import sigma.TypeScope
 import sigma.semantics.DeclarationScope
-import sigma.syntax.expressions.OrderedTupleLiteralTerm
-import sigma.syntax.expressions.TupleLiteralTerm
-import sigma.syntax.expressions.UnorderedTupleLiteralTerm
+import sigma.syntax.expressions.OrderedTupleConstructorTerm
+import sigma.syntax.expressions.TupleConstructorTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 
-abstract class TupleLiteral : Expression() {
+abstract class TupleConstructor : Expression() {
     companion object {
         fun build(
             declarationScope: DeclarationScope,
             typeScope: TypeScope,
-            term: TupleLiteralTerm,
-        ): TupleLiteral = when (term) {
-            is OrderedTupleLiteralTerm -> OrderedTupleLiteral.build(
+            term: TupleConstructorTerm,
+        ): TupleConstructor = when (term) {
+            is OrderedTupleConstructorTerm -> OrderedTupleConstructor.build(
                 typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is UnorderedTupleLiteralTerm -> UnorderedTupleLiteral.build(
+            is UnorderedTupleConstructorTerm -> UnorderedTupleConstructor.build(
                 typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,

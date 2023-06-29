@@ -63,17 +63,17 @@ class CallTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo"),
                     ),
-                    argument = UnorderedTupleLiteralTerm(
+                    argument = UnorderedTupleConstructorTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         entries = listOf(
-                            UnorderedTupleLiteralTerm.Entry(
+                            UnorderedTupleConstructorTerm.Entry(
                                 name = Symbol.of("arg1"),
                                 value = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                     referee = Symbol.of("value1"),
                                 ),
                             ),
-                            UnorderedTupleLiteralTerm.Entry(
+                            UnorderedTupleConstructorTerm.Entry(
                                 name = Symbol.of("arg2"),
                                 value = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 24),
@@ -96,7 +96,7 @@ class CallTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo"),
                     ),
-                    argument = OrderedTupleLiteralTerm(
+                    argument = OrderedTupleConstructorTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         elements = listOf(
                             ReferenceTerm(

@@ -1,7 +1,7 @@
 package sigma
 
 import sigma.syntax.expressions.CallTerm
-import sigma.syntax.expressions.UnorderedTupleLiteralTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import sigma.syntax.expressions.ReferenceTerm
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
@@ -30,10 +30,10 @@ class ExpressionParsingTests {
             assertEquals(
                 expected = CallTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = UnorderedTupleLiteralTerm(
+                    subject = UnorderedTupleConstructorTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         entries = listOf(
-                            UnorderedTupleLiteralTerm.Entry(
+                            UnorderedTupleConstructorTerm.Entry(
                                 name = Symbol.of("foo"),
                                 value = SymbolLiteralTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 6),
@@ -62,10 +62,10 @@ class ExpressionParsingTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo")
                     ),
-                    argument = UnorderedTupleLiteralTerm(
+                    argument = UnorderedTupleConstructorTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         entries = listOf(
-                            UnorderedTupleLiteralTerm.Entry(
+                            UnorderedTupleConstructorTerm.Entry(
                                 name = Symbol.of("bar"),
                                 value = SymbolLiteralTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),

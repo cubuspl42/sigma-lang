@@ -6,7 +6,7 @@ import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.semantics.types.TupleType
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
+import sigma.syntax.typeExpressions.TupleTypeConstructorTerm
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.Type
@@ -20,7 +20,7 @@ import sigma.evaluation.scope.Scope
 data class AbstractionTerm(
     override val location: SourceLocation,
     val genericParametersTuple: GenericParametersTuple? = null,
-    val argumentType: TupleTypeLiteralTerm,
+    val argumentType: TupleTypeConstructorTerm,
     val declaredImageType: TypeExpressionTerm? = null,
     val image: ExpressionTerm,
 ) : ExpressionTerm() {
@@ -57,7 +57,7 @@ data class AbstractionTerm(
                 GenericParametersTuple.build(it)
             },
             argumentType = ctx.argumentType.let {
-                TupleTypeLiteralTerm.build(it)
+                TupleTypeConstructorTerm.build(it)
             },
             declaredImageType = ctx.imageType?.let {
                 TypeExpressionTerm.build(it)

@@ -1,27 +1,23 @@
 package sigma.semantics.expressions
 
-import org.junit.jupiter.api.assertThrows
 import sigma.Arbitrary
 import sigma.BuiltinTypeScope
-import sigma.syntax.expressions.DictLiteralTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
-import sigma.semantics.types.IntCollectiveType
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.evaluation.values.FixedStaticValueScope
-import sigma.evaluation.values.Symbol
 import sigma.semantics.types.IllType
+import sigma.semantics.types.IntCollectiveType
 import sigma.syntax.SourceLocation
+import sigma.syntax.expressions.DictConstructorTerm
+import sigma.syntax.expressions.ExpressionTerm
 import utils.FakeDeclarationScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
-object DictLiteralTests {
+object DictConstructorTests {
     object TypeCheckingTests {
         @Test
         fun testSingleEntry() {
-            val dictLiteral = DictLiteral.build(
+            val dictLiteral = DictConstructor.build(
                 typeScope = BuiltinTypeScope,
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(
@@ -36,7 +32,7 @@ object DictLiteralTests {
                             [key1]: value1,
                         }
                     """.trimIndent(),
-                ) as DictLiteralTerm,
+                ) as DictConstructorTerm,
             )
 
             assertEquals(
@@ -50,7 +46,7 @@ object DictLiteralTests {
 
         @Test
         fun testMultipleEntriesCompatibleEntries() {
-            val dictLiteral = DictLiteral.build(
+            val dictLiteral = DictConstructor.build(
                 typeScope = BuiltinTypeScope,
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(
@@ -67,7 +63,7 @@ object DictLiteralTests {
                             [key2]: value2,
                         }
                     """.trimIndent(),
-                ) as DictLiteralTerm,
+                ) as DictConstructorTerm,
             )
 
             assertEquals(
@@ -81,7 +77,7 @@ object DictLiteralTests {
 
         @Test
         fun testMultipleEntriesIncompatibleKeys() {
-            val dictLiteral = DictLiteral.build(
+            val dictLiteral = DictConstructor.build(
                 typeScope = BuiltinTypeScope,
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(
@@ -98,12 +94,12 @@ object DictLiteralTests {
                             [key2]: value2,
                         }
                     """.trimIndent(),
-                ) as DictLiteralTerm,
+                ) as DictConstructorTerm,
             )
 
             assertEquals(
                 expected = setOf(
-                    DictLiteral.InconsistentKeyTypeError(
+                    DictConstructor.InconsistentKeyTypeError(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     ),
                 ),
@@ -118,7 +114,7 @@ object DictLiteralTests {
 
         @Test
         fun testMultipleEntriesIncompatibleValues() {
-            val dictLiteral = DictLiteral.build(
+            val dictLiteral = DictConstructor.build(
                 typeScope = BuiltinTypeScope,
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(
@@ -135,12 +131,12 @@ object DictLiteralTests {
                             [key2]: value2,
                         }
                     """.trimIndent(),
-                ) as DictLiteralTerm,
+                ) as DictConstructorTerm,
             )
 
             assertEquals(
                 expected = setOf(
-                    DictLiteral.InconsistentValueTypeError(
+                    DictConstructor.InconsistentValueTypeError(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     ),
                 ),
@@ -157,7 +153,7 @@ object DictLiteralTests {
         fun testMultipleEntriesNonPrimitiveKey() {
             val keyType = Arbitrary.unorderedTupleType
 
-            val dictLiteral = DictLiteral.build(
+            val dictLiteral = DictConstructor.build(
                 typeScope = BuiltinTypeScope,
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(
@@ -171,12 +167,12 @@ object DictLiteralTests {
                             [key1]: value1,
                         }
                     """.trimIndent(),
-                ) as DictLiteralTerm,
+                ) as DictConstructorTerm,
             )
 
             assertEquals(
                 expected = setOf(
-                    DictLiteral.NonPrimitiveKeyTypeError(
+                    DictConstructor.NonPrimitiveKeyTypeError(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         keyType = keyType,
                     ),

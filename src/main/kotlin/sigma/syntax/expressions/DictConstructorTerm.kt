@@ -3,7 +3,7 @@ package sigma.syntax.expressions
 import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.DictAssociationContext
-import sigma.parser.antlr.SigmaParser.DictLiteralContext
+import sigma.parser.antlr.SigmaParser.DictConstructorContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.DictType
 import sigma.semantics.types.PrimitiveType
@@ -13,7 +13,7 @@ import sigma.evaluation.scope.Scope
 import sigma.semantics.types.Type
 import sigma.evaluation.values.TypeErrorException
 
-data class DictLiteralTerm(
+data class DictConstructorTerm(
     override val location: SourceLocation,
     val associations: List<Association>,
 ) : ExpressionTerm() {
@@ -33,8 +33,8 @@ data class DictLiteralTerm(
 
     companion object {
         fun build(
-            ctx: DictLiteralContext,
-        ): DictLiteralTerm = DictLiteralTerm(
+            ctx: DictConstructorContext,
+        ): DictConstructorTerm = DictConstructorTerm(
             location = SourceLocation.build(ctx),
             associations = ctx.dictAssociation().map {
                 Association.build(it)

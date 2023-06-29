@@ -2,14 +2,14 @@ package sigma.evaluation.values
 
 import sigma.Thunk
 import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.typeExpressions.TupleTypeLiteralTerm
+import sigma.syntax.typeExpressions.TupleTypeConstructorTerm
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.tables.Table
 import sigma.evaluation.scope.chainWith
 
 class Closure(
     private val context: Scope,
-    private val argumentType: TupleTypeLiteralTerm,
+    private val argumentType: TupleTypeConstructorTerm,
     private val image: ExpressionTerm,
 ) : ComputableFunctionValue() {
     override fun apply(

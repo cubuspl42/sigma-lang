@@ -12,8 +12,8 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.UnorderedTupleLiteralTerm
-import sigma.syntax.expressions.UnorderedTupleLiteralTerm.DuplicatedNameError
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm.DuplicatedNameError
 import utils.FakeDeclarationScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,9 +24,9 @@ object UnorderedTupleTests {
         fun testEmpty() {
             val term = ExpressionTerm.parse(
                 source = "{}",
-            ) as UnorderedTupleLiteralTerm
+            ) as UnorderedTupleConstructorTerm
 
-            val unorderedTupleLiteral = UnorderedTupleLiteral.build(
+            val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 typeScope = BuiltinTypeScope,
                 declarationScope = DeclarationScope.Empty,
                 term = term,
@@ -36,7 +36,7 @@ object UnorderedTupleTests {
                 expected = UnorderedTupleType(
                     valueTypeByName = emptyMap(),
                 ),
-                actual = unorderedTupleLiteral.inferredType.value,
+                actual = unorderedTupleConstructor.inferredType.value,
             )
         }
 
@@ -49,9 +49,9 @@ object UnorderedTupleTests {
                         key2: value2,
                     }
                 """.trimIndent(),
-            ) as UnorderedTupleLiteralTerm
+            ) as UnorderedTupleConstructorTerm
 
-            val unorderedTupleLiteral = UnorderedTupleLiteral.build(
+            val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 typeScope = TypeScope.Empty,
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(
@@ -69,7 +69,7 @@ object UnorderedTupleTests {
                         Symbol.of("key2") to IntCollectiveType,
                     ),
                 ),
-                actual = unorderedTupleLiteral.inferredType.value,
+                actual = unorderedTupleConstructor.inferredType.value,
             )
         }
 
@@ -82,9 +82,9 @@ object UnorderedTupleTests {
                         key1: value2,
                     }
                 """.trimIndent(),
-            ) as UnorderedTupleLiteralTerm
+            ) as UnorderedTupleConstructorTerm
 
-            val unorderedTupleLiteral = UnorderedTupleLiteral.build(
+            val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 typeScope = TypeScope.Empty,
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(
@@ -97,17 +97,17 @@ object UnorderedTupleTests {
 
             assertEquals(
                 expected = setOf(
-                    UnorderedTupleLiteral.DuplicatedKeyError(
+                    UnorderedTupleConstructor.DuplicatedKeyError(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         duplicatedKey = Symbol.of("key1"),
                     ),
                 ),
-                actual = unorderedTupleLiteral.errors,
+                actual = unorderedTupleConstructor.errors,
             )
 
             assertEquals(
                 expected = IllType,
-                actual = unorderedTupleLiteral.inferredType.value,
+                actual = unorderedTupleConstructor.inferredType.value,
             )
         }
     }

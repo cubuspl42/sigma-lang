@@ -9,15 +9,15 @@ import sigma.parser.antlr.SigmaParser
 data class TypeCallTerm(
     override val location: SourceLocation,
     val callee: TypeReferenceTerm,
-    val passedArgument: TypeTupleLiteral,
+    val passedArgument: TypeTupleConstructor,
 ) : TypeExpressionTerm() {
-    data class TypeTupleLiteral(
+    data class TypeTupleConstructor(
         val elements: List<TypeExpressionTerm>,
     ) {
         companion object {
             fun build(
-                ctx: SigmaParser.TypeTupleLiteralContext,
-            ): TypeTupleLiteral = TypeTupleLiteral(
+                ctx: SigmaParser.TypeTupleConstructorContext,
+            ): TypeTupleConstructor = TypeTupleConstructor(
                 elements = ctx.elements.map { TypeExpressionTerm.build(it) },
             )
         }
@@ -30,7 +30,7 @@ data class TypeCallTerm(
         ): TypeCallTerm = TypeCallTerm(
             location = SourceLocation.build(ctx),
             callee = TypeReferenceTerm.build(ctx.callee),
-            passedArgument = TypeTupleLiteral.build(ctx.passedArgument),
+            passedArgument = TypeTupleConstructor.build(ctx.passedArgument),
         )
     }
 

@@ -3,7 +3,7 @@ package sigma.syntax.type_expressions
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.ArrayTypeLiteralTerm
+import sigma.syntax.typeExpressions.ArrayTypeConstructorTerm
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
 import sigma.evaluation.values.FixedTypeScope
@@ -11,7 +11,7 @@ import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ArrayTypeLiteralTests {
+class ArrayTypeConstructorTests {
     object ParsingTests {
         @Test
         fun test() {
@@ -20,7 +20,7 @@ class ArrayTypeLiteralTests {
             )
 
             assertEquals(
-                expected = ArrayTypeLiteralTerm(
+                expected = ArrayTypeConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elementType = TypeReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),

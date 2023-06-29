@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.CommonTokenStream
 import sigma.TypeScope
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
-import sigma.parser.antlr.SigmaParser.ArrayTypeLiteralContext
+import sigma.parser.antlr.SigmaParser.ArrayTypeConstructorContext
 import sigma.parser.antlr.SigmaParser.DictTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
@@ -26,17 +26,17 @@ abstract class TypeExpressionTerm : Term() {
                 ctx: SigmaParser.TypeReferenceContext,
             ): TypeExpressionTerm = TypeReferenceTerm.build(ctx)
 
-            override fun visitTupleTypeLiteral(
-                ctx: SigmaParser.TupleTypeLiteralContext,
-            ): TypeExpressionTerm = TupleTypeLiteralTerm.build(ctx)
+            override fun visitTupleTypeConstructor(
+                ctx: SigmaParser.TupleTypeConstructorContext,
+            ): TypeExpressionTerm = TupleTypeConstructorTerm.build(ctx)
 
             override fun visitFunctionTypeDepiction(
                 ctx: FunctionTypeDepictionContext,
             ): TypeExpressionTerm = FunctionTypeTerm.build(ctx)
 
-            override fun visitArrayTypeLiteral(
-                ctx: ArrayTypeLiteralContext,
-            ): TypeExpressionTerm = ArrayTypeLiteralTerm.build(ctx)
+            override fun visitArrayTypeConstructor(
+                ctx: ArrayTypeConstructorContext,
+            ): TypeExpressionTerm = ArrayTypeConstructorTerm.build(ctx)
 
             override fun visitDictTypeDepiction(
                 ctx: DictTypeDepictionContext,

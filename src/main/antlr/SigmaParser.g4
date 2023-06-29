@@ -38,8 +38,8 @@ expression
     | parenExpression # parenExpressionAlt
     | reference # referenceAlt
     | abstraction # abstractionAlt
-    | tupleLiteral # tupleLiteralAlt
-    | dictLiteral # dictLiteralAlt
+    | tupleConstructor # tupleConstructorAlt
+    | dictConstructor # dictConstructorAlt
     | letExpression # letExpressionAlt
     | isUndefinedCheck # isUndefinedCheckAlt
     | SymbolLiteral # symbolLiteralAlt
@@ -50,16 +50,16 @@ expression
 // For left-recursion
 callableExpression
     : callee=callableExpression LeftParen argument=expression RightParen # callExpressionAlt
-    | callee=callableExpression argument=tupleLiteral # callExpressionTupleLiteralAlt
+    | callee=callableExpression argument=tupleConstructor # callExpressionTupleConstructorAlt
     | subject=callableExpression Dot fieldName=Identifier # fieldReadAlt
     | parenExpression # callableParenAlt
     | reference # callableReferenceAlt
-    | tupleLiteral # callableTupleLiteralAlt
+    | tupleConstructor # callableTupleConstructorAlt
     ;
 
-tupleLiteral
-    : unorderedTupleLiteral
-    | orderedTupleLiteral
+tupleConstructor
+    : unorderedTupleConstructor
+    | orderedTupleConstructor
     ;
 
 // Let expression
@@ -77,13 +77,13 @@ declaration
 // end
 
 abstraction
-    :   (Bang genericParametersTuple)? argumentType=tupleTypeLiteral
+    :   (Bang genericParametersTuple)? argumentType=tupleTypeConstructor
         (ThinArrow imageType=typeExpression)? FatArrow image=expression
     ;
 
-// Unordered tuple literal
+// Unordered tuple constructor
 
-unorderedTupleLiteral
+unorderedTupleConstructor
     : LeftBrace (unorderedTupleAssociation (Comma unorderedTupleAssociation)*)? Comma? RightBrace ;
 
 unorderedTupleAssociation
@@ -92,9 +92,9 @@ unorderedTupleAssociation
 
 // end
 
-// Ordered tuple literal
+// Ordered tuple constructor
 
-orderedTupleLiteral
+orderedTupleConstructor
     : LeftBracket (orderedTupleElement (Comma orderedTupleElement)* Comma?)? RightBracket
     ;
 
@@ -104,9 +104,9 @@ orderedTupleElement
 
 // end
 
-// Dict literal
+// Dict constructor
 
-dictLiteral
+dictConstructor
     : LeftBrace dictAssociation (Comma dictAssociation)* Comma? RightBrace
     ;
 
@@ -134,16 +134,16 @@ typeExpression
     : typeCall
     | typeReference
     | functionTypeDepiction
-    | tupleTypeLiteral
-    | arrayTypeLiteral
+    | tupleTypeConstructor
+    | arrayTypeConstructor
     | dictTypeDepiction
     ;
 
 typeCall
-    : callee=typeReference passedArgument=typeTupleLiteral
+    : callee=typeReference passedArgument=typeTupleConstructor
     ;
 
-typeTupleLiteral
+typeTupleConstructor
     : LeftBracket (elements+=typeExpression (Comma elements+=typeExpression)* Comma?)? RightBracket
     ;
 
@@ -151,18 +151,18 @@ typeReference
     : referee=identifier
     ;
 
-tupleTypeLiteral
-    : unorderedTupleTypeLiteral
-    | orderedTupleTypeLiteral
+tupleTypeConstructor
+    : unorderedTupleTypeConstructor
+    | orderedTupleTypeConstructor
     ;
 
 functionTypeDepiction
-    : (Bang genericParametersTuple)? argumentType=tupleTypeLiteral ThinArrow imageType=typeExpression
+    : (Bang genericParametersTuple)? argumentType=tupleTypeConstructor ThinArrow imageType=typeExpression
     ;
 
-// Unordered tuple type literal
+// Unordered tuple type constructor
 
-unorderedTupleTypeLiteral
+unorderedTupleTypeConstructor
     : LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
 
 unorderedTupleTypeEntry
@@ -171,9 +171,9 @@ unorderedTupleTypeEntry
 
 // end
 
-// Ordered tuple type literal
+// Ordered tuple type constructor
 
-orderedTupleTypeLiteral
+orderedTupleTypeConstructor
     : LeftBracket (orderedTupleTypeElement (Comma orderedTupleTypeElement)* Comma?)? RightBracket
     ;
 
@@ -183,7 +183,7 @@ orderedTupleTypeElement
 
 // end
 
-arrayTypeLiteral
+arrayTypeConstructor
     : LeftBracket type=typeExpression Asterisk RightBracket
     ;
 

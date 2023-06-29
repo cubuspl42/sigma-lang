@@ -5,14 +5,14 @@ import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.ArrayType
 
-data class ArrayTypeLiteralTerm(
+data class ArrayTypeConstructorTerm(
     override val location: SourceLocation,
     val elementType: TypeExpressionTerm,
 ) : TypeExpressionTerm() {
     companion object {
         fun build(
-            ctx: SigmaParser.ArrayTypeLiteralContext,
-        ): ArrayTypeLiteralTerm = ArrayTypeLiteralTerm(
+            ctx: SigmaParser.ArrayTypeConstructorContext,
+        ): ArrayTypeConstructorTerm = ArrayTypeConstructorTerm(
             location = SourceLocation.build(ctx),
             elementType = build(ctx.type),
         )

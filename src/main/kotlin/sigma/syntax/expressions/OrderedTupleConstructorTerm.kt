@@ -2,21 +2,21 @@ package sigma.syntax.expressions
 
 import sigma.TypeScope
 import sigma.SyntaxValueScope
-import sigma.parser.antlr.SigmaParser.OrderedTupleLiteralContext
+import sigma.parser.antlr.SigmaParser.OrderedTupleConstructorContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.OrderedTupleType
 import sigma.evaluation.scope.Scope
 import sigma.semantics.types.Type
 import sigma.evaluation.values.tables.ArrayTable
 
-data class OrderedTupleLiteralTerm(
+data class OrderedTupleConstructorTerm(
     override val location: SourceLocation,
     val elements: List<ExpressionTerm>,
-) : TupleLiteralTerm() {
+) : TupleConstructorTerm() {
     companion object {
         fun build(
-            ctx: OrderedTupleLiteralContext,
-        ): OrderedTupleLiteralTerm = OrderedTupleLiteralTerm(
+            ctx: OrderedTupleConstructorContext,
+        ): OrderedTupleConstructorTerm = OrderedTupleConstructorTerm(
             location = SourceLocation.build(ctx),
             elements = ctx.orderedTupleElement().map {
                 ExpressionTerm.build(it)

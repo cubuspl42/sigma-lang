@@ -1,9 +1,9 @@
 package sigma
 
 import org.junit.jupiter.api.assertThrows
-import sigma.syntax.expressions.UnorderedTupleLiteralTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.UnorderedTupleLiteralTerm.DuplicatedNameError
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm.DuplicatedNameError
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.UnorderedTupleType
@@ -14,12 +14,12 @@ import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-object UnorderedTupleLiteralTests {
+object UnorderedTupleConstructorTests {
     object ParsingTests {
         @Test
         fun testEmpty() {
             assertEquals(
-                expected = UnorderedTupleLiteralTerm(
+                expected = UnorderedTupleConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = emptyList()
                 ),
@@ -30,10 +30,10 @@ object UnorderedTupleLiteralTests {
         @Test
         fun testSingleEntry() {
             assertEquals(
-                expected = UnorderedTupleLiteralTerm(
+                expected = UnorderedTupleConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        UnorderedTupleLiteralTerm.Entry(
+                        UnorderedTupleConstructorTerm.Entry(
                             name = Symbol.of("foo"),
                             value = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
@@ -49,17 +49,17 @@ object UnorderedTupleLiteralTests {
         @Test
         fun testMultipleEntries() {
             assertEquals(
-                expected = UnorderedTupleLiteralTerm(
+                expected = UnorderedTupleConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        UnorderedTupleLiteralTerm.Entry(
+                        UnorderedTupleConstructorTerm.Entry(
                             name = Symbol.of("foo"),
                             value = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 referee = Symbol.of("baz1"),
                             ),
                         ),
-                        UnorderedTupleLiteralTerm.Entry(
+                        UnorderedTupleConstructorTerm.Entry(
                             name = Symbol.of("bar"),
                             value = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
