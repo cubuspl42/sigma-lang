@@ -4,7 +4,7 @@ import sigma.TypeScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.UnorderedTupleTypeLiteralTerm
+import sigma.syntax.typeExpressions.UnorderedTupleTypeConstructorTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.UnorderedTupleType
@@ -13,7 +13,7 @@ import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class UnorderedTupleTypeLiteralTests {
+class UnorderedTupleTypeConstructorTests {
     object ParsingTests {
         @Test
         fun testEmpty() {
@@ -22,7 +22,7 @@ class UnorderedTupleTypeLiteralTests {
             )
 
             assertEquals(
-                expected = UnorderedTupleTypeLiteralTerm(
+                expected = UnorderedTupleTypeConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = emptyList(),
                 ),
@@ -37,24 +37,24 @@ class UnorderedTupleTypeLiteralTests {
             )
 
             assertEquals(
-                expected = UnorderedTupleTypeLiteralTerm(
+                expected = UnorderedTupleTypeConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        UnorderedTupleTypeLiteralTerm.Entry(
+                        UnorderedTupleTypeConstructorTerm.Entry(
                             name = Symbol.of("a"),
                             valueType = TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 4),
                                 referee = Symbol.of("A"),
                             ),
                         ),
-                        UnorderedTupleTypeLiteralTerm.Entry(
+                        UnorderedTupleTypeConstructorTerm.Entry(
                             name = Symbol.of("b"),
                             valueType = TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                 referee = Symbol.of("B"),
                             ),
                         ),
-                        UnorderedTupleTypeLiteralTerm.Entry(
+                        UnorderedTupleTypeConstructorTerm.Entry(
                             name = Symbol.of("c"),
                             valueType = TypeReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 16),

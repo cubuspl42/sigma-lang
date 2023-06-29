@@ -12,12 +12,12 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.AbstractionAltContext
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
-import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
+import sigma.parser.antlr.SigmaParser.CallExpressionTupleConstructorAltContext
 import sigma.parser.antlr.SigmaParser.CallableExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallableParenAltContext
 import sigma.parser.antlr.SigmaParser.CallableReferenceAltContext
-import sigma.parser.antlr.SigmaParser.CallableTupleLiteralAltContext
-import sigma.parser.antlr.SigmaParser.DictLiteralAltContext
+import sigma.parser.antlr.SigmaParser.CallableTupleConstructorAltContext
+import sigma.parser.antlr.SigmaParser.DictConstructorAltContext
 import sigma.parser.antlr.SigmaParser.FieldReadAltContext
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.parser.antlr.SigmaParser.IsUndefinedCheckAltContext
@@ -25,7 +25,7 @@ import sigma.parser.antlr.SigmaParser.LetExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ParenExpressionAltContext
 import sigma.parser.antlr.SigmaParser.ReferenceAltContext
 import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
-import sigma.parser.antlr.SigmaParser.TupleLiteralAltContext
+import sigma.parser.antlr.SigmaParser.TupleConstructorAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.semantics.types.Type
 import sigma.syntax.Term
@@ -65,13 +65,13 @@ sealed class ExpressionTerm : Term() {
                 ctx: AbstractionAltContext,
             ): ExpressionTerm = AbstractionTerm.build(ctx.abstraction())
 
-            override fun visitTupleLiteralAlt(
-                ctx: TupleLiteralAltContext,
-            ): ExpressionTerm = TupleLiteralTerm.build(ctx.tupleLiteral())
+            override fun visitTupleConstructorAlt(
+                ctx: TupleConstructorAltContext,
+            ): ExpressionTerm = TupleConstructorTerm.build(ctx.tupleConstructor())
 
-            override fun visitDictLiteralAlt(
-                ctx: DictLiteralAltContext,
-            ): ExpressionTerm = DictLiteralTerm.build(ctx.dictLiteral())
+            override fun visitDictConstructorAlt(
+                ctx: DictConstructorAltContext,
+            ): ExpressionTerm = DictConstructorTerm.build(ctx.dictConstructor())
 
             override fun visitLetExpressionAlt(
                 ctx: LetExpressionAltContext,
@@ -97,8 +97,8 @@ sealed class ExpressionTerm : Term() {
                 ctx: CallExpressionAltContext,
             ): ExpressionTerm = CallTerm.build(ctx)
 
-            override fun visitCallExpressionTupleLiteralAlt(
-                ctx: CallExpressionTupleLiteralAltContext,
+            override fun visitCallExpressionTupleConstructorAlt(
+                ctx: CallExpressionTupleConstructorAltContext,
             ): ExpressionTerm = CallTerm.build(ctx)
 
             override fun visitCallableParenAlt(
@@ -109,9 +109,9 @@ sealed class ExpressionTerm : Term() {
                 ctx: CallableReferenceAltContext,
             ): ExpressionTerm = ReferenceTerm.build(ctx.reference())
 
-            override fun visitCallableTupleLiteralAlt(
-                ctx: CallableTupleLiteralAltContext,
-            ): ExpressionTerm = TupleLiteralTerm.build(ctx.tupleLiteral())
+            override fun visitCallableTupleConstructorAlt(
+                ctx: CallableTupleConstructorAltContext,
+            ): ExpressionTerm = TupleConstructorTerm.build(ctx.tupleConstructor())
 
             override fun visitFieldReadAlt(
                 ctx: FieldReadAltContext,

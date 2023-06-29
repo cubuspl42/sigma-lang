@@ -7,7 +7,7 @@ import sigma.SyntaxValueScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
-import sigma.parser.antlr.SigmaParser.CallExpressionTupleLiteralAltContext
+import sigma.parser.antlr.SigmaParser.CallExpressionTupleConstructorAltContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.Type
@@ -38,14 +38,14 @@ data class CallTerm(
                     location = SourceLocation.build(ctx),
                     referee = Symbol.of(prototype.functionName),
                 ),
-                argument = UnorderedTupleLiteralTerm(
+                argument = UnorderedTupleConstructorTerm(
                     location = SourceLocation.build(ctx),
                     entries = listOf(
-                        UnorderedTupleLiteralTerm.Entry(
+                        UnorderedTupleConstructorTerm.Entry(
                             name = prototype.leftArgument,
                             value = leftExpression,
                         ),
-                        UnorderedTupleLiteralTerm.Entry(
+                        UnorderedTupleConstructorTerm.Entry(
                             name = prototype.rightArgument,
                             value = rightExpression,
                         ),
@@ -63,11 +63,11 @@ data class CallTerm(
         )
 
         fun build(
-            ctx: CallExpressionTupleLiteralAltContext,
+            ctx: CallExpressionTupleConstructorAltContext,
         ): CallTerm = CallTerm(
             location = SourceLocation.build(ctx),
             subject = ExpressionTerm.build(ctx.callee),
-            argument = TupleLiteralTerm.build(ctx.argument),
+            argument = TupleConstructorTerm.build(ctx.argument),
         )
     }
 

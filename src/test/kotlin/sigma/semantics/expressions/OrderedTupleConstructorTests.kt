@@ -6,21 +6,21 @@ import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.OrderedTupleLiteralTerm
+import sigma.syntax.expressions.OrderedTupleConstructorTerm
 import utils.FakeDeclarationScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-class OrderedTupleLiteralTests {
+class OrderedTupleConstructorTests {
     object TypeInferenceTests {
         @Test
         fun testEmpty() {
             val term = ExpressionTerm.parse(
                 source = "[]",
-            ) as OrderedTupleLiteralTerm
+            ) as OrderedTupleConstructorTerm
 
-            val tupleLiteral = OrderedTupleLiteral.build(
+            val tupleLiteral = OrderedTupleConstructor.build(
                 typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = term,
@@ -42,9 +42,9 @@ class OrderedTupleLiteralTests {
         fun testNonEmpty() {
             val term = ExpressionTerm.parse(
                 source = "[a, b]",
-            ) as OrderedTupleLiteralTerm
+            ) as OrderedTupleConstructorTerm
 
-            val tupleLiteral = OrderedTupleLiteral.build(
+            val tupleLiteral = OrderedTupleConstructor.build(
                 typeScope = TypeScope.Empty,
                 declarationScope = FakeDeclarationScope(
                     typeByName = mapOf(

@@ -16,7 +16,7 @@ import sigma.evaluation.scope.Scope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class OrderedTupleLiteralTests {
+class OrderedTupleConstructorTests {
     object ParsingTests {
         @Test
         fun testEmpty() {
@@ -25,7 +25,7 @@ class OrderedTupleLiteralTests {
             )
 
             assertEquals(
-                expected = OrderedTupleLiteralTerm(
+                expected = OrderedTupleConstructorTerm(
                     location = SourceLocation(1, 0),
                     elements = emptyList(),
                 ),
@@ -40,7 +40,7 @@ class OrderedTupleLiteralTests {
             )
 
             assertEquals(
-                expected = OrderedTupleLiteralTerm(
+                expected = OrderedTupleConstructorTerm(
                     location = SourceLocation(1, 0),
                     elements = listOf(
                         ReferenceTerm(
@@ -60,7 +60,7 @@ class OrderedTupleLiteralTests {
             )
 
             assertEquals(
-                expected = OrderedTupleLiteralTerm(
+                expected = OrderedTupleConstructorTerm(
                     location = SourceLocation(1, 0),
                     elements = listOf(
                         ReferenceTerm(

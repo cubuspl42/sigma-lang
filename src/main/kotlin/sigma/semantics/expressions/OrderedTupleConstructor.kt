@@ -5,18 +5,18 @@ import sigma.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.OrderedTupleType
-import sigma.syntax.expressions.OrderedTupleLiteralTerm
+import sigma.syntax.expressions.OrderedTupleConstructorTerm
 
-class OrderedTupleLiteral(
-    override val term: OrderedTupleLiteralTerm,
+class OrderedTupleConstructor(
+    override val term: OrderedTupleConstructorTerm,
     val elements: List<Expression>,
-) : TupleLiteral() {
+) : TupleConstructor() {
     companion object {
         fun build(
             typeScope: TypeScope,
             declarationScope: DeclarationScope,
-            term: OrderedTupleLiteralTerm,
-        ): OrderedTupleLiteral = OrderedTupleLiteral(
+            term: OrderedTupleConstructorTerm,
+        ): OrderedTupleConstructor = OrderedTupleConstructor(
             term = term,
             elements = term.elements.map {
                 Expression.build(

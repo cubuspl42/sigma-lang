@@ -6,17 +6,17 @@ import sigma.evaluation.values.PrimitiveValue
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
-import sigma.syntax.expressions.UnorderedTupleLiteralTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.semantics.types.IllType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
 
-class UnorderedTupleLiteral(
-    override val term: UnorderedTupleLiteralTerm,
+class UnorderedTupleConstructor(
+    override val term: UnorderedTupleConstructorTerm,
     val entries: Set<Entry>,
-) : TupleLiteral() {
+) : TupleConstructor() {
     data class Entry(
         val name: Symbol,
         val value: Expression,
@@ -25,7 +25,7 @@ class UnorderedTupleLiteral(
             fun build(
                 typeScope: TypeScope,
                 declarationScope: DeclarationScope,
-                entry: UnorderedTupleLiteralTerm.Entry,
+                entry: UnorderedTupleConstructorTerm.Entry,
             ): Entry = Entry(
                 name = entry.name,
                 value = Expression.build(
@@ -52,8 +52,8 @@ class UnorderedTupleLiteral(
         fun build(
             typeScope: TypeScope,
             declarationScope: DeclarationScope,
-            term: UnorderedTupleLiteralTerm,
-        ): UnorderedTupleLiteral = UnorderedTupleLiteral(
+            term: UnorderedTupleConstructorTerm,
+        ): UnorderedTupleConstructor = UnorderedTupleConstructor(
             term = term,
             entries = term.entries.map {
                 Entry.build(

@@ -5,15 +5,15 @@ import sigma.syntax.SourceLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-object DictLiteralTermTests {
+object DictConstructorTermTests {
     object ParsingTests {
         @Test
         fun testSimple() {
             assertEquals(
-                expected = DictLiteralTerm(
+                expected = DictConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     associations = listOf(
-                        DictLiteralTerm.Association(
+                        DictConstructorTerm.Association(
                             key = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 2),
                                 referee = Symbol.of("foo"),
@@ -23,7 +23,7 @@ object DictLiteralTermTests {
                                 referee = Symbol.of("value1"),
                             ),
                         ),
-                        DictLiteralTerm.Association(
+                        DictConstructorTerm.Association(
                             key = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
                                 referee = Symbol.of("baz"),

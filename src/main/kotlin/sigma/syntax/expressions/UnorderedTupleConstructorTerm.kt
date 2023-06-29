@@ -3,7 +3,7 @@ package sigma.syntax.expressions
 import sigma.TypeScope
 import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser
-import sigma.parser.antlr.SigmaParser.UnorderedTupleLiteralContext
+import sigma.parser.antlr.SigmaParser.UnorderedTupleConstructorContext
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.PrimitiveValue
@@ -13,10 +13,10 @@ import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 
-data class UnorderedTupleLiteralTerm(
+data class UnorderedTupleConstructorTerm(
     override val location: SourceLocation,
     val entries: List<Entry>,
-) : TupleLiteralTerm() {
+) : TupleConstructorTerm() {
     data class Entry(
         val name: Symbol,
         val value: ExpressionTerm,
@@ -45,8 +45,8 @@ data class UnorderedTupleLiteralTerm(
 
     companion object {
         fun build(
-            ctx: UnorderedTupleLiteralContext,
-        ): UnorderedTupleLiteralTerm = UnorderedTupleLiteralTerm(
+            ctx: UnorderedTupleConstructorContext,
+        ): UnorderedTupleConstructorTerm = UnorderedTupleConstructorTerm(
             location = SourceLocation.build(ctx),
             entries = ctx.unorderedTupleAssociation().map {
                 Entry.build(it)

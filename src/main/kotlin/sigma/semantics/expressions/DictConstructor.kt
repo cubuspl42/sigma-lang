@@ -9,10 +9,10 @@ import sigma.semantics.types.IllType
 import sigma.semantics.types.PrimitiveType
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.DictLiteralTerm
+import sigma.syntax.expressions.DictConstructorTerm
 
-class DictLiteral(
-    override val term: DictLiteralTerm,
+class DictConstructor(
+    override val term: DictConstructorTerm,
     val associations: List<Association>,
 ) : Expression() {
     class Association(
@@ -23,7 +23,7 @@ class DictLiteral(
             fun build(
                 typeScope: TypeScope,
                 declarationScope: DeclarationScope,
-                term: DictLiteralTerm.Association,
+                term: DictConstructorTerm.Association,
             ): Association = Association(
                 key = Expression.build(
                     typeScope = typeScope,
@@ -43,8 +43,8 @@ class DictLiteral(
         fun build(
             typeScope: TypeScope,
             declarationScope: DeclarationScope,
-            term: DictLiteralTerm,
-        ): DictLiteral = DictLiteral(
+            term: DictConstructorTerm,
+        ): DictConstructor = DictConstructor(
             term = term,
             associations = term.associations.map {
                 Association.build(

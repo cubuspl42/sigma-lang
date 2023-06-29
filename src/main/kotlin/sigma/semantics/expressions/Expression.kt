@@ -9,7 +9,7 @@ import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.CallTerm
-import sigma.syntax.expressions.DictLiteralTerm
+import sigma.syntax.expressions.DictConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.FieldReadTerm
 import sigma.syntax.expressions.IntLiteralTerm
@@ -17,7 +17,7 @@ import sigma.syntax.expressions.IsUndefinedCheckTerm
 import sigma.syntax.expressions.LetExpressionTerm
 import sigma.syntax.expressions.ReferenceTerm
 import sigma.syntax.expressions.SymbolLiteralTerm
-import sigma.syntax.expressions.TupleLiteralTerm
+import sigma.syntax.expressions.TupleConstructorTerm
 import sigma.evaluation.scope.Scope
 
 abstract class Expression : Entity() {
@@ -68,13 +68,13 @@ abstract class Expression : Entity() {
 
             is SymbolLiteralTerm -> TODO()
 
-            is TupleLiteralTerm -> TupleLiteral.build(
+            is TupleConstructorTerm -> TupleConstructor.build(
                 typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is DictLiteralTerm -> DictLiteral.build(
+            is DictConstructorTerm -> DictConstructor.build(
                 typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,

@@ -3,8 +3,8 @@ package sigma.syntax
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.IntLiteralTerm
-import sigma.syntax.expressions.UnorderedTupleLiteralTerm
-import sigma.syntax.typeExpressions.OrderedTupleTypeLiteralTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm
+import sigma.syntax.typeExpressions.OrderedTupleTypeConstructorTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import kotlin.test.Test
@@ -65,10 +65,10 @@ class ModuleTests {
                         name = Symbol.of("name2"), valueType = null,
                         value = AbstractionTerm(
                             location = SourceLocation(lineIndex = 7, columnIndex = 8),
-                            argumentType = OrderedTupleTypeLiteralTerm(
+                            argumentType = OrderedTupleTypeConstructorTerm(
                                 location = SourceLocation(lineIndex = 7, columnIndex = 8),
                                 elements = listOf(
-                                    OrderedTupleTypeLiteralTerm.Element(
+                                    OrderedTupleTypeConstructorTerm.Element(
                                         name = Symbol.of("a"),
                                         type = TypeReferenceTerm(
                                             location = SourceLocation(lineIndex = 7, columnIndex = 12),
@@ -85,17 +85,17 @@ class ModuleTests {
                     ),
                     DefinitionTerm(
                         location = SourceLocation(lineIndex = 9, columnIndex = 0),
-                        name = Symbol.of("name3"), value = UnorderedTupleLiteralTerm(
+                        name = Symbol.of("name3"), value = UnorderedTupleConstructorTerm(
                             location = SourceLocation(lineIndex = 9, columnIndex = 8),
                             entries = listOf(
-                                UnorderedTupleLiteralTerm.Entry(
+                                UnorderedTupleConstructorTerm.Entry(
                                     name = Symbol.of("a"),
                                     value = IntLiteralTerm(
                                         location = SourceLocation(lineIndex = 10, columnIndex = 7),
                                         value = IntValue(value = 1L),
                                     ),
                                 ),
-                                UnorderedTupleLiteralTerm.Entry(
+                                UnorderedTupleConstructorTerm.Entry(
                                     name = Symbol.of("b"),
                                     value = IntLiteralTerm(
                                         location = SourceLocation(lineIndex = 11, columnIndex = 7),
