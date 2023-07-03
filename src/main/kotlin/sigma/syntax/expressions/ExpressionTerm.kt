@@ -116,6 +116,10 @@ sealed class ExpressionTerm : Term() {
             override fun visitFieldReadAlt(
                 ctx: FieldReadAltContext,
             ): ExpressionTerm = FieldReadTerm.build(ctx)
+
+            override fun visitSetConstructor(
+                ctx: SigmaParser.SetConstructorContext,
+            ): ExpressionTerm = SetConstructorTerm.build(ctx)
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class}")
     }
 

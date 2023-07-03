@@ -19,6 +19,7 @@ import sigma.syntax.expressions.ReferenceTerm
 import sigma.syntax.expressions.SymbolLiteralTerm
 import sigma.syntax.expressions.TupleConstructorTerm
 import sigma.evaluation.scope.Scope
+import sigma.syntax.expressions.SetConstructorTerm
 
 abstract class Expression : Entity() {
     companion object {
@@ -75,6 +76,12 @@ abstract class Expression : Entity() {
             )
 
             is DictConstructorTerm -> DictConstructor.build(
+                typeScope = typeScope,
+                declarationScope = declarationScope,
+                term = term,
+            )
+
+            is SetConstructorTerm -> SetConstructor.build(
                 typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,

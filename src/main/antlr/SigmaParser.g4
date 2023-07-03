@@ -40,6 +40,7 @@ expression
     | abstraction # abstractionAlt
     | tupleConstructor # tupleConstructorAlt
     | dictConstructor # dictConstructorAlt
+    | setConstructor # setConstructorAlt
     | letExpression # letExpressionAlt
     | isUndefinedCheck # isUndefinedCheckAlt
     | SymbolLiteral # symbolLiteralAlt
@@ -112,6 +113,14 @@ dictConstructor
 
 dictAssociation
     : LeftBracket key=expression RightBracket Colon value=expression
+    ;
+
+// end
+
+// Set constructor
+
+setConstructor
+    : LeftBrace (elements+=expression (Comma elements+=expression)* Comma?)? RightBrace
     ;
 
 // end
