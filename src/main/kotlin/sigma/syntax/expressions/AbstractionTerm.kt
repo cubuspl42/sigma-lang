@@ -1,15 +1,11 @@
 package sigma.syntax.expressions
 
 import sigma.TypeScope
-import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
-import sigma.semantics.types.TupleType
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TupleTypeConstructorTerm
 import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.semantics.types.UniversalFunctionType
-import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.Term
 import sigma.evaluation.values.Closure
@@ -64,20 +60,6 @@ data class AbstractionTerm(
             },
             image = ExpressionTerm.build(ctx.image),
         )
-    }
-
-    override fun validateAdditionally(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ) {
-        throw NotImplementedError()
-    }
-
-    override fun determineType(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ): Type {
-        throw NotImplementedError()
     }
 
     override fun evaluate(

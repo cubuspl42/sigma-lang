@@ -1,20 +1,14 @@
 package sigma.syntax.expressions
 
 import sigma.BinaryOperationPrototype
-import sigma.TypeScope
-import sigma.SyntaxValueScope
 
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionTupleConstructorAltContext
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.FunctionType
-import sigma.semantics.types.Type
-import sigma.semantics.types.TypeVariableResolutionError
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.TypeErrorException
 import sigma.evaluation.scope.Scope
 
 data class CallTerm(
@@ -68,46 +62,6 @@ data class CallTerm(
             location = SourceLocation.build(ctx),
             subject = ExpressionTerm.build(ctx.callee),
             argument = TupleConstructorTerm.build(ctx.argument),
-        )
-    }
-
-    override fun validateAdditionally(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ) {
-        // TODO: Validate passed argument
-    }
-
-    override fun determineType(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ): Type {
-        val subjectType = subject.determineType(
-            typeScope = typeScope,
-            valueScope = valueScope,
-        ) as? FunctionType ?: throw TypeErrorException(
-            location = location,
-            message = "Only functions can be called",
-        )
-
-        val argumentType = argument.determineType(
-            typeScope = typeScope,
-            valueScope = valueScope,
-        )
-
-        val typeVariableResolution = try {
-            subjectType.argumentType.resolveTypeVariables(
-                assignedType = argumentType
-            )
-        } catch (e: TypeVariableResolutionError) {
-            throw TypeErrorException(
-                location = location,
-                message = e.message,
-            )
-        }
-
-        return subjectType.imageType.substituteTypeVariables(
-            resolution = typeVariableResolution,
         )
     }
 

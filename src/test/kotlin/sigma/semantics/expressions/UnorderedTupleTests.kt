@@ -1,9 +1,7 @@
 package sigma.semantics.expressions
 
-import org.junit.jupiter.api.assertThrows
 import sigma.BuiltinTypeScope
 import sigma.TypeScope
-import sigma.evaluation.values.FixedStaticValueScope
 import sigma.evaluation.values.Symbol
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
@@ -13,7 +11,6 @@ import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm.DuplicatedNameError
 import utils.FakeDeclarationScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
