@@ -1,14 +1,15 @@
 package sigma.programs.euler
 
-import sigma.semantics.Project
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.tables.DictTable
+import sigma.semantics.Project
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import kotlin.test.assertIs
 
 class EulerProblemsTests {
     @Test
@@ -30,29 +31,28 @@ class EulerProblemsTests {
 
     @Test
     fun testProblem8() {
-        val actual = solveProblem(8)
+        val result = solveProblem(8)
 
         assertEquals(
             expected = IntValue(value = 23514624000L),
-            actual = actual,
+            actual = result,
         )
     }
 
     @Test
     fun testProblem9() {
-        val actual = solveProblem(9)
+        val result = solveProblem(9)
 
-        assertTrue {
-            actual.equalsTo(
-                DictTable(
-                    entries = mapOf(
-                        Symbol.of("a") to IntValue(value = 1L),
-                        Symbol.of("b") to IntValue(value = 1L),
-                        Symbol.of("c") to IntValue(value = 8L),
-                    ),
-                ),
-            )
-        }
+        assertIs<DictTable>(result)
+
+        assertEquals<Map<PrimitiveValue, Value>>(
+            expected = mapOf(
+                Symbol.of("a") to IntValue(value = 1L),
+                Symbol.of("b") to IntValue(value = 1L),
+                Symbol.of("c") to IntValue(value = 8L),
+            ),
+            actual = result.evaluatedEntries,
+        )
     }
 
     @Test

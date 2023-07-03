@@ -38,7 +38,5 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
 
     abstract val imageType: Type
 
-    override fun equalsTo(other: Value): Boolean = this == other
-
     abstract fun compute(args: List<Thunk>): Thunk
 }
