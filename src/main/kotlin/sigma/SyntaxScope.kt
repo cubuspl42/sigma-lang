@@ -32,16 +32,4 @@ interface SyntaxValueScope {
 
     // Idea: Return `TypeExpression`?
     fun getValueType(valueName: Symbol): Type?
-
-    fun chainWith(
-        backScope: SyntaxValueScope,
-    ): SyntaxValueScope = object : SyntaxValueScope {
-        override fun getValueType(
-            valueName: Symbol,
-        ): Type? = this@SyntaxValueScope.getValueType(
-            valueName = valueName,
-        ) ?: backScope.getValueType(
-            valueName = valueName,
-        )
-    }
 }

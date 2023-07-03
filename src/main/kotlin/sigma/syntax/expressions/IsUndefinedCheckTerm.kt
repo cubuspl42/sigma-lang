@@ -1,11 +1,7 @@
 package sigma.syntax.expressions
 
-import sigma.TypeScope
-import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.IsUndefinedCheckContext
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.BoolType
-import sigma.semantics.types.Type
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.UndefinedValue
 import sigma.evaluation.scope.Scope
@@ -22,11 +18,6 @@ data class IsUndefinedCheckTerm(
             argument = ExpressionTerm.build(ctx),
         )
     }
-
-    override fun determineType(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ): Type = TODO()
 
     override fun evaluate(
         scope: Scope,

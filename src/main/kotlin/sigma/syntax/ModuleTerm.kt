@@ -2,13 +2,10 @@ package sigma.syntax
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.SyntaxValueScope
-import sigma.TypeScope
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ImportStatementContext
 import sigma.parser.antlr.SigmaParser.ModuleContext
-import sigma.evaluation.values.LoopedStaticValueScope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.evaluation.scope.LoopedScope
@@ -19,23 +16,6 @@ data class ModuleTerm(
     val imports: List<Import>,
     val declarations: List<DefinitionTerm>,
 ) : Term() {
-    override fun validate(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ) {
-        val newValueScope = LoopedStaticValueScope(
-            typeContext = typeScope,
-            valueContext = valueScope,
-            declarations = declarations,
-        )
-
-        declarations.forEach {
-            it.validate(
-                typeScope = typeScope,
-                valueScope = newValueScope,
-            )
-        }
-    }
 
     fun evaluateDeclaration(
         name: String,

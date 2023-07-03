@@ -27,7 +27,6 @@ import sigma.parser.antlr.SigmaParser.ReferenceAltContext
 import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
 import sigma.parser.antlr.SigmaParser.TupleConstructorAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
-import sigma.semantics.types.Type
 import sigma.syntax.Term
 import sigma.evaluation.values.Value
 import sigma.evaluation.scope.Scope
@@ -137,34 +136,6 @@ sealed class ExpressionTerm : Term() {
     fun bind(scope: Scope): Thunk = BoundThunk(scope = scope)
 
     fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).toEvaluatedValue
-
-    final override fun validate(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ) {
-        determineType(
-            typeScope = typeScope,
-            valueScope = valueScope,
-        )
-
-        validateAdditionally(
-            typeScope = typeScope,
-            valueScope = valueScope,
-        )
-    }
-
-    open fun validateAdditionally(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ) {
-    }
-
-    abstract fun determineType(
-        // Idea: Rename to metaScope?
-        typeScope: TypeScope,
-        // Idea: Rename to staticScope?
-        valueScope: SyntaxValueScope,
-    ): Type
 
     // Idea for naming:
     // "environment" - scope in which an expression is evaluated

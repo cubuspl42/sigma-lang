@@ -1,13 +1,9 @@
 package sigma.syntax.expressions
 
-import sigma.TypeScope
-import sigma.SyntaxValueScope
 import sigma.Thunk
 import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.TypeErrorException
 import sigma.evaluation.scope.Scope
 
 data class ReferenceTerm(
@@ -22,16 +18,6 @@ data class ReferenceTerm(
             referee = Symbol(name = ctx.referee.text),
         )
     }
-
-    override fun determineType(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ): Type = valueScope.getValueType(
-        valueName = referee,
-    ) ?: throw TypeErrorException(
-        location = location,
-        message = "Unresolved reference: $referee"
-    )
 
     override fun evaluate(
         scope: Scope,

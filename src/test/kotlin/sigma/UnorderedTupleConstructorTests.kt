@@ -1,16 +1,10 @@
 package sigma
 
-import org.junit.jupiter.api.assertThrows
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm
+import sigma.evaluation.values.Symbol
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm.DuplicatedNameError
-import sigma.semantics.types.BoolType
-import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.ReferenceTerm
-import sigma.evaluation.values.FixedStaticValueScope
-import sigma.evaluation.values.Symbol
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

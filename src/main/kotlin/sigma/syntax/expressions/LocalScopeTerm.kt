@@ -1,15 +1,12 @@
 package sigma.syntax.expressions
 
-import sigma.semantics.Program
-import sigma.TypeScope
-import sigma.SyntaxValueScope
+import sigma.evaluation.scope.LoopedScope
+import sigma.evaluation.scope.Scope
 import sigma.parser.antlr.SigmaParser
+import sigma.semantics.Program
 import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
 import sigma.syntax.Term
-import sigma.evaluation.values.LoopedStaticValueScope
-import sigma.evaluation.scope.LoopedScope
-import sigma.evaluation.scope.Scope
 
 data class LocalScopeTerm(
     override val location: SourceLocation,
@@ -35,32 +32,6 @@ data class LocalScopeTerm(
             },
         )
     }
-
-    override fun validate(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ) {
-        val newValueScope = evaluateStatically(
-            typeScope = typeScope,
-            valueScope = valueScope,
-        )
-
-        definitions.forEach {
-            it.validate(
-                typeScope = typeScope,
-                valueScope = newValueScope,
-            )
-        }
-    }
-
-    fun evaluateStatically(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ): SyntaxValueScope = LoopedStaticValueScope(
-        typeContext = typeScope,
-        valueContext = valueScope,
-        declarations = definitions,
-    )
 
     fun evaluateDynamically(
         scope: Scope,

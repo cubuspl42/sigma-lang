@@ -1,17 +1,11 @@
 package sigma.syntax.expressions
 
-import sigma.TypeScope
-import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser.DictAssociationContext
 import sigma.parser.antlr.SigmaParser.DictConstructorContext
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.DictType
-import sigma.semantics.types.PrimitiveType
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.tables.DictTable
 import sigma.evaluation.scope.Scope
-import sigma.semantics.types.Type
-import sigma.evaluation.values.TypeErrorException
 
 data class DictConstructorTerm(
     override val location: SourceLocation,
@@ -43,9 +37,6 @@ data class DictConstructorTerm(
     }
 
     override fun dump(): String = "(dict literal)"
-    override fun determineType(typeScope: TypeScope, valueScope: SyntaxValueScope): Type {
-        TODO("Not yet implemented")
-    }
 
     override fun evaluate(
         scope: Scope,

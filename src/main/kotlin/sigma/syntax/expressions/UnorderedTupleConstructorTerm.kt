@@ -1,11 +1,8 @@
 package sigma.syntax.expressions
 
-import sigma.TypeScope
-import sigma.SyntaxValueScope
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.UnorderedTupleConstructorContext
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.tables.DictTable
 import sigma.evaluation.scope.Scope
@@ -55,13 +52,6 @@ data class UnorderedTupleConstructorTerm(
     }
 
     override fun dump(): String = "(dict constructor)"
-
-    override fun determineType(
-        typeScope: TypeScope,
-        valueScope: SyntaxValueScope,
-    ): UnorderedTupleType {
-        TODO()
-    }
 
     override fun evaluate(
         scope: Scope,

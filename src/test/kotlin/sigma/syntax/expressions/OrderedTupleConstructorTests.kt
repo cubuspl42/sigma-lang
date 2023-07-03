@@ -1,19 +1,13 @@
 package sigma.syntax.expressions
 
-import sigma.TypeScope
-import sigma.SyntaxValueScope
-import sigma.syntax.SourceLocation
-import sigma.semantics.types.BoolType
-import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.OrderedTupleType
+import sigma.evaluation.scope.FixedScope
+import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.FixedStaticValueScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.tables.ArrayTable
-import sigma.evaluation.scope.FixedScope
-import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.tables.DictTable
+import sigma.syntax.SourceLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -82,50 +76,6 @@ class OrderedTupleConstructorTests {
                     ),
                 ),
                 actual = expression,
-            )
-        }
-    }
-
-    object TypeInferenceTests {
-        @Test
-        fun testEmpty() {
-            val type = ExpressionTerm.parse(
-                source = "[]",
-            ).determineType(
-                typeScope = TypeScope.Empty,
-                valueScope = SyntaxValueScope.Empty,
-            )
-
-            assertEquals(
-                expected = OrderedTupleType(
-                    elements = emptyList(),
-                ),
-                actual = type,
-            )
-        }
-
-        @Test
-        fun testNonEmpty() {
-            val type = ExpressionTerm.parse(
-                source = "[a, b]",
-            ).determineType(
-                typeScope = TypeScope.Empty,
-                valueScope = FixedStaticValueScope(
-                    entries = mapOf(
-                        Symbol.of("a") to BoolType,
-                        Symbol.of("b") to IntCollectiveType,
-                    ),
-                ),
-            )
-
-            assertEquals(
-                expected = OrderedTupleType(
-                    elements = listOf(
-                        OrderedTupleType.Element(name = null, type = BoolType),
-                        OrderedTupleType.Element(name = null, type = IntCollectiveType),
-                    ),
-                ),
-                actual = type,
             )
         }
     }
