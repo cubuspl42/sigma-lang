@@ -36,10 +36,6 @@ abstract class FunctionValue : Value() {
                     }
                 }
 
-                override fun equalsTo(other: Value): Boolean {
-                    TODO("Not yet implemented")
-                }
-
                 override fun dump(): String = "${primary.dump()} .. ${secondary.dump()}"
             }
         }

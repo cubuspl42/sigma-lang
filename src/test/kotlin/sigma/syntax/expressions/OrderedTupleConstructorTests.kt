@@ -13,8 +13,10 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.tables.ArrayTable
 import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.tables.DictTable
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class OrderedTupleConstructorTests {
     object ParsingTests {
@@ -137,11 +139,13 @@ class OrderedTupleConstructorTests {
                 scope = Scope.Empty,
             ).toEvaluatedValue
 
+            assertIs<DictTable>(value)
+
             assertEquals(
                 expected = ArrayTable(
                     elements = emptyList(),
-                ),
-                actual = value,
+                ).evaluatedEntries,
+                actual = value.evaluatedEntries,
             )
         }
 
@@ -158,14 +162,16 @@ class OrderedTupleConstructorTests {
                 ),
             ).toEvaluatedValue
 
+            assertIs<DictTable>(value)
+
             assertEquals(
                 expected = ArrayTable(
                     elements = listOf(
                         BoolValue(false),
                         IntValue(1),
                     ),
-                ),
-                actual = value,
+                ).evaluatedEntries,
+                actual = value.evaluatedEntries,
             )
         }
     }

@@ -23,4 +23,12 @@ class Closure(
     )
 
     override fun dump(): String = "(closure)"
+
+    override fun equals(other: Any?): Boolean {
+        throw UnsupportedOperationException()
+    }
+
+    override fun hashCode(): Int {
+        throw UnsupportedOperationException()
+    }
 }

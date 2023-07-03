@@ -6,7 +6,7 @@ import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 
-data class DictTable(
+class DictTable(
     private val entries: Map<PrimitiveValue, Thunk>,
 ) : Table() {
     companion object {
@@ -21,6 +21,16 @@ data class DictTable(
         val Empty = DictTable(
             entries = emptyMap(),
         )
+    }
+
+    val evaluatedEntries by lazy { entries.mapValues { it.value.toEvaluatedValue } }
+
+    override fun equals(other: Any?): Boolean {
+        throw UnsupportedOperationException()
+    }
+
+    override fun hashCode(): Int {
+        throw UnsupportedOperationException()
     }
 
     override fun read(
@@ -39,16 +49,6 @@ data class DictTable(
             val imageStr = it.value.toEvaluatedValue.dump()
 
             "$keyStr = $imageStr"
-        }
-    }
-
-    override fun equalsTo(other: Value): Boolean {
-        if (other !is DictTable) return  false
-
-        return this.entries.keys == other.entries.keys && entries.all { (key, value) ->
-            val otherValue = other.read(key)!!
-
-            value.toEvaluatedValue.equalsTo(otherValue.toEvaluatedValue)
         }
     }
 
