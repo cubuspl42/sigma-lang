@@ -1,11 +1,13 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.SetValue
 import sigma.semantics.Computation
-import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
-import sigma.semantics.types.SetType
+import sigma.semantics.TypeScope
 import sigma.semantics.types.IllType
+import sigma.semantics.types.SetType
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.SetConstructorTerm
@@ -76,4 +78,12 @@ class SetConstructor(
             inferredElementTypeOutcome.value as? InconsistentElementTypeError,
         )
     }
+
+    override fun evaluate(
+        scope: Scope,
+    ): SetValue = SetValue(
+        elements = elements.map {
+            it.evaluate(scope = scope).toEvaluatedValue
+        }.toSet(),
+    )
 }

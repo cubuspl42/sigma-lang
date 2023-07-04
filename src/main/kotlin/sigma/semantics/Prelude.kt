@@ -35,7 +35,7 @@ data class Prelude(
                 outerScope = BuiltinScope,
             )
 
-            val preludeScope = prelude.evaluateDynamically(
+            val preludeScope = definitionBlock.evaluate(
                 scope = BuiltinScope,
             )
 

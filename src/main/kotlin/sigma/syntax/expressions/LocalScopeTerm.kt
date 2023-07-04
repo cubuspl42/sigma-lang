@@ -1,7 +1,5 @@
 package sigma.syntax.expressions
 
-import sigma.evaluation.scope.LoopedScope
-import sigma.evaluation.scope.Scope
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.Program
 import sigma.syntax.DefinitionTerm
@@ -32,13 +30,4 @@ data class LocalScopeTerm(
             },
         )
     }
-
-    fun evaluateDynamically(
-        scope: Scope,
-    ): Scope = LoopedScope(
-        context = scope,
-        declarations = definitions.associate {
-            it.name to it.value
-        },
-    )
 }

@@ -37,15 +37,4 @@ data class DictConstructorTerm(
     }
 
     override fun dump(): String = "(dict literal)"
-
-    override fun evaluate(
-        scope: Scope,
-    ): DictTable = DictTable(
-        entries = associations.associate {
-            val key = it.key.evaluate(scope = scope).toEvaluatedValue as PrimitiveValue
-            val value = it.value.bind(scope = scope)
-
-            key to value
-        },
-    )
 }

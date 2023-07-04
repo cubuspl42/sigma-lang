@@ -20,14 +20,4 @@ class IntLiteralTermTests {
             )
         }
     }
-
-    object EvaluationTests {
-        @Test
-        fun test() {
-            assertEquals(
-                expected = IntValue(123),
-                actual = ExpressionTerm.parse(source = "123").evaluateAsRoot(),
-            )
-        }
-    }
 }

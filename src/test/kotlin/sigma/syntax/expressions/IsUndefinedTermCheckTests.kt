@@ -27,34 +27,4 @@ class IsUndefinedTermCheckTests {
             )
         }
     }
-
-    object EvaluationTests {
-        @Test
-        fun testNotUndefined() {
-            assertEquals(
-                expected = BoolValue.False,
-                actual = ExpressionTerm.parse(
-                    source = "isUndefined 0",
-                ).evaluate(
-                    scope = Scope.Empty,
-                ),
-            )
-        }
-
-        @Test
-        fun testUndefined() {
-            assertEquals(
-                expected = BoolValue.True,
-                actual = ExpressionTerm.parse(
-                    source = "isUndefined d(0)",
-                ).evaluate(
-                    scope = FixedScope(
-                        entries = mapOf(
-                            Symbol.of("d") to DictTable.Empty,
-                        ),
-                    ),
-                ),
-            )
-        }
-    }
 }

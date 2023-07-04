@@ -65,22 +65,5 @@ data class CallTerm(
         )
     }
 
-    override fun evaluate(
-        scope: Scope,
-    ): Thunk {
-        val subjectValue = subject.evaluate(scope = scope).toEvaluatedValue
-
-        if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
-
-        val argumentValue = argument.evaluate(scope = scope)
-
-        // Thought: Obtaining argument here might not be lazy enough
-        val image = subjectValue.apply(
-            argument = argumentValue.toEvaluatedValue,
-        )
-
-        return image
-    }
-
     override fun dump(): String = "${subject.dump()}[${argument.dump()}]"
 }

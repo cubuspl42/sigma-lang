@@ -1,10 +1,11 @@
 package sigma.semantics.expressions
 
-import sigma.semantics.Computation
 import sigma.evaluation.Thunk
-import sigma.semantics.TypeScope
+import sigma.evaluation.scope.Scope
+import sigma.semantics.Computation
 import sigma.semantics.DeclarationScope
 import sigma.semantics.Entity
+import sigma.semantics.TypeScope
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
@@ -16,10 +17,9 @@ import sigma.syntax.expressions.IntLiteralTerm
 import sigma.syntax.expressions.IsUndefinedCheckTerm
 import sigma.syntax.expressions.LetExpressionTerm
 import sigma.syntax.expressions.ReferenceTerm
+import sigma.syntax.expressions.SetConstructorTerm
 import sigma.syntax.expressions.SymbolLiteralTerm
 import sigma.syntax.expressions.TupleConstructorTerm
-import sigma.evaluation.scope.Scope
-import sigma.syntax.expressions.SetConstructorTerm
 
 abstract class Expression : Entity() {
     companion object {
@@ -107,8 +107,9 @@ abstract class Expression : Entity() {
     protected abstract val term: ExpressionTerm
 
     abstract val inferredType: Computation<Type>
+    fun bind(scope: Scope): Thunk = evaluate(scope = scope)
 
-    fun evaluate(scope: Scope): Thunk {
-        return term.evaluate(scope = scope)
-    }
+    abstract fun evaluate(
+        scope: Scope,
+    ): Thunk
 }

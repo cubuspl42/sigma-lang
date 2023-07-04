@@ -21,12 +21,4 @@ data class SetConstructorTerm(
     }
 
     override fun dump(): String = "(set constructor)"
-
-    override fun evaluate(
-        scope: Scope,
-    ): SetValue = SetValue(
-        elements = elements.map {
-            it.evaluate(scope = scope).toEvaluatedValue
-        }.toSet(),
-    )
 }

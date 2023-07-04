@@ -22,9 +22,5 @@ data class SymbolLiteralTerm(
         )
     }
 
-    override fun evaluate(
-        scope: Scope,
-    ): Value = symbol
-
     override fun dump(): String = symbol.dump()
 }

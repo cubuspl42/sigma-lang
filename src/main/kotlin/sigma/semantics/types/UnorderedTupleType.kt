@@ -1,7 +1,10 @@
 package sigma.semantics.types
 
+import sigma.evaluation.Thunk
+import sigma.evaluation.scope.Scope
 import sigma.semantics.SyntaxValueScope
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.tables.Table
 import sigma.semantics.expressions.Abstraction
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
@@ -138,4 +141,8 @@ data class UnorderedTupleType(
             )
         },
     )
+
+    override fun toArgumentScope(argument: Table): Scope = object : Scope {
+        override fun getValue(name: Symbol): Thunk? = argument.read(name)
+    }
 }

@@ -1,9 +1,16 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.Thunk
+import sigma.evaluation.scope.FixedScope
+import sigma.evaluation.values.ComputableFunctionValue
 import sigma.semantics.BuiltinScope
 import sigma.semantics.BuiltinTypeScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.tables.DictTable
+import sigma.semantics.DeclarationScope
+import sigma.semantics.TypeScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
@@ -140,6 +147,61 @@ class CallTests {
                     ),
                 ),
                 actual = call.errors,
+            )
+        }
+    }
+
+    object EvaluationTests {
+        @Test
+        fun testSimple() {
+            val sq = object : ComputableFunctionValue() {
+                override fun apply(argument: Value): Thunk {
+                    val n = argument as IntValue
+                    return IntValue(n.value * n.value)
+                }
+            }
+
+            val call = Call.build(
+                typeScope = TypeScope.Empty,
+                declarationScope = DeclarationScope.Empty,
+                term = ExpressionTerm.parse("sq(3)") as CallTerm,
+            )
+
+            assertEquals(
+                expected = IntValue(9),
+                actual = call.evaluate(
+                    scope = FixedScope(
+                        entries = mapOf(
+                            Symbol.of("sq") to sq,
+                        )
+                    ),
+                ).toEvaluatedValue,
+            )
+        }
+
+        @Test
+        fun testDictSubject() {
+            val call = Call.build(
+                typeScope = TypeScope.Empty,
+                declarationScope = DeclarationScope.Empty,
+                term = ExpressionTerm.parse("dict(2)") as CallTerm,
+            )
+
+            assertEquals(
+                expected = Symbol.of("two"),
+                actual = call.evaluate(
+                    scope = FixedScope(
+                        entries = mapOf(
+                            Symbol.of("dict") to DictTable(
+                                entries = mapOf(
+                                    IntValue(1) to Symbol.of("one"),
+                                    IntValue(2) to Symbol.of("two"),
+                                    IntValue(3) to Symbol.of("three"),
+                                ),
+                            ),
+                        ),
+                    ),
+                ).toEvaluatedValue,
             )
         }
     }

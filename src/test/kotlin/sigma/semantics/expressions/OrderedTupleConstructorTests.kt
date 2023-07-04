@@ -1,5 +1,12 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.scope.FixedScope
+import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.tables.ArrayTable
+import sigma.evaluation.values.tables.DictTable
 import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
@@ -67,6 +74,64 @@ class OrderedTupleConstructorTests {
                     ),
                 ),
                 actual = type,
+            )
+        }
+    }
+
+    object EvaluationTests {
+        @Test
+        fun testEmpty() {
+            val tupleConstructor = OrderedTupleConstructor.build(
+                typeScope = TypeScope.Empty,
+                declarationScope = DeclarationScope.Empty,
+                term = ExpressionTerm.parse(
+                    source = "[]",
+                ) as OrderedTupleConstructorTerm,
+            )
+
+            val value = tupleConstructor.evaluate(
+                scope = Scope.Empty,
+            ).toEvaluatedValue
+
+            assertIs<DictTable>(value)
+
+            assertEquals(
+                expected = ArrayTable(
+                    elements = emptyList(),
+                ).evaluatedEntries,
+                actual = value.evaluatedEntries,
+            )
+        }
+
+        @Test
+        fun testNonEmpty() {
+            val tupleConstructor = OrderedTupleConstructor.build(
+                typeScope = TypeScope.Empty,
+                declarationScope = DeclarationScope.Empty,
+                term = ExpressionTerm.parse(
+                    source = "[a, b]",
+                ) as OrderedTupleConstructorTerm,
+            )
+
+            val value = tupleConstructor.evaluate(
+                scope = FixedScope(
+                    entries = mapOf(
+                        Symbol.of("a") to BoolValue(false),
+                        Symbol.of("b") to IntValue(1),
+                    ),
+                ),
+            ).toEvaluatedValue
+
+            assertIs<DictTable>(value)
+
+            assertEquals(
+                expected = ArrayTable(
+                    elements = listOf(
+                        BoolValue(false),
+                        IntValue(1),
+                    ),
+                ).evaluatedEntries,
+                actual = value.evaluatedEntries,
             )
         }
     }

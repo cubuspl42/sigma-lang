@@ -1,16 +1,16 @@
 package sigma.evaluation.values
 
 import sigma.evaluation.Thunk
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.typeExpressions.TupleTypeConstructorTerm
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.tables.Table
 import sigma.evaluation.scope.chainWith
+import sigma.evaluation.values.tables.Table
+import sigma.semantics.expressions.Expression
+import sigma.semantics.types.TupleType
 
 class Closure(
     private val context: Scope,
-    private val argumentType: TupleTypeConstructorTerm,
-    private val image: ExpressionTerm,
+    private val argumentType: TupleType,
+    private val image: Expression,
 ) : ComputableFunctionValue() {
     override fun apply(
         argument: Value,

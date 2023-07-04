@@ -21,12 +21,4 @@ data class LetExpressionTerm(
     }
 
     override fun dump(): String = "(let expression)"
-
-    override fun evaluate(
-        scope: Scope,
-    ): Thunk = result.evaluate(
-        scope = localScope.evaluateDynamically(
-            scope = scope,
-        ),
-    )
 }

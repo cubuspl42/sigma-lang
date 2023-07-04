@@ -17,23 +17,23 @@ data class ModuleTerm(
     val declarations: List<DefinitionTerm>,
 ) : Term() {
 
-    fun evaluateDeclaration(
-        name: String,
-        scope: Scope,
-    ): Value {
-        val newScope = LoopedScope(
-            context = scope,
-            declarations = declarations.associate {
-                it.name to it.value
-            },
-        )
-
-        val thunk = newScope.getValue(
-            name = Symbol.of(name),
-        ) ?: throw IllegalStateException("Can't find symbol `${name}`")
-
-        return thunk.toEvaluatedValue
-    }
+//    fun evaluateDeclaration(
+//        name: String,
+//        scope: Scope,
+//    ): Value {
+//        val newScope = LoopedScope(
+//            context = scope,
+//            expressionByName = declarations.associate {
+//                it.name to it.value
+//            },
+//        )
+//
+//        val thunk = newScope.getValue(
+//            name = Symbol.of(name),
+//        ) ?: throw IllegalStateException("Can't find symbol `${name}`")
+//
+//        return thunk.toEvaluatedValue
+//    }
 
     companion object {
         fun parse(

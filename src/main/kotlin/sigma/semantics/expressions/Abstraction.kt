@@ -1,5 +1,7 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.Closure
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.semantics.Declaration
@@ -66,6 +68,14 @@ class Abstraction(
             )
         }
     }
+
+    override fun evaluate(
+        scope: Scope,
+    ): Closure = Closure(
+        context = scope,
+        argumentType = argumentType,
+        image = image,
+    )
 
     private val declaredImageType: Type? by lazy {
         term.declaredImageType?.evaluate(

@@ -1,8 +1,11 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.values.IntValue
 import sigma.semantics.BuiltinScope
 import sigma.semantics.BuiltinTypeScope
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.tables.ArrayTable
+import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntType
@@ -114,6 +117,35 @@ class AbstractionTests {
                     value = inferredType.imageType,
                 )
             }
+        }
+    }
+
+    object EvaluationTests {
+        @Test
+        fun testUnorderedArgumentTuple() {
+            val abstraction = Abstraction.build(
+                outerTypeScope = BuiltinTypeScope,
+                outerDeclarationScope = DeclarationScope.Empty,
+                term = ExpressionTerm.parse(
+                    source = "[n: Int, m: Int] => n * m",
+                ) as AbstractionTerm
+
+            )
+            val closure = abstraction.evaluate(
+                scope = BuiltinScope,
+            )
+
+            assertEquals(
+                expected = IntValue(6),
+                actual = closure.apply(
+                    ArrayTable(
+                        elements = listOf(
+                            IntValue(2),
+                            IntValue(3),
+                        ),
+                    ),
+                ).toEvaluatedValue,
+            )
         }
     }
 }

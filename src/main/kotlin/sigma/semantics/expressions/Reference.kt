@@ -1,5 +1,7 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.Thunk
+import sigma.evaluation.scope.Scope
 import sigma.semantics.Computation
 import sigma.semantics.Declaration
 import sigma.semantics.DeclarationScope
@@ -50,4 +52,10 @@ class Reference(
             ) else null
         )
     }
+
+    override fun evaluate(
+        scope: Scope,
+    ): Thunk = scope.getValue(referredName) ?: throw RuntimeException(
+        "Unresolved reference at run-time: $referredName",
+    )
 }

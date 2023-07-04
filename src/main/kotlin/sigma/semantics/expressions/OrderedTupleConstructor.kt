@@ -1,5 +1,7 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.tables.ArrayTable
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
@@ -46,5 +48,13 @@ class OrderedTupleConstructor(
     override val errors: Set<SemanticError> by lazy {
         elements.fold(emptySet()) { acc, it -> acc + it.errors }
     }
+
+    override fun evaluate(
+        scope: Scope,
+    ) = ArrayTable(
+        elements = elements.map {
+            it.evaluate(scope = scope)
+        },
+    )
 }
 
