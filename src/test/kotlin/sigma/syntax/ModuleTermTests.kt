@@ -10,7 +10,7 @@ import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ModuleTests {
+class ModuleTermTests {
     object ParsingTests {
         @Test
         fun test() {

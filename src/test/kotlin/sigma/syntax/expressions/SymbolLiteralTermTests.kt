@@ -5,7 +5,7 @@ import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class SymbolLiteralTests {
+class SymbolLiteralTermTests {
     object ParsingTests {
         @Test
         fun test() {

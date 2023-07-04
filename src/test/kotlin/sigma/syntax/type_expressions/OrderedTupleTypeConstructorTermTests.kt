@@ -13,7 +13,7 @@ import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class OrderedTupleTypeConstructorTests {
+class OrderedTupleTypeConstructorTermTests {
     object ParsingTests {
         @Test
         fun testEmpty() {

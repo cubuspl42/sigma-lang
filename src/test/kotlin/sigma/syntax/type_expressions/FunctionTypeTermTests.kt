@@ -14,7 +14,7 @@ import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class FunctionTypeDepictionTests {
+class FunctionTypeTermTests {
     object ParsingTests {
         @Test
         fun test() {

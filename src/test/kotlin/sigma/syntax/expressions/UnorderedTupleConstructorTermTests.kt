@@ -1,14 +1,11 @@
-package sigma
+package sigma.syntax.expressions
 
 import sigma.evaluation.values.Symbol
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.ReferenceTerm
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-object UnorderedTupleConstructorTests {
+object UnorderedTupleConstructorTermTests {
     object ParsingTests {
         @Test
         fun testEmpty() {

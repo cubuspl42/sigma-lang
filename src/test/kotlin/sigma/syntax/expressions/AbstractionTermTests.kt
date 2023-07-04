@@ -19,7 +19,7 @@ import sigma.semantics.expressions.Expression
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AbstractionTests {
+class AbstractionTermTests {
     object ParsingTests {
         @Test
         fun test() {
