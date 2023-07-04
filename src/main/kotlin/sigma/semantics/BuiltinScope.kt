@@ -29,7 +29,7 @@ private class BuiltinDefinition(
     override val errors: Set<SemanticError> = emptySet()
 }
 
-object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
+object BuiltinScope : Scope, DeclarationScope {
     private data class SimpleBuiltinValue(
         override val type: Type,
         override val value: Value,
@@ -201,12 +201,6 @@ object BuiltinScope : SyntaxValueScope, Scope, DeclarationScope {
             type = builtinValue.type,
         )
     }
-
-    override fun getValueType(
-        valueName: Symbol,
-    ): Type? = getBuiltin(
-        name = valueName,
-    )?.type
 
     override fun getValue(
         name: Symbol,

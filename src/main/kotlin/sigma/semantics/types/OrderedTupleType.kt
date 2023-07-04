@@ -4,7 +4,6 @@ import indexOfOrNull
 import sigma.evaluation.Thunk
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.IntValue
-import sigma.semantics.SyntaxValueScope
 import sigma.semantics.expressions.Abstraction
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.tables.Table
@@ -130,14 +129,6 @@ data class OrderedTupleType(
             expectedType = this,
             actualType = assignedType,
         )
-    }
-
-    override fun toStaticValueScope(): SyntaxValueScope = object : SyntaxValueScope {
-        override fun getValueType(
-            valueName: Symbol,
-        ): Type? = elements.singleOrNull { entry ->
-            valueName == entry.name
-        }?.type
     }
 
     override fun toArgumentDeclarationBlock(): Abstraction.ArgumentDeclarationBlock =
