@@ -1,6 +1,6 @@
 package sigma.semantics.types
 
-import sigma.SyntaxValueScope
+import sigma.semantics.SyntaxValueScope
 import sigma.semantics.expressions.Abstraction
 
 abstract class TupleType : TableType() {

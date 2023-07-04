@@ -1,6 +1,6 @@
 package sigma.evaluation.values
 
-import sigma.Thunk
+import sigma.evaluation.Thunk
 
 // Thought: Rename to `EvaluatedValue`?
 sealed class Value : Thunk() {

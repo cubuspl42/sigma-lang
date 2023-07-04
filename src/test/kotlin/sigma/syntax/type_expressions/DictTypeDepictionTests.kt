@@ -1,6 +1,6 @@
 package sigma.syntax.type_expressions
 
-import sigma.BuiltinTypeScope
+import sigma.semantics.BuiltinTypeScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation

@@ -1,7 +1,7 @@
 package sigma.semantics.expressions
 
 
-import sigma.Computation
+import sigma.semantics.Computation
 import sigma.evaluation.values.IntValue
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IntLiteralType

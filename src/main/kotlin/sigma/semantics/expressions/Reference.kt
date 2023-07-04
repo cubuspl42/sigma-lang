@@ -1,6 +1,6 @@
 package sigma.semantics.expressions
 
-import sigma.Computation
+import sigma.semantics.Computation
 import sigma.semantics.Declaration
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError

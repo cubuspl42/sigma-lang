@@ -1,7 +1,7 @@
 package sigma.evaluation.values
 
-import sigma.BuiltinValue
-import sigma.Thunk
+import sigma.semantics.BuiltinValue
+import sigma.evaluation.Thunk
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.Type

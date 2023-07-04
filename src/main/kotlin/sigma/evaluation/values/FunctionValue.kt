@@ -1,7 +1,7 @@
 package sigma.evaluation.values
 
 import cutOffFront
-import sigma.Thunk
+import sigma.evaluation.Thunk
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.IntCollectiveType

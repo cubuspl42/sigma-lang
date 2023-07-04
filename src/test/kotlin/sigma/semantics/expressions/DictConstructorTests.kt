@@ -1,7 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.Arbitrary
-import sigma.BuiltinTypeScope
+import sigma.semantics.BuiltinTypeScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IllType

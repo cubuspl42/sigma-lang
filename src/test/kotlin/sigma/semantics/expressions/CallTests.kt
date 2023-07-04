@@ -1,7 +1,7 @@
 package sigma.semantics.expressions
 
-import sigma.BuiltinScope
-import sigma.BuiltinTypeScope
+import sigma.semantics.BuiltinScope
+import sigma.semantics.BuiltinTypeScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.semantics.types.BoolType

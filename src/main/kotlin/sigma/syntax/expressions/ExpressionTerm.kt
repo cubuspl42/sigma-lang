@@ -3,10 +3,8 @@ package sigma.syntax.expressions
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
-import sigma.BuiltinScope
-import sigma.TypeScope
-import sigma.SyntaxValueScope
-import sigma.Thunk
+import sigma.semantics.BuiltinScope
+import sigma.evaluation.Thunk
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.AbstractionAltContext

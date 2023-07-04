@@ -1,6 +1,5 @@
 package sigma.semantics
 
-import sigma.Computation
 import sigma.evaluation.values.Symbol
 import sigma.semantics.types.Type
 

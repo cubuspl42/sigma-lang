@@ -1,8 +1,6 @@
 package sigma.semantics
 
-import sigma.BuiltinTypeScope
-import sigma.Thunk
-import sigma.TypeScope
+import sigma.evaluation.Thunk
 import sigma.syntax.ModuleTerm
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.scope.chainWith

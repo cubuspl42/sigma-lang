@@ -1,6 +1,6 @@
 package sigma.semantics.types
 
-import sigma.SyntaxValueScope
+import sigma.semantics.SyntaxValueScope
 import sigma.evaluation.values.Symbol
 import sigma.semantics.expressions.Abstraction
 

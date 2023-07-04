@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.TypeScope
+import sigma.semantics.TypeScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.DictType

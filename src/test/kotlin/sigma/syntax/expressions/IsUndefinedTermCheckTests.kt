@@ -1,9 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.BuiltinTypeScope
-import sigma.SyntaxValueScope
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.BoolType
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.tables.DictTable

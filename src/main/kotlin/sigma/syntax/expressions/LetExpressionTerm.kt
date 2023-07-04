@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.Thunk
+import sigma.evaluation.Thunk
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
 import sigma.syntax.SourceLocation
 import sigma.evaluation.scope.Scope

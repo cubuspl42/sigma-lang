@@ -1,6 +1,6 @@
 package sigma.evaluation.values
 
-import sigma.Thunk
+import sigma.evaluation.Thunk
 import sigma.evaluation.values.tables.Table
 
 data class BoolValue(

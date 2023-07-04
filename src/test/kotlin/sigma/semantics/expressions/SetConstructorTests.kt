@@ -1,6 +1,6 @@
 package sigma.semantics.expressions
 
-import sigma.BuiltinTypeScope
+import sigma.semantics.BuiltinTypeScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType

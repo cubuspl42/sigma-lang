@@ -1,6 +1,6 @@
 package sigma.evaluation.scope
 
-import sigma.Thunk
+import sigma.evaluation.Thunk
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.evaluation.values.Symbol
 

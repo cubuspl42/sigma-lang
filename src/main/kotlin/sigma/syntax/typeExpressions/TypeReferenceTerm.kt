@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.TypeScope
+import sigma.semantics.TypeScope
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol

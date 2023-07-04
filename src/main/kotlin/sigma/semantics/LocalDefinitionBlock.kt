@@ -1,6 +1,5 @@
 package sigma.semantics
 
-import sigma.TypeScope
 import sigma.syntax.DefinitionTerm
 import sigma.evaluation.values.Symbol
 

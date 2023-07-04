@@ -1,6 +1,6 @@
 package sigma.semantics.expressions
 
-import sigma.TypeScope
+import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.syntax.expressions.OrderedTupleConstructorTerm
 import sigma.syntax.expressions.TupleConstructorTerm

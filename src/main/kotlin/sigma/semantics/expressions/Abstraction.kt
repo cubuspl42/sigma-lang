@@ -1,7 +1,7 @@
 package sigma.semantics.expressions
 
-import sigma.Computation
-import sigma.TypeScope
+import sigma.semantics.Computation
+import sigma.semantics.TypeScope
 import sigma.semantics.Declaration
 import sigma.semantics.DeclarationBlock
 import sigma.semantics.DeclarationScope

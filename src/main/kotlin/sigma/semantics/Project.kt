@@ -1,6 +1,5 @@
 package sigma.semantics
 
-import sigma.BuiltinTypeScope
 import sigma.syntax.ModuleTerm
 
 class Project {

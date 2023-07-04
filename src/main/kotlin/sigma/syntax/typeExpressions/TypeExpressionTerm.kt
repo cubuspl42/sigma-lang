@@ -2,7 +2,7 @@ package sigma.syntax.typeExpressions
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.TypeScope
+import sigma.semantics.TypeScope
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ArrayTypeConstructorContext

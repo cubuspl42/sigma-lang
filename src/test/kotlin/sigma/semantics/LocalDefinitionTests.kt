@@ -1,7 +1,5 @@
 package sigma.semantics
 
-import sigma.BuiltinScope
-import sigma.BuiltinTypeScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.Type

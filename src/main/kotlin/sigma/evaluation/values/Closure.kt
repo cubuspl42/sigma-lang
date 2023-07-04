@@ -1,6 +1,6 @@
 package sigma.evaluation.values
 
-import sigma.Thunk
+import sigma.evaluation.Thunk
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.typeExpressions.TupleTypeConstructorTerm
 import sigma.evaluation.scope.Scope

@@ -1,14 +1,10 @@
 package sigma.syntax.expressions
 
-import sigma.Thunk
 import sigma.evaluation.scope.FixedScope
-import sigma.evaluation.values.ComputableFunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
 import sigma.syntax.SourceLocation
-import utils.FakeDeclarationScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

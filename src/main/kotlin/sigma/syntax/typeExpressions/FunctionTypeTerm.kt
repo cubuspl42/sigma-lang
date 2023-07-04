@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.TypeScope
+import sigma.semantics.TypeScope
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
