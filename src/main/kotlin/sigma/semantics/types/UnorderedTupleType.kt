@@ -2,7 +2,6 @@ package sigma.semantics.types
 
 import sigma.evaluation.Thunk
 import sigma.evaluation.scope.Scope
-import sigma.semantics.SyntaxValueScope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.tables.Table
 import sigma.semantics.expressions.Abstraction
@@ -116,10 +115,6 @@ data class UnorderedTupleType(
             expectedType = this,
             actualType = assignedType,
         )
-    }
-
-    override fun toStaticValueScope(): SyntaxValueScope = object : SyntaxValueScope {
-        override fun getValueType(valueName: Symbol): Type? = valueTypeByName[valueName]
     }
 
     override fun toArgumentDeclarationBlock(): Abstraction.ArgumentDeclarationBlock =
