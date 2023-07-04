@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-class OrderedTupleConstructorTests {
+class OrderedTupleConstructorTermTests {
     object ParsingTests {
         @Test
         fun testEmpty() {

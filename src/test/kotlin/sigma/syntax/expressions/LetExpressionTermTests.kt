@@ -7,7 +7,7 @@ import sigma.syntax.typeExpressions.TypeReferenceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class LetExpressionTests {
+class LetExpressionTermTests {
     object ParsingTests {
         @Test
         fun testSimple() {

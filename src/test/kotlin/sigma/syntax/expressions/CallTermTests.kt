@@ -11,7 +11,7 @@ import sigma.evaluation.scope.FixedScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class CallTests {
+class CallTermTests {
     object ParsingTests {
         @Test
         fun testSimple() {

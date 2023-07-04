@@ -5,7 +5,7 @@ import sigma.evaluation.values.IntValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class IntLiteralTests {
+class IntLiteralTermTests {
     object ParsingTests {
         @Test
         fun test() {

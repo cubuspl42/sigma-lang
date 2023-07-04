@@ -8,7 +8,7 @@ import sigma.syntax.SourceLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class FieldReadTests {
+class FieldReadTermTests {
     object ParsingTests {
         @Test
         fun testSimple() {
