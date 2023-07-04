@@ -114,47 +114,4 @@ class CallTermTests {
             )
         }
     }
-
-    object EvaluationTests {
-        @Test
-        fun testSimple() {
-            val sq = object : ComputableFunctionValue() {
-                override fun apply(argument: Value): Thunk {
-                    val n = argument as IntValue
-                    return IntValue(n.value * n.value)
-                }
-            }
-
-            assertEquals(
-                expected = IntValue(9),
-                actual = ExpressionTerm.parse("sq(3)").evaluate(
-                    scope = FixedScope(
-                        entries = mapOf(
-                            Symbol.of("sq") to sq,
-                        )
-                    ),
-                ),
-            )
-        }
-
-        @Test
-        fun testDictSubject() {
-            assertEquals(
-                expected = Symbol.of("two"),
-                actual = ExpressionTerm.parse("dict(2)").evaluate(
-                    scope = FixedScope(
-                        entries = mapOf(
-                            Symbol.of("dict") to DictTable(
-                                entries = mapOf(
-                                    IntValue(1) to Symbol.of("one"),
-                                    IntValue(2) to Symbol.of("two"),
-                                    IntValue(3) to Symbol.of("three"),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            )
-        }
-    }
 }

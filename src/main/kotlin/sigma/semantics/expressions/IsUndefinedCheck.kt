@@ -1,5 +1,8 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.UndefinedValue
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.semantics.types.BoolType
@@ -30,4 +33,14 @@ data class IsUndefinedCheck(
     override val inferredType: Computation<Type> = Computation.pure(BoolType)
 
     override val errors: Set<SemanticError> = emptySet()
+
+    override fun evaluate(
+        scope: Scope,
+    ): BoolValue {
+        val argumentValue = argument.evaluate(scope = scope).toEvaluatedValue
+
+        return BoolValue(
+            value = argumentValue is UndefinedValue,
+        )
+    }
 }

@@ -19,15 +19,5 @@ data class IsUndefinedCheckTerm(
         )
     }
 
-    override fun evaluate(
-        scope: Scope,
-    ): BoolValue {
-        val argumentValue = argument.evaluate(scope = scope).toEvaluatedValue
-
-        return BoolValue(
-            value = argumentValue is UndefinedValue,
-        )
-    }
-
     override fun dump(): String = "(isUndefined)"
 }

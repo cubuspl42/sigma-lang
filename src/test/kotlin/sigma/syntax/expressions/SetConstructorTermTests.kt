@@ -34,32 +34,4 @@ object SetConstructorTermTests {
             )
         }
     }
-
-    object EvaluationTests {
-        @Test
-        fun testSimple() {
-            val term = ExpressionTerm.parse("{foo, bar, baz}")
-
-            val value = term.evaluate(
-                scope = FixedScope(
-                    entries = mapOf(
-                        Symbol.of("foo") to IntValue(value = 1L),
-                        Symbol.of("bar") to IntValue(value = 2L),
-                        Symbol.of("baz") to IntValue(value = 3L),
-                    ),
-                ),
-            )
-
-            assertEquals(
-                expected = SetValue(
-                    elements = setOf(
-                        IntValue(value = 1L),
-                        IntValue(value = 2L),
-                        IntValue(value = 3L),
-                    )
-                ),
-                actual = value,
-            )
-        }
-    }
 }

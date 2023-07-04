@@ -3,8 +3,6 @@ package sigma.syntax.expressions
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
-import sigma.semantics.BuiltinScope
-import sigma.evaluation.Thunk
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.AbstractionAltContext
@@ -26,8 +24,6 @@ import sigma.parser.antlr.SigmaParser.SymbolLiteralAltContext
 import sigma.parser.antlr.SigmaParser.TupleConstructorAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.syntax.Term
-import sigma.evaluation.values.Value
-import sigma.evaluation.scope.Scope
 
 sealed class ExpressionTerm : Term() {
     companion object {
@@ -119,28 +115,6 @@ sealed class ExpressionTerm : Term() {
             ): ExpressionTerm = SetConstructorTerm.build(ctx)
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class}")
     }
-
-    inner class BoundThunk(private val scope: Scope) : Thunk() {
-        override val toEvaluatedValue: Value by lazy {
-            this@ExpressionTerm.evaluate(
-                scope = scope,
-            ).toEvaluatedValue
-        }
-
-        override fun dump(): String = "(bound thunk)"
-    }
-
-    // Isn't this the same as `evaluate`?
-    fun bind(scope: Scope): Thunk = BoundThunk(scope = scope)
-
-    fun evaluateAsRoot(): Value = evaluate(scope = BuiltinScope).toEvaluatedValue
-
-    // Idea for naming:
-    // "environment" - scope in which an expression is evaluated
-    // "context" - outer scope for nested scopes
-    abstract fun evaluate(
-        scope: Scope,
-    ): Thunk
 
     abstract fun dump(): String
 }

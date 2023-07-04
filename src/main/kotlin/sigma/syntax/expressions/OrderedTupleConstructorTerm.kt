@@ -21,12 +21,4 @@ data class OrderedTupleConstructorTerm(
     }
 
     override fun dump(): String = "(dict constructor)"
-
-    override fun evaluate(
-        scope: Scope,
-    ) = ArrayTable(
-        elements = elements.map {
-            it.evaluate(scope = scope)
-        },
-    )
 }

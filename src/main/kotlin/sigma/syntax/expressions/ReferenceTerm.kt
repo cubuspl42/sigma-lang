@@ -19,11 +19,5 @@ data class ReferenceTerm(
         )
     }
 
-    override fun evaluate(
-        scope: Scope,
-    ): Thunk = scope.getValue(referee) ?: throw RuntimeException(
-        "Unresolved reference at run-time: $referee",
-    )
-
     override fun dump(): String = referee.dump()
 }

@@ -1,8 +1,10 @@
 package sigma.semantics.expressions
 
 
+import sigma.evaluation.scope.Scope
 import sigma.semantics.Computation
 import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Value
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IntLiteralType
 import sigma.semantics.types.Type
@@ -29,4 +31,8 @@ data class IntLiteral(
     )
 
     override val errors: Set<SemanticError> = emptySet()
+
+    override fun evaluate(
+        scope: Scope,
+    ): Value = value
 }

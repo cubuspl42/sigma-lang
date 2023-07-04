@@ -53,8 +53,4 @@ data class UnorderedTupleTypeConstructorTerm(
             valueTypes.singleOrNull() ?: throw DuplicateKeyError(key = key)
         },
     )
-
-    override fun toArgumentScope(argument: Table): Scope = object : Scope {
-        override fun getValue(name: Symbol): Thunk? = argument.read(name)
-    }
 }

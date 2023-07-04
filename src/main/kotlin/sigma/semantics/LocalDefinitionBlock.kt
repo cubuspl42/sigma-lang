@@ -1,5 +1,7 @@
 package sigma.semantics
 
+import sigma.evaluation.scope.LoopedScope
+import sigma.evaluation.scope.Scope
 import sigma.syntax.DefinitionTerm
 import sigma.evaluation.values.Symbol
 
@@ -74,4 +76,13 @@ class LocalDefinitionBlock(
     val errors: Set<SemanticError> by lazy {
         definitionByName.values.fold(emptySet()) { acc, it -> acc + it.errors }
     }
+
+    fun evaluate(
+        scope: Scope,
+    ): Scope = LoopedScope(
+        context = scope,
+        expressionByName = definitionByName.mapValues { (_, definition) ->
+            definition.definer
+        },
+    )
 }

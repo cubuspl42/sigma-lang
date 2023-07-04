@@ -22,17 +22,5 @@ data class FieldReadTerm(
         )
     }
 
-    override fun evaluate(
-        scope: Scope,
-    ): Thunk {
-        val subjectValue = subject.evaluate(scope = scope).toEvaluatedValue
-
-        if (subjectValue !is DictTable) throw IllegalStateException("Subject $subjectValue is not a dict")
-
-        val value = subjectValue.apply(fieldName)
-
-        return value
-    }
-
     override fun dump(): String = "${subject.dump()}.${fieldName.name}"
 }

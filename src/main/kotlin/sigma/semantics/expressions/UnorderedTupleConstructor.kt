@@ -1,5 +1,6 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.scope.Scope
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.evaluation.values.PrimitiveValue
@@ -8,6 +9,7 @@ import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.tables.DictTable
 import sigma.semantics.types.IllType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
@@ -101,5 +103,13 @@ class UnorderedTupleConstructor(
             inferredTypeOutcome.value as? DuplicatedKeyError,
         )
     }
+
+    override fun evaluate(
+        scope: Scope,
+    ): DictTable = DictTable(
+        entries = entries.associate {
+            it.name to it.value.bind(scope = scope)
+        },
+    )
 }
 

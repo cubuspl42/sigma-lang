@@ -62,13 +62,5 @@ data class AbstractionTerm(
         )
     }
 
-    override fun evaluate(
-        scope: Scope,
-    ): Closure = Closure(
-        context = scope,
-        argumentType = argumentType,
-        image = image,
-    )
-
     override fun dump(): String = "(abstraction)"
 }

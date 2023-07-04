@@ -25,6 +25,4 @@ abstract class TupleTypeConstructorTerm : TypeExpressionTerm() {
     }
 
     abstract override fun evaluate(typeScope: TypeScope): TupleType
-
-    abstract fun toArgumentScope(argument: Table): Scope
 }

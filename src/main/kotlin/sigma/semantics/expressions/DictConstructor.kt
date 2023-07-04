@@ -1,5 +1,8 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.PrimitiveValue
+import sigma.evaluation.values.tables.DictTable
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
@@ -152,4 +155,15 @@ class DictConstructor(
             inferredValueTypeOutcome.value as? InconsistentValueTypeError,
         )
     }
+
+    override fun evaluate(
+        scope: Scope,
+    ): DictTable = DictTable(
+        entries = associations.associate {
+            val key = it.key.evaluate(scope = scope).toEvaluatedValue as PrimitiveValue
+            val value = it.value.bind(scope = scope)
+
+            key to value
+        },
+    )
 }

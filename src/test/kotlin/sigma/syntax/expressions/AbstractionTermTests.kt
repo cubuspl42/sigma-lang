@@ -223,29 +223,4 @@ class AbstractionTermTests {
             )
         }
     }
-
-    object EvaluationTests {
-        @Test
-        fun testUnorderedArgumentTuple() {
-            val abstraction = ExpressionTerm.parse(
-                source = "[n: Int, m: Int] => n * m",
-            ) as AbstractionTerm
-
-            val closure = abstraction.evaluate(
-                scope = BuiltinScope,
-            )
-
-            assertEquals(
-                expected = IntValue(6),
-                actual = closure.apply(
-                    ArrayTable(
-                        elements = listOf(
-                            IntValue(2),
-                            IntValue(3),
-                        ),
-                    ),
-                ),
-            )
-        }
-    }
 }

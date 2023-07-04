@@ -1,6 +1,12 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.scope.FixedScope
+import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.SetValue
+import sigma.evaluation.values.Symbol
 import sigma.semantics.BuiltinTypeScope
+import sigma.semantics.DeclarationScope
+import sigma.semantics.TypeScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
@@ -96,6 +102,38 @@ object SetConstructorTests {
             assertEquals(
                 expected = IllType,
                 actual = setConstructor.inferredType.value,
+            )
+        }
+    }
+
+    object EvaluationTests {
+        @Test
+        fun testSimple() {
+            val setConstructor = SetConstructor.build(
+                typeScope = TypeScope.Empty,
+                declarationScope = DeclarationScope.Empty,
+                term = ExpressionTerm.parse("{foo, bar, baz}") as SetConstructorTerm,
+            )
+
+            val value = setConstructor.evaluate(
+                scope = FixedScope(
+                    entries = mapOf(
+                        Symbol.of("foo") to IntValue(value = 1L),
+                        Symbol.of("bar") to IntValue(value = 2L),
+                        Symbol.of("baz") to IntValue(value = 3L),
+                    ),
+                ),
+            )
+
+            assertEquals(
+                expected = SetValue(
+                    elements = setOf(
+                        IntValue(value = 1L),
+                        IntValue(value = 2L),
+                        IntValue(value = 3L),
+                    )
+                ),
+                actual = value,
             )
         }
     }

@@ -28,18 +28,6 @@ data class UnorderedTupleConstructorTerm(
         }
     }
 
-    // TODO: Share with `UnorderedTupleType`
-    data class EntryType(
-        val name: Symbol,
-        val valueType: Type,
-    )
-
-    class DuplicatedNameError(
-        duplicatedKey: PrimitiveValue,
-    ) : TypeErrorException(
-        message = "Duplicate key: ${duplicatedKey.dump()}",
-    )
-
     companion object {
         fun build(
             ctx: UnorderedTupleConstructorContext,
@@ -52,12 +40,4 @@ data class UnorderedTupleConstructorTerm(
     }
 
     override fun dump(): String = "(dict constructor)"
-
-    override fun evaluate(
-        scope: Scope,
-    ): DictTable = DictTable(
-        entries = entries.associate {
-            it.name to it.value.bind(scope = scope)
-        },
-    )
 }

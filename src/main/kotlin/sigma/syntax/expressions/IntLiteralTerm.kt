@@ -1,11 +1,8 @@
 package sigma.syntax.expressions
 
-
+import sigma.evaluation.values.IntValue
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.syntax.SourceLocation
-import sigma.evaluation.values.IntValue
-import sigma.evaluation.values.Value
-import sigma.evaluation.scope.Scope
 
 data class IntLiteralTerm(
     override val location: SourceLocation,
@@ -19,10 +16,6 @@ data class IntLiteralTerm(
             value = IntValue(value = ctx.text.toLong()),
         )
     }
-
-    override fun evaluate(
-        scope: Scope,
-    ): Value = value
 
     override fun dump(): String = value.toString()
 }

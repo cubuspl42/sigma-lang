@@ -1,5 +1,7 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.Thunk
+import sigma.evaluation.scope.Scope
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
@@ -54,4 +56,12 @@ data class LetExpression(
     override val errors: Set<SemanticError> by lazy {
         definitionBlock.errors + result.errors
     }
+
+    override fun evaluate(
+        scope: Scope,
+    ): Thunk = result.evaluate(
+        scope = definitionBlock.evaluate(
+            scope = scope,
+        ),
+    )
 }
