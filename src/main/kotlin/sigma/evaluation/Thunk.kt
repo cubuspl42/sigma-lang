@@ -1,4 +1,4 @@
-package sigma
+package sigma.evaluation
 
 import sigma.evaluation.values.Value
 

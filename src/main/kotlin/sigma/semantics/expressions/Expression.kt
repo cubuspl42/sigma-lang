@@ -1,8 +1,8 @@
 package sigma.semantics.expressions
 
-import sigma.Computation
-import sigma.Thunk
-import sigma.TypeScope
+import sigma.semantics.Computation
+import sigma.evaluation.Thunk
+import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.Entity
 import sigma.semantics.types.Type

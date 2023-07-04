@@ -1,6 +1,6 @@
 package sigma.evaluation.scope
 
-import sigma.Thunk
+import sigma.evaluation.Thunk
 import sigma.evaluation.values.Symbol
 
 interface Scope {

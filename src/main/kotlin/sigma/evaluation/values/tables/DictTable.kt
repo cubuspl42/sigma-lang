@@ -1,6 +1,6 @@
 package sigma.evaluation.values.tables
 
-import sigma.Thunk
+import sigma.evaluation.Thunk
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol

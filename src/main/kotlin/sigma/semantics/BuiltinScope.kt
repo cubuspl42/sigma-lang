@@ -1,4 +1,4 @@
-package sigma
+package sigma.semantics
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
@@ -6,17 +6,12 @@ import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.semantics.Declaration
-import sigma.semantics.DeclarationScope
-import sigma.semantics.Definition
-import sigma.semantics.SemanticError
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
-import sigma.semantics.types.UndefinedType
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.UnorderedTupleType
 

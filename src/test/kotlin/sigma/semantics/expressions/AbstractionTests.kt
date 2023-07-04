@@ -1,14 +1,13 @@
 package sigma.semantics.expressions
 
-import sigma.BuiltinScope
-import sigma.BuiltinTypeScope
+import sigma.semantics.BuiltinScope
+import sigma.semantics.BuiltinTypeScope
 import sigma.evaluation.values.Symbol
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.TypeVariable
-import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.ExpressionTerm
 import kotlin.test.Test

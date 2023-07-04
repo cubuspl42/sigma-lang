@@ -1,8 +1,6 @@
 package sigma.semantics
 
 import getResourceAsText
-import sigma.BuiltinScope
-import sigma.BuiltinTypeScope
 import sigma.syntax.expressions.LocalScopeTerm
 import sigma.evaluation.scope.Scope
 

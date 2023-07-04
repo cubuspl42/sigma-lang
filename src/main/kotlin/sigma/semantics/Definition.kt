@@ -1,7 +1,5 @@
 package sigma.semantics
 
-import sigma.Computation
-import sigma.TypeScope
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.Type
 import sigma.syntax.DefinitionTerm

@@ -1,8 +1,8 @@
 package sigma.syntax.typeExpressions
 
 import indexOfOrNull
-import sigma.TypeScope
-import sigma.Thunk
+import sigma.semantics.TypeScope
+import sigma.evaluation.Thunk
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeConstructorContext
 import sigma.semantics.types.OrderedTupleType

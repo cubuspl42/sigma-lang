@@ -1,14 +1,13 @@
 package sigma.semantics.expressions
 
-import sigma.Computation
-import sigma.TypeScope
+import sigma.semantics.Computation
+import sigma.semantics.TypeScope
 import sigma.evaluation.values.PrimitiveValue
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.TypeErrorException
 import sigma.semantics.types.IllType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation

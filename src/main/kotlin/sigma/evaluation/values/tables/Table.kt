@@ -1,6 +1,6 @@
 package sigma.evaluation.values.tables
 
-import sigma.Thunk
+import sigma.evaluation.Thunk
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.UndefinedValue
 import sigma.evaluation.values.Value

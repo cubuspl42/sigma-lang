@@ -1,8 +1,7 @@
 package sigma.syntax.expressions
 
-import sigma.BuiltinScope
-import sigma.BuiltinTypeScope
-import sigma.SyntaxValueScope
+import sigma.semantics.BuiltinScope
+import sigma.semantics.BuiltinTypeScope
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType

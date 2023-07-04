@@ -1,8 +1,8 @@
 package sigma.semantics.expressions
 
-import sigma.BuiltinScope
-import sigma.BuiltinTypeScope
-import sigma.Computation
+import sigma.semantics.BuiltinScope
+import sigma.semantics.BuiltinTypeScope
+import sigma.semantics.Computation
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntType
 import sigma.syntax.expressions.ExpressionTerm

@@ -1,4 +1,4 @@
-package sigma
+package sigma.semantics
 
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType

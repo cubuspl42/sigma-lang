@@ -1,4 +1,4 @@
-package sigma
+package sigma.semantics
 
 abstract class Computation<out A> {
     sealed interface Result<out A> {
@@ -23,7 +23,7 @@ abstract class Computation<out A> {
         )
 
         companion object {
-            val Empty: Computation.Context = Context(inProgress = emptySet())
+            val Empty: Context = Context(inProgress = emptySet())
         }
     }
 

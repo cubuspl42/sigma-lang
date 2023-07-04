@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.TypeScope
+import sigma.semantics.TypeScope
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.syntax.SourceLocation
