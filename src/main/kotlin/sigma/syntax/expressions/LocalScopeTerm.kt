@@ -2,13 +2,13 @@ package sigma.syntax.expressions
 
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.Program
-import sigma.syntax.DefinitionTerm
+import sigma.syntax.LocalDefinitionTerm
 import sigma.syntax.SourceLocation
 import sigma.syntax.Term
 
 data class LocalScopeTerm(
     override val location: SourceLocation,
-    val definitions: List<DefinitionTerm>,
+    val definitions: List<LocalDefinitionTerm>,
 ) : Term() {
     companion object {
         fun parse(
@@ -26,7 +26,7 @@ data class LocalScopeTerm(
         ): LocalScopeTerm = LocalScopeTerm(
             location = SourceLocation.build(ctx),
             definitions = ctx.declaration().map {
-                DefinitionTerm.build(it)
+                LocalDefinitionTerm.build(it)
             },
         )
     }

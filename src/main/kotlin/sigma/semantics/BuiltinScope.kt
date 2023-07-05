@@ -25,8 +25,6 @@ private class BuiltinDefinition(
     val type: Type,
 ) : Declaration() {
     override val inferredType: Computation<Type> = Computation.pure(type)
-
-    override val errors: Set<SemanticError> = emptySet()
 }
 
 object BuiltinScope : Scope, DeclarationScope {

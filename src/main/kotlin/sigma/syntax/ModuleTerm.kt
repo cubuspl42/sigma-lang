@@ -6,35 +6,12 @@ import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ImportStatementContext
 import sigma.parser.antlr.SigmaParser.ModuleContext
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
-import sigma.evaluation.scope.LoopedScope
-import sigma.evaluation.scope.Scope
 
 data class ModuleTerm(
     override val location: SourceLocation,
     val imports: List<Import>,
-    val declarations: List<DefinitionTerm>,
+    val staticStatements: List<StaticStatementTerm>,
 ) : Term() {
-
-//    fun evaluateDeclaration(
-//        name: String,
-//        scope: Scope,
-//    ): Value {
-//        val newScope = LoopedScope(
-//            context = scope,
-//            expressionByName = declarations.associate {
-//                it.name to it.value
-//            },
-//        )
-//
-//        val thunk = newScope.getValue(
-//            name = Symbol.of(name),
-//        ) ?: throw IllegalStateException("Can't find symbol `${name}`")
-//
-//        return thunk.toEvaluatedValue
-//    }
-
     companion object {
         fun parse(
             source: String,
@@ -54,8 +31,8 @@ data class ModuleTerm(
                 imports = ctx.importSection().importStatement().map {
                     Import.build(it)
                 },
-                declarations = ctx.moduleBody().declaration().map {
-                    DefinitionTerm.build(it)
+                staticStatements = ctx.moduleBody().staticStatement().map {
+                    StaticStatementTerm.build(it)
                 },
             )
         }
