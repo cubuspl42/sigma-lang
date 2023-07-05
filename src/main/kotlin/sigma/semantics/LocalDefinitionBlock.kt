@@ -2,7 +2,7 @@ package sigma.semantics
 
 import sigma.evaluation.scope.LoopedScope
 import sigma.evaluation.scope.Scope
-import sigma.syntax.DefinitionTerm
+import sigma.syntax.LocalDefinitionTerm
 import sigma.evaluation.values.Symbol
 
 abstract class DeclarationBlock : DeclarationScope {
@@ -31,7 +31,7 @@ abstract class DefinitionBlock : DeclarationBlock() {
         fun build(
             typeScope: TypeScope,
             outerDeclarationScope: DeclarationScope,
-            definitions: List<DefinitionTerm>,
+            definitions: List<LocalDefinitionTerm>,
         ): LocalDefinitionBlock = LocalDefinitionBlock(
             typeScope = typeScope,
             declarationScope = outerDeclarationScope,
@@ -47,13 +47,13 @@ abstract class DefinitionBlock : DeclarationBlock() {
 class LocalDefinitionBlock(
     private val typeScope: TypeScope,
     private val declarationScope: DeclarationScope,
-    private val declarations: List<DefinitionTerm>,
+    private val declarations: List<LocalDefinitionTerm>,
 ) : DefinitionBlock() {
     companion object {
         fun build(
             typeScope: TypeScope,
             outerDeclarationScope: DeclarationScope,
-            definitions: List<DefinitionTerm>,
+            definitions: List<LocalDefinitionTerm>,
         ): LocalDefinitionBlock = LocalDefinitionBlock(
             typeScope = typeScope,
             declarationScope = outerDeclarationScope,

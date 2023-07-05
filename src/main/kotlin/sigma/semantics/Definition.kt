@@ -16,7 +16,7 @@ abstract class Definition : Declaration() {
     protected abstract val typeScope: TypeScope
 
     private val declaredType by lazy {
-        term.valueType?.evaluate(
+        term.type?.evaluate(
             typeScope = typeScope,
         )
     }
@@ -43,7 +43,7 @@ abstract class Definition : Declaration() {
         }
     }
 
-    final override val errors: Set<SemanticError> by lazy {
+    val errors: Set<SemanticError> by lazy {
         setOfNotNull(
             unmatchedInferredTypeError
         ) + definer.errors

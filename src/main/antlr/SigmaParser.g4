@@ -19,7 +19,20 @@ importPath
     ;
 
 moduleBody
-    : declaration*
+    : staticStatement*
+    ;
+
+staticStatement
+    : typeAliasDefinition
+    | constantDefinition
+    ;
+
+typeAliasDefinition
+    : TypeAliasKeyword name=Identifier Assign definer=typeExpression
+    ;
+
+constantDefinition
+    : ConstKeyword name=Identifier (Colon type=typeExpression)? Assign definer=expression
     ;
 
 // Expressions

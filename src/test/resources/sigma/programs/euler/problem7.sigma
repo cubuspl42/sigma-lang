@@ -1,4 +1,4 @@
-main = let {
+const main = let {
     M = 100,
 
     // Build table with all multiples of n smaller than M

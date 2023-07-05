@@ -1,4 +1,4 @@
-main = let {
+const main = let {
     concatAllOf = ![e, te] [
         list: [e*],
         transform: [e] -> [te*],

@@ -1,2 +1,2 @@
-main = let {
+const main = let {
 } in false

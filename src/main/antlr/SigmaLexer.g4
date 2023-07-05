@@ -4,6 +4,8 @@ LetKeyword : 'let' ;
 InKeyword : 'in' ;
 ImportKeyword : 'import' ;
 IsUndefinedKeyword : 'isUndefined' ;
+TypeAliasKeyword : 'typeAlias' ;
+ConstKeyword : 'const' ;
 
 LeftParen : '(' ;
 RightParen : ')' ;

@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
 import sigma.evaluation.values.Symbol
-import sigma.syntax.DefinitionTerm
+import sigma.syntax.LocalDefinitionTerm
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import kotlin.test.Test
@@ -17,10 +17,10 @@ class LetExpressionTermTests {
                     localScope = LocalScopeTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         definitions = listOf(
-                            DefinitionTerm(
+                            LocalDefinitionTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 4),
                                 name = Symbol.of("g"),
-                                value = CallTerm(
+                                definer = CallTerm(
                                     location = SourceLocation(lineIndex = 2, columnIndex = 8),
                                     subject = ReferenceTerm(
                                         location = SourceLocation(lineIndex = 2, columnIndex = 8),
@@ -32,10 +32,10 @@ class LetExpressionTermTests {
                                     ),
                                 ),
                             ),
-                            DefinitionTerm(
+                            LocalDefinitionTerm(
                                 location = SourceLocation(lineIndex = 3, columnIndex = 4),
                                 name = Symbol.of("f"),
-                                value = ReferenceTerm(
+                                definer = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 8),
                                     referee = Symbol.of("g"),
                                 ),
@@ -73,14 +73,14 @@ class LetExpressionTermTests {
                     localScope = LocalScopeTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         definitions = listOf(
-                            DefinitionTerm(
+                            LocalDefinitionTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 name = Symbol.of("a"),
-                                valueType = TypeReferenceTerm(
+                                type = TypeReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),
                                     referee = Symbol.of("Int"),
                                 ),
-                                value = ReferenceTerm(
+                                definer = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 15),
                                     referee = Symbol.of("b"),
                                 ),
