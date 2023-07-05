@@ -2,6 +2,7 @@ package sigma.semantics
 
 import sigma.syntax.ConstantDefinitionTerm
 import sigma.syntax.StaticStatementTerm
+import sigma.syntax.TypeAliasDefinitionTerm
 
 sealed class StaticStatement : Entity() {
     companion object {
@@ -13,6 +14,8 @@ sealed class StaticStatement : Entity() {
                 containingModule = containingModule,
                 term = term,
             )
+
+            is TypeAliasDefinitionTerm -> TODO()
         }
     }
 }
