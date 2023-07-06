@@ -5,7 +5,7 @@ import sigma.semantics.types.Type
 import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
 
-abstract class Definition : Declaration() {
+abstract class ValueDefinition : Declaration() {
     data class UnmatchedInferredTypeError(
         override val location: SourceLocation,
         val matchResult: Type.MatchResult,

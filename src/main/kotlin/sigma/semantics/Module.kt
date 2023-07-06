@@ -5,10 +5,7 @@ import sigma.syntax.ModuleTerm
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.scope.chainWith
 import sigma.evaluation.values.Symbol
-import sigma.semantics.expressions.Expression
-import sigma.syntax.ConstantDefinitionTerm
-import sigma.syntax.DefinitionTerm
-import sigma.syntax.StaticStatementTerm
+import sigma.semantics.types.Type
 
 class Module(
     private val prelude: Prelude,
@@ -24,73 +21,48 @@ class Module(
         )
     }
 
-    private val staticStatements: Set<StaticStatement> = term.staticStatements.map {
-        StaticStatement.build(
+    private val staticDefinitions: Set<StaticDefinition> = term.staticStatements.map {
+        StaticDefinition.build(
             containingModule = this,
             term = it,
         )
     }.toSet()
 
+    private fun getStaticDefinition(
+        name: Symbol,
+    ): StaticDefinition? = staticDefinitions.singleOrNull {
+        it.name == name
+    }
+
+    fun getConstantDefinition(
+        name: Symbol,
+    ): ConstantDefinition? = getStaticDefinition(name = name) as? ConstantDefinition
+
+    fun getTypeAliasDefinition(
+        name: Symbol,
+    ): TypeAliasDefinition? = getStaticDefinition(name = name) as? TypeAliasDefinition
+
+    val innerTypeScope: TypeScope = object : TypeScope {
+        override fun getType(typeName: Symbol): Type? = getTypeAliasDefinition(name = typeName)?.aliasedType
+    }.chainWith(
+        backScope = BuiltinTypeScope,
+    )
+
     val innerDeclarationScope: DeclarationScope = object : DefinitionBlock() {
         override fun getDefinition(
             name: Symbol,
-        ): Definition? = this@Module.getGlobalDefinition(name = name)?.asDefinition
+        ): ValueDefinition? = getConstantDefinition(name = name)?.asValueDefinition
     }.chainWith(
         outerScope = prelude.declarationScope,
     )
 
     val innerScope = object : Scope {
-        override fun getValue(name: Symbol): Thunk? = this@Module.getGlobalDefinition(name = name)?.definerThunk
+        override fun getValue(name: Symbol): Thunk? = getConstantDefinition(name = name)?.definerThunk
     }.chainWith(
         context = prelude.scope,
     )
 
-    fun getGlobalDefinition(name: Symbol): ConstantDefinition? =
-        staticStatements.filterIsInstance<ConstantDefinition>().singleOrNull {
-            it.asDefinition.name == name
-        }
-
     override val errors: Set<SemanticError> by lazy {
-        staticStatements.fold(emptySet()) { acc, it -> acc + it.errors }
+        staticDefinitions.fold(emptySet()) { acc, it -> acc + it.errors }
     }
-}
-
-class ConstantDefinition(
-    private val containingModule: Module,
-    val term: ConstantDefinitionTerm,
-) : StaticStatement() {
-    companion object {
-        fun build(
-            containingModule: Module,
-            term: ConstantDefinitionTerm,
-        ): ConstantDefinition = ConstantDefinition(
-            containingModule = containingModule,
-            term = term,
-        )
-    }
-
-    val asDefinition = object : Definition() {
-        override val term: DefinitionTerm
-            get() = this@ConstantDefinition.term
-
-        override val name: Symbol = term.name
-
-        override val typeScope: TypeScope = BuiltinTypeScope
-
-        override val definer: Expression by lazy {
-            Expression.build(
-                typeScope = typeScope,
-                declarationScope = containingModule.innerDeclarationScope,
-                term = term.definer,
-            )
-        }
-    }
-
-    val definerThunk: Thunk by lazy {
-        asDefinition.definer.evaluate(
-            scope = containingModule.innerScope,
-        )
-    }
-    override val errors: Set<SemanticError>
-        get() = asDefinition.errors
 }
