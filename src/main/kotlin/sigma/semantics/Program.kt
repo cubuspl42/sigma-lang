@@ -25,7 +25,7 @@ class Program internal constructor(
     val errors: Set<SemanticError> by lazy { module.errors }
 
     fun evaluateResult(): Value {
-        val result = module.getGlobalDefinition(
+        val result = module.getConstantDefinition(
             name = Symbol.of("main")
         )!!
 

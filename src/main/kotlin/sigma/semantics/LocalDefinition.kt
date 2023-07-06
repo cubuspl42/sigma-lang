@@ -9,7 +9,7 @@ class LocalDefinition(
     override val term: LocalDefinitionTerm,
     override val name: Symbol,
     override val definer: Expression,
-) : Definition() {
+) : ValueDefinition() {
     companion object {
         fun build(
             typeScope: TypeScope,

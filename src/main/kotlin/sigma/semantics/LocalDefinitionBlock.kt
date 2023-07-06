@@ -41,7 +41,7 @@ abstract class DefinitionBlock : DeclarationBlock() {
 
     override fun getDeclaration(name: Symbol): Declaration? = getDefinition(name = name)
 
-    abstract fun getDefinition(name: Symbol): Definition?
+    abstract fun getDefinition(name: Symbol): ValueDefinition?
 }
 
 class LocalDefinitionBlock(

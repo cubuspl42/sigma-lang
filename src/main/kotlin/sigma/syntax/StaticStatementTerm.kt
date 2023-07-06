@@ -5,8 +5,6 @@ import org.antlr.v4.runtime.CommonTokenStream
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParserBaseVisitor
-import sigma.semantics.StaticStatement
-import sigma.syntax.typeExpressions.TypeExpressionTerm
 
 sealed class StaticStatementTerm : Term() {
     companion object {

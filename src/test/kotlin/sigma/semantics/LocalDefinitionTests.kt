@@ -31,7 +31,7 @@ class LocalDefinitionTests {
 
             assertEquals(
                 expected = setOf(
-                    Definition.UnmatchedInferredTypeError(
+                    ValueDefinition.UnmatchedInferredTypeError(
                         location = SourceLocation(lineIndex = 2, columnIndex = 13),
                         matchResult = Type.TotalMismatch(
                             expectedType = IntCollectiveType,
