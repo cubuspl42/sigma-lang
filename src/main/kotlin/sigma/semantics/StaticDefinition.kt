@@ -1,6 +1,8 @@
 package sigma.semantics
 
+import sigma.evaluation.Thunk
 import sigma.evaluation.values.Symbol
+import sigma.semantics.types.Type
 import sigma.syntax.ConstantDefinitionTerm
 import sigma.syntax.StaticStatementTerm
 import sigma.syntax.TypeAliasDefinitionTerm
@@ -24,4 +26,8 @@ sealed class StaticDefinition : Entity() {
     }
 
     abstract val name: Symbol
+
+    open val definedValue: Thunk? = null
+
+    open val definedType: Type? = null
 }

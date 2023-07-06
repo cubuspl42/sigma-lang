@@ -38,7 +38,7 @@ class ConstantDefinition(
         }
     }
 
-    val definerThunk: Thunk by lazy {
+    override val definedValue: Thunk by lazy {
         asValueDefinition.definer.evaluate(
             scope = containingModule.innerScope,
         )

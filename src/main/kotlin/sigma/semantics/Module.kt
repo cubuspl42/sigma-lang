@@ -38,12 +38,8 @@ class Module(
         name: Symbol,
     ): ConstantDefinition? = getStaticDefinition(name = name) as? ConstantDefinition
 
-    fun getTypeAliasDefinition(
-        name: Symbol,
-    ): TypeAliasDefinition? = getStaticDefinition(name = name) as? TypeAliasDefinition
-
     val innerTypeScope: TypeScope = object : TypeScope {
-        override fun getType(typeName: Symbol): Type? = getTypeAliasDefinition(name = typeName)?.aliasedType
+        override fun getType(typeName: Symbol): Type? = getStaticDefinition(name = typeName)?.definedType
     }.chainWith(
         backScope = BuiltinTypeScope,
     )
@@ -57,7 +53,7 @@ class Module(
     )
 
     val innerScope = object : Scope {
-        override fun getValue(name: Symbol): Thunk? = getConstantDefinition(name = name)?.definerThunk
+        override fun getValue(name: Symbol): Thunk? = getStaticDefinition(name = name)?.definedValue
     }.chainWith(
         context = prelude.scope,
     )
