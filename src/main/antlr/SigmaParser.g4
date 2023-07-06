@@ -25,6 +25,7 @@ moduleBody
 staticStatement
     : typeAliasDefinition
     | constantDefinition
+    | classDefinition
     ;
 
 typeAliasDefinition
@@ -33,6 +34,21 @@ typeAliasDefinition
 
 constantDefinition
     : ConstKeyword name=Identifier (Colon type=typeExpression)? Assign definer=expression
+    ;
+
+classDefinition
+    : ClassKeyword name=Identifier LeftParen
+          FieldsDirective LeftParen fieldDeclaration+ RightParen
+          methodDefinition*
+      RightParen
+    ;
+
+fieldDeclaration
+    : name=Identifier Colon type=typeExpression
+    ;
+
+methodDefinition
+    : MethodDirective name=Identifier Assign body=expression
     ;
 
 // Expressions
@@ -82,9 +98,9 @@ letExpression
     : LetKeyword scope=localScope InKeyword result=expression ;
 
 localScope
-    : LeftBrace (declaration (Comma declaration)*)? Comma? RightBrace ;
+    : LeftBrace (definition (Comma definition)*)? Comma? RightBrace ;
 
-declaration
+definition
     : name=identifier (Colon valueType=typeExpression)? Assign value=expression
     ;
 

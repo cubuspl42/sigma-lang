@@ -3,6 +3,7 @@ package sigma.semantics
 import sigma.evaluation.Thunk
 import sigma.evaluation.values.Symbol
 import sigma.semantics.types.Type
+import sigma.syntax.ClassDefinitionTerm
 import sigma.syntax.ConstantDefinitionTerm
 import sigma.syntax.StaticStatementTerm
 import sigma.syntax.TypeAliasDefinitionTerm
@@ -12,7 +13,7 @@ sealed class StaticDefinition : Entity() {
         fun build(
             containingModule: Module,
             term: StaticStatementTerm,
-        ): StaticDefinition = when(term) {
+        ): StaticDefinition = when (term) {
             is ConstantDefinitionTerm -> ConstantDefinition.build(
                 containingModule = containingModule,
                 term = term,
@@ -22,6 +23,8 @@ sealed class StaticDefinition : Entity() {
                 containingModule = containingModule,
                 term = term,
             )
+
+            is ClassDefinitionTerm -> ClassDefinition.build()
         }
     }
 

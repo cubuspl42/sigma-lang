@@ -23,7 +23,7 @@ class LocalDefinitionTests {
 
             val definitionTerm = letExpressionTerm.localScope.definitions.single()
 
-            val definition = LocalDefinition.build(
+            val definition = LocalValueDefinition.build(
                 typeScope = BuiltinTypeScope,
                 declarationScope = BuiltinScope,
                 term = definitionTerm,

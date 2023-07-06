@@ -62,7 +62,7 @@ class LocalDefinitionBlock(
     }
 
     private val definitionByName = declarations.associate {
-        it.name to LocalDefinition.build(
+        it.name to LocalValueDefinition.build(
             typeScope = typeScope,
             declarationScope = declarationScope,
             term = it,
@@ -71,7 +71,7 @@ class LocalDefinitionBlock(
 
     override fun getDeclaration(name: Symbol): Declaration? = getDefinition(name = name)
 
-    override fun getDefinition(name: Symbol): LocalDefinition? = definitionByName[name]
+    override fun getDefinition(name: Symbol): LocalValueDefinition? = definitionByName[name]
 
     val errors: Set<SemanticError> by lazy {
         definitionByName.values.fold(emptySet()) { acc, it -> acc + it.errors }
