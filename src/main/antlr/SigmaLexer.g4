@@ -6,6 +6,12 @@ ImportKeyword : 'import' ;
 IsUndefinedKeyword : 'isUndefined' ;
 TypeAliasKeyword : 'typeAlias' ;
 ConstKeyword : 'const' ;
+ClassKeyword : 'class' ;
+DefKeyword : 'def' ;
+
+FieldsDirective : '%fields' ;
+MethodDirective : '%method' ;
+UnrecognizedDirective : '%' [a-zA-Z]+ ;
 
 LeftParen : '(' ;
 RightParen : ')' ;

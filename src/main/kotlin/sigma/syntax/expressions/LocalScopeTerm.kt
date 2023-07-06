@@ -25,7 +25,7 @@ data class LocalScopeTerm(
             ctx: SigmaParser.LocalScopeContext,
         ): LocalScopeTerm = LocalScopeTerm(
             location = SourceLocation.build(ctx),
-            definitions = ctx.declaration().map {
+            definitions = ctx.definition().map {
                 LocalDefinitionTerm.build(it)
             },
         )

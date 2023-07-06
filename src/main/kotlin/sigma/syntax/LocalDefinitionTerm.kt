@@ -1,7 +1,7 @@
 package sigma.syntax
 
 import sigma.evaluation.values.Symbol
-import sigma.parser.antlr.SigmaParser.DeclarationContext
+import sigma.parser.antlr.SigmaParser.DefinitionContext
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 
@@ -13,7 +13,7 @@ data class LocalDefinitionTerm(
 ) : Term(), DefinitionTerm {
     companion object {
         fun build(
-            ctx: DeclarationContext,
+            ctx: DefinitionContext,
         ): LocalDefinitionTerm = LocalDefinitionTerm(
             location = SourceLocation.build(ctx),
             name = Symbol.of(ctx.name.text),

@@ -6,6 +6,7 @@ import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
+// TODO: Rename
 sealed class StaticStatementTerm : Term() {
     companion object {
         fun parse(
@@ -30,6 +31,10 @@ sealed class StaticStatementTerm : Term() {
             override fun visitConstantDefinition(
                 ctx: SigmaParser.ConstantDefinitionContext,
             ): StaticStatementTerm = ConstantDefinitionTerm.build(ctx)
+
+            override fun visitClassDefinition(
+                ctx: SigmaParser.ClassDefinitionContext,
+            ): StaticStatementTerm = ClassDefinitionTerm.build(ctx)
         }.visit(ctx)
     }
 }

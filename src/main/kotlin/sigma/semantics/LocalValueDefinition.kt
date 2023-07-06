@@ -4,7 +4,7 @@ import sigma.evaluation.values.Symbol
 import sigma.semantics.expressions.Expression
 import sigma.syntax.LocalDefinitionTerm
 
-class LocalDefinition(
+class LocalValueDefinition(
     override val typeScope: TypeScope,
     override val term: LocalDefinitionTerm,
     override val name: Symbol,
@@ -15,7 +15,7 @@ class LocalDefinition(
             typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: LocalDefinitionTerm,
-        ): LocalDefinition = LocalDefinition(
+        ): LocalValueDefinition = LocalValueDefinition(
             typeScope = typeScope,
             term = term,
             name = term.name,
