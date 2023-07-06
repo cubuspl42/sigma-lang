@@ -20,7 +20,7 @@ class TypeAliasDefinition(
 
     override val name: Symbol = term.name
 
-    val aliasedType: Type? by lazy {
+    override val definedType: Type? by lazy {
         term.definer?.evaluate(
             typeScope = containingModule.innerTypeScope,
         )
