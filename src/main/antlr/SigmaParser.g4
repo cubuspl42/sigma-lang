@@ -72,6 +72,7 @@ expression
     | setConstructor # setConstructorAlt
     | letExpression # letExpressionAlt
     | isUndefinedCheck # isUndefinedCheckAlt
+    | ifExpression # ifExpressionAlt
     | SymbolLiteral # symbolLiteralAlt
     | IntLiteral # intLiteralAlt
     | callableExpression # callableExpressionAlt
@@ -105,6 +106,13 @@ definition
     ;
 
 // end
+
+ifExpression
+    : IfKeyword guard=expression LeftParen
+          ThenDirective trueBranch=expression Comma
+          ElseDirective falseBranch=expression Comma?
+      RightParen
+    ;
 
 abstraction
     :   (Bang genericParametersTuple)? argumentType=tupleTypeConstructor
