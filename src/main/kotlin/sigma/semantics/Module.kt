@@ -10,7 +10,7 @@ import sigma.semantics.types.Type
 class Module(
     private val prelude: Prelude,
     private val term: ModuleTerm,
-) : Entity() {
+) {
     companion object {
         fun build(
             prelude: Prelude,
@@ -58,7 +58,7 @@ class Module(
         context = prelude.scope,
     )
 
-    override val errors: Set<SemanticError> by lazy {
+    val errors: Set<SemanticError> by lazy {
         staticDefinitions.fold(emptySet()) { acc, it -> acc + it.errors }
     }
 }

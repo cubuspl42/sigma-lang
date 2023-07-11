@@ -8,7 +8,7 @@ import sigma.syntax.ConstantDefinitionTerm
 import sigma.syntax.StaticStatementTerm
 import sigma.syntax.TypeAliasDefinitionTerm
 
-sealed class StaticDefinition : Entity() {
+sealed class StaticDefinition {
     companion object {
         fun build(
             containingModule: Module,
@@ -27,6 +27,8 @@ sealed class StaticDefinition : Entity() {
             is ClassDefinitionTerm -> ClassDefinition.build()
         }
     }
+
+    abstract val errors: Set<SemanticError>
 
     abstract val name: Symbol
 

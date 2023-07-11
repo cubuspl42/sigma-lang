@@ -5,6 +5,7 @@ import sigma.evaluation.scope.Scope
 import sigma.semantics.Computation
 import sigma.semantics.DeclarationScope
 import sigma.semantics.Entity
+import sigma.semantics.SemanticError
 import sigma.semantics.TypeScope
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
@@ -21,7 +22,7 @@ import sigma.syntax.expressions.SetConstructorTerm
 import sigma.syntax.expressions.SymbolLiteralTerm
 import sigma.syntax.expressions.TupleConstructorTerm
 
-abstract class Expression : Entity() {
+abstract class Expression {
     companion object {
         fun build(
             typeScope: TypeScope,
@@ -103,6 +104,8 @@ abstract class Expression : Entity() {
 
     val location: SourceLocation
         get() = term.location
+
+    abstract val errors: Set<SemanticError>
 
     protected abstract val term: ExpressionTerm
 
