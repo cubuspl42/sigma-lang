@@ -14,6 +14,7 @@ import sigma.syntax.expressions.CallTerm
 import sigma.syntax.expressions.DictConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.FieldReadTerm
+import sigma.syntax.expressions.IfExpressionTerm
 import sigma.syntax.expressions.IntLiteralTerm
 import sigma.syntax.expressions.IsUndefinedCheckTerm
 import sigma.syntax.expressions.LetExpressionTerm
@@ -87,6 +88,8 @@ abstract class Expression {
                 declarationScope = declarationScope,
                 term = term,
             )
+
+            is IfExpressionTerm -> TODO()
         }
 
         fun parse(

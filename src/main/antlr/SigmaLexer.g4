@@ -8,9 +8,12 @@ TypeAliasKeyword : 'typeAlias' ;
 ConstKeyword : 'const' ;
 ClassKeyword : 'class' ;
 DefKeyword : 'def' ;
+IfKeyword : 'if' ;
 
 FieldsDirective : '%fields' ;
 MethodDirective : '%method' ;
+ThenDirective : '%then' ;
+ElseDirective : '%else' ;
 UnrecognizedDirective : '%' [a-zA-Z]+ ;
 
 LeftParen : '(' ;
