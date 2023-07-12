@@ -26,10 +26,10 @@ const main = let {
         listsRemaining: lists,
     },
 
-    range = [start: Int, end: Int] -> [Int*] => if[end < start]{
-        then: [],
-        else: concat[[start], range[start + 1, end]],
-    },
+    range = [start: Int, end: Int] -> [Int*] => if end < start (
+        %then [],
+        %else concat[[start], range[start + 1, end]],
+    ),
 
     tripletsSummingTo = [n: Int] =>
         concatAllOf[range[1, n], [a: Int] =>
@@ -47,11 +47,11 @@ const main = let {
             ] -> r,
             ifEmpty: r,
         },
-    ] => if[length[list] > 0]{
-        then: branches.ifExtracted[
+    ] => if length[list] > 0 (
+        %then branches.ifExtracted[
             list(0),
             dropFirst[list],
         ],
-        else: branches.ifEmpty,
-    }
+        %else branches.ifEmpty,
+    )
 } in tripletsSummingTo[10](0)

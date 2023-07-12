@@ -1,15 +1,15 @@
 const main = let {
     N: Int = 100,
 
-    sumOfSquares = [n: Int] -> Int => if[n == 1] {
-        then: 1,
-        else: sumOfSquares[n - 1] + sq[n],
-    },
+    sumOfSquares = [n: Int] -> Int => if n == 1 (
+        %then 1,
+        %else sumOfSquares[n - 1] + sq[n],
+    ),
 
-    sumOf = [n: Int] -> Int => if [n == 1] {
-        then: 1,
-        else: sumOf[n - 1] + n,
-    },
+    sumOf = [n: Int] -> Int => if n == 1 (
+        %then 1,
+        %else sumOf[n - 1] + n,
+    ),
 
     squareOfSum = [n: Int] => let {
         s = sumOf[n],
