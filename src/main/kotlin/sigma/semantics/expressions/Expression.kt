@@ -89,7 +89,11 @@ abstract class Expression {
                 term = term,
             )
 
-            is IfExpressionTerm -> TODO()
+            is IfExpressionTerm -> IfExpression.build(
+                typeScope = typeScope,
+                declarationScope = declarationScope,
+                term = term,
+            )
         }
 
         fun parse(
