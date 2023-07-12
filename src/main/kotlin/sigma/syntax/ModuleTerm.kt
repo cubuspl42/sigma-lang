@@ -31,7 +31,7 @@ data class ModuleTerm(
                 imports = ctx.importSection().importStatement().map {
                     Import.build(it)
                 },
-                staticStatements = ctx.moduleBody().staticStatement().map {
+                staticStatements = ctx.namespaceBody().staticStatement().map {
                     StaticStatementTerm.build(it)
                 },
             )

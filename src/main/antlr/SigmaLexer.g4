@@ -9,6 +9,7 @@ ConstKeyword : 'const' ;
 ClassKeyword : 'class' ;
 DefKeyword : 'def' ;
 IfKeyword : 'if' ;
+NamespaceKeyword : 'namespace' ;
 
 FieldsDirective : '%fields' ;
 MethodDirective : '%method' ;

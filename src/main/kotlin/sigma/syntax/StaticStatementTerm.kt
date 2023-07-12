@@ -35,6 +35,10 @@ sealed class StaticStatementTerm : Term() {
             override fun visitClassDefinition(
                 ctx: SigmaParser.ClassDefinitionContext,
             ): StaticStatementTerm = ClassDefinitionTerm.build(ctx)
+
+            override fun visitNamespaceDefinition(
+                ctx: SigmaParser.NamespaceDefinitionContext,
+            ): StaticStatementTerm = NamespaceDefinitionTerm.build(ctx)
         }.visit(ctx)
     }
 }

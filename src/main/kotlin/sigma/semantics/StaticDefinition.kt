@@ -5,6 +5,7 @@ import sigma.evaluation.values.Value
 import sigma.semantics.types.Type
 import sigma.syntax.ClassDefinitionTerm
 import sigma.syntax.ConstantDefinitionTerm
+import sigma.syntax.NamespaceDefinitionTerm
 import sigma.syntax.StaticStatementTerm
 import sigma.syntax.TypeAliasDefinitionTerm
 
@@ -25,6 +26,8 @@ sealed class StaticDefinition {
             )
 
             is ClassDefinitionTerm -> ClassDefinition.build()
+
+            is NamespaceDefinitionTerm -> TODO()
         }
     }
 
