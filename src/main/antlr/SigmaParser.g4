@@ -3,7 +3,7 @@ parser grammar SigmaParser;
 options { tokenVocab = SigmaLexer; }
 
 module
-    : importSection moduleBody
+    : importSection namespaceBody
     ;
 
 importSection
@@ -18,14 +18,12 @@ importPath
     : identifier (Dot identifier)*
     ;
 
-moduleBody
-    : staticStatement*
-    ;
-
+// Thought: NamespaceEntry ?
 staticStatement
     : typeAliasDefinition
     | constantDefinition
     | classDefinition
+    | namespaceDefinition
     ;
 
 typeAliasDefinition
@@ -35,6 +33,16 @@ typeAliasDefinition
 constantDefinition
     : ConstKeyword name=Identifier (Colon type=typeExpression)? Assign definer=expression
     ;
+
+namespaceDefinition
+    : NamespaceKeyword name=Identifier LeftParen namespaceBody RightParen
+    ;
+
+namespaceBody
+    : staticStatement*
+    ;
+
+// Class
 
 classDefinition
     : ClassKeyword name=Identifier LeftParen
@@ -50,6 +58,8 @@ fieldDeclaration
 methodDefinition
     : MethodDirective name=Identifier Assign body=expression
     ;
+
+// end
 
 // Expressions
 
