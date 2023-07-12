@@ -1,6 +1,5 @@
 package sigma.semantics.expressions
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Value
@@ -84,20 +83,16 @@ class IfExpression(
 
     override fun evaluate(
         scope: Scope,
-    ): Thunk = object : Thunk() {
-        override val toEvaluatedValue: Value
-            get() {
-                val guardValue = guard.evaluate(scope = scope).toEvaluatedValue
+    ): Value {
 
-                if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")
+        val guardValue = guard.evaluate(scope = scope)
 
-                return if (guardValue.value) {
-                    trueBranch.evaluate(scope = scope).toEvaluatedValue
-                } else {
-                    falseBranch.evaluate(scope = scope).toEvaluatedValue
-                }
-            }
+        if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")
 
-        override fun dump(): String = "(bound if)"
+        return if (guardValue.value) {
+            trueBranch.evaluate(scope = scope)
+        } else {
+            falseBranch.evaluate(scope = scope)
+        }
     }
 }

@@ -1,10 +1,9 @@
 package sigma.semantics.expressions
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.DeclarationScope
-import sigma.semantics.Entity
 import sigma.semantics.SemanticError
 import sigma.semantics.TypeScope
 import sigma.semantics.types.Type
@@ -117,9 +116,8 @@ abstract class Expression {
     protected abstract val term: ExpressionTerm
 
     abstract val inferredType: Computation<Type>
-    fun bind(scope: Scope): Thunk = evaluate(scope = scope)
 
     abstract fun evaluate(
         scope: Scope,
-    ): Thunk
+    ): Value
 }

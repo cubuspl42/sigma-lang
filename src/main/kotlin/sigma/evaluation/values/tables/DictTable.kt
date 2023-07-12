@@ -1,13 +1,12 @@
 package sigma.evaluation.values.tables
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 
 class DictTable(
-    private val entries: Map<PrimitiveValue, Thunk>,
+    val entries: Map<PrimitiveValue, Value>,
 ) : Table() {
     companion object {
         fun fromList(
@@ -23,8 +22,6 @@ class DictTable(
         )
     }
 
-    val evaluatedEntries by lazy { entries.mapValues { it.value.toEvaluatedValue } }
-
     override fun equals(other: Any?): Boolean {
         throw UnsupportedOperationException()
     }
@@ -35,18 +32,18 @@ class DictTable(
 
     override fun read(
         argument: Value,
-    ): Thunk? = entries[argument as PrimitiveValue]
+    ): Value? = entries[argument as PrimitiveValue]
 
     override fun dumpContent(): String? {
         val entries = entries.mapValues { (_, image) ->
-            image.toEvaluatedValue
+            image
         }.entries
 
         if (entries.isEmpty()) return null
 
         return entries.joinToString(separator = ", ") {
             val keyStr = dumpKey(key = it.key)
-            val imageStr = it.value.toEvaluatedValue.dump()
+            val imageStr = it.value.dump()
 
             "$keyStr = $imageStr"
         }
@@ -59,11 +56,11 @@ class DictTable(
         else -> "[${key.dump()}]"
     }
 
-    fun toMapDebug(): Map<Long, Thunk> = entries.map { (key, value) ->
+    fun toMapDebug(): Map<Long, Value> = entries.map { (key, value) ->
         (key as IntValue).value to value
     }.toMap()
 
-    fun toListDebug(): List<Thunk> {
+    fun toListDebug(): List<Value> {
         val map = toMapDebug()
 
         val expectedIndexSet = (0 until map.size).toSet()
@@ -76,9 +73,9 @@ class DictTable(
 
 @Suppress("FunctionName")
 fun ArrayTable(
-    elements: List<Thunk>,
-) = DictTable(
-    entries = elements.withIndex().associate { (index, thunk) ->
-        IntValue(value = index.toLong()) to thunk
+    elements: List<Value>,
+): DictTable = DictTable(
+    entries = elements.withIndex().associate { (index, value) ->
+        IntValue(value = index.toLong()) to value
     },
 )

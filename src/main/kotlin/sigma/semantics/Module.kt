@@ -1,10 +1,10 @@
 package sigma.semantics
 
-import sigma.evaluation.Thunk
 import sigma.syntax.ModuleTerm
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.scope.chainWith
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 import sigma.semantics.types.Type
 
 class Module(
@@ -53,7 +53,7 @@ class Module(
     )
 
     val innerScope = object : Scope {
-        override fun getValue(name: Symbol): Thunk? = getStaticDefinition(name = name)?.definedValue
+        override fun getValue(name: Symbol): Value? = getStaticDefinition(name = name)?.definedValue
     }.chainWith(
         context = prelude.scope,
     )

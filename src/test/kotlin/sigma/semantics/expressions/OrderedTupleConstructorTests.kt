@@ -91,15 +91,15 @@ class OrderedTupleConstructorTests {
 
             val value = tupleConstructor.evaluate(
                 scope = Scope.Empty,
-            ).toEvaluatedValue
+            )
 
             assertIs<DictTable>(value)
 
             assertEquals(
                 expected = ArrayTable(
                     elements = emptyList(),
-                ).evaluatedEntries,
-                actual = value.evaluatedEntries,
+                ).entries,
+                actual = value.entries,
             )
         }
 
@@ -120,7 +120,7 @@ class OrderedTupleConstructorTests {
                         Symbol.of("b") to IntValue(1),
                     ),
                 ),
-            ).toEvaluatedValue
+            )
 
             assertIs<DictTable>(value)
 
@@ -130,8 +130,8 @@ class OrderedTupleConstructorTests {
                         BoolValue(false),
                         IntValue(1),
                     ),
-                ).evaluatedEntries,
-                actual = value.evaluatedEntries,
+                ).entries,
+                actual = value.entries,
             )
         }
     }

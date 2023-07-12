@@ -1,5 +1,6 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.semantics.BuiltinScope
 import sigma.semantics.BuiltinTypeScope
@@ -131,9 +132,12 @@ class AbstractionTests {
                 ) as AbstractionTerm
 
             )
+
             val closure = abstraction.evaluate(
                 scope = BuiltinScope,
             )
+
+            assertIs<FunctionValue>(closure)
 
             assertEquals(
                 expected = IntValue(6),
@@ -144,7 +148,7 @@ class AbstractionTests {
                             IntValue(3),
                         ),
                     ),
-                ).toEvaluatedValue,
+                ),
             )
         }
     }

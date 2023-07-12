@@ -1,6 +1,5 @@
 package sigma.evaluation.values
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.values.tables.Table
 
 data class BoolValue(
@@ -14,10 +13,10 @@ data class BoolValue(
 
     object If : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
-            val test = (argument as Table).read(IntValue.Zero)!!.toEvaluatedValue as BoolValue
+            val test = (argument as Table).read(IntValue.Zero)!! as BoolValue
 
             return object : ComputableFunctionValue() {
-                override fun apply(argument: Value): Thunk {
+                override fun apply(argument: Value): Value {
                     val branches = argument as FunctionValue
 
                     return when {

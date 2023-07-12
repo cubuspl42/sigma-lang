@@ -1,10 +1,10 @@
 package sigma.semantics.expressions
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.scope.Scope
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 import sigma.evaluation.values.tables.DictTable
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
@@ -121,8 +121,8 @@ class FieldRead(
 
     override fun evaluate(
         scope: Scope,
-    ): Thunk {
-        val subjectValue = subject.evaluate(scope = scope).toEvaluatedValue
+    ): Value {
+        val subjectValue = subject.evaluate(scope = scope)
 
         if (subjectValue !is DictTable) throw IllegalStateException("Subject $subjectValue is not a dict")
 

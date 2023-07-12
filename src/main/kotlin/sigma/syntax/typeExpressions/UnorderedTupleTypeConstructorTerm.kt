@@ -1,7 +1,6 @@
 package sigma.syntax.typeExpressions
 
 import sigma.semantics.TypeScope
-import sigma.evaluation.Thunk
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeConstructorContext
 import sigma.semantics.types.UnorderedTupleType

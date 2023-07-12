@@ -1,6 +1,5 @@
 package sigma.semantics.expressions
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.scope.Scope
 import sigma.semantics.Computation
 import sigma.semantics.Declaration
@@ -11,6 +10,7 @@ import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ReferenceTerm
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 
 class Reference(
     private val declarationScope: DeclarationScope,
@@ -55,7 +55,7 @@ class Reference(
 
     override fun evaluate(
         scope: Scope,
-    ): Thunk = scope.getValue(referredName) ?: throw RuntimeException(
+    ): Value = scope.getValue(referredName) ?: throw RuntimeException(
         "Unresolved reference at run-time: $referredName",
     )
 }

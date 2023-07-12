@@ -1,6 +1,5 @@
 package sigma.semantics.expressions
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.ComputableFunctionValue
 import sigma.semantics.BuiltinScope
@@ -155,7 +154,7 @@ class CallTests {
         @Test
         fun testSimple() {
             val sq = object : ComputableFunctionValue() {
-                override fun apply(argument: Value): Thunk {
+                override fun apply(argument: Value): Value {
                     val n = argument as IntValue
                     return IntValue(n.value * n.value)
                 }
@@ -175,7 +174,7 @@ class CallTests {
                             Symbol.of("sq") to sq,
                         )
                     ),
-                ).toEvaluatedValue,
+                ),
             )
         }
 
@@ -201,7 +200,7 @@ class CallTests {
                             ),
                         ),
                     ),
-                ).toEvaluatedValue,
+                ),
             )
         }
     }

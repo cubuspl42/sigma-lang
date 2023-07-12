@@ -14,8 +14,8 @@ data class IntValue(
         override fun apply(argument: Value): Value {
             val argumentTuple = argument as Table
 
-            val left = argumentTuple.read(Symbol.of(prototype.leftArgumentName))!!.toEvaluatedValue
-            val right = argumentTuple.read(Symbol.of(prototype.rightArgumentName))!!.toEvaluatedValue
+            val left = argumentTuple.read(Symbol.of(prototype.leftArgumentName))!!
+            val right = argumentTuple.read(Symbol.of(prototype.rightArgumentName))!!
 
             left as IntValue
             right as IntValue
@@ -67,7 +67,7 @@ data class IntValue(
 
     object Sq : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
-            val arg = (argument as Table).read(Zero)!!.toEvaluatedValue as IntValue
+            val arg = (argument as Table).read(Zero)!! as IntValue
 
             return IntValue(arg.value * arg.value)
         }

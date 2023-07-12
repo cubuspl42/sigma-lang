@@ -29,6 +29,6 @@ class Program internal constructor(
             name = Symbol.of("main")
         )!!
 
-        return result.definedValue.toEvaluatedValue
+        return result.definedValue
     }
 }

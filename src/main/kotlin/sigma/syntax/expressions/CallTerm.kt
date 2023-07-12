@@ -2,7 +2,6 @@ package sigma.syntax.expressions
 
 import sigma.BinaryOperationPrototype
 
-import sigma.evaluation.Thunk
 import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionTupleConstructorAltContext

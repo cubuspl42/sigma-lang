@@ -14,6 +14,7 @@ import sigma.semantics.types.Type
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 
 class Abstraction(
     private val innerTypeScope: TypeScope,
@@ -69,7 +70,7 @@ class Abstraction(
 
     override fun evaluate(
         scope: Scope,
-    ): Closure = Closure(
+    ): Value = Closure(
         context = scope,
         argumentType = argumentType,
         image = image,
