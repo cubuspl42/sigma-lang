@@ -1,11 +1,11 @@
 package sigma.semantics.types
 
 import indexOfOrNull
-import sigma.evaluation.Thunk
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.IntValue
 import sigma.semantics.expressions.Abstraction
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 import sigma.evaluation.values.tables.Table
 
 data class OrderedTupleType(
@@ -159,7 +159,7 @@ data class OrderedTupleType(
     }
 
      override fun toArgumentScope(argument: Table): Scope = object : Scope {
-        override fun getValue(name: Symbol): Thunk? {
+        override fun getValue(name: Symbol): Value? {
             val index = elements.indexOfOrNull { it.name == name } ?: return null
 
             return argument.read(IntValue(value = index.toLong()))

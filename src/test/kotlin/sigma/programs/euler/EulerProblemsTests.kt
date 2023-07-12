@@ -51,7 +51,7 @@ class EulerProblemsTests {
                 Symbol.of("b") to IntValue(value = 1L),
                 Symbol.of("c") to IntValue(value = 8L),
             ),
-            actual = result.evaluatedEntries,
+            actual = result.entries,
         )
     }
 

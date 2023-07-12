@@ -1,6 +1,5 @@
 package sigma.evaluation.values.tables
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.UndefinedValue
 import sigma.evaluation.values.Value
@@ -9,7 +8,7 @@ import sigma.evaluation.values.Value
 abstract class Table : FunctionValue() {
     final override fun apply(
         argument: Value,
-    ): Thunk = read(
+    ): Value = read(
         argument = argument,
     ) ?: UndefinedValue.withName(
         name = argument,
@@ -27,7 +26,7 @@ abstract class Table : FunctionValue() {
     // Idea: Rename to `key`?
     abstract fun read(
         argument: Value,
-    ): Thunk?
+    ): Value?
 
     abstract fun dumpContent(): String?
 }

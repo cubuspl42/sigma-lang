@@ -1,7 +1,6 @@
 package sigma.evaluation.values
 
 import cutOffFront
-import sigma.evaluation.Thunk
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.IntCollectiveType
@@ -20,14 +19,14 @@ abstract class FunctionValue : Value() {
 
             val primary = argument.apply(
                 argument = Symbol.of("primary"),
-            ).toEvaluatedValue as FunctionValue
+            ) as FunctionValue
 
             val secondary = argument.apply(
                 argument = Symbol.of("secondary"),
-            ).toEvaluatedValue as FunctionValue
+            ) as FunctionValue
 
             return object : FunctionValue() {
-                override fun apply(argument: Value): Thunk {
+                override fun apply(argument: Value): Value {
                     val value = primary.apply(argument = argument)
 
                     return when (value) {
@@ -60,7 +59,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(args: List<Thunk>): Thunk {
+        override fun compute(args: List<Value>): Value {
             val elements = (args.first() as FunctionValue).toList()
 
             val result = elements.chunked(size = 4)
@@ -86,7 +85,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(args: List<Thunk>): Thunk {
+        override fun compute(args: List<Value>): Value {
             val elements = (args.first() as FunctionValue).toList()
 
             val result = elements.drop(1)
@@ -110,7 +109,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(args: List<Thunk>): Thunk {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
             val n = (args[1] as IntValue).value
 
@@ -137,7 +136,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(args: List<Thunk>): Thunk {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
             val n = (args[1] as IntValue).value
 
@@ -191,14 +190,14 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(args: List<Thunk>): Thunk {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
             val transform = args[1] as FunctionValue
 
             return DictTable.fromList(elements.map {
                 transform.apply(
                     DictTable.fromList(listOf(it)),
-                ).toEvaluatedValue
+                )
             })
         }
     }
@@ -214,7 +213,7 @@ abstract class FunctionValue : Value() {
 
         override val imageType = IntCollectiveType
 
-        override fun compute(args: List<Thunk>): Thunk {
+        override fun compute(args: List<Value>): Value {
             val list = (args[0] as FunctionValue).toList()
 
             return IntValue(value = list.size.toLong())
@@ -241,7 +240,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(args: List<Thunk>): Thunk {
+        override fun compute(args: List<Value>): Value {
             val front = (args[0] as FunctionValue).toList()
             val back = (args[1] as FunctionValue).toList()
 
@@ -256,7 +255,7 @@ abstract class FunctionValue : Value() {
 
         override val imageType = IntCollectiveType
 
-        override fun compute(args: List<Thunk>): Thunk {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
 
             return IntValue(
@@ -272,7 +271,7 @@ abstract class FunctionValue : Value() {
 
         override val imageType = IntCollectiveType
 
-        override fun compute(args: List<Thunk>): Thunk {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
 
             return IntValue(
@@ -292,7 +291,7 @@ abstract class FunctionValue : Value() {
 
         override val imageType = IntCollectiveType
 
-        override fun compute(args: List<Thunk>): Thunk {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
 
             val result = elements.maxOf { (it as IntValue).value }
@@ -302,10 +301,10 @@ abstract class FunctionValue : Value() {
     }
 
     fun toList(): List<Value> = generateSequence(0) { it + 1 }.map {
-        apply(IntValue(value = it.toLong())).toEvaluatedValue
+        apply(IntValue(value = it.toLong()))
     }.takeWhile { it !is UndefinedValue }.toList()
 
     abstract fun apply(
         argument: Value,
-    ): Thunk
+    ): Value
 }

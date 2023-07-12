@@ -3,6 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.UndefinedValue
+import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.semantics.types.BoolType
@@ -36,8 +37,8 @@ data class IsUndefinedCheck(
 
     override fun evaluate(
         scope: Scope,
-    ): BoolValue {
-        val argumentValue = argument.evaluate(scope = scope).toEvaluatedValue
+    ): Value {
+        val argumentValue = argument.evaluate(scope = scope)
 
         return BoolValue(
             value = argumentValue is UndefinedValue,

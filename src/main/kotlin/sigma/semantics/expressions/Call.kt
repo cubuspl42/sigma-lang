@@ -1,6 +1,5 @@
 package sigma.semantics.expressions
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.Value
@@ -137,23 +136,18 @@ class Call(
 
     override fun evaluate(
         scope: Scope,
-    ): Thunk = object : Thunk() {
-        override val toEvaluatedValue: Value
-            get() {
-                val subjectValue = subject.evaluate(scope = scope).toEvaluatedValue
+    ): Value {
+        val subjectValue = subject.evaluate(scope = scope)
 
-                if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
+        if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
 
-                val argumentValue = argument.evaluate(scope = scope)
+        val argumentValue = argument.evaluate(scope = scope)
 
-                // Thought: Obtaining argument here might not be lazy enough
-                val image = subjectValue.apply(
-                    argument = argumentValue.toEvaluatedValue,
-                )
+        // Thought: Obtaining argument here might not be lazy enough
+        val image = subjectValue.apply(
+            argument = argumentValue,
+        )
 
-                return image.toEvaluatedValue
-            }
-
-        override fun dump(): String = "(bound call)"
+        return image
     }
 }

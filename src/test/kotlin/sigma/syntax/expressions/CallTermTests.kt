@@ -1,6 +1,5 @@
 package sigma.syntax.expressions
 
-import sigma.evaluation.Thunk
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.ComputableFunctionValue
 import sigma.evaluation.values.IntValue

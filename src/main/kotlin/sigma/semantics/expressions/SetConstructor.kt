@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.SetValue
+import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
@@ -81,9 +82,9 @@ class SetConstructor(
 
     override fun evaluate(
         scope: Scope,
-    ): SetValue = SetValue(
+    ): Value = SetValue(
         elements = elements.map {
-            it.evaluate(scope = scope).toEvaluatedValue
+            it.evaluate(scope = scope)
         }.toSet(),
     )
 }

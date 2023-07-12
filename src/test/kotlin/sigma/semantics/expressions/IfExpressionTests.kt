@@ -1,6 +1,5 @@
 package sigma.semantics.expressions
 
-import sigma.evaluation.scope.Scope
 import sigma.semantics.BuiltinTypeScope
 import sigma.evaluation.values.IntValue
 import sigma.semantics.BuiltinScope
@@ -10,7 +9,6 @@ import sigma.semantics.types.IntType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.IfExpressionTerm
-import kotlin.math.acos
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -101,7 +99,7 @@ class IfExpressionTests {
                 expected = IntValue(value = 3L),
                 actual = ifExpression.evaluate(
                     scope = BuiltinScope,
-                ).toEvaluatedValue,
+                ),
             )
         }
 
@@ -126,7 +124,7 @@ class IfExpressionTests {
                 expected = IntValue(value = 4L),
                 actual = ifExpression.evaluate(
                     scope = BuiltinScope,
-                ).toEvaluatedValue,
+                ),
             )
         }
     }

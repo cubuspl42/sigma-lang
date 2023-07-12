@@ -1,8 +1,8 @@
 package sigma.semantics.types
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 import sigma.evaluation.values.tables.Table
 import sigma.semantics.expressions.Abstraction
 
@@ -138,6 +138,6 @@ data class UnorderedTupleType(
     )
 
     override fun toArgumentScope(argument: Table): Scope = object : Scope {
-        override fun getValue(name: Symbol): Thunk? = argument.read(name)
+        override fun getValue(name: Symbol): Value? = argument.read(name)
     }
 }

@@ -1,7 +1,7 @@
 package sigma.semantics
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 import sigma.semantics.expressions.Expression
 import sigma.syntax.ConstantDefinitionTerm
 import sigma.syntax.DefinitionTerm
@@ -38,7 +38,7 @@ class ConstantDefinition(
         }
     }
 
-    override val definedValue: Thunk by lazy {
+    override val definedValue: Value by lazy {
         asValueDefinition.definer.evaluate(
             scope = containingModule.innerScope,
         )

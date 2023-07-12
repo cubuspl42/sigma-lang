@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.PrimitiveValue
+import sigma.evaluation.values.Value
 import sigma.evaluation.values.tables.DictTable
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
@@ -158,10 +159,10 @@ class DictConstructor(
 
     override fun evaluate(
         scope: Scope,
-    ): DictTable = DictTable(
+    ): Value = DictTable(
         entries = associations.associate {
-            val key = it.key.evaluate(scope = scope).toEvaluatedValue as PrimitiveValue
-            val value = it.value.bind(scope = scope)
+            val key = it.key.evaluate(scope = scope) as PrimitiveValue
+            val value = it.value.evaluate(scope = scope)
 
             key to value
         },

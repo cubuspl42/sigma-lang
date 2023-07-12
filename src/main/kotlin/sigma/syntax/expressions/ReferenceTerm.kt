@@ -1,6 +1,5 @@
 package sigma.syntax.expressions
 
-import sigma.evaluation.Thunk
 import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol

@@ -1,7 +1,7 @@
 package sigma.semantics
 
-import sigma.evaluation.Thunk
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.Type
 import sigma.syntax.ClassDefinitionTerm
@@ -35,7 +35,7 @@ class ClassDefinition(
         )
     }.toSet()
 
-    override val definedValue: Thunk?
+    override val definedValue: Value?
         get() = super.definedValue
 
     override val definedType: Type?
