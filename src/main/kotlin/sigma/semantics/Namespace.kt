@@ -4,7 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.scope.chainWith
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.semantics.types.Type
+import sigma.semantics.types.TypeEntity
 import sigma.syntax.NamespaceDefinitionTerm
 
 class Namespace(
@@ -39,7 +39,7 @@ class Namespace(
     ): ConstantDefinition? = getStaticDefinition(name = name) as? ConstantDefinition
 
     val innerTypeScope: TypeScope = object : TypeScope {
-        override fun getType(typeName: Symbol): Type? = getStaticDefinition(name = typeName)?.definedType
+        override fun getTypeEntity(typeName: Symbol): TypeEntity? = getStaticDefinition(name = typeName)?.definedType
     }.chainWith(
         backScope = BuiltinTypeScope,
     )

@@ -22,7 +22,7 @@ data class TypeReferenceTerm(
 
     override fun evaluate(
         typeScope: TypeScope,
-    ): TypeEntity = typeScope.getType(
+    ): TypeEntity = typeScope.getTypeEntity(
         typeName = referee,
     ) ?: throw TypeErrorException(
         location = location,
