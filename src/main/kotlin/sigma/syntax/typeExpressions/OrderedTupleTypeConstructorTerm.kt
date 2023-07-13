@@ -5,6 +5,7 @@ import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeConstructorContext
 import sigma.semantics.types.OrderedTupleType
 import sigma.evaluation.values.Symbol
+import sigma.semantics.types.TypeEntity
 
 data class OrderedTupleTypeConstructorTerm(
     override val location: SourceLocation,
@@ -35,7 +36,7 @@ data class OrderedTupleTypeConstructorTerm(
         elements = elements.map {
             OrderedTupleType.Element(
                 name = it.name,
-                type = it.type.evaluate(
+                type = it.type.evaluateAsType(
                     typeScope = typeScope,
                 ),
             )

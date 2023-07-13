@@ -2,10 +2,10 @@ package sigma.syntax.typeExpressions
 
 import sigma.semantics.TypeScope
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.parser.antlr.SigmaParser
+import sigma.semantics.types.TypeEntity
 
 data class TypeReferenceTerm(
     override val location: SourceLocation,
@@ -22,7 +22,7 @@ data class TypeReferenceTerm(
 
     override fun evaluate(
         typeScope: TypeScope,
-    ): Type = typeScope.getType(
+    ): TypeEntity = typeScope.getType(
         typeName = referee,
     ) ?: throw TypeErrorException(
         location = location,

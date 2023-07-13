@@ -11,6 +11,7 @@ import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.semantics.types.Type
+import sigma.semantics.types.TypeEntity
 import sigma.syntax.Term
 
 abstract class TypeExpressionTerm : Term() {
@@ -58,5 +59,11 @@ abstract class TypeExpressionTerm : Term() {
 
     abstract fun evaluate(
         typeScope: TypeScope,
-    ): Type
+    ): TypeEntity
+
+    fun evaluateAsType(
+        typeScope: TypeScope,
+    ): Type =
+        // TODO: Improve the error handling
+        evaluate(typeScope = typeScope) as Type
 }

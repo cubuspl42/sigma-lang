@@ -7,6 +7,7 @@ import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
+import sigma.semantics.types.TypeEntity
 
 data class UnorderedTupleTypeConstructorTerm(
     override val location: SourceLocation,
@@ -44,7 +45,7 @@ data class UnorderedTupleTypeConstructorTerm(
             it.name
         }.mapValues { (key, entryTypes) ->
             val valueTypes = entryTypes.map {
-                it.valueType.evaluate(typeScope = typeScope)
+                it.valueType.evaluateAsType(typeScope = typeScope)
             }
 
             valueTypes.singleOrNull() ?: throw DuplicateKeyError(key = key)
