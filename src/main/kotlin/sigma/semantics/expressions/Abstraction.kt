@@ -77,7 +77,7 @@ class Abstraction(
     )
 
     private val declaredImageType: Type? by lazy {
-        term.declaredImageType?.evaluate(
+        term.declaredImageType?.evaluateAsType(
             typeScope = innerTypeScope,
         )
     }

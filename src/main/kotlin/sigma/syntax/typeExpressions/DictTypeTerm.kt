@@ -6,6 +6,7 @@ import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.DictType
 import sigma.semantics.types.PrimitiveType
 import sigma.evaluation.values.TypeErrorException
+import sigma.semantics.types.TypeEntity
 
 data class DictTypeTerm(
     override val location: SourceLocation,
@@ -24,14 +25,14 @@ data class DictTypeTerm(
 
     override fun evaluate(
         typeScope: TypeScope,
-    ): DictType = DictType(
+    ): TypeEntity = DictType(
         keyType = keyType.evaluate(
             typeScope = typeScope,
         ) as? PrimitiveType ?: throw TypeErrorException(
             location = keyType.location,
             message = "Dict key type is not primitive",
         ),
-        valueType = valueType.evaluate(
+        valueType = valueType.evaluateAsType(
             typeScope = typeScope,
         ),
     )

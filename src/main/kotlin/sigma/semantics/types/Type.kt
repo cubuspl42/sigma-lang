@@ -4,7 +4,7 @@ import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 
-sealed class Type {
+sealed class Type : TypeEntity() {
     sealed class MatchResult {
         abstract fun isFull(): Boolean
 

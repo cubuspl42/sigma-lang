@@ -2,6 +2,7 @@ package sigma.syntax.typeExpressions
 
 import sigma.semantics.TypeScope
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
+import sigma.semantics.types.TypeEntity
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.semantics.types.UniversalFunctionType
@@ -29,7 +30,7 @@ data class FunctionTypeTerm(
 
     override fun evaluate(
         typeScope: TypeScope,
-    ): UniversalFunctionType {
+    ): TypeEntity {
         val innerTypeScope = genericParametersTuple?.toStaticTypeScope(
             typeScope = typeScope,
         ) ?: typeScope
@@ -38,7 +39,7 @@ data class FunctionTypeTerm(
             typeScope = innerTypeScope,
         )
 
-        val imageType = this.imageType.evaluate(
+        val imageType = this.imageType.evaluateAsType(
             typeScope = innerTypeScope,
         )
 

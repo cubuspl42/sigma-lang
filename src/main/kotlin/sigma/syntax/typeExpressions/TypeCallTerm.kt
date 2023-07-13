@@ -2,8 +2,8 @@ package sigma.syntax.typeExpressions
 
 import sigma.semantics.TypeScope
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.Type
 import sigma.parser.antlr.SigmaParser
+import sigma.semantics.types.TypeEntity
 
 data class TypeCallTerm(
     override val location: SourceLocation,
@@ -35,5 +35,5 @@ data class TypeCallTerm(
 
     override fun evaluate(
         typeScope: TypeScope,
-    ): Type = TODO()
+    ): TypeEntity = TODO()
 }

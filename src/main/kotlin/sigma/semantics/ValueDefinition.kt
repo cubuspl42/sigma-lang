@@ -16,7 +16,7 @@ abstract class ValueDefinition : Declaration() {
     protected abstract val typeScope: TypeScope
 
     private val declaredType by lazy {
-        term.type?.evaluate(
+        term.type?.evaluateAsType(
             typeScope = typeScope,
         )
     }
