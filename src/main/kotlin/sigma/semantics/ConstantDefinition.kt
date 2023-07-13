@@ -7,15 +7,15 @@ import sigma.syntax.ConstantDefinitionTerm
 import sigma.syntax.DefinitionTerm
 
 class ConstantDefinition(
-    private val containingModule: Module,
+    private val containingNamespace: Namespace,
     val term: ConstantDefinitionTerm,
 ) : StaticDefinition() {
     companion object {
         fun build(
-            containingModule: Module,
+            containingNamespace: Namespace,
             term: ConstantDefinitionTerm,
         ): ConstantDefinition = ConstantDefinition(
-            containingModule = containingModule,
+            containingNamespace = containingNamespace,
             term = term,
         )
     }
@@ -27,12 +27,12 @@ class ConstantDefinition(
         override val name: Symbol = term.name
 
         override val typeScope: TypeScope
-            get() = containingModule.innerTypeScope
+            get() = containingNamespace.innerTypeScope
 
         override val definer: Expression by lazy {
             Expression.build(
                 typeScope = typeScope,
-                declarationScope = containingModule.innerDeclarationScope,
+                declarationScope = containingNamespace.innerDeclarationScope,
                 term = term.definer,
             )
         }
@@ -40,7 +40,7 @@ class ConstantDefinition(
 
     override val definedValue: Value by lazy {
         asValueDefinition.definer.evaluate(
-            scope = containingModule.innerScope,
+            scope = containingNamespace.innerScope,
         )
     }
 

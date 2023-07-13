@@ -1,12 +1,11 @@
 package sigma.syntax.typeExpressions
 
-import sigma.semantics.TypeScope
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeConstructorContext
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeConstructorContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
+import sigma.semantics.TypeScope
 import sigma.semantics.types.TupleType
-import sigma.semantics.types.TypeEntity
 
 abstract class TupleTypeConstructorTerm : TypeExpressionTerm() {
     companion object {

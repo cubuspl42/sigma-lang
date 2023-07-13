@@ -7,7 +7,7 @@ import sigma.syntax.typeExpressions.TypeExpressionTerm
 data class TypeAliasDefinitionTerm(
     override val location: SourceLocation,
     val name: Symbol,
-    val definer: TypeExpressionTerm? = null,
+    val definer: TypeExpressionTerm,
 ) : StaticStatementTerm() {
     companion object {
         fun build(
@@ -15,7 +15,7 @@ data class TypeAliasDefinitionTerm(
         ): TypeAliasDefinitionTerm = TypeAliasDefinitionTerm(
             location = SourceLocation.build(ctx),
             name = Symbol.of(ctx.name.text),
-            definer = ctx.definer?.let { TypeExpressionTerm.build(it) },
+            definer = ctx.definer.let { TypeExpressionTerm.build(it) },
         )
     }
 }

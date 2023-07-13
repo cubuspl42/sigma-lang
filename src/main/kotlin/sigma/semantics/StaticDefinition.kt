@@ -12,16 +12,16 @@ import sigma.syntax.TypeAliasDefinitionTerm
 sealed class StaticDefinition {
     companion object {
         fun build(
-            containingModule: Module,
+            containingNamespace: Namespace,
             term: StaticStatementTerm,
         ): StaticDefinition = when (term) {
             is ConstantDefinitionTerm -> ConstantDefinition.build(
-                containingModule = containingModule,
+                containingNamespace = containingNamespace,
                 term = term,
             )
 
             is TypeAliasDefinitionTerm -> TypeAliasDefinition.build(
-                containingModule = containingModule,
+                containingNamespace = containingNamespace,
                 term = term,
             )
 
