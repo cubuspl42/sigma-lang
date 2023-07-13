@@ -1,14 +1,10 @@
 package sigma.syntax.typeExpressions
 
-import indexOfOrNull
 import sigma.semantics.TypeScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeConstructorContext
 import sigma.semantics.types.OrderedTupleType
-import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.tables.Table
 
 data class OrderedTupleTypeConstructorTerm(
     override val location: SourceLocation,

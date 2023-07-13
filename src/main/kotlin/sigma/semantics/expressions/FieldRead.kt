@@ -5,7 +5,7 @@ import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.DictValue
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
@@ -124,7 +124,7 @@ class FieldRead(
     ): Value {
         val subjectValue = subject.evaluate(scope = scope)
 
-        if (subjectValue !is DictTable) throw IllegalStateException("Subject $subjectValue is not a dict")
+        if (subjectValue !is DictValue) throw IllegalStateException("Subject $subjectValue is not a dict")
 
         val value = subjectValue.apply(fieldName)
 

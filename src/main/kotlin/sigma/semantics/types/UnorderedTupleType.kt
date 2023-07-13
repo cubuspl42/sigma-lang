@@ -3,7 +3,7 @@ package sigma.semantics.types
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.Table
+import sigma.evaluation.values.Table
 import sigma.semantics.expressions.Abstraction
 
 // Type of tables with fixed number of entries, with keys being symbols, and any

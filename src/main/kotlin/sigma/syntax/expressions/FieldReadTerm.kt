@@ -3,8 +3,6 @@ package sigma.syntax.expressions
 import sigma.parser.antlr.SigmaParser.FieldReadAltContext
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.tables.DictTable
-import sigma.evaluation.scope.Scope
 
 data class FieldReadTerm(
     override val location: SourceLocation,

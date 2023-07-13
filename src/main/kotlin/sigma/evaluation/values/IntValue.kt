@@ -1,7 +1,6 @@
 package sigma.evaluation.values
 
 import sigma.BinaryOperationPrototype
-import sigma.evaluation.values.tables.Table
 
 data class IntValue(
     val value: Long,

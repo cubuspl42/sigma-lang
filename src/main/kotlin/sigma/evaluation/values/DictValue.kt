@@ -1,23 +1,18 @@
-package sigma.evaluation.values.tables
+package sigma.evaluation.values
 
-import sigma.evaluation.values.IntValue
-import sigma.evaluation.values.PrimitiveValue
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
-
-class DictTable(
+class DictValue(
     val entries: Map<PrimitiveValue, Value>,
 ) : Table() {
     companion object {
         fun fromList(
             list: List<Value>,
-        ): DictTable = DictTable(
+        ): DictValue = DictValue(
             entries = list.withIndex().associate { (index, element) ->
                 IntValue(value = index.toLong()) to element
             },
         )
 
-        val Empty = DictTable(
+        val Empty = DictValue(
             entries = emptyMap(),
         )
     }
@@ -31,8 +26,8 @@ class DictTable(
     }
 
     override fun read(
-        argument: Value,
-    ): Value? = entries[argument as PrimitiveValue]
+        key: Value,
+    ): Value? = entries[key as PrimitiveValue]
 
     override fun dumpContent(): String? {
         val entries = entries.mapValues { (_, image) ->
@@ -74,7 +69,7 @@ class DictTable(
 @Suppress("FunctionName")
 fun ArrayTable(
     elements: List<Value>,
-): DictTable = DictTable(
+): DictValue = DictValue(
     entries = elements.withIndex().associate { (index, value) ->
         IntValue(value = index.toLong()) to value
     },

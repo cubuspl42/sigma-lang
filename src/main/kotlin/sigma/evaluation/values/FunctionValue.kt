@@ -7,8 +7,6 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
-import sigma.evaluation.values.tables.ArrayTable
-import sigma.evaluation.values.tables.DictTable
 
 abstract class FunctionValue : Value() {
     object Link : ComputableFunctionValue() {
@@ -64,8 +62,8 @@ abstract class FunctionValue : Value() {
 
             val result = elements.chunked(size = 4)
 
-            return DictTable.fromList(
-                result.map { DictTable.fromList(it) },
+            return DictValue.fromList(
+                result.map { DictValue.fromList(it) },
             )
         }
     }
@@ -90,7 +88,7 @@ abstract class FunctionValue : Value() {
 
             val result = elements.drop(1)
 
-            return DictTable.fromList(result)
+            return DictValue.fromList(result)
         }
     }
 
@@ -115,7 +113,7 @@ abstract class FunctionValue : Value() {
 
             val result = elements.take(n.toInt())
 
-            return DictTable.fromList(result)
+            return DictValue.fromList(result)
         }
     }
 
@@ -149,9 +147,9 @@ abstract class FunctionValue : Value() {
 
             val result = computeRecursive(elements)
 
-            return DictTable.fromList(
+            return DictValue.fromList(
                 result.map {
-                    DictTable.fromList(it)
+                    DictValue.fromList(it)
                 },
             )
         }
@@ -194,9 +192,9 @@ abstract class FunctionValue : Value() {
             val elements = (args[0] as FunctionValue).toList()
             val transform = args[1] as FunctionValue
 
-            return DictTable.fromList(elements.map {
+            return DictValue.fromList(elements.map {
                 transform.apply(
-                    DictTable.fromList(listOf(it)),
+                    DictValue.fromList(listOf(it)),
                 )
             })
         }

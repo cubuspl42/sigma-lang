@@ -7,7 +7,7 @@ import sigma.semantics.BuiltinTypeScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.DictValue
 import sigma.semantics.DeclarationScope
 import sigma.semantics.TypeScope
 import sigma.semantics.types.BoolType
@@ -191,7 +191,7 @@ class CallTests {
                 actual = call.evaluate(
                     scope = FixedScope(
                         entries = mapOf(
-                            Symbol.of("dict") to DictTable(
+                            Symbol.of("dict") to DictValue(
                                 entries = mapOf(
                                     IntValue(1) to Symbol.of("one"),
                                     IntValue(2) to Symbol.of("two"),

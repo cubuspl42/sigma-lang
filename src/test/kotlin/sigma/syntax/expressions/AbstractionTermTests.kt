@@ -13,7 +13,6 @@ import sigma.syntax.expressions.AbstractionTerm.GenericParametersTuple
 import sigma.syntax.typeExpressions.OrderedTupleTypeConstructorTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.tables.ArrayTable
 import sigma.semantics.DeclarationScope
 import sigma.semantics.expressions.Expression
 import kotlin.test.Test

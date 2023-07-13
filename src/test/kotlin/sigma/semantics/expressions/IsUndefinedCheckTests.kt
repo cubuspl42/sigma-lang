@@ -4,7 +4,7 @@ import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.DictValue
 import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
@@ -55,7 +55,7 @@ class IsUndefinedCheckTests {
 
         @Test
         fun testUndefined() {
-            val dictTable = DictTable.Empty
+            val dictValue = DictValue.Empty
 
             val isUndefinedCheck = IsUndefinedCheck.build(
                 typeScope = TypeScope.Empty,
@@ -70,7 +70,7 @@ class IsUndefinedCheckTests {
                 actual = isUndefinedCheck.evaluate(
                     scope = FixedScope(
                         entries = mapOf(
-                            Symbol.of("d") to dictTable,
+                            Symbol.of("d") to dictValue,
                         ),
                     ),
                 ),

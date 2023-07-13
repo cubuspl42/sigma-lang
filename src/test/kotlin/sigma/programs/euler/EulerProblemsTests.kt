@@ -5,7 +5,7 @@ import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.DictValue
 import sigma.semantics.Project
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -43,7 +43,7 @@ class EulerProblemsTests {
     fun testProblem9() {
         val result = solveProblem(9)
 
-        assertIs<DictTable>(result)
+        assertIs<DictValue>(result)
 
         assertEquals<Map<PrimitiveValue, Value>>(
             expected = mapOf(

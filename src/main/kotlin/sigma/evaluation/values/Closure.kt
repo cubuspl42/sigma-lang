@@ -2,7 +2,6 @@ package sigma.evaluation.values
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.scope.chainWith
-import sigma.evaluation.values.tables.Table
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.TupleType
 

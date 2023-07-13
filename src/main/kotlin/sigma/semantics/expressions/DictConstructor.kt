@@ -3,7 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.DictValue
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
@@ -159,7 +159,7 @@ class DictConstructor(
 
     override fun evaluate(
         scope: Scope,
-    ): Value = DictTable(
+    ): Value = DictValue(
         entries = associations.associate {
             val key = it.key.evaluate(scope = scope) as PrimitiveValue
             val value = it.value.evaluate(scope = scope)
