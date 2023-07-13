@@ -2,8 +2,8 @@ package sigma.semantics
 
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
+import sigma.semantics.types.TypeEntity
 
 private val builtinTypes = mapOf(
     Symbol.of("Bool") to BoolType,
@@ -11,7 +11,7 @@ private val builtinTypes = mapOf(
 )
 
 val BuiltinTypeScope = object : TypeScope {
-    override fun getType(
+    override fun getTypeEntity(
         typeName: Symbol,
-    ): Type? = builtinTypes[typeName]
+    ): TypeEntity? = builtinTypes[typeName]
 }

@@ -1,23 +1,23 @@
 package sigma.semantics
 
 import sigma.evaluation.values.Symbol
-import sigma.semantics.types.Type
+import sigma.semantics.types.TypeEntity
 
 interface TypeScope {
     object Empty : TypeScope {
-        override fun getType(typeName: Symbol): Type? = null
+        override fun getTypeEntity(typeName: Symbol): TypeEntity? = null
     }
 
-    fun getType(typeName: Symbol): Type?
+    fun getTypeEntity(typeName: Symbol): TypeEntity?
 
     fun chainWith(
         backScope: TypeScope,
     ): TypeScope = object : TypeScope {
-        override fun getType(
+        override fun getTypeEntity(
             typeName: Symbol,
-        ): Type? = this@TypeScope.getType(
+        ): TypeEntity? = this@TypeScope.getTypeEntity(
             typeName = typeName,
-        ) ?: backScope.getType(
+        ) ?: backScope.getTypeEntity(
             typeName = typeName,
         )
     }
