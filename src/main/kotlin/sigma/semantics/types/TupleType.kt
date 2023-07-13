@@ -1,7 +1,7 @@
 package sigma.semantics.types
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.Table
+import sigma.evaluation.values.DictValue
 import sigma.semantics.expressions.Abstraction
 
 abstract class TupleType : TableType() {
@@ -11,5 +11,5 @@ abstract class TupleType : TableType() {
         resolution: TypeVariableResolution,
     ): TupleType
 
-    abstract fun toArgumentScope(argument: Table): Scope
+    abstract fun toArgumentScope(argument: DictValue): Scope
 }

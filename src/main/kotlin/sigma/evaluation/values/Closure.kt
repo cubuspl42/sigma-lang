@@ -14,7 +14,7 @@ class Closure(
         argument: Value,
     ): Value = image.evaluate(
         scope = argumentType.toArgumentScope(
-            argument = argument as Table,
+            argument = argument as DictValue,
         ).chainWith(
             context = context,
         ),
