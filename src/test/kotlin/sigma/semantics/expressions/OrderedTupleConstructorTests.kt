@@ -5,8 +5,8 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.tables.ArrayTable
-import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.ArrayTable
+import sigma.evaluation.values.DictValue
 import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
@@ -93,7 +93,7 @@ class OrderedTupleConstructorTests {
                 scope = Scope.Empty,
             )
 
-            assertIs<DictTable>(value)
+            assertIs<DictValue>(value)
 
             assertEquals(
                 expected = ArrayTable(
@@ -122,7 +122,7 @@ class OrderedTupleConstructorTests {
                 ),
             )
 
-            assertIs<DictTable>(value)
+            assertIs<DictValue>(value)
 
             assertEquals(
                 expected = ArrayTable(

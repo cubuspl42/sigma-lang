@@ -1,11 +1,7 @@
 package sigma.syntax.expressions
 
 import sigma.syntax.SourceLocation
-import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.tables.DictTable
-import sigma.evaluation.scope.FixedScope
-import sigma.evaluation.scope.Scope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

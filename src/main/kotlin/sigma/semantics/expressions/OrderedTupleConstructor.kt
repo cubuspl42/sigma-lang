@@ -2,7 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.ArrayTable
+import sigma.evaluation.values.ArrayTable
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope

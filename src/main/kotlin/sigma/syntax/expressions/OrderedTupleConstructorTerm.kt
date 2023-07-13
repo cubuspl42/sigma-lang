@@ -2,8 +2,6 @@ package sigma.syntax.expressions
 
 import sigma.parser.antlr.SigmaParser.OrderedTupleConstructorContext
 import sigma.syntax.SourceLocation
-import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.tables.ArrayTable
 
 data class OrderedTupleConstructorTerm(
     override val location: SourceLocation,

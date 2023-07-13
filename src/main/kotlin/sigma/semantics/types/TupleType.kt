@@ -1,7 +1,7 @@
 package sigma.semantics.types
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.tables.Table
+import sigma.evaluation.values.Table
 import sigma.semantics.expressions.Abstraction
 
 abstract class TupleType : TableType() {

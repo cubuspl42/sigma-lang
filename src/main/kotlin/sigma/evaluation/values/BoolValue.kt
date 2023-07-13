@@ -1,7 +1,5 @@
 package sigma.evaluation.values
 
-import sigma.evaluation.values.tables.Table
-
 data class BoolValue(
     val value: Boolean,
 ) : PrimitiveValue() {

@@ -10,7 +10,7 @@ import sigma.semantics.types.Type
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.DictValue
 import sigma.semantics.types.IllType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
@@ -107,7 +107,7 @@ class UnorderedTupleConstructor(
 
     override fun evaluate(
         scope: Scope,
-    ): Value = DictTable(
+    ): Value = DictValue(
         entries = entries.associate {
             it.name to it.value.evaluate(scope = scope)
         },

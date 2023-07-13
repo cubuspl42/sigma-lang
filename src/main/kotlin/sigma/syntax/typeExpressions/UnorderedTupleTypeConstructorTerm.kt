@@ -7,8 +7,6 @@ import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
-import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.tables.Table
 
 data class UnorderedTupleTypeConstructorTerm(
     override val location: SourceLocation,

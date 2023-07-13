@@ -3,7 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.tables.DictTable
+import sigma.evaluation.values.DictValue
 import sigma.semantics.DeclarationScope
 import sigma.semantics.TypeScope
 import sigma.syntax.expressions.ExpressionTerm
@@ -17,7 +17,7 @@ class FieldReadTests {
     object EvaluationTests {
         @Test
         fun testSimple() {
-            val foo = DictTable(
+            val foo = DictValue(
                 entries = mapOf(
                     Symbol.of("bar") to IntValue(value = 123L),
                 ),

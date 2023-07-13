@@ -3,9 +3,6 @@ package sigma.syntax.expressions
 import sigma.parser.antlr.SigmaParser.DictAssociationContext
 import sigma.parser.antlr.SigmaParser.DictConstructorContext
 import sigma.syntax.SourceLocation
-import sigma.evaluation.values.PrimitiveValue
-import sigma.evaluation.values.tables.DictTable
-import sigma.evaluation.scope.Scope
 
 data class DictConstructorTerm(
     override val location: SourceLocation,

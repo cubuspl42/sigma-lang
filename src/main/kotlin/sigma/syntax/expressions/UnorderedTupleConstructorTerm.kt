@@ -3,12 +3,7 @@ package sigma.syntax.expressions
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.UnorderedTupleConstructorContext
 import sigma.syntax.SourceLocation
-import sigma.evaluation.values.PrimitiveValue
-import sigma.evaluation.values.tables.DictTable
-import sigma.evaluation.scope.Scope
-import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.TypeErrorException
 
 data class UnorderedTupleConstructorTerm(
     override val location: SourceLocation,

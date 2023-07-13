@@ -1,10 +1,5 @@
-package sigma.evaluation.values.tables
+package sigma.evaluation.values
 
-import sigma.evaluation.values.FunctionValue
-import sigma.evaluation.values.UndefinedValue
-import sigma.evaluation.values.Value
-
-// Thought: Would PartialFunction be a better name?
 abstract class Table : FunctionValue() {
     final override fun apply(
         argument: Value,

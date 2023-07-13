@@ -6,7 +6,7 @@ import sigma.evaluation.values.IntValue
 import sigma.semantics.expressions.Abstraction
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.tables.Table
+import sigma.evaluation.values.Table
 
 data class OrderedTupleType(
     val elements: List<Element>,

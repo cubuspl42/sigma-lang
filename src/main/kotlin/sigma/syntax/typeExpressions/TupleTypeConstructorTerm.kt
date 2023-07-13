@@ -6,8 +6,6 @@ import sigma.parser.antlr.SigmaParser.OrderedTupleTypeConstructorContext
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeConstructorContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.semantics.types.TupleType
-import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.tables.Table
 
 abstract class TupleTypeConstructorTerm : TypeExpressionTerm() {
     companion object {
