@@ -11,7 +11,7 @@ data class IntValue(
 
     abstract class BinaryIntFunction : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
-            val argumentTuple = argument as Table
+            val argumentTuple = argument as DictValue
 
             val left = argumentTuple.read(Symbol.of(prototype.leftArgumentName))!!
             val right = argumentTuple.read(Symbol.of(prototype.rightArgumentName))!!
@@ -66,7 +66,7 @@ data class IntValue(
 
     object Sq : ComputableFunctionValue() {
         override fun apply(argument: Value): Value {
-            val arg = (argument as Table).read(Zero)!! as IntValue
+            val arg = (argument as DictValue).read(Zero)!! as IntValue
 
             return IntValue(arg.value * arg.value)
         }

@@ -2,7 +2,8 @@ package sigma.evaluation.values
 
 class DictValue(
     val entries: Map<PrimitiveValue, Value>,
-) : Table() {
+) : FunctionValue() {
+
     companion object {
         fun fromList(
             list: List<Value>,
@@ -17,6 +18,23 @@ class DictValue(
         )
     }
 
+    override fun apply(
+        argument: Value,
+    ): Value = read(
+        key = argument,
+    ) ?: UndefinedValue.withName(
+        name = argument,
+    )
+
+    override fun dump(): String {
+        val content = dumpContent()
+
+        return when {
+            content != null -> "{ $content }"
+            else -> "∅"
+        }
+    }
+
     override fun equals(other: Any?): Boolean {
         throw UnsupportedOperationException()
     }
@@ -25,11 +43,11 @@ class DictValue(
         throw UnsupportedOperationException()
     }
 
-    override fun read(
+    fun read(
         key: Value,
     ): Value? = entries[key as PrimitiveValue]
 
-    override fun dumpContent(): String? {
+    private fun dumpContent(): String? {
         val entries = entries.mapValues { (_, image) ->
             image
         }.entries

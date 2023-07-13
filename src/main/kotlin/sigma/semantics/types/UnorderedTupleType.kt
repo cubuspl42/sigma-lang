@@ -3,7 +3,7 @@ package sigma.semantics.types
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.Table
+import sigma.evaluation.values.DictValue
 import sigma.semantics.expressions.Abstraction
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
@@ -137,7 +137,7 @@ data class UnorderedTupleType(
         },
     )
 
-    override fun toArgumentScope(argument: Table): Scope = object : Scope {
+    override fun toArgumentScope(argument: DictValue): Scope = object : Scope {
         override fun getValue(name: Symbol): Value? = argument.read(name)
     }
 }
