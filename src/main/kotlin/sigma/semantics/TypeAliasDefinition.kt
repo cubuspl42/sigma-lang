@@ -5,24 +5,24 @@ import sigma.semantics.types.Type
 import sigma.syntax.TypeAliasDefinitionTerm
 
 class TypeAliasDefinition(
-    private val containingModule: Module,
+    private val containingNamespace: Namespace,
     private val term: TypeAliasDefinitionTerm,
 ) : StaticDefinition() {
     companion object {
         fun build(
-            containingModule: Module,
+            containingNamespace: Namespace,
             term: TypeAliasDefinitionTerm,
         ): TypeAliasDefinition = TypeAliasDefinition(
-            containingModule = containingModule,
+            containingNamespace = containingNamespace,
             term = term,
         )
     }
 
     override val name: Symbol = term.name
 
-    override val definedType: Type? by lazy {
-        term.definer?.evaluateAsType(
-            typeScope = containingModule.innerTypeScope,
+    override val definedType: Type by lazy {
+        term.definer.evaluateAsType(
+            typeScope = containingNamespace.innerTypeScope,
         )
     }
 

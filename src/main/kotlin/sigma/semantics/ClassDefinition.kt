@@ -7,7 +7,7 @@ import sigma.semantics.types.Type
 import sigma.syntax.ClassDefinitionTerm
 
 class ClassDefinition(
-    private val containingModule: Module,
+    private val containingNamespace: Namespace,
     private val term: ClassDefinitionTerm,
 ) : StaticDefinition() {
     inner class MethodDefinition(
@@ -29,7 +29,7 @@ class ClassDefinition(
             name = it.name,
             body = Expression.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = containingModule.innerDeclarationScope,
+                declarationScope = containingNamespace.innerDeclarationScope,
                 term = it.body,
             ),
         )

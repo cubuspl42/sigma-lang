@@ -6,6 +6,7 @@ import sigma.evaluation.scope.chainWith
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.types.Type
+import sigma.syntax.NamespaceDefinitionTerm
 
 class Module(
     private val prelude: Prelude,
@@ -21,44 +22,15 @@ class Module(
         )
     }
 
-    private val staticDefinitions: Set<StaticDefinition> = term.staticStatements.map {
-        StaticDefinition.build(
-            containingModule = this,
-            term = it,
-        )
-    }.toSet()
-
-    private fun getStaticDefinition(
-        name: Symbol,
-    ): StaticDefinition? = staticDefinitions.singleOrNull {
-        it.name == name
-    }
-
-    fun getConstantDefinition(
-        name: Symbol,
-    ): ConstantDefinition? = getStaticDefinition(name = name) as? ConstantDefinition
-
-    val innerTypeScope: TypeScope = object : TypeScope {
-        override fun getType(typeName: Symbol): Type? = getStaticDefinition(name = typeName)?.definedType
-    }.chainWith(
-        backScope = BuiltinTypeScope,
+    val rootNamespace = Namespace.build(
+        prelude = prelude,
+        term = NamespaceDefinitionTerm(
+            location = term.location,
+            name = Symbol.of("__root__"),
+            staticStatements = term.staticStatements,
+        ),
     )
 
-    val innerDeclarationScope: DeclarationScope = object : DefinitionBlock() {
-        override fun getDefinition(
-            name: Symbol,
-        ): ValueDefinition? = getConstantDefinition(name = name)?.asValueDefinition
-    }.chainWith(
-        outerScope = prelude.declarationScope,
-    )
-
-    val innerScope = object : Scope {
-        override fun getValue(name: Symbol): Value? = getStaticDefinition(name = name)?.definedValue
-    }.chainWith(
-        context = prelude.scope,
-    )
-
-    val errors: Set<SemanticError> by lazy {
-        staticDefinitions.fold(emptySet()) { acc, it -> acc + it.errors }
-    }
+    val errors: Set<SemanticError>
+        get() = rootNamespace.errors
 }

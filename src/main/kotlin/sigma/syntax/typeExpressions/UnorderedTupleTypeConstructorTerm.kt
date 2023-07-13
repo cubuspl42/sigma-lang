@@ -1,13 +1,12 @@
 package sigma.syntax.typeExpressions
 
-import sigma.semantics.TypeScope
-import sigma.syntax.SourceLocation
-import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeConstructorContext
-import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
-import sigma.semantics.types.TypeEntity
+import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeConstructorContext
+import sigma.semantics.TypeScope
+import sigma.semantics.types.UnorderedTupleType
+import sigma.syntax.SourceLocation
 
 data class UnorderedTupleTypeConstructorTerm(
     override val location: SourceLocation,

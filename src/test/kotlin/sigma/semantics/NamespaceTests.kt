@@ -4,38 +4,36 @@ import sigma.evaluation.values.Symbol
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
-import sigma.semantics.types.Type
 import sigma.semantics.types.UniversalFunctionType
-import sigma.syntax.ModuleTerm
-import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.LetExpressionTerm
+import sigma.syntax.NamespaceDefinitionTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-object ModuleTests {
+object NamespaceTests {
     object TypeCheckingTests {
         @Test
-        fun testTypeScope() {
-            val term = ModuleTerm.parse(
+        fun testInnerTypeScope() {
+            val term = NamespaceDefinitionTerm.parse(
                 source = """
-                    typeAlias UserId = Int
-                    
-                    const isUserIdValid = [userId: UserId] => true
+                    namespace Foo (
+                        typeAlias UserId = Int
+                        
+                        const isUserIdValid = [userId: UserId] => true
+                    )
                 """.trimIndent(),
             )
 
-            val module = Module.build(
+            val namespace = Namespace.build(
                 prelude = Prelude.load(),
                 term = term,
             )
 
-            val isUserIdValid = module.rootNamespace.getConstantDefinition(
+            val isUserIdValidDefinition = namespace.getConstantDefinition(
                 name = Symbol.of("isUserIdValid"),
             )
 
-            assertNotNull(isUserIdValid)
+            assertNotNull(isUserIdValidDefinition)
 
             assertEquals(
                 expected = UniversalFunctionType(
@@ -49,7 +47,7 @@ object ModuleTests {
                     ),
                     imageType = BoolType,
                 ),
-                actual = isUserIdValid.asValueDefinition.inferredType.value,
+                actual = isUserIdValidDefinition.asValueDefinition.inferredType.value,
             )
         }
     }

@@ -2,19 +2,19 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Closure
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.TypeScope
 import sigma.semantics.Declaration
 import sigma.semantics.DeclarationBlock
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
+import sigma.semantics.TypeScope
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.expressions.AbstractionTerm
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
 
 class Abstraction(
     private val innerTypeScope: TypeScope,
