@@ -12,13 +12,13 @@ abstract class DeclarationBlock : DeclarationScope {
         ): DeclarationBlock = object : DeclarationBlock() {
             val resultBlock = build(this)
 
-            override fun getDeclaration(name: Symbol): Declaration? = resultBlock.getDeclaration(name = name)
+            override fun getDeclaration(name: Symbol): ValueDeclaration? = resultBlock.getDeclaration(name = name)
         }.resultBlock
     }
 
-    abstract fun getDeclaration(name: Symbol): Declaration?
+    abstract fun getDeclaration(name: Symbol): ValueDeclaration?
 
-    final override fun resolveDeclaration(name: Symbol): Declaration? = getDeclaration(name = name)
+    final override fun resolveDeclaration(name: Symbol): ValueDeclaration? = getDeclaration(name = name)
 
     fun chainWith(outerScope: DeclarationScope): DeclarationScope = DeclarationScope.Chained(
         outerScope = outerScope,
@@ -39,7 +39,7 @@ abstract class DefinitionBlock : DeclarationBlock() {
         )
     }
 
-    override fun getDeclaration(name: Symbol): Declaration? = getDefinition(name = name)
+    override fun getDeclaration(name: Symbol): ValueDeclaration? = getDefinition(name = name)
 
     abstract fun getDefinition(name: Symbol): ValueDefinition?
 }
@@ -69,7 +69,7 @@ class LocalDefinitionBlock(
         )
     }
 
-    override fun getDeclaration(name: Symbol): Declaration? = getDefinition(name = name)
+    override fun getDeclaration(name: Symbol): ValueDeclaration? = getDefinition(name = name)
 
     override fun getDefinition(name: Symbol): LocalValueDefinition? = definitionByName[name]
 

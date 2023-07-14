@@ -2,7 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.semantics.Computation
-import sigma.semantics.Declaration
+import sigma.semantics.ValueDeclaration
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
@@ -33,7 +33,7 @@ class Reference(
 
     val referredName = term.referee
 
-    private val referredDeclaration: Declaration? by lazy {
+    private val referredDeclaration: ValueDeclaration? by lazy {
         declarationScope.resolveDeclaration(name = term.referee)
     }
 
