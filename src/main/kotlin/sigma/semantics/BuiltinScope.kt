@@ -20,7 +20,7 @@ interface BuiltinValue {
     val value: Value
 }
 
-private class BuiltinDefinition(
+private class BuiltinDeclaration(
     override val name: Symbol,
     val type: Type,
 ) : Declaration() {
@@ -194,7 +194,7 @@ object BuiltinScope : Scope, DeclarationScope {
     )
 
     private val builtinDefinitions = builtinValues.entries.associate { (name, builtinValue) ->
-        name to BuiltinDefinition(
+        name to BuiltinDeclaration(
             name = name,
             type = builtinValue.type,
         )
