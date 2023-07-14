@@ -14,33 +14,33 @@ interface DeclarationScope {
 
             override fun resolveDeclaration(
                 name: Symbol,
-            ): Declaration? = resultScope.resolveDeclaration(name = name)
+            ): ValueDeclaration? = resultScope.resolveDeclaration(name = name)
         }.result
     }
 
     object Empty : DeclarationScope {
-        override fun resolveDeclaration(name: Symbol): Declaration? = null
+        override fun resolveDeclaration(name: Symbol): ValueDeclaration? = null
     }
 
     class Chained(
         private val outerScope: DeclarationScope,
         private val declarationBlock: DeclarationBlock,
     ) : DeclarationScope {
-        override fun resolveDeclaration(name: Symbol): Declaration? =
+        override fun resolveDeclaration(name: Symbol): ValueDeclaration? =
             declarationBlock.getDeclaration(name = name) ?: outerScope.resolveDeclaration(name = name)
     }
 
     class Fixed(
-        private val declarationByName: Map<Symbol, Declaration>,
+        private val declarationByName: Map<Symbol, ValueDeclaration>,
     ) : DeclarationScope {
         companion object {
-            fun of(declarations: Set<Declaration>): Fixed = Fixed(
+            fun of(declarations: Set<ValueDeclaration>): Fixed = Fixed(
                 declarationByName = declarations.associateBy { it.name },
             )
         }
 
-        override fun resolveDeclaration(name: Symbol): Declaration? = declarationByName[name]
+        override fun resolveDeclaration(name: Symbol): ValueDeclaration? = declarationByName[name]
     }
 
-    fun resolveDeclaration(name: Symbol): Declaration?
+    fun resolveDeclaration(name: Symbol): ValueDeclaration?
 }

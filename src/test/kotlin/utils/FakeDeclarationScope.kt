@@ -1,16 +1,15 @@
 package utils
 
 import sigma.semantics.Computation
-import sigma.semantics.Declaration
-import sigma.semantics.SemanticError
+import sigma.semantics.ValueDeclaration
 import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
 import sigma.semantics.DeclarationBlock
 
-class FakeDeclaration(
+class FakeValueDeclaration(
     override val name: Symbol,
     type: Type,
-) : Declaration() {
+) : ValueDeclaration() {
     override val inferredType: Computation<Type> = Computation.pure(type)
 }
 
@@ -20,11 +19,11 @@ class FakeDeclarationScope(
     private val declarationByScope = typeByName.entries.associate { (name, type) ->
         val nameSymbol = Symbol.of(name)
 
-        nameSymbol to FakeDeclaration(
+        nameSymbol to FakeValueDeclaration(
             name = nameSymbol,
             type = type,
         )
     }
 
-    override fun getDeclaration(name: Symbol): Declaration? = declarationByScope[name]
+    override fun getDeclaration(name: Symbol): ValueDeclaration? = declarationByScope[name]
 }

@@ -5,7 +5,7 @@ import sigma.evaluation.values.Closure
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.Declaration
+import sigma.semantics.ValueDeclaration
 import sigma.semantics.DeclarationBlock
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
@@ -25,7 +25,7 @@ class Abstraction(
     class ArgumentDeclaration(
         override val name: Symbol,
         val type: Type,
-    ) : Declaration() {
+    ) : ValueDeclaration() {
         override val inferredType: Computation<Type> = Computation.pure(type)
     }
 
@@ -34,7 +34,7 @@ class Abstraction(
     ) : DeclarationBlock() {
         private val declarationByName = argumentDeclarations.associateBy { it.name }
 
-        override fun getDeclaration(name: Symbol): Declaration? = declarationByName[name]
+        override fun getDeclaration(name: Symbol): ValueDeclaration? = declarationByName[name]
     }
 
     companion object {
