@@ -25,7 +25,7 @@ sealed class StaticDefinition {
                 term = term,
             )
 
-            is ClassDefinitionTerm -> ClassDefinition.build()
+            is ClassDefinitionTerm -> TODO()
 
             is NamespaceDefinitionTerm -> TODO()
         }
