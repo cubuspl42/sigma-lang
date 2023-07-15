@@ -4,7 +4,7 @@ import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
-import sigma.evaluation.values.FixedTypeScope
+import sigma.evaluation.values.FakeTypeScope
 import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -33,7 +33,7 @@ class TypeReferenceTermTests {
             val type = TypeExpressionTerm.parse(
                 source = "Foo",
             ).evaluate(
-                typeScope = FixedTypeScope(
+                typeScope = FakeTypeScope(
                     entries = mapOf(
                         Symbol.of("Foo") to BoolType,
                     ),

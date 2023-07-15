@@ -6,7 +6,7 @@ import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.ArrayTypeConstructorTerm
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
-import sigma.evaluation.values.FixedTypeScope
+import sigma.evaluation.values.FakeTypeScope
 import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -38,7 +38,7 @@ class ArrayTypeConstructorTermTests {
             val type = TypeExpressionTerm.parse(
                 source = "[A*]",
             ).evaluate(
-                typeScope = FixedTypeScope(
+                typeScope = FakeTypeScope(
                     entries = mapOf(
                         Symbol.of("A") to BoolType,
                     ),

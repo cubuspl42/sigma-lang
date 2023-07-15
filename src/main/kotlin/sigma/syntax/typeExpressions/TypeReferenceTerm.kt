@@ -22,10 +22,14 @@ data class TypeReferenceTerm(
 
     override fun evaluate(
         typeScope: TypeScope,
-    ): TypeEntity = typeScope.getTypeEntity(
-        typeName = referee,
-    ) ?: throw TypeErrorException(
-        location = location,
-        message = "Unresolved type ${referee.dump()}",
-    )
+    ): TypeEntity {
+        val typeDefinition = typeScope.getTypeDefinition(
+            typeName = referee,
+        ) ?: throw TypeErrorException(
+            location = location,
+            message = "Unresolved type ${referee.dump()}",
+        )
+
+        return typeDefinition.definedType
+    }
 }

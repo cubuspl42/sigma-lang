@@ -3,15 +3,29 @@ package sigma.semantics
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.evaluation.values.Symbol
+import sigma.semantics.types.Type
 import sigma.semantics.types.TypeEntity
 
-private val builtinTypes = mapOf(
-    Symbol.of("Bool") to BoolType,
-    Symbol.of("Int") to IntCollectiveType,
+data class BuiltinTypeDefinition(
+    override val name: Symbol,
+    override val definedType: Type,
+) : TypeDefinition
+
+private val builtinTypeDefinitions = setOf(
+    BuiltinTypeDefinition(
+        name = Symbol.of("Bool"),
+        definedType = BoolType,
+    ),
+    BuiltinTypeDefinition(
+        name = Symbol.of("Int"),
+        definedType = IntCollectiveType,
+    ),
 )
 
-val BuiltinTypeScope = object : TypeScope {
-    override fun getTypeEntity(
+object BuiltinTypeScope : TypeScope {
+    override fun getTypeDefinition(
         typeName: Symbol,
-    ): TypeEntity? = builtinTypes[typeName]
+    ): TypeDefinition? = builtinTypeDefinitions.singleOrNull {
+        it.name == typeName
+    }
 }

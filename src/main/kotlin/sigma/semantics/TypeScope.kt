@@ -5,19 +5,19 @@ import sigma.semantics.types.TypeEntity
 
 interface TypeScope {
     object Empty : TypeScope {
-        override fun getTypeEntity(typeName: Symbol): TypeEntity? = null
+        override fun getTypeDefinition(typeName: Symbol): TypeDefinition? = null
     }
 
-    fun getTypeEntity(typeName: Symbol): TypeEntity?
+    fun getTypeDefinition(typeName: Symbol): TypeDefinition?
 
     fun chainWith(
         backScope: TypeScope,
     ): TypeScope = object : TypeScope {
-        override fun getTypeEntity(
+        override fun getTypeDefinition(
             typeName: Symbol,
-        ): TypeEntity? = this@TypeScope.getTypeEntity(
+        ): TypeDefinition? = this@TypeScope.getTypeDefinition(
             typeName = typeName,
-        ) ?: backScope.getTypeEntity(
+        ) ?: backScope.getTypeDefinition(
             typeName = typeName,
         )
     }

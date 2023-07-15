@@ -15,6 +15,7 @@ import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.semantics.DeclarationScope
 import sigma.semantics.expressions.Expression
+import sigma.syntax.expressions.AbstractionTerm.GenericParameterDefinition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -55,9 +56,9 @@ class AbstractionTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                        parameterNames = listOf(
-                            Symbol.of("a"),
-                            Symbol.of("b"),
+                        parametersDefinitions = listOf(
+                            GenericParameterDefinition.of("a"),
+                            GenericParameterDefinition.of("b"),
                         )
                     ),
                     argumentType = OrderedTupleTypeConstructorTerm(
@@ -97,8 +98,8 @@ class AbstractionTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                        parameterNames = listOf(
-                            Symbol.of("t"),
+                        parametersDefinitions = listOf(
+                            GenericParameterDefinition.of("t"),
                         )
                     ),
                     argumentType = OrderedTupleTypeConstructorTerm(

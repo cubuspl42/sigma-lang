@@ -8,10 +8,8 @@ import sigma.syntax.typeExpressions.TupleTypeConstructorTerm
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.Term
-import sigma.evaluation.values.Closure
-import sigma.evaluation.values.FixedTypeScope
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.scope.Scope
+import sigma.semantics.TypeDefinition
 
 data class AbstractionTerm(
     override val location: SourceLocation,
@@ -20,28 +18,44 @@ data class AbstractionTerm(
     val declaredImageType: TypeExpressionTerm? = null,
     val image: ExpressionTerm,
 ) : ExpressionTerm() {
+    data class GenericParameterDefinition(
+        override val name: Symbol,
+        override val definedType: TypeVariable,
+    ) : TypeDefinition {
+        companion object {
+            fun of(
+                name: String,
+            ): GenericParameterDefinition {
+                val nameSymbol = Symbol.of(name)
+
+                return GenericParameterDefinition(
+                    name = nameSymbol,
+                    definedType = TypeVariable(name = nameSymbol),
+                )
+            }
+        }
+    }
+
     data class GenericParametersTuple(
         override val location: SourceLocation,
-        val parameterNames: List<Symbol>,
-    ) : Term() {
+        val parametersDefinitions: List<GenericParameterDefinition>,
+    ) : Term(), TypeScope {
         companion object {
             fun build(
                 ctx: GenericParametersTupleContext,
             ): GenericParametersTuple = GenericParametersTuple(
                 location = SourceLocation.build(ctx),
-                parameterNames = ctx.genericParameterDeclaration().map {
-                    Symbol.of(it.name.text)
+                parametersDefinitions = ctx.genericParameterDeclaration().map {
+                    GenericParameterDefinition.of(it.name.text)
                 },
             )
         }
 
-        fun toStaticTypeScope(
-            typeScope: TypeScope,
-        ): TypeScope = FixedTypeScope(
-            entries = parameterNames.associateWith { TypeVariable(name = it) },
-        ).chainWith(
-            backScope = typeScope,
-        )
+        override fun getTypeDefinition(
+            typeName: Symbol,
+        ): TypeDefinition? = parametersDefinitions.lastOrNull {
+            it.name == typeName
+        }
     }
 
     companion object {
