@@ -21,7 +21,7 @@ import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.CallTerm
 import sigma.syntax.expressions.ExpressionTerm
-import utils.FakeDeclarationScope
+import utils.FakeDeclarationBlock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -36,7 +36,7 @@ class CallTests {
 
             val call = Call.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "f" to UniversalFunctionType(
                             argumentType = OrderedTupleType(
@@ -74,7 +74,7 @@ class CallTests {
 
             val call = Call.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "f" to UniversalFunctionType(
                             argumentType = OrderedTupleType(
@@ -126,7 +126,7 @@ class CallTests {
 
             val call = Call.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "b" to BoolType,
                     ),

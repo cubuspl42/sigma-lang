@@ -11,7 +11,7 @@ import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
-import utils.FakeDeclarationScope
+import utils.FakeDeclarationBlock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -50,7 +50,7 @@ object UnorderedTupleTests {
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 typeScope = TypeScope.Empty,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "value1" to BoolType,
                         "value2" to IntCollectiveType,
@@ -83,7 +83,7 @@ object UnorderedTupleTests {
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 typeScope = TypeScope.Empty,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "value1" to BoolType,
                         "value2" to IntCollectiveType,
