@@ -31,9 +31,7 @@ data class FunctionTypeTerm(
     override fun evaluate(
         typeScope: TypeScope,
     ): TypeEntity {
-        val innerTypeScope = genericParametersTuple?.toStaticTypeScope(
-            typeScope = typeScope,
-        ) ?: typeScope
+        val innerTypeScope = genericParametersTuple ?: typeScope
 
         val argumentType = argumentType.evaluate(
             typeScope = innerTypeScope,

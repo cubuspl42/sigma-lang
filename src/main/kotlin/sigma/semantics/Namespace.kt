@@ -39,12 +39,9 @@ class Namespace(
     ): ConstantDefinition? = getStaticDefinition(name = name) as? ConstantDefinition
 
     val innerTypeScope: TypeScope = object : TypeScope {
-        override fun getTypeEntity(
+        override fun getTypeDefinition(
             typeName: Symbol,
-        ): TypeEntity? {
-            val typeAliasDefinition = getStaticDefinition(name = typeName) as? TypeAliasDefinition
-            return typeAliasDefinition?.aliasedType
-        }
+        ): TypeDefinition? = getStaticDefinition(name = typeName) as? TypeAliasDefinition
     }.chainWith(
         backScope = BuiltinTypeScope,
     )

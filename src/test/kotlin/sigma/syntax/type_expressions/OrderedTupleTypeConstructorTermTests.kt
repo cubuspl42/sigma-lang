@@ -8,7 +8,7 @@ import sigma.syntax.typeExpressions.OrderedTupleTypeConstructorTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
-import sigma.evaluation.values.FixedTypeScope
+import sigma.evaluation.values.FakeTypeScope
 import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -148,7 +148,7 @@ class OrderedTupleTypeConstructorTermTests {
             val type = TypeExpressionTerm.parse(
                 source = "[a: A, B]",
             ).evaluate(
-                typeScope = FixedTypeScope(
+                typeScope = FakeTypeScope(
                     entries = mapOf(
                         Symbol.of("A") to BoolType,
                         Symbol.of("B") to IntCollectiveType,

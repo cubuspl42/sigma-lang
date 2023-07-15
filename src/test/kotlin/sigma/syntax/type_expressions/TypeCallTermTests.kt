@@ -3,8 +3,6 @@ package sigma.syntax.type_expressions
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.BoolType
-import sigma.evaluation.values.FixedTypeScope
 import sigma.evaluation.values.Symbol
 import sigma.syntax.typeExpressions.TypeCallTerm
 import sigma.syntax.typeExpressions.UnorderedTupleTypeConstructorTerm
