@@ -47,7 +47,7 @@ object NamespaceTests {
                     ),
                     imageType = BoolType,
                 ),
-                actual = isUserIdValidDefinition.asValueDefinition.inferredType.value,
+                actual = isUserIdValidDefinition.asValueDefinition.effectiveValueType.value,
             )
         }
     }

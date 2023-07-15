@@ -9,8 +9,8 @@ import sigma.semantics.DeclarationBlock
 class FakeValueDeclaration(
     override val name: Symbol,
     type: Type,
-) : ValueDeclaration() {
-    override val inferredType: Computation<Type> = Computation.pure(type)
+) : ValueDeclaration {
+    override val effectiveValueType: Computation<Type> = Computation.pure(type)
 }
 
 class FakeDeclarationScope(

@@ -14,19 +14,19 @@ interface DeclarationScope {
 
             override fun resolveDeclaration(
                 name: Symbol,
-            ): ValueDeclaration? = resultScope.resolveDeclaration(name = name)
+            ): Declaration? = resultScope.resolveDeclaration(name = name)
         }.result
     }
 
     object Empty : DeclarationScope {
-        override fun resolveDeclaration(name: Symbol): ValueDeclaration? = null
+        override fun resolveDeclaration(name: Symbol): Declaration? = null
     }
 
     class Chained(
         private val outerScope: DeclarationScope,
         private val declarationBlock: DeclarationBlock,
     ) : DeclarationScope {
-        override fun resolveDeclaration(name: Symbol): ValueDeclaration? =
+        override fun resolveDeclaration(name: Symbol): Declaration? =
             declarationBlock.getDeclaration(name = name) ?: outerScope.resolveDeclaration(name = name)
     }
 
@@ -39,8 +39,8 @@ interface DeclarationScope {
             )
         }
 
-        override fun resolveDeclaration(name: Symbol): ValueDeclaration? = declarationByName[name]
+        override fun resolveDeclaration(name: Symbol): Declaration? = declarationByName[name]
     }
 
-    fun resolveDeclaration(name: Symbol): ValueDeclaration?
+    fun resolveDeclaration(name: Symbol): Declaration?
 }

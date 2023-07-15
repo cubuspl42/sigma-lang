@@ -7,7 +7,7 @@ import sigma.syntax.TypeAliasDefinitionTerm
 class TypeAliasDefinition(
     private val containingNamespace: Namespace,
     private val term: TypeAliasDefinitionTerm,
-) : StaticDefinition() {
+) : StaticDefinition(), Declaration {
     companion object {
         fun build(
             containingNamespace: Namespace,
@@ -20,7 +20,7 @@ class TypeAliasDefinition(
 
     override val name: Symbol = term.name
 
-    override val definedType: Type by lazy {
+    val aliasedType: Type by lazy {
         term.definer.evaluateAsType(
             typeScope = containingNamespace.innerTypeScope,
         )

@@ -25,8 +25,8 @@ class Abstraction(
     class ArgumentDeclaration(
         override val name: Symbol,
         val type: Type,
-    ) : ValueDeclaration() {
-        override val inferredType: Computation<Type> = Computation.pure(type)
+    ) : ValueDeclaration {
+        override val effectiveValueType: Computation<Type> = Computation.pure(type)
     }
 
     class ArgumentDeclarationBlock(

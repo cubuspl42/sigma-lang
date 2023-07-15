@@ -5,7 +5,7 @@ import sigma.semantics.types.Type
 import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
 
-abstract class ValueDefinition : ValueDeclaration() {
+abstract class ValueDefinition : ValueDeclaration {
     data class UnmatchedInferredTypeError(
         override val location: SourceLocation,
         val matchResult: Type.MatchResult,
@@ -36,7 +36,7 @@ abstract class ValueDefinition : ValueDeclaration() {
         } else null
     }
 
-    final override val inferredType: Computation<Type> by lazy {
+    final override val effectiveValueType: Computation<Type> by lazy {
         when (val it = declaredType) {
             null -> definer.inferredType
             else -> Computation.pure(it)

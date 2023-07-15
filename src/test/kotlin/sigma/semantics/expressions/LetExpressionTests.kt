@@ -38,7 +38,7 @@ class LetExpressionTests {
             )
 
             val fType = assertIs<FunctionType>(
-                value = fDefinition.inferredType.value,
+                value = fDefinition.effectiveValueType.value,
             )
 
             assertIs<IntType>(value = fType.imageType)
@@ -50,7 +50,7 @@ class LetExpressionTests {
             )
 
             val gType = assertIs<FunctionType>(
-                value = gDefinition.inferredType.value,
+                value = gDefinition.effectiveValueType.value,
             )
 
             assertIs<IntType>(value = gType.imageType)
@@ -80,7 +80,7 @@ class LetExpressionTests {
             )
 
             assertIs<Computation.Result.CyclicError<*>>(
-                value = fDefinition.inferredType.result,
+                value = fDefinition.effectiveValueType.result,
             )
 
             val gDefinition = assertNotNull(
@@ -90,7 +90,7 @@ class LetExpressionTests {
             )
 
             assertIs<Computation.Result.CyclicError<*>>(
-                value = gDefinition.inferredType.result,
+                value = gDefinition.effectiveValueType.result,
             )
         }
     }

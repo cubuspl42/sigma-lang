@@ -20,11 +20,12 @@ class ConstantDefinition(
         )
     }
 
-    val asValueDefinition = object : ValueDefinition() {
+    inner class ConstantValueDefinition : ValueDefinition() {
         override val term: DefinitionTerm
             get() = this@ConstantDefinition.term
 
-        override val name: Symbol = term.name
+        override val name: Symbol
+            get() = this@ConstantDefinition.name
 
         override val typeScope: TypeScope
             get() = containingNamespace.innerTypeScope
@@ -38,14 +39,16 @@ class ConstantDefinition(
         }
     }
 
-    override val definedValue: Value by lazy {
+    val asValueDefinition = ConstantValueDefinition()
+
+    val definedValue: Value by lazy {
         asValueDefinition.definer.evaluate(
             scope = containingNamespace.innerScope,
         )
     }
 
     override val name: Symbol
-        get() = asValueDefinition.name
+        get() = term.name
 
     override val errors: Set<SemanticError>
         get() = asValueDefinition.errors
