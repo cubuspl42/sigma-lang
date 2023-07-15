@@ -1,15 +1,12 @@
 package sigma.semantics
 
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
-import sigma.semantics.types.Type
 import sigma.syntax.ClassDefinitionTerm
 import sigma.syntax.ConstantDefinitionTerm
 import sigma.syntax.NamespaceDefinitionTerm
 import sigma.syntax.StaticStatementTerm
 import sigma.syntax.TypeAliasDefinitionTerm
 
-sealed class StaticDefinition {
+sealed class StaticDefinition : Declaration {
     companion object {
         fun build(
             containingNamespace: Namespace,
@@ -32,10 +29,4 @@ sealed class StaticDefinition {
     }
 
     abstract val errors: Set<SemanticError>
-
-    abstract val name: Symbol
-
-    open val definedValue: Value? = null
-
-    open val definedType: Type? = null
 }

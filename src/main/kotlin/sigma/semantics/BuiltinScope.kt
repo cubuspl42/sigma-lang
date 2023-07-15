@@ -23,8 +23,8 @@ interface BuiltinValue {
 private class BuiltinValueDeclaration(
     override val name: Symbol,
     val type: Type,
-) : ValueDeclaration() {
-    override val inferredType: Computation<Type> = Computation.pure(type)
+) : ValueDeclaration {
+    override val effectiveValueType: Computation<Type> = Computation.pure(type)
 }
 
 object BuiltinScope : Scope, DeclarationScope {
@@ -210,5 +210,5 @@ object BuiltinScope : Scope, DeclarationScope {
         name: Symbol,
     ): BuiltinValue? = builtinValues[name]
 
-    override fun resolveDeclaration(name: Symbol): ValueDeclaration? = builtinDefinitions[name]
+    override fun resolveDeclaration(name: Symbol): Declaration? = builtinDefinitions[name]
 }

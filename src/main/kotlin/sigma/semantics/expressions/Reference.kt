@@ -11,12 +11,18 @@ import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ReferenceTerm
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
+import sigma.semantics.Declaration
 
 class Reference(
     private val declarationScope: DeclarationScope,
     override val term: ReferenceTerm,
 ) : Expression() {
     data class UnresolvedNameError(
+        override val location: SourceLocation,
+        val name: Symbol,
+    ) : SemanticError
+
+    data class NonValueDeclarationError(
         override val location: SourceLocation,
         val name: Symbol,
     ) : SemanticError
@@ -33,23 +39,32 @@ class Reference(
 
     val referredName = term.referee
 
-    private val referredDeclaration: ValueDeclaration? by lazy {
+    private val referredDeclaration: Declaration? by lazy {
         declarationScope.resolveDeclaration(name = term.referee)
     }
 
     override val inferredType: Computation<Type> = Computation.lazy {
-        when (val it = referredDeclaration) {
+        val referredValueDeclaration = referredDeclaration as? ValueDeclaration
+
+        when (val it = referredValueDeclaration) {
             null -> Computation.pure(IllType)
-            else -> it.inferredType
+            else -> it.effectiveValueType
         }
     }
 
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
-            if (referredDeclaration == null) UnresolvedNameError(
-                location = term.location,
-                name = term.referee,
-            ) else null
+            when (referredDeclaration) {
+                null -> UnresolvedNameError(
+                    location = term.location,
+                    name = term.referee,
+                )
+                !is ValueDeclaration -> NonValueDeclarationError(
+                    location = term.location,
+                    name = term.referee,
+                )
+                else -> null
+            }
         )
     }
 

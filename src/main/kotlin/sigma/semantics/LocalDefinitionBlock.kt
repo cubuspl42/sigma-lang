@@ -18,7 +18,7 @@ abstract class DeclarationBlock : DeclarationScope {
 
     abstract fun getDeclaration(name: Symbol): ValueDeclaration?
 
-    final override fun resolveDeclaration(name: Symbol): ValueDeclaration? = getDeclaration(name = name)
+    final override fun resolveDeclaration(name: Symbol): Declaration? = getDeclaration(name = name)
 
     fun chainWith(outerScope: DeclarationScope): DeclarationScope = DeclarationScope.Chained(
         outerScope = outerScope,

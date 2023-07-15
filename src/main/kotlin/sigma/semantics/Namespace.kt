@@ -39,7 +39,12 @@ class Namespace(
     ): ConstantDefinition? = getStaticDefinition(name = name) as? ConstantDefinition
 
     val innerTypeScope: TypeScope = object : TypeScope {
-        override fun getTypeEntity(typeName: Symbol): TypeEntity? = getStaticDefinition(name = typeName)?.definedType
+        override fun getTypeEntity(
+            typeName: Symbol,
+        ): TypeEntity? {
+            val typeAliasDefinition = getStaticDefinition(name = typeName) as? TypeAliasDefinition
+            return typeAliasDefinition?.aliasedType
+        }
     }.chainWith(
         backScope = BuiltinTypeScope,
     )
@@ -53,7 +58,12 @@ class Namespace(
     )
 
     val innerScope = object : Scope {
-        override fun getValue(name: Symbol): Value? = getStaticDefinition(name = name)?.definedValue
+        override fun getValue(
+            name: Symbol,
+        ): Value? {
+            val constantDefinition = getStaticDefinition(name = name) as? ConstantDefinition
+            return constantDefinition?.definedValue
+        }
     }.chainWith(
         context = prelude.scope,
     )
