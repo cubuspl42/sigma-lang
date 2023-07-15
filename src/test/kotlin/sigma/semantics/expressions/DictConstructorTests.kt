@@ -1,7 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.Arbitrary
-import sigma.semantics.BuiltinTypeScope
+import sigma.evaluation.values.Symbol
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IllType
@@ -10,6 +10,7 @@ import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.DictConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
 import utils.FakeDeclarationBlock
+import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -18,14 +19,16 @@ object DictConstructorTests {
         @Test
         fun testSingleEntry() {
             val dictLiteral = DictConstructor.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "key1" to IntCollectiveType,
-                        "value1" to BoolType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("key1"),
+                        type = IntCollectiveType,
                     ),
-
+                    FakeValueDeclaration(
+                        name = Symbol.of("value1"),
+                        type = BoolType,
                     ),
+                ),
                 term = ExpressionTerm.parse(
                     source = """
                         {
@@ -47,13 +50,22 @@ object DictConstructorTests {
         @Test
         fun testMultipleEntriesCompatibleEntries() {
             val dictLiteral = DictConstructor.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "key1" to IntCollectiveType,
-                        "value1" to BoolType,
-                        "key2" to IntCollectiveType,
-                        "value2" to BoolType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("key1"),
+                        type = IntCollectiveType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value1"),
+                        type = BoolType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("key2"),
+                        type = IntCollectiveType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value2"),
+                        type = BoolType,
                     ),
                 ),
                 term = ExpressionTerm.parse(
@@ -78,13 +90,22 @@ object DictConstructorTests {
         @Test
         fun testMultipleEntriesIncompatibleKeys() {
             val dictLiteral = DictConstructor.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "key1" to IntCollectiveType,
-                        "value1" to BoolType,
-                        "key2" to BoolType,
-                        "value2" to BoolType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("key1"),
+                        type = IntCollectiveType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value1"),
+                        type = BoolType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("key2"),
+                        type = BoolType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value2"),
+                        type = BoolType,
                     ),
                 ),
                 term = ExpressionTerm.parse(
@@ -115,13 +136,22 @@ object DictConstructorTests {
         @Test
         fun testMultipleEntriesIncompatibleValues() {
             val dictLiteral = DictConstructor.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "key1" to IntCollectiveType,
-                        "value1" to BoolType,
-                        "key2" to IntCollectiveType,
-                        "value2" to Arbitrary.unorderedTupleType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("key1"),
+                        type = IntCollectiveType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value1"),
+                        type = BoolType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("key2"),
+                        type = IntCollectiveType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value2"),
+                        type = Arbitrary.unorderedTupleType,
                     ),
                 ),
                 term = ExpressionTerm.parse(
@@ -154,11 +184,14 @@ object DictConstructorTests {
             val keyType = Arbitrary.unorderedTupleType
 
             val dictLiteral = DictConstructor.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "key1" to keyType,
-                        "value1" to BoolType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("key1"),
+                        type = keyType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value1"),
+                        type = BoolType,
                     ),
                 ),
                 term = ExpressionTerm.parse(

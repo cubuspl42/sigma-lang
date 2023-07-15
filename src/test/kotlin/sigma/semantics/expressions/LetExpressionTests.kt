@@ -1,7 +1,6 @@
 package sigma.semantics.expressions
 
 import sigma.semantics.BuiltinScope
-import sigma.semantics.BuiltinTypeScope
 import sigma.semantics.Computation
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntType
@@ -26,7 +25,6 @@ class LetExpressionTests {
             ) as LetExpressionTerm
 
             val let = LetExpression.build(
-                typeScope = BuiltinTypeScope,
                 outerDeclarationScope = BuiltinScope,
                 term = term,
             )
@@ -68,7 +66,6 @@ class LetExpressionTests {
             ) as LetExpressionTerm
 
             val let = LetExpression.build(
-                typeScope = BuiltinTypeScope,
                 outerDeclarationScope = BuiltinScope,
                 term = term,
             )

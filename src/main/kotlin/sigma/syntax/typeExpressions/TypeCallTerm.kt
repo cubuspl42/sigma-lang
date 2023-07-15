@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.semantics.TypeScope
+import sigma.semantics.DeclarationScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.TypeEntity
@@ -34,6 +34,6 @@ data class TypeCallTerm(
     }
 
     override fun evaluate(
-        typeScope: TypeScope,
+        declarationScope: DeclarationScope,
     ): TypeEntity = TODO()
 }

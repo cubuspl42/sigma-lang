@@ -1,11 +1,10 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.DictValue
 import sigma.semantics.Computation
-import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.DictType
@@ -25,17 +24,14 @@ class DictConstructor(
     ) {
         companion object {
             fun build(
-                typeScope: TypeScope,
                 declarationScope: DeclarationScope,
                 term: DictConstructorTerm.Association,
             ): Association = Association(
                 key = Expression.build(
-                    typeScope = typeScope,
                     declarationScope = declarationScope,
                     term = term.key,
                 ),
                 value = Expression.build(
-                    typeScope = typeScope,
                     declarationScope = declarationScope,
                     term = term.value,
                 ),
@@ -45,14 +41,12 @@ class DictConstructor(
 
     companion object {
         fun build(
-            typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: DictConstructorTerm,
         ): DictConstructor = DictConstructor(
             term = term,
             associations = term.associations.map {
                 Association.build(
-                    typeScope = typeScope,
                     declarationScope = declarationScope,
                     term = it,
                 )

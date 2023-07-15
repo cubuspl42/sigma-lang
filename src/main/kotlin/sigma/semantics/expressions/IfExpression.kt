@@ -6,7 +6,6 @@ import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
-import sigma.semantics.TypeScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
@@ -20,23 +19,19 @@ class IfExpression(
 ) : Expression() {
     companion object {
         fun build(
-            typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: IfExpressionTerm,
         ): IfExpression = IfExpression(
             term = term,
             guard = build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term.guard,
             ),
             trueBranch = build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term.trueBranch,
             ),
             falseBranch = build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term.falseBranch,
             ),

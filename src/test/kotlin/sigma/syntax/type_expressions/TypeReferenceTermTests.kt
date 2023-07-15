@@ -4,8 +4,10 @@ import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
-import sigma.evaluation.values.FakeTypeScope
 import sigma.evaluation.values.Symbol
+import sigma.semantics.types.IntCollectiveType
+import utils.FakeDeclarationBlock
+import utils.FakeTypeDefinition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -33,9 +35,10 @@ class TypeReferenceTermTests {
             val type = TypeExpressionTerm.parse(
                 source = "Foo",
             ).evaluate(
-                typeScope = FakeTypeScope(
-                    entries = mapOf(
-                        Symbol.of("Foo") to BoolType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeTypeDefinition(
+                        name = Symbol.of("Foo"),
+                        definedType = BoolType,
                     ),
                 ),
             )

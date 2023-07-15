@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.semantics.TypeScope
+import sigma.semantics.DeclarationScope
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.parser.antlr.SigmaParser.GenericParametersTupleContext
 import sigma.syntax.SourceLocation
@@ -9,6 +9,7 @@ import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.Term
 import sigma.evaluation.values.Symbol
+import sigma.semantics.DeclarationBlock
 import sigma.semantics.TypeDefinition
 
 data class AbstractionTerm(
@@ -39,7 +40,7 @@ data class AbstractionTerm(
     data class GenericParametersTuple(
         override val location: SourceLocation,
         val parametersDefinitions: List<GenericParameterDefinition>,
-    ) : Term(), TypeScope {
+    ) : Term() {
         companion object {
             fun build(
                 ctx: GenericParametersTupleContext,
@@ -51,11 +52,15 @@ data class AbstractionTerm(
             )
         }
 
-        override fun getTypeDefinition(
-            typeName: Symbol,
-        ): TypeDefinition? = parametersDefinitions.lastOrNull {
-            it.name == typeName
+        inner class GenericParametersTupleBlock : DeclarationBlock() {
+            override fun getDeclaration(
+                name: Symbol,
+            ): TypeDefinition? = parametersDefinitions.lastOrNull {
+                it.name == name
+            }
         }
+
+        val asDeclarationBlock = GenericParametersTupleBlock()
     }
 
     companion object {

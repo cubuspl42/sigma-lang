@@ -5,11 +5,10 @@ import sigma.evaluation.values.Closure
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.ValueDeclaration
 import sigma.semantics.DeclarationBlock
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
-import sigma.semantics.TypeScope
+import sigma.semantics.ValueDeclaration
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
@@ -17,7 +16,7 @@ import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.expressions.AbstractionTerm
 
 class Abstraction(
-    private val innerTypeScope: TypeScope,
+    private val innerDeclarationScope: DeclarationScope,
     override val term: AbstractionTerm,
     val argumentType: TupleType,
     val image: Expression,
@@ -39,29 +38,33 @@ class Abstraction(
 
     companion object {
         fun build(
-            outerTypeScope: TypeScope,
             outerDeclarationScope: DeclarationScope,
             term: AbstractionTerm,
         ): Abstraction {
-            val innerTypeScope = term.genericParametersTuple ?: outerTypeScope
+            val genericDeclarationBlock = term.genericParametersTuple?.asDeclarationBlock
+
+            val innerDeclarationScope1 = genericDeclarationBlock?.chainWith(
+                outerScope = outerDeclarationScope,
+            ) ?: outerDeclarationScope
 
             val argumentType: TupleType = term.argumentType.evaluate(
-                typeScope = innerTypeScope,
+                declarationScope = innerDeclarationScope1,
             )
 
-            val innerDeclarationScope = argumentType.toArgumentDeclarationBlock().chainWith(
-                outerScope = outerDeclarationScope,
+            val innerDeclarationScope2 = argumentType.toArgumentDeclarationBlock().chainWith(
+                outerScope = innerDeclarationScope1,
+            )
+
+            val image = build(
+                declarationScope = innerDeclarationScope2,
+                term = term.image,
             )
 
             return Abstraction(
-                innerTypeScope = innerTypeScope,
+                innerDeclarationScope = innerDeclarationScope2,
                 term = term,
                 argumentType = argumentType,
-                image = build(
-                    typeScope = innerTypeScope,
-                    declarationScope = innerDeclarationScope,
-                    term = term.image,
-                ),
+                image = image,
             )
         }
     }
@@ -76,7 +79,7 @@ class Abstraction(
 
     private val declaredImageType: Type? by lazy {
         term.declaredImageType?.evaluateAsType(
-            typeScope = innerTypeScope,
+            declarationScope = innerDeclarationScope,
         )
     }
 

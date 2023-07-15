@@ -1,7 +1,6 @@
 package sigma.syntax.expressions
 
 import sigma.semantics.BuiltinScope
-import sigma.semantics.BuiltinTypeScope
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
@@ -134,8 +133,7 @@ class AbstractionTermTests {
             )
 
             val expression = Expression.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = BuiltinScope,
                 term = term,
             )
 
@@ -164,7 +162,6 @@ class AbstractionTermTests {
             )
 
             val expression = Expression.build(
-                typeScope = BuiltinTypeScope,
                 declarationScope = BuiltinScope,
                 term = term,
             )
@@ -200,8 +197,7 @@ class AbstractionTermTests {
             )
 
             val expression = Expression.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = BuiltinScope,
                 term = term,
             )
 

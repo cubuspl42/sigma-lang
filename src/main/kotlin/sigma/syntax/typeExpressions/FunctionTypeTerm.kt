@@ -1,11 +1,11 @@
 package sigma.syntax.typeExpressions
 
-import sigma.semantics.TypeScope
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
+import sigma.semantics.DeclarationScope
 import sigma.semantics.types.TypeEntity
+import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
-import sigma.semantics.types.UniversalFunctionType
 
 data class FunctionTypeTerm(
     override val location: SourceLocation,
@@ -29,16 +29,18 @@ data class FunctionTypeTerm(
     }
 
     override fun evaluate(
-        typeScope: TypeScope,
+        declarationScope: DeclarationScope,
     ): TypeEntity {
-        val innerTypeScope = genericParametersTuple ?: typeScope
+        val innerDeclarationScope = genericParametersTuple?.asDeclarationBlock?.chainWith(
+            outerScope = declarationScope,
+        ) ?: declarationScope
 
         val argumentType = argumentType.evaluate(
-            typeScope = innerTypeScope,
+            declarationScope = innerDeclarationScope,
         )
 
         val imageType = this.imageType.evaluateAsType(
-            typeScope = innerTypeScope,
+            declarationScope = innerDeclarationScope,
         )
 
         return UniversalFunctionType(

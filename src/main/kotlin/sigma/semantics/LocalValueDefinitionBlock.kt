@@ -6,28 +6,26 @@ import sigma.evaluation.values.Symbol
 import sigma.syntax.LocalDefinitionTerm
 
 class LocalValueDefinitionBlock(
-    private val typeScope: TypeScope,
     private val declarationScope: DeclarationScope,
     private val declarations: List<LocalDefinitionTerm>,
 ) : DeclarationBlock() {
     companion object {
         fun build(
-            typeScope: TypeScope,
             outerDeclarationScope: DeclarationScope,
             definitions: List<LocalDefinitionTerm>,
         ): LocalValueDefinitionBlock = LocalValueDefinitionBlock(
-            typeScope = typeScope,
             declarationScope = outerDeclarationScope,
             declarations = definitions,
         )
     }
 
-    private val definitionByName = declarations.associate {
-        it.name to LocalValueDefinition.build(
-            typeScope = typeScope,
-            declarationScope = declarationScope,
-            term = it,
-        )
+    private val definitionByName by lazy {
+        declarations.associate {
+            it.name to LocalValueDefinition.build(
+                declarationScope = declarationScope,
+                term = it,
+            )
+        }
     }
 
     fun getValueDefinition(name: Symbol): LocalValueDefinition? = definitionByName[name]

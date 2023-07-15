@@ -4,9 +4,7 @@ import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Symbol
-import sigma.semantics.BuiltinTypeScope
 import sigma.semantics.DeclarationScope
-import sigma.semantics.TypeScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
@@ -15,6 +13,7 @@ import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.SetConstructorTerm
 import utils.FakeDeclarationBlock
+import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -23,10 +22,10 @@ object SetConstructorTests {
         @Test
         fun testSingleElement() {
             val setConstructor = SetConstructor.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "value1" to BoolType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("value1"),
+                        type = BoolType,
                     ),
                 ),
                 term = ExpressionTerm.parse(
@@ -45,11 +44,14 @@ object SetConstructorTests {
         @Test
         fun testMultipleEntriesCompatibleElements() {
             val setConstructor = SetConstructor.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "value1" to BoolType,
-                        "value2" to BoolType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("value1"),
+                        type = BoolType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value2"),
+                        type = BoolType,
                     ),
                 ),
                 term = ExpressionTerm.parse(
@@ -73,11 +75,14 @@ object SetConstructorTests {
         @Test
         fun testMultipleEntriesIncompatibleElements() {
             val setConstructor = SetConstructor.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "value1" to BoolType,
-                        "value2" to IntCollectiveType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("value1"),
+                        type = BoolType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value2"),
+                        type = IntCollectiveType,
                     ),
                 ),
                 term = ExpressionTerm.parse(
@@ -110,7 +115,6 @@ object SetConstructorTests {
         @Test
         fun testSimple() {
             val setConstructor = SetConstructor.build(
-                typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = ExpressionTerm.parse("{foo, bar, baz}") as SetConstructorTerm,
             )

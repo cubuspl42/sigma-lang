@@ -1,11 +1,10 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.semantics.Computation
-import sigma.semantics.TypeScope
+import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.DictValue
+import sigma.semantics.Computation
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
@@ -46,13 +45,11 @@ class FieldRead(
 
     companion object {
         fun build(
-            typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: FieldReadTerm,
         ): FieldRead = FieldRead(
             term = term,
             subject = Expression.build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term.subject,
             ),

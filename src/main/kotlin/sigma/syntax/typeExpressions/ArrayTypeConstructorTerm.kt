@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.semantics.TypeScope
+import sigma.semantics.DeclarationScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.ArrayType
@@ -20,8 +20,8 @@ data class ArrayTypeConstructorTerm(
     }
 
     override fun evaluate(
-        typeScope: TypeScope,
+        declarationScope: DeclarationScope,
     ): TypeEntity = ArrayType(
-        elementType = elementType.evaluateAsType(typeScope = typeScope),
+        elementType = elementType.evaluateAsType(declarationScope = declarationScope),
     )
 }

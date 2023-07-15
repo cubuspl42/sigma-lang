@@ -2,7 +2,7 @@ package sigma.syntax.typeExpressions
 
 import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeConstructorContext
-import sigma.semantics.TypeScope
+import sigma.semantics.DeclarationScope
 import sigma.semantics.types.OrderedTupleType
 import sigma.syntax.SourceLocation
 
@@ -30,13 +30,13 @@ data class OrderedTupleTypeConstructorTerm(
     }
 
     override fun evaluate(
-        typeScope: TypeScope,
+        declarationScope: DeclarationScope,
     ): OrderedTupleType = OrderedTupleType(
         elements = elements.map {
             OrderedTupleType.Element(
                 name = it.name,
                 type = it.type.evaluateAsType(
-                    typeScope = typeScope,
+                    declarationScope = declarationScope,
                 ),
             )
         },

@@ -1,6 +1,6 @@
 package sigma.syntax.typeExpressions
 
-import sigma.semantics.TypeScope
+import sigma.semantics.DeclarationScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.DictType
@@ -24,16 +24,16 @@ data class DictTypeTerm(
     }
 
     override fun evaluate(
-        typeScope: TypeScope,
+        declarationScope: DeclarationScope,
     ): TypeEntity = DictType(
         keyType = keyType.evaluate(
-            typeScope = typeScope,
+            declarationScope = declarationScope,
         ) as? PrimitiveType ?: throw TypeErrorException(
             location = keyType.location,
             message = "Dict key type is not primitive",
         ),
         valueType = valueType.evaluateAsType(
-            typeScope = typeScope,
+            declarationScope = declarationScope,
         ),
     )
 }

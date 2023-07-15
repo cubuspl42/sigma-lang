@@ -3,7 +3,6 @@ package sigma.semantics.expressions
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.semantics.BuiltinScope
-import sigma.semantics.BuiltinTypeScope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.ArrayTable
 import sigma.semantics.DeclarationScope
@@ -28,7 +27,6 @@ class AbstractionTests {
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
-                    outerTypeScope = BuiltinTypeScope,
                     outerDeclarationScope = BuiltinScope,
                     term = term,
                 )
@@ -49,7 +47,6 @@ class AbstractionTests {
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
-                    outerTypeScope = BuiltinTypeScope,
                     outerDeclarationScope = BuiltinScope,
                     term = term,
                 )
@@ -70,7 +67,6 @@ class AbstractionTests {
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
-                    outerTypeScope = BuiltinTypeScope,
                     outerDeclarationScope = BuiltinScope,
                     term = term,
                 )
@@ -91,7 +87,6 @@ class AbstractionTests {
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
-                    outerTypeScope = BuiltinTypeScope,
                     outerDeclarationScope = BuiltinScope,
                     term = term,
                 )
@@ -125,12 +120,10 @@ class AbstractionTests {
         @Test
         fun testUnorderedArgumentTuple() {
             val abstraction = Abstraction.build(
-                outerTypeScope = BuiltinTypeScope,
-                outerDeclarationScope = DeclarationScope.Empty,
+                outerDeclarationScope = BuiltinScope,
                 term = ExpressionTerm.parse(
                     source = "[n: Int, m: Int] => n * m",
                 ) as AbstractionTerm
-
             )
 
             val closure = abstraction.evaluate(

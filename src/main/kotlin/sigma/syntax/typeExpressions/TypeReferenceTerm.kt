@@ -1,10 +1,11 @@
 package sigma.syntax.typeExpressions
 
-import sigma.semantics.TypeScope
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.parser.antlr.SigmaParser
+import sigma.semantics.DeclarationScope
+import sigma.semantics.TypeDefinition
 import sigma.semantics.types.TypeEntity
 
 data class TypeReferenceTerm(
@@ -21,13 +22,18 @@ data class TypeReferenceTerm(
     }
 
     override fun evaluate(
-        typeScope: TypeScope,
+        declarationScope: DeclarationScope,
     ): TypeEntity {
-        val typeDefinition = typeScope.getTypeDefinition(
-            typeName = referee,
+        val resolvedDeclaration = declarationScope.resolveDeclaration(
+            name = referee,
         ) ?: throw TypeErrorException(
             location = location,
-            message = "Unresolved type ${referee.dump()}",
+            message = "Unresolved name ${referee.dump()}",
+        )
+
+        val typeDefinition = resolvedDeclaration as? TypeDefinition ?: throw TypeErrorException(
+            location = location,
+            message = "Unresolved name ${referee.dump()}",
         )
 
         return typeDefinition.definedType

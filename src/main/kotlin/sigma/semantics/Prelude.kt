@@ -19,7 +19,6 @@ data class Prelude(
 
             val (definitionBlock, _) = DeclarationScope.looped { innerDeclarationScopeLooped ->
                 val definitionBlock = LocalValueDefinitionBlock.build(
-                    typeScope = BuiltinTypeScope,
                     outerDeclarationScope = innerDeclarationScopeLooped,
                     definitions = prelude.definitions,
                 )

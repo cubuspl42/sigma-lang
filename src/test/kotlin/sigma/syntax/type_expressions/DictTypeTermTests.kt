@@ -1,6 +1,5 @@
 package sigma.syntax.type_expressions
 
-import sigma.semantics.BuiltinTypeScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
@@ -9,6 +8,7 @@ import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
 import sigma.evaluation.values.Symbol
+import sigma.semantics.BuiltinScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -43,7 +43,7 @@ class DictTypeTermTests {
             val type = TypeExpressionTerm.parse(
                 source = "{[Int]: Bool}",
             ).evaluate(
-                typeScope = BuiltinTypeScope,
+                declarationScope = BuiltinScope,
             )
 
             assertEquals(

@@ -5,7 +5,6 @@ import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
-import sigma.semantics.TypeScope
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
@@ -25,24 +24,20 @@ import sigma.syntax.expressions.TupleConstructorTerm
 abstract class Expression {
     companion object {
         fun build(
-            typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: ExpressionTerm,
         ): Expression = when (term) {
             is AbstractionTerm -> Abstraction.build(
-                outerTypeScope = typeScope,
                 outerDeclarationScope = declarationScope,
                 term = term,
             )
 
             is CallTerm -> Call.build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,
             )
 
             is FieldReadTerm -> FieldRead.build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,
             )
@@ -52,13 +47,11 @@ abstract class Expression {
             )
 
             is IsUndefinedCheckTerm -> IsUndefinedCheck.build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,
             )
 
             is LetExpressionTerm -> LetExpression.build(
-                typeScope = typeScope,
                 outerDeclarationScope = declarationScope,
                 term = term,
             )
@@ -71,25 +64,21 @@ abstract class Expression {
             is SymbolLiteralTerm -> TODO()
 
             is TupleConstructorTerm -> TupleConstructor.build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,
             )
 
             is DictConstructorTerm -> DictConstructor.build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,
             )
 
             is SetConstructorTerm -> SetConstructor.build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,
             )
 
             is IfExpressionTerm -> IfExpression.build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term,
             )
@@ -101,7 +90,6 @@ abstract class Expression {
             val term = ExpressionTerm.parse(source = source)
 
             return Expression.build(
-                typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = term,
             )
