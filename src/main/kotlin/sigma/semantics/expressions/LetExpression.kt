@@ -5,14 +5,14 @@ import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
-import sigma.semantics.LocalDefinitionBlock
+import sigma.semantics.LocalValueDefinitionBlock
 import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.LetExpressionTerm
 
 data class LetExpression(
     override val term: LetExpressionTerm,
-    val definitionBlock: LocalDefinitionBlock,
+    val definitionBlock: LocalValueDefinitionBlock,
     val result: Expression,
 ) : Expression() {
     companion object {
@@ -22,7 +22,7 @@ data class LetExpression(
             term: LetExpressionTerm,
         ): LetExpression {
             val (definitionBlock, innerDeclarationScope) = DeclarationScope.looped { innerDeclarationScopeLooped ->
-                val definitionBlock = LocalDefinitionBlock.build(
+                val definitionBlock = LocalValueDefinitionBlock.build(
                     typeScope = typeScope,
                     outerDeclarationScope = innerDeclarationScopeLooped,
                     definitions = term.localScope.definitions,

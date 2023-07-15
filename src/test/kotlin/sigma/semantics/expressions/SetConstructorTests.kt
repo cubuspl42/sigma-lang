@@ -14,7 +14,7 @@ import sigma.semantics.types.SetType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.SetConstructorTerm
-import utils.FakeDeclarationScope
+import utils.FakeDeclarationBlock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -24,7 +24,7 @@ object SetConstructorTests {
         fun testSingleElement() {
             val setConstructor = SetConstructor.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "value1" to BoolType,
                     ),
@@ -46,7 +46,7 @@ object SetConstructorTests {
         fun testMultipleEntriesCompatibleElements() {
             val setConstructor = SetConstructor.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "value1" to BoolType,
                         "value2" to BoolType,
@@ -74,7 +74,7 @@ object SetConstructorTests {
         fun testMultipleEntriesIncompatibleElements() {
             val setConstructor = SetConstructor.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "value1" to BoolType,
                         "value2" to IntCollectiveType,

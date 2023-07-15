@@ -13,7 +13,7 @@ class FakeValueDeclaration(
     override val effectiveValueType: Computation<Type> = Computation.pure(type)
 }
 
-class FakeDeclarationScope(
+class FakeDeclarationBlock(
     typeByName: Map<String, Type>,
 ) : DeclarationBlock() {
     private val declarationByScope = typeByName.entries.associate { (name, type) ->

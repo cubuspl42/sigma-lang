@@ -4,7 +4,6 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.scope.chainWith
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.semantics.types.TypeEntity
 import sigma.syntax.NamespaceDefinitionTerm
 
 class Namespace(
@@ -46,11 +45,15 @@ class Namespace(
         backScope = BuiltinTypeScope,
     )
 
-    val innerDeclarationScope: DeclarationScope = object : DefinitionBlock() {
-        override fun getDefinition(
+    inner class NamespaceDeclarationBlock : DeclarationBlock() {
+        override fun getDeclaration(
             name: Symbol,
-        ): ValueDefinition? = getConstantDefinition(name = name)?.asValueDefinition
-    }.chainWith(
+        ): Declaration? = getStaticDefinition(name = name)
+    }
+
+    private val asDeclarationBlock = NamespaceDeclarationBlock()
+
+    val innerDeclarationScope: DeclarationScope = asDeclarationBlock.chainWith(
         outerScope = prelude.declarationScope,
     )
 

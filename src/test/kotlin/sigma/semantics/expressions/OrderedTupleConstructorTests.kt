@@ -14,7 +14,7 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.OrderedTupleConstructorTerm
-import utils.FakeDeclarationScope
+import utils.FakeDeclarationBlock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -53,7 +53,7 @@ class OrderedTupleConstructorTests {
 
             val tupleLiteral = OrderedTupleConstructor.build(
                 typeScope = TypeScope.Empty,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "a" to BoolType,
                         "b" to IntCollectiveType,

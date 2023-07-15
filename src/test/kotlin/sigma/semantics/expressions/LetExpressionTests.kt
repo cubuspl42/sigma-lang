@@ -32,7 +32,7 @@ class LetExpressionTests {
             )
 
             val fDefinition = assertNotNull(
-                actual = let.definitionBlock.getDefinition(
+                actual = let.definitionBlock.getValueDefinition(
                     name = Symbol.of("f"),
                 ),
             )
@@ -44,7 +44,7 @@ class LetExpressionTests {
             assertIs<IntType>(value = fType.imageType)
 
             val gDefinition = assertNotNull(
-                actual = let.definitionBlock.getDefinition(
+                actual = let.definitionBlock.getValueDefinition(
                     name = Symbol.of("g"),
                 ),
             )
@@ -74,7 +74,7 @@ class LetExpressionTests {
             )
 
             val fDefinition = assertNotNull(
-                actual = let.definitionBlock.getDefinition(
+                actual = let.definitionBlock.getValueDefinition(
                     name = Symbol.of("f"),
                 ),
             )
@@ -84,7 +84,7 @@ class LetExpressionTests {
             )
 
             val gDefinition = assertNotNull(
-                actual = let.definitionBlock.getDefinition(
+                actual = let.definitionBlock.getValueDefinition(
                     name = Symbol.of("g"),
                 ),
             )

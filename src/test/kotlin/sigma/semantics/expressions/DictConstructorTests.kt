@@ -9,7 +9,7 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.DictConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
-import utils.FakeDeclarationScope
+import utils.FakeDeclarationBlock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -19,7 +19,7 @@ object DictConstructorTests {
         fun testSingleEntry() {
             val dictLiteral = DictConstructor.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "key1" to IntCollectiveType,
                         "value1" to BoolType,
@@ -48,7 +48,7 @@ object DictConstructorTests {
         fun testMultipleEntriesCompatibleEntries() {
             val dictLiteral = DictConstructor.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "key1" to IntCollectiveType,
                         "value1" to BoolType,
@@ -79,7 +79,7 @@ object DictConstructorTests {
         fun testMultipleEntriesIncompatibleKeys() {
             val dictLiteral = DictConstructor.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "key1" to IntCollectiveType,
                         "value1" to BoolType,
@@ -116,7 +116,7 @@ object DictConstructorTests {
         fun testMultipleEntriesIncompatibleValues() {
             val dictLiteral = DictConstructor.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "key1" to IntCollectiveType,
                         "value1" to BoolType,
@@ -155,7 +155,7 @@ object DictConstructorTests {
 
             val dictLiteral = DictConstructor.build(
                 typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationScope(
+                declarationScope = FakeDeclarationBlock(
                     typeByName = mapOf(
                         "key1" to keyType,
                         "value1" to BoolType,
