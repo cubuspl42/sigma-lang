@@ -2,14 +2,12 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.ComputableFunctionValue
-import sigma.semantics.BuiltinScope
-import sigma.semantics.BuiltinTypeScope
+import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.DictValue
+import sigma.semantics.BuiltinScope
 import sigma.semantics.DeclarationScope
-import sigma.semantics.TypeScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
@@ -22,6 +20,7 @@ import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.CallTerm
 import sigma.syntax.expressions.ExpressionTerm
 import utils.FakeDeclarationBlock
+import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -35,10 +34,10 @@ class CallTests {
             ) as CallTerm
 
             val call = Call.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "f" to UniversalFunctionType(
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("f"),
+                        type = UniversalFunctionType(
                             argumentType = OrderedTupleType(
                                 elements = listOf(
                                     OrderedTupleType.Element(
@@ -73,10 +72,10 @@ class CallTests {
             ) as CallTerm
 
             val call = Call.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "f" to UniversalFunctionType(
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("f"),
+                        type = UniversalFunctionType(
                             argumentType = OrderedTupleType(
                                 elements = listOf(
                                     OrderedTupleType.Element(
@@ -125,10 +124,10 @@ class CallTests {
             ) as CallTerm
 
             val call = Call.build(
-                typeScope = BuiltinTypeScope,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "b" to BoolType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("b"),
+                        type = BoolType,
                     ),
                 ),
                 term = term,
@@ -161,7 +160,6 @@ class CallTests {
             }
 
             val call = Call.build(
-                typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = ExpressionTerm.parse("sq(3)") as CallTerm,
             )
@@ -181,7 +179,6 @@ class CallTests {
         @Test
         fun testDictSubject() {
             val call = Call.build(
-                typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = ExpressionTerm.parse("dict(2)") as CallTerm,
             )

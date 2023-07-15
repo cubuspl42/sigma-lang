@@ -7,7 +7,6 @@ import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.ArrayTable
 import sigma.evaluation.values.DictValue
-import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
@@ -15,6 +14,7 @@ import sigma.semantics.types.OrderedTupleType
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.OrderedTupleConstructorTerm
 import utils.FakeDeclarationBlock
+import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -28,7 +28,6 @@ class OrderedTupleConstructorTests {
             ) as OrderedTupleConstructorTerm
 
             val tupleLiteral = OrderedTupleConstructor.build(
-                typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = term,
             )
@@ -52,11 +51,14 @@ class OrderedTupleConstructorTests {
             ) as OrderedTupleConstructorTerm
 
             val tupleLiteral = OrderedTupleConstructor.build(
-                typeScope = TypeScope.Empty,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "a" to BoolType,
-                        "b" to IntCollectiveType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("a"),
+                        type = BoolType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("b"),
+                        type = IntCollectiveType,
                     ),
                 ),
                 term = term,
@@ -82,7 +84,6 @@ class OrderedTupleConstructorTests {
         @Test
         fun testEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(
-                typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = ExpressionTerm.parse(
                     source = "[]",
@@ -106,7 +107,6 @@ class OrderedTupleConstructorTests {
         @Test
         fun testNonEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(
-                typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = ExpressionTerm.parse(
                     source = "[a, b]",

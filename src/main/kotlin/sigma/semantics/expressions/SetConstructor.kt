@@ -6,7 +6,6 @@ import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
-import sigma.semantics.TypeScope
 import sigma.semantics.types.IllType
 import sigma.semantics.types.SetType
 import sigma.semantics.types.Type
@@ -19,14 +18,12 @@ class SetConstructor(
 ) : Expression() {
     companion object {
         fun build(
-            typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: SetConstructorTerm,
         ): SetConstructor = SetConstructor(
             term = term,
             elements = term.elements.map {
                 Expression.build(
-                    typeScope = typeScope,
                     declarationScope = declarationScope,
                     term = it,
                 )

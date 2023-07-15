@@ -2,7 +2,6 @@ package sigma.syntax.typeExpressions
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.semantics.TypeScope
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.ArrayTypeConstructorContext
@@ -10,6 +9,7 @@ import sigma.parser.antlr.SigmaParser.DictTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
+import sigma.semantics.DeclarationScope
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeEntity
 import sigma.syntax.Term
@@ -58,12 +58,12 @@ abstract class TypeExpressionTerm : Term() {
     }
 
     abstract fun evaluate(
-        typeScope: TypeScope,
+        declarationScope: DeclarationScope,
     ): TypeEntity
 
     fun evaluateAsType(
-        typeScope: TypeScope,
+        declarationScope: DeclarationScope,
     ): Type =
         // TODO: Improve the error handling
-        evaluate(typeScope = typeScope) as Type
+        evaluate(declarationScope = declarationScope) as Type
 }

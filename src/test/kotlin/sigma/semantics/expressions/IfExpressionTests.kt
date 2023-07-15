@@ -1,6 +1,5 @@
 package sigma.semantics.expressions
 
-import sigma.semantics.BuiltinTypeScope
 import sigma.evaluation.values.IntValue
 import sigma.semantics.BuiltinScope
 import sigma.semantics.DeclarationScope
@@ -27,7 +26,6 @@ class IfExpressionTests {
             ) as IfExpressionTerm
 
             val call = IfExpression.build(
-                typeScope = BuiltinTypeScope,
                 declarationScope = BuiltinScope,
                 term = term,
             )
@@ -54,7 +52,6 @@ class IfExpressionTests {
             ) as IfExpressionTerm
 
             val call = IfExpression.build(
-                typeScope = BuiltinTypeScope,
                 declarationScope = DeclarationScope.Empty,
                 term = term,
             )
@@ -90,7 +87,6 @@ class IfExpressionTests {
             ) as IfExpressionTerm
 
             val ifExpression = IfExpression.build(
-                typeScope = BuiltinTypeScope,
                 declarationScope = DeclarationScope.Empty,
                 term = term,
             )
@@ -115,7 +111,6 @@ class IfExpressionTests {
             ) as IfExpressionTerm
 
             val ifExpression = IfExpression.build(
-                typeScope = BuiltinTypeScope,
                 declarationScope = BuiltinScope,
                 term = term,
             )

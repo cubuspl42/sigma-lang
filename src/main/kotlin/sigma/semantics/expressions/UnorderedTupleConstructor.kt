@@ -1,19 +1,18 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.semantics.Computation
-import sigma.semantics.TypeScope
+import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.PrimitiveValue
-import sigma.semantics.DeclarationScope
-import sigma.semantics.SemanticError
-import sigma.semantics.types.Type
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.DictValue
+import sigma.semantics.Computation
+import sigma.semantics.DeclarationScope
+import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
+import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 
 class UnorderedTupleConstructor(
     override val term: UnorderedTupleConstructorTerm,
@@ -25,13 +24,11 @@ class UnorderedTupleConstructor(
     ) {
         companion object {
             fun build(
-                typeScope: TypeScope,
                 declarationScope: DeclarationScope,
                 entry: UnorderedTupleConstructorTerm.Entry,
             ): Entry = Entry(
                 name = entry.name,
                 value = Expression.build(
-                    typeScope = typeScope,
                     declarationScope = declarationScope,
                     term = entry.value,
                 ),
@@ -52,14 +49,12 @@ class UnorderedTupleConstructor(
 
     companion object {
         fun build(
-            typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: UnorderedTupleConstructorTerm,
         ): UnorderedTupleConstructor = UnorderedTupleConstructor(
             term = term,
             entries = term.entries.map {
                 Entry.build(
-                    typeScope = typeScope,
                     declarationScope = declarationScope,
                     entry = it,
                 )

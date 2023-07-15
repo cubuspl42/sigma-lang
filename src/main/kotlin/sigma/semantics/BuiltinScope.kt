@@ -151,24 +151,24 @@ object BuiltinScope : Scope, DeclarationScope {
         Symbol.of("link") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType(
-                  valueTypeByName = mapOf(
-                      Symbol.of("primary") to DictType(
-                          keyType = TypeVariable(
-                              name = Symbol.of("K"),
-                          ),
-                          valueType = TypeVariable(
-                              name = Symbol.of("V"),
-                          ),
-                      ),
-                      Symbol.of("secondary") to DictType(
-                          keyType = TypeVariable(
-                              name = Symbol.of("K"),
-                          ),
-                          valueType = TypeVariable(
-                              name = Symbol.of("V"),
-                          ),
-                      ),
-                  )
+                    valueTypeByName = mapOf(
+                        Symbol.of("primary") to DictType(
+                            keyType = TypeVariable(
+                                name = Symbol.of("K"),
+                            ),
+                            valueType = TypeVariable(
+                                name = Symbol.of("V"),
+                            ),
+                        ),
+                        Symbol.of("secondary") to DictType(
+                            keyType = TypeVariable(
+                                name = Symbol.of("K"),
+                            ),
+                            valueType = TypeVariable(
+                                name = Symbol.of("V"),
+                            ),
+                        ),
+                    )
                 ),
                 imageType = DictType(
                     keyType = TypeVariable(
@@ -193,12 +193,26 @@ object BuiltinScope : Scope, DeclarationScope {
         Symbol.of("concat") to FunctionValue.ConcatFunction,
     )
 
-    private val builtinDefinitions = builtinValues.entries.associate { (name, builtinValue) ->
-        name to BuiltinValueDeclaration(
+    private val builtinValueDeclarations = builtinValues.map { (name, builtinValue) ->
+        BuiltinValueDeclaration(
             name = name,
             type = builtinValue.type,
         )
-    }
+    }.toSet()
+
+    private val builtinTypeDefinitions = setOf(
+        BuiltinTypeDefinition(
+            name = Symbol.of("Bool"),
+            definedType = BoolType,
+        ),
+        BuiltinTypeDefinition(
+            name = Symbol.of("Int"),
+            definedType = IntCollectiveType,
+        ),
+    )
+
+    private val builtinDeclarations: Map<Symbol, Declaration> =
+        (builtinValueDeclarations + builtinTypeDefinitions).associateBy { it.name }
 
     override fun getValue(
         name: Symbol,
@@ -210,5 +224,5 @@ object BuiltinScope : Scope, DeclarationScope {
         name: Symbol,
     ): BuiltinValue? = builtinValues[name]
 
-    override fun resolveDeclaration(name: Symbol): Declaration? = builtinDefinitions[name]
+    override fun resolveDeclaration(name: Symbol): Declaration? = builtinDeclarations[name]
 }

@@ -3,7 +3,6 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.LocalValueDefinitionBlock
 import sigma.semantics.SemanticError
@@ -17,13 +16,11 @@ data class LetExpression(
 ) : Expression() {
     companion object {
         fun build(
-            typeScope: TypeScope,
             outerDeclarationScope: DeclarationScope,
             term: LetExpressionTerm,
         ): LetExpression {
             val (definitionBlock, innerDeclarationScope) = DeclarationScope.looped { innerDeclarationScopeLooped ->
                 val definitionBlock = LocalValueDefinitionBlock.build(
-                    typeScope = typeScope,
                     outerDeclarationScope = innerDeclarationScopeLooped,
                     definitions = term.localScope.definitions,
                 )
@@ -42,7 +39,6 @@ data class LetExpression(
                 term = term,
                 definitionBlock = definitionBlock,
                 result = Expression.build(
-                    typeScope = typeScope,
                     declarationScope = innerDeclarationScope,
                     term = term.result,
                 ),

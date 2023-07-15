@@ -1,15 +1,17 @@
 package sigma.syntax.type_expressions
 
-import sigma.semantics.TypeScope
-import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
-import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.OrderedTupleTypeConstructorTerm
+import sigma.evaluation.values.Symbol
+import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
-import sigma.evaluation.values.FakeTypeScope
-import sigma.evaluation.values.Symbol
+import sigma.syntax.SourceLocation
+import sigma.syntax.typeExpressions.OrderedTupleTypeConstructorTerm
+import sigma.syntax.typeExpressions.TypeExpressionTerm
+import sigma.syntax.typeExpressions.TypeReferenceTerm
+import utils.FakeDeclarationBlock
+import utils.FakeTypeDefinition
+import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -134,7 +136,7 @@ class OrderedTupleTypeConstructorTermTests {
             val type = TypeExpressionTerm.parse(
                 source = "[]",
             ).evaluate(
-                typeScope = TypeScope.Empty,
+                declarationScope = DeclarationScope.Empty,
             )
 
             assertEquals(
@@ -148,10 +150,14 @@ class OrderedTupleTypeConstructorTermTests {
             val type = TypeExpressionTerm.parse(
                 source = "[a: A, B]",
             ).evaluate(
-                typeScope = FakeTypeScope(
-                    entries = mapOf(
-                        Symbol.of("A") to BoolType,
-                        Symbol.of("B") to IntCollectiveType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeTypeDefinition(
+                        name = Symbol.of("A"),
+                        definedType = BoolType,
+                    ),
+                    FakeTypeDefinition(
+                        name = Symbol.of("B"),
+                        definedType = IntCollectiveType,
                     ),
                 ),
             )

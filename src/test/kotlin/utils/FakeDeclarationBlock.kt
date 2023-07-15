@@ -4,26 +4,34 @@ import sigma.semantics.Computation
 import sigma.semantics.ValueDeclaration
 import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
+import sigma.semantics.Declaration
 import sigma.semantics.DeclarationBlock
+import sigma.semantics.TypeDefinition
 
-class FakeValueDeclaration(
+data class FakeValueDeclaration(
     override val name: Symbol,
-    type: Type,
+    val type: Type,
 ) : ValueDeclaration {
     override val effectiveValueType: Computation<Type> = Computation.pure(type)
 }
 
-class FakeDeclarationBlock(
-    typeByName: Map<String, Type>,
-) : DeclarationBlock() {
-    private val declarationByScope = typeByName.entries.associate { (name, type) ->
-        val nameSymbol = Symbol.of(name)
+data class FakeTypeDefinition(
+    override val name: Symbol,
+    override val definedType: Type,
+) : TypeDefinition
 
-        nameSymbol to FakeValueDeclaration(
-            name = nameSymbol,
-            type = type,
+class FakeDeclarationBlock(
+    declarations: Set<Declaration>,
+) : DeclarationBlock() {
+    companion object {
+        fun of(
+            vararg declarations: Declaration,
+        ): FakeDeclarationBlock = FakeDeclarationBlock(
+            declarations = declarations.toSet(),
         )
     }
 
-    override fun getDeclaration(name: Symbol): ValueDeclaration? = declarationByScope[name]
+    private val declarationByName = declarations.associateBy { it.name }
+
+    override fun getDeclaration(name: Symbol): Declaration? = declarationByName[name]
 }

@@ -1,13 +1,14 @@
 package sigma.syntax.type_expressions
 
-import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
-import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.ArrayTypeConstructorTerm
+import sigma.evaluation.values.Symbol
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
-import sigma.evaluation.values.FakeTypeScope
-import sigma.evaluation.values.Symbol
+import sigma.syntax.SourceLocation
+import sigma.syntax.typeExpressions.ArrayTypeConstructorTerm
+import sigma.syntax.typeExpressions.TypeExpressionTerm
+import sigma.syntax.typeExpressions.TypeReferenceTerm
+import utils.FakeDeclarationBlock
+import utils.FakeTypeDefinition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -38,9 +39,10 @@ class ArrayTypeConstructorTermTests {
             val type = TypeExpressionTerm.parse(
                 source = "[A*]",
             ).evaluate(
-                typeScope = FakeTypeScope(
-                    entries = mapOf(
-                        Symbol.of("A") to BoolType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeTypeDefinition(
+                        name = Symbol.of("A"),
+                        definedType = BoolType,
                     ),
                 ),
             )

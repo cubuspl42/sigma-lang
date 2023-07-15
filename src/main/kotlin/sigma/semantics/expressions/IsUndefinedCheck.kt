@@ -5,11 +5,10 @@ import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.UndefinedValue
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.TypeScope
-import sigma.semantics.types.BoolType
-import sigma.semantics.types.Type
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.Type
 import sigma.syntax.expressions.IsUndefinedCheckTerm
 
 data class IsUndefinedCheck(
@@ -18,13 +17,11 @@ data class IsUndefinedCheck(
 ) : Expression() {
     companion object {
         fun build(
-            typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: IsUndefinedCheckTerm,
         ): IsUndefinedCheck = IsUndefinedCheck(
             term = term,
             argument = Expression.build(
-                typeScope = typeScope,
                 declarationScope = declarationScope,
                 term = term.argument,
             ),

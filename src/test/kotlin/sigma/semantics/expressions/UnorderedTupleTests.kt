@@ -1,7 +1,5 @@
 package sigma.semantics.expressions
 
-import sigma.semantics.BuiltinTypeScope
-import sigma.semantics.TypeScope
 import sigma.evaluation.values.Symbol
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
@@ -12,6 +10,8 @@ import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import utils.FakeDeclarationBlock
+import utils.FakeTypeDefinition
+import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -24,7 +24,6 @@ object UnorderedTupleTests {
             ) as UnorderedTupleConstructorTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                typeScope = BuiltinTypeScope,
                 declarationScope = DeclarationScope.Empty,
                 term = term,
             )
@@ -49,11 +48,14 @@ object UnorderedTupleTests {
             ) as UnorderedTupleConstructorTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                typeScope = TypeScope.Empty,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "value1" to BoolType,
-                        "value2" to IntCollectiveType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("value1"),
+                        type = BoolType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value2"),
+                        type = IntCollectiveType,
                     ),
                 ),
                 term = term,
@@ -82,11 +84,14 @@ object UnorderedTupleTests {
             ) as UnorderedTupleConstructorTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                typeScope = TypeScope.Empty,
-                declarationScope = FakeDeclarationBlock(
-                    typeByName = mapOf(
-                        "value1" to BoolType,
-                        "value2" to IntCollectiveType,
+                declarationScope = FakeDeclarationBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("value1"),
+                        type = BoolType,
+                    ),
+                    FakeValueDeclaration(
+                        name = Symbol.of("value2"),
+                        type = IntCollectiveType,
                     ),
                 ),
                 term = term,

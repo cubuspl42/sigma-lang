@@ -22,7 +22,7 @@ class TypeAliasDefinition(
 
     val aliasedType: Type by lazy {
         term.definer.evaluateAsType(
-            typeScope = containingNamespace.innerTypeScope,
+            declarationScope = containingNamespace.innerDeclarationScope,
         )
     }
 

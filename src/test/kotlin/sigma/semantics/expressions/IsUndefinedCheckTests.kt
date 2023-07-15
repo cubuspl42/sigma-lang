@@ -5,7 +5,6 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
-import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
 import sigma.syntax.expressions.ExpressionTerm
@@ -22,7 +21,6 @@ class IsUndefinedCheckTests {
             ) as IsUndefinedCheckTerm
 
             val isUndefinedCheck = IsUndefinedCheck.build(
-                typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = term,
             )
@@ -38,7 +36,6 @@ class IsUndefinedCheckTests {
         @Test
         fun testNotUndefined() {
             val isUndefinedCheck = IsUndefinedCheck.build(
-                typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = ExpressionTerm.parse(
                     source = "isUndefined 0",
@@ -58,7 +55,6 @@ class IsUndefinedCheckTests {
             val dictValue = DictValue.Empty
 
             val isUndefinedCheck = IsUndefinedCheck.build(
-                typeScope = TypeScope.Empty,
                 declarationScope = DeclarationScope.Empty,
                 term = ExpressionTerm.parse(
                     source = "isUndefined d(0)",

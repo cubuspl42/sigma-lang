@@ -1,6 +1,5 @@
 package sigma.syntax.type_expressions
 
-import sigma.semantics.BuiltinTypeScope
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
@@ -11,6 +10,7 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.UniversalFunctionType
 import sigma.evaluation.values.Symbol
+import sigma.semantics.BuiltinScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -60,7 +60,7 @@ class FunctionTypeTermTests {
             val type = TypeExpressionTerm.parse(
                 source = "[a: Int, b: Bool] -> Bool",
             ).evaluate(
-                typeScope = BuiltinTypeScope,
+                declarationScope = BuiltinScope,
             )
 
             assertEquals(

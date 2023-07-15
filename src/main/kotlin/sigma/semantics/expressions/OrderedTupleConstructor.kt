@@ -1,10 +1,9 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.Value
 import sigma.evaluation.values.ArrayTable
+import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.TypeScope
 import sigma.semantics.DeclarationScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.OrderedTupleType
@@ -16,14 +15,12 @@ class OrderedTupleConstructor(
 ) : TupleConstructor() {
     companion object {
         fun build(
-            typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: OrderedTupleConstructorTerm,
         ): OrderedTupleConstructor = OrderedTupleConstructor(
             term = term,
             elements = term.elements.map {
                 Expression.build(
-                    typeScope = typeScope,
                     declarationScope = declarationScope,
                     term = it,
                 )

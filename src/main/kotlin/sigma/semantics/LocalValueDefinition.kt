@@ -5,25 +5,25 @@ import sigma.semantics.expressions.Expression
 import sigma.syntax.LocalDefinitionTerm
 
 class LocalValueDefinition(
-    override val typeScope: TypeScope,
+    override val declarationScope: DeclarationScope,
     override val term: LocalDefinitionTerm,
-    override val name: Symbol,
-    override val definer: Expression,
 ) : ValueDefinition() {
     companion object {
         fun build(
-            typeScope: TypeScope,
             declarationScope: DeclarationScope,
             term: LocalDefinitionTerm,
         ): LocalValueDefinition = LocalValueDefinition(
-            typeScope = typeScope,
+            declarationScope = declarationScope,
             term = term,
-            name = term.name,
-            definer = Expression.build(
-                typeScope = typeScope,
-                declarationScope = declarationScope,
-                term = term.definer,
-            ),
+        )
+    }
+
+    override val name: Symbol = term.name
+
+    override val definer: Expression by lazy {
+        Expression.build(
+            declarationScope = declarationScope,
+            term = term.definer,
         )
     }
 }
