@@ -42,6 +42,12 @@ abstract class TypeExpressionTerm : Term() {
             override fun visitDictTypeDepiction(
                 ctx: DictTypeDepictionContext,
             ): TypeExpressionTerm = DictTypeTerm.build(ctx)
+
+            override fun visitGenericTypeConstructor(
+                ctx: SigmaParser.GenericTypeConstructorContext,
+            ): TypeExpressionTerm {
+                return GenericTypeConstructorTerm.build(ctx)
+            }
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match type expression ${ctx::class}")
 
         fun parse(

@@ -5,11 +5,11 @@ import sigma.semantics.DeclarationScope
 import sigma.semantics.types.TypeEntity
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.AbstractionTerm
+import sigma.syntax.expressions.GenericParametersTuple
 
 data class FunctionTypeTerm(
     override val location: SourceLocation,
-    val genericParametersTuple: AbstractionTerm.GenericParametersTuple? = null,
+    val genericParametersTuple: GenericParametersTuple? = null,
     val argumentType: TupleTypeConstructorTerm,
     val imageType: TypeExpressionTerm,
 ) : TypeExpressionTerm() {
@@ -19,7 +19,7 @@ data class FunctionTypeTerm(
         ): FunctionTypeTerm = FunctionTypeTerm(
             location = SourceLocation.build(ctx),
             genericParametersTuple = ctx.genericParametersTuple()?.let {
-                AbstractionTerm.GenericParametersTuple.build(it)
+                GenericParametersTuple.build(it)
             },
             argumentType = ctx.argumentType.let {
                 TupleTypeConstructorTerm.build(it)

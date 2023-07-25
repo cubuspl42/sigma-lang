@@ -8,13 +8,11 @@ import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.AbstractionTerm.GenericParametersTuple
 import sigma.syntax.typeExpressions.OrderedTupleTypeConstructorTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
-import sigma.semantics.DeclarationScope
 import sigma.semantics.expressions.Expression
-import sigma.syntax.expressions.AbstractionTerm.GenericParameterDefinition
+import sigma.syntax.expressions.GenericParametersTuple.GenericParameterDefinition.Companion
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -56,8 +54,8 @@ class AbstractionTermTests {
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         parametersDefinitions = listOf(
-                            GenericParameterDefinition.of("a"),
-                            GenericParameterDefinition.of("b"),
+                            GenericParametersTuple.GenericParameterDefinition.of("a"),
+                            GenericParametersTuple.GenericParameterDefinition.of("b"),
                         )
                     ),
                     argumentType = OrderedTupleTypeConstructorTerm(
@@ -98,7 +96,7 @@ class AbstractionTermTests {
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         parametersDefinitions = listOf(
-                            GenericParameterDefinition.of("t"),
+                            GenericParametersTuple.GenericParameterDefinition.of("t"),
                         )
                     ),
                     argumentType = OrderedTupleTypeConstructorTerm(
