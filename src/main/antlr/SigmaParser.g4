@@ -193,6 +193,7 @@ typeExpression
     | tupleTypeConstructor
     | arrayTypeConstructor
     | dictTypeDepiction
+    | genericTypeConstructor
     ;
 
 typeCall
@@ -213,7 +214,7 @@ tupleTypeConstructor
     ;
 
 functionTypeDepiction
-    : (Bang genericParametersTuple)? argumentType=tupleTypeConstructor ThinArrow imageType=typeExpression
+    : genericParametersTuple? argumentType=tupleTypeConstructor ThinArrow imageType=typeExpression
     ;
 
 // Unordered tuple type constructor
@@ -247,10 +248,14 @@ dictTypeDepiction
     : LeftBrace LeftBracket keyType=typeExpression RightBracket Colon valueType=typeExpression RightBrace
     ;
 
+genericTypeConstructor
+    : genericParametersTuple body=typeExpression
+    ;
+
 // Other
 
 genericParametersTuple
-    : LeftBracket genericParameterDeclaration ((Comma genericParameterDeclaration)+ Comma?)? RightBracket
+    : Bang LeftBracket genericParameterDeclaration ((Comma genericParameterDeclaration)+ Comma?)? RightBracket
     ;
 
 genericParameterDeclaration
