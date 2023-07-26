@@ -1,7 +1,7 @@
 package sigma.syntax.type_expressions
 
 import sigma.evaluation.values.Symbol
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
@@ -135,7 +135,7 @@ class OrderedTupleTypeConstructorTermTests {
             val type = TypeExpressionTerm.parse(
                 source = "[]",
             ).evaluate(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
             )
 
             assertEquals(

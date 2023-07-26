@@ -1,7 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.values.Symbol
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
@@ -23,7 +23,7 @@ object UnorderedTupleTests {
             ) as UnorderedTupleConstructorTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = term,
             )
 

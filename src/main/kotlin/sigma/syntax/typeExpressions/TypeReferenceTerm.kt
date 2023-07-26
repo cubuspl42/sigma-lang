@@ -4,7 +4,7 @@ import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.parser.antlr.SigmaParser
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.TypeEntityDefinition
 import sigma.semantics.types.TypeEntity
 
@@ -22,9 +22,9 @@ data class TypeReferenceTerm(
     }
 
     override fun evaluate(
-        declarationScope: DeclarationScope,
+        declarationScope: StaticScope,
     ): TypeEntity {
-        val resolvedDeclaration = declarationScope.resolveDeclaration(
+        val resolvedDeclaration = declarationScope.resolveName(
             name = referee,
         ) ?: throw TypeErrorException(
             location = location,

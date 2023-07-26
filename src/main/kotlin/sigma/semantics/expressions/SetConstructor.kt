@@ -4,7 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
 import sigma.semantics.types.SetType
@@ -18,7 +18,7 @@ class SetConstructor(
 ) : Expression() {
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: SetConstructorTerm,
         ): SetConstructor = SetConstructor(
             term = term,

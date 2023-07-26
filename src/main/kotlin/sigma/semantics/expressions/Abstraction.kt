@@ -6,7 +6,7 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.DeclarationBlock
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.ValueDeclaration
 import sigma.semantics.types.FunctionType
@@ -16,7 +16,7 @@ import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.expressions.AbstractionTerm
 
 class Abstraction(
-    private val innerDeclarationScope: DeclarationScope,
+    private val innerDeclarationScope: StaticScope,
     override val term: AbstractionTerm,
     val argumentType: TupleType,
     val image: Expression,
@@ -38,7 +38,7 @@ class Abstraction(
 
     companion object {
         fun build(
-            outerDeclarationScope: DeclarationScope,
+            outerDeclarationScope: StaticScope,
             term: AbstractionTerm,
         ): Abstraction {
             val genericDeclarationBlock = term.genericParametersTuple?.asDeclarationBlock

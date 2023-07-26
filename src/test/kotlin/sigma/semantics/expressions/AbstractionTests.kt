@@ -5,7 +5,6 @@ import sigma.evaluation.values.IntValue
 import sigma.semantics.BuiltinScope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.ArrayTable
-import sigma.semantics.DeclarationScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntType

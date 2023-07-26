@@ -4,7 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.Type
@@ -19,7 +19,7 @@ class IfExpression(
 ) : Expression() {
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: IfExpressionTerm,
         ): IfExpression = IfExpression(
             term = term,

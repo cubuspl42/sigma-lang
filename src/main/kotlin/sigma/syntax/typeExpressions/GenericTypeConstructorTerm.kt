@@ -1,7 +1,7 @@
 package sigma.syntax.typeExpressions
 
 import sigma.parser.antlr.SigmaParser
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.types.GenericTypeConstructor
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.GenericParametersTuple
@@ -12,7 +12,7 @@ data class GenericTypeConstructorTerm(
     val body: TypeExpressionTerm,
 ) : TypeExpressionTerm() {
     override fun evaluate(
-        declarationScope: DeclarationScope,
+        declarationScope: StaticScope,
     ): GenericTypeConstructor = GenericTypeConstructor(
         context = declarationScope,
         argumentMetaType = genericParametersTuple,

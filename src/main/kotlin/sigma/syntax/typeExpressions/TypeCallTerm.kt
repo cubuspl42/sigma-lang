@@ -1,8 +1,7 @@
 package sigma.syntax.typeExpressions
 
-import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.TypeErrorException
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.types.GenericTypeConstructor
@@ -26,7 +25,7 @@ data class TypeCallTerm(
         }
 
         fun evaluate(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
         ): OrderedTypeTuple = OrderedTypeTuple(
             elements = elements.map {
                 it.evaluate(declarationScope = declarationScope)
@@ -46,7 +45,7 @@ data class TypeCallTerm(
     }
 
     override fun evaluate(
-        declarationScope: DeclarationScope,
+        declarationScope: StaticScope,
     ): TypeEntity {
         val calleeEntity = callee.evaluate(declarationScope = declarationScope)
 

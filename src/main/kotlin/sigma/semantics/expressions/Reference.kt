@@ -3,7 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.semantics.Computation
 import sigma.semantics.ValueDeclaration
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
@@ -14,7 +14,7 @@ import sigma.evaluation.values.Value
 import sigma.semantics.Declaration
 
 class Reference(
-    private val declarationScope: DeclarationScope,
+    private val declarationScope: StaticScope,
     override val term: ReferenceTerm,
 ) : Expression() {
     data class UnresolvedNameError(
@@ -29,7 +29,7 @@ class Reference(
 
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: ReferenceTerm,
         ): Reference = Reference(
             declarationScope = declarationScope,
@@ -40,7 +40,7 @@ class Reference(
     val referredName = term.referee
 
     private val referredDeclaration: Declaration? by lazy {
-        declarationScope.resolveDeclaration(name = term.referee)
+        declarationScope.resolveName(name = term.referee)
     }
 
     override val inferredType: Computation<Type> = Computation.lazy {

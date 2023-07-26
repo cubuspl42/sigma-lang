@@ -7,7 +7,7 @@ import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.ArrayTable
 import sigma.evaluation.values.DictValue
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
@@ -28,7 +28,7 @@ class OrderedTupleConstructorTests {
             ) as OrderedTupleConstructorTerm
 
             val tupleLiteral = OrderedTupleConstructor.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = term,
             )
 
@@ -84,7 +84,7 @@ class OrderedTupleConstructorTests {
         @Test
         fun testEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = ExpressionTerm.parse(
                     source = "[]",
                 ) as OrderedTupleConstructorTerm,
@@ -107,7 +107,7 @@ class OrderedTupleConstructorTests {
         @Test
         fun testNonEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = ExpressionTerm.parse(
                     source = "[a, b]",
                 ) as OrderedTupleConstructorTerm,

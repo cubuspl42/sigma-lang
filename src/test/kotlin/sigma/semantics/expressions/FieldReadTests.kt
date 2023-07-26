@@ -4,7 +4,7 @@ import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.FieldReadTerm
 import kotlin.test.Test
@@ -23,7 +23,7 @@ class FieldReadTests {
             )
 
             val fieldRead = FieldRead.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = ExpressionTerm.parse("foo.bar") as FieldReadTerm,
             )
 

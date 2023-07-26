@@ -27,7 +27,7 @@ class ConstantDefinition(
         override val name: Symbol
             get() = this@ConstantDefinition.name
 
-        override val declarationScope: DeclarationScope
+        override val declarationScope: StaticScope
             get() = containingNamespace.innerDeclarationScope
 
         override val definer: Expression by lazy {

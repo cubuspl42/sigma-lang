@@ -5,7 +5,7 @@ import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IllType
@@ -24,7 +24,7 @@ class DictConstructor(
     ) {
         companion object {
             fun build(
-                declarationScope: DeclarationScope,
+                declarationScope: StaticScope,
                 term: DictConstructorTerm.Association,
             ): Association = Association(
                 key = Expression.build(
@@ -41,7 +41,7 @@ class DictConstructor(
 
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: DictConstructorTerm,
         ): DictConstructor = DictConstructor(
             term = term,
