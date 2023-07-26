@@ -3,7 +3,6 @@ package sigma.syntax.typeExpressions
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.DeclarationScope
 import sigma.semantics.types.GenericTypeConstructor
-import sigma.semantics.types.TypeEntity
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.GenericParametersTuple
 
@@ -14,8 +13,15 @@ data class GenericTypeConstructorTerm(
 ) : TypeExpressionTerm() {
     override fun evaluate(
         declarationScope: DeclarationScope,
-    ): TypeEntity = GenericTypeConstructor(
-        body = body,
+    ): GenericTypeConstructor = GenericTypeConstructor(
+        context = declarationScope,
+        argumentMetaType = genericParametersTuple,
+        bodyTerm = body,
+        body = body.evaluate(
+            declarationScope = genericParametersTuple.asDeclarationBlock.chainWith(
+                outerScope = declarationScope,
+            ),
+        ),
     )
 
     companion object {

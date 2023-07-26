@@ -8,7 +8,7 @@ import sigma.syntax.typeExpressions.ArrayTypeConstructorTerm
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import utils.FakeDeclarationBlock
-import utils.FakeTypeDefinition
+import utils.FakeTypeEntityDefinition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -40,9 +40,9 @@ class ArrayTypeConstructorTermTests {
                 source = "[A*]",
             ).evaluate(
                 declarationScope = FakeDeclarationBlock.of(
-                    FakeTypeDefinition(
+                    FakeTypeEntityDefinition(
                         name = Symbol.of("A"),
-                        definedType = BoolType,
+                        definedTypeEntity = BoolType,
                     ),
                 ),
             )

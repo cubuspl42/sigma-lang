@@ -10,7 +10,7 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.Symbol
 import utils.FakeDeclarationBlock
-import utils.FakeTypeDefinition
+import utils.FakeTypeEntityDefinition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -90,17 +90,17 @@ class UnorderedTupleTypeConstructorTermTests {
                 source = "{a: A, b: B, c: C}",
             ).evaluate(
                 declarationScope = FakeDeclarationBlock.of(
-                    FakeTypeDefinition(
+                    FakeTypeEntityDefinition(
                         name = Symbol.of("A"),
-                        definedType = BoolType,
+                        definedTypeEntity = BoolType,
                     ),
-                    FakeTypeDefinition(
+                    FakeTypeEntityDefinition(
                         name = Symbol.of("B"),
-                        definedType = IntCollectiveType,
+                        definedTypeEntity = IntCollectiveType,
                     ),
-                    FakeTypeDefinition(
+                    FakeTypeEntityDefinition(
                         name = Symbol.of("C"),
-                        definedType = IntCollectiveType,
+                        definedTypeEntity = IntCollectiveType,
                     ),
                 ),
             )

@@ -3,7 +3,7 @@ package sigma.syntax.expressions
 import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.DeclarationBlock
-import sigma.semantics.TypeDefinition
+import sigma.semantics.TypeEntityDefinition
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.SourceLocation
 import sigma.syntax.Term
@@ -25,8 +25,8 @@ data class GenericParametersTuple(
 
     data class GenericParameterDefinition(
         override val name: Symbol,
-        override val definedType: TypeVariable,
-    ) : TypeDefinition {
+        val definedTypeVariable: TypeVariable,
+    ) : TypeEntityDefinition {
         companion object {
             fun of(
                 name: String,
@@ -35,16 +35,18 @@ data class GenericParametersTuple(
 
                 return GenericParameterDefinition(
                     name = nameSymbol,
-                    definedType = TypeVariable(name = nameSymbol),
+                    definedTypeVariable = TypeVariable(name = nameSymbol),
                 )
             }
         }
+
+        override val definedTypeEntity = definedTypeVariable
     }
 
     inner class GenericParametersTupleBlock : DeclarationBlock() {
         override fun getDeclaration(
             name: Symbol,
-        ): TypeDefinition? = parametersDefinitions.lastOrNull {
+        ): TypeEntityDefinition? = parametersDefinitions.lastOrNull {
             it.name == name
         }
     }

@@ -7,7 +7,7 @@ import sigma.syntax.TypeAliasDefinitionTerm
 class TypeAliasDefinition(
     private val containingNamespace: Namespace,
     private val term: TypeAliasDefinitionTerm,
-) : StaticDefinition(), TypeDefinition {
+) : StaticDefinition(), TypeEntityDefinition {
     companion object {
         fun build(
             containingNamespace: Namespace,
@@ -26,7 +26,7 @@ class TypeAliasDefinition(
         )
     }
 
-    override val definedType: Type
+    override val definedTypeEntity: Type
         get() = aliasedType
 
     override val errors: Set<SemanticError> = emptySet()

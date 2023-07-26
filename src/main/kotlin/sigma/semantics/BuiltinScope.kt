@@ -203,11 +203,11 @@ object BuiltinScope : Scope, DeclarationScope {
     private val builtinTypeDefinitions = setOf(
         BuiltinTypeDefinition(
             name = Symbol.of("Bool"),
-            definedType = BoolType,
+            definedTypeEntity = BoolType,
         ),
         BuiltinTypeDefinition(
             name = Symbol.of("Int"),
-            definedType = IntCollectiveType,
+            definedTypeEntity = IntCollectiveType,
         ),
     )
 

@@ -10,7 +10,6 @@ import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import utils.FakeDeclarationBlock
-import utils.FakeTypeDefinition
 import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals

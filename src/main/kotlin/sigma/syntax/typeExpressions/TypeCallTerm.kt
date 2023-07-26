@@ -1,8 +1,12 @@
 package sigma.syntax.typeExpressions
 
+import sigma.evaluation.values.FunctionValue
+import sigma.evaluation.values.TypeErrorException
 import sigma.semantics.DeclarationScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
+import sigma.semantics.types.GenericTypeConstructor
+import sigma.semantics.types.OrderedTypeTuple
 import sigma.semantics.types.TypeEntity
 
 data class TypeCallTerm(
@@ -21,6 +25,14 @@ data class TypeCallTerm(
             )
         }
 
+        fun evaluate(
+            declarationScope: DeclarationScope,
+        ): OrderedTypeTuple = OrderedTypeTuple(
+            elements = elements.map {
+                it.evaluate(declarationScope = declarationScope)
+            },
+        )
+
     }
 
     companion object {
@@ -35,5 +47,20 @@ data class TypeCallTerm(
 
     override fun evaluate(
         declarationScope: DeclarationScope,
-    ): TypeEntity = TODO()
+    ): TypeEntity {
+        val calleeEntity = callee.evaluate(declarationScope = declarationScope)
+
+        if (calleeEntity !is GenericTypeConstructor) {
+            throw TypeErrorException(
+                location = callee.location,
+                message = "Callee $calleeEntity is not a type constructor",
+            )
+        }
+
+        val argumentEntity = passedArgument.evaluate(declarationScope = declarationScope)
+
+        val result = calleeEntity.call(argumentEntity)
+
+        return result
+    }
 }
