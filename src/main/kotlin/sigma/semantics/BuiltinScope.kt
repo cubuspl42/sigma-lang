@@ -27,7 +27,7 @@ private class BuiltinValueDeclaration(
     override val effectiveValueType: Computation<Type> = Computation.pure(type)
 }
 
-object BuiltinScope : Scope, DeclarationScope {
+object BuiltinScope : Scope, StaticScope {
     private data class SimpleBuiltinValue(
         override val type: Type,
         override val value: Value,
@@ -224,5 +224,5 @@ object BuiltinScope : Scope, DeclarationScope {
         name: Symbol,
     ): BuiltinValue? = builtinValues[name]
 
-    override fun resolveDeclaration(name: Symbol): Declaration? = builtinDeclarations[name]
+    override fun resolveName(name: Symbol): Declaration? = builtinDeclarations[name]
 }

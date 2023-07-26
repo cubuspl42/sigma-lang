@@ -4,7 +4,7 @@ import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Symbol
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
@@ -115,7 +115,7 @@ object SetConstructorTests {
         @Test
         fun testSimple() {
             val setConstructor = SetConstructor.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = ExpressionTerm.parse("{foo, bar, baz}") as SetConstructorTerm,
             )
 

@@ -3,7 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
@@ -24,7 +24,7 @@ import sigma.syntax.expressions.TupleConstructorTerm
 abstract class Expression {
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: ExpressionTerm,
         ): Expression = when (term) {
             is AbstractionTerm -> Abstraction.build(
@@ -90,7 +90,7 @@ abstract class Expression {
             val term = ExpressionTerm.parse(source = source)
 
             return Expression.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = term,
             )
         }

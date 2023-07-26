@@ -13,7 +13,7 @@ abstract class ValueDefinition : ValueDeclaration {
 
     protected abstract val term: DefinitionTerm
 
-    protected abstract val declarationScope: DeclarationScope
+    protected abstract val declarationScope: StaticScope
 
     private val declaredType by lazy {
         term.type?.evaluateAsType(

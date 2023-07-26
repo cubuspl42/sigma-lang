@@ -5,12 +5,12 @@ import sigma.semantics.expressions.Expression
 import sigma.syntax.LocalDefinitionTerm
 
 class LocalValueDefinition(
-    override val declarationScope: DeclarationScope,
+    override val declarationScope: StaticScope,
     override val term: LocalDefinitionTerm,
 ) : ValueDefinition() {
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: LocalDefinitionTerm,
         ): LocalValueDefinition = LocalValueDefinition(
             declarationScope = declarationScope,

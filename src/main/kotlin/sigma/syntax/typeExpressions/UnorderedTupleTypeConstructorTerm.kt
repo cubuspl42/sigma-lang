@@ -4,7 +4,7 @@ import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeConstructorContext
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
 
@@ -38,7 +38,7 @@ data class UnorderedTupleTypeConstructorTerm(
     }
 
     override fun evaluate(
-        declarationScope: DeclarationScope,
+        declarationScope: StaticScope,
     ): UnorderedTupleType = UnorderedTupleType(
         valueTypeByName = entries.groupBy {
             it.name

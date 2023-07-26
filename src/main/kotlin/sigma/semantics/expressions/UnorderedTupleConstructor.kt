@@ -6,7 +6,7 @@ import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
@@ -24,7 +24,7 @@ class UnorderedTupleConstructor(
     ) {
         companion object {
             fun build(
-                declarationScope: DeclarationScope,
+                declarationScope: StaticScope,
                 entry: UnorderedTupleConstructorTerm.Entry,
             ): Entry = Entry(
                 name = entry.name,
@@ -49,7 +49,7 @@ class UnorderedTupleConstructor(
 
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: UnorderedTupleConstructorTerm,
         ): UnorderedTupleConstructor = UnorderedTupleConstructor(
             term = term,

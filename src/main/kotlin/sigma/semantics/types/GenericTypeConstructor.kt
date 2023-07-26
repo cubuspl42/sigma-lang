@@ -1,11 +1,11 @@
 package sigma.semantics.types
 
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.syntax.expressions.GenericParametersTuple
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 
 class GenericTypeConstructor(
-    val context: DeclarationScope,
+    val context: StaticScope,
     val argumentMetaType: GenericParametersTuple,
     val bodyTerm: TypeExpressionTerm,
     val body: TypeEntity,

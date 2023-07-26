@@ -4,7 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IllType
@@ -19,7 +19,7 @@ class Call(
 ) : Expression() {
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: CallTerm,
         ): Call = Call(
             term = term,

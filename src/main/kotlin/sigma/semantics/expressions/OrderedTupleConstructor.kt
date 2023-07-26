@@ -4,7 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.ArrayTable
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.OrderedTupleType
 import sigma.syntax.expressions.OrderedTupleConstructorTerm
@@ -15,7 +15,7 @@ class OrderedTupleConstructor(
 ) : TupleConstructor() {
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: OrderedTupleConstructorTerm,
         ): OrderedTupleConstructor = OrderedTupleConstructor(
             term = term,

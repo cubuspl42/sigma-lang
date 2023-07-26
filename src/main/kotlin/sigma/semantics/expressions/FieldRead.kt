@@ -5,7 +5,7 @@ import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
@@ -45,7 +45,7 @@ class FieldRead(
 
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: FieldReadTerm,
         ): FieldRead = FieldRead(
             term = term,

@@ -9,7 +9,7 @@ import sigma.parser.antlr.SigmaParser.DictTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.parser.antlr.SigmaParser.TypeExpressionContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeEntity
 import sigma.syntax.Term
@@ -64,11 +64,11 @@ abstract class TypeExpressionTerm : Term() {
     }
 
     abstract fun evaluate(
-        declarationScope: DeclarationScope,
+        declarationScope: StaticScope,
     ): TypeEntity
 
     fun evaluateAsType(
-        declarationScope: DeclarationScope,
+        declarationScope: StaticScope,
     ): Type =
         // TODO: Improve the error handling
         evaluate(declarationScope = declarationScope) as Type

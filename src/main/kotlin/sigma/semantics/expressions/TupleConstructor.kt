@@ -1,6 +1,6 @@
 package sigma.semantics.expressions
 
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.syntax.expressions.OrderedTupleConstructorTerm
 import sigma.syntax.expressions.TupleConstructorTerm
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
@@ -8,7 +8,7 @@ import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 abstract class TupleConstructor : Expression() {
     companion object {
         fun build(
-            declarationScope: DeclarationScope,
+            declarationScope: StaticScope,
             term: TupleConstructorTerm,
         ): TupleConstructor = when (term) {
             is OrderedTupleConstructorTerm -> OrderedTupleConstructor.build(

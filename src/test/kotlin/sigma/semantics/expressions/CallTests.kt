@@ -7,7 +7,7 @@ import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.BuiltinScope
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
@@ -160,7 +160,7 @@ class CallTests {
             }
 
             val call = Call.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = ExpressionTerm.parse("sq(3)") as CallTerm,
             )
 
@@ -179,7 +179,7 @@ class CallTests {
         @Test
         fun testDictSubject() {
             val call = Call.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = ExpressionTerm.parse("dict(2)") as CallTerm,
             )
 

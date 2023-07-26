@@ -2,7 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.values.IntValue
 import sigma.semantics.BuiltinScope
-import sigma.semantics.DeclarationScope
+import sigma.semantics.StaticScope
 import sigma.semantics.types.IntLiteralType
 import sigma.semantics.types.IntType
 import sigma.syntax.SourceLocation
@@ -52,7 +52,7 @@ class IfExpressionTests {
             ) as IfExpressionTerm
 
             val call = IfExpression.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = term,
             )
 
@@ -87,7 +87,7 @@ class IfExpressionTests {
             ) as IfExpressionTerm
 
             val ifExpression = IfExpression.build(
-                declarationScope = DeclarationScope.Empty,
+                declarationScope = StaticScope.Empty,
                 term = term,
             )
 

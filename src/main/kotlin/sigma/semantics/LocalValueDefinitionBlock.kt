@@ -6,12 +6,12 @@ import sigma.evaluation.values.Symbol
 import sigma.syntax.LocalDefinitionTerm
 
 class LocalValueDefinitionBlock(
-    private val declarationScope: DeclarationScope,
+    private val declarationScope: StaticScope,
     private val declarations: List<LocalDefinitionTerm>,
 ) : DeclarationBlock() {
     companion object {
         fun build(
-            outerDeclarationScope: DeclarationScope,
+            outerDeclarationScope: StaticScope,
             definitions: List<LocalDefinitionTerm>,
         ): LocalValueDefinitionBlock = LocalValueDefinitionBlock(
             declarationScope = outerDeclarationScope,
