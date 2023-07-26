@@ -5,9 +5,8 @@ import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
 import sigma.semantics.types.BoolType
 import sigma.evaluation.values.Symbol
-import sigma.semantics.types.IntCollectiveType
 import utils.FakeDeclarationBlock
-import utils.FakeTypeDefinition
+import utils.FakeTypeEntityDefinition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -36,9 +35,9 @@ class TypeReferenceTermTests {
                 source = "Foo",
             ).evaluate(
                 declarationScope = FakeDeclarationBlock.of(
-                    FakeTypeDefinition(
+                    FakeTypeEntityDefinition(
                         name = Symbol.of("Foo"),
-                        definedType = BoolType,
+                        definedTypeEntity = BoolType,
                     ),
                 ),
             )

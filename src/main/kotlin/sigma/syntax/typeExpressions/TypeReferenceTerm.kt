@@ -5,7 +5,7 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.TypeErrorException
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.DeclarationScope
-import sigma.semantics.TypeDefinition
+import sigma.semantics.TypeEntityDefinition
 import sigma.semantics.types.TypeEntity
 
 data class TypeReferenceTerm(
@@ -31,11 +31,11 @@ data class TypeReferenceTerm(
             message = "Unresolved name ${referee.dump()}",
         )
 
-        val typeDefinition = resolvedDeclaration as? TypeDefinition ?: throw TypeErrorException(
+        val typeDefinition = resolvedDeclaration as? TypeEntityDefinition ?: throw TypeErrorException(
             location = location,
             message = "Unresolved name ${referee.dump()}",
         )
 
-        return typeDefinition.definedType
+        return typeDefinition.definedTypeEntity
     }
 }

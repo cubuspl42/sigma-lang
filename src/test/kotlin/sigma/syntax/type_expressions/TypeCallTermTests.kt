@@ -4,8 +4,17 @@ import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
+import sigma.semantics.BuiltinScope
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.GenericTypeConstructor
+import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.TypeVariable
+import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.typeExpressions.TypeCallTerm
 import sigma.syntax.typeExpressions.UnorderedTupleTypeConstructorTerm
+import utils.FakeDeclarationBlock
+import utils.FakeTypeEntityDefinition
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -59,9 +68,40 @@ class TypeCallTermTests {
 
     object EvaluationTests {
         @Test
+        @Ignore
         fun test() {
-            val term = TypeExpressionTerm.parse(
-                source = "Foo[Bar]",
+            val genericTypeConstructor = TypeExpressionTerm.parse(
+                source = "![A, B] {a: A, b: B, c: Int}",
+            ).evaluate(
+                declarationScope = BuiltinScope,
+            ) as GenericTypeConstructor
+
+            val callTerm = TypeExpressionTerm.parse(
+                source = "Foo[Int, Bool]",
+            ) as TypeCallTerm
+
+            val resultEntity = callTerm.evaluate(
+                declarationScope = FakeDeclarationBlock(
+                    declarations = setOf(
+                        FakeTypeEntityDefinition(
+                            name = Symbol.of("Foo"),
+                            definedTypeEntity = genericTypeConstructor,
+                        ),
+                    ),
+                ).chainWith(
+                    outerScope = BuiltinScope,
+                ),
+            )
+
+            assertEquals(
+                expected = UnorderedTupleType(
+                    valueTypeByName = mapOf(
+                        Symbol.of("a") to IntCollectiveType,
+                        Symbol.of("b") to BoolType,
+                        Symbol.of("c") to IntCollectiveType,
+                    ),
+                ),
+                actual = resultEntity,
             )
         }
     }

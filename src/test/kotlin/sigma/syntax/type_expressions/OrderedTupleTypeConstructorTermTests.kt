@@ -10,8 +10,7 @@ import sigma.syntax.typeExpressions.OrderedTupleTypeConstructorTerm
 import sigma.syntax.typeExpressions.TypeExpressionTerm
 import sigma.syntax.typeExpressions.TypeReferenceTerm
 import utils.FakeDeclarationBlock
-import utils.FakeTypeDefinition
-import utils.FakeValueDeclaration
+import utils.FakeTypeEntityDefinition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -151,13 +150,13 @@ class OrderedTupleTypeConstructorTermTests {
                 source = "[a: A, B]",
             ).evaluate(
                 declarationScope = FakeDeclarationBlock.of(
-                    FakeTypeDefinition(
+                    FakeTypeEntityDefinition(
                         name = Symbol.of("A"),
-                        definedType = BoolType,
+                        definedTypeEntity = BoolType,
                     ),
-                    FakeTypeDefinition(
+                    FakeTypeEntityDefinition(
                         name = Symbol.of("B"),
-                        definedType = IntCollectiveType,
+                        definedTypeEntity = IntCollectiveType,
                     ),
                 ),
             )

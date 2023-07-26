@@ -4,9 +4,6 @@ import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.syntax.SourceLocation
 import sigma.syntax.typeExpressions.TupleTypeConstructorTerm
 import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.semantics.types.TypeVariable
-import sigma.evaluation.values.Symbol
-import sigma.semantics.TypeDefinition
 
 data class AbstractionTerm(
     override val location: SourceLocation,

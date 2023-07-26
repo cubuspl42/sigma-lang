@@ -9,7 +9,6 @@ import sigma.semantics.types.GenericTypeConstructor
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.expressions.GenericParametersTuple
 import sigma.syntax.typeExpressions.GenericTypeConstructorTerm
-import sigma.syntax.typeExpressions.TypeCallTerm
 import sigma.syntax.typeExpressions.UnorderedTupleTypeConstructorTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -31,13 +30,13 @@ class GenericTypeConstructorTermTests {
                         parametersDefinitions = listOf(
                             GenericParametersTuple.GenericParameterDefinition(
                                 name = Symbol.of("A"),
-                                definedType = TypeVariable(
+                                definedTypeVariable = TypeVariable(
                                     name =  Symbol.of("A"),
                                 ),
                             ),
                             GenericParametersTuple.GenericParameterDefinition(
                                 name = Symbol.of("B"),
-                                definedType = TypeVariable(
+                                definedTypeVariable = TypeVariable(
                                     name =  Symbol.of("B"),
                                 ),
                             ),

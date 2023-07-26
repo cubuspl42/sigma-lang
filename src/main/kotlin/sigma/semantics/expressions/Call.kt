@@ -139,7 +139,6 @@ class Call(
 
         val argumentValue = argument.evaluate(scope = scope)
 
-        // Thought: Obtaining argument here might not be lazy enough
         val image = subjectValue.apply(
             argument = argumentValue,
         )
