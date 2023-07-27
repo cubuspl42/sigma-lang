@@ -94,6 +94,7 @@ class IfExpressionTests {
             assertEquals(
                 expected = IntValue(value = 3L),
                 actual = ifExpression.evaluate(
+                    context = EvaluationContext.Initial,
                     scope = BuiltinScope,
                 ),
             )
@@ -118,6 +119,7 @@ class IfExpressionTests {
             assertEquals(
                 expected = IntValue(value = 4L),
                 actual = ifExpression.evaluate(
+                    context = EvaluationContext.Initial,
                     scope = BuiltinScope,
                 ),
             )

@@ -30,6 +30,7 @@ class FieldReadTests {
             assertEquals(
                 expected = IntValue(value = 123L),
                 actual = fieldRead.evaluate(
+                    context = EvaluationContext.Initial,
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("foo") to foo,

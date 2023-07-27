@@ -1,5 +1,7 @@
 package sigma.evaluation.values
 
+import sigma.semantics.expressions.EvaluationContext
+
 class DictValue(
     val entries: Map<PrimitiveValue, Value>,
 ) : FunctionValue() {
@@ -19,6 +21,7 @@ class DictValue(
     }
 
     override fun apply(
+        context: EvaluationContext,
         argument: Value,
     ): Value = read(
         key = argument,

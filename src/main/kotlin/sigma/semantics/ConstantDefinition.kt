@@ -3,6 +3,7 @@ package sigma.semantics
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
+import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.expressions.Expression
 import sigma.syntax.ConstantDefinitionTerm
 
@@ -48,6 +49,8 @@ class ConstantDefinition(
 
     val definedValue: EvaluationResult by lazy {
         asValueDefinition.body.evaluate(
+            // TODO: Pass non-initial context!
+            context = EvaluationContext.Initial,
             scope = containingNamespace.innerScope,
         )
     }

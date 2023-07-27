@@ -117,13 +117,20 @@ class FieldRead(
     }
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): Value {
-        val subjectValue = subject.evaluate(scope = scope)
+        val subjectValue = subject.evaluate(
+            context = context,
+            scope = scope,
+        )
 
         if (subjectValue !is DictValue) throw IllegalStateException("Subject $subjectValue is not a dict")
 
-        val value = subjectValue.apply(fieldName)
+        val value = subjectValue.apply(
+            context = context,
+            argument = fieldName,
+        )
 
         return value
     }

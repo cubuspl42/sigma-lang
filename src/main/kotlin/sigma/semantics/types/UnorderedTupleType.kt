@@ -5,6 +5,7 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.EvaluationResult
 import sigma.semantics.expressions.Abstraction
+import sigma.semantics.expressions.EvaluationContext
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
@@ -138,6 +139,6 @@ data class UnorderedTupleType(
     )
 
     override fun toArgumentScope(argument: DictValue): Scope = object : Scope {
-        override fun getValue(name: Symbol): EvaluationResult? = argument.read(name)
+        override fun getValue(context: EvaluationContext, name: Symbol): EvaluationResult? = argument.read(name)
     }
 }

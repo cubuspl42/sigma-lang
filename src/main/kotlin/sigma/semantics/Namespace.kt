@@ -5,6 +5,7 @@ import sigma.evaluation.scope.chainWith
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
+import sigma.semantics.expressions.EvaluationContext
 import sigma.syntax.NamespaceDefinitionTerm
 
 class Namespace(
@@ -52,6 +53,7 @@ class Namespace(
 
     val innerScope = object : Scope {
         override fun getValue(
+            context: EvaluationContext,
             name: Symbol,
         ): EvaluationResult? {
             val constantDefinition = getStaticDefinition(name = name) as? ConstantDefinition

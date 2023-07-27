@@ -101,11 +101,15 @@ class UnorderedTupleConstructor(
     }
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): Value = DictValue(
         entries = entries.associate {
             val name = it.name
-            val value = it.value.evaluate(scope = scope) as Value
+            val value = it.value.evaluate(
+                context = context,
+                scope = scope,
+            ) as Value
 
             name to value
         },

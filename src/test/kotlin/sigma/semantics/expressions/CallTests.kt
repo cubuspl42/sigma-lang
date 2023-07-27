@@ -153,7 +153,7 @@ class CallTests {
         @Test
         fun testSimple() {
             val sq = object : ComputableFunctionValue() {
-                override fun apply(argument: Value): Value {
+                override fun apply(context: EvaluationContext, argument: Value): Value {
                     val n = argument as IntValue
                     return IntValue(n.value * n.value)
                 }
@@ -167,6 +167,7 @@ class CallTests {
             assertEquals(
                 expected = IntValue(9),
                 actual = call.evaluate(
+                    context = EvaluationContext.Initial,
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("sq") to sq,
@@ -186,6 +187,7 @@ class CallTests {
             assertEquals(
                 expected = Symbol.of("two"),
                 actual = call.evaluate(
+                    context = EvaluationContext.Initial,
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("dict") to DictValue(
