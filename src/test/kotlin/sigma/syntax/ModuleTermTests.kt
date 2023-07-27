@@ -35,7 +35,7 @@ class ModuleTermTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         name = Symbol.of("UserId"),
                         body = ReferenceTerm(
-                            location = SourceLocation(lineIndex = 1, columnIndex = 19),
+                            location = SourceLocation(lineIndex = 1, columnIndex = 15),
                             referee = Symbol.of("Int"),
                         )
                     ),

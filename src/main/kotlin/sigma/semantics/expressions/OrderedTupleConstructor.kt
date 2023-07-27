@@ -47,7 +47,7 @@ class OrderedTupleConstructor(
         elements.fold(emptySet()) { acc, it -> acc + it.errors }
     }
 
-    override fun evaluate(
+    override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
     ): Value = ArrayTable(

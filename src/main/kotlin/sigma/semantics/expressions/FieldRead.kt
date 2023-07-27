@@ -116,7 +116,7 @@ class FieldRead(
         )
     }
 
-    override fun evaluate(
+    override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
     ): Value {

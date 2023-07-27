@@ -100,7 +100,7 @@ class UnorderedTupleConstructor(
         )
     }
 
-    override fun evaluate(
+    override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
     ): Value = DictValue(

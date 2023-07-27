@@ -4,6 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Closure
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
+import sigma.semantics.BuiltinScope
 import sigma.semantics.Computation
 import sigma.semantics.DeclarationBlock
 import sigma.semantics.StaticScope
@@ -56,7 +57,7 @@ class Abstraction(
             // TODO
             val argumentType = argumentTypeBody.evaluate(
                 context = EvaluationContext.Initial,
-                scope = Scope.Empty,
+                scope = BuiltinScope,
             ) as TupleType
 
             val innerDeclarationScope2 = argumentType.toArgumentDeclarationBlock().chainWith(
@@ -77,7 +78,7 @@ class Abstraction(
         }
     }
 
-    override fun evaluate(
+    override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
     ): Value = Closure(

@@ -1,7 +1,7 @@
 package sigma.programs.euler
 
 import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.CallStackExhaustionError
+import sigma.evaluation.values.EvaluationStackExhaustionError
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
@@ -89,7 +89,7 @@ private fun solveProblem(n: Int): EvaluationResult {
     println()
 
     when (val evaluationResult = program.evaluateResult()) {
-        CallStackExhaustionError -> println("Error: call stack exhausted")
+        EvaluationStackExhaustionError -> println("Error: call stack exhausted")
         is Value -> println("Result: ${evaluationResult.dump()}")
     }
 

@@ -7,6 +7,7 @@ import sigma.semantics.Computation
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.Type
 import sigma.syntax.expressions.OrderedTupleTypeConstructorTerm
 
 class OrderedTupleTypeConstructor(
@@ -36,12 +37,23 @@ class OrderedTupleTypeConstructor(
         )
     }
 
-    override val inferredType: Computation<OrderedTupleType> = TODO()
+    override val inferredType: Computation<OrderedTupleType>
+        get() = TODO()
 
-    override val errors: Set<SemanticError> = TODO()
+    override val errors: Set<SemanticError>
+        get() = TODO()
 
-    override fun evaluate(
+    override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = TODO()
+    ): Value = OrderedTupleType(
+        elements = elements.map {
+            OrderedTupleType.Element(
+                name = it.name, type = it.type.evaluate(
+                    context = context,
+                    scope = scope,
+                ) as Type
+            )
+        },
+    )
 }

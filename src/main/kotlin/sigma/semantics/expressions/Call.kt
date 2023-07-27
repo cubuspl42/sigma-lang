@@ -131,7 +131,7 @@ class Call(
         )
     }
 
-    override fun evaluate(
+    override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
     ): EvaluationResult {

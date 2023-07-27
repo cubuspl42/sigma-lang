@@ -6,4 +6,4 @@ abstract class Value : EvaluationResult {
     abstract fun dump(): String
 }
 
-object CallStackExhaustionError : EvaluationResult
+object EvaluationStackExhaustionError : EvaluationResult
