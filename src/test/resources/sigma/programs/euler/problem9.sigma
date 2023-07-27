@@ -1,49 +1,49 @@
 const main = let {
-    concatAllOf = ![e, te] [
-        list: [e*],
-        transform: [e] -> [te*],
-    ] -> [te*] =>
+    concatAllOf = ![e, te] ^[
+        list: ^[e*],
+        transform: ^[e] -> ^[te*],
+    ] -> ^[te*] =>
         concatAll[map[list, transform]],
 
-    concatAll = ![e] [
-        lists: [[e*]*],
-    ] -> [e*] => let {
-        recurse = {
-            listAccumulated: [e*],
-            listsRemaining: [[e*]*],
-        } -> [e*] => extractHead[listsRemaining, {
-            ifExtracted: [
-                listsRemainingHead: [e*],
-                listsRemainingTail: [[e*]*],
-            ] => recurse {
+    concatAll = ![e] ^[
+        lists: ^[^[e*]*],
+    ] -> ^[e*] => let {
+        recurse = ^{
+            listAccumulated: ^[e*],
+            listsRemaining: ^[^[e*]*],
+        } -> ^[e*] => extractHead[listsRemaining, {
+            ifExtracted: ^[
+                listsRemainingHead: ^[e*],
+                listsRemainingTail: ^[^[e*]*],
+            ] => recurse{
                 listAccumulated: concat[listAccumulated, listsRemainingHead],
                 listsRemaining: listsRemainingTail,
             },
             ifEmpty: listAccumulated,
         }]
-    } in recurse {
+    } in recurse{
         listAccumulated: [],
         listsRemaining: lists,
     },
 
-    range = [start: Int, end: Int] -> [Int*] => if end < start (
+    range = ^[start: Int, end: Int] -> ^[Int*] => if end < start (
         %then [],
         %else concat[[start], range[start + 1, end]],
     ),
 
-    tripletsSummingTo = [n: Int] =>
-        concatAllOf[range[1, n], [a: Int] =>
-            map[range[1, n], [b: Int] =>
+    tripletsSummingTo = ^[n: Int] =>
+        concatAllOf[range[1, n], ^[a: Int] =>
+            map[range[1, n], ^[b: Int] =>
                 {a: a, b: b, c: n - a - b}
             ]
         ],
 
-    extractHead = ![e, r] [
-        list: [e*],
-        branches: {
-            ifExtracted: [
+    extractHead = ![e, r] ^[
+        list: ^[e*],
+        branches: ^{
+            ifExtracted: ^[
                 head: e,
-                tail: [e*],
+                tail: ^[e*],
             ] -> r,
             ifEmpty: r,
         },

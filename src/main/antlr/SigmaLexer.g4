@@ -40,6 +40,7 @@ Slash : '/' ;
 Plus : '+' ;
 Minus : '-' ;
 Bang : '!' ;
+Dash : '^' ;
 
 ThinArrow : '->' ;
 FatArrow : '=>' ;

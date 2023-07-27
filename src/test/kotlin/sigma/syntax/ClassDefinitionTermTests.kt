@@ -23,9 +23,9 @@ class ClassDefinitionTermTests {
                             id: Int
                         )
 
-                        %method doSomething1 = {mArg1: Int, mArg2: Bool} => 42
+                        %method doSomething1 = ^{mArg1: Int, mArg2: Bool} => 42
                         
-                        %method doSomething2 = [mArg1: Int] => 43
+                        %method doSomething2 = ^[mArg1: Int] => 43
                     )
                 """.trimIndent()
             )
@@ -43,21 +43,21 @@ class ClassDefinitionTermTests {
                             UnorderedTupleTypeConstructorTerm.Entry(
                                 name = Symbol.of("mArg1"),
                                 valueType = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 7, columnIndex = 35),
+                                    location = SourceLocation(lineIndex = 7, columnIndex = 36),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
                             UnorderedTupleTypeConstructorTerm.Entry(
                                 name = Symbol.of("mArg2"),
                                 valueType = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 7, columnIndex = 47),
+                                    location = SourceLocation(lineIndex = 7, columnIndex = 48),
                                     referee = Symbol.of("Bool"),
                                 ),
                             ),
                         ),
                     ),
                     image = IntLiteralTerm(
-                        location = SourceLocation(lineIndex = 7, columnIndex = 56),
+                        location = SourceLocation(lineIndex = 7, columnIndex = 57),
                         value = IntValue(value = 42L),
                     ),
                 ),
@@ -74,14 +74,14 @@ class ClassDefinitionTermTests {
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("mArg1"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 9, columnIndex = 35),
+                                    location = SourceLocation(lineIndex = 9, columnIndex = 36),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
                         ),
                     ),
                     image = IntLiteralTerm(
-                        location = SourceLocation(lineIndex = 9, columnIndex = 43),
+                        location = SourceLocation(lineIndex = 9, columnIndex = 44),
                         value = IntValue(value = 43L),
                     ),
                 ),

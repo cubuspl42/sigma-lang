@@ -15,7 +15,7 @@ class FunctionTypeTermTests {
         @Test
         fun test() {
             val typeExpression = TypeExpressionTerm.parse(
-                source = "[a: A, b: B] -> C",
+                source = "^[a: A, b: B] -> C",
             )
 
             assertEquals(
@@ -27,21 +27,21 @@ class FunctionTypeTermTests {
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("a"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                     referee = Symbol.of("A"),
                                 ),
                             ),
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("b"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 10),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 11),
                                     referee = Symbol.of("B"),
                                 ),
                             ),
                         ),
                     ),
                     imageType = TypeReferenceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 16),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 17),
                         referee = Symbol.of("C"),
                     ),
                 ),
@@ -54,7 +54,7 @@ class FunctionTypeTermTests {
         @Test
         fun test() {
             val type = TypeExpressionTerm.parse(
-                source = "[a: Int, b: Bool] -> Bool",
+                source = "^[a: Int, b: Bool] -> Bool",
             ).evaluate(
                 declarationScope = BuiltinScope,
             )

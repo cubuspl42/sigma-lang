@@ -20,6 +20,10 @@ class AbstractionTermTests {
     object ParsingTests {
         @Test
         fun test() {
+            val term = ExpressionTerm.parse(
+                source = "^[n: Int] => 0",
+            )
+
             assertEquals(
                 expected = AbstractionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
@@ -29,30 +33,32 @@ class AbstractionTermTests {
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("n"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
                         ),
                     ),
                     image = IntLiteralTerm(
-                        SourceLocation(lineIndex = 1, columnIndex = 12),
+                        SourceLocation(lineIndex = 1, columnIndex = 13),
                         value = IntValue(0),
                     ),
                 ),
-                actual = ExpressionTerm.parse(
-                    source = "[n: Int] => 0",
-                ),
+                actual = term,
             )
         }
 
         @Test
         fun testGenericWithMultipleParameters() {
+            val term = ExpressionTerm.parse(
+                source = "![a, b] ^[a: a, b: b] => 0",
+            )
+
             assertEquals(
                 expected = AbstractionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = GenericParametersTuple(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         parametersDefinitions = listOf(
                             GenericParametersTuple.GenericParameterDefinition.of("a"),
                             GenericParametersTuple.GenericParameterDefinition.of("b"),
@@ -64,27 +70,25 @@ class AbstractionTermTests {
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("a"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 12),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                     referee = Symbol.of("a"),
                                 ),
                             ),
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("b"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 18),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 19),
                                     referee = Symbol.of("b"),
                                 ),
                             ),
                         ),
                     ),
                     image = IntLiteralTerm(
-                        SourceLocation(lineIndex = 1, columnIndex = 24),
+                        SourceLocation(lineIndex = 1, columnIndex = 25),
                         value = IntValue(0),
                     ),
                 ),
-                actual = ExpressionTerm.parse(
-                    source = "![a, b] [a: a, b: b] => 0",
-                ),
+                actual = term,
             )
         }
 
@@ -94,7 +98,7 @@ class AbstractionTermTests {
                 expected = AbstractionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = GenericParametersTuple(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         parametersDefinitions = listOf(
                             GenericParametersTuple.GenericParameterDefinition.of("t"),
                         )
@@ -105,19 +109,19 @@ class AbstractionTermTests {
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("n"),
                                 type = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 9),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
                         ),
                     ),
                     image = IntLiteralTerm(
-                        SourceLocation(lineIndex = 1, columnIndex = 17),
+                        SourceLocation(lineIndex = 1, columnIndex = 18),
                         value = IntValue(0),
                     ),
                 ),
                 actual = ExpressionTerm.parse(
-                    source = "![t] [n: Int] => 0",
+                    source = "![t] ^[n: Int] => 0",
                 ),
             )
         }
@@ -127,7 +131,7 @@ class AbstractionTermTests {
         @Test
         fun test() {
             val term = ExpressionTerm.parse(
-                source = "[n: Int] => n",
+                source = "^[n: Int] => n",
             )
 
             val expression = Expression.build(
@@ -156,7 +160,7 @@ class AbstractionTermTests {
         @Test
         fun testGenericSingleParameter() {
             val term = ExpressionTerm.parse(
-                source = "![t] [t: t] => false",
+                source = "![t] ^[t: t] => false",
             )
 
             val expression = Expression.build(
@@ -189,7 +193,7 @@ class AbstractionTermTests {
             val term = ExpressionTerm.parse(
                 source = """
                     let {
-                        f = [n: Int] -> Bool => f[n + 1]
+                        f = ^[n: Int] -> Bool => f[n + 1]
                     } in f
                 """.trimIndent(),
             )

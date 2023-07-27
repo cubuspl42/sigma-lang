@@ -20,7 +20,7 @@ class ModuleTermTests {
                     
                     const name1 = 123
                     
-                    const name2 = [a: Int] => 42
+                    const name2 = ^[a: Int] => 42
                     
                     const name3 = {
                         a: 1,
@@ -59,14 +59,14 @@ class ModuleTermTests {
                                     OrderedTupleTypeConstructorTerm.Element(
                                         name = Symbol.of("a"),
                                         type = TypeReferenceTerm(
-                                            location = SourceLocation(lineIndex = 5, columnIndex = 18),
+                                            location = SourceLocation(lineIndex = 5, columnIndex = 19),
                                             referee = Symbol.of("Int"),
                                         ),
                                     ),
                                 ),
                             ),
                             image = IntLiteralTerm(
-                                location = SourceLocation(lineIndex = 5, columnIndex = 26),
+                                location = SourceLocation(lineIndex = 5, columnIndex = 27),
                                 value = IntValue(value = 42L),
                             ),
                         ),

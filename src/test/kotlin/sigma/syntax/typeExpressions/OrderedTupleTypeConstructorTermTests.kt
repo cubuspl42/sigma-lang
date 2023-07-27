@@ -16,7 +16,7 @@ class OrderedTupleTypeConstructorTermTests {
         @Test
         fun testEmpty() {
             val expression = TypeExpressionTerm.parse(
-                source = "[]",
+                source = "^[]",
             )
 
             assertEquals(
@@ -31,7 +31,7 @@ class OrderedTupleTypeConstructorTermTests {
         @Test
         fun testSingleUnnamed() {
             val expression = TypeExpressionTerm.parse(
-                source = "[A]",
+                source = "^[A]",
             )
 
             assertEquals(
@@ -41,7 +41,7 @@ class OrderedTupleTypeConstructorTermTests {
                         OrderedTupleTypeConstructorTerm.Element(
                             name = null,
                             type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 2),
                                 referee = Symbol.of("A"),
                             ),
                         ),
@@ -54,7 +54,7 @@ class OrderedTupleTypeConstructorTermTests {
         @Test
         fun testAllUnnamed() {
             val expression = TypeExpressionTerm.parse(
-                source = "[A, B, C]",
+                source = "^[A, B, C]",
             )
 
             assertEquals(
@@ -64,21 +64,21 @@ class OrderedTupleTypeConstructorTermTests {
                         OrderedTupleTypeConstructorTerm.Element(
                             name = null,
                             type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 2),
                                 referee = Symbol.of("A"),
                             ),
                         ),
                         OrderedTupleTypeConstructorTerm.Element(
                             name = null,
                             type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                 referee = Symbol.of("B"),
                             ),
                         ),
                         OrderedTupleTypeConstructorTerm.Element(
                             name = null,
                             type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 8),
                                 referee = Symbol.of("C"),
                             ),
                         ),
@@ -91,7 +91,7 @@ class OrderedTupleTypeConstructorTermTests {
         @Test
         fun testSomeNamed() {
             val expression = TypeExpressionTerm.parse(
-                source = "[a: A, B, c: C]",
+                source = "^[a: A, B, c: C]",
             )
 
             assertEquals(
@@ -101,21 +101,21 @@ class OrderedTupleTypeConstructorTermTests {
                         OrderedTupleTypeConstructorTerm.Element(
                             name = Symbol.of("a"),
                             type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                 referee = Symbol.of("A"),
                             ),
                         ),
                         OrderedTupleTypeConstructorTerm.Element(
                             name = null,
                             type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 8),
                                 referee = Symbol.of("B"),
                             ),
                         ),
                         OrderedTupleTypeConstructorTerm.Element(
                             name = Symbol.of("c"),
                             type = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 13),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 14),
                                 referee = Symbol.of("C"),
                             ),
                         ),
@@ -130,7 +130,7 @@ class OrderedTupleTypeConstructorTermTests {
         @Test
         fun testEmpty() {
             val type = TypeExpressionTerm.parse(
-                source = "[]",
+                source = "^[]",
             ).evaluate(
                 declarationScope = StaticScope.Empty,
             )
@@ -144,7 +144,7 @@ class OrderedTupleTypeConstructorTermTests {
         @Test
         fun testNonEmpty() {
             val type = TypeExpressionTerm.parse(
-                source = "[a: A, B]",
+                source = "^[a: A, B]",
             ).evaluate(
                 declarationScope = FakeDeclarationBlock.of(
                     FakeTypeEntityDefinition(

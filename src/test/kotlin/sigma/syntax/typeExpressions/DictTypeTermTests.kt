@@ -14,18 +14,18 @@ class DictTypeTermTests {
         @Test
         fun test() {
             val expression = TypeExpressionTerm.parse(
-                source = "{[K]: V}",
+                source = "^{[K]: V}",
             )
 
             assertEquals(
                 expected = DictTypeTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     keyType = TypeReferenceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 2),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         referee = Symbol.of("K"),
                     ),
                     valueType = TypeReferenceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 6),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 7),
                         referee = Symbol.of("V"),
                     ),
                 ),
@@ -38,7 +38,7 @@ class DictTypeTermTests {
         @Test
         fun test() {
             val type = TypeExpressionTerm.parse(
-                source = "{[Int]: Bool}",
+                source = "^{[Int]: Bool}",
             ).evaluate(
                 declarationScope = BuiltinScope,
             )

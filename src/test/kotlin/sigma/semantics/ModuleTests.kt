@@ -18,7 +18,7 @@ object ModuleTests {
                 source = """
                     typeAlias UserId = Int
                     
-                    const isUserIdValid = [userId: UserId] => true
+                    const isUserIdValid = ^[userId: UserId] => true
                 """.trimIndent(),
             )
 

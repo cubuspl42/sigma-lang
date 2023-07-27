@@ -15,7 +15,7 @@ class GenericTypeConstructorTermTests {
         @Test
         fun test() {
             val term = TypeExpressionTerm.parse(
-                source = "![A, B] {a: A, b: B, c: Int}",
+                source = "![A, B] ^{a: A, b: B, c: Int}",
             )
 
             assertEquals(
@@ -44,21 +44,21 @@ class GenericTypeConstructorTermTests {
                             UnorderedTupleTypeConstructorTerm.Entry(
                                 name = Symbol.of(name = "a"),
                                 valueType = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 12),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                     referee = Symbol.of(name = "A"),
                                 ),
                             ),
                             UnorderedTupleTypeConstructorTerm.Entry(
                                 name = Symbol.of(name = "b"),
                                 valueType = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 18),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 19),
                                     referee = Symbol.of(name = "B"),
                                 ),
                             ),
                             UnorderedTupleTypeConstructorTerm.Entry(
                                 name = Symbol.of(name = "c"),
                                 valueType = TypeReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 24),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 25),
                                     referee = Symbol.of(name = "Int"),
                                 ),
                             ),
@@ -74,7 +74,7 @@ class GenericTypeConstructorTermTests {
         @Test
         fun test() {
             val term = TypeExpressionTerm.parse(
-                source = "![A, B] {a: A, b: B, c: Int}",
+                source = "![A, B] ^{a: A, b: B, c: Int}",
             )
 
             val typeEntity = term.evaluate(declarationScope = BuiltinScope)

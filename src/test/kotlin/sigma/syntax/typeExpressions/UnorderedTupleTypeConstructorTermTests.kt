@@ -16,7 +16,7 @@ class UnorderedTupleTypeConstructorTermTests {
         @Test
         fun testEmpty() {
             val expression = TypeExpressionTerm.parse(
-                source = "{}",
+                source = "^{}",
             )
 
             assertEquals(
@@ -31,7 +31,7 @@ class UnorderedTupleTypeConstructorTermTests {
         @Test
         fun testNonEmpty() {
             val expression = TypeExpressionTerm.parse(
-                source = "{a: A, b: B, c: C}",
+                source = "^{a: A, b: B, c: C}",
             )
 
             assertEquals(
@@ -41,21 +41,21 @@ class UnorderedTupleTypeConstructorTermTests {
                         UnorderedTupleTypeConstructorTerm.Entry(
                             name = Symbol.of("a"),
                             valueType = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                 referee = Symbol.of("A"),
                             ),
                         ),
                         UnorderedTupleTypeConstructorTerm.Entry(
                             name = Symbol.of("b"),
                             valueType = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 10),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 11),
                                 referee = Symbol.of("B"),
                             ),
                         ),
                         UnorderedTupleTypeConstructorTerm.Entry(
                             name = Symbol.of("c"),
                             valueType = TypeReferenceTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 16),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 17),
                                 referee = Symbol.of("C"),
                             ),
                         ),
@@ -70,7 +70,7 @@ class UnorderedTupleTypeConstructorTermTests {
         @Test
         fun testEmpty() {
             val type = TypeExpressionTerm.parse(
-                source = "{}",
+                source = "^{}",
             ).evaluate(
                 declarationScope = StaticScope.Empty,
             )
@@ -84,7 +84,7 @@ class UnorderedTupleTypeConstructorTermTests {
         @Test
         fun testNonEmpty() {
             val type = TypeExpressionTerm.parse(
-                source = "{a: A, b: B, c: C}",
+                source = "^{a: A, b: B, c: C}",
             ).evaluate(
                 declarationScope = FakeDeclarationBlock.of(
                     FakeTypeEntityDefinition(
