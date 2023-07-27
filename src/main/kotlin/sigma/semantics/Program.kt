@@ -4,7 +4,6 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 
@@ -30,6 +29,6 @@ class Program internal constructor(
             name = Symbol.of("main")
         )!!
 
-        return result.definedValue
+        return result.staticValue
     }
 }

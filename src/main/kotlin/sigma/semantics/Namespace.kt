@@ -57,7 +57,7 @@ class Namespace(
             name: Symbol,
         ): EvaluationResult? {
             val constantDefinition = getStaticDefinition(name = name) as? ConstantDefinition
-            return constantDefinition?.definedValue
+            return constantDefinition?.staticValue
         }
     }.chainWith(
         context = prelude.scope,

@@ -9,6 +9,7 @@ import sigma.semantics.Computation
 import sigma.semantics.ConstantDefinition
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticDefinition
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
@@ -56,7 +57,7 @@ class TranslationScope(
         name = name,
     )?.let { declaration ->
         when (declaration) {
-            is ConstantDefinition -> declaration.definedValue
+            is StaticDefinition -> declaration.staticValue
             else -> null
         }
     }

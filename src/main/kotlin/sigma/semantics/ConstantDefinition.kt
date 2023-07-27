@@ -46,7 +46,7 @@ class ConstantDefinition(
 
     val asValueDefinition = ConstantValueDefinition()
 
-    val definedValue: EvaluationResult by lazy {
+    override val staticValue: EvaluationResult by lazy {
         asValueDefinition.body.evaluate(
             // TODO: Pass non-initial context!
             context = EvaluationContext.Initial,
