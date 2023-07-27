@@ -1,6 +1,5 @@
 package sigma.semantics
 
-import sigma.evaluation.scope.Scope
 import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.Type

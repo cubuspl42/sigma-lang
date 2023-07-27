@@ -2,7 +2,6 @@ package sigma.semantics
 
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
 import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.expressions.Expression
 import sigma.syntax.ConstantDefinitionTerm

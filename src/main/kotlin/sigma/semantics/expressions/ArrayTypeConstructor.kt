@@ -27,14 +27,15 @@ class ArrayTypeConstructor(
         )
     }
 
-    override val inferredType: Computation<Type> = TODO()
+    override val inferredType: Computation<Type>
+        get() = TODO()
 
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
         )
     }
 
-    override fun evaluate(
+    override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
     ): Value = TODO()

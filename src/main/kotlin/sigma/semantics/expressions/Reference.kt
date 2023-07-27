@@ -68,7 +68,7 @@ class Reference(
         )
     }
 
-    override fun evaluate(
+    override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
     ): EvaluationResult = scope.getValue(

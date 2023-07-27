@@ -1,8 +1,8 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.EvaluationStackExhaustionError
 import sigma.evaluation.values.EvaluationResult
-import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
@@ -35,7 +35,7 @@ data class EvaluationContext(
             callDepth = 0,
         )
 
-        const val maxCallDepth: Int = 1024
+        const val maxEvaluationDepth: Int = 1024
     }
 
     fun withIncreasedDepth(): EvaluationContext = EvaluationContext(
@@ -143,8 +143,20 @@ abstract class Expression {
 
     abstract val inferredType: Computation<Type>
 
-    abstract fun evaluate(
+    abstract fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
     ): EvaluationResult
+
+    fun evaluate(
+        context: EvaluationContext,
+        scope: Scope,
+    ): EvaluationResult = if (context.callDepth < EvaluationContext.maxEvaluationDepth) {
+        evaluateDirectly(
+            context = context,
+            scope = scope,
+        )
+    } else {
+        EvaluationStackExhaustionError
+    }
 }
