@@ -8,10 +8,14 @@ import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
+import sigma.syntax.expressions.ArrayTypeConstructorTerm
 import sigma.syntax.expressions.CallTerm
 import sigma.syntax.expressions.DictConstructorTerm
+import sigma.syntax.expressions.DictTypeTerm
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.FieldReadTerm
+import sigma.syntax.expressions.FunctionTypeTerm
+import sigma.syntax.expressions.GenericTypeConstructorTerm
 import sigma.syntax.expressions.IfExpressionTerm
 import sigma.syntax.expressions.IntLiteralTerm
 import sigma.syntax.expressions.IsUndefinedCheckTerm
@@ -20,6 +24,7 @@ import sigma.syntax.expressions.ReferenceTerm
 import sigma.syntax.expressions.SetConstructorTerm
 import sigma.syntax.expressions.SymbolLiteralTerm
 import sigma.syntax.expressions.TupleConstructorTerm
+import sigma.syntax.expressions.TupleTypeConstructorTerm
 
 abstract class Expression {
     companion object {
@@ -82,6 +87,22 @@ abstract class Expression {
                 declarationScope = declarationScope,
                 term = term,
             )
+
+            is TupleTypeConstructorTerm -> TupleTypeConstructor.build(
+                declarationScope = declarationScope,
+                term = term,
+            )
+
+            is ArrayTypeConstructorTerm -> ArrayTypeConstructor.build(
+                declarationScope = declarationScope,
+                term = term,
+            )
+
+            is DictTypeTerm -> TODO()
+
+            is FunctionTypeTerm -> TODO()
+
+            is GenericTypeConstructorTerm -> TODO()
         }
 
         fun parse(

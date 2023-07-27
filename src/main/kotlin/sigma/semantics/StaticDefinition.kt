@@ -4,7 +4,6 @@ import sigma.syntax.ClassDefinitionTerm
 import sigma.syntax.ConstantDefinitionTerm
 import sigma.syntax.NamespaceDefinitionTerm
 import sigma.syntax.StaticStatementTerm
-import sigma.syntax.TypeAliasDefinitionTerm
 
 sealed class StaticDefinition : Declaration {
     companion object {
@@ -13,11 +12,6 @@ sealed class StaticDefinition : Declaration {
             term: StaticStatementTerm,
         ): StaticDefinition = when (term) {
             is ConstantDefinitionTerm -> ConstantDefinition.build(
-                containingNamespace = containingNamespace,
-                term = term,
-            )
-
-            is TypeAliasDefinitionTerm -> TypeAliasDefinition.build(
                 containingNamespace = containingNamespace,
                 term = term,
             )

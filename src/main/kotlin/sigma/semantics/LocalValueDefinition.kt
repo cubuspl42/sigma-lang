@@ -6,7 +6,7 @@ import sigma.syntax.LocalDefinitionTerm
 
 class LocalValueDefinition(
     override val declarationScope: StaticScope,
-    override val term: LocalDefinitionTerm,
+    private val term: LocalDefinitionTerm,
 ) : ValueDefinition() {
     companion object {
         fun build(
@@ -20,10 +20,19 @@ class LocalValueDefinition(
 
     override val name: Symbol = term.name
 
-    override val definer: Expression by lazy {
+    override val definedTypeBody: Expression? by lazy {
+        term.declaredTypeBody?.let {
+            Expression.build(
+                declarationScope = declarationScope,
+                term = it,
+            )
+        }
+    }
+
+    override val body: Expression by lazy {
         Expression.build(
             declarationScope = declarationScope,
-            term = term.definer,
+            term = term.body,
         )
     }
 }

@@ -17,7 +17,7 @@ object NamespaceTests {
             val term = NamespaceDefinitionTerm.parse(
                 source = """
                     namespace Foo (
-                        typeAlias UserId = Int
+                        const UserId = Int
                         
                         const isUserIdValid = ^[userId: UserId] => true
                     )

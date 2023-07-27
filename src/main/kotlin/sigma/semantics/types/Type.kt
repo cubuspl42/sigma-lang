@@ -3,8 +3,9 @@ package sigma.semantics.types
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 
-sealed class Type : TypeEntity() {
+sealed class Type : Value() {
     sealed class MatchResult {
         abstract fun isFull(): Boolean
 
@@ -57,8 +58,27 @@ sealed class Type : TypeEntity() {
     abstract fun match(
         assignedType: Type,
     ): MatchResult
+}
 
-    abstract fun dump(): String
+object MetaType : Type() {
+    override fun findLowestCommonSupertype(other: Type): Type {
+        TODO("Not yet implemented")
+    }
+
+    override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution {
+        TODO("Not yet implemented")
+    }
+
+    override fun substituteTypeVariables(resolution: TypeVariableResolution): Type {
+        TODO("Not yet implemented")
+    }
+
+    override fun match(assignedType: Type): MatchResult {
+        TODO("Not yet implemented")
+    }
+
+    override fun dump(): String = "(meta-type)"
+
 }
 
 object AnyType : Type() {

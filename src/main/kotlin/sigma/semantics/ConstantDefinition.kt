@@ -4,7 +4,6 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.expressions.Expression
 import sigma.syntax.ConstantDefinitionTerm
-import sigma.syntax.DefinitionTerm
 
 class ConstantDefinition(
     private val containingNamespace: Namespace,
@@ -21,19 +20,25 @@ class ConstantDefinition(
     }
 
     inner class ConstantValueDefinition : ValueDefinition() {
-        override val term: DefinitionTerm
-            get() = this@ConstantDefinition.term
-
         override val name: Symbol
             get() = this@ConstantDefinition.name
 
         override val declarationScope: StaticScope
             get() = containingNamespace.innerDeclarationScope
 
-        override val definer: Expression by lazy {
+        override val definedTypeBody: Expression? by lazy {
+            term.declaredTypeBody?.let {
+                Expression.build(
+                    declarationScope = declarationScope,
+                    term = it,
+                )
+            }
+        }
+
+        override val body: Expression by lazy {
             Expression.build(
                 declarationScope = containingNamespace.innerDeclarationScope,
-                term = term.definer,
+                term = term.body,
             )
         }
     }
@@ -41,7 +46,7 @@ class ConstantDefinition(
     val asValueDefinition = ConstantValueDefinition()
 
     val definedValue: Value by lazy {
-        asValueDefinition.definer.evaluate(
+        asValueDefinition.body.evaluate(
             scope = containingNamespace.innerScope,
         )
     }

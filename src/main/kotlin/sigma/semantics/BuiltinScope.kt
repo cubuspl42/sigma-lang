@@ -9,6 +9,7 @@ import sigma.evaluation.values.Value
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
+import sigma.semantics.types.MetaType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
@@ -34,6 +35,14 @@ object BuiltinScope : Scope, StaticScope {
     ) : BuiltinValue
 
     private val builtinValues: Map<Symbol, BuiltinValue> = mapOf(
+        Symbol.of("Bool") to SimpleBuiltinValue(
+            type = MetaType,
+            value = BoolType,
+        ),
+        Symbol.of("Int") to SimpleBuiltinValue(
+            type = MetaType,
+            value = IntCollectiveType,
+        ),
         Symbol.of("false") to SimpleBuiltinValue(
             type = BoolType,
             value = BoolValue(false),
@@ -200,19 +209,8 @@ object BuiltinScope : Scope, StaticScope {
         )
     }.toSet()
 
-    private val builtinTypeDefinitions = setOf(
-        BuiltinTypeDefinition(
-            name = Symbol.of("Bool"),
-            definedTypeEntity = BoolType,
-        ),
-        BuiltinTypeDefinition(
-            name = Symbol.of("Int"),
-            definedTypeEntity = IntCollectiveType,
-        ),
-    )
-
     private val builtinDeclarations: Map<Symbol, Declaration> =
-        (builtinValueDeclarations + builtinTypeDefinitions).associateBy { it.name }
+        builtinValueDeclarations.associateBy { it.name }
 
     override fun getValue(
         name: Symbol,

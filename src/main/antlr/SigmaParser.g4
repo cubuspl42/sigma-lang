@@ -20,18 +20,13 @@ importPath
 
 // Thought: NamespaceEntry ?
 staticStatement
-    : typeAliasDefinition
-    | constantDefinition
+    : constantDefinition
     | classDefinition
     | namespaceDefinition
     ;
 
-typeAliasDefinition
-    : TypeAliasKeyword name=Identifier Assign definer=typeExpression
-    ;
-
 constantDefinition
-    : ConstKeyword name=Identifier (Colon type=typeExpression)? Assign definer=expression
+    : ConstKeyword name=Identifier (Colon type=expression)? Assign definer=expression
     ;
 
 namespaceDefinition
@@ -52,7 +47,7 @@ classDefinition
     ;
 
 fieldDeclaration
-    : name=Identifier Colon type=typeExpression
+    : name=Identifier Colon type=expression
     ;
 
 methodDefinition
@@ -85,6 +80,10 @@ expression
     | ifExpression # ifExpressionAlt
     | SymbolLiteral # symbolLiteralAlt
     | IntLiteral # intLiteralAlt
+    | tupleTypeConstructor # tupleTypeConstructorAlt
+    | functionTypeDepiction # functionTypeDepictionAlt
+    | arrayTypeConstructor # arrayTypeConstructorAlt
+    | dictTypeDepiction # dictTypeDepictionAlt
     | callableExpression # callableExpressionAlt
     ;
 
@@ -112,7 +111,7 @@ localScope
     : LeftBrace (definition (Comma definition)*)? Comma? RightBrace ;
 
 definition
-    : name=identifier (Colon valueType=typeExpression)? Assign value=expression
+    : name=identifier (Colon valueType=expression)? Assign value=expression
     ;
 
 // end
@@ -126,7 +125,7 @@ ifExpression
 
 abstraction
     :   genericParametersTuple? argumentType=tupleTypeConstructor
-        (ThinArrow imageType=typeExpression)? FatArrow image=expression
+        (ThinArrow imageType=expression)? FatArrow image=expression
     ;
 
 // Unordered tuple constructor
@@ -186,26 +185,8 @@ reference
 
 // Type expressions
 
-typeExpression
-    : typeCall
-    | typeReference
-    | functionTypeDepiction
-    | tupleTypeConstructor
-    | arrayTypeConstructor
-    | dictTypeDepiction
-    | genericTypeConstructor
-    ;
-
-typeCall
-    : callee=typeReference passedArgument=typeTupleConstructor
-    ;
-
 typeTupleConstructor
-    : LeftBracket (elements+=typeExpression (Comma elements+=typeExpression)* Comma?)? RightBracket
-    ;
-
-typeReference
-    : referee=identifier
+    : LeftBracket (elements+=expression (Comma elements+=expression)* Comma?)? RightBracket
     ;
 
 tupleTypeConstructor
@@ -213,8 +194,9 @@ tupleTypeConstructor
     | orderedTupleTypeConstructor
     ;
 
+// Thought: "functionTypeConstructor"?
 functionTypeDepiction
-    : genericParametersTuple? argumentType=tupleTypeConstructor ThinArrow imageType=typeExpression
+    : genericParametersTuple? argumentType=tupleTypeConstructor ThinArrow imageType=expression
     ;
 
 // Unordered tuple type constructor
@@ -223,7 +205,7 @@ unorderedTupleTypeConstructor
     : Dash LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
 
 unorderedTupleTypeEntry
-    : name=identifier Colon valueType=typeExpression
+    : name=identifier Colon valueType=expression
     ;
 
 // end
@@ -235,21 +217,21 @@ orderedTupleTypeConstructor
     ;
 
 orderedTupleTypeElement
-    : (name=identifier Colon)? type=typeExpression
+    : (name=identifier Colon)? type=expression
     ;
 
 // end
 
 arrayTypeConstructor
-    : Dash LeftBracket type=typeExpression Asterisk RightBracket
+    : Dash LeftBracket type=expression Asterisk RightBracket
     ;
 
 dictTypeDepiction
-    : Dash LeftBrace LeftBracket keyType=typeExpression RightBracket Colon valueType=typeExpression RightBrace
+    : Dash LeftBrace LeftBracket keyType=expression RightBracket Colon valueType=expression RightBrace
     ;
 
 genericTypeConstructor
-    : genericParametersTuple body=typeExpression
+    : genericParametersTuple body=expression
     ;
 
 // Other

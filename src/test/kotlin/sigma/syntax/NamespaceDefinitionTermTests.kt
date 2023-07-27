@@ -1,10 +1,10 @@
 package sigma.syntax
 
-import sigma.syntax.typeExpressions.TypeReferenceTerm
+import sigma.syntax.expressions.ReferenceTerm
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.IntLiteralTerm
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
-import sigma.syntax.typeExpressions.OrderedTupleTypeConstructorTerm
+import sigma.syntax.expressions.OrderedTupleTypeConstructorTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import kotlin.test.Test
@@ -17,7 +17,7 @@ class NamespaceDefinitionTermTests {
             val term = NamespaceDefinitionTerm.parse(
                 source = """
                     namespace Foo (
-                        typeAlias UserId = Int
+                        const UserId = Int
                         
                         const name1 = 123
                         
@@ -36,10 +36,10 @@ class NamespaceDefinitionTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     name = Symbol.of("Foo"),
                     staticStatements = listOf(
-                        TypeAliasDefinitionTerm(
+                        ConstantDefinitionTerm(
                             location = SourceLocation(lineIndex = 2, columnIndex = 4),
                             name = Symbol.of("UserId"),
-                            definer = TypeReferenceTerm(
+                            body = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 23),
                                 referee = Symbol.of("Int"),
                             )
@@ -47,23 +47,23 @@ class NamespaceDefinitionTermTests {
                         ConstantDefinitionTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 4),
                             name = Symbol.of("name1"),
-                            type = null,
-                            definer = IntLiteralTerm(
+                            declaredTypeBody = null,
+                            body = IntLiteralTerm(
                                 location = SourceLocation(lineIndex = 4, columnIndex = 18),
                                 value = IntValue(value = 123L),
                             ),
                         ),
                         ConstantDefinitionTerm(
                             location = SourceLocation(lineIndex = 6, columnIndex = 4),
-                            name = Symbol.of("name2"), type = null,
-                            definer = AbstractionTerm(
+                            name = Symbol.of("name2"), declaredTypeBody = null,
+                            body = AbstractionTerm(
                                 location = SourceLocation(lineIndex = 6, columnIndex = 18),
                                 argumentType = OrderedTupleTypeConstructorTerm(
                                     location = SourceLocation(lineIndex = 6, columnIndex = 18),
                                     elements = listOf(
                                         OrderedTupleTypeConstructorTerm.Element(
                                             name = Symbol.of("a"),
-                                            type = TypeReferenceTerm(
+                                            type = ReferenceTerm(
                                                 location = SourceLocation(lineIndex = 6, columnIndex = 23),
                                                 referee = Symbol.of("Int"),
                                             ),
@@ -78,7 +78,7 @@ class NamespaceDefinitionTermTests {
                         ),
                         ConstantDefinitionTerm(
                             location = SourceLocation(lineIndex = 8, columnIndex = 4),
-                            name = Symbol.of("name3"), definer = UnorderedTupleConstructorTerm(
+                            name = Symbol.of("name3"), body = UnorderedTupleConstructorTerm(
                                 location = SourceLocation(lineIndex = 8, columnIndex = 18),
                                 entries = listOf(
                                     UnorderedTupleConstructorTerm.Entry(
@@ -128,8 +128,8 @@ class NamespaceDefinitionTermTests {
                                 ConstantDefinitionTerm(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 8),
                                     name = Symbol.of("foo"),
-                                    type = null,
-                                    definer = IntLiteralTerm(
+                                    declaredTypeBody = null,
+                                    body = IntLiteralTerm(
                                         location = SourceLocation(lineIndex = 3, columnIndex = 20),
                                         value = IntValue(value = 2L),
                                     ),
