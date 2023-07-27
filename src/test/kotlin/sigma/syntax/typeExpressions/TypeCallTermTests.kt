@@ -1,17 +1,12 @@
-package sigma.syntax.type_expressions
+package sigma.syntax.typeExpressions
 
-import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
 import sigma.semantics.BuiltinScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.GenericTypeConstructor
 import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UnorderedTupleType
-import sigma.syntax.typeExpressions.TypeCallTerm
-import sigma.syntax.typeExpressions.UnorderedTupleTypeConstructorTerm
 import utils.FakeDeclarationBlock
 import utils.FakeTypeEntityDefinition
 import kotlin.test.Ignore

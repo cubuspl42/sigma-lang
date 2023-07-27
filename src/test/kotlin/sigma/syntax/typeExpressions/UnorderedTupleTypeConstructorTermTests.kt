@@ -1,10 +1,7 @@
-package sigma.syntax.type_expressions
+package sigma.syntax.typeExpressions
 
 import sigma.semantics.StaticScope
-import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.UnorderedTupleTypeConstructorTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.UnorderedTupleType
