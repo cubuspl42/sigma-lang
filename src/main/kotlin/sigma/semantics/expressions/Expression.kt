@@ -1,6 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -128,5 +129,5 @@ abstract class Expression {
 
     abstract fun evaluate(
         scope: Scope,
-    ): Value
+    ): EvaluationResult
 }

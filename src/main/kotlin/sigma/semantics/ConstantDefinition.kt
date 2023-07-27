@@ -1,5 +1,6 @@
 package sigma.semantics
 
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.expressions.Expression
@@ -45,7 +46,7 @@ class ConstantDefinition(
 
     val asValueDefinition = ConstantValueDefinition()
 
-    val definedValue: Value by lazy {
+    val definedValue: EvaluationResult by lazy {
         asValueDefinition.body.evaluate(
             scope = containingNamespace.innerScope,
         )

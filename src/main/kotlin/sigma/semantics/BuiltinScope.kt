@@ -2,6 +2,7 @@ package sigma.semantics
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
@@ -214,7 +215,7 @@ object BuiltinScope : Scope, StaticScope {
 
     override fun getValue(
         name: Symbol,
-    ): Value? = getBuiltin(
+    ): EvaluationResult? = getBuiltin(
         name = name,
     )?.value
 

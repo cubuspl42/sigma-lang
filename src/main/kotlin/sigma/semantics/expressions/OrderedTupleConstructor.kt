@@ -51,8 +51,7 @@ class OrderedTupleConstructor(
         scope: Scope,
     ): Value = ArrayTable(
         elements = elements.map {
-            it.evaluate(scope = scope)
+            it.evaluate(scope = scope) as Value
         },
     )
 }
-

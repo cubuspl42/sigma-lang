@@ -1,5 +1,9 @@
 package sigma.evaluation.values
 
-abstract class Value {
+sealed interface EvaluationResult
+
+abstract class Value : EvaluationResult {
     abstract fun dump(): String
 }
+
+object CallStackExhaustionError : EvaluationResult

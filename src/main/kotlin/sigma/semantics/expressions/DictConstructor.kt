@@ -156,7 +156,7 @@ class DictConstructor(
     ): Value = DictValue(
         entries = associations.associate {
             val key = it.key.evaluate(scope = scope) as PrimitiveValue
-            val value = it.value.evaluate(scope = scope)
+            val value = it.value.evaluate(scope = scope) as Value
 
             key to value
         },

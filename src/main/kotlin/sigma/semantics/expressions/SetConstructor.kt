@@ -81,7 +81,7 @@ class SetConstructor(
         scope: Scope,
     ): Value = SetValue(
         elements = elements.map {
-            it.evaluate(scope = scope)
+            it.evaluate(scope = scope) as Value
         }.toSet(),
     )
 }

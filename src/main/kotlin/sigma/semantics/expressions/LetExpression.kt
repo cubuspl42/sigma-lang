@@ -1,6 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -55,7 +56,7 @@ data class LetExpression(
 
     override fun evaluate(
         scope: Scope,
-    ): Value = result.evaluate(
+    ): EvaluationResult = result.evaluate(
         scope = definitionBlock.evaluate(
             scope = scope,
         ),

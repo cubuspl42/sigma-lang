@@ -1,11 +1,13 @@
 package sigma.programs.euler
 
 import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.CallStackExhaustionError
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.DictValue
+import sigma.evaluation.values.EvaluationResult
 import sigma.semantics.Project
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -64,7 +66,7 @@ class EulerProblemsTests {
     }
 }
 
-private fun solveProblem(n: Int): Value {
+private fun solveProblem(n: Int): EvaluationResult {
     val store = Project.ResourceStore(javaClass = EulerProblemsTests::class.java)
     val loader = Project.Loader.create(store = store)
     val program = loader.load(fileBaseName = "problem$n")
@@ -85,8 +87,11 @@ private fun solveProblem(n: Int): Value {
     val result = program.evaluateResult()
 
     println()
-    println("Result:")
-    println(result.dump())
+
+    when (val evaluationResult = program.evaluateResult()) {
+        CallStackExhaustionError -> println("Error: call stack exhausted")
+        is Value -> println("Result: ${evaluationResult.dump()}")
+    }
 
     println()
 
