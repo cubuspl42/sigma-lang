@@ -1,8 +1,8 @@
 package sigma.semantics
 
+import sigma.evaluation.scope.Scope
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.Type
-import sigma.syntax.DefinitionTerm
 import sigma.syntax.SourceLocation
 
 abstract class ValueDefinition : ValueDeclaration {
@@ -11,26 +11,22 @@ abstract class ValueDefinition : ValueDeclaration {
         val matchResult: Type.MatchResult,
     ) : SemanticError
 
-    protected abstract val term: DefinitionTerm
-
     protected abstract val declarationScope: StaticScope
 
-    private val declaredType by lazy {
-        term.type?.evaluateAsType(
-            declarationScope = declarationScope,
-        )
+    private val declaredType: Type? by lazy {
+        definedTypeBody?.evaluate(scope = BuiltinScope) as? Type
     }
 
     private val unmatchedInferredTypeError: UnmatchedInferredTypeError? by lazy {
         val declaredType = this.declaredType
-        val inferredType = definer.inferredType.value
+        val inferredType = body.inferredType.value
 
         if (declaredType != null && inferredType != null) {
             val matchResult = declaredType.match(inferredType)
 
             if (matchResult.isFull()) null
             else UnmatchedInferredTypeError(
-                location = definer.location,
+                location = body.location,
                 matchResult = matchResult,
             )
         } else null
@@ -38,7 +34,7 @@ abstract class ValueDefinition : ValueDeclaration {
 
     final override val effectiveValueType: Computation<Type> by lazy {
         when (val it = declaredType) {
-            null -> definer.inferredType
+            null -> body.inferredType
             else -> Computation.pure(it)
         }
     }
@@ -46,8 +42,10 @@ abstract class ValueDefinition : ValueDeclaration {
     val errors: Set<SemanticError> by lazy {
         setOfNotNull(
             unmatchedInferredTypeError
-        ) + definer.errors
+        ) + body.errors
     }
 
-    abstract val definer: Expression
+    abstract val definedTypeBody: Expression?
+
+    abstract val body: Expression
 }

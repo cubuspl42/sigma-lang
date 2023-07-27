@@ -1,18 +1,16 @@
 package sigma.syntax.expressions
 
 import sigma.semantics.BuiltinScope
-import sigma.syntax.typeExpressions.TypeReferenceTerm
+import sigma.syntax.expressions.ReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.OrderedTupleTypeConstructorTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.semantics.expressions.Expression
-import sigma.syntax.expressions.GenericParametersTuple.GenericParameterDefinition.Companion
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -32,7 +30,7 @@ class AbstractionTermTests {
                         elements = listOf(
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("n"),
-                                type = TypeReferenceTerm(
+                                type = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                     referee = Symbol.of("Int"),
                                 ),
@@ -69,14 +67,14 @@ class AbstractionTermTests {
                         elements = listOf(
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("a"),
-                                type = TypeReferenceTerm(
+                                type = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                     referee = Symbol.of("a"),
                                 ),
                             ),
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("b"),
-                                type = TypeReferenceTerm(
+                                type = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 19),
                                     referee = Symbol.of("b"),
                                 ),
@@ -108,7 +106,7 @@ class AbstractionTermTests {
                         elements = listOf(
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("n"),
-                                type = TypeReferenceTerm(
+                                type = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                     referee = Symbol.of("Int"),
                                 ),

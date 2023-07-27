@@ -2,14 +2,12 @@ package sigma.syntax.expressions
 
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.TupleTypeConstructorTerm
-import sigma.syntax.typeExpressions.TypeExpressionTerm
 
 data class AbstractionTerm(
     override val location: SourceLocation,
     val genericParametersTuple: GenericParametersTuple? = null,
     val argumentType: TupleTypeConstructorTerm,
-    val declaredImageType: TypeExpressionTerm? = null,
+    val declaredImageType: ExpressionTerm? = null,
     val image: ExpressionTerm,
 ) : ExpressionTerm() {
     companion object {
@@ -24,7 +22,7 @@ data class AbstractionTerm(
                 TupleTypeConstructorTerm.build(it)
             },
             declaredImageType = ctx.imageType?.let {
-                TypeExpressionTerm.build(it)
+                ExpressionTerm.build(it)
             },
             image = ExpressionTerm.build(ctx.image),
         )

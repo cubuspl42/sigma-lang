@@ -24,10 +24,6 @@ sealed class StaticStatementTerm : Term() {
         fun build(
             ctx: SigmaParser.StaticStatementContext,
         ): StaticStatementTerm = object : SigmaParserBaseVisitor<StaticStatementTerm>() {
-            override fun visitTypeAliasDefinition(
-                ctx: SigmaParser.TypeAliasDefinitionContext,
-            ): StaticStatementTerm = TypeAliasDefinitionTerm.build(ctx)
-
             override fun visitConstantDefinition(
                 ctx: SigmaParser.ConstantDefinitionContext,
             ): StaticStatementTerm = ConstantDefinitionTerm.build(ctx)

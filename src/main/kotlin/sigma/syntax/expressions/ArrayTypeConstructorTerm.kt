@@ -1,15 +1,12 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.expressions
 
-import sigma.semantics.StaticScope
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
-import sigma.semantics.types.ArrayType
-import sigma.semantics.types.TypeEntity
 
 data class ArrayTypeConstructorTerm(
     override val location: SourceLocation,
-    val elementType: TypeExpressionTerm,
-) : TypeExpressionTerm() {
+    val elementType: ExpressionTerm,
+) : ExpressionTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.ArrayTypeConstructorContext,
@@ -19,9 +16,11 @@ data class ArrayTypeConstructorTerm(
         )
     }
 
-    override fun evaluate(
-        declarationScope: StaticScope,
-    ): TypeEntity = ArrayType(
-        elementType = elementType.evaluateAsType(declarationScope = declarationScope),
-    )
+//    override fun evaluate(
+//        declarationScope: StaticScope,
+//    ): TypeEntity = ArrayType(
+//        elementType = elementType.evaluateAsType(declarationScope = declarationScope),
+//    )
+
+    override fun dump(): String = "(array type constructor)"
 }

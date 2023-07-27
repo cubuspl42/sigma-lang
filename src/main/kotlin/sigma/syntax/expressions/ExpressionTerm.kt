@@ -117,6 +117,22 @@ sealed class ExpressionTerm : Term() {
             override fun visitIfExpressionAlt(
                 ctx: SigmaParser.IfExpressionAltContext,
             ): ExpressionTerm = IfExpressionTerm.build(ctx.ifExpression())
+
+            override fun visitTupleTypeConstructorAlt(
+                ctx: SigmaParser.TupleTypeConstructorAltContext,
+            ): ExpressionTerm = TupleTypeConstructorTerm.build(ctx.tupleTypeConstructor())
+
+            override fun visitFunctionTypeDepictionAlt(
+                ctx: SigmaParser.FunctionTypeDepictionAltContext,
+            ): ExpressionTerm = FunctionTypeTerm.build(ctx.functionTypeDepiction())
+
+            override fun visitArrayTypeConstructorAlt(
+                ctx: SigmaParser.ArrayTypeConstructorAltContext,
+            ): ExpressionTerm = ArrayTypeConstructorTerm.build(ctx.arrayTypeConstructor())
+
+            override fun visitDictTypeDepictionAlt(
+                ctx: SigmaParser.DictTypeDepictionAltContext,
+            ): ExpressionTerm = DictTypeTerm.build(ctx.dictTypeDepiction())
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class}")
     }
 

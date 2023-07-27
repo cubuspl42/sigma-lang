@@ -4,9 +4,10 @@ import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.IntLiteralTerm
-import sigma.syntax.typeExpressions.OrderedTupleTypeConstructorTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
-import sigma.syntax.typeExpressions.UnorderedTupleTypeConstructorTerm
+import sigma.syntax.expressions.OrderedTupleTypeConstructorTerm
+import sigma.syntax.expressions.ReferenceTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorTerm
+import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -40,16 +41,16 @@ class ClassDefinitionTermTests {
                     argumentType = UnorderedTupleTypeConstructorTerm(
                         location = SourceLocation(lineIndex = 7, columnIndex = 27),
                         entries = listOf(
-                            UnorderedTupleTypeConstructorTerm.Entry(
+                            UnorderedTupleConstructorTerm.Entry(
                                 name = Symbol.of("mArg1"),
-                                valueType = TypeReferenceTerm(
+                                value = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 7, columnIndex = 36),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
-                            UnorderedTupleTypeConstructorTerm.Entry(
+                            UnorderedTupleConstructorTerm.Entry(
                                 name = Symbol.of("mArg2"),
-                                valueType = TypeReferenceTerm(
+                                value = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 7, columnIndex = 48),
                                     referee = Symbol.of("Bool"),
                                 ),
@@ -73,7 +74,7 @@ class ClassDefinitionTermTests {
                         elements = listOf(
                             OrderedTupleTypeConstructorTerm.Element(
                                 name = Symbol.of("mArg1"),
-                                type = TypeReferenceTerm(
+                                type = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 9, columnIndex = 36),
                                     referee = Symbol.of("Int"),
                                 ),
@@ -95,7 +96,7 @@ class ClassDefinitionTermTests {
                         ClassDefinitionTerm.FieldDeclarationTerm(
                             location = SourceLocation(lineIndex = 3, columnIndex = 8),
                             name = Symbol.of("bar"),
-                            type = TypeReferenceTerm(
+                            type = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 3, columnIndex = 13),
                                 referee = Symbol.of("Bar"),
                             ),
@@ -103,7 +104,7 @@ class ClassDefinitionTermTests {
                         ClassDefinitionTerm.FieldDeclarationTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 8),
                             name = Symbol.of("id"),
-                            type = TypeReferenceTerm(
+                            type = ReferenceTerm(
                                 location = SourceLocation(lineIndex = 4, columnIndex = 12),
                                 referee = Symbol.of("Int"),
                             ),

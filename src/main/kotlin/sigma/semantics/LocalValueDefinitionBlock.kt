@@ -43,7 +43,7 @@ class LocalValueDefinitionBlock(
     ): Scope = LoopedScope(
         context = scope,
         expressionByName = definitionByName.mapValues { (_, definition) ->
-            definition.definer
+            definition.body
         },
     )
 }

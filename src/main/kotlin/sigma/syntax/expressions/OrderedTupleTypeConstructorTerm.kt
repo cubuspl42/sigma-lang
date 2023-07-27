@@ -1,9 +1,7 @@
-package sigma.syntax.typeExpressions
+package sigma.syntax.expressions
 
 import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeConstructorContext
-import sigma.semantics.StaticScope
-import sigma.semantics.types.OrderedTupleType
 import sigma.syntax.SourceLocation
 
 data class OrderedTupleTypeConstructorTerm(
@@ -12,7 +10,7 @@ data class OrderedTupleTypeConstructorTerm(
 ) : TupleTypeConstructorTerm() {
     data class Element(
         val name: Symbol?,
-        val type: TypeExpressionTerm,
+        val type: ExpressionTerm,
     )
 
     companion object {
@@ -29,16 +27,18 @@ data class OrderedTupleTypeConstructorTerm(
         )
     }
 
-    override fun evaluate(
-        declarationScope: StaticScope,
-    ): OrderedTupleType = OrderedTupleType(
-        elements = elements.map {
-            OrderedTupleType.Element(
-                name = it.name,
-                type = it.type.evaluateAsType(
-                    declarationScope = declarationScope,
-                ),
-            )
-        },
-    )
+//    override fun evaluate(
+//        declarationScope: StaticScope,
+//    ): OrderedTupleType = OrderedTupleType(
+//        elements = elements.map {
+//            OrderedTupleType.Element(
+//                name = it.name,
+//                type = it.type.evaluateAsType(
+//                    declarationScope = declarationScope,
+//                ),
+//            )
+//        },
+//    )
+
+    override fun dump(): String = "(ordered tuple type constructor)"
 }

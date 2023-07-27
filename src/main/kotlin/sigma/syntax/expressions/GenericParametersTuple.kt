@@ -2,8 +2,11 @@ package sigma.syntax.expressions
 
 import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser
+import sigma.semantics.Computation
+import sigma.semantics.Declaration
 import sigma.semantics.DeclarationBlock
-import sigma.semantics.TypeEntityDefinition
+import sigma.semantics.ValueDeclaration
+import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.SourceLocation
 import sigma.syntax.Term
@@ -26,7 +29,7 @@ data class GenericParametersTuple(
     data class GenericParameterDefinition(
         override val name: Symbol,
         val definedTypeVariable: TypeVariable,
-    ) : TypeEntityDefinition {
+    ) : ValueDeclaration {
         companion object {
             fun of(
                 name: String,
@@ -40,15 +43,14 @@ data class GenericParametersTuple(
             }
         }
 
-        override val definedTypeEntity = definedTypeVariable
+        override val effectiveValueType: Computation<Type>
+            get() = TODO("Not yet implemented")
     }
 
     inner class GenericParametersTupleBlock : DeclarationBlock() {
         override fun getDeclaration(
             name: Symbol,
-        ): TypeEntityDefinition? = parametersDefinitions.lastOrNull {
-            it.name == name
-        }
+        ): Declaration? = TODO()
     }
 
     val asDeclarationBlock = GenericParametersTupleBlock()

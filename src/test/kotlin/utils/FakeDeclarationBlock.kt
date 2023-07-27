@@ -6,7 +6,6 @@ import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
 import sigma.semantics.Declaration
 import sigma.semantics.DeclarationBlock
-import sigma.semantics.TypeEntityDefinition
 import sigma.semantics.types.TypeEntity
 
 data class FakeValueDeclaration(
@@ -15,11 +14,6 @@ data class FakeValueDeclaration(
 ) : ValueDeclaration {
     override val effectiveValueType: Computation<Type> = Computation.pure(type)
 }
-
-data class FakeTypeEntityDefinition(
-    override val name: Symbol,
-    override val definedTypeEntity: TypeEntity,
-) : TypeEntityDefinition
 
 class FakeDeclarationBlock(
     declarations: Set<Declaration>,

@@ -47,9 +47,14 @@ class Abstraction(
                 outerScope = outerDeclarationScope,
             ) ?: outerDeclarationScope
 
-            val argumentType: TupleType = term.argumentType.evaluate(
+
+            val argumentTypeBody =  build(
                 declarationScope = innerDeclarationScope1,
+                term = term.argumentType,
             )
+
+            // TODO
+            val argumentType = argumentTypeBody.evaluate(scope = Scope.Empty) as TupleType
 
             val innerDeclarationScope2 = argumentType.toArgumentDeclarationBlock().chainWith(
                 outerScope = innerDeclarationScope1,
@@ -78,9 +83,7 @@ class Abstraction(
     )
 
     private val declaredImageType: Type? by lazy {
-        term.declaredImageType?.evaluateAsType(
-            declarationScope = innerDeclarationScope,
-        )
+        TODO()
     }
 
     override val inferredType: Computation<FunctionType> by lazy {

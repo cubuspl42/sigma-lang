@@ -5,8 +5,6 @@ import sigma.parser.antlr.SigmaParser.ClassDefinitionContext
 import sigma.parser.antlr.SigmaParser.FieldDeclarationContext
 import sigma.parser.antlr.SigmaParser.MethodDefinitionContext
 import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.typeExpressions.TupleTypeConstructorTerm
-import sigma.syntax.typeExpressions.TypeExpressionTerm
 
 data class ClassDefinitionTerm(
     override val location: SourceLocation,
@@ -17,7 +15,7 @@ data class ClassDefinitionTerm(
     data class FieldDeclarationTerm(
         override val location: SourceLocation,
         val name: Symbol,
-        val type: TypeExpressionTerm,
+        val type: ExpressionTerm,
     ) : Term() {
         companion object {
             fun build(
@@ -25,7 +23,7 @@ data class ClassDefinitionTerm(
             ): FieldDeclarationTerm = FieldDeclarationTerm(
                 location = SourceLocation.build(ctx),
                 name = Symbol.of(ctx.name.text),
-                type = TypeExpressionTerm.build(ctx.type),
+                type = ExpressionTerm.build(ctx.type),
             )
         }
     }

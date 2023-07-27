@@ -3,7 +3,6 @@ package sigma.syntax.expressions
 import sigma.evaluation.values.Symbol
 import sigma.syntax.LocalDefinitionTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.typeExpressions.TypeReferenceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -20,7 +19,7 @@ class LetExpressionTermTests {
                             LocalDefinitionTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 4),
                                 name = Symbol.of("g"),
-                                definer = CallTerm(
+                                body = CallTerm(
                                     location = SourceLocation(lineIndex = 2, columnIndex = 8),
                                     subject = ReferenceTerm(
                                         location = SourceLocation(lineIndex = 2, columnIndex = 8),
@@ -35,7 +34,7 @@ class LetExpressionTermTests {
                             LocalDefinitionTerm(
                                 location = SourceLocation(lineIndex = 3, columnIndex = 4),
                                 name = Symbol.of("f"),
-                                definer = ReferenceTerm(
+                                body = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 8),
                                     referee = Symbol.of("g"),
                                 ),
@@ -76,11 +75,11 @@ class LetExpressionTermTests {
                             LocalDefinitionTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 name = Symbol.of("a"),
-                                type = TypeReferenceTerm(
+                                declaredTypeBody = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),
                                     referee = Symbol.of("Int"),
                                 ),
-                                definer = ReferenceTerm(
+                                body = ReferenceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 15),
                                     referee = Symbol.of("b"),
                                 ),
