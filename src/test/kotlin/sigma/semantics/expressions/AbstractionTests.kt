@@ -22,7 +22,7 @@ class AbstractionTests {
             @Test
             fun testInferredFromValue() {
                 val term = ExpressionTerm.parse(
-                    source = "[a: Int] => 2 + 3",
+                    source = "^[a: Int] => 2 + 3",
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
@@ -42,7 +42,7 @@ class AbstractionTests {
             @Test
             fun testInferredFromDeclaration() {
                 val term = ExpressionTerm.parse(
-                    source = "[a: Int] -> Bool => 3 + 4",
+                    source = "^[a: Int] -> Bool => 3 + 4",
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
@@ -62,7 +62,7 @@ class AbstractionTests {
             @Test
             fun testInferredFromArguments() {
                 val term = ExpressionTerm.parse(
-                    source = "[a: Int] => a",
+                    source = "^[a: Int] => a",
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
@@ -82,7 +82,7 @@ class AbstractionTests {
             @Test
             fun testDeclaredFromGenericArguments() {
                 val term = ExpressionTerm.parse(
-                    source = "![e] [a: e] -> e => a",
+                    source = "![e] ^[a: e] -> e => a",
                 ) as AbstractionTerm
 
                 val abstraction = Abstraction.build(
@@ -121,7 +121,7 @@ class AbstractionTests {
             val abstraction = Abstraction.build(
                 outerDeclarationScope = BuiltinScope,
                 term = ExpressionTerm.parse(
-                    source = "[n: Int, m: Int] => n * m",
+                    source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionTerm
             )
 

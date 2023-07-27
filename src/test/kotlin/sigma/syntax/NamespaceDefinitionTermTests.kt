@@ -21,7 +21,7 @@ class NamespaceDefinitionTermTests {
                         
                         const name1 = 123
                         
-                        const name2 = [a: Int] => 42
+                        const name2 = ^[a: Int] => 42
                         
                         const name3 = {
                             a: 1,
@@ -64,14 +64,14 @@ class NamespaceDefinitionTermTests {
                                         OrderedTupleTypeConstructorTerm.Element(
                                             name = Symbol.of("a"),
                                             type = TypeReferenceTerm(
-                                                location = SourceLocation(lineIndex = 6, columnIndex = 22),
+                                                location = SourceLocation(lineIndex = 6, columnIndex = 23),
                                                 referee = Symbol.of("Int"),
                                             ),
                                         ),
                                     ),
                                 ),
                                 image = IntLiteralTerm(
-                                    location = SourceLocation(lineIndex = 6, columnIndex = 30),
+                                    location = SourceLocation(lineIndex = 6, columnIndex = 31),
                                     value = IntValue(value = 42L),
                                 ),
                             ),

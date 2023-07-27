@@ -125,7 +125,7 @@ ifExpression
     ;
 
 abstraction
-    :   (Bang genericParametersTuple)? argumentType=tupleTypeConstructor
+    :   genericParametersTuple? argumentType=tupleTypeConstructor
         (ThinArrow imageType=typeExpression)? FatArrow image=expression
     ;
 
@@ -220,7 +220,7 @@ functionTypeDepiction
 // Unordered tuple type constructor
 
 unorderedTupleTypeConstructor
-    : LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
+    : Dash LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
 
 unorderedTupleTypeEntry
     : name=identifier Colon valueType=typeExpression
@@ -231,7 +231,7 @@ unorderedTupleTypeEntry
 // Ordered tuple type constructor
 
 orderedTupleTypeConstructor
-    : LeftBracket (orderedTupleTypeElement (Comma orderedTupleTypeElement)* Comma?)? RightBracket
+    : Dash LeftBracket (orderedTupleTypeElement (Comma orderedTupleTypeElement)* Comma?)? RightBracket
     ;
 
 orderedTupleTypeElement
@@ -241,11 +241,11 @@ orderedTupleTypeElement
 // end
 
 arrayTypeConstructor
-    : LeftBracket type=typeExpression Asterisk RightBracket
+    : Dash LeftBracket type=typeExpression Asterisk RightBracket
     ;
 
 dictTypeDepiction
-    : LeftBrace LeftBracket keyType=typeExpression RightBracket Colon valueType=typeExpression RightBrace
+    : Dash LeftBrace LeftBracket keyType=typeExpression RightBracket Colon valueType=typeExpression RightBrace
     ;
 
 genericTypeConstructor

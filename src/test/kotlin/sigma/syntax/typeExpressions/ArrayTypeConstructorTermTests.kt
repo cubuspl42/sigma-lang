@@ -14,14 +14,14 @@ class ArrayTypeConstructorTermTests {
         @Test
         fun test() {
             val expression = TypeExpressionTerm.parse(
-                source = "[A*]",
+                source = "^[A*]",
             )
 
             assertEquals(
                 expected = ArrayTypeConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elementType = TypeReferenceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 2),
                         referee = Symbol.of("A"),
                     ),
                 ),
@@ -34,7 +34,7 @@ class ArrayTypeConstructorTermTests {
         @Test
         fun test() {
             val type = TypeExpressionTerm.parse(
-                source = "[A*]",
+                source = "^[A*]",
             ).evaluate(
                 declarationScope = FakeDeclarationBlock.of(
                     FakeTypeEntityDefinition(

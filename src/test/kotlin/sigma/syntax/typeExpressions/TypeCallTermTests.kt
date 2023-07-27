@@ -18,7 +18,7 @@ class TypeCallTermTests {
         @Test
         fun test() {
             val term = TypeExpressionTerm.parse(
-                source = "Foo[Bar, {a: Int, b: Bool}]",
+                source = "Foo[Bar, ^{a: Int, b: Bool}]",
             )
 
             assertEquals(
@@ -40,14 +40,14 @@ class TypeCallTermTests {
                                     UnorderedTupleTypeConstructorTerm.Entry(
                                         name = Symbol.of("a"),
                                         valueType = TypeReferenceTerm(
-                                            location = SourceLocation(lineIndex = 1, columnIndex = 13),
+                                            location = SourceLocation(lineIndex = 1, columnIndex = 14),
                                             referee = Symbol.of("Int"),
                                         ),
                                     ),
                                     UnorderedTupleTypeConstructorTerm.Entry(
                                         name = Symbol.of("b"),
                                         valueType = TypeReferenceTerm(
-                                            location = SourceLocation(lineIndex = 1, columnIndex = 21),
+                                            location = SourceLocation(lineIndex = 1, columnIndex = 22),
                                             referee = Symbol.of("Bool"),
                                         ),
                                     ),
