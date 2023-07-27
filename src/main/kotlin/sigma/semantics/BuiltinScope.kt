@@ -23,11 +23,16 @@ interface BuiltinValue {
     val value: Value
 }
 
-private class BuiltinValueDeclaration(
+private class BuiltinValueDefinition(
     override val name: Symbol,
+    val value: Value,
     val type: Type,
-) : ValueDeclaration {
-    override val effectiveValueType: Computation<Type> = Computation.pure(type)
+) : StaticDefinition() {
+//    override val effectiveValueType: Computation<Type> = Computation.pure(type)
+
+    override val staticValue: EvaluationResult = value
+    override val errors: Set<SemanticError>
+        get() = emptySet()
 }
 
 object BuiltinScope : Scope, StaticScope {
@@ -205,8 +210,9 @@ object BuiltinScope : Scope, StaticScope {
     )
 
     private val builtinValueDeclarations = builtinValues.map { (name, builtinValue) ->
-        BuiltinValueDeclaration(
+        BuiltinValueDefinition(
             name = name,
+            value = builtinValue.value,
             type = builtinValue.type,
         )
     }.toSet()
