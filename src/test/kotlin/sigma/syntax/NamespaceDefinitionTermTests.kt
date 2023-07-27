@@ -64,7 +64,7 @@ class NamespaceDefinitionTermTests {
                                         OrderedTupleTypeConstructorTerm.Element(
                                             name = Symbol.of("a"),
                                             type = ReferenceTerm(
-                                                location = SourceLocation(lineIndex = 6, columnIndex = 23),
+                                                location = SourceLocation(lineIndex = 6, columnIndex = 19),
                                                 referee = Symbol.of("Int"),
                                             ),
                                         ),

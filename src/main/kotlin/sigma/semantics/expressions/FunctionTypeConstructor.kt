@@ -5,25 +5,33 @@ import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
-import sigma.semantics.types.ArrayType
+import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
+import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.expressions.ArrayTypeConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
+import sigma.syntax.expressions.FunctionTypeTerm
+import sigma.syntax.expressions.TupleTypeConstructorTerm
 import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
 
-class ArrayTypeConstructor(
+class FunctionTypeConstructor(
     override val term: ExpressionTerm,
-    val elementType: Expression,
+    val argumentType: TupleTypeConstructor,
+    val imageType: Expression,
 ) : Expression() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: ArrayTypeConstructorTerm,
-        ): ArrayTypeConstructor = ArrayTypeConstructor(
+            term: FunctionTypeTerm,
+        ): FunctionTypeConstructor = FunctionTypeConstructor(
             term = term,
-            elementType = Expression.build(
+            argumentType = TupleTypeConstructor.build(
                 declarationScope = declarationScope,
-                term = term.elementType,
+                term = term.argumentType,
+            ),
+            imageType = Expression.build(
+                declarationScope = declarationScope,
+                term = term.imageType,
             ),
         )
     }
@@ -39,10 +47,14 @@ class ArrayTypeConstructor(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = ArrayType(
-        elementType = elementType.evaluate(
-            context = context,
-            scope = scope,
+    ): Value = UniversalFunctionType(
+        argumentType = argumentType.evaluate(
+            context,
+            scope,
+        ) as TupleType,
+        imageType = imageType.evaluate(
+            context,
+            scope,
         ) as Type,
     )
 }

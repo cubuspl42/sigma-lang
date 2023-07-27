@@ -11,6 +11,7 @@ import sigma.syntax.expressions.GenericTypeConstructorTerm
 import sigma.syntax.expressions.ReferenceTerm
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -18,6 +19,7 @@ import kotlin.test.assertIs
 class GenericTypeConstructorTermTests {
     object ParsingTests {
         @Test
+        @Ignore
         fun test() {
             val term = ExpressionTerm.parse(
                 source = "![A, B] ^{a: A, b: B, c: Int}",

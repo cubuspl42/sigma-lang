@@ -19,7 +19,8 @@ import sigma.syntax.expressions.AbstractionTerm
 class Abstraction(
     private val innerDeclarationScope: StaticScope,
     override val term: AbstractionTerm,
-    val argumentType: TupleType,
+    val argumentTypeConstructor: TupleTypeConstructor,
+    val declaredImageTypeConstructor: Expression?,
     val image: Expression,
 ) : Expression() {
     class ArgumentDeclaration(
@@ -48,8 +49,7 @@ class Abstraction(
                 outerScope = outerDeclarationScope,
             ) ?: outerDeclarationScope
 
-
-            val argumentTypeBody =  build(
+            val argumentTypeBody = TupleTypeConstructor.build(
                 declarationScope = innerDeclarationScope1,
                 term = term.argumentType,
             )
@@ -64,6 +64,13 @@ class Abstraction(
                 outerScope = innerDeclarationScope1,
             )
 
+            val declaredImageType = term.declaredImageType?.let {
+                Expression.build(
+                    declarationScope = innerDeclarationScope2,
+                    term = it,
+                )
+            }
+
             val image = build(
                 declarationScope = innerDeclarationScope2,
                 term = term.image,
@@ -72,7 +79,8 @@ class Abstraction(
             return Abstraction(
                 innerDeclarationScope = innerDeclarationScope2,
                 term = term,
-                argumentType = argumentType,
+                argumentTypeConstructor = argumentTypeBody,
+                declaredImageTypeConstructor = declaredImageType,
                 image = image,
             )
         }
@@ -87,23 +95,38 @@ class Abstraction(
         image = image,
     )
 
-    private val declaredImageType: Type? by lazy {
-        TODO()
+    val argumentType by lazy {
+        argumentTypeConstructor.bindTranslated(
+            staticScope = innerDeclarationScope,
+        ).evaluate(
+            context = EvaluationContext.Initial,
+        ) as TupleType
     }
 
-    override val inferredType: Computation<FunctionType> by lazy {
-        inferredImageType.thenJust { inferredImageType ->
-            UniversalFunctionType(
-                argumentType = argumentType,
-                imageType = inferredImageType,
-            )
+    val declaredImageType by lazy {
+        declaredImageTypeConstructor?.bindTranslated(
+            staticScope = innerDeclarationScope,
+        )?.evaluate(
+            context = EvaluationContext.Initial,
+        ) as? Type
+    }
+
+    private val effectiveImageType: Computation<Type> by lazy {
+        val declaredImageType = this.declaredImageType
+
+        if (declaredImageType != null) {
+            return@lazy Computation.pure(declaredImageType)
+        } else {
+            return@lazy image.inferredType
         }
     }
 
-    private val inferredImageType: Computation<Type> by lazy {
-        when (val it = declaredImageType) {
-            null -> image.inferredType
-            else -> Computation.pure(it)
+    override val inferredType: Computation<FunctionType> by lazy {
+        effectiveImageType.thenJust { effectiveImageType ->
+            UniversalFunctionType(
+                argumentType = argumentType,
+                imageType = effectiveImageType,
+            )
         }
     }
 

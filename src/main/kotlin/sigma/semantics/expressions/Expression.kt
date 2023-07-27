@@ -3,7 +3,10 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationStackExhaustionError
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Thunk
 import sigma.semantics.Computation
+import sigma.semantics.ConstantDefinition
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.Type
@@ -41,6 +44,22 @@ data class EvaluationContext(
     fun withIncreasedDepth(): EvaluationContext = EvaluationContext(
         callDepth = callDepth + 1,
     )
+}
+
+class TranslationScope(
+    private val staticScope: StaticScope,
+) : Scope {
+    override fun getValue(
+        context: EvaluationContext,
+        name: Symbol,
+    ): EvaluationResult? = staticScope.resolveName(
+        name = name,
+    )?.let { declaration ->
+        when (declaration) {
+            is ConstantDefinition -> declaration.definedValue
+            else -> null
+        }
+    }
 }
 
 abstract class Expression {
@@ -117,7 +136,10 @@ abstract class Expression {
 
             is DictTypeTerm -> TODO()
 
-            is FunctionTypeTerm -> TODO()
+            is FunctionTypeTerm -> FunctionTypeConstructor.build(
+                declarationScope = declarationScope,
+                term = term,
+            )
 
             is GenericTypeConstructorTerm -> TODO()
         }
@@ -159,4 +181,23 @@ abstract class Expression {
     } else {
         EvaluationStackExhaustionError
     }
+
+    fun bind(
+        boundScope: Scope,
+    ): Thunk = object : Thunk() {
+        override fun evaluateDirectly(
+            context: EvaluationContext,
+        ): EvaluationResult = this@Expression.evaluate(
+            context = context,
+            scope = boundScope,
+        )
+    }
+
+    fun bindTranslated(
+        staticScope: StaticScope,
+    ): Thunk = bind(
+        boundScope = TranslationScope(
+            staticScope = staticScope,
+        ),
+    )
 }

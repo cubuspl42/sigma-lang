@@ -7,6 +7,7 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.ArrayTable
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.FunctionType
+import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.IntType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.TypeVariable
@@ -18,6 +19,23 @@ import kotlin.test.assertIs
 
 class AbstractionTests {
     object TypeCheckingTests {
+        @Test
+        fun testDeclaredImageType() {
+            val term = ExpressionTerm.parse(
+                source = "^[a: Int] -> Int => a + 3",
+            ) as AbstractionTerm
+
+            val abstraction = Abstraction.build(
+                outerDeclarationScope = BuiltinScope,
+                term = term,
+            )
+
+            assertEquals(
+                expected = IntCollectiveType,
+                actual = abstraction.declaredImageType,
+            )
+        }
+
         object InferredTypeTests {
             @Test
             fun testInferredFromValue() {
