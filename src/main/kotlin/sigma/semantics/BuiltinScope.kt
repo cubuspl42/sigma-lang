@@ -7,6 +7,7 @@ import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
+import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
@@ -214,6 +215,7 @@ object BuiltinScope : Scope, StaticScope {
         builtinValueDeclarations.associateBy { it.name }
 
     override fun getValue(
+        context: EvaluationContext,
         name: Symbol,
     ): EvaluationResult? = getBuiltin(
         name = name,

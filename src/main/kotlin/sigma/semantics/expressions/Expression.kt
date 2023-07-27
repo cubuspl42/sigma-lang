@@ -27,6 +27,22 @@ import sigma.syntax.expressions.SymbolLiteralTerm
 import sigma.syntax.expressions.TupleConstructorTerm
 import sigma.syntax.expressions.TupleTypeConstructorTerm
 
+data class EvaluationContext(
+    val callDepth: Int,
+) {
+    companion object {
+        val Initial: EvaluationContext = EvaluationContext(
+            callDepth = 0,
+        )
+
+        const val maxCallDepth: Int = 1024
+    }
+
+    fun withIncreasedDepth(): EvaluationContext = EvaluationContext(
+        callDepth = callDepth + 1,
+    )
+}
+
 abstract class Expression {
     companion object {
         fun build(
@@ -128,6 +144,7 @@ abstract class Expression {
     abstract val inferredType: Computation<Type>
 
     abstract fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): EvaluationResult
 }

@@ -54,7 +54,10 @@ class Abstraction(
             )
 
             // TODO
-            val argumentType = argumentTypeBody.evaluate(scope = Scope.Empty) as TupleType
+            val argumentType = argumentTypeBody.evaluate(
+                context = EvaluationContext.Initial,
+                scope = Scope.Empty,
+            ) as TupleType
 
             val innerDeclarationScope2 = argumentType.toArgumentDeclarationBlock().chainWith(
                 outerScope = innerDeclarationScope1,
@@ -75,9 +78,10 @@ class Abstraction(
     }
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): Value = Closure(
-        context = scope,
+        outerScope = scope,
         argumentType = argumentType,
         image = image,
     )

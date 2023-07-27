@@ -91,6 +91,7 @@ class OrderedTupleConstructorTests {
             )
 
             val value = tupleConstructor.evaluate(
+                context = EvaluationContext.Initial,
                 scope = Scope.Empty,
             )
 
@@ -114,6 +115,7 @@ class OrderedTupleConstructorTests {
             )
 
             val value = tupleConstructor.evaluate(
+                context = EvaluationContext.Initial,
                 scope = FixedScope(
                     entries = mapOf(
                         Symbol.of("a") to BoolValue(false),

@@ -1,6 +1,7 @@
 package sigma.semantics
 
 import sigma.evaluation.scope.Scope
+import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
@@ -14,7 +15,10 @@ abstract class ValueDefinition : ValueDeclaration {
     protected abstract val declarationScope: StaticScope
 
     private val declaredType: Type? by lazy {
-        definedTypeBody?.evaluate(scope = BuiltinScope) as? Type
+        definedTypeBody?.evaluate(
+            context = EvaluationContext.Initial,
+            scope = BuiltinScope,
+        ) as? Type
     }
 
     private val unmatchedInferredTypeError: UnmatchedInferredTypeError? by lazy {

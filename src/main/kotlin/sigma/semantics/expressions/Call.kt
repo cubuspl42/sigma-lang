@@ -1,7 +1,6 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.CallStackExhaustionError
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.Value
@@ -133,16 +132,24 @@ class Call(
     }
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): EvaluationResult {
-        val subjectValue = subject.evaluate(scope = scope)
+        val subjectValue = subject.evaluate(
+            context = context,
+            scope = scope,
+        )
 
         if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
 
-        val argumentResult = argument.evaluate(scope = scope)
+        val argumentResult = argument.evaluate(
+            context = context,
+            scope = scope,
+        )
         val argumentValue = argumentResult as? Value ?: return argumentResult
 
         val image = subjectValue.apply(
+            context = context,
             argument = argumentValue,
         )
 

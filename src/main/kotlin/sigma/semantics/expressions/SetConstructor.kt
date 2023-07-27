@@ -78,10 +78,14 @@ class SetConstructor(
     }
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): Value = SetValue(
         elements = elements.map {
-            it.evaluate(scope = scope) as Value
+            it.evaluate(
+                context = context,
+                scope = scope,
+            ) as Value
         }.toSet(),
     )
 }

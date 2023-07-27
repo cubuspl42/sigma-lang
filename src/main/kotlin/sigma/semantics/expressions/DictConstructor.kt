@@ -152,11 +152,19 @@ class DictConstructor(
     }
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): Value = DictValue(
         entries = associations.associate {
-            val key = it.key.evaluate(scope = scope) as PrimitiveValue
-            val value = it.value.evaluate(scope = scope) as Value
+            val key = it.key.evaluate(
+                context = context,
+                scope = scope,
+            ) as PrimitiveValue
+
+            val value = it.value.evaluate(
+                context = context,
+                scope = scope,
+            ) as Value
 
             key to value
         },

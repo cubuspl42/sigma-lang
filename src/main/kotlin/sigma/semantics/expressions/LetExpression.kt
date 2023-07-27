@@ -55,8 +55,10 @@ data class LetExpression(
     }
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): EvaluationResult = result.evaluate(
+        context = context,
         scope = definitionBlock.evaluate(
             scope = scope,
         ),

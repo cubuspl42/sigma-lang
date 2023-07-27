@@ -33,9 +33,13 @@ data class IsUndefinedCheck(
     override val errors: Set<SemanticError> = emptySet()
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): Value {
-        val argumentValue = argument.evaluate(scope = scope)
+        val argumentValue = argument.evaluate(
+            context = context,
+            scope = scope,
+        )
 
         return BoolValue(
             value = argumentValue is UndefinedValue,

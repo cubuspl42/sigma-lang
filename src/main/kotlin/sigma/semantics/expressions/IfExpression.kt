@@ -78,17 +78,27 @@ class IfExpression(
     }
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): EvaluationResult {
 
-        val guardValue = guard.evaluate(scope = scope)
+        val guardValue = guard.evaluate(
+            context = context,
+            scope = scope,
+        )
 
         if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")
 
         return if (guardValue.value) {
-            trueBranch.evaluate(scope = scope)
+            trueBranch.evaluate(
+                context = context,
+                scope = scope,
+            )
         } else {
-            falseBranch.evaluate(scope = scope)
+            falseBranch.evaluate(
+                context = context,
+                scope = scope,
+            )
         }
     }
 }

@@ -45,6 +45,7 @@ class IsUndefinedCheckTests {
             assertEquals(
                 expected = BoolValue.False,
                 actual = isUndefinedCheck.evaluate(
+                    context = EvaluationContext.Initial,
                     scope = Scope.Empty,
                 ),
             )
@@ -64,6 +65,7 @@ class IsUndefinedCheckTests {
             assertEquals(
                 expected = BoolValue.True,
                 actual = isUndefinedCheck.evaluate(
+                    context = EvaluationContext.Initial,
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("d") to dictValue,

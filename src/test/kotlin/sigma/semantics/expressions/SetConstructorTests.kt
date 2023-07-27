@@ -120,6 +120,7 @@ object SetConstructorTests {
             )
 
             val value = setConstructor.evaluate(
+                context = EvaluationContext.Initial,
                 scope = FixedScope(
                     entries = mapOf(
                         Symbol.of("foo") to IntValue(value = 1L),

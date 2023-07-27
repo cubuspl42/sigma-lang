@@ -95,8 +95,7 @@ class AbstractionTests {
                 )
 
                 assertEquals(
-                    expected = inferredType.argumentType,
-                    actual = OrderedTupleType(
+                    expected = inferredType.argumentType, actual = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
                                 name = Symbol.of("a"),
@@ -119,13 +118,13 @@ class AbstractionTests {
         @Test
         fun testUnorderedArgumentTuple() {
             val abstraction = Abstraction.build(
-                outerDeclarationScope = BuiltinScope,
-                term = ExpressionTerm.parse(
+                outerDeclarationScope = BuiltinScope, term = ExpressionTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionTerm
             )
 
             val closure = abstraction.evaluate(
+                context = EvaluationContext.Initial,
                 scope = BuiltinScope,
             )
 
@@ -134,7 +133,8 @@ class AbstractionTests {
             assertEquals(
                 expected = IntValue(6),
                 actual = closure.apply(
-                    ArrayTable(
+                    context = EvaluationContext.Initial,
+                    argument = ArrayTable(
                         elements = listOf(
                             IntValue(2),
                             IntValue(3),

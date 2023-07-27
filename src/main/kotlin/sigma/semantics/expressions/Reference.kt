@@ -11,7 +11,6 @@ import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ReferenceTerm
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
 import sigma.semantics.Declaration
 
 class Reference(
@@ -70,8 +69,12 @@ class Reference(
     }
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
-    ): EvaluationResult = scope.getValue(referredName) ?: throw RuntimeException(
+    ): EvaluationResult = scope.getValue(
+        context = context,
+        name = referredName,
+    ) ?: throw RuntimeException(
         "Unresolved reference at run-time: $referredName",
     )
 }

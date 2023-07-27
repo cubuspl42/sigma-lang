@@ -41,7 +41,7 @@ class LocalValueDefinitionBlock(
     fun evaluate(
         scope: Scope,
     ): Scope = LoopedScope(
-        context = scope,
+        outerScope = scope,
         expressionByName = definitionByName.mapValues { (_, definition) ->
             definition.body
         },

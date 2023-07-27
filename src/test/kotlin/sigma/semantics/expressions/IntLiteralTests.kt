@@ -17,7 +17,10 @@ class IntLiteralTests {
 
             assertEquals(
                 expected = IntValue(123),
-                actual = intLiteral.evaluate(scope = Scope.Empty),
+                actual = intLiteral.evaluate(
+                    context = EvaluationContext.Initial,
+                    scope = Scope.Empty,
+                ),
             )
         }
     }

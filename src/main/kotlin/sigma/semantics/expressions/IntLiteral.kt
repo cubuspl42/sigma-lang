@@ -33,6 +33,7 @@ data class IntLiteral(
     override val errors: Set<SemanticError> = emptySet()
 
     override fun evaluate(
+        context: EvaluationContext,
         scope: Scope,
     ): Value = value
 }
