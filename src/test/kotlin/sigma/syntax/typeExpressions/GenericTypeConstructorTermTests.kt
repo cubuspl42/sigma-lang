@@ -1,15 +1,11 @@
-package sigma.syntax.type_expressions
+package sigma.syntax.typeExpressions
 
-import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
 import sigma.semantics.BuiltinScope
 import sigma.semantics.types.GenericTypeConstructor
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.expressions.GenericParametersTuple
-import sigma.syntax.typeExpressions.GenericTypeConstructorTerm
-import sigma.syntax.typeExpressions.UnorderedTupleTypeConstructorTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

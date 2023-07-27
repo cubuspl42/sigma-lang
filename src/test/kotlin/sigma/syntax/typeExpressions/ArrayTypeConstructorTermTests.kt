@@ -1,27 +1,29 @@
-package sigma.syntax.type_expressions
+package sigma.syntax.typeExpressions
 
-import sigma.syntax.typeExpressions.TypeExpressionTerm
-import sigma.syntax.typeExpressions.TypeReferenceTerm
-import sigma.syntax.SourceLocation
-import sigma.semantics.types.BoolType
 import sigma.evaluation.values.Symbol
+import sigma.semantics.types.ArrayType
+import sigma.semantics.types.BoolType
+import sigma.syntax.SourceLocation
 import utils.FakeDeclarationBlock
 import utils.FakeTypeEntityDefinition
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TypeReferenceTermTests {
+class ArrayTypeConstructorTermTests {
     object ParsingTests {
         @Test
         fun test() {
             val expression = TypeExpressionTerm.parse(
-                source = "Foo",
+                source = "[A*]",
             )
 
             assertEquals(
-                expected = TypeReferenceTerm(
+                expected = ArrayTypeConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    referee = Symbol.of("Foo"),
+                    elementType = TypeReferenceTerm(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        referee = Symbol.of("A"),
+                    ),
                 ),
                 actual = expression,
             )
@@ -32,18 +34,20 @@ class TypeReferenceTermTests {
         @Test
         fun test() {
             val type = TypeExpressionTerm.parse(
-                source = "Foo",
+                source = "[A*]",
             ).evaluate(
                 declarationScope = FakeDeclarationBlock.of(
                     FakeTypeEntityDefinition(
-                        name = Symbol.of("Foo"),
+                        name = Symbol.of("A"),
                         definedTypeEntity = BoolType,
                     ),
                 ),
             )
 
             assertEquals(
-                expected = BoolType,
+                expected = ArrayType(
+                    elementType = BoolType,
+                ),
                 actual = type,
             )
         }
