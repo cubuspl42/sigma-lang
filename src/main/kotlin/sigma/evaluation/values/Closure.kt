@@ -12,7 +12,7 @@ class Closure(
 ) : ComputableFunctionValue() {
     override fun apply(
         argument: Value,
-    ): Value = image.evaluate(
+    ): EvaluationResult = image.evaluate(
         scope = argumentType.toArgumentScope(
             argument = argument as DictValue,
         ).chainWith(

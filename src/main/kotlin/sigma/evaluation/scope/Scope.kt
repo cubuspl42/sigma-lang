@@ -1,14 +1,14 @@
 package sigma.evaluation.scope
 
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
 
 interface Scope {
     object Empty : Scope {
-        override fun getValue(name: Symbol): Value? = null
+        override fun getValue(name: Symbol): EvaluationResult? = null
     }
 
-    fun getValue(name: Symbol): Value?
+    fun getValue(name: Symbol): EvaluationResult?
 }
 
 fun Scope.chainWith(

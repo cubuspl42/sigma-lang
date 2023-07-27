@@ -1,3 +1,5 @@
+import sigma.evaluation.values.CallStackExhaustionError
+import sigma.evaluation.values.Value
 import sigma.semantics.Project
 
 fun main() {
@@ -5,5 +7,8 @@ fun main() {
     val loader = Project.Loader.create(store = store)
     val program = loader.load(fileBaseName = "problem")
 
-    println("Result: ${program.evaluateResult().dump()}")
+    when (val evaluationResult = program.evaluateResult()) {
+        CallStackExhaustionError -> println("Error: call stack exhausted")
+        is Value -> println("Result: ${evaluationResult.dump()}")
+    }
 }

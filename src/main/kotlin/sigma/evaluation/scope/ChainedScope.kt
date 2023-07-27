@@ -1,7 +1,7 @@
 package sigma.evaluation.scope
 
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
 
 class ChainedScope(
     private val context: Scope,
@@ -9,7 +9,7 @@ class ChainedScope(
 ) : Scope {
     override fun getValue(
         name: Symbol,
-    ): Value? = scope.getValue(
+    ): EvaluationResult? = scope.getValue(
         name = name,
     ) ?: context.getValue(
         name = name,

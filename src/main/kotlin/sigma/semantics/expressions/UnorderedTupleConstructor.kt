@@ -104,7 +104,10 @@ class UnorderedTupleConstructor(
         scope: Scope,
     ): Value = DictValue(
         entries = entries.associate {
-            it.name to it.value.evaluate(scope = scope)
+            val name = it.name
+            val value = it.value.evaluate(scope = scope) as Value
+
+            name to value
         },
     )
 }

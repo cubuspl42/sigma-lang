@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -78,7 +79,7 @@ class IfExpression(
 
     override fun evaluate(
         scope: Scope,
-    ): Value {
+    ): EvaluationResult {
 
         val guardValue = guard.evaluate(scope = scope)
 

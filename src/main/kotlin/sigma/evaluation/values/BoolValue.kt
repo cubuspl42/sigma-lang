@@ -14,7 +14,7 @@ data class BoolValue(
             val test = (argument as DictValue).read(IntValue.Zero)!! as BoolValue
 
             return object : ComputableFunctionValue() {
-                override fun apply(argument: Value): Value {
+                override fun apply(argument: Value): EvaluationResult {
                     val branches = argument as FunctionValue
 
                     return when {

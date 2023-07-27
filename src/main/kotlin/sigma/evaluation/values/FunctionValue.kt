@@ -24,14 +24,11 @@ abstract class FunctionValue : Value() {
             ) as FunctionValue
 
             return object : FunctionValue() {
-                override fun apply(argument: Value): Value {
-                    val value = primary.apply(argument = argument)
-
-                    return when (value) {
+                override fun apply(argument: Value): EvaluationResult =
+                    when (val value = primary.apply(argument = argument)) {
                         is UndefinedValue -> secondary.apply(argument = argument)
                         else -> value
                     }
-                }
 
                 override fun dump(): String = "${primary.dump()} .. ${secondary.dump()}"
             }
@@ -195,7 +192,7 @@ abstract class FunctionValue : Value() {
             return DictValue.fromList(elements.map {
                 transform.apply(
                     DictValue.fromList(listOf(it)),
-                )
+                ) as Value
             })
         }
     }
@@ -299,10 +296,10 @@ abstract class FunctionValue : Value() {
     }
 
     fun toList(): List<Value> = generateSequence(0) { it + 1 }.map {
-        apply(IntValue(value = it.toLong()))
+        apply(IntValue(value = it.toLong())) as Value
     }.takeWhile { it !is UndefinedValue }.toList()
 
     abstract fun apply(
         argument: Value,
-    ): Value
+    ): EvaluationResult
 }
