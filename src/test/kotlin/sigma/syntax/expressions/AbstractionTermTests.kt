@@ -58,8 +58,8 @@ class AbstractionTermTests {
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         parametersDefinitions = listOf(
-                            GenericParametersTuple.GenericParameterDefinition.of("a"),
-                            GenericParametersTuple.GenericParameterDefinition.of("b"),
+                            Symbol.of("a"),
+                            Symbol.of("b"),
                         )
                     ),
                     argumentType = OrderedTupleTypeConstructorTerm(
@@ -98,7 +98,7 @@ class AbstractionTermTests {
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         parametersDefinitions = listOf(
-                            GenericParametersTuple.GenericParameterDefinition.of("t"),
+                            Symbol.of("t"),
                         )
                     ),
                     argumentType = OrderedTupleTypeConstructorTerm(
