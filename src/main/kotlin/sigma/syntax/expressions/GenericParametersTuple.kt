@@ -15,7 +15,7 @@ import sigma.syntax.Term
 
 data class GenericParametersTuple(
     override val location: SourceLocation,
-    val parametersDefinitions: List<GenericParameterDefinition>,
+    val parametersDefinitions: List<Symbol>,
 ) : Term() {
     companion object {
         fun build(
@@ -23,36 +23,15 @@ data class GenericParametersTuple(
         ): GenericParametersTuple = GenericParametersTuple(
             location = SourceLocation.build(ctx),
             parametersDefinitions = ctx.genericParameterDeclaration().map {
-                GenericParameterDefinition.of(it.name.text)
+                Symbol.of(it.name.text)
             },
         )
-    }
-
-    data class GenericParameterDefinition(
-        override val name: Symbol,
-        val definedTypeVariable: TypeVariable,
-    ) : ValueDeclaration {
-        companion object {
-            fun of(
-                name: String,
-            ): GenericParameterDefinition {
-                val nameSymbol = Symbol.of(name)
-
-                return GenericParameterDefinition(
-                    name = nameSymbol,
-                    definedTypeVariable = TypeVariable(name = nameSymbol),
-                )
-            }
-        }
-
-        override val effectiveValueType: Computation<Type>
-            get() = TODO("Not yet implemented")
     }
 
     inner class GenericParametersTupleBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
-        ): ResolvedName? = if (parametersDefinitions.any { it.name == name }) {
+        ): ResolvedName? = if (parametersDefinitions.any { it == name }) {
             ResolvedName(
                 type = MetaType,
                 resolution = DynamicResolution(),

@@ -31,18 +31,8 @@ class GenericTypeConstructorTermTests {
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         parametersDefinitions = listOf(
-                            GenericParametersTuple.GenericParameterDefinition(
-                                name = Symbol.of("A"),
-                                definedTypeVariable = TypeVariable(
-                                    name =  Symbol.of("A"),
-                                ),
-                            ),
-                            GenericParametersTuple.GenericParameterDefinition(
-                                name = Symbol.of("B"),
-                                definedTypeVariable = TypeVariable(
-                                    name =  Symbol.of("B"),
-                                ),
-                            ),
+                            Symbol.of("A"),
+                            Symbol.of("B"),
                         ),
                     ),
                     body = UnorderedTupleTypeConstructorTerm(
