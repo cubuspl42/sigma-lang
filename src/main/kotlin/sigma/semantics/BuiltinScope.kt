@@ -81,15 +81,15 @@ object BuiltinScope : Scope, StaticScope {
                     argumentType = UnorderedTupleType(
                         valueTypeByName = mapOf(
                             Symbol.of("then") to TypeVariable(
-                                name = Symbol.of("r"),
+                                formula = Formula.of("r"),
                             ),
                             Symbol.of("else") to TypeVariable(
-                                name = Symbol.of("r"),
+                                formula = Formula.of("r"),
                             ),
                         )
                     ),
                     imageType = TypeVariable(
-                        name = Symbol.of("r"),
+                        formula = Formula.of("r"),
                     ),
                 ),
             ),
@@ -179,28 +179,28 @@ object BuiltinScope : Scope, StaticScope {
                     valueTypeByName = mapOf(
                         Symbol.of("primary") to DictType(
                             keyType = TypeVariable(
-                                name = Symbol.of("K"),
+                                formula = Formula.of("K"),
                             ),
                             valueType = TypeVariable(
-                                name = Symbol.of("V"),
+                                formula = Formula.of("V"),
                             ),
                         ),
                         Symbol.of("secondary") to DictType(
                             keyType = TypeVariable(
-                                name = Symbol.of("K"),
+                                formula = Formula.of("K"),
                             ),
                             valueType = TypeVariable(
-                                name = Symbol.of("V"),
+                                formula = Formula.of("V"),
                             ),
                         ),
                     )
                 ),
                 imageType = DictType(
                     keyType = TypeVariable(
-                        name = Symbol.of("K"),
+                        formula = Formula.of("K"),
                     ),
                     valueType = TypeVariable(
-                        name = Symbol.of("V"),
+                        formula = Formula.of("V"),
                     ),
                 ),
             ),

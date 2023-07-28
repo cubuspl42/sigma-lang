@@ -6,6 +6,7 @@ import sigma.semantics.BuiltinScope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.ArrayTable
 import sigma.evaluation.values.ValueResult
+import sigma.semantics.Formula
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntCollectiveType
@@ -114,16 +115,17 @@ class AbstractionTests {
                 )
 
                 assertEquals(
-                    expected = inferredType.argumentType, actual = OrderedTupleType(
+                    expected = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
                                 name = Symbol.of("a"),
                                 type = TypeVariable(
-                                    name = Symbol.of("e"),
+                                    formula = Formula.of("e"),
                                 ),
                             ),
                         ),
-                    )
+                    ),
+                    actual = inferredType.argumentType,
                 )
 
                 assertIs<TypeVariable>(

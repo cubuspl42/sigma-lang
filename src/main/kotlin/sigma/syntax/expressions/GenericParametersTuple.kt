@@ -4,6 +4,7 @@ import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.Computation
 import sigma.semantics.DynamicResolution
+import sigma.semantics.Formula
 import sigma.semantics.ResolvedName
 import sigma.semantics.StaticBlock
 import sigma.semantics.ValueDeclaration
@@ -34,10 +35,14 @@ data class GenericParametersTuple(
         ): ResolvedName? = if (parametersDefinitions.any { it == name }) {
             ResolvedName(
                 type = MetaType,
-                resolution = DynamicResolution(),
+                resolution = DynamicResolution(
+                    resolvedFormula = Formula(
+                        name = name,
+                    ),
+                ),
             )
         } else {
-             null
+            null
         }
     }
 

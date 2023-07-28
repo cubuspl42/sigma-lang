@@ -1,15 +1,25 @@
 package sigma.semantics
 
+import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.semantics.types.Type
 
-sealed interface Formula
-
-sealed class Resolution {
+data class Formula(
+    val name: Symbol,
+) {
+    companion object {
+        fun of(s: String): Formula = Formula(
+            name = Symbol.of(s)
+        )
+    }
 }
 
-class DynamicResolution() : Resolution()
+sealed class Resolution {}
+
+class DynamicResolution(
+    val resolvedFormula: Formula?,
+) : Resolution()
 
 abstract class StaticResolution : Resolution() {
     abstract val resolvedValue: Thunk
