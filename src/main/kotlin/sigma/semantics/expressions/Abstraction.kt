@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Closure
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.BuiltinScope
@@ -89,11 +90,11 @@ class Abstraction(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = Closure(
+    ): EvaluationResult = Closure(
         outerScope = scope,
         argumentType = argumentType,
         image = image,
-    )
+    ).asEvaluationResult
 
     val argumentType by lazy {
         argumentTypeConstructor.bindTranslated(

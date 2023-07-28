@@ -1,6 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.CachingThunk
 import sigma.evaluation.values.EvaluationStackExhaustionError
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
@@ -185,7 +186,7 @@ abstract class Expression {
 
     fun bind(
         boundScope: Scope,
-    ): Thunk = object : Thunk() {
+    ): Thunk = object : CachingThunk() {
         override fun evaluateDirectly(
             context: EvaluationContext,
         ): EvaluationResult = this@Expression.evaluate(

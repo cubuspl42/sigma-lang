@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.EvaluationResult
 import sigma.semantics.Computation
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Value
@@ -35,5 +36,5 @@ data class IntLiteral(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = value
+    ): EvaluationResult = value.asEvaluationResult
 }

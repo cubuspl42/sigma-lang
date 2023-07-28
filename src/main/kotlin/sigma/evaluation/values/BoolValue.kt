@@ -12,7 +12,7 @@ data class BoolValue(
     }
 
     object If : ComputableFunctionValue() {
-        override fun apply(context: EvaluationContext, argument: Value): Value {
+        override fun apply(context: EvaluationContext, argument: Value): ValueResult {
             val test = (argument as DictValue).read(IntValue.Zero)!! as BoolValue
 
             return object : ComputableFunctionValue() {
@@ -26,7 +26,7 @@ data class BoolValue(
                 }
 
                 override fun dump(): String = "(if')"
-            }
+            }.asEvaluationResult
         }
 
         override fun dump(): String = "(if)"

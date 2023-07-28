@@ -3,9 +3,11 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.ComputableFunctionValue
 import sigma.evaluation.values.DictValue
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.BuiltinScope
 import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
@@ -153,9 +155,9 @@ class CallTests {
         @Test
         fun testSimple() {
             val sq = object : ComputableFunctionValue() {
-                override fun apply(context: EvaluationContext, argument: Value): Value {
+                override fun apply(context: EvaluationContext, argument: Value): EvaluationResult {
                     val n = argument as IntValue
-                    return IntValue(n.value * n.value)
+                    return IntValue(n.value * n.value).asEvaluationResult
                 }
             }
 
@@ -164,9 +166,8 @@ class CallTests {
                 term = ExpressionTerm.parse("sq(3)") as CallTerm,
             )
 
-            assertEquals(
-                expected = IntValue(9),
-                actual = call.evaluate(
+            val result = assertIs<ValueResult>(
+                call.evaluate(
                     context = EvaluationContext.Initial,
                     scope = FixedScope(
                         entries = mapOf(
@@ -174,6 +175,10 @@ class CallTests {
                         )
                     ),
                 ),
+            )
+            assertEquals(
+                expected = IntValue(9),
+                actual = result.value,
             )
         }
 
@@ -184,9 +189,8 @@ class CallTests {
                 term = ExpressionTerm.parse("dict(2)") as CallTerm,
             )
 
-            assertEquals(
-                expected = Symbol.of("two"),
-                actual = call.evaluate(
+            val result = assertIs<ValueResult>(
+                call.evaluate(
                     context = EvaluationContext.Initial,
                     scope = FixedScope(
                         entries = mapOf(
@@ -200,6 +204,11 @@ class CallTests {
                         ),
                     ),
                 ),
+            )
+
+            assertEquals(
+                expected = Symbol.of("two"),
+                actual = result.value,
             )
         }
     }

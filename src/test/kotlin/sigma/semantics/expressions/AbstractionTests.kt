@@ -5,6 +5,7 @@ import sigma.evaluation.values.IntValue
 import sigma.semantics.BuiltinScope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.ArrayTable
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntCollectiveType
@@ -141,16 +142,19 @@ class AbstractionTests {
                 ) as AbstractionTerm
             )
 
-            val closure = abstraction.evaluate(
-                context = EvaluationContext.Initial,
-                scope = BuiltinScope,
+            val result = assertIs<ValueResult>(
+                abstraction.evaluate(
+                    context = EvaluationContext.Initial,
+                    scope = BuiltinScope,
+                ),
             )
+
+            val closure = result.value
 
             assertIs<FunctionValue>(closure)
 
-            assertEquals(
-                expected = IntValue(6),
-                actual = closure.apply(
+            val callResult = assertIs<ValueResult>(
+                closure.apply(
                     context = EvaluationContext.Initial,
                     argument = ArrayTable(
                         elements = listOf(
@@ -159,6 +163,11 @@ class AbstractionTests {
                         ),
                     ),
                 ),
+            )
+
+            assertEquals(
+                expected = IntValue(6),
+                actual = callResult.value,
             )
         }
     }

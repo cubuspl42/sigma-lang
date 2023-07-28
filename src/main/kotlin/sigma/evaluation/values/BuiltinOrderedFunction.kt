@@ -12,13 +12,13 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
     final override fun apply(
         context: EvaluationContext,
         argument: Value,
-    ): Value {
+    ): EvaluationResult {
         val args = argument as FunctionValue
 
         return compute(
             context = context,
             args = args.toList(),
-        )
+        ).asEvaluationResult
     }
 
     final override val type: Type

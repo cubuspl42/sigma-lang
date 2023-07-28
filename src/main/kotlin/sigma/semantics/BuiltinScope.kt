@@ -7,6 +7,7 @@ import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
@@ -30,7 +31,7 @@ private class BuiltinValueDefinition(
 ) : StaticDefinition() {
 //    override val effectiveValueType: Computation<Type> = Computation.pure(type)
 
-    override val staticValue: EvaluationResult = value
+    override val staticValue: EvaluationResult = ValueResult(value = value)
     override val errors: Set<SemanticError>
         get() = emptySet()
 }
@@ -225,7 +226,7 @@ object BuiltinScope : Scope, StaticScope {
         name: Symbol,
     ): EvaluationResult? = getBuiltin(
         name = name,
-    )?.value
+    )?.value?.asEvaluationResult
 
     private fun getBuiltin(
         name: Symbol,

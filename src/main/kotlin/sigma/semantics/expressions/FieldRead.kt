@@ -2,8 +2,9 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.DictValue
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
@@ -119,19 +120,20 @@ class FieldRead(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value {
-        val subjectValue = subject.evaluate(
+    ): EvaluationResult {
+        val subjectResult = subject.evaluate(
             context = context,
             scope = scope,
         )
 
+        val subjectValueResult = subjectResult as? ValueResult ?: return subjectResult
+        val subjectValue = subjectValueResult.value
+
         if (subjectValue !is DictValue) throw IllegalStateException("Subject $subjectValue is not a dict")
 
-        val value = subjectValue.apply(
+        return subjectValue.apply(
             context = context,
             argument = fieldName,
         )
-
-        return value
     }
 }

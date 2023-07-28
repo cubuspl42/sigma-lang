@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.DictValue
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
@@ -103,7 +104,7 @@ class UnorderedTupleConstructor(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = DictValue(
+    ): EvaluationResult = DictValue(
         entries = entries.associate {
             val name = it.name
             val value = it.value.evaluate(
@@ -113,5 +114,5 @@ class UnorderedTupleConstructor(
 
             name to value
         },
-    )
+    ).asEvaluationResult
 }

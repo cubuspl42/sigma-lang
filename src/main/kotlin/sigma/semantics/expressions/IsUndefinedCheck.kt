@@ -2,8 +2,10 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.UndefinedValue
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
@@ -35,14 +37,17 @@ data class IsUndefinedCheck(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value {
-        val argumentValue = argument.evaluate(
+    ): EvaluationResult {
+        val argumentResult = argument.evaluate(
             context = context,
             scope = scope,
         )
 
+        val argumentValueResult = argumentResult as? ValueResult ?: return argumentResult
+        val argumentValue = argumentValueResult.value
+
         return BoolValue(
             value = argumentValue is UndefinedValue,
-        )
+        ).asEvaluationResult
     }
 }

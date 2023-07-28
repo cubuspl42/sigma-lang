@@ -1,6 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -39,10 +40,10 @@ class ArrayTypeConstructor(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = ArrayType(
+    ): EvaluationResult = ArrayType(
         elementType = elementType.evaluate(
             context = context,
             scope = scope,
         ) as Type,
-    )
+    ).asEvaluationResult
 }

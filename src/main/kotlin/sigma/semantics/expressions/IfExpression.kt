@@ -3,6 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
@@ -81,10 +82,13 @@ class IfExpression(
         scope: Scope,
     ): EvaluationResult {
 
-        val guardValue = guard.evaluate(
+        val guardResult = guard.evaluate(
             context = context,
             scope = scope,
         )
+
+        val guardValueResult = guardResult as? ValueResult ?: return guardResult
+        val guardValue = guardValueResult.value
 
         if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")
 

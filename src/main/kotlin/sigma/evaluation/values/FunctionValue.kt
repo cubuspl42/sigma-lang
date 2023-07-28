@@ -14,7 +14,7 @@ abstract class FunctionValue : Value() {
         override fun apply(
             context: EvaluationContext,
             argument: Value,
-        ): Value {
+        ): EvaluationResult {
             argument as FunctionValue
 
             val primary = argument.apply(
@@ -28,14 +28,21 @@ abstract class FunctionValue : Value() {
             ) as FunctionValue
 
             return object : FunctionValue() {
-                override fun apply(context: EvaluationContext, argument: Value): EvaluationResult =
-                    when (val value = primary.apply(context = context, argument = argument)) {
-                        is UndefinedValue -> secondary.apply(context = context, argument = argument)
-                        else -> value
+                override fun apply(context: EvaluationContext, argument: Value): EvaluationResult {
+                    val result = primary.apply(context = context, argument = argument)
+
+                    return when {
+                        result is ValueResult && result.value is UndefinedValue -> secondary.apply(
+                            context = context,
+                            argument = argument,
+                        )
+
+                        else -> result
                     }
+                }
 
                 override fun dump(): String = "${primary.dump()} .. ${secondary.dump()}"
-            }
+            }.asEvaluationResult
         }
 
         override fun dump(): String = "(link function)"
