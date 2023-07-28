@@ -14,7 +14,7 @@ abstract class ValueDefinition : ValueDeclaration {
     protected abstract val declarationScope: StaticScope
 
     private val declaredType: Type? by lazy {
-        definedTypeBody?.evaluate(
+        declaredTypeBody?.evaluateValue(
             context = EvaluationContext.Initial,
             scope = BuiltinScope,
         ) as? Type
@@ -48,7 +48,7 @@ abstract class ValueDefinition : ValueDeclaration {
         ) + body.errors
     }
 
-    abstract val definedTypeBody: Expression?
+    abstract val declaredTypeBody: Expression?
 
     abstract val body: Expression
 }

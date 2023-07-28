@@ -27,7 +27,7 @@ class ConstantDefinition(
         override val declarationScope: StaticScope
             get() = containingNamespace.innerDeclarationScope
 
-        override val definedTypeBody: Expression? by lazy {
+        override val declaredTypeBody: Expression? by lazy {
             term.declaredTypeBody?.let {
                 Expression.build(
                     declarationScope = declarationScope,
@@ -54,9 +54,11 @@ class ConstantDefinition(
         )
     }
 
-    val valueThunk = asValueDefinition.body.bind(
-        boundScope = containingNamespace.innerScope,
-    )
+    val valueThunk by lazy {
+        asValueDefinition.body.bind(
+            boundScope = containingNamespace.innerScope,
+        )
+    }
 
     override val name: Symbol
         get() = term.name

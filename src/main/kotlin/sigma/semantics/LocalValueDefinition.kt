@@ -20,7 +20,7 @@ class LocalValueDefinition(
 
     override val name: Symbol = term.name
 
-    override val definedTypeBody: Expression? by lazy {
+    override val declaredTypeBody: Expression? by lazy {
         term.declaredTypeBody?.let {
             Expression.build(
                 declarationScope = declarationScope,

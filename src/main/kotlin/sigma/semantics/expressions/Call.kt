@@ -4,6 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
@@ -135,7 +136,7 @@ class Call(
         context: EvaluationContext,
         scope: Scope,
     ): EvaluationResult {
-        val subjectValue = subject.evaluate(
+        val subjectValue = subject.evaluateValue(
             context = context,
             scope = scope,
         )
@@ -146,11 +147,11 @@ class Call(
             context = context,
             scope = scope,
         )
-        val argumentValue = argumentResult as? Value ?: return argumentResult
+        val argumentValueResult = argumentResult as? ValueResult ?: return argumentResult
 
         val image = subjectValue.apply(
             context = context,
-            argument = argumentValue,
+            argument = argumentValueResult.value,
         )
 
         return image

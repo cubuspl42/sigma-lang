@@ -16,7 +16,7 @@ object ModuleTests {
         fun testTypeScope() {
             val term = ModuleTerm.parse(
                 source = """
-                    typeAlias UserId = Int
+                    const UserId = Int
                     
                     const isUserIdValid = ^[userId: UserId] => true
                 """.trimIndent(),

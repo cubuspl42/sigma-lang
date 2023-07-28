@@ -50,7 +50,7 @@ class OrderedTupleTypeConstructor(
     ): EvaluationResult = OrderedTupleType(
         elements = elements.map {
             OrderedTupleType.Element(
-                name = it.name, type = it.type.evaluate(
+                name = it.name, type = it.type.evaluateValue(
                     context = context,
                     scope = scope,
                 ) as Type
