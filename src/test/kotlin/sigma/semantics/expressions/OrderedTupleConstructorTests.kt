@@ -90,7 +90,7 @@ class OrderedTupleConstructorTests {
                 ) as OrderedTupleConstructorTerm,
             )
 
-            val value = tupleConstructor.evaluate(
+            val value = tupleConstructor.evaluateValue(
                 context = EvaluationContext.Initial,
                 scope = Scope.Empty,
             )
@@ -114,7 +114,7 @@ class OrderedTupleConstructorTests {
                 ) as OrderedTupleConstructorTerm,
             )
 
-            val value = tupleConstructor.evaluate(
+            val value = tupleConstructor.evaluateValue(
                 context = EvaluationContext.Initial,
                 scope = FixedScope(
                     entries = mapOf(

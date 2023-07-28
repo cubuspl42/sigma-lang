@@ -62,7 +62,7 @@ class Abstraction(
             )
 
             // TODO
-            val argumentType = argumentTypeBody.evaluate(
+            val argumentType = argumentTypeBody.evaluateValue(
                 context = EvaluationContext.Initial,
                 scope = BuiltinScope,
             ) as TupleType
@@ -105,7 +105,7 @@ class Abstraction(
     val argumentType by lazy {
         argumentTypeConstructor.bindTranslated(
             staticScope = innerDeclarationScope,
-        ).evaluate(
+        ).evaluateValue(
             context = EvaluationContext.Initial,
         ) as TupleType
     }
@@ -113,7 +113,7 @@ class Abstraction(
     val declaredImageType by lazy {
         declaredImageTypeConstructor?.bindTranslated(
             staticScope = innerDeclarationScope,
-        )?.evaluate(
+        )?.evaluateValue(
             context = EvaluationContext.Initial,
         ) as? Type
     }

@@ -107,7 +107,7 @@ class UnorderedTupleConstructor(
     ): EvaluationResult = DictValue(
         entries = entries.associate {
             val name = it.name
-            val value = it.value.evaluate(
+            val value = it.value.evaluateValue(
                 context = context,
                 scope = scope,
             ) as Value

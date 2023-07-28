@@ -6,6 +6,8 @@ import sigma.evaluation.values.EvaluationStackExhaustionError
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.Resolution
 import sigma.semantics.Computation
 import sigma.semantics.DynamicResolution
@@ -188,6 +190,14 @@ abstract class Expression {
     } else {
         EvaluationStackExhaustionError
     }
+
+    fun evaluateValue(
+        context: EvaluationContext,
+        scope: Scope,
+    ): Value? = (evaluate(
+        context,
+        scope,
+    ) as? ValueResult)?.value
 
     fun bind(
         boundScope: Scope,

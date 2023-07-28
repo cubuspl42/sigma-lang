@@ -40,7 +40,7 @@ class NamespaceDefinitionTermTests {
                             location = SourceLocation(lineIndex = 2, columnIndex = 4),
                             name = Symbol.of("UserId"),
                             body = ReferenceTerm(
-                                location = SourceLocation(lineIndex = 2, columnIndex = 23),
+                                location = SourceLocation(lineIndex = 2, columnIndex = 19),
                                 referee = Symbol.of("Int"),
                             )
                         ),
@@ -64,7 +64,7 @@ class NamespaceDefinitionTermTests {
                                         OrderedTupleTypeConstructorTerm.Element(
                                             name = Symbol.of("a"),
                                             type = ReferenceTerm(
-                                                location = SourceLocation(lineIndex = 6, columnIndex = 19),
+                                                location = SourceLocation(lineIndex = 6, columnIndex = 23),
                                                 referee = Symbol.of("Int"),
                                             ),
                                         ),

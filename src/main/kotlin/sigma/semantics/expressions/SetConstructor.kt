@@ -83,7 +83,7 @@ class SetConstructor(
         scope: Scope,
     ): EvaluationResult = SetValue(
         elements = elements.map {
-            it.evaluate(
+            it.evaluateValue(
                 context = context,
                 scope = scope,
             ) as Value
