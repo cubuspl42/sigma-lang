@@ -3,9 +3,11 @@ package sigma.syntax.expressions
 import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.Computation
+import sigma.semantics.DynamicResolution
 import sigma.semantics.ResolvedName
 import sigma.semantics.StaticBlock
 import sigma.semantics.ValueDeclaration
+import sigma.semantics.types.MetaType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.SourceLocation
@@ -50,7 +52,14 @@ data class GenericParametersTuple(
     inner class GenericParametersTupleBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
-        ): ResolvedName? = TODO()
+        ): ResolvedName? = if (parametersDefinitions.any { it.name == name }) {
+            ResolvedName(
+                type = MetaType,
+                resolution = DynamicResolution(),
+            )
+        } else {
+             null
+        }
     }
 
     val asDeclarationBlock = GenericParametersTupleBlock()
