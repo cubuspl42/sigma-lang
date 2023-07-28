@@ -34,6 +34,14 @@ private class BuiltinValueDefinition(
     override val staticValue: EvaluationResult = ValueResult(value = value)
     override val errors: Set<SemanticError>
         get() = emptySet()
+
+    val asResolvedName: ResolvedName
+        get() = ResolvedName(
+            type = type,
+            resolution = BuiltinResolution(
+                builtinValue = value,
+            ),
+        )
 }
 
 object BuiltinScope : Scope, StaticScope {
@@ -218,7 +226,7 @@ object BuiltinScope : Scope, StaticScope {
         )
     }.toSet()
 
-    private val builtinDeclarations: Map<Symbol, Declaration> =
+    private val builtinDeclarations: Map<Symbol, BuiltinValueDefinition> =
         builtinValueDeclarations.associateBy { it.name }
 
     override fun getValue(
@@ -232,5 +240,7 @@ object BuiltinScope : Scope, StaticScope {
         name: Symbol,
     ): BuiltinValue? = builtinValues[name]
 
-    override fun resolveName(name: Symbol): Declaration? = builtinDeclarations[name]
+    override fun resolveName(
+        name: Symbol,
+    ): ResolvedName? = builtinDeclarations[name]?.asResolvedName
 }

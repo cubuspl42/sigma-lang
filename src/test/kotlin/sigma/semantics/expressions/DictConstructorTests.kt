@@ -9,7 +9,7 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.DictConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
-import utils.FakeDeclarationBlock
+import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,7 +19,7 @@ object DictConstructorTests {
         @Test
         fun testSingleEntry() {
             val dictLiteral = DictConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
@@ -50,7 +50,7 @@ object DictConstructorTests {
         @Test
         fun testMultipleEntriesCompatibleEntries() {
             val dictLiteral = DictConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
@@ -90,7 +90,7 @@ object DictConstructorTests {
         @Test
         fun testMultipleEntriesIncompatibleKeys() {
             val dictLiteral = DictConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
@@ -136,7 +136,7 @@ object DictConstructorTests {
         @Test
         fun testMultipleEntriesIncompatibleValues() {
             val dictLiteral = DictConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
@@ -184,7 +184,7 @@ object DictConstructorTests {
             val keyType = Arbitrary.unorderedTupleType
 
             val dictLiteral = DictConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("key1"),
                         type = keyType,

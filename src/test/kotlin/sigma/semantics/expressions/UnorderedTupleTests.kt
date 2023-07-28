@@ -9,7 +9,7 @@ import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
-import utils.FakeDeclarationBlock
+import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -47,7 +47,7 @@ object UnorderedTupleTests {
             ) as UnorderedTupleConstructorTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
@@ -83,7 +83,7 @@ object UnorderedTupleTests {
             ) as UnorderedTupleConstructorTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,

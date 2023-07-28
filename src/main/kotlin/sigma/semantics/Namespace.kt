@@ -39,13 +39,20 @@ class Namespace(
         name: Symbol,
     ): ConstantDefinition? = getStaticDefinition(name = name) as? ConstantDefinition
 
-    inner class NamespaceDeclarationBlock : DeclarationBlock() {
-        override fun getDeclaration(
+    inner class NamespaceStaticBlock : StaticBlock() {
+        override fun resolveNameLocally(
             name: Symbol,
-        ): Declaration? = getStaticDefinition(name = name)
+        ): ResolvedName? = getConstantDefinition(name = name)?.let {
+            ResolvedName(
+                type = it.asValueDefinition.effectiveValueType.value!!,
+                resolution = ConstDefinitionResolution(
+                    constantDefinition = it,
+                )
+            )
+        }
     }
 
-    private val asDeclarationBlock = NamespaceDeclarationBlock()
+    private val asDeclarationBlock = NamespaceStaticBlock()
 
     val innerDeclarationScope: StaticScope = asDeclarationBlock.chainWith(
         outerScope = prelude.declarationScope,

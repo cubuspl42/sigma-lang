@@ -2,15 +2,15 @@ package sigma.semantics
 
 import sigma.evaluation.values.Symbol
 
-abstract class DeclarationBlock : StaticScope {
-    abstract fun getDeclaration(name: Symbol): Declaration?
+abstract class StaticBlock : StaticScope {
+    abstract fun resolveNameLocally(name: Symbol): ResolvedName?
 
     final override fun resolveName(
         name: Symbol,
-    ): Declaration? = getDeclaration(name = name)
+    ): ResolvedName? = resolveNameLocally(name = name)
 
     fun chainWith(outerScope: StaticScope): StaticScope = StaticScope.Chained(
         outerScope = outerScope,
-        declarationBlock = this,
+        staticBlock = this,
     )
 }

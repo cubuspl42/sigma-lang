@@ -8,7 +8,7 @@ import sigma.syntax.LocalDefinitionTerm
 class LocalValueDefinitionBlock(
     private val declarationScope: StaticScope,
     private val declarations: List<LocalDefinitionTerm>,
-) : DeclarationBlock() {
+) : StaticBlock() {
     companion object {
         fun build(
             outerDeclarationScope: StaticScope,
@@ -30,9 +30,14 @@ class LocalValueDefinitionBlock(
 
     fun getValueDefinition(name: Symbol): LocalValueDefinition? = definitionByName[name]
 
-    override fun getDeclaration(
+    override fun resolveNameLocally(
         name: Symbol,
-    ): Declaration? = getValueDefinition(name = name)
+    ): ResolvedName? = getValueDefinition(name = name)?.let {
+        ResolvedName(
+            type = it.effectiveValueType.value!!,
+            resolution = it.body.resolve(),
+        )
+    }
 
     val errors: Set<SemanticError> by lazy {
         definitionByName.values.fold(emptySet()) { acc, it -> acc + it.errors }

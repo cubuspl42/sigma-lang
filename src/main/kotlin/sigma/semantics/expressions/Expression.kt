@@ -6,11 +6,13 @@ import sigma.evaluation.values.EvaluationStackExhaustionError
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
+import sigma.semantics.Resolution
 import sigma.semantics.Computation
-import sigma.semantics.ConstantDefinition
+import sigma.semantics.DynamicResolution
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticDefinition
+import sigma.semantics.StaticResolution
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
@@ -56,10 +58,13 @@ class TranslationScope(
         name: Symbol,
     ): EvaluationResult? = staticScope.resolveName(
         name = name,
-    )?.let { declaration ->
-        when (declaration) {
-            is StaticDefinition -> declaration.staticValue
-            else -> null
+    )?.let { resolvedName ->
+        when (val resolution = resolvedName.resolution) {
+            is StaticResolution -> resolution.resolvedValue.evaluate(
+                context = context,
+            )
+
+            is DynamicResolution -> null
         }
     }
 }
@@ -202,4 +207,8 @@ abstract class Expression {
             staticScope = staticScope,
         ),
     )
+
+    fun resolve(): Resolution {
+        return DynamicResolution()
+    }
 }

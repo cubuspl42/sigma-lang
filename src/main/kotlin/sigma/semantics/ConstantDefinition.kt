@@ -54,6 +54,10 @@ class ConstantDefinition(
         )
     }
 
+    val valueThunk = asValueDefinition.body.bind(
+        boundScope = containingNamespace.innerScope,
+    )
+
     override val name: Symbol
         get() = term.name
 

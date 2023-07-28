@@ -14,33 +14,21 @@ interface StaticScope {
 
             override fun resolveName(
                 name: Symbol,
-            ): Declaration? = resultScope.resolveName(name = name)
+            ): ResolvedName? = resultScope.resolveName(name = name)
         }.result
     }
 
     object Empty : StaticScope {
-        override fun resolveName(name: Symbol): Declaration? = null
+        override fun resolveName(name: Symbol): ResolvedName? = null
     }
 
     class Chained(
         private val outerScope: StaticScope,
-        private val declarationBlock: DeclarationBlock,
+        private val staticBlock: StaticBlock,
     ) : StaticScope {
-        override fun resolveName(name: Symbol): Declaration? =
-            declarationBlock.getDeclaration(name = name) ?: outerScope.resolveName(name = name)
+        override fun resolveName(name: Symbol): ResolvedName? =
+            staticBlock.resolveNameLocally(name = name) ?: outerScope.resolveName(name = name)
     }
 
-    class Fixed(
-        private val declarationByName: Map<Symbol, ValueDeclaration>,
-    ) : StaticScope {
-        companion object {
-            fun of(declarations: Set<ValueDeclaration>): Fixed = Fixed(
-                declarationByName = declarations.associateBy { it.name },
-            )
-        }
-
-        override fun resolveName(name: Symbol): Declaration? = declarationByName[name]
-    }
-
-    fun resolveName(name: Symbol): Declaration?
+    fun resolveName(name: Symbol): ResolvedName?
 }

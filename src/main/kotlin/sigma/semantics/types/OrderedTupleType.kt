@@ -132,8 +132,8 @@ data class OrderedTupleType(
         )
     }
 
-    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentDeclarationBlock =
-        Abstraction.ArgumentDeclarationBlock(
+    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentStaticBlock =
+        Abstraction.ArgumentStaticBlock(
             argumentDeclarations = elements.mapNotNull { element ->
                 element.toArgumentDeclaration()
             },

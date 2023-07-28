@@ -118,8 +118,8 @@ data class UnorderedTupleType(
         )
     }
 
-    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentDeclarationBlock =
-        Abstraction.ArgumentDeclarationBlock(
+    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentStaticBlock =
+        Abstraction.ArgumentStaticBlock(
             argumentDeclarations = valueTypeByName.map { (name, type) ->
                 Abstraction.ArgumentDeclaration(
                     name = name,
