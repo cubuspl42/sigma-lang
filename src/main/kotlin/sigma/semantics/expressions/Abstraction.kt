@@ -61,10 +61,11 @@ class Abstraction(
                 term = term.argumentType,
             )
 
-            // TODO
             val argumentType = argumentTypeBody.evaluateValue(
                 context = EvaluationContext.Initial,
-                scope = BuiltinScope,
+                scope = TranslationScope(
+                    staticScope = innerDeclarationScope1,
+                ),
             ) as TupleType
 
             val innerDeclarationScope2 = argumentType.toArgumentDeclarationBlock().chainWith(
