@@ -10,6 +10,7 @@ import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
+import sigma.semantics.Formula
 import sigma.semantics.expressions.Expression
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -175,7 +176,7 @@ class AbstractionTermTests {
                             OrderedTupleType.Element(
                                 name = Symbol.of("t"),
                                 type = TypeVariable(
-                                    name = Symbol.of("t"),
+                                    formula = Formula.of("t"),
                                 ),
                             ),
                         ),

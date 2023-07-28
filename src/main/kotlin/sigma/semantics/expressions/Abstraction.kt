@@ -4,13 +4,13 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Closure
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
-import sigma.semantics.BuiltinScope
 import sigma.semantics.Computation
 import sigma.semantics.DynamicResolution
+import sigma.semantics.Formula
 import sigma.semantics.ResolvedName
+import sigma.semantics.SemanticError
 import sigma.semantics.StaticBlock
 import sigma.semantics.StaticScope
-import sigma.semantics.SemanticError
 import sigma.semantics.ValueDeclaration
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.TupleType
@@ -21,7 +21,7 @@ import sigma.syntax.expressions.AbstractionTerm
 class Abstraction(
     private val innerDeclarationScope: StaticScope,
     override val term: AbstractionTerm,
-    val argumentTypeConstructor: TupleTypeConstructor,
+    val argumentType: TupleType,
     val declaredImageTypeConstructor: Expression?,
     val image: Expression,
 ) : Expression() {
@@ -37,10 +37,16 @@ class Abstraction(
     ) : StaticBlock() {
         private val declarationByName = argumentDeclarations.associateBy { it.name }
 
-        override fun resolveNameLocally(name: Symbol): ResolvedName? = declarationByName[name]?.let {
+        override fun resolveNameLocally(
+            name: Symbol,
+        ): ResolvedName? = declarationByName[name]?.let {
             ResolvedName(
                 type = it.type,
-                resolution = DynamicResolution(),
+                resolution = DynamicResolution(
+                    resolvedFormula = Formula(
+                        name = name,
+                    ),
+                ),
             )
         }
     }
@@ -87,7 +93,7 @@ class Abstraction(
             return Abstraction(
                 innerDeclarationScope = innerDeclarationScope2,
                 term = term,
-                argumentTypeConstructor = argumentTypeBody,
+                argumentType = argumentType,
                 declaredImageTypeConstructor = declaredImageType,
                 image = image,
             )
@@ -102,14 +108,6 @@ class Abstraction(
         argumentType = argumentType,
         image = image,
     ).asEvaluationResult
-
-    val argumentType by lazy {
-        argumentTypeConstructor.bindTranslated(
-            staticScope = innerDeclarationScope,
-        ).evaluateValue(
-            context = EvaluationContext.Initial,
-        ) as TupleType
-    }
 
     val declaredImageType by lazy {
         declaredImageTypeConstructor?.bindTranslated(

@@ -1,6 +1,7 @@
 package sigma.evaluation.values
 
 import cutOffFront
+import sigma.semantics.Formula
 import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.ArrayType
@@ -52,7 +53,7 @@ abstract class FunctionValue : Value() {
         override val argTypes: List<Type> = listOf(
             ArrayType(
                 elementType = TypeVariable(
-                    name = Symbol.of("e"),
+                    formula = Formula.of("e"),
                 ),
             ),
         )
@@ -60,7 +61,7 @@ abstract class FunctionValue : Value() {
         override val imageType: Type = ArrayType(
             elementType = ArrayType(
                 elementType = TypeVariable(
-                    name = Symbol.of("e"),
+                    formula = Formula.of("e"),
                 ),
             ),
         )
@@ -80,14 +81,14 @@ abstract class FunctionValue : Value() {
         override val argTypes: List<Type> = listOf(
             ArrayType(
                 elementType = TypeVariable(
-                    name = Symbol.of("e"),
+                    formula = Formula.of("e"),
                 ),
             ),
         )
 
         override val imageType: Type = ArrayType(
             elementType = TypeVariable(
-                name = Symbol.of("e"),
+                formula = Formula.of("e"),
             ),
         )
 
@@ -104,14 +105,14 @@ abstract class FunctionValue : Value() {
         override val argTypes: List<Type> = listOf(
             ArrayType(
                 elementType = TypeVariable(
-                    name = Symbol.of("e"),
+                    formula = Formula.of("e"),
                 ),
             ),
         )
 
         override val imageType: Type = ArrayType(
             elementType = TypeVariable(
-                name = Symbol.of("e"),
+                formula = Formula.of("e"),
             ),
         )
 
@@ -129,7 +130,7 @@ abstract class FunctionValue : Value() {
         override val argTypes: List<Type> = listOf(
             ArrayType(
                 elementType = TypeVariable(
-                    name = Symbol.of("e"),
+                    formula = Formula.of("e"),
                 ),
             ),
         )
@@ -137,7 +138,7 @@ abstract class FunctionValue : Value() {
         override val imageType: Type = ArrayType(
             elementType = ArrayType(
                 elementType = TypeVariable(
-                    name = Symbol.of("e"),
+                    formula = Formula.of("e"),
                 ),
             ),
         )
@@ -170,21 +171,21 @@ abstract class FunctionValue : Value() {
                     OrderedTupleType.Element(
                         name = null,
                         type = TypeVariable(
-                            name = Symbol.of("e"),
+                            formula = Formula.of("e"),
                         ),
                     ),
                 )
             ),
             // TODO: Improve this typing, as it makes no sense
             imageType = TypeVariable(
-                name = Symbol.of("r"),
+                formula = Formula.of("r"),
             ),
         )
 
         override val argTypes = listOf(
             ArrayType(
                 elementType = TypeVariable(
-                    name = Symbol.of("e"),
+                    formula = Formula.of("e"),
                 ),
             ),
             transformType,
@@ -192,7 +193,7 @@ abstract class FunctionValue : Value() {
 
         override val imageType = ArrayType(
             elementType = TypeVariable(
-                name = Symbol.of("r"),
+                formula = Formula.of("r"),
             ),
         )
 
@@ -213,7 +214,7 @@ abstract class FunctionValue : Value() {
         override val argTypes = listOf(
             ArrayType(
                 elementType = TypeVariable(
-                    name = Symbol.of("e"),
+                    formula = Formula.of("e"),
                 ),
             ),
         )
@@ -231,19 +232,19 @@ abstract class FunctionValue : Value() {
         override val argTypes = listOf(
             ArrayType(
                 elementType = TypeVariable(
-                    name = Symbol.of("e"),
+                    formula = Formula.of("e"),
                 ),
             ),
             ArrayType(
                 elementType = TypeVariable(
-                    name = Symbol.of("e"),
+                    formula = Formula.of("e"),
                 ),
             ),
         )
 
         override val imageType = ArrayType(
             elementType = TypeVariable(
-                name = Symbol.of("e"),
+                formula = Formula.of("e"),
             ),
         )
 

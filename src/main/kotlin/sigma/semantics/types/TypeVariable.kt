@@ -1,9 +1,11 @@
 package sigma.semantics.types
 
 import sigma.evaluation.values.Symbol
+import sigma.semantics.Formula
 
 data class TypeVariable(
-    val name: Symbol,
+    // TODO
+    val formula: Formula,
 ) : Type() {
     override fun findLowestCommonSupertype(
         other: Type,
@@ -28,7 +30,7 @@ data class TypeVariable(
         )
     }
 
-    override fun dump(): String = "#${name.name}"
+    override fun dump(): String = "#${formula.name}"
 }
 
 data class TypeVariableResolution(

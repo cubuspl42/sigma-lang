@@ -7,6 +7,7 @@ import sigma.evaluation.values.Symbol
 import sigma.semantics.BuiltinResolution
 import sigma.semantics.Declaration
 import sigma.semantics.DynamicResolution
+import sigma.semantics.Formula
 import sigma.semantics.ResolvedName
 import sigma.semantics.StaticBlock
 
@@ -30,10 +31,16 @@ class FakeStaticBlock(
 
     private val declarationByName = declarations.associateBy { it.name }
 
-    override fun resolveNameLocally(name: Symbol): ResolvedName? = declarationByName[name]?.let {
+    override fun resolveNameLocally(
+        name: Symbol,
+    ): ResolvedName? = declarationByName[name]?.let {
         ResolvedName(
             type = it.type,
-            resolution = DynamicResolution(),
+            resolution = DynamicResolution(
+                resolvedFormula = Formula(
+                    name = name,
+                ),
+            ),
         )
     }
 }

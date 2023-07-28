@@ -11,11 +11,14 @@ import sigma.evaluation.values.ValueResult
 import sigma.semantics.Resolution
 import sigma.semantics.Computation
 import sigma.semantics.DynamicResolution
+import sigma.semantics.Formula
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticDefinition
 import sigma.semantics.StaticResolution
+import sigma.semantics.types.MetaType
 import sigma.semantics.types.Type
+import sigma.semantics.types.TypeVariable
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.ArrayTypeConstructorTerm
@@ -66,7 +69,14 @@ class TranslationScope(
                 context = context,
             )
 
-            is DynamicResolution -> null
+            is DynamicResolution -> when (resolvedName.type) {
+                is MetaType -> TypeVariable(
+                    // FIXME
+                    formula = resolution.resolvedFormula ?: Formula(name = Symbol.of("?")),
+                ).asEvaluationResult
+
+                else -> null
+            }
         }
     }
 }
@@ -217,8 +227,4 @@ abstract class Expression {
             staticScope = staticScope,
         ),
     )
-
-    fun resolve(): Resolution {
-        return DynamicResolution()
-    }
 }
