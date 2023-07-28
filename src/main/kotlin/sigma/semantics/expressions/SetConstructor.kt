@@ -1,6 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
@@ -80,12 +81,12 @@ class SetConstructor(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = SetValue(
+    ): EvaluationResult = SetValue(
         elements = elements.map {
             it.evaluate(
                 context = context,
                 scope = scope,
             ) as Value
         }.toSet(),
-    )
+    ).asEvaluationResult
 }

@@ -11,7 +11,7 @@ data class IntValue(
     }
 
     abstract class BinaryIntFunction : ComputableFunctionValue() {
-        override fun apply(context: EvaluationContext, argument: Value): Value {
+        override fun apply(context: EvaluationContext, argument: Value): EvaluationResult {
             val argumentTuple = argument as DictValue
 
             val left = argumentTuple.read(Symbol.of(prototype.leftArgumentName))!!
@@ -23,7 +23,7 @@ data class IntValue(
             return calculate(
                 left = left.value,
                 right = right.value,
-            )
+            ).asEvaluationResult
         }
 
         override fun dump(): String = "(${prototype.functionName})"
@@ -66,10 +66,10 @@ data class IntValue(
     }
 
     object Sq : ComputableFunctionValue() {
-        override fun apply(context: EvaluationContext, argument: Value): Value {
+        override fun apply(context: EvaluationContext, argument: Value): EvaluationResult {
             val arg = (argument as DictValue).read(Zero)!! as IntValue
 
-            return IntValue(arg.value * arg.value)
+            return IntValue(arg.value * arg.value).asEvaluationResult
         }
 
         override fun dump(): String = "(sq)"

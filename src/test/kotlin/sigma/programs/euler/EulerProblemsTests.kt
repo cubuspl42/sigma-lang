@@ -8,6 +8,7 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.Project
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,7 +18,7 @@ class EulerProblemsTests {
     @Test
     fun testProblem6() {
         assertEquals(
-            expected = IntValue(25164150),
+            expected = ValueResult(IntValue(25164150)),
             actual = solveProblem(6),
         )
     }
@@ -26,7 +27,7 @@ class EulerProblemsTests {
     fun testProblem7() {
         // For 20th prime (for performance reasons)
         assertEquals(
-            expected = IntValue(71),
+            expected = ValueResult(IntValue(71)),
             actual = solveProblem(7),
         )
     }
@@ -36,7 +37,7 @@ class EulerProblemsTests {
         val result = solveProblem(8)
 
         assertEquals(
-            expected = IntValue(value = 23514624000L),
+            expected = ValueResult(IntValue(value = 23514624000L)),
             actual = result,
         )
     }
@@ -45,7 +46,9 @@ class EulerProblemsTests {
     fun testProblem9() {
         val result = solveProblem(9)
 
-        assertIs<DictValue>(result)
+        assertIs<ValueResult>(result)
+
+        val dictValue = assertIs<DictValue>(result.value)
 
         assertEquals<Map<PrimitiveValue, Value>>(
             expected = mapOf(
@@ -53,14 +56,14 @@ class EulerProblemsTests {
                 Symbol.of("b") to IntValue(value = 1L),
                 Symbol.of("c") to IntValue(value = 8L),
             ),
-            actual = result.entries,
+            actual = dictValue.entries,
         )
     }
 
     @Test
     fun testProblem10() {
         assertEquals(
-            expected = BoolValue.False,
+            expected = ValueResult(BoolValue.False),
             actual = solveProblem(10),
         )
     }
@@ -90,7 +93,7 @@ private fun solveProblem(n: Int): EvaluationResult {
 
     when (val evaluationResult = program.evaluateResult()) {
         EvaluationStackExhaustionError -> println("Error: call stack exhausted")
-        is Value -> println("Result: ${evaluationResult.dump()}")
+        is ValueResult -> println("Result: ${evaluationResult.value.dump()}")
     }
 
     println()

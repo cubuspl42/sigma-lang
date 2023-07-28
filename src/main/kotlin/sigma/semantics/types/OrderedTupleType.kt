@@ -163,7 +163,7 @@ data class OrderedTupleType(
         override fun getValue(context: EvaluationContext, name: Symbol): EvaluationResult? {
             val index = elements.indexOfOrNull { it.name == name } ?: return null
 
-            return argument.read(IntValue(value = index.toLong()))
+            return argument.read(IntValue(value = index.toLong()))?.asEvaluationResult
         }
     }
 }

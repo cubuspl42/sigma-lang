@@ -1,6 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
@@ -46,7 +47,7 @@ class OrderedTupleTypeConstructor(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = OrderedTupleType(
+    ): EvaluationResult = OrderedTupleType(
         elements = elements.map {
             OrderedTupleType.Element(
                 name = it.name, type = it.type.evaluate(
@@ -55,5 +56,5 @@ class OrderedTupleTypeConstructor(
                 ) as Type
             )
         },
-    )
+    ).asEvaluationResult
 }

@@ -5,12 +5,14 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.IsUndefinedCheckTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class IsUndefinedCheckTests {
     object TypeCheckingTests {
@@ -42,12 +44,16 @@ class IsUndefinedCheckTests {
                 ) as IsUndefinedCheckTerm,
             )
 
-            assertEquals(
-                expected = BoolValue.False,
-                actual = isUndefinedCheck.evaluate(
+            val result = assertIs<ValueResult>(
+                isUndefinedCheck.evaluate(
                     context = EvaluationContext.Initial,
                     scope = Scope.Empty,
                 ),
+            )
+
+            assertEquals(
+                expected = BoolValue.False,
+                actual = result.value,
             )
         }
 
@@ -62,9 +68,8 @@ class IsUndefinedCheckTests {
                 ) as IsUndefinedCheckTerm,
             )
 
-            assertEquals(
-                expected = BoolValue.True,
-                actual = isUndefinedCheck.evaluate(
+            val result = assertIs<ValueResult>(
+                isUndefinedCheck.evaluate(
                     context = EvaluationContext.Initial,
                     scope = FixedScope(
                         entries = mapOf(
@@ -72,6 +77,11 @@ class IsUndefinedCheckTests {
                         ),
                     ),
                 ),
+            )
+
+            assertEquals(
+                expected = BoolValue.True,
+                actual = result.value,
             )
         }
     }

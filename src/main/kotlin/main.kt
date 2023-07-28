@@ -1,5 +1,6 @@
 import sigma.evaluation.values.EvaluationStackExhaustionError
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.Project
 
 fun main() {
@@ -9,6 +10,6 @@ fun main() {
 
     when (val evaluationResult = program.evaluateResult()) {
         EvaluationStackExhaustionError -> println("Error: call stack exhausted")
-        is Value -> println("Result: ${evaluationResult.dump()}")
+        is ValueResult -> println("Result: ${evaluationResult.value.dump()}")
     }
 }

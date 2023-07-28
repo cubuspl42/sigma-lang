@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.DictValue
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
@@ -154,7 +155,7 @@ class DictConstructor(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = DictValue(
+    ): EvaluationResult = DictValue(
         entries = associations.associate {
             val key = it.key.evaluate(
                 context = context,
@@ -168,5 +169,5 @@ class DictConstructor(
 
             key to value
         },
-    )
+    ).asEvaluationResult
 }

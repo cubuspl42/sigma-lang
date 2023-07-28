@@ -4,6 +4,7 @@ import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
@@ -16,6 +17,7 @@ import utils.FakeDeclarationBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 object SetConstructorTests {
     object TypeCheckingTests {
@@ -119,13 +121,15 @@ object SetConstructorTests {
                 term = ExpressionTerm.parse("{foo, bar, baz}") as SetConstructorTerm,
             )
 
-            val value = setConstructor.evaluate(
-                context = EvaluationContext.Initial,
-                scope = FixedScope(
-                    entries = mapOf(
-                        Symbol.of("foo") to IntValue(value = 1L),
-                        Symbol.of("bar") to IntValue(value = 2L),
-                        Symbol.of("baz") to IntValue(value = 3L),
+            val result = assertIs<ValueResult>(
+                setConstructor.evaluate(
+                    context = EvaluationContext.Initial,
+                    scope = FixedScope(
+                        entries = mapOf(
+                            Symbol.of("foo") to IntValue(value = 1L),
+                            Symbol.of("bar") to IntValue(value = 2L),
+                            Symbol.of("baz") to IntValue(value = 3L),
+                        ),
                     ),
                 ),
             )
@@ -138,7 +142,7 @@ object SetConstructorTests {
                         IntValue(value = 3L),
                     )
                 ),
-                actual = value,
+                actual = result.value,
             )
         }
     }

@@ -1,6 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.BuiltinScope
 import sigma.semantics.StaticScope
 import sigma.semantics.types.IntLiteralType
@@ -91,12 +92,16 @@ class IfExpressionTests {
                 term = term,
             )
 
-            assertEquals(
-                expected = IntValue(value = 3L),
-                actual = ifExpression.evaluate(
+            val result = assertIs<ValueResult>(
+                ifExpression.evaluate(
                     context = EvaluationContext.Initial,
                     scope = BuiltinScope,
                 ),
+            )
+
+            assertEquals(
+                expected = IntValue(value = 3L),
+                actual = result.value,
             )
         }
 
@@ -116,12 +121,16 @@ class IfExpressionTests {
                 term = term,
             )
 
-            assertEquals(
-                expected = IntValue(value = 4L),
-                actual = ifExpression.evaluate(
+            val result = assertIs<ValueResult>(
+                ifExpression.evaluate(
                     context = EvaluationContext.Initial,
                     scope = BuiltinScope,
                 ),
+            )
+
+            assertEquals(
+                expected = IntValue(value = 4L),
+                actual = result.value,
             )
         }
     }

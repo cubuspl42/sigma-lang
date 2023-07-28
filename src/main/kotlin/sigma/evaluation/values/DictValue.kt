@@ -23,11 +23,11 @@ class DictValue(
     override fun apply(
         context: EvaluationContext,
         argument: Value,
-    ): Value = read(
+    ): EvaluationResult = (read(
         key = argument,
     ) ?: UndefinedValue.withName(
         name = argument,
-    )
+    )).asEvaluationResult
 
     override fun dump(): String {
         val content = dumpContent()

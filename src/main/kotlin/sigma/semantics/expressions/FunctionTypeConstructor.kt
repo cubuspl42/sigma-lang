@@ -1,6 +1,7 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -47,7 +48,7 @@ class FunctionTypeConstructor(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = UniversalFunctionType(
+    ): EvaluationResult = UniversalFunctionType(
         argumentType = argumentType.evaluate(
             context,
             scope,
@@ -56,5 +57,5 @@ class FunctionTypeConstructor(
             context,
             scope,
         ) as Type,
-    )
+    ).asEvaluationResult
 }

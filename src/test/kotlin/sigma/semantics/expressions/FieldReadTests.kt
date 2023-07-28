@@ -4,14 +4,15 @@ import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
+import sigma.evaluation.values.ValueResult
 import sigma.semantics.StaticScope
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.FieldReadTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class FieldReadTests {
-
 
     object EvaluationTests {
         @Test
@@ -27,9 +28,8 @@ class FieldReadTests {
                 term = ExpressionTerm.parse("foo.bar") as FieldReadTerm,
             )
 
-            assertEquals(
-                expected = IntValue(value = 123L),
-                actual = fieldRead.evaluate(
+            val result = assertIs<ValueResult>(
+                fieldRead.evaluate(
                     context = EvaluationContext.Initial,
                     scope = FixedScope(
                         entries = mapOf(
@@ -37,6 +37,11 @@ class FieldReadTests {
                         )
                     ),
                 ),
+            )
+
+            assertEquals(
+                expected = IntValue(value = 123L),
+                actual = result.value,
             )
         }
     }

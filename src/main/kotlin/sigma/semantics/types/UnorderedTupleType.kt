@@ -139,6 +139,9 @@ data class UnorderedTupleType(
     )
 
     override fun toArgumentScope(argument: DictValue): Scope = object : Scope {
-        override fun getValue(context: EvaluationContext, name: Symbol): EvaluationResult? = argument.read(name)
+        override fun getValue(
+            context: EvaluationContext,
+            name: Symbol,
+        ): EvaluationResult? = argument.read(name)?.asEvaluationResult
     }
 }

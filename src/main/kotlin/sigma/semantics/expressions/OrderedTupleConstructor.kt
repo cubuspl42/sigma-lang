@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.ArrayTable
+import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -50,12 +51,12 @@ class OrderedTupleConstructor(
     override fun evaluateDirectly(
         context: EvaluationContext,
         scope: Scope,
-    ): Value = ArrayTable(
+    ): EvaluationResult = ArrayTable(
         elements = elements.map {
             it.evaluate(
                 context = context,
                 scope = scope,
             ) as Value
         },
-    )
+    ).asEvaluationResult
 }
