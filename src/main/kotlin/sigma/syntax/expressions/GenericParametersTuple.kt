@@ -3,8 +3,8 @@ package sigma.syntax.expressions
 import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.Computation
-import sigma.semantics.Declaration
-import sigma.semantics.DeclarationBlock
+import sigma.semantics.ResolvedName
+import sigma.semantics.StaticBlock
 import sigma.semantics.ValueDeclaration
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
@@ -47,10 +47,10 @@ data class GenericParametersTuple(
             get() = TODO("Not yet implemented")
     }
 
-    inner class GenericParametersTupleBlock : DeclarationBlock() {
-        override fun getDeclaration(
+    inner class GenericParametersTupleBlock : StaticBlock() {
+        override fun resolveNameLocally(
             name: Symbol,
-        ): Declaration? = TODO()
+        ): ResolvedName? = TODO()
     }
 
     val asDeclarationBlock = GenericParametersTupleBlock()

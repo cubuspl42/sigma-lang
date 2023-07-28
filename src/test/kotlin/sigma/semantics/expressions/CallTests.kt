@@ -21,7 +21,7 @@ import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.CallTerm
 import sigma.syntax.expressions.ExpressionTerm
-import utils.FakeDeclarationBlock
+import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -36,7 +36,7 @@ class CallTests {
             ) as CallTerm
 
             val call = Call.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
@@ -74,7 +74,7 @@ class CallTests {
             ) as CallTerm
 
             val call = Call.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
@@ -126,7 +126,7 @@ class CallTests {
             ) as CallTerm
 
             val call = Call.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("b"),
                         type = BoolType,

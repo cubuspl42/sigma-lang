@@ -13,7 +13,7 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.OrderedTupleConstructorTerm
-import utils.FakeDeclarationBlock
+import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -51,7 +51,7 @@ class OrderedTupleConstructorTests {
             ) as OrderedTupleConstructorTerm
 
             val tupleLiteral = OrderedTupleConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("a"),
                         type = BoolType,

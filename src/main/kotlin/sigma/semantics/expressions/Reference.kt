@@ -12,6 +12,7 @@ import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ReferenceTerm
 import sigma.evaluation.values.Symbol
 import sigma.semantics.Declaration
+import sigma.semantics.ResolvedName
 
 class Reference(
     private val declarationScope: StaticScope,
@@ -39,27 +40,18 @@ class Reference(
 
     val referredName = term.referee
 
-    private val referredDeclaration: Declaration? by lazy {
+    private val resolved: ResolvedName? by lazy {
         declarationScope.resolveName(name = term.referee)
     }
 
     override val inferredType: Computation<Type> = Computation.lazy {
-        val referredValueDeclaration = referredDeclaration as? ValueDeclaration
-
-        when (val it = referredValueDeclaration) {
-            null -> Computation.pure(IllType)
-            else -> it.effectiveValueType
-        }
+        return@lazy Computation.pure(resolved?.type ?: IllType)
     }
 
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
-            when (referredDeclaration) {
+            when (resolved) {
                 null -> UnresolvedNameError(
-                    location = term.location,
-                    name = term.referee,
-                )
-                !is ValueDeclaration -> NonValueDeclarationError(
                     location = term.location,
                     name = term.referee,
                 )

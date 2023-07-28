@@ -4,10 +4,11 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Closure
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
 import sigma.semantics.BuiltinScope
 import sigma.semantics.Computation
-import sigma.semantics.DeclarationBlock
+import sigma.semantics.DynamicResolution
+import sigma.semantics.ResolvedName
+import sigma.semantics.StaticBlock
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.ValueDeclaration
@@ -31,12 +32,17 @@ class Abstraction(
         override val effectiveValueType: Computation<Type> = Computation.pure(type)
     }
 
-    class ArgumentDeclarationBlock(
+    class ArgumentStaticBlock(
         argumentDeclarations: List<ArgumentDeclaration>,
-    ) : DeclarationBlock() {
+    ) : StaticBlock() {
         private val declarationByName = argumentDeclarations.associateBy { it.name }
 
-        override fun getDeclaration(name: Symbol): ValueDeclaration? = declarationByName[name]
+        override fun resolveNameLocally(name: Symbol): ResolvedName? = declarationByName[name]?.let {
+            ResolvedName(
+                type = it.type,
+                resolution = DynamicResolution(),
+            )
+        }
     }
 
     companion object {

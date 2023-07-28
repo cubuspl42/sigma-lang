@@ -1,13 +1,10 @@
 package sigma.syntax.typeExpressions
 
 import sigma.evaluation.values.Symbol
-import sigma.semantics.types.ArrayType
-import sigma.semantics.types.BoolType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ArrayTypeConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.ReferenceTerm
-import utils.FakeDeclarationBlock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

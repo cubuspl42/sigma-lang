@@ -1,16 +1,11 @@
 package sigma.syntax.typeExpressions
 
-import sigma.semantics.StaticScope
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.BoolType
-import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.UnorderedTupleType
 import sigma.evaluation.values.Symbol
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.ReferenceTerm
 import sigma.syntax.expressions.UnorderedTupleConstructorTerm
 import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
-import utils.FakeDeclarationBlock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

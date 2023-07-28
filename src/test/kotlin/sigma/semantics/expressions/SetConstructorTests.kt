@@ -13,7 +13,7 @@ import sigma.semantics.types.SetType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.SetConstructorTerm
-import utils.FakeDeclarationBlock
+import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,7 +24,7 @@ object SetConstructorTests {
         @Test
         fun testSingleElement() {
             val setConstructor = SetConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
@@ -46,7 +46,7 @@ object SetConstructorTests {
         @Test
         fun testMultipleEntriesCompatibleElements() {
             val setConstructor = SetConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
@@ -77,7 +77,7 @@ object SetConstructorTests {
         @Test
         fun testMultipleEntriesIncompatibleElements() {
             val setConstructor = SetConstructor.build(
-                declarationScope = FakeDeclarationBlock.of(
+                declarationScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
