@@ -8,13 +8,13 @@ abstract class Value {
     val asEvaluationResult: ValueResult
         get() = ValueResult(value = this)
 
-    val asThunk: ValueThunk
-        get() = ValueThunk(value = this)
+    val asThunk: ValueAsThunk
+        get() = ValueAsThunk(value = this)
 }
 
-class ValueThunk(
+class ValueAsThunk(
     val value: Value,
-) : Thunk {
+) : Thunk<Value> {
     override fun evaluate(
         context: EvaluationContext,
     ): EvaluationResult = ValueResult(

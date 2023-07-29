@@ -1,9 +1,8 @@
 package sigma.evaluation.values
 
-import sigma.evaluation.scope.Scope
 import sigma.semantics.expressions.EvaluationContext
 
-interface Thunk {
+interface Thunk<ValueType : Value> {
     fun evaluate(
         context: EvaluationContext,
     ): EvaluationResult
@@ -15,7 +14,7 @@ interface Thunk {
     ) as? ValueResult)?.value
 }
 
-abstract class CachingThunk : Thunk {
+abstract class CachingThunk<ValueType : Value> : Thunk<ValueType> {
     private lateinit var cachedResult: EvaluationResult
     override fun evaluate(
         context: EvaluationContext,
