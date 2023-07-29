@@ -9,7 +9,7 @@ abstract class Value {
         get() = EvaluationResult(value = this)
 
     inner class ValueAsThunk : Thunk<Value>() {
-        override fun evaluate(
+        override fun evaluateDirectly(
             context: EvaluationContext,
         ): EvaluationOutcome<Value> = this@Value.asEvaluationResult
     }
