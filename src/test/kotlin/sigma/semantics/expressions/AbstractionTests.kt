@@ -35,7 +35,7 @@ class AbstractionTests {
 
             assertEquals(
                 expected = IntCollectiveType,
-                actual = abstraction.declaredImageType,
+                actual = abstraction.declaredImageType?.value,
             )
         }
 

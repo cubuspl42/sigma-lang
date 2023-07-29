@@ -59,7 +59,7 @@ class Call(
         override fun dump(): String = "$location: Invalid argument: ${matchResult.dump()}"
     }
 
-    private val subjectCallOutcome: Thunk<SubjectCallOutcome> by lazy {
+    private val subjectCallOutcome: Thunk<SubjectCallOutcome> = Thunk.lazy {
         Thunk.combine2(
             subject.inferredType,
             argument.inferredType,
