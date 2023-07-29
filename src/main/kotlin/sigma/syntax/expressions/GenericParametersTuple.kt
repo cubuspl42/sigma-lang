@@ -2,15 +2,11 @@ package sigma.syntax.expressions
 
 import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser
-import sigma.semantics.Computation
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
 import sigma.semantics.ResolvedName
 import sigma.semantics.StaticBlock
-import sigma.semantics.ValueDeclaration
 import sigma.semantics.types.MetaType
-import sigma.semantics.types.Type
-import sigma.semantics.types.TypeVariable
 import sigma.syntax.SourceLocation
 import sigma.syntax.Term
 

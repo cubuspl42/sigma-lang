@@ -1,7 +1,7 @@
 package sigma.semantics
 
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Thunk
+import sigma.evaluation.values.Value
 import sigma.syntax.ClassDefinitionTerm
 import sigma.syntax.ConstantDefinitionTerm
 import sigma.syntax.NamespaceDefinitionTerm
@@ -24,7 +24,7 @@ abstract class StaticDefinition : Declaration {
         }
     }
 
-    abstract val staticValue: Thunk<*>
+    abstract val staticValue: Thunk<Value>
 
     abstract val errors: Set<SemanticError>
 }

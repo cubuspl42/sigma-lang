@@ -2,11 +2,9 @@ package sigma.semantics
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.scope.chainWith
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.semantics.expressions.EvaluationContext
 import sigma.syntax.NamespaceDefinitionTerm
 
 class Namespace(
@@ -62,7 +60,7 @@ class Namespace(
     val innerScope = object : Scope {
         override fun getValue(
             name: Symbol,
-        ): Thunk<*>? {
+        ): Thunk<Value>? {
             val constantDefinition = getStaticDefinition(name = name) as? ConstantDefinition
             return constantDefinition?.staticValue
         }

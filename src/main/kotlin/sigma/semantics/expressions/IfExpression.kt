@@ -2,12 +2,11 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Thunk
-import sigma.evaluation.values.ValueResult
-import sigma.semantics.Computation
-import sigma.semantics.StaticScope
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
@@ -51,7 +50,7 @@ class IfExpression(
         override fun dump(): String = "$location: Invalid guard type: ${actualType.dump()} (should be: Bool)"
     }
 
-    private val guardValidationOutcome: Computation<GuardValidationOutcome?> =
+    private val guardValidationOutcome: Thunk<GuardValidationOutcome?> =
         this.guard.inferredType.thenJust { guardType ->
             when (guardType) {
                 is BoolType -> ValidGuardResult
@@ -62,7 +61,7 @@ class IfExpression(
             }
         }
 
-    override val inferredType: Computation<Type> = Computation.combine2(
+    override val inferredType: Thunk<Type> = Thunk.combine2(
         trueBranch.inferredType,
         falseBranch.inferredType,
     ) {
@@ -72,7 +71,7 @@ class IfExpression(
         trueType.findLowestCommonSupertype(falseType)
     }
 
-    override fun bind(scope: Scope): Thunk<*> {
+    override fun bind(scope: Scope): Thunk<Value> {
         val guardValue = guard.bind(
             scope = scope,
         ).evaluateInitialValue()

@@ -2,12 +2,11 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.DictValue
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.semantics.Computation
+import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
@@ -64,7 +63,7 @@ class UnorderedTupleConstructor(
         )
     }
 
-    private val inferredTypeOutcome: Computation<InferredTypeOutcome> = Computation.traverseList(
+    private val inferredTypeOutcome: Thunk<InferredTypeOutcome> = Thunk.traverseList(
         entries.toList()
     ) { entry ->
         entry.value.inferredType.thenJust { entry.name to it }
@@ -89,14 +88,14 @@ class UnorderedTupleConstructor(
 
     }
 
-    override val inferredType: Computation<Type> = inferredTypeOutcome.thenJust {
+    override val inferredType: Thunk<Type> = inferredTypeOutcome.thenJust {
         when (it) {
             is InferredTypeResult -> it.type
             is DuplicatedKeyError -> IllType
         }
     }
 
-    override fun bind(scope: Scope): Thunk<*> = DictValue(
+    override fun bind(scope: Scope): Thunk<Value> = DictValue(
         entries = entries.associate {
             val name = it.name
             val value = it.value.bind(

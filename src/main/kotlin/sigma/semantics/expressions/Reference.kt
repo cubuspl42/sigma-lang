@@ -1,9 +1,6 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.EvaluationResult
-import sigma.semantics.Computation
-import sigma.semantics.ValueDeclaration
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
@@ -12,7 +9,7 @@ import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.ReferenceTerm
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
-import sigma.semantics.Declaration
+import sigma.evaluation.values.Value
 import sigma.semantics.ResolvedName
 
 class Reference(
@@ -45,11 +42,11 @@ class Reference(
         declarationScope.resolveName(name = term.referee)
     }
 
-    override val inferredType: Computation<Type> = Computation.lazy {
-        return@lazy Computation.pure(resolved?.type ?: IllType)
+    override val inferredType: Thunk<Type> = Thunk.lazy {
+        return@lazy Thunk.pure(resolved?.type ?: IllType)
     }
 
-    override fun bind(scope: Scope): Thunk<*> = scope.getValue(
+    override fun bind(scope: Scope): Thunk<Value> = scope.getValue(
         name = referredName,
     ) ?: throw RuntimeException(
         "Unresolved reference at run-time: $referredName",

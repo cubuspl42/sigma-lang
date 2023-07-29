@@ -1,7 +1,8 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.values.IntValue
-import sigma.evaluation.values.ValueResult
+import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Value
 import sigma.semantics.BuiltinScope
 import sigma.semantics.StaticScope
 import sigma.semantics.types.IntLiteralType
@@ -92,7 +93,7 @@ class IfExpressionTests {
                 term = term,
             )
 
-            val result = assertIs<ValueResult>(
+            val result = assertIs<EvaluationResult<Value>>(
                 ifExpression.bind(
                     scope = BuiltinScope,
                 ).evaluateInitial(),
@@ -120,7 +121,7 @@ class IfExpressionTests {
                 term = term,
             )
 
-            val result = assertIs<ValueResult>(
+            val result = assertIs<EvaluationResult<Value>>(
                 ifExpression.bind(
                     scope = BuiltinScope,
                 ).evaluateInitial(),

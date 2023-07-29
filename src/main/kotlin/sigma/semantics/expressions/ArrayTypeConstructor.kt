@@ -1,17 +1,15 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.semantics.Computation
+import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.ArrayTypeConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
 
 class ArrayTypeConstructor(
     override val term: ExpressionTerm,
@@ -30,7 +28,7 @@ class ArrayTypeConstructor(
         )
     }
 
-    override val inferredType: Computation<Type>
+    override val inferredType: Thunk<Type>
         get() = TODO()
 
     override val errors: Set<SemanticError> by lazy {
@@ -38,7 +36,7 @@ class ArrayTypeConstructor(
         )
     }
 
-    override fun bind(scope: Scope): Thunk<*> = ArrayType(
+    override fun bind(scope: Scope): Thunk<Value> = ArrayType(
         // TODO: Remove cast
         elementType = elementType.bind(
             scope = scope,

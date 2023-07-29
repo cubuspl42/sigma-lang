@@ -1,12 +1,13 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.values.EvaluationStackExhaustionError
 import sigma.semantics.BuiltinScope
-import sigma.semantics.Computation
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntType
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.LetExpressionTerm
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Thunk
 import kotlin.test.Test
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
@@ -76,8 +77,8 @@ class LetExpressionTests {
                 ),
             )
 
-            assertIs<Computation.Result.CyclicError<*>>(
-                value = fDefinition.effectiveValueType.result,
+            assertIs<EvaluationStackExhaustionError>(
+                value = fDefinition.effectiveValueType.outcome,
             )
 
             val gDefinition = assertNotNull(
@@ -86,8 +87,8 @@ class LetExpressionTests {
                 ),
             )
 
-            assertIs<Computation.Result.CyclicError<*>>(
-                value = gDefinition.effectiveValueType.result,
+            assertIs<EvaluationStackExhaustionError>(
+                value = gDefinition.effectiveValueType.outcome,
             )
         }
     }

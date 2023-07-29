@@ -1,12 +1,11 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Thunk
-import sigma.semantics.Computation
-import sigma.semantics.StaticScope
+import sigma.evaluation.values.Value
 import sigma.semantics.LocalValueDefinitionBlock
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticScope
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.LetExpressionTerm
 
@@ -47,10 +46,10 @@ data class LetExpression(
         }
     }
 
-    override val inferredType: Computation<Type>
+    override val inferredType: Thunk<Type>
         get() = result.inferredType
 
-    override fun bind(scope: Scope): Thunk<*> = result.bind(
+    override fun bind(scope: Scope): Thunk<Value> = result.bind(
         scope = definitionBlock.evaluate(
             scope = scope,
         ),

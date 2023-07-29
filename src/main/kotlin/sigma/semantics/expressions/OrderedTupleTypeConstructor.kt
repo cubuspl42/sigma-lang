@@ -1,11 +1,10 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.semantics.Computation
+import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.OrderedTupleType
@@ -39,10 +38,10 @@ class OrderedTupleTypeConstructor(
         )
     }
 
-    override val inferredType: Computation<OrderedTupleType>
+    override val inferredType: Thunk<OrderedTupleType>
         get() = TODO()
 
-    override fun bind(scope: Scope): Thunk<*> {
+    override fun bind(scope: Scope): Thunk<Value> {
         return OrderedTupleType(
             elements = elements.map {
                 OrderedTupleType.Element(

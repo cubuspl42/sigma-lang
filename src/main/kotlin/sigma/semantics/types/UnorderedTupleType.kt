@@ -3,10 +3,9 @@ package sigma.semantics.types
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Thunk
+import sigma.evaluation.values.Value
 import sigma.semantics.expressions.Abstraction
-import sigma.semantics.expressions.EvaluationContext
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
@@ -142,6 +141,6 @@ data class UnorderedTupleType(
     override fun toArgumentScope(argument: DictValue): Scope = object : Scope {
         override fun getValue(
             name: Symbol,
-        ): Thunk<*>? = argument.read(name)?.asThunk
+        ): Thunk<Value>? = argument.read(name)?.asThunk
     }
 }

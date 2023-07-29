@@ -1,20 +1,16 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.semantics.Computation
+import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UniversalFunctionType
-import sigma.syntax.expressions.ArrayTypeConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.FunctionTypeTerm
-import sigma.syntax.expressions.TupleTypeConstructorTerm
-import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
 
 class FunctionTypeConstructor(
     override val term: ExpressionTerm,
@@ -38,10 +34,10 @@ class FunctionTypeConstructor(
         )
     }
 
-    override val inferredType: Computation<Type>
+    override val inferredType: Thunk<Type>
         get() = TODO()
 
-    override fun bind(scope: Scope): Thunk<*> {
+    override fun bind(scope: Scope): Thunk<Value> {
         return UniversalFunctionType(
             argumentType = argumentType.bind(
                 scope = scope,

@@ -2,14 +2,12 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.UndefinedValue
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.ValueResult
-import sigma.semantics.Computation
-import sigma.semantics.StaticScope
+import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.IsUndefinedCheckTerm
@@ -31,8 +29,8 @@ data class IsUndefinedCheck(
         )
     }
 
-    override val inferredType: Computation<Type> = Computation.pure(BoolType)
-    override fun bind(scope: Scope): Thunk<*> {
+    override val inferredType: Thunk<Type> = Thunk.pure(BoolType)
+    override fun bind(scope: Scope): Thunk<Value> {
         val argumentValue = argument.bind(
             scope = scope,
         ).evaluateInitialValue()

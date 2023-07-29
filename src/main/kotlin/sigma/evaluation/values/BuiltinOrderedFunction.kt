@@ -10,7 +10,7 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
 
     final override fun apply(
         argument: Value,
-    ): Thunk<*> {
+    ): Thunk<Value> {
         val args = argument as FunctionValue
 
         return compute(

@@ -14,7 +14,7 @@ abstract class FunctionValue : Value() {
     object Link : ComputableFunctionValue() {
         override fun apply(
             argument: Value,
-        ): Thunk<*> {
+        ): Thunk<Value> {
             argument as FunctionValue
 
             val primary = argument.apply(
@@ -26,7 +26,7 @@ abstract class FunctionValue : Value() {
             ).evaluateInitialValue() as FunctionValue
 
             return object : FunctionValue() {
-                override fun apply(argument: Value): Thunk<*> {
+                override fun apply(argument: Value): Thunk<Value> {
                     return when (val result = primary.apply(argument = argument).evaluateInitialValue()) {
                         is UndefinedValue -> secondary.apply(
                             argument = argument,
@@ -309,5 +309,5 @@ abstract class FunctionValue : Value() {
 
     abstract fun apply(
         argument: Value,
-    ): Thunk<*>
+    ): Thunk<Value>
 }

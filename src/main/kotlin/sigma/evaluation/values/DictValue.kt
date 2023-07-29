@@ -20,7 +20,7 @@ class DictValue(
 
     override fun apply(
         argument: Value,
-    ): Thunk<*> = (read(
+    ): Thunk<Value> = (read(
         key = argument,
     ) ?: UndefinedValue.withName(
         name = argument,
