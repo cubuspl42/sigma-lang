@@ -132,7 +132,7 @@ sealed class ExpressionTerm : Term() {
 
             override fun visitDictTypeDepictionAlt(
                 ctx: SigmaParser.DictTypeDepictionAltContext,
-            ): ExpressionTerm = DictTypeTerm.build(ctx.dictTypeDepiction())
+            ): ExpressionTerm = DictTypeConstructorTerm.build(ctx.dictTypeDepiction())
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class}")
     }
 

@@ -3,8 +3,7 @@ package sigma.syntax.expressions
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 
-// Thought: "DictTypeConstructorTerm"?
-data class DictTypeTerm(
+data class DictTypeConstructorTerm(
     override val location: SourceLocation,
     val keyType: ExpressionTerm,
     val valueType: ExpressionTerm,
@@ -12,7 +11,7 @@ data class DictTypeTerm(
     companion object {
         fun build(
             ctx: SigmaParser.DictTypeDepictionContext,
-        ): DictTypeTerm = DictTypeTerm(
+        ): DictTypeConstructorTerm = DictTypeConstructorTerm(
             location = SourceLocation.build(ctx),
             keyType = build(ctx.keyType),
             valueType = build(ctx.valueType),

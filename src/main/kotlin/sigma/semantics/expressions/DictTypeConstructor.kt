@@ -7,24 +7,29 @@ import sigma.evaluation.values.asThunk
 import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
-import sigma.semantics.types.ArrayType
+import sigma.semantics.types.DictType
 import sigma.semantics.types.Type
-import sigma.syntax.expressions.ArrayTypeConstructorTerm
+import sigma.syntax.expressions.DictTypeConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
 
-class ArrayTypeConstructor(
+class DictTypeConstructor(
     override val term: ExpressionTerm,
-    val elementType: Expression,
+    val keyType: Expression,
+    val valueType: Expression,
 ) : Expression() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: ArrayTypeConstructorTerm,
-        ): ArrayTypeConstructor = ArrayTypeConstructor(
+            term: DictTypeConstructorTerm,
+        ): DictTypeConstructor = DictTypeConstructor(
             term = term,
-            elementType = Expression.build(
+            keyType = Expression.build(
                 declarationScope = declarationScope,
-                term = term.elementType,
+                term = term.keyType,
+            ),
+            valueType = Expression.build(
+                declarationScope = declarationScope,
+                term = term.valueType,
             ),
         )
     }
@@ -34,9 +39,13 @@ class ArrayTypeConstructor(
 
     override val errors: Set<SemanticError> = emptySet()
 
-    override fun bind(scope: Scope): Thunk<Value> = ArrayType(
+    override fun bind(scope: Scope): Thunk<Value> = DictType(
         // TODO: Remove cast
-        elementType = elementType.bind(
+        keyType = keyType.bind(
+            scope = scope,
+        ).evaluateInitialValue() as Type,
+        // TODO: Remove cast
+        valueType = valueType.bind(
             scope = scope,
         ).evaluateInitialValue() as Type,
     ).asThunk

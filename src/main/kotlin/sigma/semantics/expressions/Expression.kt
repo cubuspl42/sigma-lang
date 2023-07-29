@@ -19,7 +19,7 @@ import sigma.syntax.expressions.AbstractionTerm
 import sigma.syntax.expressions.ArrayTypeConstructorTerm
 import sigma.syntax.expressions.CallTerm
 import sigma.syntax.expressions.DictConstructorTerm
-import sigma.syntax.expressions.DictTypeTerm
+import sigma.syntax.expressions.DictTypeConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.FieldReadTerm
 import sigma.syntax.expressions.FunctionTypeTerm
@@ -145,7 +145,10 @@ abstract class Expression {
                 term = term,
             )
 
-            is DictTypeTerm -> TODO()
+            is DictTypeConstructorTerm -> DictTypeConstructor.build(
+                declarationScope = declarationScope,
+                term = term,
+            )
 
             is FunctionTypeTerm -> FunctionTypeConstructor.build(
                 declarationScope = declarationScope,

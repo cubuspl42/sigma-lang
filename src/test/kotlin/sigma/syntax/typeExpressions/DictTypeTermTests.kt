@@ -1,12 +1,8 @@
 package sigma.syntax.typeExpressions
 
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.BoolType
-import sigma.semantics.types.DictType
-import sigma.semantics.types.IntCollectiveType
 import sigma.evaluation.values.Symbol
-import sigma.semantics.BuiltinScope
-import sigma.syntax.expressions.DictTypeTerm
+import sigma.syntax.expressions.DictTypeConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.ReferenceTerm
 import kotlin.test.Test
@@ -21,7 +17,7 @@ class DictTypeTermTests {
             )
 
             assertEquals(
-                expected = DictTypeTerm(
+                expected = DictTypeConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     keyType = ReferenceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
