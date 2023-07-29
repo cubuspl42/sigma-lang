@@ -34,18 +34,18 @@ import sigma.syntax.expressions.TupleConstructorTerm
 import sigma.syntax.expressions.TupleTypeConstructorTerm
 
 data class EvaluationContext(
-    val callDepth: Int,
+    val evaluationDepth: Int,
 ) {
     companion object {
         val Initial: EvaluationContext = EvaluationContext(
-            callDepth = 0,
+            evaluationDepth = 0,
         )
 
         const val maxEvaluationDepth: Int = 1024
     }
 
     fun withIncreasedDepth(): EvaluationContext = EvaluationContext(
-        callDepth = callDepth + 1,
+        evaluationDepth = evaluationDepth + 1,
     )
 }
 

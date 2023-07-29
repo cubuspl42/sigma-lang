@@ -7,14 +7,14 @@ abstract class Thunk<out ResultType> {
         fun <A : Any> lazy(get: () -> Thunk<A>): Thunk<A> = object : Thunk<A>() {
             private val computation by kotlin.lazy { get() }
 
-            override fun evaluate(context: EvaluationContext): EvaluationOutcome<A> =
+            override fun evaluateDirectly(context: EvaluationContext): EvaluationOutcome<A> =
                 computation.evaluate(context = context)
         }
 
         fun <A : Any> pure(
             value: A,
         ): Thunk<A> = object : Thunk<A>() {
-            override fun evaluate(
+            override fun evaluateDirectly(
                 context: EvaluationContext,
             ): EvaluationOutcome<A> = EvaluationResult(value = value)
         }
@@ -24,7 +24,7 @@ abstract class Thunk<out ResultType> {
             thunk2: Thunk<B>,
             combine: (A, B) -> C,
         ): Thunk<C> = object : Thunk<C>() {
-            override fun evaluate(context: EvaluationContext): EvaluationOutcome<C> {
+            override fun evaluateDirectly(context: EvaluationContext): EvaluationOutcome<C> {
                 val value1 = when (val outcome = thunk1.evaluate(context = context)) {
                     is EvaluationResult -> outcome.value
                     is EvaluationError -> return outcome
@@ -45,7 +45,7 @@ abstract class Thunk<out ResultType> {
             list: List<A>,
             transform: (A) -> Thunk<B>,
         ): Thunk<List<B>> = object : Thunk<List<B>>() {
-            override fun evaluate(context: EvaluationContext): EvaluationOutcome<List<B>> {
+            override fun evaluateDirectly(context: EvaluationContext): EvaluationOutcome<List<B>> {
                 val computations = list.map(transform)
 
                 val results = computations.map {
@@ -56,14 +56,38 @@ abstract class Thunk<out ResultType> {
 
                 if (error != null) return error
 
-                return EvaluationResult(
-                    value = results.map { (it as EvaluationResult<B>).value }
-                )
+                return EvaluationResult(value = results.map { (it as EvaluationResult<B>).value })
             }
         }
     }
 
-    abstract fun evaluate(
+    private lateinit var cachedResult: EvaluationOutcome<ResultType>
+
+    fun evaluate(
+        context: EvaluationContext,
+    ): EvaluationOutcome<ResultType> {
+        val innerContext = context.withIncreasedDepth()
+
+        return when {
+            innerContext.evaluationDepth > EvaluationContext.maxEvaluationDepth -> EvaluationStackExhaustionError
+
+            this::cachedResult.isInitialized -> {
+                this.cachedResult
+            }
+
+            else -> {
+                val result = this.evaluateDirectly(
+                    context = context,
+                )
+
+                this.cachedResult = result
+
+                result
+            }
+        }
+    }
+
+    abstract fun evaluateDirectly(
         context: EvaluationContext,
     ): EvaluationOutcome<ResultType>
 
@@ -74,7 +98,7 @@ abstract class Thunk<out ResultType> {
     fun <B> thenJust(
         transform: (ResultType) -> B,
     ): Thunk<B> = object : Thunk<B>() {
-        override fun evaluate(context: EvaluationContext): EvaluationOutcome<B> {
+        override fun evaluateDirectly(context: EvaluationContext): EvaluationOutcome<B> {
             val value = when (val outcome = this@Thunk.evaluate(context = context)) {
                 is EvaluationResult -> outcome.value
                 is EvaluationError -> return outcome
@@ -89,7 +113,7 @@ abstract class Thunk<out ResultType> {
     fun <B : Any> thenDo(
         transform: (ResultType) -> Thunk<B>,
     ): Thunk<B> = object : Thunk<B>() {
-        override fun evaluate(context: EvaluationContext): EvaluationOutcome<B> {
+        override fun evaluateDirectly(context: EvaluationContext): EvaluationOutcome<B> {
             val value = when (val outcome = this@Thunk.evaluate(context = context)) {
                 is EvaluationResult -> outcome.value
                 is EvaluationError -> return outcome
@@ -118,7 +142,7 @@ fun Thunk<Value>.evaluateValueHacky(
 
 abstract class CachingThunk<ResultType : Any> : Thunk<ResultType>() {
     private lateinit var cachedResult: EvaluationOutcome<ResultType>
-    override fun evaluate(
+    override fun evaluateDirectly(
         context: EvaluationContext,
     ): EvaluationOutcome<ResultType> = if (this::cachedResult.isInitialized) {
         this.cachedResult

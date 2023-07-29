@@ -127,7 +127,7 @@ class Call(
 
     override fun bind(scope: Scope): Thunk<Value> {
         return object : Thunk<Value>() {
-            override fun evaluate(context: EvaluationContext): EvaluationOutcome<Value> {
+            override fun evaluateDirectly(context: EvaluationContext): EvaluationOutcome<Value> {
                 val subjectValue = subject.bind(
                     scope = scope,
                 ).evaluateValueHacky(
