@@ -14,15 +14,14 @@ abstract class ValueDefinition : ValueDeclaration {
 
     protected abstract val declarationScope: StaticScope
 
-    private val declaredType: Type? by lazy {
-        declaredTypeBody?.evaluateValue(
-            context = EvaluationContext.Initial,
-            scope = BuiltinScope,
-        ) as? Type
+    private val declaredType: Thunk<Type>? by lazy {
+        declaredTypeBody?.let { expression ->
+            expression.bind(scope = BuiltinScope).thenJust { it as Type }
+        }
     }
 
     private val unmatchedInferredTypeError: UnmatchedInferredTypeError? by lazy {
-        val declaredType = this.declaredType
+        val declaredType = this.declaredType?.value
         val inferredType = body.inferredType.value
 
         if (declaredType != null && inferredType != null) {
@@ -37,10 +36,7 @@ abstract class ValueDefinition : ValueDeclaration {
     }
 
     final override val effectiveValueType: Thunk<Type> by lazy {
-        when (val it = declaredType) {
-            null -> body.inferredType
-            else -> Thunk.pure(it)
-        }
+        declaredType ?: body.inferredType
     }
 
     val errors: Set<SemanticError> by lazy {
