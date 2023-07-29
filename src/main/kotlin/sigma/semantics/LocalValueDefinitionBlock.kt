@@ -34,7 +34,7 @@ class LocalValueDefinitionBlock(
         name: Symbol,
     ): ResolvedName? = getValueDefinition(name = name)?.let {
         ResolvedName(
-            type = it.effectiveValueType.value!!,
+            type = it.effectiveValueType,
             resolution = DynamicResolution(
                 resolvedFormula = null,
             )

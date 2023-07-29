@@ -7,6 +7,7 @@ import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
@@ -35,7 +36,7 @@ private class BuiltinValueDefinition(
 
     val asResolvedName: ResolvedName
         get() = ResolvedName(
-            type = type,
+            type = type.asThunk,
             resolution = BuiltinResolution(
                 builtinValue = value,
             ),

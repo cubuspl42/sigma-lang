@@ -1,6 +1,7 @@
 package sigma.syntax.expressions
 
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.asThunk
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
@@ -30,7 +31,7 @@ data class GenericParametersTuple(
             name: Symbol,
         ): ResolvedName? = if (parametersDefinitions.any { it == name }) {
             ResolvedName(
-                type = MetaType,
+                type = MetaType.asThunk,
                 resolution = DynamicResolution(
                     resolvedFormula = Formula(
                         name = name,

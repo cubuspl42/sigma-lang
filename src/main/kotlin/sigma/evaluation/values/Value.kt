@@ -4,16 +4,14 @@ import sigma.semantics.expressions.EvaluationContext
 
 abstract class Value {
     abstract fun dump(): String
+}
 
-    val asEvaluationResult: EvaluationResult<Value>
-        get() = EvaluationResult(value = this)
+val <ValueType : Value> ValueType.asEvaluationResult: EvaluationResult<ValueType>
+    get() = EvaluationResult(value = this)
 
-    inner class ValueAsThunk : Thunk<Value>() {
+val <ValueType : Value> ValueType.asThunk: Thunk<ValueType>
+    get() = object : Thunk<ValueType>() {
         override fun evaluateDirectly(
             context: EvaluationContext,
-        ): EvaluationOutcome<Value> = this@Value.asEvaluationResult
+        ): EvaluationOutcome<ValueType> = this@asThunk.asEvaluationResult
     }
-
-    val asThunk: ValueAsThunk
-        get() = ValueAsThunk()
-}

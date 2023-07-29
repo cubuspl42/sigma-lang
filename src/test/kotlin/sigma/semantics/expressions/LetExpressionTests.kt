@@ -20,7 +20,7 @@ class LetExpressionTests {
                 source = """
                     let {
                         f = ^[] -> Int => g[],
-                        g =^ [] => f[],
+                        g = ^[] => f[],
                     } in f[]
                 """.trimIndent(),
             ) as LetExpressionTerm

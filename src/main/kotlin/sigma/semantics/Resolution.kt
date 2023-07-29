@@ -3,6 +3,7 @@ package sigma.semantics
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 import sigma.semantics.types.Type
 
 data class Formula(
@@ -40,6 +41,6 @@ class ConstDefinitionResolution(
 }
 
 data class ResolvedName(
-    val type: Type,
+    val type: Thunk<Type>,
     val resolution: Resolution,
 )

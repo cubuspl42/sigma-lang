@@ -5,6 +5,7 @@ import sigma.evaluation.values.Closure
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 import sigma.evaluation.values.evaluateValueHacky
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
@@ -42,7 +43,7 @@ class Abstraction(
             name: Symbol,
         ): ResolvedName? = declarationByName[name]?.let {
             ResolvedName(
-                type = it.type,
+                type = it.type.asThunk,
                 resolution = DynamicResolution(
                     resolvedFormula = Formula(
                         name = name,

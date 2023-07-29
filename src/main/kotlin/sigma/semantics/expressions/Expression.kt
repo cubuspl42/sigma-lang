@@ -4,6 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 import sigma.evaluation.values.evaluateValueHacky
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
@@ -60,7 +61,7 @@ class TranslationScope(
         when (val resolution = resolvedName.resolution) {
             is StaticResolution -> resolution.resolvedValue
 
-            is DynamicResolution -> when (resolvedName.type) {
+            is DynamicResolution -> when (resolvedName.type.value) {
                 is MetaType -> TypeVariable(
                     // FIXME
                     formula = resolution.resolvedFormula ?: Formula(name = Symbol.of("?")),
