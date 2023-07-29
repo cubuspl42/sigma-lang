@@ -7,11 +7,18 @@ interface Thunk<ValueType : Value> {
         context: EvaluationContext,
     ): EvaluationResult
 
-    fun evaluateValue(
+    // TODO: Nuke
+    fun evaluateValueHacky(
         context: EvaluationContext,
     ): Value? = (evaluate(
         context = context,
     ) as? ValueResult)?.value
+
+    fun evaluateInitial(): EvaluationResult = evaluate(
+        context = EvaluationContext.Initial,
+    )
+
+    fun evaluateInitialValue() = (evaluateInitial() as ValueResult).value
 }
 
 abstract class CachingThunk<ValueType : Value> : Thunk<ValueType> {

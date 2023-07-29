@@ -4,6 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Thunk
 import sigma.semantics.expressions.Abstraction
 import sigma.semantics.expressions.EvaluationContext
 
@@ -140,8 +141,7 @@ data class UnorderedTupleType(
 
     override fun toArgumentScope(argument: DictValue): Scope = object : Scope {
         override fun getValue(
-            context: EvaluationContext,
             name: Symbol,
-        ): EvaluationResult? = argument.read(name)?.asEvaluationResult
+        ): Thunk<*>? = argument.read(name)?.asThunk
     }
 }

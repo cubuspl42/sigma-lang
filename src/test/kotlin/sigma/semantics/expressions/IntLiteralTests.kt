@@ -18,10 +18,9 @@ class IntLiteralTests {
             )
 
             val result = assertIs<ValueResult>(
-                intLiteral.evaluate(
-                    context = EvaluationContext.Initial,
+                intLiteral.bind(
                     scope = Scope.Empty,
-                ),
+                ).evaluateInitial(),
             )
 
             assertEquals(

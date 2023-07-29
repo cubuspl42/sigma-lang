@@ -2,17 +2,17 @@ package sigma.evaluation.scope
 
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Thunk
 import sigma.semantics.expressions.EvaluationContext
 
 interface Scope {
     object Empty : Scope {
-        override fun getValue(context: EvaluationContext, name: Symbol): EvaluationResult? = null
+        override fun getValue(name: Symbol): Thunk<*>? = null
     }
 
     fun getValue(
-        context: EvaluationContext,
         name: Symbol,
-    ): EvaluationResult?
+    ): Thunk<*>?
 }
 
 fun Scope.chainWith(

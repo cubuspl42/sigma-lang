@@ -3,6 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.SetValue
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -72,21 +73,17 @@ class SetConstructor(
         }
     }
 
+    override fun bind(scope: Scope): Thunk<*> = SetValue(
+        elements = elements.map {
+            it.bind(
+                scope = scope,
+            ).evaluateInitialValue()
+        }.toSet(),
+    ).asThunk
+
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
             inferredElementTypeOutcome.value as? InconsistentElementTypeError,
         )
     }
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult = SetValue(
-        elements = elements.map {
-            it.evaluateValue(
-                context = context,
-                scope = scope,
-            ) as Value
-        }.toSet(),
-    ).asEvaluationResult
 }

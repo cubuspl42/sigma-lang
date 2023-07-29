@@ -145,10 +145,9 @@ class AbstractionTests {
             )
 
             val result = assertIs<ValueResult>(
-                abstraction.evaluate(
-                    context = EvaluationContext.Initial,
+                abstraction.bind(
                     scope = BuiltinScope,
-                ),
+                ).evaluateInitial(),
             )
 
             val closure = result.value
@@ -157,14 +156,13 @@ class AbstractionTests {
 
             val callResult = assertIs<ValueResult>(
                 closure.apply(
-                    context = EvaluationContext.Initial,
                     argument = ArrayTable(
                         elements = listOf(
                             IntValue(2),
                             IntValue(3),
                         ),
                     ),
-                ),
+                ).evaluateInitial(),
             )
 
             assertEquals(

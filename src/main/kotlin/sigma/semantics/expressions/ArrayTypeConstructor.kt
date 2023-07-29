@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -37,13 +38,10 @@ class ArrayTypeConstructor(
         )
     }
 
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult = ArrayType(
-        elementType = elementType.evaluate(
-            context = context,
+    override fun bind(scope: Scope): Thunk<*> = ArrayType(
+        // TODO: Remove cast
+        elementType = elementType.bind(
             scope = scope,
-        ) as Type,
-    ).asEvaluationResult
+        ).evaluateInitialValue() as Type,
+    ).asThunk
 }

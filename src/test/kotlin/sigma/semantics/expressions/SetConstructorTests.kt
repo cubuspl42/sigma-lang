@@ -122,8 +122,7 @@ object SetConstructorTests {
             )
 
             val result = assertIs<ValueResult>(
-                setConstructor.evaluate(
-                    context = EvaluationContext.Initial,
+                setConstructor.bind(
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("foo") to IntValue(value = 1L),
@@ -131,7 +130,7 @@ object SetConstructorTests {
                             Symbol.of("baz") to IntValue(value = 3L),
                         ),
                     ),
-                ),
+                ).evaluateInitial(),
             )
 
             assertEquals(

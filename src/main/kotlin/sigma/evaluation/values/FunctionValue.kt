@@ -13,37 +13,31 @@ import sigma.semantics.types.TypeVariable
 abstract class FunctionValue : Value() {
     object Link : ComputableFunctionValue() {
         override fun apply(
-            context: EvaluationContext,
             argument: Value,
-        ): EvaluationResult {
+        ): Thunk<*> {
             argument as FunctionValue
 
             val primary = argument.apply(
-                context = context,
                 argument = Symbol.of("primary"),
-            ) as FunctionValue
+            ).evaluateInitialValue() as FunctionValue
 
             val secondary = argument.apply(
-                context = context,
                 argument = Symbol.of("secondary"),
-            ) as FunctionValue
+            ).evaluateInitialValue() as FunctionValue
 
             return object : FunctionValue() {
-                override fun apply(context: EvaluationContext, argument: Value): EvaluationResult {
-                    val result = primary.apply(context = context, argument = argument)
-
-                    return when {
-                        result is ValueResult && result.value is UndefinedValue -> secondary.apply(
-                            context = context,
+                override fun apply(argument: Value): Thunk<*> {
+                    return when (val result = primary.apply(argument = argument).evaluateInitialValue()) {
+                        is UndefinedValue -> secondary.apply(
                             argument = argument,
                         )
 
-                        else -> result
+                        else -> result.asThunk
                     }
                 }
 
                 override fun dump(): String = "${primary.dump()} .. ${secondary.dump()}"
-            }.asEvaluationResult
+            }.asThunk
         }
 
         override fun dump(): String = "(link function)"
@@ -66,7 +60,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(context: EvaluationContext, args: List<Value>): Value {
+        override fun compute(args: List<Value>): Value {
             val elements = (args.first() as FunctionValue).toList()
 
             val result = elements.chunked(size = 4)
@@ -92,7 +86,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(context: EvaluationContext, args: List<Value>): Value {
+        override fun compute(args: List<Value>): Value {
             val elements = (args.first() as FunctionValue).toList()
 
             val result = elements.drop(1)
@@ -116,7 +110,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(context: EvaluationContext, args: List<Value>): Value {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
             val n = (args[1] as IntValue).value
 
@@ -143,7 +137,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(context: EvaluationContext, args: List<Value>): Value {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
             val n = (args[1] as IntValue).value
 
@@ -197,15 +191,14 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(context: EvaluationContext, args: List<Value>): Value {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
             val transform = args[1] as FunctionValue
 
             return DictValue.fromList(elements.map {
                 transform.apply(
-                    context,
                     DictValue.fromList(listOf(it)),
-                ) as Value
+                ).evaluateInitialValue()
             })
         }
     }
@@ -221,7 +214,7 @@ abstract class FunctionValue : Value() {
 
         override val imageType = IntCollectiveType
 
-        override fun compute(context: EvaluationContext, args: List<Value>): Value {
+        override fun compute(args: List<Value>): Value {
             val list = (args[0] as FunctionValue).toList()
 
             return IntValue(value = list.size.toLong())
@@ -248,7 +241,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(context: EvaluationContext, args: List<Value>): Value {
+        override fun compute(args: List<Value>): Value {
             val front = (args[0] as FunctionValue).toList()
             val back = (args[1] as FunctionValue).toList()
 
@@ -263,7 +256,7 @@ abstract class FunctionValue : Value() {
 
         override val imageType = IntCollectiveType
 
-        override fun compute(context: EvaluationContext, args: List<Value>): Value {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
 
             return IntValue(
@@ -279,7 +272,7 @@ abstract class FunctionValue : Value() {
 
         override val imageType = IntCollectiveType
 
-        override fun compute(context: EvaluationContext, args: List<Value>): Value {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
 
             return IntValue(
@@ -299,7 +292,7 @@ abstract class FunctionValue : Value() {
 
         override val imageType = IntCollectiveType
 
-        override fun compute(context: EvaluationContext, args: List<Value>): Value {
+        override fun compute(args: List<Value>): Value {
             val elements = (args[0] as FunctionValue).toList()
 
             val result = elements.maxOf { (it as IntValue).value }
@@ -310,13 +303,11 @@ abstract class FunctionValue : Value() {
 
     fun toList(): List<Value> = generateSequence(0) { it + 1 }.map {
         apply(
-            context = EvaluationContext.Initial,
             argument = IntValue(value = it.toLong()),
         ) as Value
     }.takeWhile { it !is UndefinedValue }.toList()
 
     abstract fun apply(
-        context: EvaluationContext,
         argument: Value,
-    ): EvaluationResult
+    ): Thunk<*>
 }

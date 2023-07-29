@@ -3,6 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.ValueResult
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -71,37 +72,27 @@ class IfExpression(
         trueType.findLowestCommonSupertype(falseType)
     }
 
-    override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
-            guardValidationOutcome.value as? InvalidGuardError,
-        ) + trueBranch.errors + falseBranch.errors
-    }
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult {
-
-        val guardResult = guard.evaluate(
-            context = context,
+    override fun bind(scope: Scope): Thunk<*> {
+        val guardValue = guard.bind(
             scope = scope,
-        )
-
-        val guardValueResult = guardResult as? ValueResult ?: return guardResult
-        val guardValue = guardValueResult.value
+        ).evaluateInitialValue()
 
         if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")
 
         return if (guardValue.value) {
-            trueBranch.evaluate(
-                context = context,
+            trueBranch.bind(
                 scope = scope,
-            )
+            ).evaluateInitialValue().asThunk
         } else {
-            falseBranch.evaluate(
-                context = context,
+            falseBranch.bind(
                 scope = scope,
-            )
+            ).evaluateInitialValue().asThunk
         }
+    }
+
+    override val errors: Set<SemanticError> by lazy {
+        setOfNotNull(
+            guardValidationOutcome.value as? InvalidGuardError,
+        ) + trueBranch.errors + falseBranch.errors
     }
 }

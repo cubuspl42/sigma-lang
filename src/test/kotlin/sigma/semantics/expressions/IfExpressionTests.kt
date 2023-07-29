@@ -93,10 +93,9 @@ class IfExpressionTests {
             )
 
             val result = assertIs<ValueResult>(
-                ifExpression.evaluate(
-                    context = EvaluationContext.Initial,
+                ifExpression.bind(
                     scope = BuiltinScope,
-                ),
+                ).evaluateInitial(),
             )
 
             assertEquals(
@@ -122,10 +121,9 @@ class IfExpressionTests {
             )
 
             val result = assertIs<ValueResult>(
-                ifExpression.evaluate(
-                    context = EvaluationContext.Initial,
+                ifExpression.bind(
                     scope = BuiltinScope,
-                ),
+                ).evaluateInitial(),
             )
 
             assertEquals(

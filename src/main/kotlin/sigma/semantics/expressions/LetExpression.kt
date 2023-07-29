@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Thunk
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
 import sigma.semantics.LocalValueDefinitionBlock
@@ -49,17 +50,13 @@ data class LetExpression(
     override val inferredType: Computation<Type>
         get() = result.inferredType
 
-    override val errors: Set<SemanticError> by lazy {
-        definitionBlock.errors + result.errors
-    }
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult = result.evaluate(
-        context = context,
+    override fun bind(scope: Scope): Thunk<*> = result.bind(
         scope = definitionBlock.evaluate(
             scope = scope,
         ),
     )
+
+    override val errors: Set<SemanticError> by lazy {
+        definitionBlock.errors + result.errors
+    }
 }

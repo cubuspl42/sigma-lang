@@ -1,7 +1,6 @@
 package sigma.evaluation.values
 
 import sigma.BinaryOperationPrototype
-import sigma.semantics.expressions.EvaluationContext
 
 data class IntValue(
     val value: Long,
@@ -11,7 +10,7 @@ data class IntValue(
     }
 
     abstract class BinaryIntFunction : ComputableFunctionValue() {
-        override fun apply(context: EvaluationContext, argument: Value): EvaluationResult {
+        override fun apply(argument: Value): Thunk<*> {
             val argumentTuple = argument as DictValue
 
             val left = argumentTuple.read(Symbol.of(prototype.leftArgumentName))!!
@@ -23,7 +22,7 @@ data class IntValue(
             return calculate(
                 left = left.value,
                 right = right.value,
-            ).asEvaluationResult
+            ).asThunk
         }
 
         override fun dump(): String = "(${prototype.functionName})"
@@ -66,10 +65,10 @@ data class IntValue(
     }
 
     object Sq : ComputableFunctionValue() {
-        override fun apply(context: EvaluationContext, argument: Value): EvaluationResult {
+        override fun apply(argument: Value): Thunk<*> {
             val arg = (argument as DictValue).read(Zero)!! as IntValue
 
-            return IntValue(arg.value * arg.value).asEvaluationResult
+            return IntValue(arg.value * arg.value).asThunk
         }
 
         override fun dump(): String = "(sq)"

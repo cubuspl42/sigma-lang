@@ -6,6 +6,7 @@ import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.ValueResult
 import sigma.semantics.expressions.EvaluationContext
@@ -31,7 +32,7 @@ private class BuiltinValueDefinition(
 ) : StaticDefinition() {
 //    override val effectiveValueType: Computation<Type> = Computation.pure(type)
 
-    override val staticValue: EvaluationResult = ValueResult(value = value)
+    override val staticValue: Thunk<*> = value.asThunk
     override val errors: Set<SemanticError>
         get() = emptySet()
 
@@ -230,11 +231,10 @@ object BuiltinScope : Scope, StaticScope {
         builtinValueDeclarations.associateBy { it.name }
 
     override fun getValue(
-        context: EvaluationContext,
         name: Symbol,
-    ): EvaluationResult? = getBuiltin(
+    ): Thunk<*>? = getBuiltin(
         name = name,
-    )?.value?.asEvaluationResult
+    )?.value?.asThunk
 
     private fun getBuiltin(
         name: Symbol,

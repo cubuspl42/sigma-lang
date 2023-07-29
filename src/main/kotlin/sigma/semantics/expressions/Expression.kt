@@ -1,13 +1,9 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.CachingThunk
-import sigma.evaluation.values.EvaluationStackExhaustionError
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.ValueResult
 import sigma.semantics.Computation
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
@@ -57,21 +53,18 @@ class TranslationScope(
     private val staticScope: StaticScope,
 ) : Scope {
     override fun getValue(
-        context: EvaluationContext,
         name: Symbol,
-    ): EvaluationResult? = staticScope.resolveName(
+    ): Thunk<*>? = staticScope.resolveName(
         name = name,
     )?.let { resolvedName ->
         when (val resolution = resolvedName.resolution) {
-            is StaticResolution -> resolution.resolvedValue.evaluate(
-                context = context,
-            )
+            is StaticResolution -> resolution.resolvedValue
 
             is DynamicResolution -> when (resolvedName.type) {
                 is MetaType -> TypeVariable(
                     // FIXME
                     formula = resolution.resolvedFormula ?: Formula(name = Symbol.of("?")),
-                ).asEvaluationResult
+                ).asThunk
 
                 else -> null
             }
@@ -182,46 +175,19 @@ abstract class Expression {
 
     abstract val inferredType: Computation<Type>
 
-    abstract fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult
-
-    fun evaluate(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult = if (context.callDepth < EvaluationContext.maxEvaluationDepth) {
-        evaluateDirectly(
-            context = context,
-            scope = scope,
-        )
-    } else {
-        EvaluationStackExhaustionError
-    }
-
     fun evaluateValue(
         context: EvaluationContext,
         scope: Scope,
-    ): Value? = (evaluate(
-        context,
-        scope,
-    ) as? ValueResult)?.value
+    ): Value? = bind(scope = scope).evaluateValueHacky(context = context)
 
-    fun bind(
-        boundScope: Scope,
-    ): Thunk<*> = object : CachingThunk<Value>() {
-        override fun evaluateDirectly(
-            context: EvaluationContext,
-        ): EvaluationResult = this@Expression.evaluate(
-            context = context,
-            scope = boundScope,
-        )
-    }
+    abstract fun bind(
+        scope: Scope,
+    ): Thunk<*>
 
     fun bindTranslated(
         staticScope: StaticScope,
     ): Thunk<*> = bind(
-        boundScope = TranslationScope(
+        scope = TranslationScope(
             staticScope = staticScope,
         ),
     )

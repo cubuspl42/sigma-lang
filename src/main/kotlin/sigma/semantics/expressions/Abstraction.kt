@@ -2,8 +2,8 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Closure
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Thunk
 import sigma.semantics.Computation
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
@@ -99,20 +99,16 @@ class Abstraction(
             )
         }
     }
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult = Closure(
+    override fun bind(scope: Scope): Thunk<*> = Closure(
         outerScope = scope,
         argumentType = argumentType,
         image = image,
-    ).asEvaluationResult
+    ).asThunk
 
     val declaredImageType by lazy {
         declaredImageTypeConstructor?.bindTranslated(
             staticScope = innerDeclarationScope,
-        )?.evaluateValue(
+        )?.evaluateValueHacky(
             context = EvaluationContext.Initial,
         ) as? Type
     }
