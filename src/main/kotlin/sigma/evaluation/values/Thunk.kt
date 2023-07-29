@@ -2,33 +2,128 @@ package sigma.evaluation.values
 
 import sigma.semantics.expressions.EvaluationContext
 
-interface Thunk<ValueType : Value> {
-    fun evaluate(
-        context: EvaluationContext,
-    ): EvaluationResult
+abstract class Thunk<out ResultType> {
+    companion object {
+        fun <A : Any> lazy(get: () -> Thunk<A>): Thunk<A> = object : Thunk<A>() {
+            private val computation by kotlin.lazy { get() }
 
-    // TODO: Nuke
-    fun evaluateValueHacky(
-        context: EvaluationContext,
-    ): Value? = (evaluate(
-        context = context,
-    ) as? ValueResult)?.value
+            override fun evaluate(context: EvaluationContext): EvaluationOutcome<A> =
+                computation.evaluate(context = context)
+        }
 
-    fun evaluateInitial(): EvaluationResult = evaluate(
+        fun <A : Any> pure(
+            value: A,
+        ): Thunk<A> = object : Thunk<A>() {
+            override fun evaluate(
+                context: EvaluationContext,
+            ): EvaluationOutcome<A> = EvaluationResult(value = value)
+        }
+
+        fun <A : Any, B : Any, C : Any> combine2(
+            thunk1: Thunk<A>,
+            thunk2: Thunk<B>,
+            combine: (A, B) -> C,
+        ): Thunk<C> = object : Thunk<C>() {
+            override fun evaluate(context: EvaluationContext): EvaluationOutcome<C> {
+                val value1 = when (val outcome = thunk1.evaluate(context = context)) {
+                    is EvaluationResult -> outcome.value
+                    is EvaluationError -> return outcome
+                }
+
+                val value2 = when (val outcome = thunk2.evaluate(context = context)) {
+                    is EvaluationResult -> outcome.value
+                    is EvaluationError -> return outcome
+                }
+
+                return EvaluationResult(
+                    value = combine(value1, value2)
+                )
+            }
+        }
+
+        fun <A : Any, B : Any> traverseList(
+            list: List<A>,
+            transform: (A) -> Thunk<B>,
+        ): Thunk<List<B>> = object : Thunk<List<B>>() {
+            override fun evaluate(context: EvaluationContext): EvaluationOutcome<List<B>> {
+                val computations = list.map(transform)
+
+                val results = computations.map {
+                    it.evaluate(context = context)
+                }
+
+                val error = results.firstNotNullOfOrNull { it as? EvaluationError }
+
+                if (error != null) return error
+
+                return EvaluationResult(
+                    value = results.map { (it as EvaluationResult<B>).value }
+                )
+            }
+        }
+    }
+
+    abstract fun evaluate(
+        context: EvaluationContext,
+    ): EvaluationOutcome<ResultType>
+
+    fun evaluateInitial(): EvaluationOutcome<ResultType> = evaluate(
         context = EvaluationContext.Initial,
     )
 
-    fun evaluateInitialValue() = (evaluateInitial() as ValueResult).value
+    fun <B> thenJust(
+        transform: (ResultType) -> B,
+    ): Thunk<B> = object : Thunk<B>() {
+        override fun evaluate(context: EvaluationContext): EvaluationOutcome<B> {
+            val value = when (val outcome = this@Thunk.evaluate(context = context)) {
+                is EvaluationResult -> outcome.value
+                is EvaluationError -> return outcome
+            }
+
+            return EvaluationResult(
+                value = transform(value)
+            )
+        }
+    }
+
+    fun <B : Any> thenDo(
+        transform: (ResultType) -> Thunk<B>,
+    ): Thunk<B> = object : Thunk<B>() {
+        override fun evaluate(context: EvaluationContext): EvaluationOutcome<B> {
+            val value = when (val outcome = this@Thunk.evaluate(context = context)) {
+                is EvaluationResult -> outcome.value
+                is EvaluationError -> return outcome
+            }
+
+            return transform(value).evaluate(context = context)
+        }
+    }
+
+    val outcome: EvaluationOutcome<ResultType> by kotlin.lazy {
+        evaluate(context = EvaluationContext.Initial)
+    }
+
+    val value: ResultType? by kotlin.lazy {
+        (outcome as? EvaluationResult<ResultType>)?.value
+    }
 }
 
-abstract class CachingThunk<ValueType : Value> : Thunk<ValueType> {
-    private lateinit var cachedResult: EvaluationResult
+fun Thunk<Value>.evaluateInitialValue(): Value = (evaluateInitial() as EvaluationResult).value
+
+fun Thunk<Value>.evaluateValueHacky(
+    context: EvaluationContext,
+): Value? = (evaluate(
+    context = context,
+) as? EvaluationResult<Value>)?.value
+
+abstract class CachingThunk<ResultType : Any> : Thunk<ResultType>() {
+    private lateinit var cachedResult: EvaluationOutcome<ResultType>
     override fun evaluate(
         context: EvaluationContext,
-    ): EvaluationResult = if (this::cachedResult.isInitialized) {
+    ): EvaluationOutcome<ResultType> = if (this::cachedResult.isInitialized) {
         this.cachedResult
     } else {
-        val result = this.evaluateDirectly(
+        val result = this.evaluate(
             context = context,
         )
 
@@ -36,8 +131,4 @@ abstract class CachingThunk<ValueType : Value> : Thunk<ValueType> {
 
         result
     }
-
-    abstract fun evaluateDirectly(
-        context: EvaluationContext,
-    ): EvaluationResult
 }

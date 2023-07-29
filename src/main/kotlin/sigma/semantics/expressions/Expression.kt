@@ -4,7 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.semantics.Computation
+import sigma.evaluation.values.evaluateValueHacky
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
 import sigma.semantics.StaticScope
@@ -54,7 +54,7 @@ class TranslationScope(
 ) : Scope {
     override fun getValue(
         name: Symbol,
-    ): Thunk<*>? = staticScope.resolveName(
+    ): Thunk<Value>? = staticScope.resolveName(
         name = name,
     )?.let { resolvedName ->
         when (val resolution = resolvedName.resolution) {
@@ -173,7 +173,7 @@ abstract class Expression {
 
     protected abstract val term: ExpressionTerm
 
-    abstract val inferredType: Computation<Type>
+    abstract val inferredType: Thunk<Type>
 
     fun evaluateValue(
         context: EvaluationContext,
@@ -182,11 +182,11 @@ abstract class Expression {
 
     abstract fun bind(
         scope: Scope,
-    ): Thunk<*>
+    ): Thunk<Value>
 
     fun bindTranslated(
         staticScope: StaticScope,
-    ): Thunk<*> = bind(
+    ): Thunk<Value> = bind(
         scope = TranslationScope(
             staticScope = staticScope,
         ),

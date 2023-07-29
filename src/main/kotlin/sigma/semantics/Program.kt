@@ -2,8 +2,9 @@ package sigma.semantics
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.EvaluationOutcome
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Value
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 
@@ -24,7 +25,7 @@ class Program internal constructor(
 
     val errors: Set<SemanticError> by lazy { module.errors }
 
-    fun evaluateResult(): EvaluationResult {
+    fun evaluateResult(): EvaluationOutcome<Value> {
         val result = module.rootNamespace.getConstantDefinition(
             name = Symbol.of("main")
         )!!

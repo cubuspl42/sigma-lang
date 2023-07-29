@@ -2,7 +2,8 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.IntValue
-import sigma.evaluation.values.ValueResult
+import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Value
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.IntLiteralTerm
 import kotlin.test.Test
@@ -17,7 +18,7 @@ class IntLiteralTests {
                 term = ExpressionTerm.parse(source = "123") as IntLiteralTerm,
             )
 
-            val result = assertIs<ValueResult>(
+            val result = assertIs<EvaluationResult<Value>>(
                 intLiteral.bind(
                     scope = Scope.Empty,
                 ).evaluateInitial(),

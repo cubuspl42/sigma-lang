@@ -4,7 +4,8 @@ import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.ValueResult
+import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Value
 import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
@@ -121,7 +122,7 @@ object SetConstructorTests {
                 term = ExpressionTerm.parse("{foo, bar, baz}") as SetConstructorTerm,
             )
 
-            val result = assertIs<ValueResult>(
+            val result = assertIs<EvaluationResult<Value>>(
                 setConstructor.bind(
                     scope = FixedScope(
                         entries = mapOf(

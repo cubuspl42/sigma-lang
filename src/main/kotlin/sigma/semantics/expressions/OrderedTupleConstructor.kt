@@ -2,12 +2,11 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.ArrayTable
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.semantics.Computation
-import sigma.semantics.StaticScope
+import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticScope
 import sigma.semantics.types.OrderedTupleType
 import sigma.syntax.expressions.OrderedTupleConstructorTerm
 
@@ -30,7 +29,7 @@ class OrderedTupleConstructor(
         )
     }
 
-    override val inferredType: Computation<OrderedTupleType> = Computation.traverseList(
+    override val inferredType: Thunk<OrderedTupleType> = Thunk.traverseList(
         elements,
     ) { element ->
         element.inferredType.thenJust { elementType ->
@@ -49,7 +48,7 @@ class OrderedTupleConstructor(
         elements.fold(emptySet()) { acc, it -> acc + it.errors }
     }
 
-    override fun bind(scope: Scope): Thunk<*> = ArrayTable(
+    override fun bind(scope: Scope): Thunk<Value> = ArrayTable(
         elements = elements.map {
             // TODO: Handle errors
             it.bind(

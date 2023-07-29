@@ -2,14 +2,11 @@ package sigma.semantics
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.ValueResult
-import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
@@ -32,7 +29,7 @@ private class BuiltinValueDefinition(
 ) : StaticDefinition() {
 //    override val effectiveValueType: Computation<Type> = Computation.pure(type)
 
-    override val staticValue: Thunk<*> = value.asThunk
+    override val staticValue: Thunk<Value> = value.asThunk
     override val errors: Set<SemanticError>
         get() = emptySet()
 
@@ -232,7 +229,7 @@ object BuiltinScope : Scope, StaticScope {
 
     override fun getValue(
         name: Symbol,
-    ): Thunk<*>? = getBuiltin(
+    ): Thunk<Value>? = getBuiltin(
         name = name,
     )?.value?.asThunk
 

@@ -7,7 +7,7 @@ import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.ValueResult
+import sigma.evaluation.values.EvaluationResult
 import sigma.semantics.BuiltinScope
 import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
@@ -155,7 +155,7 @@ class CallTests {
         @Test
         fun testSimple() {
             val sq = object : ComputableFunctionValue() {
-                override fun apply(argument: Value): Thunk<*> {
+                override fun apply(argument: Value): Thunk<Value> {
                     val n = argument as IntValue
                     return IntValue(n.value * n.value).asThunk
                 }
@@ -166,7 +166,7 @@ class CallTests {
                 term = ExpressionTerm.parse("sq(3)") as CallTerm,
             )
 
-            val result = assertIs<ValueResult>(
+            val result = assertIs<EvaluationResult<Value>>(
                 call.bind(
                     scope = FixedScope(
                         entries = mapOf(
@@ -188,7 +188,7 @@ class CallTests {
                 term = ExpressionTerm.parse("dict(2)") as CallTerm,
             )
 
-            val result = assertIs<ValueResult>(
+            val result = assertIs<EvaluationResult<Value>>(
                 call.bind(
                     scope = FixedScope(
                         entries = mapOf(

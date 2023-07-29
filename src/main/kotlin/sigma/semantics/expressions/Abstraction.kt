@@ -4,7 +4,8 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Closure
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
-import sigma.semantics.Computation
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.evaluateValueHacky
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
 import sigma.semantics.ResolvedName
@@ -29,7 +30,7 @@ class Abstraction(
         override val name: Symbol,
         val type: Type,
     ) : ValueDeclaration {
-        override val effectiveValueType: Computation<Type> = Computation.pure(type)
+        override val effectiveValueType: Thunk<Type> = Thunk.pure(type)
     }
 
     class ArgumentStaticBlock(
@@ -99,7 +100,7 @@ class Abstraction(
             )
         }
     }
-    override fun bind(scope: Scope): Thunk<*> = Closure(
+    override fun bind(scope: Scope): Thunk<Value> = Closure(
         outerScope = scope,
         argumentType = argumentType,
         image = image,
@@ -113,17 +114,17 @@ class Abstraction(
         ) as? Type
     }
 
-    private val effectiveImageType: Computation<Type> by lazy {
+    private val effectiveImageType: Thunk<Type> by lazy {
         val declaredImageType = this.declaredImageType
 
         if (declaredImageType != null) {
-            return@lazy Computation.pure(declaredImageType)
+            return@lazy Thunk.pure(declaredImageType)
         } else {
             return@lazy image.inferredType
         }
     }
 
-    override val inferredType: Computation<FunctionType> by lazy {
+    override val inferredType: Thunk<FunctionType> by lazy {
         effectiveImageType.thenJust { effectiveImageType ->
             UniversalFunctionType(
                 argumentType = argumentType,

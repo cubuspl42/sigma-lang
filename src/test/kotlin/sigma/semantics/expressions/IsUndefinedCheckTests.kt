@@ -5,7 +5,8 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
-import sigma.evaluation.values.ValueResult
+import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Value
 import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.syntax.expressions.ExpressionTerm
@@ -44,7 +45,7 @@ class IsUndefinedCheckTests {
                 ) as IsUndefinedCheckTerm,
             )
 
-            val result = assertIs<ValueResult>(
+            val result = assertIs<EvaluationResult<Value>>(
                 isUndefinedCheck.bind(
                     scope = Scope.Empty,
                 ).evaluateInitial(),
@@ -67,7 +68,7 @@ class IsUndefinedCheckTests {
                 ) as IsUndefinedCheckTerm,
             )
 
-            val result = assertIs<ValueResult>(
+            val result = assertIs<EvaluationResult<Value>>(
                 isUndefinedCheck.bind(
                     scope = FixedScope(
                         entries = mapOf(

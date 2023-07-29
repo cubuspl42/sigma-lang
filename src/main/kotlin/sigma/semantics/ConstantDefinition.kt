@@ -1,9 +1,8 @@
 package sigma.semantics
 
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
-import sigma.semantics.expressions.EvaluationContext
+import sigma.evaluation.values.Value
 import sigma.semantics.expressions.Expression
 import sigma.syntax.ConstantDefinitionTerm
 
@@ -54,7 +53,7 @@ class ConstantDefinition(
         )
     }
 
-    override val staticValue: Thunk<*>
+    override val staticValue: Thunk<Value>
         get() = this.valueThunk
 
     override val name: Symbol

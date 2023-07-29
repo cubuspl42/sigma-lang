@@ -1,5 +1,6 @@
 package sigma.semantics
 
+import sigma.evaluation.values.Thunk
 import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.Type
@@ -35,10 +36,10 @@ abstract class ValueDefinition : ValueDeclaration {
         } else null
     }
 
-    final override val effectiveValueType: Computation<Type> by lazy {
+    final override val effectiveValueType: Thunk<Type> by lazy {
         when (val it = declaredType) {
             null -> body.inferredType
-            else -> Computation.pure(it)
+            else -> Thunk.pure(it)
         }
     }
 

@@ -5,7 +5,8 @@ import sigma.evaluation.values.IntValue
 import sigma.semantics.BuiltinScope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.ArrayTable
-import sigma.evaluation.values.ValueResult
+import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Value
 import sigma.semantics.Formula
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.FunctionType
@@ -144,7 +145,7 @@ class AbstractionTests {
                 ) as AbstractionTerm
             )
 
-            val result = assertIs<ValueResult>(
+            val result = assertIs<EvaluationResult<Value>>(
                 abstraction.bind(
                     scope = BuiltinScope,
                 ).evaluateInitial(),
@@ -154,7 +155,7 @@ class AbstractionTests {
 
             assertIs<FunctionValue>(closure)
 
-            val callResult = assertIs<ValueResult>(
+            val callResult = assertIs<EvaluationResult<Value>>(
                 closure.apply(
                     argument = ArrayTable(
                         elements = listOf(

@@ -1,11 +1,9 @@
 package utils
 
-import sigma.semantics.Computation
 import sigma.semantics.ValueDeclaration
 import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
-import sigma.semantics.BuiltinResolution
-import sigma.semantics.Declaration
+import sigma.evaluation.values.Thunk
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
 import sigma.semantics.ResolvedName
@@ -15,7 +13,7 @@ data class FakeValueDeclaration(
     override val name: Symbol,
     val type: Type,
 ) : ValueDeclaration {
-    override val effectiveValueType: Computation<Type> = Computation.pure(type)
+    override val effectiveValueType: Thunk<Type> = Thunk.pure(type)
 }
 
 class FakeStaticBlock(

@@ -10,11 +10,11 @@ data class BoolValue(
     }
 
     object If : ComputableFunctionValue() {
-        override fun apply(argument: Value): Thunk<*> {
+        override fun apply(argument: Value): Thunk<Value> {
             val test = (argument as DictValue).read(IntValue.Zero)!! as BoolValue
 
             return object : ComputableFunctionValue() {
-                override fun apply(argument: Value): Thunk<*> {
+                override fun apply(argument: Value): Thunk<Value> {
                     val branches = argument as FunctionValue
 
                     return when {

@@ -4,7 +4,8 @@ import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
-import sigma.evaluation.values.ValueResult
+import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Value
 import sigma.semantics.StaticScope
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.FieldReadTerm
@@ -28,7 +29,7 @@ class FieldReadTests {
                 term = ExpressionTerm.parse("foo.bar") as FieldReadTerm,
             )
 
-            val result = assertIs<ValueResult>(
+            val result = assertIs<EvaluationResult<Value>>(
                 fieldRead.bind(
                     scope = FixedScope(
                         entries = mapOf(

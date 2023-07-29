@@ -2,11 +2,10 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.DictValue
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
-import sigma.evaluation.values.ValueResult
-import sigma.semantics.Computation
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
@@ -61,7 +60,7 @@ class FieldRead(
     private val fieldName: Symbol
         get() = term.fieldName
 
-    private val inferredSubjectTypeOutcome: Computation<InferredSubjectTypeOutcome> =
+    private val inferredSubjectTypeOutcome: Thunk<InferredSubjectTypeOutcome> =
         subject.inferredType.thenJust { subjectType ->
             val validSubjectType = subjectType as? UnorderedTupleType
 
@@ -77,7 +76,7 @@ class FieldRead(
             }
         }
 
-    private val inferredFieldTypeOutcome: Computation<InferredFieldTypeOutcome> = inferredSubjectTypeOutcome.thenJust {
+    private val inferredFieldTypeOutcome: Thunk<InferredFieldTypeOutcome> = inferredSubjectTypeOutcome.thenJust {
         when (it) {
             is InferredSubjectTypeResult -> {
                 val subjectType = it.subjectType
@@ -101,7 +100,7 @@ class FieldRead(
         }
     }
 
-    override val inferredType: Computation<Type> by lazy {
+    override val inferredType: Thunk<Type> by lazy {
         inferredFieldTypeOutcome.thenJust {
             if (it is InferredFieldTypeResult) {
                 it.fieldType
@@ -111,7 +110,7 @@ class FieldRead(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<*> {
+    override fun bind(scope: Scope): Thunk<Value> {
         val subjectValue = subject.bind(
             scope = scope,
         ).evaluateInitialValue()

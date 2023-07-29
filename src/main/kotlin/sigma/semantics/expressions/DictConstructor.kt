@@ -2,11 +2,10 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.DictValue
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.semantics.Computation
+import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.DictType
@@ -83,7 +82,7 @@ class DictConstructor(
         override val location: SourceLocation,
     ) : InferredValueTypeOutcome, SemanticError
 
-    private val inferredKeyTypeOutcome: Computation<InferredKeyTypeOutcome> = Computation.traverseList(
+    private val inferredKeyTypeOutcome: Thunk<InferredKeyTypeOutcome> = Thunk.traverseList(
         associations
     ) {
         it.key.inferredType
@@ -112,7 +111,7 @@ class DictConstructor(
         }
     }
 
-    private val inferredValueTypeOutcome: Computation<InferredValueTypeOutcome> = Computation.traverseList(
+    private val inferredValueTypeOutcome: Thunk<InferredValueTypeOutcome> = Thunk.traverseList(
         associations
     ) {
         it.value.inferredType
@@ -132,7 +131,7 @@ class DictConstructor(
         }
     }
 
-    override val inferredType: Computation<Type> = Computation.combine2(
+    override val inferredType: Thunk<Type> = Thunk.combine2(
         inferredKeyTypeOutcome,
         inferredValueTypeOutcome,
     ) { inferredKeyTypeOutcome, inferredValueTypeOutcome ->
@@ -146,7 +145,7 @@ class DictConstructor(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<*> {
+    override fun bind(scope: Scope): Thunk<Value> {
         return DictValue(
             entries = associations.associate {
                 val key = it.key.bind(

@@ -1,12 +1,11 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.EvaluationOutcome
 import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.ValueResult
-import sigma.semantics.Computation
+import sigma.evaluation.values.evaluateValueHacky
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.FunctionType
@@ -60,7 +59,7 @@ class Call(
         override fun dump(): String = "$location: Invalid argument: ${matchResult.dump()}"
     }
 
-    private val subjectCallOutcome: Computation<SubjectCallOutcome> = Computation.combine2(
+    private val subjectCallOutcome: Thunk<SubjectCallOutcome> = Thunk.combine2(
         subject.inferredType,
         argument.inferredType,
     ) {
@@ -91,7 +90,7 @@ class Call(
         }
     }
 
-    private val argumentValidationOutcome: Computation<ArgumentValidationOutcome?> =
+    private val argumentValidationOutcome: Thunk<ArgumentValidationOutcome?> =
         this.subjectCallOutcome.thenJust { subjectCallOutcome ->
             when (subjectCallOutcome) {
                 is LegalSubjectCallResult -> {
@@ -116,7 +115,7 @@ class Call(
             }
         }
 
-    override val inferredType: Computation<Type> by lazy {
+    override val inferredType: Thunk<Type> by lazy {
         subjectCallOutcome.thenJust { subjectCall ->
             if (subjectCall is LegalSubjectCallResult) {
                 subjectCall.calleeType.imageType
@@ -126,9 +125,9 @@ class Call(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<*> {
-        return object : Thunk<Value> {
-            override fun evaluate(context: EvaluationContext): EvaluationResult {
+    override fun bind(scope: Scope): Thunk<Value> {
+        return object : Thunk<Value>() {
+            override fun evaluate(context: EvaluationContext): EvaluationOutcome<Value> {
                 val subjectValue = subject.bind(
                     scope = scope,
                 ).evaluateValueHacky(

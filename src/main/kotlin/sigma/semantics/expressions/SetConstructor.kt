@@ -1,11 +1,10 @@
 package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.semantics.Computation
+import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
@@ -43,7 +42,7 @@ class SetConstructor(
         override val location: SourceLocation,
     ) : InferredElementTypeOutcome, SemanticError
 
-    private val inferredElementTypeOutcome: Computation<InferredElementTypeOutcome> = Computation.traverseList(
+    private val inferredElementTypeOutcome: Thunk<InferredElementTypeOutcome> = Thunk.traverseList(
         elements.toList()
     ) {
         it.inferredType
@@ -63,7 +62,7 @@ class SetConstructor(
         }
     }
 
-    override val inferredType: Computation<Type> = inferredElementTypeOutcome.thenJust { inferredValueTypeOutcome ->
+    override val inferredType: Thunk<Type> = inferredElementTypeOutcome.thenJust { inferredValueTypeOutcome ->
         if (inferredValueTypeOutcome is InferredElementTypeResult) {
             SetType(
                 elementType = inferredValueTypeOutcome.elementType,
@@ -73,7 +72,7 @@ class SetConstructor(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<*> = SetValue(
+    override fun bind(scope: Scope): Thunk<Value> = SetValue(
         elements = elements.map {
             it.bind(
                 scope = scope,

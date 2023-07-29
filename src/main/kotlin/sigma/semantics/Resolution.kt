@@ -22,20 +22,20 @@ class DynamicResolution(
 ) : Resolution()
 
 abstract class StaticResolution : Resolution() {
-    abstract val resolvedValue: Thunk<*>
+    abstract val resolvedValue: Thunk<Value>
 }
 
 class BuiltinResolution(
     val builtinValue: Value,
 ) : StaticResolution() {
-    override val resolvedValue: Thunk<*>
+    override val resolvedValue: Thunk<Value>
         get() = builtinValue.asThunk
 }
 
 class ConstDefinitionResolution(
     private val constantDefinition: ConstantDefinition,
 ) : StaticResolution() {
-    override val resolvedValue: Thunk<*>
+    override val resolvedValue: Thunk<Value>
         get() = constantDefinition.valueThunk
 }
 
