@@ -4,6 +4,7 @@ import sigma.semantics.ValueDeclaration
 import sigma.semantics.types.Type
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
+import sigma.evaluation.values.asThunk
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
 import sigma.semantics.ResolvedName
@@ -33,7 +34,7 @@ class FakeStaticBlock(
         name: Symbol,
     ): ResolvedName? = declarationByName[name]?.let {
         ResolvedName(
-            type = it.type,
+            type = it.type.asThunk,
             resolution = DynamicResolution(
                 resolvedFormula = Formula(
                     name = name,

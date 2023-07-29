@@ -5,6 +5,7 @@ import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError

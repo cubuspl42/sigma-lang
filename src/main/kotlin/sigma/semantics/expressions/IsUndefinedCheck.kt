@@ -5,6 +5,7 @@ import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.UndefinedValue
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope

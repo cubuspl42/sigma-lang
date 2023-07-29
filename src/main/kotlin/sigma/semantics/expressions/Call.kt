@@ -59,38 +59,40 @@ class Call(
         override fun dump(): String = "$location: Invalid argument: ${matchResult.dump()}"
     }
 
-    private val subjectCallOutcome: Thunk<SubjectCallOutcome> = Thunk.combine2(
-        subject.inferredType,
-        argument.inferredType,
-    ) {
-            subjectType,
-            argumentType,
-        ->
+    private val subjectCallOutcome: Thunk<SubjectCallOutcome> by lazy {
+        Thunk.combine2(
+            subject.inferredType,
+            argument.inferredType,
+        ) {
+                subjectType,
+                argumentType,
+            ->
 
-        when (subjectType) {
-            is FunctionType -> {
-                val typeVariableResolution = subjectType.argumentType.resolveTypeVariables(
-                    assignedType = argumentType,
-                )
+            when (subjectType) {
+                is FunctionType -> {
+                    val typeVariableResolution = subjectType.argumentType.resolveTypeVariables(
+                        assignedType = argumentType,
+                    )
 
-                val effectiveSubjectType = subjectType.substituteTypeVariables(
-                    resolution = typeVariableResolution,
-                )
+                    val effectiveSubjectType = subjectType.substituteTypeVariables(
+                        resolution = typeVariableResolution,
+                    )
 
-                LegalSubjectCallResult(
-                    calleeType = effectiveSubjectType,
-                    argumentType = argumentType,
+                    LegalSubjectCallResult(
+                        calleeType = effectiveSubjectType,
+                        argumentType = argumentType,
+                    )
+                }
+
+                else -> IllegalSubjectCallError(
+                    location = subject.location,
+                    illegalSubjectType = subjectType,
                 )
             }
-
-            else -> IllegalSubjectCallError(
-                location = subject.location,
-                illegalSubjectType = subjectType,
-            )
         }
     }
 
-    private val argumentValidationOutcome: Thunk<ArgumentValidationOutcome?> =
+    private val argumentValidationOutcome: Thunk<ArgumentValidationOutcome?> by lazy {
         this.subjectCallOutcome.thenJust { subjectCallOutcome ->
             when (subjectCallOutcome) {
                 is LegalSubjectCallResult -> {
@@ -114,6 +116,7 @@ class Call(
                 is IllegalSubjectCallError -> null
             }
         }
+    }
 
     override val inferredType: Thunk<Type> by lazy {
         subjectCallOutcome.thenJust { subjectCall ->

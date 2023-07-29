@@ -4,6 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.ArrayTable
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope

@@ -8,6 +8,7 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 
 data class OrderedTupleType(
     val elements: List<Element>,

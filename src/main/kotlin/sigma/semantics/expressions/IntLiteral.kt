@@ -10,6 +10,7 @@ import sigma.semantics.types.Type
 import sigma.syntax.expressions.IntLiteralTerm
 
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 import sigma.evaluation.values.evaluateInitialValue
 data class IntLiteral(
     override val term: IntLiteralTerm,

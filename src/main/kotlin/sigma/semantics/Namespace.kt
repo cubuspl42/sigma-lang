@@ -43,7 +43,7 @@ class Namespace(
             name: Symbol,
         ): ResolvedName? = getConstantDefinition(name = name)?.let {
             ResolvedName(
-                type = it.asValueDefinition.effectiveValueType.value!!,
+                type = it.asValueDefinition.effectiveValueType,
                 resolution = ConstDefinitionResolution(
                     constantDefinition = it,
                 )

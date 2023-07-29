@@ -42,9 +42,8 @@ class Reference(
         declarationScope.resolveName(name = term.referee)
     }
 
-    override val inferredType: Thunk<Type> = Thunk.lazy {
-        return@lazy Thunk.pure(resolved?.type ?: IllType)
-    }
+    override val inferredType: Thunk<Type>
+        get() = resolved?.type ?: Thunk.pure(IllType)
 
     override fun bind(scope: Scope): Thunk<Value> = scope.getValue(
         name = referredName,

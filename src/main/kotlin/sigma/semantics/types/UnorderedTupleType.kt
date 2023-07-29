@@ -5,6 +5,7 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 import sigma.semantics.expressions.Abstraction
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
