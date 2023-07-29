@@ -304,7 +304,7 @@ abstract class FunctionValue : Value() {
     fun toList(): List<Value> = generateSequence(0) { it + 1 }.map {
         apply(
             argument = IntValue(value = it.toLong()),
-        ) as Value
+        ).evaluateInitialValue()
     }.takeWhile { it !is UndefinedValue }.toList()
 
     abstract fun apply(
