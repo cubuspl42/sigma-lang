@@ -45,10 +45,9 @@ class IsUndefinedCheckTests {
             )
 
             val result = assertIs<ValueResult>(
-                isUndefinedCheck.evaluate(
-                    context = EvaluationContext.Initial,
+                isUndefinedCheck.bind(
                     scope = Scope.Empty,
-                ),
+                ).evaluateInitial(),
             )
 
             assertEquals(
@@ -69,14 +68,13 @@ class IsUndefinedCheckTests {
             )
 
             val result = assertIs<ValueResult>(
-                isUndefinedCheck.evaluate(
-                    context = EvaluationContext.Initial,
+                isUndefinedCheck.bind(
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("d") to dictValue,
                         ),
                     ),
-                ),
+                ).evaluateInitial(),
             )
 
             assertEquals(

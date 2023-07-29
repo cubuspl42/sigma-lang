@@ -29,6 +29,6 @@ class Program internal constructor(
             name = Symbol.of("main")
         )!!
 
-        return result.staticValue
+        return result.staticValue.evaluateInitial()
     }
 }

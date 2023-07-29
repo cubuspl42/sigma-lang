@@ -3,6 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.SemanticError
@@ -41,20 +42,18 @@ class OrderedTupleTypeConstructor(
     override val inferredType: Computation<OrderedTupleType>
         get() = TODO()
 
+    override fun bind(scope: Scope): Thunk<*> {
+        return OrderedTupleType(
+            elements = elements.map {
+                OrderedTupleType.Element(
+                    name = it.name, type = it.type.bind(
+                        scope = scope,
+                    ).evaluateInitialValue() as Type
+                )
+            },
+        ).asThunk
+    }
+
     override val errors: Set<SemanticError>
         get() = TODO()
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult = OrderedTupleType(
-        elements = elements.map {
-            OrderedTupleType.Element(
-                name = it.name, type = it.type.evaluateValue(
-                    context = context,
-                    scope = scope,
-                ) as Type
-            )
-        },
-    ).asEvaluationResult
 }

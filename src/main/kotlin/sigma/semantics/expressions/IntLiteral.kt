@@ -5,6 +5,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationResult
 import sigma.semantics.Computation
 import sigma.evaluation.values.IntValue
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IntLiteralType
@@ -33,8 +34,7 @@ data class IntLiteral(
 
     override val errors: Set<SemanticError> = emptySet()
 
-    override fun evaluateDirectly(
-        context: EvaluationContext,
+    override fun bind(
         scope: Scope,
-    ): EvaluationResult = value.asEvaluationResult
+    ): Thunk<*> = value.asThunk
 }

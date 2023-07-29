@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -40,22 +41,19 @@ class FunctionTypeConstructor(
     override val inferredType: Computation<Type>
         get() = TODO()
 
+    override fun bind(scope: Scope): Thunk<*> {
+        return UniversalFunctionType(
+            argumentType = argumentType.bind(
+                scope = scope,
+            ).evaluateInitialValue() as TupleType,
+            imageType = imageType.bind(
+                scope = scope,
+            ).evaluateInitialValue() as Type,
+        ).asThunk
+    }
+
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
         )
     }
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult = UniversalFunctionType(
-        argumentType = argumentType.evaluate(
-            context,
-            scope,
-        ) as TupleType,
-        imageType = imageType.evaluate(
-            context,
-            scope,
-        ) as Type,
-    ).asEvaluationResult
 }

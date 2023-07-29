@@ -3,9 +3,9 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.FixedScope
 import sigma.evaluation.values.ComputableFunctionValue
 import sigma.evaluation.values.DictValue
-import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.ValueResult
 import sigma.semantics.BuiltinScope
@@ -155,9 +155,9 @@ class CallTests {
         @Test
         fun testSimple() {
             val sq = object : ComputableFunctionValue() {
-                override fun apply(context: EvaluationContext, argument: Value): EvaluationResult {
+                override fun apply(argument: Value): Thunk<*> {
                     val n = argument as IntValue
-                    return IntValue(n.value * n.value).asEvaluationResult
+                    return IntValue(n.value * n.value).asThunk
                 }
             }
 
@@ -167,14 +167,13 @@ class CallTests {
             )
 
             val result = assertIs<ValueResult>(
-                call.evaluate(
-                    context = EvaluationContext.Initial,
+                call.bind(
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("sq") to sq,
                         )
                     ),
-                ),
+                ).evaluateInitial(),
             )
             assertEquals(
                 expected = IntValue(9),
@@ -190,8 +189,7 @@ class CallTests {
             )
 
             val result = assertIs<ValueResult>(
-                call.evaluate(
-                    context = EvaluationContext.Initial,
+                call.bind(
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("dict") to DictValue(
@@ -203,7 +201,7 @@ class CallTests {
                             ),
                         ),
                     ),
-                ),
+                ).evaluateInitial(),
             )
 
             assertEquals(

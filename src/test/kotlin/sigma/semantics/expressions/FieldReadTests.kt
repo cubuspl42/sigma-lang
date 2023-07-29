@@ -29,14 +29,13 @@ class FieldReadTests {
             )
 
             val result = assertIs<ValueResult>(
-                fieldRead.evaluate(
-                    context = EvaluationContext.Initial,
+                fieldRead.bind(
                     scope = FixedScope(
                         entries = mapOf(
                             Symbol.of("foo") to foo,
                         )
                     ),
-                ),
+                ).evaluateInitial(),
             )
 
             assertEquals(

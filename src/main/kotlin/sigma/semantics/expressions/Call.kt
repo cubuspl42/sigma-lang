@@ -3,6 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.FunctionValue
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.ValueResult
 import sigma.semantics.Computation
@@ -125,35 +126,37 @@ class Call(
         }
     }
 
+    override fun bind(scope: Scope): Thunk<*> {
+        return object : Thunk<Value> {
+            override fun evaluate(context: EvaluationContext): EvaluationResult {
+                val subjectValue = subject.bind(
+                    scope = scope,
+                ).evaluateValueHacky(
+                    context = context,
+                )
+
+                if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
+
+                val argumentValue = argument.bind(
+                    scope = scope,
+                ).evaluateValueHacky(context = context)!!
+
+                val image = subjectValue.apply(
+                    argument = argumentValue,
+                )
+
+                return image.evaluate(
+                    context = context,
+                )
+            }
+
+        }
+    }
+
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
             subjectCallOutcome.value as? IllegalSubjectCallError,
             argumentValidationOutcome.value as? InvalidArgumentError,
         )
-    }
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult {
-        val subjectValue = subject.evaluateValue(
-            context = context,
-            scope = scope,
-        )
-
-        if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
-
-        val argumentResult = argument.evaluate(
-            context = context,
-            scope = scope,
-        )
-        val argumentValueResult = argumentResult as? ValueResult ?: return argumentResult
-
-        val image = subjectValue.apply(
-            context = context,
-            argument = argumentValueResult.value,
-        )
-
-        return image
     }
 }

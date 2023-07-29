@@ -4,6 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.ValueResult
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -110,30 +111,22 @@ class FieldRead(
         }
     }
 
-    override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
-            inferredSubjectTypeOutcome.value as? InvalidSubjectTypeError,
-            inferredFieldTypeOutcome.value as? MissingFieldError,
-        )
-    }
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult {
-        val subjectResult = subject.evaluate(
-            context = context,
+    override fun bind(scope: Scope): Thunk<*> {
+        val subjectValue = subject.bind(
             scope = scope,
-        )
-
-        val subjectValueResult = subjectResult as? ValueResult ?: return subjectResult
-        val subjectValue = subjectValueResult.value
+        ).evaluateInitialValue()
 
         if (subjectValue !is DictValue) throw IllegalStateException("Subject $subjectValue is not a dict")
 
         return subjectValue.apply(
-            context = context,
             argument = fieldName,
+        )
+    }
+
+    override val errors: Set<SemanticError> by lazy {
+        setOfNotNull(
+            inferredSubjectTypeOutcome.value as? InvalidSubjectTypeError,
+            inferredFieldTypeOutcome.value as? MissingFieldError,
         )
     }
 }

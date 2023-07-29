@@ -1,7 +1,5 @@
 package sigma.evaluation.values
 
-import sigma.semantics.expressions.EvaluationContext
-
 data class BoolValue(
     val value: Boolean,
 ) : PrimitiveValue() {
@@ -12,21 +10,21 @@ data class BoolValue(
     }
 
     object If : ComputableFunctionValue() {
-        override fun apply(context: EvaluationContext, argument: Value): ValueResult {
+        override fun apply(argument: Value): Thunk<*> {
             val test = (argument as DictValue).read(IntValue.Zero)!! as BoolValue
 
             return object : ComputableFunctionValue() {
-                override fun apply(context: EvaluationContext, argument: Value): EvaluationResult {
+                override fun apply(argument: Value): Thunk<*> {
                     val branches = argument as FunctionValue
 
                     return when {
-                        test.value -> branches.apply(context, Symbol.of("then"))
-                        else -> branches.apply(context, Symbol.of("else"))
+                        test.value -> branches.apply(Symbol.of("then"))
+                        else -> branches.apply(Symbol.of("else"))
                     }
                 }
 
                 override fun dump(): String = "(if')"
-            }.asEvaluationResult
+            }.asThunk
         }
 
         override fun dump(): String = "(if)"

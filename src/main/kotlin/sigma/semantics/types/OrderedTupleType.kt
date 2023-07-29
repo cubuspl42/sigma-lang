@@ -7,6 +7,7 @@ import sigma.semantics.expressions.Abstraction
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Thunk
 import sigma.semantics.expressions.EvaluationContext
 
 data class OrderedTupleType(
@@ -159,11 +160,11 @@ data class OrderedTupleType(
         )
     }
 
-     override fun toArgumentScope(argument: DictValue): Scope = object : Scope {
-        override fun getValue(context: EvaluationContext, name: Symbol): EvaluationResult? {
+    override fun toArgumentScope(argument: DictValue): Scope = object : Scope {
+        override fun getValue(name: Symbol): Thunk<*>? {
             val index = elements.indexOfOrNull { it.name == name } ?: return null
 
-            return argument.read(IntValue(value = index.toLong()))?.asEvaluationResult
+            return argument.read(IntValue(value = index.toLong()))?.asThunk
         }
     }
 }

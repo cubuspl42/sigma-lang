@@ -4,6 +4,7 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.PrimitiveValue
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -145,29 +146,26 @@ class DictConstructor(
         }
     }
 
+    override fun bind(scope: Scope): Thunk<*> {
+        return DictValue(
+            entries = associations.associate {
+                val key = it.key.bind(
+                    scope = scope,
+                ).evaluateInitialValue() as PrimitiveValue
+
+                val value = it.value.bind(
+                    scope = scope,
+                ).evaluateInitialValue()
+
+                key to value
+            },
+        ).asThunk
+    }
+
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
             inferredKeyTypeOutcome.value as? InferredKeyTypeError,
             inferredValueTypeOutcome.value as? InconsistentValueTypeError,
         )
     }
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult = DictValue(
-        entries = associations.associate {
-            val key = it.key.evaluate(
-                context = context,
-                scope = scope,
-            ) as PrimitiveValue
-
-            val value = it.value.evaluate(
-                context = context,
-                scope = scope,
-            ) as Value
-
-            key to value
-        },
-    ).asEvaluationResult
 }

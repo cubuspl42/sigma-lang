@@ -3,6 +3,7 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.UndefinedValue
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.ValueResult
@@ -31,23 +32,15 @@ data class IsUndefinedCheck(
     }
 
     override val inferredType: Computation<Type> = Computation.pure(BoolType)
-
-    override val errors: Set<SemanticError> = emptySet()
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult {
-        val argumentResult = argument.evaluate(
-            context = context,
+    override fun bind(scope: Scope): Thunk<*> {
+        val argumentValue = argument.bind(
             scope = scope,
-        )
-
-        val argumentValueResult = argumentResult as? ValueResult ?: return argumentResult
-        val argumentValue = argumentValueResult.value
+        ).evaluateInitialValue()
 
         return BoolValue(
             value = argumentValue is UndefinedValue,
-        ).asEvaluationResult
+        ).asThunk
     }
+
+    override val errors: Set<SemanticError> = emptySet()
 }

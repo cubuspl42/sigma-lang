@@ -2,6 +2,7 @@ package sigma.semantics.expressions
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationResult
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -30,14 +31,12 @@ class UnorderedTupleTypeConstructor(
 
 
     override val inferredType: Computation<Type> = TODO()
+    override fun bind(scope: Scope): Thunk<*> {
+        TODO()
+    }
 
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
         )
     }
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult = TODO()
 }

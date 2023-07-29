@@ -2,7 +2,6 @@ package sigma.evaluation.values
 
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.scope.chainWith
-import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.expressions.Expression
 import sigma.semantics.types.TupleType
 
@@ -12,10 +11,8 @@ class Closure(
     private val image: Expression,
 ) : ComputableFunctionValue() {
     override fun apply(
-        context: EvaluationContext,
         argument: Value,
-    ): EvaluationResult = image.evaluate(
-        context = context,
+    ): Thunk<*> = image.bind(
         scope = argumentType.toArgumentScope(
             argument = argument as DictValue,
         ).chainWith(

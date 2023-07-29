@@ -2,6 +2,7 @@ package sigma.semantics
 
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Thunk
 import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.expressions.Expression
 import sigma.syntax.ConstantDefinitionTerm
@@ -46,19 +47,15 @@ class ConstantDefinition(
 
     val asValueDefinition = ConstantValueDefinition()
 
-    override val staticValue: EvaluationResult by lazy {
-        asValueDefinition.body.evaluate(
-            // TODO: Pass non-initial context!
-            context = EvaluationContext.Initial,
+
+    val valueThunk by lazy {
+        asValueDefinition.body.bind(
             scope = containingNamespace.innerScope,
         )
     }
 
-    val valueThunk by lazy {
-        asValueDefinition.body.bind(
-            boundScope = containingNamespace.innerScope,
-        )
-    }
+    override val staticValue: Thunk<*>
+        get() = this.valueThunk
 
     override val name: Symbol
         get() = term.name

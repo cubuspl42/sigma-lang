@@ -5,6 +5,7 @@ import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
+import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.semantics.Computation
 import sigma.semantics.StaticScope
@@ -95,24 +96,20 @@ class UnorderedTupleConstructor(
         }
     }
 
+    override fun bind(scope: Scope): Thunk<*> = DictValue(
+        entries = entries.associate {
+            val name = it.name
+            val value = it.value.bind(
+                scope = scope,
+            ).evaluateInitialValue()
+
+            name to value
+        },
+    ).asThunk
+
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
             inferredTypeOutcome.value as? DuplicatedKeyError,
         )
     }
-
-    override fun evaluateDirectly(
-        context: EvaluationContext,
-        scope: Scope,
-    ): EvaluationResult = DictValue(
-        entries = entries.associate {
-            val name = it.name
-            val value = it.value.evaluateValue(
-                context = context,
-                scope = scope,
-            ) as Value
-
-            name to value
-        },
-    ).asEvaluationResult
 }
