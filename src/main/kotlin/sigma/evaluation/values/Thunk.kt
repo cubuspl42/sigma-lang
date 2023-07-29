@@ -77,7 +77,7 @@ abstract class Thunk<out ResultType> {
 
             else -> {
                 val result = this.evaluateDirectly(
-                    context = context,
+                    context = innerContext,
                 )
 
                 this.cachedResult = result

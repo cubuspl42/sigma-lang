@@ -107,19 +107,17 @@ class Abstraction(
         image = image,
     ).asThunk
 
-    val declaredImageType by lazy {
+    val declaredImageType: Thunk<Type>? by lazy {
         declaredImageTypeConstructor?.bindTranslated(
             staticScope = innerDeclarationScope,
-        )?.evaluateValueHacky(
-            context = EvaluationContext.Initial,
-        ) as? Type
+        )?.thenJust { it as Type }
     }
 
     private val effectiveImageType: Thunk<Type> by lazy {
         val declaredImageType = this.declaredImageType
 
         if (declaredImageType != null) {
-            return@lazy Thunk.pure(declaredImageType)
+            return@lazy declaredImageType
         } else {
             return@lazy image.inferredType
         }
