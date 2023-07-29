@@ -1,5 +1,6 @@
 package sigma.semantics.expressions
 
+import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.EvaluationStackExhaustionError
 import sigma.semantics.BuiltinScope
 import sigma.semantics.types.FunctionType
@@ -7,7 +8,7 @@ import sigma.semantics.types.IntType
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.LetExpressionTerm
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Thunk
+import sigma.semantics.types.IntCollectiveType
 import kotlin.test.Test
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
@@ -56,7 +57,7 @@ class LetExpressionTests {
         }
 
         @Test
-        fun testCyclicRecursiveDefinitions() {
+        fun testCyclicRecursiveTypeInference() {
             val term = ExpressionTerm.parse(
                 source = """
                     let {
@@ -89,6 +90,66 @@ class LetExpressionTests {
 
             assertIs<EvaluationStackExhaustionError>(
                 value = gDefinition.effectiveValueType.outcome,
+            )
+        }
+
+        @Test
+        fun testCyclicRecursiveDefinitions() {
+            val term = ExpressionTerm.parse(
+                source = """
+                    let {
+                        a: Int = b,
+                        b: Int = a,
+                    } in f[]
+                """.trimIndent(),
+            ) as LetExpressionTerm
+
+            val let = LetExpression.build(
+                outerDeclarationScope = BuiltinScope,
+                term = term,
+            )
+
+            val aDefinition = assertNotNull(
+                actual = let.definitionBlock.getValueDefinition(
+                    name = Symbol.of("a"),
+                ),
+            )
+
+            assertIs<IntCollectiveType>(
+                value = aDefinition.effectiveValueType.value,
+            )
+
+            val bDefinition = assertNotNull(
+                actual = let.definitionBlock.getValueDefinition(
+                    name = Symbol.of("b"),
+                ),
+            )
+
+            assertIs<IntCollectiveType>(
+                value = bDefinition.effectiveValueType.value,
+            )
+        }
+    }
+
+    object EvaluationTests {
+        @Test
+        fun testCyclicRecursiveDefinitions() {
+            val term = ExpressionTerm.parse(
+                source = """
+                    let {
+                        a: Int = b,
+                        b: Int = a,
+                    } in a
+                """.trimIndent(),
+            ) as LetExpressionTerm
+
+            val let = LetExpression.build(
+                outerDeclarationScope = BuiltinScope,
+                term = term,
+            )
+
+            assertIs<EvaluationStackExhaustionError>(
+                let.bind(scope = Scope.Empty).outcome,
             )
         }
     }

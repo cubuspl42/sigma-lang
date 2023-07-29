@@ -14,9 +14,11 @@ class LoopedScope(
     override fun getValue(
         name: Symbol,
     ): Thunk<Value>? = valueByName.getOrPut(name) {
-        expressionByName[name]?.bind(
-            scope = this,
-        )
+        expressionByName[name]?.let {
+            Thunk.lazy {
+                it.bind(scope = this@LoopedScope)
+            }
+        }
     } ?: outerScope.getValue(
         name = name,
     )
