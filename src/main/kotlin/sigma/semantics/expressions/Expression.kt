@@ -8,13 +8,11 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.ValueResult
-import sigma.semantics.Resolution
 import sigma.semantics.Computation
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
-import sigma.semantics.StaticDefinition
 import sigma.semantics.StaticResolution
 import sigma.semantics.types.MetaType
 import sigma.semantics.types.Type
@@ -211,7 +209,7 @@ abstract class Expression {
 
     fun bind(
         boundScope: Scope,
-    ): Thunk = object : CachingThunk() {
+    ): Thunk<*> = object : CachingThunk<Value>() {
         override fun evaluateDirectly(
             context: EvaluationContext,
         ): EvaluationResult = this@Expression.evaluate(
@@ -222,7 +220,7 @@ abstract class Expression {
 
     fun bindTranslated(
         staticScope: StaticScope,
-    ): Thunk = bind(
+    ): Thunk<*> = bind(
         boundScope = TranslationScope(
             staticScope = staticScope,
         ),
