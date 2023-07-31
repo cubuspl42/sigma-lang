@@ -67,6 +67,8 @@ object BuiltinScope : Scope, StaticScope {
         Symbol.of("setOf") to SetType.setOf,
         Symbol.of("setContains") to SetType.setContains,
         Symbol.of("setUnion") to SetType.setUnion,
+        Symbol.of("emptySet") to SetType.emptySet,
+        Symbol.of("setSum") to SetType.SetSum,
         Symbol.of("false") to SimpleBuiltinValue(
             type = BoolType,
             value = BoolValue(false),
@@ -75,6 +77,8 @@ object BuiltinScope : Scope, StaticScope {
             type = BoolType,
             value = BoolValue(true),
         ),
+
+        Symbol.of("not") to BoolValue.Not,
         Symbol.of("if") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = OrderedTupleType(

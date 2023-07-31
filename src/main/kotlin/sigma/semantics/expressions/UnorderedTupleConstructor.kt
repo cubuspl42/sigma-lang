@@ -108,7 +108,9 @@ class UnorderedTupleConstructor(
     ).asThunk
 
     override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
+        val entriesErrors: Set<SemanticError> = entries.fold(emptySet()) { acc, it -> acc + it.value.errors }
+
+        entriesErrors + setOfNotNull(
             inferredTypeOutcome.value as? DuplicatedKeyError,
         )
     }

@@ -18,8 +18,8 @@ class LoopedScope(
             Thunk.lazy {
                 it.bind(scope = this@LoopedScope)
             }
-        }
-    } ?: outerScope.getValue(
-        name = name,
-    )
+        } ?: outerScope.getValue(
+            name = name,
+        )
+    }
 }
