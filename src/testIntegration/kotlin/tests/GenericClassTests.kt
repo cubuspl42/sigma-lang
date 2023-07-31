@@ -1,4 +1,4 @@
-package patterns
+package tests
 
 import sigma.evaluation.values.ArrayTable
 import sigma.evaluation.values.FunctionValue

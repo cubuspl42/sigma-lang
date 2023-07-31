@@ -1,4 +1,4 @@
-package programs.euler
+package tests.euler
 
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.EvaluationStackExhaustionError
