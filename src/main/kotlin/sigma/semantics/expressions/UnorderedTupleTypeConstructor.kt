@@ -8,6 +8,7 @@ import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.DictType
+import sigma.semantics.types.MetaType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
@@ -31,8 +32,7 @@ class UnorderedTupleTypeConstructor(
         )
     }
 
-    override val inferredType: Thunk<Type>
-        get() = TODO()
+    override val inferredType: Thunk<Type> = MetaType.asThunk
 
     override fun bind(scope: Scope): Thunk<Value> = UnorderedTupleType(
         valueTypeByName = entries.associate {

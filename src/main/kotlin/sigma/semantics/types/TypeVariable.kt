@@ -7,6 +7,12 @@ data class TypeVariable(
     // TODO
     val formula: Formula,
 ) : Type() {
+    companion object {
+        fun of(name: String) = TypeVariable(
+            formula = Formula.of(name),
+        )
+    }
+
     override fun findLowestCommonSupertype(
         other: Type,
     ): Type = AnyType

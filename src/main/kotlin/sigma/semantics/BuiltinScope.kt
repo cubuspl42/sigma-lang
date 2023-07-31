@@ -58,6 +58,10 @@ object BuiltinScope : Scope, StaticScope {
             type = MetaType,
             value = IntCollectiveType,
         ),
+        Symbol.of("Type") to SimpleBuiltinValue(
+            type = MetaType,
+            value = MetaType,
+        ),
         Symbol.of("false") to SimpleBuiltinValue(
             type = BoolType,
             value = BoolValue(false),
