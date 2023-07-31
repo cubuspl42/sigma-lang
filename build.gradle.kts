@@ -16,10 +16,7 @@ repositories {
 
 configurations {
     create("testIntegrationImplementation") {
-        extendsFrom(configurations["implementation"])
-    }
-    create("testIntegrationRuntimeOnly") {
-        extendsFrom(configurations["runtimeOnly"])
+        extendsFrom(configurations["testImplementation"])
     }
 }
 
@@ -29,8 +26,6 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
-    "testIntegrationImplementation"(kotlin("test"))
-    "testIntegrationImplementation"(kotlin("test-junit"))
 }
 
 sourceSets {
