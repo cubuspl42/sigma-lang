@@ -63,7 +63,7 @@ class EulerProblemsTests {
     @Test
     fun testProblem10() {
         assertEquals(
-            expected = EvaluationResult(BoolValue.False),
+            expected = EvaluationResult(IntValue(value = 4227L)),
             actual = solveProblem(10),
         )
     }

@@ -1,9 +1,11 @@
 package sigma.semantics.types
 
 import sigma.evaluation.values.BoolValue
+import sigma.evaluation.values.BuiltinOrderedFunction
 import sigma.evaluation.values.ComputableFunctionValue
 import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.FunctionValue
+import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.TypeErrorException
@@ -91,7 +93,7 @@ data class SetType(
                     ).asThunk
                 }
 
-                override fun dump(): String = "(setOf)"
+                override fun dump(): String = "(setUnion)"
             },
         )
 
@@ -117,9 +119,40 @@ data class SetType(
                     ).asThunk
                 }
 
-                override fun dump(): String = "(setOf)"
+                override fun dump(): String = "(setContains)"
             },
         )
+
+        val emptySet = SimpleBuiltinValue(
+            type = UniversalFunctionType(
+                argumentType = OrderedTupleType.Empty,
+                imageType = SetType(
+                    elementType = TypeVariable.of("elementType"),
+                ),
+            ),
+            value = object : FunctionValue() {
+                override fun apply(argument: Value): Thunk<Value> = SetValue(
+                    elements = emptySet(),
+                ).asThunk
+
+                override fun dump(): String = "(emptySet)"
+            },
+        )
+    }
+
+    object SetSum : BuiltinOrderedFunction() {
+        override val argTypes: List<Type> = listOf(
+            SetType(
+                elementType = IntCollectiveType,
+            ),
+        )
+
+        override val imageType: Type = IntCollectiveType
+
+        override fun compute(args: List<Value>): Value {
+            val arg = args[0] as SetValue
+            return IntValue(value = arg.elements.sumOf { (it as IntValue).value })
+        }
     }
 
     data class SetMatch(

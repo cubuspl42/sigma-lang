@@ -17,22 +17,17 @@ data class Prelude(
                 source = preludeSource,
             )
 
-            val (definitionBlock, _) = StaticScope.looped { innerDeclarationScopeLooped ->
+            val (definitionBlock, declarationScope) = StaticScope.looped { innerDeclarationScopeLooped ->
                 val definitionBlock = LocalValueDefinitionBlock.build(
                     outerDeclarationScope = innerDeclarationScopeLooped,
                     definitions = prelude.definitions,
                 )
 
-
                 return@looped Pair(
                     definitionBlock,
-                    definitionBlock,
+                    definitionBlock.chainWith(BuiltinScope),
                 )
             }
-
-            val declarationScope = definitionBlock.chainWith(
-                outerScope = BuiltinScope,
-            )
 
             val preludeScope = definitionBlock.evaluate(
                 scope = BuiltinScope,

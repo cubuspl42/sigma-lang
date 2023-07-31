@@ -93,6 +93,6 @@ class IfExpression(
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
             guardValidationOutcome.value as? InvalidGuardError,
-        ) + trueBranch.errors + falseBranch.errors
+        ) + guard.errors + trueBranch.errors + falseBranch.errors
     }
 }

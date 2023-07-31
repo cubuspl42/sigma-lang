@@ -1,2 +1,44 @@
 const main = let {
-} in false
+    N = 200,
+
+    // Build table with all multiples of n smaller than M
+    buildMultiplesOfNUpToM = ^[n: Int] -> Set[Int] => let {
+        // Built table with ith (n * i) multiple of n and greater multiples (smaller than M)
+        buildMultiplesFrom = ^[i: Int] -> Set[Int] => let {
+            ni = n * i,
+        } in if ni >= N (
+            %then emptySet[],
+            %else setUnion[
+                setOf[[ni]],
+                buildMultiplesFrom[i + 1],
+            ],
+        ),
+    } in buildMultiplesFrom[2],
+
+    // Build prime table with all multiples smaller than M of all numbers up to n
+    buildNonPrimeTable = ^[n: Int] -> Set[Int] => if n < 2 (
+        %then emptySet[],
+        %else setUnion[
+            buildMultiplesOfNUpToM[n],
+            buildNonPrimeTable[n - 1],
+        ],
+    ),
+
+    nonPrimeTable = buildNonPrimeTable[N],
+
+    // Find all primes <= n
+    findPrimesLte = ^[n: Int] -> Set[Int] => if n < 2 (
+        %then emptySet[],
+        %else let {
+            smallerPrimes = findPrimesLte[n - 1]
+        } in if not[setContains[nonPrimeTable, n]] (
+            %then setUnion[
+                smallerPrimes,
+                setOf[[n]],
+            ],
+            %else smallerPrimes,
+        ),
+    ),
+
+    primes = findPrimesLte[N - 1],
+} in setSum[primes]

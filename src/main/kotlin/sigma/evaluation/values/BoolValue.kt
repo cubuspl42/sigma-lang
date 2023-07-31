@@ -1,5 +1,8 @@
 package sigma.evaluation.values
 
+import sigma.semantics.types.BoolType
+import sigma.semantics.types.Type
+
 data class BoolValue(
     val value: Boolean,
 ) : PrimitiveValue() {
@@ -28,6 +31,17 @@ data class BoolValue(
         }
 
         override fun dump(): String = "(if)"
+    }
+
+    object Not : BuiltinOrderedFunction() {
+        override val argTypes: List<Type> = listOf(BoolType)
+
+        override val imageType: Type = BoolType
+
+        override fun compute(args: List<Value>): Value {
+            val arg = args[0] as BoolValue
+            return BoolValue(value = !arg.value)
+        }
     }
 
     override fun dump(): String = value.toString()
