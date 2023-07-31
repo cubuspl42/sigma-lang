@@ -65,6 +65,14 @@ data class OrderedTupleType(
     }
 
     companion object {
+        fun of(
+            vararg elements: Type,
+        ): OrderedTupleType = OrderedTupleType(
+            elements = elements.map {
+                Element(name = null, type = it)
+            },
+        )
+
         val Empty = OrderedTupleType(
             elements = emptyList(),
         )
@@ -133,12 +141,11 @@ data class OrderedTupleType(
         )
     }
 
-    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentStaticBlock =
-        Abstraction.ArgumentStaticBlock(
-            argumentDeclarations = elements.mapNotNull { element ->
-                element.toArgumentDeclaration()
-            },
-        )
+    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentStaticBlock = Abstraction.ArgumentStaticBlock(
+        argumentDeclarations = elements.mapNotNull { element ->
+            element.toArgumentDeclaration()
+        },
+    )
 
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
