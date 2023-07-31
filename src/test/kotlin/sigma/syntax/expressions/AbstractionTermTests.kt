@@ -16,7 +16,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class AbstractionTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun test() {
             val term = ExpressionTerm.parse(
@@ -126,7 +126,7 @@ class AbstractionTermTests {
         }
     }
 
-    object TypeCheckingTests {
+    class TypeCheckingTests {
         @Test
         fun test() {
             val term = ExpressionTerm.parse(

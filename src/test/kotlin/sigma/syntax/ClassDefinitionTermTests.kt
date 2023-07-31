@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class ClassDefinitionTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun test() {
             val term = StaticStatementTerm.parse(

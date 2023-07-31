@@ -14,8 +14,8 @@ import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-object UnorderedTupleTests {
-    object TypeCheckingTests {
+class UnorderedTupleTests {
+    class TypeCheckingTests {
         @Test
         fun testEmpty() {
             val term = ExpressionTerm.parse(

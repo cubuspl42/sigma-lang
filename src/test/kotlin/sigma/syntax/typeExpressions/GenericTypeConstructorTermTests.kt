@@ -17,7 +17,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class GenericTypeConstructorTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         @Ignore
         fun test() {
@@ -67,7 +67,7 @@ class GenericTypeConstructorTermTests {
         }
     }
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun test() {
 //            val term = ExpressionTerm.parse(

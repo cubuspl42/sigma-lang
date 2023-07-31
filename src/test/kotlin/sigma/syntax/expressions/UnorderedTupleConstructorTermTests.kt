@@ -5,8 +5,8 @@ import sigma.syntax.SourceLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-object UnorderedTupleConstructorTermTests {
-    object ParsingTests {
+class UnorderedTupleConstructorTermTests {
+    class ParsingTests {
         @Test
         fun testEmpty() {
             assertEquals(

@@ -20,7 +20,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class OrderedTupleConstructorTests {
-    object TypeInferenceTests {
+    class TypeInferenceTests {
         @Test
         fun testEmpty() {
             val term = ExpressionTerm.parse(
@@ -80,7 +80,7 @@ class OrderedTupleConstructorTests {
         }
     }
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun testEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(

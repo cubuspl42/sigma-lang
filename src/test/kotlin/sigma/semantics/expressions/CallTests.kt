@@ -29,7 +29,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class CallTests {
-    object TypeCheckingTests {
+    class TypeCheckingTests {
         @Test
         fun testLegalSubject() {
             val term = ExpressionTerm.parse(
@@ -152,7 +152,7 @@ class CallTests {
         }
     }
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun testSimple() {
             val sq = object : ComputableFunctionValue() {

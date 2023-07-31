@@ -10,7 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class LocalDefinitionTests {
-    object TypeCheckingTests {
+    class TypeCheckingTests {
         @Test
         fun testUnmatchedInferredType() {
             val letExpressionTerm = ExpressionTerm.parse(

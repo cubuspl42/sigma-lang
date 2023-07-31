@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class DictTypeTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun test() {
             val expression = ExpressionTerm.parse(
@@ -33,7 +33,7 @@ class DictTypeTermTests {
         }
     }
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun test() {
 //            val type = ExpressionTerm.parse(

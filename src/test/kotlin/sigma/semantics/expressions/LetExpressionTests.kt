@@ -14,7 +14,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
 class LetExpressionTests {
-    object TypeCheckingTests {
+    class TypeCheckingTests {
         @Test
         fun testValidRecursiveDefinitions() {
             val term = ExpressionTerm.parse(
@@ -131,7 +131,7 @@ class LetExpressionTests {
         }
     }
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun testCyclicRecursiveDefinitions() {
             val term = ExpressionTerm.parse(

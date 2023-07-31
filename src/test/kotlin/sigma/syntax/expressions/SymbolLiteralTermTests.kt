@@ -6,7 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class SymbolLiteralTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun test() {
             assertEquals(

@@ -15,7 +15,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class IfExpressionTests {
-    object TypeCheckingTests {
+    class TypeCheckingTests {
         @Test
         fun testLegalGuard() {
             val term = ExpressionTerm.parse(
@@ -76,7 +76,7 @@ class IfExpressionTests {
         }
     }
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun testTrueGuard() {
             val term = ExpressionTerm.parse(

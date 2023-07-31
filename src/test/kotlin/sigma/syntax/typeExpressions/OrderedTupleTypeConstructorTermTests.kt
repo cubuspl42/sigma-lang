@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class OrderedTupleTypeConstructorTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun testEmpty() {
             val expression = ExpressionTerm.parse(
@@ -123,7 +123,7 @@ class OrderedTupleTypeConstructorTermTests {
         }
     }
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun testEmpty() {
 //            val type = ExpressionTerm.parse(
