@@ -61,21 +61,19 @@ sealed class Type : Value() {
 }
 
 object MetaType : Type() {
-    override fun findLowestCommonSupertype(other: Type): Type {
-        TODO("Not yet implemented")
-    }
+    override fun findLowestCommonSupertype(other: Type): Type = AnyType
 
-    override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution {
-        TODO("Not yet implemented")
-    }
+    override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution = TypeVariableResolution.Empty
 
-    override fun substituteTypeVariables(resolution: TypeVariableResolution): Type {
-        TODO("Not yet implemented")
-    }
+    override fun substituteTypeVariables(resolution: TypeVariableResolution): Type = this
 
-    override fun match(assignedType: Type): MatchResult {
-        TODO("Not yet implemented")
-    }
+    override fun match(assignedType: Type): MatchResult = when (assignedType) {
+          is MetaType -> TotalMatch
+          else -> TotalMismatch(
+              expectedType = MetaType,
+              actualType = assignedType,
+          )
+      }
 
     override fun dump(): String = "(meta-type)"
 

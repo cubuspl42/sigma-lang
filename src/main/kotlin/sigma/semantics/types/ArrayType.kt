@@ -52,7 +52,7 @@ data class ArrayType(
 
     override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution {
         val assignedArrayType = assignedType.asArray ?: throw TypeVariableResolutionError(
-            message = "Cannot resolve type variables, non-array is assigned",
+            message = "Cannot resolve type variables, non-array is assigned (${assignedType.dump()})",
         )
 
         return elementType.resolveTypeVariables(

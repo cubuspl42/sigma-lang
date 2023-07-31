@@ -13,6 +13,7 @@ import sigma.semantics.types.DictType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.MetaType
 import sigma.semantics.types.OrderedTupleType
+import sigma.semantics.types.SetType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
@@ -44,7 +45,7 @@ private class BuiltinValueDefinition(
 }
 
 object BuiltinScope : Scope, StaticScope {
-    private data class SimpleBuiltinValue(
+    data class SimpleBuiltinValue(
         override val type: Type,
         override val value: Value,
     ) : BuiltinValue
@@ -62,6 +63,10 @@ object BuiltinScope : Scope, StaticScope {
             type = MetaType,
             value = MetaType,
         ),
+        Symbol.of("Set") to SetType.constructor,
+        Symbol.of("setOf") to SetType.setOf,
+        Symbol.of("setContains") to SetType.setContains,
+        Symbol.of("setUnion") to SetType.setUnion,
         Symbol.of("false") to SimpleBuiltinValue(
             type = BoolType,
             value = BoolValue(false),

@@ -150,6 +150,11 @@ class CallTests {
                 actual = call.errors,
             )
         }
+
+        @Test
+        fun testTypeVariableResolution() {
+            // TODO
+        }
     }
 
     class EvaluationTests {

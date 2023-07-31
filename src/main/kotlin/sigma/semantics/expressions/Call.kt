@@ -50,7 +50,7 @@ class Call(
 
     sealed interface ArgumentValidationOutcome
 
-    object ValidArgumentResult : ArgumentValidationOutcome
+    data object ValidArgumentResult : ArgumentValidationOutcome
 
     data class InvalidArgumentError(
         override val location: SourceLocation,
@@ -156,7 +156,7 @@ class Call(
     }
 
     override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
+        subject.errors + argument.errors + setOfNotNull(
             subjectCallOutcome.value as? IllegalSubjectCallError,
             argumentValidationOutcome.value as? InvalidArgumentError,
         )
