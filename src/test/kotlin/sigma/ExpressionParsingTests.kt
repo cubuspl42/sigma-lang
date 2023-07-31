@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ExpressionParsingTests {
-    object ReferenceTests {
+    class ReferenceTests {
         @Test
         fun test() {
             assertEquals(
@@ -24,7 +24,7 @@ class ExpressionParsingTests {
         }
     }
 
-    object CallTests {
+    class CallTests {
         @Test
         fun testDictSubject() {
             assertEquals(

@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class NamespaceDefinitionTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun testSimple() {
             val term = NamespaceDefinitionTerm.parse(

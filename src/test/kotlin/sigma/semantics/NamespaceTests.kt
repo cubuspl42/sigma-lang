@@ -10,8 +10,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-object NamespaceTests {
-    object TypeCheckingTests {
+class NamespaceTests {
+    class TypeCheckingTests {
         @Test
         fun testInnerTypeScope() {
             val term = NamespaceDefinitionTerm.parse(

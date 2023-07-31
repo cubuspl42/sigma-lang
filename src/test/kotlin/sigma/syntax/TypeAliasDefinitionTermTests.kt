@@ -6,7 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ConstantDefinitionTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun test() {
             val term = StaticStatementTerm.parse(

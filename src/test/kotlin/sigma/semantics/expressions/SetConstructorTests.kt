@@ -20,8 +20,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-object SetConstructorTests {
-    object TypeCheckingTests {
+class SetConstructorTests {
+    class TypeCheckingTests {
         @Test
         fun testSingleElement() {
             val setConstructor = SetConstructor.build(
@@ -114,7 +114,7 @@ object SetConstructorTests {
         }
     }
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun testSimple() {
             val setConstructor = SetConstructor.build(

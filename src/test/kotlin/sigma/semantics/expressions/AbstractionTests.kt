@@ -21,7 +21,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class AbstractionTests {
-    object TypeCheckingTests {
+    class TypeCheckingTests {
         @Test
         fun testDeclaredImageType() {
             val term = ExpressionTerm.parse(
@@ -39,7 +39,7 @@ class AbstractionTests {
             )
         }
 
-        object InferredTypeTests {
+        class InferredTypeTests {
             @Test
             fun testInferredFromValue() {
                 val term = ExpressionTerm.parse(
@@ -136,7 +136,7 @@ class AbstractionTests {
         }
     }
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun testUnorderedArgumentTuple() {
             val abstraction = Abstraction.build(

@@ -6,7 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class OrderedTupleConstructorTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun testEmpty() {
             val expression = ExpressionTerm.parse(

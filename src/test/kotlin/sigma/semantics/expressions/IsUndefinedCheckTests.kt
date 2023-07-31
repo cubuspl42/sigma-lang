@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class IsUndefinedCheckTests {
-    object TypeCheckingTests {
+    class TypeCheckingTests {
         @Test
         fun test() {
             val term = ExpressionTerm.parse(
@@ -35,7 +35,7 @@ class IsUndefinedCheckTests {
         }
     }
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun testNotUndefined() {
             val isUndefinedCheck = IsUndefinedCheck.build(

@@ -14,8 +14,8 @@ import utils.FakeValueDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-object DictConstructorTests {
-    object TypeCheckingTests {
+class DictConstructorTests {
+    class TypeCheckingTests {
         @Test
         fun testSingleEntry() {
             val dictLiteral = DictConstructor.build(

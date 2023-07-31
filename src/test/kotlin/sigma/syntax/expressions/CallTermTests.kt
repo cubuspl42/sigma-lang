@@ -6,7 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class CallTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun testSimple() {
             assertEquals(

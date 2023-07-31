@@ -15,7 +15,7 @@ import kotlin.test.assertIs
 
 class FieldReadTests {
 
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun testSimple() {
             val foo = DictValue(

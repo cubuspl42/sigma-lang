@@ -10,8 +10,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-object ModuleTests {
-    object TypeCheckingTests {
+class ModuleTests {
+    class TypeCheckingTests {
         @Test
         fun testTypeScope() {
             val term = ModuleTerm.parse(

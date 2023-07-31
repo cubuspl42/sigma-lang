@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class IntLiteralTests {
-    object EvaluationTests {
+    class EvaluationTests {
         @Test
         fun test() {
             val intLiteral = IntLiteral.build(

@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ModuleTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun test() {
             val module = ModuleTerm.parse(

@@ -5,8 +5,8 @@ import sigma.syntax.SourceLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-object DictConstructorTermTests {
-    object ParsingTests {
+class DictConstructorTermTests {
+    class ParsingTests {
         @Test
         fun testSimple() {
             assertEquals(

@@ -7,7 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class LetExpressionTermTests {
-    object ParsingTests {
+    class ParsingTests {
         @Test
         fun testSimple() {
             assertEquals(
