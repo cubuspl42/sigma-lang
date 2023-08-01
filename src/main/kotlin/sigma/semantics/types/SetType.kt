@@ -160,7 +160,7 @@ data class SetType(
     ) : Type.PartialMatch() {
         override fun isFull(): Boolean = elementMatch.isFull()
         override fun dump(): String = when {
-            !elementMatch.isFull() -> "elementMatch: " + elementMatch.dump()
+            !elementMatch.isFull() -> "set element type: " + elementMatch.dump()
             else -> "(?)"
         }
     }
@@ -203,8 +203,8 @@ data class SetType(
         assignedType: Type,
     ): MatchResult = when (assignedType) {
         is SetType -> SetMatch(
-            elementMatch = assignedType.elementType.match(
-                assignedType = elementType,
+            elementMatch = elementType.match(
+                assignedType = assignedType.elementType,
             ),
         )
 
