@@ -66,5 +66,7 @@ data class UniversalFunctionType(
         )
     }
 
+    override fun walkRecursive(): Sequence<Type> = argumentType.walk() + imageType.walk()
+
     override fun dump() = "${argumentType.dump()} -> ${imageType.dump()}"
 }

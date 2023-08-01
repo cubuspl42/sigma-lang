@@ -88,4 +88,6 @@ data class ArrayType(
     }
 
     override fun dump(): String = "[${elementType.dump()}*]"
+
+    override fun walkRecursive(): Sequence<Type> = elementType.walk()
 }

@@ -16,12 +16,10 @@ sealed class Type : Value() {
 
     sealed class PartialMatch : Match()
 
-    object TotalMatch : Match() {
+    data object TotalMatch : Match() {
         override fun isFull(): Boolean = true
 
         override fun dump(): String = "(total match)"
-
-        override fun toString(): String = "TotalMatch"
     }
 
     sealed class Mismatch : MatchResult() {
@@ -56,6 +54,10 @@ sealed class Type : Value() {
     abstract fun match(
         assignedType: Type,
     ): MatchResult
+
+    fun walk(): Sequence<Type> = sequenceOf(this) + walkRecursive()
+
+    abstract fun walkRecursive(): Sequence<Type>
 }
 
 object MetaType : Type() {
@@ -66,12 +68,14 @@ object MetaType : Type() {
     override fun substituteTypeVariables(resolution: TypeVariableResolution): Type = this
 
     override fun match(assignedType: Type): MatchResult = when (assignedType) {
-          is MetaType -> TotalMatch
-          else -> TotalMismatch(
-              expectedType = MetaType,
-              actualType = assignedType,
-          )
-      }
+        is MetaType -> TotalMatch
+        else -> TotalMismatch(
+            expectedType = MetaType,
+            actualType = assignedType,
+        )
+    }
+
+    override fun walkRecursive(): Sequence<Type> = emptySequence()
 
     override fun dump(): String = "(meta-type)"
 
@@ -95,6 +99,8 @@ object AnyType : Type() {
     ): MatchResult = Type.TotalMatch
 
     override fun dump(): String = "Any"
+
+    override fun walkRecursive(): Sequence<Type> = emptySequence()
 }
 
 sealed interface PrimitiveLiteralType {
@@ -122,6 +128,9 @@ sealed class PrimitiveType : Type() {
             actualType = assignedType,
         )
     }
+
+    final override fun walkRecursive(): Sequence<Type> = emptySequence()
+
 }
 
 object UndefinedType : PrimitiveType() {
@@ -136,7 +145,7 @@ object UndefinedType : PrimitiveType() {
 }
 
 object NeverType : Type() {
-    object AssignmentMismatch : Type.Mismatch() {
+    data object AssignmentMismatch : Type.Mismatch() {
         override fun dump(): String = "nothing can be assigned to Never"
     }
 
@@ -159,6 +168,8 @@ object NeverType : Type() {
     ): MatchResult = AssignmentMismatch
 
     override fun dump(): String = "Never"
+
+    override fun walkRecursive(): Sequence<Type> = emptySequence()
 }
 
 object BoolType : PrimitiveType() {
@@ -253,4 +264,6 @@ object IllType : Type() {
     }
 
     override fun dump(): String = "IllType"
+
+    override fun walkRecursive(): Sequence<Type> = emptySequence()
 }

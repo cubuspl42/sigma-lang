@@ -36,6 +36,8 @@ data class TypeVariable(
         )
     }
 
+    override fun walkRecursive(): Sequence<Type> = emptySequence()
+
     override fun dump(): String = "#${formula.name.name}"
 }
 

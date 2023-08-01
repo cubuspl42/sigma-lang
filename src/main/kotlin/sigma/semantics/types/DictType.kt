@@ -78,4 +78,9 @@ data class DictType(
             actualType = assignedType,
         )
     }
+
+    override fun walkRecursive(): Sequence<Type> = sequence {
+        yieldAll(keyType.walk())
+        yieldAll(valueType.walk())
+    }
 }

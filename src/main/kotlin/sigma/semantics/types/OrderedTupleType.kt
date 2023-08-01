@@ -174,4 +174,8 @@ data class OrderedTupleType(
             return argument.read(IntValue(value = index.toLong()))?.asThunk
         }
     }
+
+    override fun walkRecursive(): Sequence<Type> = elements.asSequence().flatMap {
+        it.type.walk()
+    }
 }
