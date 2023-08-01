@@ -16,13 +16,30 @@ const main = let {
     } in buildMultiplesFrom[2],
 
     // Build prime table with all multiples smaller than M of all numbers up to n
-    buildNonPrimeTable = ^[n: Int] -> Set[Int] => if n < 2 (
-        %then emptySet[],
-        %else setUnion[
-            buildMultiplesOfNUpToM[n],
-            buildNonPrimeTable[n - 1],
-        ],
-    ),
+    buildNonPrimeTable = ^[n: Int] => let {
+        // Build prime table with all multiples smaller than N of all numbers between m and N
+        expandNonPrimeTable = ^{
+            smallerNonPrimeTable: Set[Int],
+            m: Int,
+        } -> Set[Int] => if (m < N) (
+            %then let {
+                expandedPrimeTable = if setContains[smallerNonPrimeTable, m] (
+                    %then smallerNonPrimeTable,
+                    %else setUnion[
+                        smallerNonPrimeTable,
+                        buildMultiplesOfNUpToM[m],
+                    ],
+                ),
+            } in expandNonPrimeTable{
+                smallerNonPrimeTable: expandedPrimeTable,
+                m: m + 1,
+            },
+            %else smallerNonPrimeTable,
+        )
+    } in expandNonPrimeTable{
+        smallerNonPrimeTable: emptySet[],
+        m: 2,
+    },
 
     nonPrimeTable = buildNonPrimeTable[N],
 
