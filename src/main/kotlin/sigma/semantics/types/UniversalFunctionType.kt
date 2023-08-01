@@ -3,6 +3,7 @@ package sigma.semantics.types
 import sigma.evaluation.values.TypeErrorException
 
 data class UniversalFunctionType(
+    override val genericParameters: Set<TypeVariable> = emptySet(),
     override val argumentType: TupleType,
     override val imageType: Type,
 ) : FunctionType() {
@@ -37,9 +38,11 @@ data class UniversalFunctionType(
         return argumentResolution.mergeWith(imageResolution)
     }
 
+    // TODO: Protect type variables from this function
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
     ): UniversalFunctionType = UniversalFunctionType(
+        genericParameters = genericParameters,
         argumentType = argumentType.substituteTypeVariables(
             resolution = resolution,
         ),
@@ -68,5 +71,8 @@ data class UniversalFunctionType(
 
     override fun walkRecursive(): Sequence<Type> = argumentType.walk() + imageType.walk()
 
-    override fun dump() = "${argumentType.dump()} -> ${imageType.dump()}"
+    override fun dump(): String = listOfNotNull(
+        if (genericParameters.isNotEmpty()) "!{${genericParameters.joinToString(separator = ", ")}}" else null,
+        "${argumentType.dump()} -> ${imageType.dump()}",
+    ).joinToString(separator = " ")
 }

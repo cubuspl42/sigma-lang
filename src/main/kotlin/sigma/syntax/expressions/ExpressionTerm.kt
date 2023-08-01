@@ -124,7 +124,7 @@ sealed class ExpressionTerm : Term() {
 
             override fun visitFunctionTypeDepictionAlt(
                 ctx: SigmaParser.FunctionTypeDepictionAltContext,
-            ): ExpressionTerm = FunctionTypeTerm.build(ctx.functionTypeDepiction())
+            ): ExpressionTerm = FunctionTypeConstructorTerm.build(ctx.functionTypeDepiction())
 
             override fun visitArrayTypeConstructorAlt(
                 ctx: SigmaParser.ArrayTypeConstructorAltContext,

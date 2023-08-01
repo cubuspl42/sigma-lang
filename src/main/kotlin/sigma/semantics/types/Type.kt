@@ -259,9 +259,7 @@ object IllType : Type() {
     }
 
     override fun substituteTypeVariables(resolution: TypeVariableResolution): Type = IllType
-    override fun match(assignedType: Type): MatchResult {
-        TODO("Not yet implemented")
-    }
+    override fun match(assignedType: Type): MatchResult = TotalMatch
 
     override fun dump(): String = "IllType"
 

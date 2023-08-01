@@ -57,8 +57,7 @@ class AbstractionTermTests {
                 expected = AbstractionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = GenericParametersTuple(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        parametersDefinitions = listOf(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0), parametersDefinitions = listOf(
                             Symbol.of("a"),
                             Symbol.of("b"),
                         )
@@ -97,8 +96,7 @@ class AbstractionTermTests {
                 expected = AbstractionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = GenericParametersTuple(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        parametersDefinitions = listOf(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0), parametersDefinitions = listOf(
                             Symbol.of("t"),
                         )
                     ),
@@ -171,6 +169,9 @@ class AbstractionTermTests {
 
             assertEquals(
                 expected = UniversalFunctionType(
+                    genericParameters = setOf(
+                        TypeVariable.of("t"),
+                    ),
                     argumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(

@@ -8,6 +8,7 @@ import sigma.semantics.Formula
 import sigma.semantics.ResolvedName
 import sigma.semantics.StaticBlock
 import sigma.semantics.types.MetaType
+import sigma.semantics.types.TypeVariable
 import sigma.syntax.SourceLocation
 import sigma.syntax.Term
 
@@ -42,6 +43,15 @@ data class GenericParametersTuple(
             null
         }
     }
+
+    val typeVariables: Set<TypeVariable>
+        get() = parametersDefinitions.map {
+            TypeVariable(
+                formula = Formula(
+                    name = it,
+                )
+            )
+        }.toSet()
 
     val asDeclarationBlock = GenericParametersTupleBlock()
 }

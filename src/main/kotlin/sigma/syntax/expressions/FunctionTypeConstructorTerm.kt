@@ -4,16 +4,16 @@ import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
 import sigma.syntax.SourceLocation
 
 // Thought: "FunctionTypeConstructorTerm"?
-data class FunctionTypeTerm(
+data class FunctionTypeConstructorTerm(
     override val location: SourceLocation,
-    val genericParametersTuple: GenericParametersTuple? = null,
+    val genericParametersTuple: GenericParametersTuple?,
     val argumentType: TupleTypeConstructorTerm,
     val imageType: ExpressionTerm,
 ) : ExpressionTerm() {
     companion object {
         fun build(
             ctx: FunctionTypeDepictionContext,
-        ): FunctionTypeTerm = FunctionTypeTerm(
+        ): FunctionTypeConstructorTerm = FunctionTypeConstructorTerm(
             location = SourceLocation.build(ctx),
             genericParametersTuple = ctx.genericParametersTuple()?.let {
                 GenericParametersTuple.build(it)
