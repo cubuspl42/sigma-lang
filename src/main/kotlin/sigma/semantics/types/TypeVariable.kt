@@ -44,6 +44,9 @@ data class TypeVariable(
 data class TypeVariableResolution(
     val resolvedTypeByVariable: Map<TypeVariable, Type>,
 ) {
+    val resolvedTypeVariables: Set<TypeVariable>
+        get() = resolvedTypeByVariable.keys
+
     fun mergeWith(
         other: TypeVariableResolution,
     ): TypeVariableResolution {

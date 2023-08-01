@@ -35,21 +35,28 @@ data class UniversalFunctionType(
             assignedType = assignedType.imageType,
         )
 
-        return argumentResolution.mergeWith(imageResolution)
+        return argumentResolution.mergeWith(imageResolution).withoutTypeVariables(
+            typeVariables = genericParameters,
+        )
     }
 
-    // TODO: Protect type variables from this function
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
-    ): UniversalFunctionType = UniversalFunctionType(
-        genericParameters = genericParameters,
-        argumentType = argumentType.substituteTypeVariables(
-            resolution = resolution,
-        ),
-        imageType = imageType.substituteTypeVariables(
-            resolution = resolution,
-        ),
-    )
+    ): UniversalFunctionType {
+        val innerResolution = resolution.withoutTypeVariables(
+            typeVariables = genericParameters,
+        )
+
+        return UniversalFunctionType(
+            genericParameters = genericParameters,
+            argumentType = argumentType.substituteTypeVariables(
+                resolution = innerResolution,
+            ),
+            imageType = imageType.substituteTypeVariables(
+                resolution = innerResolution,
+            ),
+        )
+    }
 
     override fun match(
         assignedType: Type,

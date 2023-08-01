@@ -253,6 +253,67 @@ class CallTests {
         }
 
         @Test
+        fun testNestedGenericCall() {
+            val term = ExpressionTerm.parse(
+                source = "f[false, 1]",
+            ) as CallTerm
+
+            val call = Call.build(
+                declarationScope = FakeStaticBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("f"),
+                        type = UniversalFunctionType(
+                            genericParameters = setOf(
+                                TypeVariable.of("type1"),
+                                TypeVariable.of("type2"),
+                            ),
+                            argumentType = OrderedTupleType.of(
+                                TypeVariable.of("type1"),
+                                TypeVariable.of("type2"),
+                            ),
+                            imageType = UniversalFunctionType(
+                                genericParameters = setOf(
+                                    TypeVariable.of("type2"),
+                                ),
+                                argumentType = OrderedTupleType.of(
+                                    TypeVariable.of("type1"),
+                                    TypeVariable.of("type2"),
+                                ),
+                                imageType = OrderedTupleType.of(
+                                    TypeVariable.of("type1"),
+                                    TypeVariable.of("type2"),
+                                ),
+                            ),
+                        ),
+                    ),
+                ).chainWith(BuiltinScope),
+                term = term,
+            )
+
+            assertEquals(
+                expected = emptySet(),
+                actual = call.errors,
+            )
+
+            assertEquals(
+                expected = UniversalFunctionType(
+                    genericParameters = setOf(
+                        TypeVariable.of("type2"),
+                    ),
+                    argumentType = OrderedTupleType.of(
+                        BoolType,
+                        TypeVariable.of("type2"),
+                    ),
+                    imageType = OrderedTupleType.of(
+                        BoolType,
+                        TypeVariable.of("type2"),
+                    ),
+                ),
+                actual = call.inferredType.value,
+            )
+        }
+
+        @Test
         fun testExcessiveOrderedArguments() {
             // TODO
         }
