@@ -36,7 +36,7 @@ data class TypeVariable(
         )
     }
 
-    override fun dump(): String = "#${formula.name}"
+    override fun dump(): String = "#${formula.name.name}"
 }
 
 data class TypeVariableResolution(

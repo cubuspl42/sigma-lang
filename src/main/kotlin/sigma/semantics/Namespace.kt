@@ -72,5 +72,9 @@ class Namespace(
         staticDefinitions.fold(emptySet()) { acc, it -> acc + it.errors }
     }
 
+    fun printErrors() {
+        errors.forEach { println(it.dump()) }
+    }
+
     override fun dump(): String = "(namespace)"
 }
