@@ -40,8 +40,9 @@ class Call(
     sealed interface SubjectCallOutcome
 
     data class LegalSubjectCallResult(
-        val calleeType: FunctionType,
-        val argumentType: Type,
+        val effectiveCalleeArgumentType: Type,
+        val effectiveResultType: Type,
+        val passedArgumentType: Type,
     ) : SubjectCallOutcome
 
     data class NonFullyInferredCalleeTypeError(
@@ -81,21 +82,25 @@ class Call(
                         assignedType = argumentType,
                     )
 
-                    val effectiveSubjectType = subjectType.substituteTypeVariables(
+                    val effectiveArgumentType = subjectType.argumentType.substituteTypeVariables(
                         resolution = typeVariableResolution,
                     )
 
-                    val remainingTypeVariables = effectiveSubjectType.walk().mapNotNull {
-                        it as? TypeVariable
-                    }.toSet()
+                    val effectiveImageType = subjectType.imageType.substituteTypeVariables(
+                        resolution = typeVariableResolution,
+                    )
+
+                    val remainingTypeVariables =
+                        subjectType.genericParameters - typeVariableResolution.resolvedTypeVariables
 
                     val nonInferredTypeVariables =
                         subjectType.genericParameters.intersect(remainingTypeVariables)
 
                     if (nonInferredTypeVariables.isEmpty()) {
                         LegalSubjectCallResult(
-                            calleeType = effectiveSubjectType,
-                            argumentType = argumentType,
+                            effectiveCalleeArgumentType = effectiveArgumentType,
+                            effectiveResultType = effectiveImageType,
+                            passedArgumentType = argumentType,
                         )
                     } else {
                         NonFullyInferredCalleeTypeError(
@@ -118,10 +123,12 @@ class Call(
         this.subjectCallOutcome.thenJust { subjectCallOutcome ->
             when (subjectCallOutcome) {
                 is LegalSubjectCallResult -> {
-                    val subjectType = subjectCallOutcome.calleeType
-                    val argumentType = subjectCallOutcome.argumentType
+                    // Thought: Should argument validation and type variable resolution be merged?
 
-                    val matchResult = subjectType.argumentType.match(
+                    val effectiveArgumentType = subjectCallOutcome.effectiveCalleeArgumentType
+                    val argumentType = subjectCallOutcome.passedArgumentType
+
+                    val matchResult = effectiveArgumentType.match(
                         assignedType = argumentType,
                     )
 
@@ -143,7 +150,7 @@ class Call(
     override val inferredType: Thunk<Type> by lazy {
         subjectCallOutcome.thenJust { subjectCall ->
             if (subjectCall is LegalSubjectCallResult) {
-                subjectCall.calleeType.imageType
+                subjectCall.effectiveResultType
             } else {
                 IllType
             }
