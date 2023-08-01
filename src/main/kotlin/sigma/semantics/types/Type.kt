@@ -33,8 +33,6 @@ sealed class Type : Value() {
         val actualType: Type,
     ) : Mismatch() {
         override fun dump(): String = "expected ${expectedType.dump()}, actual: ${actualType.dump()}"
-
-        override fun toString(): String = "TotalMismatch"
     }
 
     final override fun toString(): String = dump()

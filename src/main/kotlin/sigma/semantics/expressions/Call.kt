@@ -74,6 +74,7 @@ class Call(
                         assignedType = argumentType,
                     )
 
+                    // FIXME: We need to substitute all subjectType's type variables!
                     val effectiveSubjectType = subjectType.substituteTypeVariables(
                         resolution = typeVariableResolution,
                     )
