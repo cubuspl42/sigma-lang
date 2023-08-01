@@ -5,6 +5,7 @@ import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.Symbol
 import sigma.semantics.Namespace
 import sigma.semantics.Prelude
+import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.MetaType
@@ -17,9 +18,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-class GenericClassTests {
+class ScenarioTests {
     @Test
-    fun test() {
+    fun testGenericClass() {
         val term = NamespaceDefinitionTerm.parse(
             source = """
                 namespace EntryNamespace (
@@ -146,6 +147,42 @@ class GenericClassTests {
                 ),
             ),
             actual = entryTrueOfAbstractionDefinition.asValueDefinition.effectiveValueType.value,
+        )
+    }
+
+    @Test
+    fun testNonInferableGenericFunctionCall() {
+        val term = NamespaceDefinitionTerm.parse(
+            source = """
+                namespace EntryNamespace (
+                    const f = ![type] ^[] -> ^[type*] => 0
+                    
+                    const a = f[]
+                )
+            """.trimIndent(),
+        )
+
+        val namespace = Namespace.build(
+            prelude = Prelude.load(),
+            term = term,
+        )
+
+        // FIXME: There should be some error
+        assertEquals(
+            expected = emptySet(),
+            actual = namespace.errors,
+        )
+
+        val aType = namespace.getConstantDefinition(
+            name = Symbol.of("a"),
+        )!!.asValueDefinition.effectiveValueType.value
+
+        assertEquals(
+            expected = ArrayType(
+                // FIXME
+                elementType = TypeVariable.of("type"),
+            ),
+            actual = aType,
         )
     }
 }

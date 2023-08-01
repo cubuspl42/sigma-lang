@@ -11,6 +11,7 @@ import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.asThunk
 import sigma.semantics.BuiltinScope
 import sigma.semantics.StaticScope
+import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
@@ -18,7 +19,9 @@ import sigma.semantics.types.IntLiteralType
 import sigma.semantics.types.IntType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.Type
+import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
+import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.CallTerm
 import sigma.syntax.expressions.ExpressionTerm
@@ -152,8 +155,39 @@ class CallTests {
         }
 
         @Test
-        fun testTypeVariableResolution() {
-            // TODO
+        fun testNonInferableGenericCall() {
+            val term = ExpressionTerm.parse(
+                source = "f[]",
+            ) as CallTerm
+
+            val call = Call.build(
+                declarationScope = FakeStaticBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("f"),
+                        type = UniversalFunctionType(
+                            argumentType = OrderedTupleType.Empty,
+                            imageType = ArrayType(
+                                TypeVariable.of("type"),
+                            ),
+                        ),
+                    ),
+                ),
+                term = term,
+            )
+
+            assertEquals(
+                // FIXME: There should be some error
+                expected = emptySet(),
+                actual = call.errors,
+            )
+
+            assertEquals(
+                expected = ArrayType(
+                    // FIXME
+                    elementType = TypeVariable.of("type"),
+                ),
+                actual = call.inferredType.value,
+            )
         }
     }
 
