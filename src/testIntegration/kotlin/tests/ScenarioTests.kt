@@ -5,8 +5,10 @@ import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.Symbol
 import sigma.semantics.Namespace
 import sigma.semantics.Prelude
+import sigma.semantics.expressions.Call
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
+import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.MetaType
 import sigma.semantics.types.OrderedTupleType
@@ -14,6 +16,7 @@ import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.NamespaceDefinitionTerm
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -167,10 +170,15 @@ class ScenarioTests {
             term = term,
         )
 
-        // FIXME: There should be some error
+        val error = assertIs<Call.NonFullyInferredCalleeTypeError>(
+            namespace.errors.singleOrNull(),
+        )
+
         assertEquals(
-            expected = emptySet(),
-            actual = namespace.errors,
+            expected = setOf(
+                TypeVariable.of("type")
+            ),
+            actual = error.remainingTypeVariables,
         )
 
         val aType = namespace.getConstantDefinition(
@@ -178,11 +186,34 @@ class ScenarioTests {
         )!!.asValueDefinition.effectiveValueType.value
 
         assertEquals(
-            expected = ArrayType(
-                // FIXME
-                elementType = TypeVariable.of("type"),
-            ),
+            expected = IllType,
             actual = aType,
+        )
+    }
+
+    @Test
+    @Ignore // FIXME: Fix type variable resolving
+    fun testNestedGenericFunctions() {
+        val term = NamespaceDefinitionTerm.parse(
+            source = """
+                namespace EntryNamespace (
+                    const f = ![aType] ^[a: aType] -> Int => let {
+                        g = ![bType, cType] ^[a: aType, b: bType, c: cType] -> Int => 0,
+                    } in g[a, false, 1]
+                    
+                    const a = f[false, 1, {}]
+                )
+            """.trimIndent(),
+        )
+
+        val namespace = Namespace.build(
+            prelude = Prelude.load(),
+            term = term,
+        )
+
+        assertEquals(
+            expected = emptySet(),
+            actual = namespace.errors,
         )
     }
 }

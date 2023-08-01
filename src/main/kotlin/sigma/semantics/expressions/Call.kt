@@ -11,6 +11,7 @@ import sigma.semantics.SemanticError
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
+import sigma.semantics.types.TypeVariable
 import sigma.syntax.SourceLocation
 import sigma.syntax.expressions.CallTerm
 
@@ -43,7 +44,13 @@ class Call(
         val argumentType: Type,
     ) : SubjectCallOutcome
 
-    data class IllegalSubjectCallError(
+    data class NonFullyInferredCalleeTypeError(
+        override val location: SourceLocation,
+        val calleeGenericType: FunctionType,
+        val remainingTypeVariables: Set<TypeVariable>,
+    ) : SubjectCallOutcome, SemanticError
+
+    data class NonFunctionCallError(
         override val location: SourceLocation,
         val illegalSubjectType: Type,
     ) : SubjectCallOutcome, SemanticError
@@ -79,13 +86,23 @@ class Call(
                         resolution = typeVariableResolution,
                     )
 
-                    LegalSubjectCallResult(
-                        calleeType = effectiveSubjectType,
-                        argumentType = argumentType,
-                    )
+                    val typeVariables = effectiveSubjectType.walk().mapNotNull { it as? TypeVariable }.toSet()
+
+                    if (typeVariables.isEmpty()) {
+                        LegalSubjectCallResult(
+                            calleeType = effectiveSubjectType,
+                            argumentType = argumentType,
+                        )
+                    } else {
+                        NonFullyInferredCalleeTypeError(
+                            location = subject.location,
+                            calleeGenericType = subjectType,
+                            remainingTypeVariables = typeVariables,
+                        )
+                    }
                 }
 
-                else -> IllegalSubjectCallError(
+                else -> NonFunctionCallError(
                     location = subject.location,
                     illegalSubjectType = subjectType,
                 )
@@ -114,7 +131,7 @@ class Call(
                     }
                 }
 
-                is IllegalSubjectCallError -> null
+                else -> null
             }
         }
     }
@@ -157,7 +174,7 @@ class Call(
 
     override val errors: Set<SemanticError> by lazy {
         subject.errors + argument.errors + setOfNotNull(
-            subjectCallOutcome.value as? IllegalSubjectCallError,
+            subjectCallOutcome.value as? SemanticError,
             argumentValidationOutcome.value as? InvalidArgumentError,
         )
     }

@@ -13,6 +13,7 @@ import sigma.semantics.BuiltinScope
 import sigma.semantics.StaticScope
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
+import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.IntLiteralType
@@ -145,7 +146,7 @@ class CallTests {
 
             assertEquals(
                 expected = setOf(
-                    Call.IllegalSubjectCallError(
+                    Call.NonFunctionCallError(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         illegalSubjectType = BoolType,
                     ),
@@ -176,16 +177,25 @@ class CallTests {
             )
 
             assertEquals(
-                // FIXME: There should be some error
-                expected = emptySet(),
+                expected = setOf(
+                    Call.NonFullyInferredCalleeTypeError(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                        calleeGenericType = UniversalFunctionType(
+                            argumentType = OrderedTupleType.Empty,
+                            imageType = ArrayType(
+                                TypeVariable.of("type"),
+                            ),
+                        ),
+                        remainingTypeVariables = setOf(
+                            TypeVariable.of("type"),
+                        ),
+                    )
+                ),
                 actual = call.errors,
             )
 
             assertEquals(
-                expected = ArrayType(
-                    // FIXME
-                    elementType = TypeVariable.of("type"),
-                ),
+                expected = IllType,
                 actual = call.inferredType.value,
             )
         }

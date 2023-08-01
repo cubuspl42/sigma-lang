@@ -213,4 +213,6 @@ data class SetType(
             actualType = assignedType,
         )
     }
+
+    override fun walkRecursive(): Sequence<Type> = elementType.walk()
 }

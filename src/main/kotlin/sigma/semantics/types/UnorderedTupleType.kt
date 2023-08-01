@@ -119,6 +119,8 @@ data class UnorderedTupleType(
         )
     }
 
+    override fun walkRecursive(): Sequence<Type> = valueTypeByName.values.asSequence().flatMap { it.walk() }
+
     override fun toArgumentDeclarationBlock(): Abstraction.ArgumentStaticBlock =
         Abstraction.ArgumentStaticBlock(
             argumentDeclarations = valueTypeByName.map { (name, type) ->
