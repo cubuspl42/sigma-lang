@@ -6,7 +6,6 @@ import sigma.evaluation.values.Symbol
 import sigma.semantics.Namespace
 import sigma.semantics.Prelude
 import sigma.semantics.expressions.Call
-import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
@@ -16,7 +15,6 @@ import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.NamespaceDefinitionTerm
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -113,6 +111,9 @@ class ScenarioTests {
 
         assertEquals(
             expected = UniversalFunctionType(
+                genericParameters = setOf(
+                    TypeVariable.of("valueType"),
+                ),
                 argumentType = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         Symbol.of("key") to IntCollectiveType,
@@ -170,6 +171,8 @@ class ScenarioTests {
             term = term,
         )
 
+        namespace.printErrors()
+
         val error = assertIs<Call.NonFullyInferredCalleeTypeError>(
             namespace.errors.singleOrNull(),
         )
@@ -178,7 +181,7 @@ class ScenarioTests {
             expected = setOf(
                 TypeVariable.of("type")
             ),
-            actual = error.remainingTypeVariables,
+            actual = error.nonInferredTypeVariables,
         )
 
         val aType = namespace.getConstantDefinition(
@@ -192,16 +195,15 @@ class ScenarioTests {
     }
 
     @Test
-    @Ignore // FIXME: Fix type variable resolving
     fun testNestedGenericFunctions() {
         val term = NamespaceDefinitionTerm.parse(
             source = """
                 namespace EntryNamespace (
                     const f = ![aType] ^[a: aType] -> Int => let {
                         g = ![bType, cType] ^[a: aType, b: bType, c: cType] -> Int => 0,
-                    } in g[a, false, 1]
+                    } in g[a, false, {}]
                     
-                    const a = f[false, 1, {}]
+                    const a = f[1]
                 )
             """.trimIndent(),
         )

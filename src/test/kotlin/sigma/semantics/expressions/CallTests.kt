@@ -13,7 +13,6 @@ import sigma.semantics.BuiltinScope
 import sigma.semantics.StaticScope
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.BoolType
-import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.IntLiteralType
@@ -156,6 +155,53 @@ class CallTests {
         }
 
         @Test
+        fun testInferableGenericCall() {
+            val term = ExpressionTerm.parse(
+                source = "f[false, 0]",
+            ) as CallTerm
+
+            val call = Call.build(
+                declarationScope = FakeStaticBlock.of(
+                    FakeValueDeclaration(
+                        name = Symbol.of("f"),
+                        type = UniversalFunctionType(
+                            genericParameters = setOf(
+                                TypeVariable.of("type1"),
+                                TypeVariable.of("type2"),
+                            ),
+                            argumentType = OrderedTupleType.of(
+                                TypeVariable.of("type1"),
+                                TypeVariable.of("type2"),
+                            ),
+                            imageType = UnorderedTupleType(
+                                valueTypeByName = mapOf(
+                                    Symbol.of("key1") to TypeVariable.of("type1"),
+                                    Symbol.of("key2") to TypeVariable.of("type2"),
+                                ),
+                            ),
+                        ),
+                    ),
+                ).chainWith(BuiltinScope),
+                term = term,
+            )
+
+            assertEquals(
+                expected = emptySet(),
+                actual = call.errors,
+            )
+
+            assertEquals(
+                expected = UnorderedTupleType(
+                    valueTypeByName = mapOf(
+                        Symbol.of("key1") to BoolType,
+                        Symbol.of("key2") to IntLiteralType.of(0L),
+                    ),
+                ),
+                actual = call.inferredType.value,
+            )
+        }
+
+        @Test
         fun testNonInferableGenericCall() {
             val term = ExpressionTerm.parse(
                 source = "f[]",
@@ -166,6 +212,9 @@ class CallTests {
                     FakeValueDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
+                            genericParameters = setOf(
+                                TypeVariable.of("type"),
+                            ),
                             argumentType = OrderedTupleType.Empty,
                             imageType = ArrayType(
                                 TypeVariable.of("type"),
@@ -181,12 +230,15 @@ class CallTests {
                     Call.NonFullyInferredCalleeTypeError(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         calleeGenericType = UniversalFunctionType(
+                            genericParameters = setOf(
+                                TypeVariable.of("type"),
+                            ),
                             argumentType = OrderedTupleType.Empty,
                             imageType = ArrayType(
                                 TypeVariable.of("type"),
                             ),
                         ),
-                        remainingTypeVariables = setOf(
+                        nonInferredTypeVariables = setOf(
                             TypeVariable.of("type"),
                         ),
                     )
@@ -198,6 +250,16 @@ class CallTests {
                 expected = IllType,
                 actual = call.inferredType.value,
             )
+        }
+
+        @Test
+        fun testExcessiveOrderedArguments() {
+            // TODO
+        }
+
+        @Test
+        fun testExcessiveUnorderedArguments() {
+            // TODO
         }
     }
 

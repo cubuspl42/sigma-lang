@@ -34,7 +34,6 @@ class EulerProblemsTests {
     }
 
     @Test
-    @Ignore // FIXME: Fix type variable resolving
     fun testProblem8() {
         val result = solveProblem(8)
 
@@ -45,7 +44,6 @@ class EulerProblemsTests {
     }
 
     @Test
-    @Ignore // FIXME: Fix type variable resolving
     fun testProblem9() {
         val result = solveProblem(9)
 

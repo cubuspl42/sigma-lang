@@ -53,6 +53,14 @@ data class TypeVariableResolution(
         )
     }
 
+    fun withoutTypeVariables(
+        typeVariables: Set<TypeVariable>,
+    ) = TypeVariableResolution(
+        resolvedTypeByVariable = resolvedTypeByVariable.filterKeys {
+            !typeVariables.contains(it)
+        },
+    )
+
     companion object {
         val Empty = TypeVariableResolution(
             resolvedTypeByVariable = emptyMap(),

@@ -17,12 +17,15 @@ import sigma.semantics.ValueDeclaration
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
+import sigma.semantics.types.TypeVariable
+import sigma.semantics.types.TypeVariableResolution
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.expressions.AbstractionTerm
 
 class Abstraction(
     private val innerDeclarationScope: StaticScope,
     override val term: AbstractionTerm,
+    val genericParameters: Set<TypeVariable>,
     val argumentType: TupleType,
     val declaredImageTypeConstructor: Expression?,
     val image: Expression,
@@ -95,12 +98,14 @@ class Abstraction(
             return Abstraction(
                 innerDeclarationScope = innerDeclarationScope2,
                 term = term,
+                genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
                 argumentType = argumentType,
                 declaredImageTypeConstructor = declaredImageType,
                 image = image,
             )
         }
     }
+
     override fun bind(scope: Scope): Thunk<Value> = Closure(
         outerScope = scope,
         argumentType = argumentType,
@@ -126,6 +131,7 @@ class Abstraction(
     override val inferredType: Thunk<FunctionType> by lazy {
         effectiveImageType.thenJust { effectiveImageType ->
             UniversalFunctionType(
+                genericParameters = genericParameters,
                 argumentType = argumentType,
                 imageType = effectiveImageType,
             )

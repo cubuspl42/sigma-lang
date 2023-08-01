@@ -47,7 +47,7 @@ class Call(
     data class NonFullyInferredCalleeTypeError(
         override val location: SourceLocation,
         val calleeGenericType: FunctionType,
-        val remainingTypeVariables: Set<TypeVariable>,
+        val nonInferredTypeVariables: Set<TypeVariable>,
     ) : SubjectCallOutcome, SemanticError
 
     data class NonFunctionCallError(
@@ -81,14 +81,18 @@ class Call(
                         assignedType = argumentType,
                     )
 
-                    // FIXME: We need to substitute all subjectType's type variables!
                     val effectiveSubjectType = subjectType.substituteTypeVariables(
                         resolution = typeVariableResolution,
                     )
 
-                    val typeVariables = effectiveSubjectType.walk().mapNotNull { it as? TypeVariable }.toSet()
+                    val remainingTypeVariables = effectiveSubjectType.walk().mapNotNull {
+                        it as? TypeVariable
+                    }.toSet()
 
-                    if (typeVariables.isEmpty()) {
+                    val nonInferredTypeVariables =
+                        subjectType.genericParameters.intersect(remainingTypeVariables)
+
+                    if (nonInferredTypeVariables.isEmpty()) {
                         LegalSubjectCallResult(
                             calleeType = effectiveSubjectType,
                             argumentType = argumentType,
@@ -97,7 +101,7 @@ class Call(
                         NonFullyInferredCalleeTypeError(
                             location = subject.location,
                             calleeGenericType = subjectType,
-                            remainingTypeVariables = typeVariables,
+                            nonInferredTypeVariables = nonInferredTypeVariables,
                         )
                     }
                 }

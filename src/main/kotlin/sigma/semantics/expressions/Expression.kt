@@ -22,7 +22,7 @@ import sigma.syntax.expressions.DictConstructorTerm
 import sigma.syntax.expressions.DictTypeConstructorTerm
 import sigma.syntax.expressions.ExpressionTerm
 import sigma.syntax.expressions.FieldReadTerm
-import sigma.syntax.expressions.FunctionTypeTerm
+import sigma.syntax.expressions.FunctionTypeConstructorTerm
 import sigma.syntax.expressions.GenericTypeConstructorTerm
 import sigma.syntax.expressions.IfExpressionTerm
 import sigma.syntax.expressions.IntLiteralTerm
@@ -150,7 +150,7 @@ abstract class Expression {
                 term = term,
             )
 
-            is FunctionTypeTerm -> FunctionTypeConstructor.build(
+            is FunctionTypeConstructorTerm -> FunctionTypeConstructor.build(
                 declarationScope = declarationScope,
                 term = term,
             )

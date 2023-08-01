@@ -1,14 +1,9 @@
 package sigma.syntax.typeExpressions
 
 import sigma.syntax.SourceLocation
-import sigma.semantics.types.BoolType
-import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.OrderedTupleType
-import sigma.semantics.types.UniversalFunctionType
 import sigma.evaluation.values.Symbol
-import sigma.semantics.BuiltinScope
 import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.FunctionTypeTerm
+import sigma.syntax.expressions.FunctionTypeConstructorTerm
 import sigma.syntax.expressions.OrderedTupleTypeConstructorTerm
 import sigma.syntax.expressions.ReferenceTerm
 import kotlin.test.Test
@@ -23,8 +18,9 @@ class FunctionTypeTermTests {
             )
 
             assertEquals(
-                expected = FunctionTypeTerm(
+                expected = FunctionTypeConstructorTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                    genericParametersTuple = null,
                     argumentType = OrderedTupleTypeConstructorTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         elements = listOf(

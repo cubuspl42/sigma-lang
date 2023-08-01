@@ -8,6 +8,8 @@ sealed class FunctionType : Type() {
 
     abstract override fun substituteTypeVariables(resolution: TypeVariableResolution): FunctionType
 
+    open val genericParameters: Set<TypeVariable> = emptySet()
+
     abstract val argumentType: Type
 
     abstract val imageType: Type
