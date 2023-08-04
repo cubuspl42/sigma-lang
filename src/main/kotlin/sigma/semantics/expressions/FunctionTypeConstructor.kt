@@ -3,14 +3,10 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
-import sigma.semantics.Formula
-import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticScope
 import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
-import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
 import sigma.syntax.expressions.FunctionTypeConstructorTerm
 
@@ -39,17 +35,20 @@ class FunctionTypeConstructor(
     override val inferredType: Thunk<Type>
         get() = TODO()
 
-    override fun bind(
-        scope: Scope,
-    ): Thunk<Value> = UniversalFunctionType(
-        genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
-        argumentType = argumentType.bind(
+    override fun bind(scope: Scope): Thunk<Value> = Thunk.combine2(
+        argumentType.bind(
             scope = scope,
-        ).evaluateInitialValue() as TupleType,
-        imageType = imageType.bind(
+        ),
+        imageType.bind(
             scope = scope,
-        ).evaluateInitialValue() as Type,
-    ).asThunk
+        ),
+    ) { argumentType, imageType ->
+        UniversalFunctionType(
+            genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
+            argumentType = argumentType as TupleType,
+            imageType = imageType as Type,
+        )
+    }
 
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(

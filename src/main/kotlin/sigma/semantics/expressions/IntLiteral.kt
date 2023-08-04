@@ -4,14 +4,13 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Thunk
+import sigma.evaluation.values.Value
+import sigma.evaluation.values.asThunk
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IntLiteralType
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.IntLiteralTerm
 
-import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
 data class IntLiteral(
     override val term: IntLiteralTerm,
 ) : Expression() {

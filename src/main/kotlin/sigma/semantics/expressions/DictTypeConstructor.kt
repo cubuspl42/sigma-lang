@@ -3,10 +3,8 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
-import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticScope
 import sigma.semantics.types.DictType
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.DictTypeConstructorTerm
@@ -39,14 +37,18 @@ class DictTypeConstructor(
 
     override val errors: Set<SemanticError> = emptySet()
 
-    override fun bind(scope: Scope): Thunk<Value> = DictType(
-        // TODO: Remove cast
-        keyType = keyType.bind(
+    override fun bind(
+        scope: Scope,
+    ): Thunk<Value> = Thunk.combine2(
+        keyType.bind(
             scope = scope,
-        ).evaluateInitialValue() as Type,
-        // TODO: Remove cast
-        valueType = valueType.bind(
+        ), valueType.bind(
             scope = scope,
-        ).evaluateInitialValue() as Type,
-    ).asThunk
+        )
+    ) { keyType, valueType ->
+        DictType(
+            keyType = keyType as Type,
+            valueType = valueType as Type,
+        )
+    }
 }

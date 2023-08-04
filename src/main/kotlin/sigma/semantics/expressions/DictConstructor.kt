@@ -146,20 +146,23 @@ class DictConstructor(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<Value> {
-        return DictValue(
-            entries = associations.associate {
-                val key = it.key.bind(
-                    scope = scope,
-                ).evaluateInitialValue() as PrimitiveValue
-
-                val value = it.value.bind(
-                    scope = scope,
-                ).evaluateInitialValue()
-
-                key to value
-            },
-        ).asThunk
+    override fun bind(
+        scope: Scope,
+    ): Thunk<Value> = Thunk.traverseList(associations) { association ->
+        Thunk.combine2(
+            association.key.bind(
+                scope = scope,
+            ),
+            association.value.bind(
+                scope = scope,
+            ),
+        ) { key, value ->
+            (key as PrimitiveValue) to value
+        }
+    }.thenJust {
+        DictValue(
+            entries = it.toMap(),
+        )
     }
 
     override val errors: Set<SemanticError> by lazy {

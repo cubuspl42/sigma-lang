@@ -93,8 +93,7 @@ class Call(
                     val remainingTypeVariables =
                         subjectType.genericParameters - typeVariableResolution.resolvedTypeVariables
 
-                    val nonInferredTypeVariables =
-                        subjectType.genericParameters.intersect(remainingTypeVariables)
+                    val nonInferredTypeVariables = subjectType.genericParameters.intersect(remainingTypeVariables)
 
                     if (nonInferredTypeVariables.isEmpty()) {
                         LegalSubjectCallResult(
@@ -157,31 +156,21 @@ class Call(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<Value> {
-        return object : Thunk<Value>() {
-            override fun evaluateDirectly(context: EvaluationContext): EvaluationOutcome<Value> {
-                val subjectValue = subject.bind(
-                    scope = scope,
-                ).evaluateValueHacky(
-                    context = context,
-                )
+    override fun bind(
+        scope: Scope,
+    ): Thunk<Value> = Thunk.combine2(
+        subject.bind(
+            scope = scope,
+        ), argument.bind(
+            scope = scope,
+        )
+    ) { subjectValue, argumentValue ->
+        if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
 
-                if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
-
-                val argumentValue = argument.bind(
-                    scope = scope,
-                ).evaluateValueHacky(context = context)!!
-
-                val image = subjectValue.apply(
-                    argument = argumentValue,
-                )
-
-                return image.evaluate(
-                    context = context,
-                )
-            }
-        }
-    }
+        subjectValue.apply(
+            argument = argumentValue,
+        )
+    }.thenDo { it }
 
     override val errors: Set<SemanticError> by lazy {
         subject.errors + argument.errors + setOfNotNull(

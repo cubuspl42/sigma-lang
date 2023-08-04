@@ -4,8 +4,6 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.ArrayTable
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.OrderedTupleType
@@ -49,12 +47,11 @@ class OrderedTupleConstructor(
         elements.fold(emptySet()) { acc, it -> acc + it.errors }
     }
 
-    override fun bind(scope: Scope): Thunk<Value> = ArrayTable(
-        elements = elements.map {
-            // TODO: Handle errors
-            it.bind(
-                scope = scope,
-            ).evaluateInitialValue()
-        },
-    ).asThunk
+    override fun bind(
+        scope: Scope,
+    ): Thunk<Value> = Thunk.traverseList(elements) {
+        it.bind(scope = scope)
+    }.thenJust { elements ->
+        ArrayTable(elements = elements)
+    }
 }
