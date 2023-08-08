@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check for files in any 'gen' directory with the given extensions
-forbidden_files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^.*\/gen\/.*\.(interp|java|tokens)$')
+forbidden_files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^analyzer\/src\/main\/gen\/.*\.(interp|java|tokens)$')
 
 # If any such files are found, show an error message and exit with a non-zero status
 if [ ! -z "$forbidden_files" ]; then

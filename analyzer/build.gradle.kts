@@ -1,8 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm")
-    id("com.github.ben-manes.versions")
+    alias(libs.plugins.kotlin)
     antlr
     application
 }
@@ -47,18 +46,16 @@ tasks {
         outputDirectory = File("${project.buildDir}/generated-src/antlr/main/sigma/parser/antlr")
     }
 
-    test {
-        dependsOn("testIntegration")
+    compileKotlin {
+        dependsOn(generateGrammarSource)
     }
 
-    withType<Test> {
+    compileTestKotlin {
         dependsOn(generateTestGrammarSource)
     }
 
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
-
-        dependsOn(generateGrammarSource)
+    getByName("compileTestIntegrationKotlin") {
+        dependsOn("generateTestIntegrationGrammarSource")
     }
 }
 
