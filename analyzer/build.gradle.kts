@@ -1,14 +1,17 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm")
-    id("com.github.ben-manes.versions")
+    alias(libs.plugins.kotlin)
     antlr
     application
 }
 
 group = "me.kuba"
 version = "1.0-SNAPSHOT"
+
+kotlin {
+    jvmToolchain(17)
+}
 
 configurations {
     create("testIntegrationImplementation") {
@@ -52,8 +55,6 @@ tasks {
     }
 
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
-
         dependsOn(generateGrammarSource)
     }
 }

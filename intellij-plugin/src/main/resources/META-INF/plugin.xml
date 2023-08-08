@@ -1,0 +1,37 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.github.cubuspl42.sigmaLangIntellijPlugin</id>
+    <name>Sigma</name>
+    <vendor>cubuspl42</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <resource-bundle>messages.MyBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow factoryClass="com.github.cubuspl42.sigmaLangIntellijPlugin.toolWindow.MyToolWindowFactory"
+                    id="MyToolWindow"/>
+
+        <fileType name="Sigma File" implementationClass="com.github.cubuspl42.sigmaLangIntellijPlugin.SigmaFileType"
+                  fieldName="INSTANCE"
+                  language="Sigma" extensions="sigma"/>
+        <lang.parserDefinition language="Sigma"
+                               implementationClass="com.github.cubuspl42.sigmaLangIntellijPlugin.SigmaParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="Sigma"
+                                       implementationClass="com.github.cubuspl42.sigmaLangIntellijPlugin.SigmaSyntaxHighlighterFactory"/>
+        <completion.contributor
+                language="Sigma"
+                implementationClass="com.github.cubuspl42.sigmaLangIntellijPlugin.SigmaCompletionContributor"/>
+    </extensions>
+
+    <applicationListeners>
+        <listener class="com.github.cubuspl42.sigmaLangIntellijPlugin.listeners.MyApplicationActivationListener"
+                  topic="com.intellij.openapi.application.ApplicationActivationListener"/>
+    </applicationListeners>
+
+    <actions>
+        <action class="com.github.cubuspl42.sigmaLangIntellijPlugin.MyAction" id="MyAction">
+            <add-to-group group-id="StructureViewPopupMenu"/>
+        </action>
+    </actions>
+</idea-plugin>
