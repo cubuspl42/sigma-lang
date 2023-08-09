@@ -1,6 +1,7 @@
 package sigma.evaluation.values
 
 import sigma.semantics.BuiltinValue
+import sigma.semantics.expressions.EvaluationContext
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.Type
@@ -13,9 +14,9 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
     ): Thunk<Value> {
         val args = argument as FunctionValue
 
-        return compute(
+        return computeThunk(
             args = args.toList(),
-        ).asThunk
+        )
     }
 
     final override val type: Type
@@ -39,7 +40,15 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
 
     abstract val imageType: Type
 
-    abstract fun compute(
+    open fun computeThunk(
         args: List<Value>,
-    ): Value
+    ): Thunk<Value> = Thunk.lazy {
+        Thunk.pure(compute(args))
+    }
+
+    open fun compute(
+        args: List<Value>,
+    ): Value {
+        throw NotImplementedError()
+    }
 }

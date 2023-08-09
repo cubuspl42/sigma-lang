@@ -5,8 +5,6 @@ import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.UndefinedValue
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
@@ -31,14 +29,12 @@ data class IsUndefinedCheck(
     }
 
     override val inferredType: Thunk<Type> = Thunk.pure(BoolType)
-    override fun bind(scope: Scope): Thunk<Value> {
-        val argumentValue = argument.bind(
-            scope = scope,
-        ).evaluateInitialValue()
-
-        return BoolValue(
+    override fun bind(scope: Scope): Thunk<Value> = argument.bind(
+        scope = scope,
+    ).thenJust { argumentValue ->
+        BoolValue(
             value = argumentValue is UndefinedValue,
-        ).asThunk
+        )
     }
 
     override val errors: Set<SemanticError> = emptySet()

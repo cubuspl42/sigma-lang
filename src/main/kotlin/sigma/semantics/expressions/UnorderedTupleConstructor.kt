@@ -6,10 +6,8 @@ import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
-import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticScope
 import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
@@ -96,16 +94,17 @@ class UnorderedTupleConstructor(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<Value> = DictValue(
-        entries = entries.associate {
-            val name = it.name
-            val value = it.value.bind(
-                scope = scope,
-            ).evaluateInitialValue()
-
-            name to value
-        },
-    ).asThunk
+    override fun bind(
+        scope: Scope,
+    ): Thunk<Value> = Thunk.traverseList(entries.toList()) { entry ->
+        entry.value.bind(scope = scope).thenJust { entryValue ->
+            entry.name to entryValue
+        }
+    }.thenJust { entries ->
+        DictValue(
+            entries.toMap(),
+        )
+    }
 
     override val errors: Set<SemanticError> by lazy {
         val entriesErrors: Set<SemanticError> = entries.fold(emptySet()) { acc, it -> acc + it.value.errors }

@@ -4,10 +4,8 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
-import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticScope
 import sigma.semantics.types.IllType
 import sigma.semantics.types.SetType
 import sigma.semantics.types.Type
@@ -73,13 +71,15 @@ class SetConstructor(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<Value> = SetValue(
-        elements = elements.map {
-            it.bind(
-                scope = scope,
-            ).evaluateInitialValue()
-        }.toSet(),
-    ).asThunk
+    override fun bind(
+        scope: Scope,
+    ): Thunk<Value> = Thunk.traverseList(elements.toList()) {
+        it.bind(scope = scope)
+    }.thenJust { elements ->
+        SetValue(
+            elements = elements.toSet(),
+        )
+    }
 
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
