@@ -32,69 +32,90 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   static boolean parse_root_(IElementType t, PsiBuilder b, int l) {
-    return sigmaFile(b, l + 1);
+    return sigma_file(b, l + 1);
   }
 
   /* ********************************************************** */
-  // property|COMMENT|CRLF
-  static boolean item_(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "item_")) return false;
+  // CONST_KEYWORD IDENTIFIER ASSIGN expression
+  public static boolean constant_definition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "constant_definition")) return false;
+    if (!nextTokenIs(b, CONST_KEYWORD)) return false;
     boolean r;
-    r = property(b, l + 1);
-    if (!r) r = consumeToken(b, COMMENT);
-    if (!r) r = consumeToken(b, CRLF);
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, CONST_KEYWORD, IDENTIFIER, ASSIGN);
+    r = r && expression(b, l + 1);
+    exit_section_(b, m, CONSTANT_DEFINITION, r);
     return r;
   }
 
   /* ********************************************************** */
-  // (KEY? SEPARATOR VALUE?) | KEY
-  public static boolean property(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "property")) return false;
-    if (!nextTokenIs(b, "<property>", KEY, SEPARATOR)) return false;
+  // INT_LITERAL
+  public static boolean expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expression")) return false;
+    if (!nextTokenIs(b, INT_LITERAL)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, PROPERTY, "<property>");
-    r = property_0(b, l + 1);
-    if (!r) r = consumeToken(b, KEY);
+    Marker m = enter_section_(b);
+    r = consumeToken(b, INT_LITERAL);
+    exit_section_(b, m, EXPRESSION, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // namespace_body
+  public static boolean module(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "module")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, MODULE, "<module>");
+    r = namespace_body(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // KEY? SEPARATOR VALUE?
-  private static boolean property_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "property_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = property_0_0(b, l + 1);
-    r = r && consumeToken(b, SEPARATOR);
-    r = r && property_0_2(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // KEY?
-  private static boolean property_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "property_0_0")) return false;
-    consumeToken(b, KEY);
-    return true;
-  }
-
-  // VALUE?
-  private static boolean property_0_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "property_0_2")) return false;
-    consumeToken(b, VALUE);
+  /* ********************************************************** */
+  // static_statement*
+  public static boolean namespace_body(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "namespace_body")) return false;
+    Marker m = enter_section_(b, l, _NONE_, NAMESPACE_BODY, "<namespace body>");
+    while (true) {
+      int c = current_position_(b);
+      if (!static_statement(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "namespace_body", c)) break;
+    }
+    exit_section_(b, l, m, true, false, null);
     return true;
   }
 
   /* ********************************************************** */
-  // item_*
-  static boolean sigmaFile(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "sigmaFile")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!item_(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "sigmaFile", c)) break;
-    }
-    return true;
+  // NAMESPACE_KEYWORD IDENTIFIER PAREN_LEFT namespace_body PAREN_RIGHT
+  public static boolean namespace_definition(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "namespace_definition")) return false;
+    if (!nextTokenIs(b, NAMESPACE_KEYWORD)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, NAMESPACE_KEYWORD, IDENTIFIER, PAREN_LEFT);
+    r = r && namespace_body(b, l + 1);
+    r = r && consumeToken(b, PAREN_RIGHT);
+    exit_section_(b, m, NAMESPACE_DEFINITION, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // module
+  static boolean sigma_file(PsiBuilder b, int l) {
+    return module(b, l + 1);
+  }
+
+  /* ********************************************************** */
+  // constant_definition | namespace_definition
+  public static boolean static_statement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "static_statement")) return false;
+    if (!nextTokenIs(b, "<static statement>", CONST_KEYWORD, NAMESPACE_KEYWORD)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, STATIC_STATEMENT, "<static statement>");
+    r = constant_definition(b, l + 1);
+    if (!r) r = namespace_definition(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
 }

@@ -12,16 +12,11 @@ import com.intellij.psi.tree.IElementType
 
 class SigmaSyntaxHighlighter : SyntaxHighlighterBase() {
     companion object {
-        private val Separator: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-            "SIGMA_SEPARATOR",
-            DefaultLanguageHighlighterColors.OPERATION_SIGN
-        )
+        private val Keyword: TextAttributesKey =
+            TextAttributesKey.createTextAttributesKey("SIGMA_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
 
-        private val Key: TextAttributesKey =
-            TextAttributesKey.createTextAttributesKey("SIGMA_KEY", DefaultLanguageHighlighterColors.KEYWORD)
-
-        private val Value: TextAttributesKey =
-            TextAttributesKey.createTextAttributesKey("SIGMA_VALUE", DefaultLanguageHighlighterColors.STRING)
+        private val IntLiteral: TextAttributesKey =
+            TextAttributesKey.createTextAttributesKey("SIGMA_INT_LITERAL", DefaultLanguageHighlighterColors.NUMBER)
 
         private val Comment: TextAttributesKey =
             TextAttributesKey.createTextAttributesKey("SIGMA_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
@@ -31,11 +26,9 @@ class SigmaSyntaxHighlighter : SyntaxHighlighterBase() {
 
         private val BadCharKeys = arrayOf(BadCharacter)
 
-        private val SeparatorKeys = arrayOf(Separator)
+        private val KeywordKeys = arrayOf(Keyword)
 
-        private val KeyKeys = arrayOf(Key)
-
-        private val ValueKeys = arrayOf(Value)
+        private val IntLiteralKeys = arrayOf(IntLiteral)
 
         private val CommentKeys = arrayOf(Comment)
 
@@ -47,10 +40,8 @@ class SigmaSyntaxHighlighter : SyntaxHighlighterBase() {
     override fun getTokenHighlights(
         tokenType: IElementType,
     ): Array<out TextAttributesKey?> = when (tokenType) {
-        SigmaTypes.SEPARATOR -> SeparatorKeys
-        SigmaTypes.KEY -> KeyKeys
-        SigmaTypes.VALUE -> ValueKeys
-        SigmaTypes.COMMENT -> CommentKeys
+        SigmaTypes.CONST_KEYWORD, SigmaTypes.NAMESPACE_KEYWORD -> KeywordKeys
+        SigmaTypes.INT_LITERAL -> IntLiteralKeys
         TokenType.BAD_CHARACTER -> BadCharKeys
         else -> EmptyKeys
     }

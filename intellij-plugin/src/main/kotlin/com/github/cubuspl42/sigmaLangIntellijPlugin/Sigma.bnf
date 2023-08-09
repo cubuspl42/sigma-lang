@@ -13,8 +13,16 @@
   tokenTypeClass="com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTokenType"
 }
 
-sigmaFile ::= item_*
+sigma_file ::= module
 
-private item_ ::= (property|COMMENT|CRLF)
+module ::= namespace_body
 
-property ::= (KEY? SEPARATOR VALUE?) | KEY
+static_statement ::= constant_definition | namespace_definition
+
+constant_definition ::= CONST_KEYWORD IDENTIFIER ASSIGN expression
+
+namespace_definition ::= NAMESPACE_KEYWORD IDENTIFIER PAREN_LEFT namespace_body PAREN_RIGHT
+
+namespace_body ::= static_statement*
+
+expression ::= INT_LITERAL

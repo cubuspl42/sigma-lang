@@ -11,20 +11,26 @@ import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaPropertyImpl extends ASTWrapperPsiElement implements SigmaProperty {
+public class SigmaNamespaceBodyImpl extends ASTWrapperPsiElement implements SigmaNamespaceBody {
 
-  public SigmaPropertyImpl(@NotNull ASTNode node) {
+  public SigmaNamespaceBodyImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitProperty(this);
+    visitor.visitNamespaceBody(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof SigmaVisitor) accept((SigmaVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public List<SigmaStaticStatement> getStaticStatementList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaStaticStatement.class);
   }
 
 }
