@@ -5,9 +5,8 @@ import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.evaluateInitialValue
-import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticScope
 import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
@@ -110,14 +109,12 @@ class FieldRead(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<Value> {
-        val subjectValue = subject.bind(
-            scope = scope,
-        ).evaluateInitialValue()
-
+    override fun bind(scope: Scope): Thunk<Value> = subject.bind(
+        scope = scope,
+    ).thenDo { subjectValue ->
         if (subjectValue !is DictValue) throw IllegalStateException("Subject $subjectValue is not a dict")
 
-        return subjectValue.apply(
+        subjectValue.apply(
             argument = fieldName,
         )
     }
