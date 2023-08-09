@@ -3,10 +3,8 @@ package sigma.semantics.expressions
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
-import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
+import sigma.semantics.StaticScope
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.Type
 import sigma.syntax.expressions.ArrayTypeConstructorTerm
@@ -34,10 +32,9 @@ class ArrayTypeConstructor(
 
     override val errors: Set<SemanticError> = emptySet()
 
-    override fun bind(scope: Scope): Thunk<Value> = ArrayType(
-        // TODO: Remove cast
-        elementType = elementType.bind(
-            scope = scope,
-        ).evaluateInitialValue() as Type,
-    ).asThunk
+    override fun bind(scope: Scope): Thunk<Value> = elementType.bind(
+        scope = scope,
+    ).thenJust {
+        ArrayType(elementType = it as Type)
+    }
 }
