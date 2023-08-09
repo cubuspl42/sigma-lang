@@ -21,7 +21,7 @@ class SigmaCompletionContributor : CompletionContributor() {
 
         extend(
             CompletionType.BASIC,
-            PlatformPatterns.psiElement(SigmaTypes.VALUE),
+            PlatformPatterns.psiElement(SigmaTypes.INT_LITERAL),
             completionProvider,
         )
     }

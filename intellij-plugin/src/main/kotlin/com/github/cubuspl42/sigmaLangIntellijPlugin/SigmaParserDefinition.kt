@@ -23,7 +23,7 @@ class SigmaParserDefinition : ParserDefinition {
 
     override fun createLexer(project: Project): Lexer = SigmaLexerAdapter()
 
-    override fun getCommentTokens(): TokenSet = SigmaTokenSets.Comments
+    override fun getCommentTokens(): TokenSet = TokenSet.EMPTY
 
     override fun getStringLiteralElements(): TokenSet = TokenSet.EMPTY
 

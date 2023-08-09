@@ -6,7 +6,6 @@ import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes;
 import com.intellij.psi.TokenType;
 
 %%
-
 %class SigmaLexer
 %implements FlexLexer
 %unicode
@@ -15,30 +14,44 @@ import com.intellij.psi.TokenType;
 %eof{  return;
 %eof}
 
-CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
-FIRST_VALUE_CHARACTER=[^ \n\f\\] | "\\"{CRLF} | "\\".
-VALUE_CHARACTER=[^\n\f\\] | "\\"{CRLF} | "\\".
-END_OF_LINE_COMMENT=("#"|"!")[^\r\n]*
-SEPARATOR=[:=]
-KEY_CHARACTER=[^:=\ \n\t\f\\] | "\\ "
-
-%state WAITING_VALUE
+INT_LITERAL=[0-9]+
+//SYMBOL=[a-zA-Z0-9]+
+SPACE=' '
+NEWLINE='\n'
+//BACKTICK='`'
+//COMMENT="//"[^\r\n]*
 
 %%
 
-<YYINITIAL> {END_OF_LINE_COMMENT}                           { yybegin(YYINITIAL); return SigmaTypes.COMMENT; }
+{WHITE_SPACE}+                  { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
-<YYINITIAL> {KEY_CHARACTER}+                                { yybegin(YYINITIAL); return SigmaTypes.KEY; }
-
-<YYINITIAL> {SEPARATOR}                                     { yybegin(WAITING_VALUE); return SigmaTypes.SEPARATOR; }
-
-<WAITING_VALUE> {CRLF}({CRLF}|{WHITE_SPACE})+               { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-
-<WAITING_VALUE> {WHITE_SPACE}+                              { yybegin(WAITING_VALUE); return TokenType.WHITE_SPACE; }
-
-<WAITING_VALUE> {FIRST_VALUE_CHARACTER}{VALUE_CHARACTER}*   { yybegin(YYINITIAL); return SigmaTypes.VALUE; }
-
-({CRLF}|{WHITE_SPACE})+                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-
-[^]                                                         { return TokenType.BAD_CHARACTER; }
+"const"                         { yybegin(YYINITIAL); return SigmaTypes.CONST_KEYWORD; }
+[a-zA-Z][a-zA-Z0-9]*            { yybegin(YYINITIAL); return SigmaTypes.IDENTIFIER; }
+//"("                           { yybegin(YYINITIAL); return TokenType.PAREN_LEFT; }
+//")"                           { yybegin(YYINITIAL); return TokenType.PAREN_RIGHT; }
+//"["                           { yybegin(YYINITIAL); return TokenType.BRACKET_LEFT; }
+//"]"                           { yybegin(YYINITIAL); return TokenType.BRACKET_RIGHT; }
+//"{"                           { yybegin(YYINITIAL); return TokenType.BRACE_LEFT; }
+//"}"                           { yybegin(YYINITIAL); return TokenType.BRACE_RIGHT; }
+"="                             { yybegin(YYINITIAL); return SigmaTypes.ASSIGN; }
+{SPACE} | {NEWLINE}             { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+//{COMMENT}                     { yybegin(YYINITIAL); return SigmaTypes.COMMENT; }
+//"let"                         { yybegin(YYINITIAL); return SigmaTypes.LET_KEYWORD; }
+//"in"                          { yybegin(YYINITIAL); return SigmaTypes.IN_KEYWORD; }
+//"import"                      { yybegin(YYINITIAL); return SigmaTypes.IMPORT_KEYWORD; }
+//"isUndefined"                 { yybegin(YYINITIAL); return SigmaTypes.ISUNDEFINED_KEYWORD; }
+//"typeAlias"                   { yybegin(YYINITIAL); return SigmaTypes.TYPEALIAS_KEYWORD; }
+//"class"                       { yybegin(YYINITIAL); return SigmaTypes.CLASS_KEYWORD; }
+//"def"                         { yybegin(YYINITIAL); return SigmaTypes.DEF_KEYWORD; }
+//"if"                          { yybegin(YYINITIAL); return SigmaTypes.IF_KEYWORD; }
+//"namespace"                   { yybegin(YYINITIAL); return SigmaTypes.NAMESPACE_KEYWORD; }
+//"%fields"                     { yybegin(YYINITIAL); return SigmaTypes.FIELDS_DIRECTIVE; }
+//"%method"                     { yybegin(YYINITIAL); return SigmaTypes.METHOD_DIRECTIVE; }
+//"%then"                       { yybegin(YYINITIAL); return SigmaTypes.THEN_DIRECTIVE; }
+//"%else"                       { yybegin(YYINITIAL); return SigmaTypes.ELSE_DIRECTIVE; }
+//"%"{IDENTIFIER}               { yybegin(YYINITIAL); return SigmaTypes.UNRECOGNIZED_DIRECTIVE; }
+//"("<IDENTIFIER>{SPACE}*")"    { yybegin(YYINITIAL); return SigmaTypes.PAREN_EXPRESSION; }
+//{IDENTIFIER}                  { yybegin(YYINITIAL); return SigmaTypes.IDENTIFIER; }
+{INT_LITERAL}                   { yybegin(YYINITIAL); return SigmaTypes.INT_LITERAL; }
+[^]                             { yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
