@@ -11,33 +11,38 @@ import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 
 abstract class FunctionValue : Value() {
+
     object Link : ComputableFunctionValue() {
         override fun apply(
             argument: Value,
         ): Thunk<Value> {
             argument as FunctionValue
 
-            val primary = argument.apply(
-                argument = Symbol.of("primary"),
-            ).evaluateInitialValue() as FunctionValue
+            return Thunk.combine2(
+                argument.apply(
+                    argument = Symbol.of("primary"),
+                ), argument.apply(
+                    argument = Symbol.of("secondary"),
+                )
+            ) { primary, secondary ->
+                primary as FunctionValue
+                secondary as FunctionValue
 
-            val secondary = argument.apply(
-                argument = Symbol.of("secondary"),
-            ).evaluateInitialValue() as FunctionValue
+                object : FunctionValue() {
+                    override fun apply(argument: Value): Thunk<Value> =
+                        primary.apply(argument = argument).thenDo { result ->
+                            when (result) {
+                                is UndefinedValue -> secondary.apply(
+                                    argument = argument,
+                                )
 
-            return object : FunctionValue() {
-                override fun apply(argument: Value): Thunk<Value> {
-                    return when (val result = primary.apply(argument = argument).evaluateInitialValue()) {
-                        is UndefinedValue -> secondary.apply(
-                            argument = argument,
-                        )
+                                else -> result.asThunk
+                            }
+                        }
 
-                        else -> result.asThunk
-                    }
+                    override fun dump(): String = "${primary.dump()} .. ${secondary.dump()}"
                 }
-
-                override fun dump(): String = "${primary.dump()} .. ${secondary.dump()}"
-            }.asThunk
+            }
         }
 
         override fun dump(): String = "(link function)"
@@ -191,15 +196,15 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override fun compute(args: List<Value>): Value {
+        override fun computeThunk(args: List<Value>): Thunk<Value> {
             val elements = (args[0] as FunctionValue).toList()
             val transform = args[1] as FunctionValue
 
-            return DictValue.fromList(elements.map {
-                transform.apply(
-                    DictValue.fromList(listOf(it)),
-                ).evaluateInitialValue()
-            })
+            return Thunk.traverseList(elements) {
+                transform.applyOrdered(it)
+            }.thenJust { values ->
+                DictValue.fromList(values)
+            }
         }
     }
 
@@ -310,4 +315,10 @@ abstract class FunctionValue : Value() {
     abstract fun apply(
         argument: Value,
     ): Thunk<Value>
+
+    fun applyOrdered(
+        vararg arguments: Value,
+    ): Thunk<Value> = apply(
+        argument = DictValue.fromList(arguments.toList()),
+    )
 }
