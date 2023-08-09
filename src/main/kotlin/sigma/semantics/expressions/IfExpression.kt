@@ -4,8 +4,6 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.BoolValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
@@ -72,21 +70,19 @@ class IfExpression(
         trueType.findLowestCommonSupertype(falseType)
     }
 
-    override fun bind(scope: Scope): Thunk<Value> {
-        val guardValue = guard.bind(
-            scope = scope,
-        ).evaluateInitialValue()
-
+    override fun bind(scope: Scope): Thunk<Value> = guard.bind(
+        scope = scope,
+    ).thenDo { guardValue ->
         if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")
 
-        return if (guardValue.value) {
+        if (guardValue.value) {
             trueBranch.bind(
                 scope = scope,
-            ).evaluateInitialValue().asThunk
+            )
         } else {
             falseBranch.bind(
                 scope = scope,
-            ).evaluateInitialValue().asThunk
+            )
         }
     }
 
