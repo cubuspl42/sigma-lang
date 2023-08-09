@@ -1,3 +1,3 @@
 # Sigma
 
-A next-level purely functional programming language.
+A next-level purely functional programming language!
