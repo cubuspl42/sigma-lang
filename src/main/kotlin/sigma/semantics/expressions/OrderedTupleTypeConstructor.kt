@@ -4,8 +4,6 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.OrderedTupleType
@@ -42,16 +40,16 @@ class OrderedTupleTypeConstructor(
     override val inferredType: Thunk<OrderedTupleType>
         get() = TODO()
 
-    override fun bind(scope: Scope): Thunk<Value> {
-        return OrderedTupleType(
-            elements = elements.map {
-                OrderedTupleType.Element(
-                    name = it.name, type = it.type.bind(
-                        scope = scope,
-                    ).evaluateInitialValue() as Type
-                )
-            },
-        ).asThunk
+    override fun bind(
+        scope: Scope,
+    ): Thunk<Value> = Thunk.traverseList(elements) { element ->
+        element.type.bind(scope = scope).thenJust { elementType ->
+            OrderedTupleType.Element(
+                name = element.name, type = elementType as Type,
+            )
+        }
+    }.thenJust { elements ->
+        OrderedTupleType(elements = elements)
     }
 
     override val errors: Set<SemanticError>

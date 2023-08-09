@@ -35,6 +35,10 @@ sourceSets {
     }
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 tasks {
     register<Test>("testIntegration") {
         testClassesDirs = sourceSets["testIntegration"].output.classesDirs

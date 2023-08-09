@@ -4,10 +4,8 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
-import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
-import sigma.semantics.types.DictType
+import sigma.semantics.StaticScope
 import sigma.semantics.types.MetaType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
@@ -34,13 +32,20 @@ class UnorderedTupleTypeConstructor(
 
     override val inferredType: Thunk<Type> = MetaType.asThunk
 
-    override fun bind(scope: Scope): Thunk<Value> = UnorderedTupleType(
-        valueTypeByName = entries.associate {
-            it.name to it.value.bind(
-                scope = scope,
-            ).evaluateInitialValue() as Type
+    override fun bind(
+        scope: Scope,
+    ): Thunk<Value> = Thunk.traverseList(entries.toList()) { entry ->
+        entry.value.bind(
+            scope = scope,
+        ).thenJust { entryType ->
+            entry.name to (entryType as Type)
         }
-    ).asThunk
+
+    }.thenJust { entries ->
+        UnorderedTupleType(
+            valueTypeByName = entries.toMap(),
+        )
+    }
 
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
