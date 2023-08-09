@@ -42,7 +42,7 @@ data class EvaluationContext(
             evaluationDepth = 0,
         )
 
-        const val maxEvaluationDepth: Int = 1024
+        const val maxEvaluationDepth: Int = 2048
     }
 
     fun withIncreasedDepth(): EvaluationContext = EvaluationContext(
