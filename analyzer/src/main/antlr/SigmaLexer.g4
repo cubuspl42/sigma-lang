@@ -10,12 +10,11 @@ ClassKeyword : '%class' ;
 DefKeyword : '%def' ;
 IfKeyword : '%if' ;
 NamespaceKeyword : '%namespace' ;
-
-FieldsDirective : '%fields' ;
-MethodDirective : '%method' ;
-ThenDirective : '%then' ;
-ElseDirective : '%else' ;
-UnrecognizedDirective : '%' [a-zA-Z]+ ;
+FieldsKeyword : '%fields' ;
+MethodKeyword : '%method' ;
+ThenKeyword : '%then' ;
+ElseKeyword : '%else' ;
+UnrecognizedKeyword : '%' [a-zA-Z]+ ;
 
 LeftParen : '(' ;
 RightParen : ')' ;
