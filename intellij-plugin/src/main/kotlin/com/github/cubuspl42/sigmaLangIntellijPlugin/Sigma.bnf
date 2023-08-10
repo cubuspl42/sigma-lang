@@ -17,12 +17,14 @@ sigma_file ::= module
 
 module ::= namespace_body
 
-static_statement ::= constant_definition | namespace_definition
+namespace_entry ::=
+    constant_definition |
+    namespace_definition
 
 constant_definition ::= CONST_KEYWORD IDENTIFIER ASSIGN expression
 
 namespace_definition ::= NAMESPACE_KEYWORD IDENTIFIER PAREN_LEFT namespace_body PAREN_RIGHT
 
-namespace_body ::= static_statement*
+namespace_body ::= namespace_entry*
 
 expression ::= INT_LITERAL

@@ -29,8 +29,8 @@ public class SigmaNamespaceBodyImpl extends ASTWrapperPsiElement implements Sigm
 
   @Override
   @NotNull
-  public List<SigmaStaticStatement> getStaticStatementList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaStaticStatement.class);
+  public List<SigmaNamespaceEntry> getNamespaceEntryList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaNamespaceEntry.class);
   }
 
 }

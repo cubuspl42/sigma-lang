@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface SigmaNamespaceBody extends PsiElement {
 
   @NotNull
-  List<SigmaStaticStatement> getStaticStatementList();
+  List<SigmaNamespaceEntry> getNamespaceEntryList();
 
 }

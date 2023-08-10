@@ -72,13 +72,13 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // static_statement*
+  // namespace_entry*
   public static boolean namespace_body(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "namespace_body")) return false;
     Marker m = enter_section_(b, l, _NONE_, NAMESPACE_BODY, "<namespace body>");
     while (true) {
       int c = current_position_(b);
-      if (!static_statement(b, l + 1)) break;
+      if (!namespace_entry(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "namespace_body", c)) break;
     }
     exit_section_(b, l, m, true, false, null);
@@ -100,22 +100,23 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // module
-  static boolean sigma_file(PsiBuilder b, int l) {
-    return module(b, l + 1);
-  }
-
-  /* ********************************************************** */
-  // constant_definition | namespace_definition
-  public static boolean static_statement(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "static_statement")) return false;
-    if (!nextTokenIs(b, "<static statement>", CONST_KEYWORD, NAMESPACE_KEYWORD)) return false;
+  // constant_definition |
+  //     namespace_definition
+  public static boolean namespace_entry(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "namespace_entry")) return false;
+    if (!nextTokenIs(b, "<namespace entry>", CONST_KEYWORD, NAMESPACE_KEYWORD)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, STATIC_STATEMENT, "<static statement>");
+    Marker m = enter_section_(b, l, _NONE_, NAMESPACE_ENTRY, "<namespace entry>");
     r = constant_definition(b, l + 1);
     if (!r) r = namespace_definition(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
+  }
+
+  /* ********************************************************** */
+  // module
+  static boolean sigma_file(PsiBuilder b, int l) {
+    return module(b, l + 1);
   }
 
 }
