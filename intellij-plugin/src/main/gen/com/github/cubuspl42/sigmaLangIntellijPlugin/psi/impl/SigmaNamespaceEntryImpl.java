@@ -11,14 +11,14 @@ import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaStaticStatementImpl extends ASTWrapperPsiElement implements SigmaStaticStatement {
+public class SigmaNamespaceEntryImpl extends ASTWrapperPsiElement implements SigmaNamespaceEntry {
 
-  public SigmaStaticStatementImpl(@NotNull ASTNode node) {
+  public SigmaNamespaceEntryImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitStaticStatement(this);
+    visitor.visitNamespaceEntry(this);
   }
 
   @Override

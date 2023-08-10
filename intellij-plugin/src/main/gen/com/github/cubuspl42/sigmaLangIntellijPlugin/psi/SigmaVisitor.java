@@ -27,7 +27,7 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitStaticStatement(@NotNull SigmaStaticStatement o) {
+  public void visitNamespaceEntry(@NotNull SigmaNamespaceEntry o) {
     visitPsiElement(o);
   }
 

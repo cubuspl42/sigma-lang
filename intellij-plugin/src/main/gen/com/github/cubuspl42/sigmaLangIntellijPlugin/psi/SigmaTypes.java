@@ -13,7 +13,7 @@ public interface SigmaTypes {
   IElementType MODULE = new SigmaElementType("MODULE");
   IElementType NAMESPACE_BODY = new SigmaElementType("NAMESPACE_BODY");
   IElementType NAMESPACE_DEFINITION = new SigmaElementType("NAMESPACE_DEFINITION");
-  IElementType STATIC_STATEMENT = new SigmaElementType("STATIC_STATEMENT");
+  IElementType NAMESPACE_ENTRY = new SigmaElementType("NAMESPACE_ENTRY");
 
   IElementType ASSIGN = new SigmaTokenType("ASSIGN");
   IElementType CONST_KEYWORD = new SigmaTokenType("CONST_KEYWORD");
@@ -41,8 +41,8 @@ public interface SigmaTypes {
       else if (type == NAMESPACE_DEFINITION) {
         return new SigmaNamespaceDefinitionImpl(node);
       }
-      else if (type == STATIC_STATEMENT) {
-        return new SigmaStaticStatementImpl(node);
+      else if (type == NAMESPACE_ENTRY) {
+        return new SigmaNamespaceEntryImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }
