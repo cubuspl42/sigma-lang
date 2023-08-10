@@ -80,9 +80,9 @@ expression
     | SymbolLiteral # symbolLiteralAlt
     | IntLiteral # intLiteralAlt
     | tupleTypeConstructor # tupleTypeConstructorAlt
-    | functionTypeDepiction # functionTypeDepictionAlt
+    | functionTypeConstructor # functionTypeConstructorAlt
     | arrayTypeConstructor # arrayTypeConstructorAlt
-    | dictTypeDepiction # dictTypeDepictionAlt
+    | dictTypeConstructor # dictTypeConstructorAlt
     | callableExpression # callableExpressionAlt
     ;
 
@@ -193,8 +193,7 @@ tupleTypeConstructor
     | orderedTupleTypeConstructor
     ;
 
-// Thought: "functionTypeConstructor"?
-functionTypeDepiction
+functionTypeConstructor
     : genericParametersTuple? argumentType=tupleTypeConstructor ThinArrow imageType=expression
     ;
 
@@ -225,7 +224,7 @@ arrayTypeConstructor
     : Dash LeftBracket type=expression Asterisk RightBracket
     ;
 
-dictTypeDepiction
+dictTypeConstructor
     : Dash LeftBrace LeftBracket keyType=expression RightBracket Colon valueType=expression RightBrace
     ;
 
