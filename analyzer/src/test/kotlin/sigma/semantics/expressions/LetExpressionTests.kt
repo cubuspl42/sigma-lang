@@ -19,10 +19,10 @@ class LetExpressionTests {
         fun testValidRecursiveDefinitions() {
             val term = ExpressionTerm.parse(
                 source = """
-                    let {
+                    %let {
                         f = ^[] -> Int => g[],
                         g = ^[] => f[],
-                    } in f[]
+                    } %in f[]
                 """.trimIndent(),
             ) as LetExpressionTerm
 
@@ -60,10 +60,10 @@ class LetExpressionTests {
         fun testCyclicRecursiveTypeInference() {
             val term = ExpressionTerm.parse(
                 source = """
-                    let {
+                    %let {
                         f = ^[] => g[],
                         g = ^[] => f[],
-                    } in f[]
+                    } %in f[]
                 """.trimIndent(),
             ) as LetExpressionTerm
 
@@ -97,10 +97,10 @@ class LetExpressionTests {
         fun testCyclicRecursiveDefinitions() {
             val term = ExpressionTerm.parse(
                 source = """
-                    let {
+                    %let {
                         a: Int = b,
                         b: Int = a,
-                    } in f[]
+                    } %in f[]
                 """.trimIndent(),
             ) as LetExpressionTerm
 
@@ -136,10 +136,10 @@ class LetExpressionTests {
         fun testCyclicRecursiveDefinitions() {
             val term = ExpressionTerm.parse(
                 source = """
-                    let {
+                    %let {
                         a: Int = b,
                         b: Int = a,
-                    } in a
+                    } %in a
                 """.trimIndent(),
             ) as LetExpressionTerm
 

@@ -11,7 +11,7 @@ class IfExpressionTermTests {
         fun testSimple() {
             val term = ExpressionTerm.parse(
                 """
-                    if g (
+                    %if g (
                         %then t,
                         %else f, 
                     )
@@ -21,7 +21,7 @@ class IfExpressionTermTests {
                 expected = IfExpressionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     guard = ReferenceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 3),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         referee = Symbol.of("g"),
                     ),
                     trueBranch = ReferenceTerm(

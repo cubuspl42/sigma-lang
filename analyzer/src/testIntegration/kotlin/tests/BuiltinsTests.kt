@@ -26,14 +26,14 @@ class BuiltinsTests {
     fun testSet() {
         val term = NamespaceDefinitionTerm.parse(
             source = """
-                namespace EntryNamespace (
-                    const mySet1 = setOf[[1, 2, 3]]
+                %namespace EntryNamespace (
+                    %const mySet1 = setOf[[1, 2, 3]]
                     
-                    const contains2 = setContains[mySet1, 2]
+                    %const contains2 = setContains[mySet1, 2]
 
-                    const contains5 = setContains[mySet1, 5]
+                    %const contains5 = setContains[mySet1, 5]
                     
-                    const mySet2 = setUnion[mySet1, setOf[[2, 3, 4]]]
+                    %const mySet2 = setUnion[mySet1, setOf[[2, 3, 4]]]
                 )
             """.trimIndent(),
         )
