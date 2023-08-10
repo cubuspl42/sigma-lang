@@ -9,7 +9,7 @@ class ConstantDefinitionTermTests {
     class ParsingTests {
         @Test
         fun test() {
-            val term = StaticStatementTerm.parse(
+            val term = NamespaceEntryTerm.parse(
                 source = """
                     const UserId = Int
                 """.trimIndent()

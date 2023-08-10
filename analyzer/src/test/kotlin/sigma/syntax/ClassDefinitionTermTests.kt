@@ -16,7 +16,7 @@ class ClassDefinitionTermTests {
     class ParsingTests {
         @Test
         fun test() {
-            val term = StaticStatementTerm.parse(
+            val term = NamespaceEntryTerm.parse(
                 source = """
                     class Foo (
                         %fields (

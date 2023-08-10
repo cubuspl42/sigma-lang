@@ -18,8 +18,7 @@ importPath
     : identifier (Dot identifier)*
     ;
 
-// Thought: NamespaceEntry ?
-staticStatement
+namespaceEntry
     : constantDefinition
     | classDefinition
     | namespaceDefinition
@@ -34,7 +33,7 @@ namespaceDefinition
     ;
 
 namespaceBody
-    : staticStatement*
+    : namespaceEntry*
     ;
 
 // Class

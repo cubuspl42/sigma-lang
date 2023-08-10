@@ -5,15 +5,13 @@ import org.antlr.v4.runtime.CommonTokenStream
 import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
-import sigma.parser.antlr.SigmaParser.ImportStatementContext
-import sigma.parser.antlr.SigmaParser.ModuleContext
 import sigma.parser.antlr.SigmaParser.NamespaceDefinitionContext
 
 data class NamespaceDefinitionTerm(
     override val location: SourceLocation,
     val name: Symbol,
-    val staticStatements: List<StaticStatementTerm>,
-) : StaticStatementTerm() {
+    val namespaceEntries: List<NamespaceEntryTerm>,
+) : NamespaceEntryTerm() {
     companion object {
         fun parse(
             source: String,
@@ -32,8 +30,8 @@ data class NamespaceDefinitionTerm(
         ): NamespaceDefinitionTerm = NamespaceDefinitionTerm(
             location = SourceLocation.build(ctx),
             name = Symbol.of(ctx.name.text),
-            staticStatements = ctx.namespaceBody().staticStatement().map {
-                StaticStatementTerm.build(it)
+            namespaceEntries = ctx.namespaceBody().namespaceEntry().map {
+                NamespaceEntryTerm.build(it)
             },
         )
     }

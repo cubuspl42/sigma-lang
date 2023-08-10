@@ -7,34 +7,34 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
 // TODO: Rename
-sealed class StaticStatementTerm : Term() {
+sealed class NamespaceEntryTerm : Term() {
     companion object {
         fun parse(
             source: String,
-        ): StaticStatementTerm {
-            val sourceName = "__static_statement__"
+        ): NamespaceEntryTerm {
+            val sourceName = "__namespace_entry__"
 
             val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
             val tokenStream = CommonTokenStream(lexer)
             val parser = SigmaParser(tokenStream)
 
-            return StaticStatementTerm.build(parser.staticStatement())
+            return NamespaceEntryTerm.build(parser.namespaceEntry())
         }
 
         fun build(
-            ctx: SigmaParser.StaticStatementContext,
-        ): StaticStatementTerm = object : SigmaParserBaseVisitor<StaticStatementTerm>() {
+            ctx: SigmaParser.NamespaceEntryContext,
+        ): NamespaceEntryTerm = object : SigmaParserBaseVisitor<NamespaceEntryTerm>() {
             override fun visitConstantDefinition(
                 ctx: SigmaParser.ConstantDefinitionContext,
-            ): StaticStatementTerm = ConstantDefinitionTerm.build(ctx)
+            ): NamespaceEntryTerm = ConstantDefinitionTerm.build(ctx)
 
             override fun visitClassDefinition(
                 ctx: SigmaParser.ClassDefinitionContext,
-            ): StaticStatementTerm = ClassDefinitionTerm.build(ctx)
+            ): NamespaceEntryTerm = ClassDefinitionTerm.build(ctx)
 
             override fun visitNamespaceDefinition(
                 ctx: SigmaParser.NamespaceDefinitionContext,
-            ): StaticStatementTerm = NamespaceDefinitionTerm.build(ctx)
+            ): NamespaceEntryTerm = NamespaceDefinitionTerm.build(ctx)
         }.visit(ctx)
     }
 }

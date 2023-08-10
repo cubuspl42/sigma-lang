@@ -35,7 +35,7 @@ class NamespaceDefinitionTermTests {
                 expected = NamespaceDefinitionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     name = Symbol.of("Foo"),
-                    staticStatements = listOf(
+                    namespaceEntries = listOf(
                         ConstantDefinitionTerm(
                             location = SourceLocation(lineIndex = 2, columnIndex = 4),
                             name = Symbol.of("UserId"),
@@ -120,11 +120,11 @@ class NamespaceDefinitionTermTests {
                 expected = NamespaceDefinitionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     name = Symbol.of("Foo"),
-                    staticStatements = listOf(
+                    namespaceEntries = listOf(
                         NamespaceDefinitionTerm(
                             location = SourceLocation(lineIndex = 2, columnIndex = 4),
                             name = Symbol.of("Bar"),
-                            staticStatements = listOf(
+                            namespaceEntries = listOf(
                                 ConstantDefinitionTerm(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 8),
                                     name = Symbol.of("foo"),

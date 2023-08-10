@@ -21,7 +21,7 @@ class Namespace(
         )
     }
 
-    private val staticDefinitions: Set<StaticDefinition> = term.staticStatements.map {
+    private val staticDefinitions: Set<StaticDefinition> = term.namespaceEntries.map {
         StaticDefinition.build(
             containingNamespace = this,
             term = it,
