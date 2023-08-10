@@ -122,17 +122,17 @@ sealed class ExpressionTerm : Term() {
                 ctx: SigmaParser.TupleTypeConstructorAltContext,
             ): ExpressionTerm = TupleTypeConstructorTerm.build(ctx.tupleTypeConstructor())
 
-            override fun visitFunctionTypeDepictionAlt(
-                ctx: SigmaParser.FunctionTypeDepictionAltContext,
-            ): ExpressionTerm = FunctionTypeConstructorTerm.build(ctx.functionTypeDepiction())
+            override fun visitFunctionTypeConstructorAlt(
+                ctx: SigmaParser.FunctionTypeConstructorAltContext,
+            ): ExpressionTerm = FunctionTypeConstructorTerm.build(ctx.functionTypeConstructor())
 
             override fun visitArrayTypeConstructorAlt(
                 ctx: SigmaParser.ArrayTypeConstructorAltContext,
             ): ExpressionTerm = ArrayTypeConstructorTerm.build(ctx.arrayTypeConstructor())
 
-            override fun visitDictTypeDepictionAlt(
-                ctx: SigmaParser.DictTypeDepictionAltContext,
-            ): ExpressionTerm = DictTypeConstructorTerm.build(ctx.dictTypeDepiction())
+            override fun visitDictTypeConstructorAlt(
+                ctx: SigmaParser.DictTypeConstructorAltContext,
+            ): ExpressionTerm = DictTypeConstructorTerm.build(ctx.dictTypeConstructor())
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class.java}")
     }
 

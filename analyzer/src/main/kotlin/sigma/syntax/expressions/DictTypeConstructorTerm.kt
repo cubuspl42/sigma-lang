@@ -10,7 +10,7 @@ data class DictTypeConstructorTerm(
 ) : ExpressionTerm() {
     companion object {
         fun build(
-            ctx: SigmaParser.DictTypeDepictionContext,
+            ctx: SigmaParser.DictTypeConstructorContext,
         ): DictTypeConstructorTerm = DictTypeConstructorTerm(
             location = SourceLocation.build(ctx),
             keyType = build(ctx.keyType),

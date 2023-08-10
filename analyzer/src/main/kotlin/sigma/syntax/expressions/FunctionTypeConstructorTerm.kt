@@ -1,6 +1,6 @@
 package sigma.syntax.expressions
 
-import sigma.parser.antlr.SigmaParser.FunctionTypeDepictionContext
+import sigma.parser.antlr.SigmaParser.FunctionTypeConstructorContext
 import sigma.syntax.SourceLocation
 
 // Thought: "FunctionTypeConstructorTerm"?
@@ -12,7 +12,7 @@ data class FunctionTypeConstructorTerm(
 ) : ExpressionTerm() {
     companion object {
         fun build(
-            ctx: FunctionTypeDepictionContext,
+            ctx: FunctionTypeConstructorContext,
         ): FunctionTypeConstructorTerm = FunctionTypeConstructorTerm(
             location = SourceLocation.build(ctx),
             genericParametersTuple = ctx.genericParametersTuple()?.let {
