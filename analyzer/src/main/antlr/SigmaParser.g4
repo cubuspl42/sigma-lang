@@ -40,7 +40,7 @@ namespaceBody
 
 classDefinition
     : ClassKeyword name=Identifier LeftParen
-          FieldsDirective LeftParen fieldDeclaration+ RightParen
+          FieldsKeyword LeftParen fieldDeclaration+ RightParen
           methodDefinition*
       RightParen
     ;
@@ -50,7 +50,7 @@ fieldDeclaration
     ;
 
 methodDefinition
-    : MethodDirective name=Identifier Assign body=expression
+    : MethodKeyword name=Identifier Assign body=expression
     ;
 
 // end
@@ -117,8 +117,8 @@ definition
 
 ifExpression
     : IfKeyword guard=expression LeftParen
-          ThenDirective trueBranch=expression Comma
-          ElseDirective falseBranch=expression Comma?
+          ThenKeyword trueBranch=expression Comma
+          ElseKeyword falseBranch=expression Comma?
       RightParen
     ;
 
