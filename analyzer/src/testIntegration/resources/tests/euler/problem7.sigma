@@ -1,21 +1,21 @@
-const main = let {
+%const main = %let {
     M = 100,
 
     // Build table with all multiples of n smaller than M
-    buildMultiplesOfNUpToM = ^[n: Int] => let {
+    buildMultiplesOfNUpToM = ^[n: Int] => %let {
         // Built table with ith (n * i) multiple of n and greater multiples (smaller than M)
-        buildMultiplesFrom = ^[i: Int] -> ^{[Int]: Bool} => let {
+        buildMultiplesFrom = ^[i: Int] -> ^{[Int]: Bool} => %let {
             ni = n * i,
-        } in if ni >= M (
+        } %in %if ni >= M (
             %then {},
             %else {
                [ni]: true,
             } .. buildMultiplesFrom[i + 1],
         ),
-    } in buildMultiplesFrom[2],
+    } %in buildMultiplesFrom[2],
 
     // Build prime table with all multiples smaller than M of all numbers up to n
-    buildNonPrimeTable = ^[n: Int] -> ^{[Int]: Bool} => if n < 2 (
+    buildNonPrimeTable = ^[n: Int] -> ^{[Int]: Bool} => %if n < 2 (
         %then {},
         %else (buildMultiplesOfNUpToM[n] .. buildNonPrimeTable[n - 1]),
     ),
@@ -23,11 +23,11 @@ const main = let {
     nonPrimeTable = buildNonPrimeTable[M],
 
     // Find all primes <= n
-    findPrimesLte = ^[n: Int] -> ^{[Int]: Bool} => if n < 2 (
+    findPrimesLte = ^[n: Int] -> ^{[Int]: Bool} => %if n < 2 (
         %then {},
-        %else let {
+        %else %let {
             smallerPrimes = findPrimesLte[n - 1]
-        } in if isUndefined(nonPrimeTable(n)) (
+        } %in %if isUndefined(nonPrimeTable(n)) (
             %then { [n]: true } .. smallerPrimes,
             %else smallerPrimes,
         ),
@@ -35,12 +35,12 @@ const main = let {
 
     primeTable = findPrimesLte[M - 1],
 
-    findIthPrime = ^[i: Int] -> Int => let {
-        find = ^{n: Int, nextPrimeId: Int} -> Int => let {
-            isNPrime = isUndefined(nonPrimeTable(n)),
+    findIthPrime = ^[i: Int] -> Int => %let {
+        find = ^{n: Int, nextPrimeId: Int} -> Int => %let {
+            isNPrime = %isUndefined(nonPrimeTable(n)),
             nextN = n + 1,
-        } in if isNPrime (
-            %then if nextPrimeId == i (
+        } %in %if isNPrime (
+            %then %if nextPrimeId == i (
                 %then n,
                 %else find{
                     n: nextN,
@@ -52,8 +52,8 @@ const main = let {
                 nextPrimeId: nextPrimeId,
             },
         ),
-    } in find{
+    } %in find{
         n: 1,
         nextPrimeId: 0,
     },
-} in findIthPrime[20]
+} %in findIthPrime[20]

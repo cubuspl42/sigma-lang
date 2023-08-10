@@ -1,4 +1,4 @@
-const main = let {
+%const main = %let {
     concatAllOf = ![e, te] ^[
         list: ^[e*],
         transform: ^[e] -> ^[te*],
@@ -7,7 +7,7 @@ const main = let {
 
     concatAll = ![e] ^[
         lists: ^[^[e*]*],
-    ] -> ^[e*] => let {
+    ] -> ^[e*] => %let {
         recurse = ^{
             listAccumulated: ^[e*],
             listsRemaining: ^[^[e*]*],
@@ -21,12 +21,12 @@ const main = let {
             },
             ifEmpty: listAccumulated,
         }]
-    } in recurse{
+    } %in recurse{
         listAccumulated: [],
         listsRemaining: lists,
     },
 
-    range = ^[start: Int, end: Int] -> ^[Int*] => if end < start (
+    range = ^[start: Int, end: Int] -> ^[Int*] => %if end < start (
         %then [],
         %else concat[[start], range[start + 1, end]],
     ),
@@ -47,11 +47,11 @@ const main = let {
             ] -> r,
             ifEmpty: r,
         },
-    ] => if length[list] > 0 (
+    ] => %if length[list] > 0 (
         %then branches.ifExtracted[
             list(0),
             dropFirst[list],
         ],
         %else branches.ifEmpty,
     )
-} in tripletsSummingTo[10](0)
+} %in tripletsSummingTo[10](0)

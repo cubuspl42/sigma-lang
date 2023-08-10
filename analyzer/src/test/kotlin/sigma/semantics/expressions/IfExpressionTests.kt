@@ -20,7 +20,7 @@ class IfExpressionTests {
         fun testLegalGuard() {
             val term = ExpressionTerm.parse(
                 source = """
-                    if true (
+                    %if true (
                         %then 3,
                         %else 4,
                     )
@@ -46,7 +46,7 @@ class IfExpressionTests {
         fun testIllegalGuard() {
             val term = ExpressionTerm.parse(
                 source = """
-                    if 2 (
+                    %if 2 (
                         %then 3,
                         %else 4,
                     )
@@ -61,7 +61,7 @@ class IfExpressionTests {
             assertEquals(
                 expected = setOf(
                     IfExpression.InvalidGuardError(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 3),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         actualType = IntLiteralType(
                             value = IntValue(value = 2L),
                         ),
@@ -81,7 +81,7 @@ class IfExpressionTests {
         fun testTrueGuard() {
             val term = ExpressionTerm.parse(
                 source = """
-                    if true (
+                    %if true (
                         %then 3,
                         %else 4,
                     )
@@ -109,7 +109,7 @@ class IfExpressionTests {
         fun testFalseGuard() {
             val term = ExpressionTerm.parse(
                 source = """
-                    if false (
+                    %if false (
                         %then 3,
                         %else 4,
                     )

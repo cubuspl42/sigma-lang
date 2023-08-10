@@ -1,15 +1,15 @@
 lexer grammar SigmaLexer;
 
-LetKeyword : 'let' ;
-InKeyword : 'in' ;
-ImportKeyword : 'import' ;
-IsUndefinedKeyword : 'isUndefined' ;
-TypeAliasKeyword : 'typeAlias' ;
-ConstKeyword : 'const' ;
-ClassKeyword : 'class' ;
-DefKeyword : 'def' ;
-IfKeyword : 'if' ;
-NamespaceKeyword : 'namespace' ;
+LetKeyword : '%let' ;
+InKeyword : '%in' ;
+ImportKeyword : '%import' ;
+IsUndefinedKeyword : '%isUndefined' ;
+TypeAliasKeyword : '%typeAlias' ;
+ConstKeyword : '%const' ;
+ClassKeyword : '%class' ;
+DefKeyword : '%def' ;
+IfKeyword : '%if' ;
+NamespaceKeyword : '%namespace' ;
 
 FieldsDirective : '%fields' ;
 MethodDirective : '%method' ;

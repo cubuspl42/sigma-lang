@@ -20,7 +20,7 @@ class IsUndefinedCheckTests {
         @Test
         fun test() {
             val term = ExpressionTerm.parse(
-                source = "isUndefined foo",
+                source = "%isUndefined foo",
             ) as IsUndefinedCheckTerm
 
             val isUndefinedCheck = IsUndefinedCheck.build(
@@ -41,7 +41,7 @@ class IsUndefinedCheckTests {
             val isUndefinedCheck = IsUndefinedCheck.build(
                 declarationScope = StaticScope.Empty,
                 term = ExpressionTerm.parse(
-                    source = "isUndefined 0",
+                    source = "%isUndefined 0",
                 ) as IsUndefinedCheckTerm,
             )
 
@@ -64,7 +64,7 @@ class IsUndefinedCheckTests {
             val isUndefinedCheck = IsUndefinedCheck.build(
                 declarationScope = StaticScope.Empty,
                 term = ExpressionTerm.parse(
-                    source = "isUndefined d(0)",
+                    source = "%isUndefined d(0)",
                 ) as IsUndefinedCheckTerm,
             )
 

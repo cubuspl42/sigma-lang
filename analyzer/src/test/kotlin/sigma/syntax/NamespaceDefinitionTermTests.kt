@@ -16,14 +16,14 @@ class NamespaceDefinitionTermTests {
         fun testSimple() {
             val term = NamespaceDefinitionTerm.parse(
                 source = """
-                    namespace Foo (
-                        const UserId = Int
+                    %namespace Foo (
+                        %const UserId = Int
                         
-                        const name1 = 123
+                        %const name1 = 123
                         
-                        const name2 = ^[a: Int] => 42
+                        %const name2 = ^[a: Int] => 42
                         
-                        const name3 = {
+                        %const name3 = {
                             a: 1,
                             b: 2,
                         }
@@ -40,7 +40,7 @@ class NamespaceDefinitionTermTests {
                             location = SourceLocation(lineIndex = 2, columnIndex = 4),
                             name = Symbol.of("UserId"),
                             body = ReferenceTerm(
-                                location = SourceLocation(lineIndex = 2, columnIndex = 19),
+                                location = SourceLocation(lineIndex = 2, columnIndex = 20),
                                 referee = Symbol.of("Int"),
                             )
                         ),
@@ -49,7 +49,7 @@ class NamespaceDefinitionTermTests {
                             name = Symbol.of("name1"),
                             declaredTypeBody = null,
                             body = IntLiteralTerm(
-                                location = SourceLocation(lineIndex = 4, columnIndex = 18),
+                                location = SourceLocation(lineIndex = 4, columnIndex = 19),
                                 value = IntValue(value = 123L),
                             ),
                         ),
@@ -57,21 +57,21 @@ class NamespaceDefinitionTermTests {
                             location = SourceLocation(lineIndex = 6, columnIndex = 4),
                             name = Symbol.of("name2"), declaredTypeBody = null,
                             body = AbstractionTerm(
-                                location = SourceLocation(lineIndex = 6, columnIndex = 18),
+                                location = SourceLocation(lineIndex = 6, columnIndex = 19),
                                 argumentType = OrderedTupleTypeConstructorTerm(
-                                    location = SourceLocation(lineIndex = 6, columnIndex = 18),
+                                    location = SourceLocation(lineIndex = 6, columnIndex = 19),
                                     elements = listOf(
                                         OrderedTupleTypeConstructorTerm.Element(
                                             name = Symbol.of("a"),
                                             type = ReferenceTerm(
-                                                location = SourceLocation(lineIndex = 6, columnIndex = 23),
+                                                location = SourceLocation(lineIndex = 6, columnIndex = 24),
                                                 referee = Symbol.of("Int"),
                                             ),
                                         ),
                                     ),
                                 ),
                                 image = IntLiteralTerm(
-                                    location = SourceLocation(lineIndex = 6, columnIndex = 31),
+                                    location = SourceLocation(lineIndex = 6, columnIndex = 32),
                                     value = IntValue(value = 42L),
                                 ),
                             ),
@@ -79,7 +79,7 @@ class NamespaceDefinitionTermTests {
                         ConstantDefinitionTerm(
                             location = SourceLocation(lineIndex = 8, columnIndex = 4),
                             name = Symbol.of("name3"), body = UnorderedTupleConstructorTerm(
-                                location = SourceLocation(lineIndex = 8, columnIndex = 18),
+                                location = SourceLocation(lineIndex = 8, columnIndex = 19),
                                 entries = listOf(
                                     UnorderedTupleConstructorTerm.Entry(
                                         name = Symbol.of("a"),
@@ -108,9 +108,9 @@ class NamespaceDefinitionTermTests {
         fun testNested() {
             val term = NamespaceDefinitionTerm.parse(
                 source = """
-                    namespace Foo (
-                        namespace Bar (
-                            const foo = 2
+                    %namespace Foo (
+                        %namespace Bar (
+                            %const foo = 2
                         )
                     )
                 """.trimIndent()
@@ -130,7 +130,7 @@ class NamespaceDefinitionTermTests {
                                     name = Symbol.of("foo"),
                                     declaredTypeBody = null,
                                     body = IntLiteralTerm(
-                                        location = SourceLocation(lineIndex = 3, columnIndex = 20),
+                                        location = SourceLocation(lineIndex = 3, columnIndex = 21),
                                         value = IntValue(value = 2L),
                                     ),
                                 ),

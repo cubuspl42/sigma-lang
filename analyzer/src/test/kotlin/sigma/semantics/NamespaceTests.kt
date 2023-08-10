@@ -16,10 +16,10 @@ class NamespaceTests {
         fun testInnerTypeScope() {
             val term = NamespaceDefinitionTerm.parse(
                 source = """
-                    namespace Foo (
-                        const UserId = Int
+                    %namespace Foo (
+                        %const UserId = Int
                         
-                        const isUserIdValid = ^[userId: UserId] => true
+                        %const isUserIdValid = ^[userId: UserId] => true
                     )
                 """.trimIndent(),
             )

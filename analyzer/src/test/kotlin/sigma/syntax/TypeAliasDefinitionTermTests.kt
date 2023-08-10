@@ -11,7 +11,7 @@ class ConstantDefinitionTermTests {
         fun test() {
             val term = NamespaceEntryTerm.parse(
                 source = """
-                    const UserId = Int
+                    %const UserId = Int
                 """.trimIndent()
             )
 
@@ -20,7 +20,7 @@ class ConstantDefinitionTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     name = Symbol.of("UserId"),
                     body = ReferenceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 15),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 16),
                         referee = Symbol.of("Int"),
                     )
                 ),

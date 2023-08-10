@@ -192,9 +192,9 @@ class AbstractionTermTests {
         fun testRecursiveCallTest() {
             val term = ExpressionTerm.parse(
                 source = """
-                    let {
+                    %let {
                         f = ^[n: Int] -> Bool => f[n + 1]
-                    } in f
+                    } %in f
                 """.trimIndent(),
             )
 

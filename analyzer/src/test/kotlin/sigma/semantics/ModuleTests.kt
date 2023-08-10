@@ -16,9 +16,9 @@ class ModuleTests {
         fun testTypeScope() {
             val term = ModuleTerm.parse(
                 source = """
-                    const UserId = Int
+                    %const UserId = Int
                     
-                    const isUserIdValid = ^[userId: UserId] => true
+                    %const isUserIdValid = ^[userId: UserId] => true
                 """.trimIndent(),
             )
 

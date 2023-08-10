@@ -10,11 +10,20 @@ class LetExpressionTermTests {
     class ParsingTests {
         @Test
         fun testSimple() {
+            val term = ExpressionTerm.parse(
+                source = """
+                    %let {
+                        g = h(a),
+                        f = g,
+                    } %in f(x)
+                """.trimIndent()
+            )
+
             assertEquals(
                 expected = LetExpressionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     localScope = LocalScopeTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 5),
                         definitions = listOf(
                             LocalDefinitionTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 4),
@@ -42,60 +51,55 @@ class LetExpressionTermTests {
                         ),
                     ),
                     result = CallTerm(
-                        location = SourceLocation(lineIndex = 4, columnIndex = 5),
+                        location = SourceLocation(lineIndex = 4, columnIndex = 6),
                         subject = ReferenceTerm(
-                            location = SourceLocation(lineIndex = 4, columnIndex = 5),
+                            location = SourceLocation(lineIndex = 4, columnIndex = 6),
                             referee = Symbol.of("f"),
                         ),
                         argument = ReferenceTerm(
-                            location = SourceLocation(lineIndex = 4, columnIndex = 7),
+                            location = SourceLocation(lineIndex = 4, columnIndex = 8),
                             referee = Symbol.of("x"),
                         ),
                     ),
                 ),
-                actual = ExpressionTerm.parse(
-                    source = """
-                        let {
-                            g = h(a),
-                            f = g,
-                        } in f(x)
-                    """.trimIndent()
-                ),
+                actual = term,
             )
         }
 
         @Test
         fun testWithTypeAnnotation() {
+            val term = ExpressionTerm.parse(
+                source = """
+                        %let { a: Int = b } %in a
+                    """.trimIndent()
+            )
+
             assertEquals(
                 expected = LetExpressionTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     localScope = LocalScopeTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 4),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 5),
                         definitions = listOf(
                             LocalDefinitionTerm(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 6),
+                                location = SourceLocation(lineIndex = 1, columnIndex = 7),
                                 name = Symbol.of("a"),
                                 declaredTypeBody = ReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 9),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                     referee = Symbol.of("Int"),
                                 ),
                                 body = ReferenceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 15),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 16),
                                     referee = Symbol.of("b"),
                                 ),
                             ),
                         ),
                     ),
                     result = ReferenceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 22),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 24),
                         referee = Symbol.of("a"),
                     ),
                 ),
-                actual = ExpressionTerm.parse(
-                    source = """
-                        let { a: Int = b } in a
-                    """.trimIndent()
-                ),
+                actual = term,
             )
         }
     }

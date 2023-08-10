@@ -24,13 +24,13 @@ class ScenarioTests {
     fun testGenericClass() {
         val term = NamespaceDefinitionTerm.parse(
             source = """
-                namespace EntryNamespace (
-                    const Entry = ^[valueType: Type] => ^{
+                %namespace EntryNamespace (
+                    %const Entry = ^[valueType: Type] => ^{
                         key: Int,
                         value: valueType,
                     }
                     
-                    const entryOf = ![valueType] ^{
+                    %const entryOf = ![valueType] ^{
                         key: Int,
                         value: valueType,
                     } -> Entry[valueType] => {
@@ -38,7 +38,7 @@ class ScenarioTests {
                         value: value,
                     }
                     
-                    const entryTrueOf = ^{
+                    %const entryTrueOf = ^{
                         key: Int,
                     } -> Entry[Bool] => {
                         key: key,
@@ -159,9 +159,9 @@ class ScenarioTests {
         val term = NamespaceDefinitionTerm.parse(
             source = """
                 namespace EntryNamespace (
-                    const f = ![type] ^[] -> ^[type*] => 0
+                    %const f = ![type] ^[] -> ^[type*] => 0
                     
-                    const a = f[]
+                    %const a = f[]
                 )
             """.trimIndent(),
         )
@@ -198,12 +198,12 @@ class ScenarioTests {
     fun testNestedGenericFunctions() {
         val term = NamespaceDefinitionTerm.parse(
             source = """
-                namespace EntryNamespace (
-                    const f = ![aType] ^[a: aType] -> Int => let {
+                %namespace EntryNamespace (
+                    %const f = ![aType] ^[a: aType] -> Int => %let {
                         g = ![bType, cType] ^[a: aType, b: bType, c: cType] -> Int => 0,
-                    } in g[a, false, {}]
+                    } %in g[a, false, {}]
                     
-                    const a = f[1]
+                    %const a = f[1]
                 )
             """.trimIndent(),
         )

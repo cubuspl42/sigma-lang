@@ -15,9 +15,9 @@ class LocalDefinitionTests {
         fun testUnmatchedInferredType() {
             val letExpressionTerm = ExpressionTerm.parse(
                 source = """
-                    let {
+                    %let {
                         a: Int = false
-                    } in a
+                    } %in a
                 """.trimIndent(),
             ) as LetExpressionTerm
 

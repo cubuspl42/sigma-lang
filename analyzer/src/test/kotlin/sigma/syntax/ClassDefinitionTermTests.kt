@@ -18,7 +18,7 @@ class ClassDefinitionTermTests {
         fun test() {
             val term = NamespaceEntryTerm.parse(
                 source = """
-                    class Foo (
+                    %class Foo (
                         %fields (
                             bar: Bar
                             id: Int
