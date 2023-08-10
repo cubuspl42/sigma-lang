@@ -10,7 +10,7 @@ import sigma.parser.antlr.SigmaParser.ModuleContext
 data class ModuleTerm(
     override val location: SourceLocation,
     val imports: List<Import>,
-    val staticStatements: List<StaticStatementTerm>,
+    val staticStatements: List<NamespaceEntryTerm>,
 ) : Term() {
     companion object {
         fun parse(
@@ -31,8 +31,8 @@ data class ModuleTerm(
                 imports = ctx.importSection().importStatement().map {
                     Import.build(it)
                 },
-                staticStatements = ctx.namespaceBody().staticStatement().map {
-                    StaticStatementTerm.build(it)
+                staticStatements = ctx.namespaceBody().namespaceEntry().map {
+                    NamespaceEntryTerm.build(it)
                 },
             )
         }

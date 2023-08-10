@@ -11,7 +11,7 @@ data class ClassDefinitionTerm(
     val name: Symbol,
     val fieldDeclarations: List<FieldDeclarationTerm>,
     val methodDefinitions: List<MethodDefinitionTerm>,
-) : StaticStatementTerm() {
+) : NamespaceEntryTerm() {
     data class FieldDeclarationTerm(
         override val location: SourceLocation,
         val name: Symbol,

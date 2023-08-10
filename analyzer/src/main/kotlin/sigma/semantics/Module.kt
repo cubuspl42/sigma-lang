@@ -1,11 +1,7 @@
 package sigma.semantics
 
 import sigma.syntax.ModuleTerm
-import sigma.evaluation.scope.Scope
-import sigma.evaluation.scope.chainWith
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
-import sigma.semantics.types.Type
 import sigma.syntax.NamespaceDefinitionTerm
 
 class Module(
@@ -27,7 +23,7 @@ class Module(
         term = NamespaceDefinitionTerm(
             location = term.location,
             name = Symbol.of("__root__"),
-            staticStatements = term.staticStatements,
+            namespaceEntries = term.staticStatements,
         ),
     )
 
