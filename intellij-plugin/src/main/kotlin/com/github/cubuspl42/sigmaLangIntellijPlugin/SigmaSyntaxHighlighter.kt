@@ -21,6 +21,15 @@ class SigmaSyntaxHighlighter : SyntaxHighlighterBase() {
         private val Comment: TextAttributesKey =
             TextAttributesKey.createTextAttributesKey("SIGMA_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
 
+        private val Comma: TextAttributesKey =
+            TextAttributesKey.createTextAttributesKey("SIGMA_COMMA", DefaultLanguageHighlighterColors.COMMA)
+
+        private val Bracket: TextAttributesKey =
+            TextAttributesKey.createTextAttributesKey("SIGMA_BRACKET", DefaultLanguageHighlighterColors.BRACKETS)
+
+        private val Identifier: TextAttributesKey =
+            TextAttributesKey.createTextAttributesKey("SIGMA_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER)
+
         private val BadCharacter: TextAttributesKey =
             TextAttributesKey.createTextAttributesKey("SIGMA_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER)
 
@@ -30,7 +39,13 @@ class SigmaSyntaxHighlighter : SyntaxHighlighterBase() {
 
         private val IntLiteralKeys = arrayOf(IntLiteral)
 
+        private val CommaKeys = arrayOf(Comma)
+
+        private val BracketKeys = arrayOf(Bracket)
+
         private val CommentKeys = arrayOf(Comment)
+
+        private val IdentifierKeys = arrayOf(Identifier)
 
         private val EmptyKeys = arrayOfNulls<TextAttributesKey>(0)
     }
@@ -40,8 +55,11 @@ class SigmaSyntaxHighlighter : SyntaxHighlighterBase() {
     override fun getTokenHighlights(
         tokenType: IElementType,
     ): Array<out TextAttributesKey?> = when (tokenType) {
-        SigmaTypes.CONST_KEYWORD, SigmaTypes.NAMESPACE_KEYWORD -> KeywordKeys
+        SigmaTypes.IF_KEYWORD, SigmaTypes.THEN_KEYWORD, SigmaTypes.ELSE_KEYWORD, SigmaTypes.IS_UNDEFINED_KEYWORD, SigmaTypes.LET_KEYWORD, SigmaTypes.IN_KEYWORD, SigmaTypes.NAMESPACE_KEYWORD, SigmaTypes.CONST_KEYWORD -> KeywordKeys
         SigmaTypes.INT_LITERAL -> IntLiteralKeys
+        SigmaTypes.COMMA -> CommaKeys
+        SigmaTypes.BRACKET_LEFT, SigmaTypes.BRACKET_RIGHT -> BracketKeys
+        SigmaTypes.IDENTIFIER -> IdentifierKeys
         TokenType.BAD_CHARACTER -> BadCharKeys
         else -> EmptyKeys
     }
