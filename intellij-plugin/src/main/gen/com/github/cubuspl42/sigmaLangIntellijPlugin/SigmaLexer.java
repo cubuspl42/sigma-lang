@@ -64,10 +64,13 @@ class SigmaLexer implements FlexLexer {
   private static final int [] ZZ_CMAP_BLOCKS = zzUnpackcmap_blocks();
 
   private static final String ZZ_CMAP_BLOCKS_PACKED_0 =
-    "\11\0\1\1\1\2\1\0\1\1\23\0\1\1\6\0"+
-    "\1\3\10\0\12\4\3\0\1\5\3\0\32\6\6\0"+
-    "\2\6\1\7\12\6\1\10\1\11\3\6\1\12\1\13"+
-    "\6\6\u0185\0";
+    "\11\0\2\1\1\0\1\1\23\0\1\1\4\0\1\2"+
+    "\2\0\1\3\1\4\1\5\1\6\1\7\1\10\1\0"+
+    "\1\11\12\12\1\13\2\0\1\14\1\15\2\0\24\16"+
+    "\1\17\5\16\1\20\1\0\1\21\1\22\2\0\1\23"+
+    "\1\16\1\24\1\25\1\26\1\27\1\16\1\30\1\31"+
+    "\2\16\1\32\1\33\1\34\1\35\1\36\2\16\1\37"+
+    "\1\40\6\16\1\41\1\0\1\42\u0182\0";
 
   private static int [] zzUnpackcmap_blocks() {
     int [] result = new int[512];
@@ -94,11 +97,14 @@ class SigmaLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\1\2\1\1\1\3\1\4\2\5\1\0"+
-    "\1\2\3\5\1\6";
+    "\1\0\1\1\1\2\1\1\1\3\1\4\1\5\1\6"+
+    "\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16"+
+    "\1\17\1\20\1\21\1\22\6\0\1\23\1\24\1\25"+
+    "\2\0\1\26\1\27\7\0\1\30\3\0\1\31\2\0"+
+    "\1\32\1\33\11\0\1\34\1\0\1\35";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[14];
+    int [] result = new int[61];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -123,11 +129,17 @@ class SigmaLexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\14\0\30\0\44\0\60\0\14\0\74\0\110"+
-    "\0\124\0\14\0\140\0\154\0\170\0\74";
+    "\0\0\0\43\0\106\0\151\0\43\0\43\0\43\0\43"+
+    "\0\43\0\214\0\43\0\257\0\43\0\322\0\365\0\43"+
+    "\0\43\0\43\0\43\0\43\0\u0118\0\u013b\0\u015e\0\u0181"+
+    "\0\u01a4\0\u01c7\0\43\0\43\0\43\0\u01ea\0\u020d\0\43"+
+    "\0\43\0\u0230\0\u0253\0\u0276\0\u0299\0\u02bc\0\u02df\0\u0302"+
+    "\0\43\0\u0325\0\u0348\0\u036b\0\43\0\u038e\0\u03b1\0\43"+
+    "\0\43\0\u03d4\0\u03f7\0\u041a\0\u043d\0\u0460\0\u0483\0\u04a6"+
+    "\0\u04c9\0\u04ec\0\43\0\u050f\0\43";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[14];
+    int [] result = new int[61];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -150,15 +162,23 @@ class SigmaLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\2\2\3\1\4\1\5\1\6\1\7\1\10\4\7"+
-    "\15\0\2\3\13\0\1\11\1\12\14\0\1\5\13\0"+
-    "\1\7\1\0\6\7\4\0\1\7\1\0\3\7\1\13"+
-    "\2\7\3\0\1\12\14\0\1\7\1\0\2\7\1\14"+
-    "\3\7\4\0\1\7\1\0\4\7\1\15\1\7\4\0"+
-    "\1\7\1\0\5\7\1\16";
+    "\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11"+
+    "\1\12\1\13\1\14\1\15\1\16\1\2\2\17\1\20"+
+    "\1\21\1\22\16\17\1\23\1\24\44\0\1\3\65\0"+
+    "\1\25\1\0\1\26\2\0\1\27\1\30\1\0\1\31"+
+    "\3\0\1\32\17\0\1\33\37\0\1\14\44\0\1\34"+
+    "\1\35\37\0\1\17\3\0\2\17\3\0\16\17\37\0"+
+    "\1\36\37\0\1\37\37\0\1\40\4\0\1\41\2\0"+
+    "\1\42\31\0\1\43\37\0\1\44\47\0\1\45\46\0"+
+    "\1\46\45\0\1\47\22\0\1\50\63\0\1\51\35\0"+
+    "\1\52\35\0\1\53\53\0\1\54\31\0\1\55\50\0"+
+    "\1\56\34\0\1\57\50\0\1\60\46\0\1\61\27\0"+
+    "\1\62\54\0\1\63\31\0\1\64\52\0\1\65\33\0"+
+    "\1\66\36\0\1\67\50\0\1\70\35\0\1\71\52\0"+
+    "\1\72\34\0\1\73\42\0\1\74\41\0\1\75\15\0";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[132];
+    int [] result = new int[1330];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -196,10 +216,12 @@ class SigmaLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\1\11\3\1\1\11\2\1\1\0\1\11\4\1";
+    "\1\0\1\11\2\1\5\11\1\1\1\11\1\1\1\11"+
+    "\2\1\5\11\6\0\3\11\2\0\2\11\7\0\1\11"+
+    "\3\0\1\11\2\0\2\11\11\0\1\11\1\0\1\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[14];
+    int [] result = new int[61];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -524,32 +546,147 @@ class SigmaLexer implements FlexLexer {
             { yybegin(YYINITIAL); return TokenType.BAD_CHARACTER;
             }
           // fall through
-          case 7: break;
+          case 30: break;
           case 2:
             { yybegin(YYINITIAL); return TokenType.WHITE_SPACE;
             }
           // fall through
-          case 8: break;
+          case 31: break;
           case 3:
+            { yybegin(YYINITIAL); return SigmaTypes.PAREN_LEFT;
+            }
+          // fall through
+          case 32: break;
+          case 4:
+            { yybegin(YYINITIAL); return SigmaTypes.PAREN_RIGHT;
+            }
+          // fall through
+          case 33: break;
+          case 5:
+            { yybegin(YYINITIAL); return SigmaTypes.ASTERISK;
+            }
+          // fall through
+          case 34: break;
+          case 6:
+            { yybegin(YYINITIAL); return SigmaTypes.PLUS;
+            }
+          // fall through
+          case 35: break;
+          case 7:
+            { yybegin(YYINITIAL); return SigmaTypes.COMMA;
+            }
+          // fall through
+          case 36: break;
+          case 8:
+            { yybegin(YYINITIAL); return SigmaTypes.MINUS;
+            }
+          // fall through
+          case 37: break;
+          case 9:
+            { yybegin(YYINITIAL); return SigmaTypes.SLASH;
+            }
+          // fall through
+          case 38: break;
+          case 10:
             { yybegin(YYINITIAL); return SigmaTypes.INT_LITERAL;
             }
           // fall through
-          case 9: break;
-          case 4:
+          case 39: break;
+          case 11:
+            { yybegin(YYINITIAL); return SigmaTypes.COLON;
+            }
+          // fall through
+          case 40: break;
+          case 12:
             { yybegin(YYINITIAL); return SigmaTypes.ASSIGN;
             }
           // fall through
-          case 10: break;
-          case 5:
+          case 41: break;
+          case 13:
             { yybegin(YYINITIAL); return SigmaTypes.IDENTIFIER;
             }
           // fall through
-          case 11: break;
-          case 6:
+          case 42: break;
+          case 14:
+            { yybegin(YYINITIAL); return SigmaTypes.BRACKET_LEFT;
+            }
+          // fall through
+          case 43: break;
+          case 15:
+            { yybegin(YYINITIAL); return SigmaTypes.BRACKET_RIGHT;
+            }
+          // fall through
+          case 44: break;
+          case 16:
+            { yybegin(YYINITIAL); return SigmaTypes.DASH;
+            }
+          // fall through
+          case 45: break;
+          case 17:
+            { yybegin(YYINITIAL); return SigmaTypes.BRACE_LEFT;
+            }
+          // fall through
+          case 46: break;
+          case 18:
+            { yybegin(YYINITIAL); return SigmaTypes.BRACE_RIGHT;
+            }
+          // fall through
+          case 47: break;
+          case 19:
+            { yybegin(YYINITIAL); return SigmaTypes.THIN_ARROW;
+            }
+          // fall through
+          case 48: break;
+          case 20:
+            { yybegin(YYINITIAL); return SigmaTypes.EQUALS;
+            }
+          // fall through
+          case 49: break;
+          case 21:
+            { yybegin(YYINITIAL); return SigmaTypes.FAT_ARROW;
+            }
+          // fall through
+          case 50: break;
+          case 22:
+            { yybegin(YYINITIAL); return SigmaTypes.IF_KEYWORD;
+            }
+          // fall through
+          case 51: break;
+          case 23:
+            { yybegin(YYINITIAL); return SigmaTypes.IN_KEYWORD;
+            }
+          // fall through
+          case 52: break;
+          case 24:
+            { yybegin(YYINITIAL); return SigmaTypes.LET_KEYWORD;
+            }
+          // fall through
+          case 53: break;
+          case 25:
+            { yybegin(YYINITIAL); return SigmaTypes.ELSE_KEYWORD;
+            }
+          // fall through
+          case 54: break;
+          case 26:
+            { yybegin(YYINITIAL); return SigmaTypes.THEN_KEYWORD;
+            }
+          // fall through
+          case 55: break;
+          case 27:
             { yybegin(YYINITIAL); return SigmaTypes.CONST_KEYWORD;
             }
           // fall through
-          case 12: break;
+          case 56: break;
+          case 28:
+            { yybegin(YYINITIAL); return SigmaTypes.NAMESPACE_KEYWORD;
+            }
+          // fall through
+          case 57: break;
+          case 29:
+            { yybegin(YYINITIAL); return SigmaTypes.IS_UNDEFINED_KEYWORD;
+            }
+          // fall through
+          case 58: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

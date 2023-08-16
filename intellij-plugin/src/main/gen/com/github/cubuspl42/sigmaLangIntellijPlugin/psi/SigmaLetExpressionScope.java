@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaModule extends PsiElement {
+public interface SigmaLetExpressionScope extends PsiElement {
 
   @NotNull
-  SigmaNamespaceBody getNamespaceBody();
+  List<SigmaLetExpressionScopeEntry> getLetExpressionScopeEntryList();
 
 }

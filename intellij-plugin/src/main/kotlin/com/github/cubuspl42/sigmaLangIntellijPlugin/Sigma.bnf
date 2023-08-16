@@ -2,6 +2,8 @@
   parserClass="com.github.cubuspl42.sigmaLangIntellijPlugin.parser.SigmaParser"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+  extends(".*_term")=term
+  extends(".*_compact_expression")=compact_expression
 
   psiClassPrefix="Sigma"
   psiImplClassSuffix="Impl"
@@ -13,18 +15,159 @@
   tokenTypeClass="com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTokenType"
 }
 
-sigma_file ::= module
+sigma_file ::=
+    namespace_body
 
-module ::= namespace_body
+// # Namespace
+
+namespace_definition ::=
+    NAMESPACE_KEYWORD IDENTIFIER <<paren_wrapped namespace_body>>
+
+namespace_body ::= namespace_entry*
 
 namespace_entry ::=
     constant_definition |
     namespace_definition
 
-constant_definition ::= CONST_KEYWORD IDENTIFIER ASSIGN expression
+constant_definition ::=
+    CONST_KEYWORD IDENTIFIER ASSIGN expression
 
-namespace_definition ::= NAMESPACE_KEYWORD IDENTIFIER PAREN_LEFT namespace_body PAREN_RIGHT
+// # end
 
-namespace_body ::= namespace_entry*
+// # Expressions
 
-expression ::= INT_LITERAL
+expression ::=
+    if_expression |
+    is_undefined_expression |
+    let_expression |
+    abstraction_constructor | // Must be before tuple_constructor
+    term
+
+term ::=
+    unary_group |
+    multiplication_group |
+    addition_group |
+    equals_term |
+    compact_term |
+
+compact_term ::=
+    compact_expression
+
+compact_expression ::=
+    reference_compact_expression |
+    tuple_constructor_compact_expression |
+    tuple_type_constructor_compact_expression |
+    literal_compact_expression |
+    call_compact_expression |
+    paren_compact_expression
+
+call_compact_expression ::=
+    compact_expression tuple_constructor_expression
+
+type_expression ::=
+    expression
+
+paren_compact_expression ::=
+     <<paren_wrapped expression>>
+
+reference_compact_expression ::=
+    IDENTIFIER
+
+if_expression ::=
+    IF_KEYWORD expression <<paren_wrapped if_expression_body>>
+
+if_expression_body ::=
+    THEN_KEYWORD expression COMMA
+    ELSE_KEYWORD expression COMMA?
+
+is_undefined_expression ::=
+    IS_UNDEFINED_KEYWORD expression
+
+// private rules to define operators with the same priority
+private unary_group ::= unary_negation_term
+private multiplication_group ::= multiplication_term | division_term
+private addition_group ::= addition_term | subtraction_term
+
+// public rules for each expression
+unary_negation_term ::= MINUS term
+multiplication_term ::= term ASTERISK term
+division_term ::= term SLASH term
+addition_term ::= term PLUS term
+subtraction_term ::= term MINUS term
+equals_term ::= term EQUALS term
+
+tuple_constructor_compact_expression ::=
+    tuple_constructor_expression
+
+tuple_constructor_expression ::=
+    ordered_tuple_constructor |
+    unordered_tuple_constructor
+
+ordered_tuple_constructor ::=
+    <<bracket_wrapped
+        <<list expression>>
+    >>
+
+unordered_tuple_constructor ::=
+    <<brace_wrapped
+        <<list unordered_tuple_entry>>
+    >>
+
+// Thought: Is colon the right syntax?
+unordered_tuple_entry ::=
+    IDENTIFIER COLON expression
+
+tuple_type_constructor_compact_expression ::=
+    ordered_tuple_type_constructor |
+    unordered_tuple_type_constructor
+
+ordered_tuple_type_constructor ::=
+    DASH <<bracket_wrapped
+        <<list ordered_tuple_type_constructor_entry>>
+    >>
+
+ordered_tuple_type_constructor_entry ::=
+    IDENTIFIER type_annotation
+
+unordered_tuple_type_constructor ::=
+    DASH <<brace_wrapped
+        <<list unordered_tuple_type_constructor_entry>>
+    >>
+
+unordered_tuple_type_constructor_entry ::=
+    IDENTIFIER COLON type_expression
+
+abstraction_constructor ::=
+    generic_parameters_tuple? tuple_type_constructor_compact_expression (THIN_ARROW type_expression)? FAT_ARROW expression
+
+generic_parameters_tuple ::=
+    DASH <<bracket_wrapped
+        <<list generic_parameter_declaration>>
+    >>
+
+generic_parameter_declaration ::=
+    IDENTIFIER
+
+let_expression ::=
+    LET_KEYWORD <<brace_wrapped let_expression_scope>> IN_KEYWORD expression
+
+let_expression_scope ::=
+    <<list let_expression_scope_entry>>
+
+let_expression_scope_entry ::=
+    IDENTIFIER type_annotation? ASSIGN expression
+
+literal_compact_expression ::= INT_LITERAL
+
+// # end
+
+type_annotation ::=
+    COLON type_expression
+
+private meta paren_wrapped ::= PAREN_LEFT <<p>> PAREN_RIGHT
+
+private meta bracket_wrapped ::= BRACKET_LEFT <<p>> BRACKET_RIGHT
+
+private meta brace_wrapped ::= BRACE_LEFT <<p>> BRACE_RIGHT
+
+private meta list ::= <<p>> (COMMA <<p>>)* COMMA?

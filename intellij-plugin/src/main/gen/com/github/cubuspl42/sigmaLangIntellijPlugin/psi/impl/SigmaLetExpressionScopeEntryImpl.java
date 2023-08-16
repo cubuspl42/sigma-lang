@@ -11,14 +11,14 @@ import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaExpressionImpl extends ASTWrapperPsiElement implements SigmaExpression {
+public class SigmaLetExpressionScopeEntryImpl extends ASTWrapperPsiElement implements SigmaLetExpressionScopeEntry {
 
-  public SigmaExpressionImpl(@NotNull ASTNode node) {
+  public SigmaLetExpressionScopeEntryImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitExpression(this);
+    visitor.visitLetExpressionScopeEntry(this);
   }
 
   @Override
@@ -28,33 +28,15 @@ public class SigmaExpressionImpl extends ASTWrapperPsiElement implements SigmaEx
   }
 
   @Override
-  @Nullable
-  public SigmaAbstractionConstructor getAbstractionConstructor() {
-    return findChildByClass(SigmaAbstractionConstructor.class);
+  @NotNull
+  public SigmaExpression getExpression() {
+    return findNotNullChildByClass(SigmaExpression.class);
   }
 
   @Override
   @Nullable
-  public SigmaIfExpression getIfExpression() {
-    return findChildByClass(SigmaIfExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaIsUndefinedExpression getIsUndefinedExpression() {
-    return findChildByClass(SigmaIsUndefinedExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaLetExpression getLetExpression() {
-    return findChildByClass(SigmaLetExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaTerm getTerm() {
-    return findChildByClass(SigmaTerm.class);
+  public SigmaTypeAnnotation getTypeAnnotation() {
+    return findChildByClass(SigmaTypeAnnotation.class);
   }
 
 }

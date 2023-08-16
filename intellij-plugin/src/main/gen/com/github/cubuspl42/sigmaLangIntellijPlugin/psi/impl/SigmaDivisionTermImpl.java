@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaModuleImpl extends ASTWrapperPsiElement implements SigmaModule {
+public class SigmaDivisionTermImpl extends SigmaTermImpl implements SigmaDivisionTerm {
 
-  public SigmaModuleImpl(@NotNull ASTNode node) {
+  public SigmaDivisionTermImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitModule(this);
+    visitor.visitDivisionTerm(this);
   }
 
   @Override
@@ -29,8 +29,8 @@ public class SigmaModuleImpl extends ASTWrapperPsiElement implements SigmaModule
 
   @Override
   @NotNull
-  public SigmaNamespaceBody getNamespaceBody() {
-    return findNotNullChildByClass(SigmaNamespaceBody.class);
+  public List<SigmaTerm> getTermList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaTerm.class);
   }
 
 }
