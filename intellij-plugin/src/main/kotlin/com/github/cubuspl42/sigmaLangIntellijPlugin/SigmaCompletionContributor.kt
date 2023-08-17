@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLangIntellijPlugin
 
+import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaExpression
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
@@ -21,8 +22,14 @@ class SigmaCompletionContributor : CompletionContributor() {
 
         extend(
             CompletionType.BASIC,
-            PlatformPatterns.psiElement(SigmaTypes.INT_LITERAL),
+            PlatformPatterns.psiElement()
+                .withLanguage(SigmaLanguage)
+                .withParent(SigmaExpression::class.java),
             completionProvider,
         )
+    }
+
+    override fun fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) {
+        super.fillCompletionVariants(parameters, result)
     }
 }
