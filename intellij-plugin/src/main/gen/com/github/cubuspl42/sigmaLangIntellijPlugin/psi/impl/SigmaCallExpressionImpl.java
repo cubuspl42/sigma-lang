@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaCallChainExpressionImpl extends SigmaExpressionImpl implements SigmaCallChainExpression {
+public class SigmaCallExpressionImpl extends SigmaExpressionImpl implements SigmaCallExpression {
 
-  public SigmaCallChainExpressionImpl(@NotNull ASTNode node) {
+  public SigmaCallExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitCallChainExpression(this);
+    visitor.visitCallExpression(this);
   }
 
   @Override
@@ -29,8 +29,20 @@ public class SigmaCallChainExpressionImpl extends SigmaExpressionImpl implements
 
   @Override
   @NotNull
-  public List<SigmaExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaExpression.class);
+  public SigmaExpression getExpression() {
+    return findNotNullChildByClass(SigmaExpression.class);
+  }
+
+  @Override
+  @Nullable
+  public SigmaOrderedTupleConstructor getOrderedTupleConstructor() {
+    return findChildByClass(SigmaOrderedTupleConstructor.class);
+  }
+
+  @Override
+  @Nullable
+  public SigmaUnorderedTupleConstructor getUnorderedTupleConstructor() {
+    return findChildByClass(SigmaUnorderedTupleConstructor.class);
   }
 
 }

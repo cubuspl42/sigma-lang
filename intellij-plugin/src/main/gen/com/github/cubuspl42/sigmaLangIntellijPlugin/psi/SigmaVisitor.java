@@ -15,7 +15,7 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitCallChainExpression(@NotNull SigmaCallChainExpression o) {
+  public void visitCallExpression(@NotNull SigmaCallExpression o) {
     visitExpression(o);
   }
 

@@ -10,7 +10,7 @@ public interface SigmaTypes {
 
   IElementType ABSTRACTION_CONSTRUCTOR = new SigmaElementType("ABSTRACTION_CONSTRUCTOR");
   IElementType ADDITION_EXPRESSION = new SigmaElementType("ADDITION_EXPRESSION");
-  IElementType CALL_CHAIN_EXPRESSION = new SigmaElementType("CALL_CHAIN_EXPRESSION");
+  IElementType CALL_EXPRESSION = new SigmaElementType("CALL_EXPRESSION");
   IElementType CONSTANT_DEFINITION = new SigmaElementType("CONSTANT_DEFINITION");
   IElementType DIVISION_EXPRESSION = new SigmaElementType("DIVISION_EXPRESSION");
   IElementType EQUALS_EXPRESSION = new SigmaElementType("EQUALS_EXPRESSION");
@@ -81,8 +81,8 @@ public interface SigmaTypes {
       else if (type == ADDITION_EXPRESSION) {
         return new SigmaAdditionExpressionImpl(node);
       }
-      else if (type == CALL_CHAIN_EXPRESSION) {
-        return new SigmaCallChainExpressionImpl(node);
+      else if (type == CALL_EXPRESSION) {
+        return new SigmaCallExpressionImpl(node);
       }
       else if (type == CONSTANT_DEFINITION) {
         return new SigmaConstantDefinitionImpl(node);
