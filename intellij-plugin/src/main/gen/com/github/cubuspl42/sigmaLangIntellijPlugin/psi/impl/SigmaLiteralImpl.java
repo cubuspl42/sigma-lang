@@ -10,27 +10,21 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaAdditionTermImpl extends SigmaTermImpl implements SigmaAdditionTerm {
+public class SigmaLiteralImpl extends SigmaExpressionImpl implements SigmaLiteral {
 
-  public SigmaAdditionTermImpl(@NotNull ASTNode node) {
+  public SigmaLiteralImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitAdditionTerm(this);
+    visitor.visitLiteral(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof SigmaVisitor) accept((SigmaVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @NotNull
-  public List<SigmaTerm> getTermList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaTerm.class);
   }
 
 }

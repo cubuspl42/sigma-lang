@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaCallCompactExpression extends SigmaCompactExpression {
+public interface SigmaParenExpression extends SigmaExpression {
 
-  @NotNull
-  SigmaCompactExpression getCompactExpression();
-
-  @NotNull
-  SigmaTupleConstructorExpression getTupleConstructorExpression();
+  @Nullable
+  SigmaExpression getExpression();
 
 }

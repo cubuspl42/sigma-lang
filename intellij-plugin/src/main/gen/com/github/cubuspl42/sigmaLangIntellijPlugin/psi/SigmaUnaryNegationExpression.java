@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaTupleConstructorCompactExpression extends SigmaCompactExpression {
+public interface SigmaUnaryNegationExpression extends SigmaExpression {
 
-  @NotNull
-  SigmaTupleConstructorExpression getTupleConstructorExpression();
+  @Nullable
+  SigmaExpression getExpression();
 
 }

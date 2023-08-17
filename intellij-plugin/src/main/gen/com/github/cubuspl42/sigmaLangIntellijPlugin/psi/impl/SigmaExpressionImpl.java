@@ -11,7 +11,7 @@ import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaExpressionImpl extends ASTWrapperPsiElement implements SigmaExpression {
+public abstract class SigmaExpressionImpl extends ASTWrapperPsiElement implements SigmaExpression {
 
   public SigmaExpressionImpl(@NotNull ASTNode node) {
     super(node);
@@ -25,36 +25,6 @@ public class SigmaExpressionImpl extends ASTWrapperPsiElement implements SigmaEx
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof SigmaVisitor) accept((SigmaVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public SigmaAbstractionConstructor getAbstractionConstructor() {
-    return findChildByClass(SigmaAbstractionConstructor.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaIfExpression getIfExpression() {
-    return findChildByClass(SigmaIfExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaIsUndefinedExpression getIsUndefinedExpression() {
-    return findChildByClass(SigmaIsUndefinedExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaLetExpression getLetExpression() {
-    return findChildByClass(SigmaLetExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaTerm getTerm() {
-    return findChildByClass(SigmaTerm.class);
   }
 
 }

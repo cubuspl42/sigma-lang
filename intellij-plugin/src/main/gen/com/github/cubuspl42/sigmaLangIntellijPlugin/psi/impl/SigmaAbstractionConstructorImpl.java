@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaAbstractionConstructorImpl extends ASTWrapperPsiElement implements SigmaAbstractionConstructor {
+public class SigmaAbstractionConstructorImpl extends SigmaExpressionImpl implements SigmaAbstractionConstructor {
 
   public SigmaAbstractionConstructorImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitAbstractionConstructor(this);
   }
@@ -29,20 +29,14 @@ public class SigmaAbstractionConstructorImpl extends ASTWrapperPsiElement implem
 
   @Override
   @NotNull
-  public SigmaExpression getExpression() {
-    return findNotNullChildByClass(SigmaExpression.class);
+  public List<SigmaExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaExpression.class);
   }
 
   @Override
   @Nullable
   public SigmaGenericParametersTuple getGenericParametersTuple() {
     return findChildByClass(SigmaGenericParametersTuple.class);
-  }
-
-  @Override
-  @NotNull
-  public SigmaTupleTypeConstructorCompactExpression getTupleTypeConstructorCompactExpression() {
-    return findNotNullChildByClass(SigmaTupleTypeConstructorCompactExpression.class);
   }
 
   @Override

@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaEqualsTermImpl extends SigmaTermImpl implements SigmaEqualsTerm {
+public class SigmaUnaryNegationExpressionImpl extends SigmaExpressionImpl implements SigmaUnaryNegationExpression {
 
-  public SigmaEqualsTermImpl(@NotNull ASTNode node) {
+  public SigmaUnaryNegationExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitEqualsTerm(this);
+    visitor.visitUnaryNegationExpression(this);
   }
 
   @Override
@@ -28,9 +28,9 @@ public class SigmaEqualsTermImpl extends SigmaTermImpl implements SigmaEqualsTer
   }
 
   @Override
-  @NotNull
-  public List<SigmaTerm> getTermList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaTerm.class);
+  @Nullable
+  public SigmaExpression getExpression() {
+    return findChildByClass(SigmaExpression.class);
   }
 
 }

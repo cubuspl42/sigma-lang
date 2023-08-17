@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaUnaryNegationTerm extends SigmaTerm {
+public interface SigmaTupleTypeConstructor extends SigmaExpression {
 
   @Nullable
-  SigmaTerm getTerm();
+  SigmaOrderedTupleTypeConstructor getOrderedTupleTypeConstructor();
+
+  @Nullable
+  SigmaUnorderedTupleTypeConstructor getUnorderedTupleTypeConstructor();
 
 }

@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaParenCompactExpression extends SigmaCompactExpression {
+public interface SigmaMultiplicationExpression extends SigmaExpression {
 
   @NotNull
-  SigmaExpression getExpression();
+  List<SigmaExpression> getExpressionList();
 
 }

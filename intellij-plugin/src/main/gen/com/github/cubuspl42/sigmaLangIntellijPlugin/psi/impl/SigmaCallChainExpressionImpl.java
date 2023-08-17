@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaTupleConstructorExpressionImpl extends ASTWrapperPsiElement implements SigmaTupleConstructorExpression {
+public class SigmaCallChainExpressionImpl extends SigmaExpressionImpl implements SigmaCallChainExpression {
 
-  public SigmaTupleConstructorExpressionImpl(@NotNull ASTNode node) {
+  public SigmaCallChainExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitTupleConstructorExpression(this);
+    visitor.visitCallChainExpression(this);
   }
 
   @Override
@@ -28,15 +28,9 @@ public class SigmaTupleConstructorExpressionImpl extends ASTWrapperPsiElement im
   }
 
   @Override
-  @Nullable
-  public SigmaOrderedTupleConstructor getOrderedTupleConstructor() {
-    return findChildByClass(SigmaOrderedTupleConstructor.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaUnorderedTupleConstructor getUnorderedTupleConstructor() {
-    return findChildByClass(SigmaUnorderedTupleConstructor.class);
+  @NotNull
+  public List<SigmaExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaExpression.class);
   }
 
 }

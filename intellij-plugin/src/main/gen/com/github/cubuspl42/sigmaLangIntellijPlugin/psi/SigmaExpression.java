@@ -7,19 +7,4 @@ import com.intellij.psi.PsiElement;
 
 public interface SigmaExpression extends PsiElement {
 
-  @Nullable
-  SigmaAbstractionConstructor getAbstractionConstructor();
-
-  @Nullable
-  SigmaIfExpression getIfExpression();
-
-  @Nullable
-  SigmaIsUndefinedExpression getIsUndefinedExpression();
-
-  @Nullable
-  SigmaLetExpression getLetExpression();
-
-  @Nullable
-  SigmaTerm getTerm();
-
 }

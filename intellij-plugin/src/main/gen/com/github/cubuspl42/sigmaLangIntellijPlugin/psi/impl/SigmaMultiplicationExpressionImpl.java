@@ -10,21 +10,27 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaReferenceCompactExpressionImpl extends SigmaCompactExpressionImpl implements SigmaReferenceCompactExpression {
+public class SigmaMultiplicationExpressionImpl extends SigmaExpressionImpl implements SigmaMultiplicationExpression {
 
-  public SigmaReferenceCompactExpressionImpl(@NotNull ASTNode node) {
+  public SigmaMultiplicationExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitReferenceCompactExpression(this);
+    visitor.visitMultiplicationExpression(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof SigmaVisitor) accept((SigmaVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public List<SigmaExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaExpression.class);
   }
 
 }
