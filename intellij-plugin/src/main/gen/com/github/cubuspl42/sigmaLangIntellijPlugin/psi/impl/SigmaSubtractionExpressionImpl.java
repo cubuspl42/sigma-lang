@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaCallCompactExpressionImpl extends SigmaCompactExpressionImpl implements SigmaCallCompactExpression {
+public class SigmaSubtractionExpressionImpl extends SigmaExpressionImpl implements SigmaSubtractionExpression {
 
-  public SigmaCallCompactExpressionImpl(@NotNull ASTNode node) {
+  public SigmaSubtractionExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitCallCompactExpression(this);
+    visitor.visitSubtractionExpression(this);
   }
 
   @Override
@@ -29,14 +29,8 @@ public class SigmaCallCompactExpressionImpl extends SigmaCompactExpressionImpl i
 
   @Override
   @NotNull
-  public SigmaCompactExpression getCompactExpression() {
-    return findNotNullChildByClass(SigmaCompactExpression.class);
-  }
-
-  @Override
-  @NotNull
-  public SigmaTupleConstructorExpression getTupleConstructorExpression() {
-    return findNotNullChildByClass(SigmaTupleConstructorExpression.class);
+  public List<SigmaExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaExpression.class);
   }
 
 }

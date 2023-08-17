@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaIsUndefinedExpressionImpl extends ASTWrapperPsiElement implements SigmaIsUndefinedExpression {
+public class SigmaIsUndefinedExpressionImpl extends SigmaExpressionImpl implements SigmaIsUndefinedExpression {
 
   public SigmaIsUndefinedExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitIsUndefinedExpression(this);
   }
@@ -28,9 +28,9 @@ public class SigmaIsUndefinedExpressionImpl extends ASTWrapperPsiElement impleme
   }
 
   @Override
-  @NotNull
+  @Nullable
   public SigmaExpression getExpression() {
-    return findNotNullChildByClass(SigmaExpression.class);
+    return findChildByClass(SigmaExpression.class);
   }
 
 }

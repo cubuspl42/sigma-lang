@@ -10,27 +10,21 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaUnaryNegationTermImpl extends SigmaTermImpl implements SigmaUnaryNegationTerm {
+public class SigmaReferenceExpressionImpl extends SigmaExpressionImpl implements SigmaReferenceExpression {
 
-  public SigmaUnaryNegationTermImpl(@NotNull ASTNode node) {
+  public SigmaReferenceExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitUnaryNegationTerm(this);
+    visitor.visitReferenceExpression(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof SigmaVisitor) accept((SigmaVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public SigmaTerm getTerm() {
-    return findChildByClass(SigmaTerm.class);
   }
 
 }

@@ -9,13 +9,11 @@ import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.impl.*;
 public interface SigmaTypes {
 
   IElementType ABSTRACTION_CONSTRUCTOR = new SigmaElementType("ABSTRACTION_CONSTRUCTOR");
-  IElementType ADDITION_TERM = new SigmaElementType("ADDITION_TERM");
-  IElementType CALL_COMPACT_EXPRESSION = new SigmaElementType("CALL_COMPACT_EXPRESSION");
-  IElementType COMPACT_EXPRESSION = new SigmaElementType("COMPACT_EXPRESSION");
-  IElementType COMPACT_TERM = new SigmaElementType("COMPACT_TERM");
+  IElementType ADDITION_EXPRESSION = new SigmaElementType("ADDITION_EXPRESSION");
+  IElementType CALL_CHAIN_EXPRESSION = new SigmaElementType("CALL_CHAIN_EXPRESSION");
   IElementType CONSTANT_DEFINITION = new SigmaElementType("CONSTANT_DEFINITION");
-  IElementType DIVISION_TERM = new SigmaElementType("DIVISION_TERM");
-  IElementType EQUALS_TERM = new SigmaElementType("EQUALS_TERM");
+  IElementType DIVISION_EXPRESSION = new SigmaElementType("DIVISION_EXPRESSION");
+  IElementType EQUALS_EXPRESSION = new SigmaElementType("EQUALS_EXPRESSION");
   IElementType EXPRESSION = new SigmaElementType("EXPRESSION");
   IElementType GENERIC_PARAMETERS_TUPLE = new SigmaElementType("GENERIC_PARAMETERS_TUPLE");
   IElementType GENERIC_PARAMETER_DECLARATION = new SigmaElementType("GENERIC_PARAMETER_DECLARATION");
@@ -25,24 +23,22 @@ public interface SigmaTypes {
   IElementType LET_EXPRESSION = new SigmaElementType("LET_EXPRESSION");
   IElementType LET_EXPRESSION_SCOPE = new SigmaElementType("LET_EXPRESSION_SCOPE");
   IElementType LET_EXPRESSION_SCOPE_ENTRY = new SigmaElementType("LET_EXPRESSION_SCOPE_ENTRY");
-  IElementType LITERAL_COMPACT_EXPRESSION = new SigmaElementType("LITERAL_COMPACT_EXPRESSION");
-  IElementType MULTIPLICATION_TERM = new SigmaElementType("MULTIPLICATION_TERM");
+  IElementType LITERAL = new SigmaElementType("LITERAL");
+  IElementType MULTIPLICATION_EXPRESSION = new SigmaElementType("MULTIPLICATION_EXPRESSION");
   IElementType NAMESPACE_BODY = new SigmaElementType("NAMESPACE_BODY");
   IElementType NAMESPACE_DEFINITION = new SigmaElementType("NAMESPACE_DEFINITION");
   IElementType NAMESPACE_ENTRY = new SigmaElementType("NAMESPACE_ENTRY");
   IElementType ORDERED_TUPLE_CONSTRUCTOR = new SigmaElementType("ORDERED_TUPLE_CONSTRUCTOR");
   IElementType ORDERED_TUPLE_TYPE_CONSTRUCTOR = new SigmaElementType("ORDERED_TUPLE_TYPE_CONSTRUCTOR");
   IElementType ORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY = new SigmaElementType("ORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY");
-  IElementType PAREN_COMPACT_EXPRESSION = new SigmaElementType("PAREN_COMPACT_EXPRESSION");
-  IElementType REFERENCE_COMPACT_EXPRESSION = new SigmaElementType("REFERENCE_COMPACT_EXPRESSION");
-  IElementType SUBTRACTION_TERM = new SigmaElementType("SUBTRACTION_TERM");
-  IElementType TERM = new SigmaElementType("TERM");
-  IElementType TUPLE_CONSTRUCTOR_COMPACT_EXPRESSION = new SigmaElementType("TUPLE_CONSTRUCTOR_COMPACT_EXPRESSION");
-  IElementType TUPLE_CONSTRUCTOR_EXPRESSION = new SigmaElementType("TUPLE_CONSTRUCTOR_EXPRESSION");
-  IElementType TUPLE_TYPE_CONSTRUCTOR_COMPACT_EXPRESSION = new SigmaElementType("TUPLE_TYPE_CONSTRUCTOR_COMPACT_EXPRESSION");
+  IElementType PAREN_EXPRESSION = new SigmaElementType("PAREN_EXPRESSION");
+  IElementType REFERENCE_EXPRESSION = new SigmaElementType("REFERENCE_EXPRESSION");
+  IElementType SUBTRACTION_EXPRESSION = new SigmaElementType("SUBTRACTION_EXPRESSION");
+  IElementType TUPLE_CONSTRUCTOR = new SigmaElementType("TUPLE_CONSTRUCTOR");
+  IElementType TUPLE_TYPE_CONSTRUCTOR = new SigmaElementType("TUPLE_TYPE_CONSTRUCTOR");
   IElementType TYPE_ANNOTATION = new SigmaElementType("TYPE_ANNOTATION");
   IElementType TYPE_EXPRESSION = new SigmaElementType("TYPE_EXPRESSION");
-  IElementType UNARY_NEGATION_TERM = new SigmaElementType("UNARY_NEGATION_TERM");
+  IElementType UNARY_NEGATION_EXPRESSION = new SigmaElementType("UNARY_NEGATION_EXPRESSION");
   IElementType UNORDERED_TUPLE_CONSTRUCTOR = new SigmaElementType("UNORDERED_TUPLE_CONSTRUCTOR");
   IElementType UNORDERED_TUPLE_ENTRY = new SigmaElementType("UNORDERED_TUPLE_ENTRY");
   IElementType UNORDERED_TUPLE_TYPE_CONSTRUCTOR = new SigmaElementType("UNORDERED_TUPLE_TYPE_CONSTRUCTOR");
@@ -82,26 +78,20 @@ public interface SigmaTypes {
       if (type == ABSTRACTION_CONSTRUCTOR) {
         return new SigmaAbstractionConstructorImpl(node);
       }
-      else if (type == ADDITION_TERM) {
-        return new SigmaAdditionTermImpl(node);
+      else if (type == ADDITION_EXPRESSION) {
+        return new SigmaAdditionExpressionImpl(node);
       }
-      else if (type == CALL_COMPACT_EXPRESSION) {
-        return new SigmaCallCompactExpressionImpl(node);
-      }
-      else if (type == COMPACT_TERM) {
-        return new SigmaCompactTermImpl(node);
+      else if (type == CALL_CHAIN_EXPRESSION) {
+        return new SigmaCallChainExpressionImpl(node);
       }
       else if (type == CONSTANT_DEFINITION) {
         return new SigmaConstantDefinitionImpl(node);
       }
-      else if (type == DIVISION_TERM) {
-        return new SigmaDivisionTermImpl(node);
+      else if (type == DIVISION_EXPRESSION) {
+        return new SigmaDivisionExpressionImpl(node);
       }
-      else if (type == EQUALS_TERM) {
-        return new SigmaEqualsTermImpl(node);
-      }
-      else if (type == EXPRESSION) {
-        return new SigmaExpressionImpl(node);
+      else if (type == EQUALS_EXPRESSION) {
+        return new SigmaEqualsExpressionImpl(node);
       }
       else if (type == GENERIC_PARAMETERS_TUPLE) {
         return new SigmaGenericParametersTupleImpl(node);
@@ -127,11 +117,11 @@ public interface SigmaTypes {
       else if (type == LET_EXPRESSION_SCOPE_ENTRY) {
         return new SigmaLetExpressionScopeEntryImpl(node);
       }
-      else if (type == LITERAL_COMPACT_EXPRESSION) {
-        return new SigmaLiteralCompactExpressionImpl(node);
+      else if (type == LITERAL) {
+        return new SigmaLiteralImpl(node);
       }
-      else if (type == MULTIPLICATION_TERM) {
-        return new SigmaMultiplicationTermImpl(node);
+      else if (type == MULTIPLICATION_EXPRESSION) {
+        return new SigmaMultiplicationExpressionImpl(node);
       }
       else if (type == NAMESPACE_BODY) {
         return new SigmaNamespaceBodyImpl(node);
@@ -151,23 +141,20 @@ public interface SigmaTypes {
       else if (type == ORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY) {
         return new SigmaOrderedTupleTypeConstructorEntryImpl(node);
       }
-      else if (type == PAREN_COMPACT_EXPRESSION) {
-        return new SigmaParenCompactExpressionImpl(node);
+      else if (type == PAREN_EXPRESSION) {
+        return new SigmaParenExpressionImpl(node);
       }
-      else if (type == REFERENCE_COMPACT_EXPRESSION) {
-        return new SigmaReferenceCompactExpressionImpl(node);
+      else if (type == REFERENCE_EXPRESSION) {
+        return new SigmaReferenceExpressionImpl(node);
       }
-      else if (type == SUBTRACTION_TERM) {
-        return new SigmaSubtractionTermImpl(node);
+      else if (type == SUBTRACTION_EXPRESSION) {
+        return new SigmaSubtractionExpressionImpl(node);
       }
-      else if (type == TUPLE_CONSTRUCTOR_COMPACT_EXPRESSION) {
-        return new SigmaTupleConstructorCompactExpressionImpl(node);
+      else if (type == TUPLE_CONSTRUCTOR) {
+        return new SigmaTupleConstructorImpl(node);
       }
-      else if (type == TUPLE_CONSTRUCTOR_EXPRESSION) {
-        return new SigmaTupleConstructorExpressionImpl(node);
-      }
-      else if (type == TUPLE_TYPE_CONSTRUCTOR_COMPACT_EXPRESSION) {
-        return new SigmaTupleTypeConstructorCompactExpressionImpl(node);
+      else if (type == TUPLE_TYPE_CONSTRUCTOR) {
+        return new SigmaTupleTypeConstructorImpl(node);
       }
       else if (type == TYPE_ANNOTATION) {
         return new SigmaTypeAnnotationImpl(node);
@@ -175,8 +162,8 @@ public interface SigmaTypes {
       else if (type == TYPE_EXPRESSION) {
         return new SigmaTypeExpressionImpl(node);
       }
-      else if (type == UNARY_NEGATION_TERM) {
-        return new SigmaUnaryNegationTermImpl(node);
+      else if (type == UNARY_NEGATION_EXPRESSION) {
+        return new SigmaUnaryNegationExpressionImpl(node);
       }
       else if (type == UNORDERED_TUPLE_CONSTRUCTOR) {
         return new SigmaUnorderedTupleConstructorImpl(node);

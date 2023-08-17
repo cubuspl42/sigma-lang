@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaIfExpressionImpl extends ASTWrapperPsiElement implements SigmaIfExpression {
+public class SigmaIfExpressionImpl extends SigmaExpressionImpl implements SigmaIfExpression {
 
   public SigmaIfExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitIfExpression(this);
   }
@@ -28,15 +28,15 @@ public class SigmaIfExpressionImpl extends ASTWrapperPsiElement implements Sigma
   }
 
   @Override
-  @NotNull
+  @Nullable
   public SigmaExpression getExpression() {
-    return findNotNullChildByClass(SigmaExpression.class);
+    return findChildByClass(SigmaExpression.class);
   }
 
   @Override
-  @NotNull
+  @Nullable
   public SigmaIfExpressionBody getIfExpressionBody() {
-    return findNotNullChildByClass(SigmaIfExpressionBody.class);
+    return findChildByClass(SigmaIfExpressionBody.class);
   }
 
 }

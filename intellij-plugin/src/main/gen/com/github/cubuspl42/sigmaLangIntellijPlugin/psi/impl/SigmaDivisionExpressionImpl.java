@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaSubtractionTermImpl extends SigmaTermImpl implements SigmaSubtractionTerm {
+public class SigmaDivisionExpressionImpl extends SigmaExpressionImpl implements SigmaDivisionExpression {
 
-  public SigmaSubtractionTermImpl(@NotNull ASTNode node) {
+  public SigmaDivisionExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitSubtractionTerm(this);
+    visitor.visitDivisionExpression(this);
   }
 
   @Override
@@ -29,8 +29,8 @@ public class SigmaSubtractionTermImpl extends SigmaTermImpl implements SigmaSubt
 
   @Override
   @NotNull
-  public List<SigmaTerm> getTermList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaTerm.class);
+  public List<SigmaExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaExpression.class);
   }
 
 }

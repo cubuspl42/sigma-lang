@@ -36,52 +36,12 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
-    create_token_set_(CALL_COMPACT_EXPRESSION, COMPACT_EXPRESSION, LITERAL_COMPACT_EXPRESSION, PAREN_COMPACT_EXPRESSION,
-      REFERENCE_COMPACT_EXPRESSION, TUPLE_CONSTRUCTOR_COMPACT_EXPRESSION, TUPLE_TYPE_CONSTRUCTOR_COMPACT_EXPRESSION),
-    create_token_set_(ADDITION_TERM, COMPACT_TERM, DIVISION_TERM, EQUALS_TERM,
-      MULTIPLICATION_TERM, SUBTRACTION_TERM, TERM, UNARY_NEGATION_TERM),
+    create_token_set_(ABSTRACTION_CONSTRUCTOR, ADDITION_EXPRESSION, CALL_CHAIN_EXPRESSION, DIVISION_EXPRESSION,
+      EQUALS_EXPRESSION, EXPRESSION, IF_EXPRESSION, IS_UNDEFINED_EXPRESSION,
+      LET_EXPRESSION, LITERAL, MULTIPLICATION_EXPRESSION, PAREN_EXPRESSION,
+      REFERENCE_EXPRESSION, SUBTRACTION_EXPRESSION, TUPLE_CONSTRUCTOR, TUPLE_TYPE_CONSTRUCTOR,
+      UNARY_NEGATION_EXPRESSION),
   };
-
-  /* ********************************************************** */
-  // generic_parameters_tuple? tuple_type_constructor_compact_expression (THIN_ARROW type_expression)? FAT_ARROW expression
-  public static boolean abstraction_constructor(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "abstraction_constructor")) return false;
-    if (!nextTokenIs(b, DASH)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = abstraction_constructor_0(b, l + 1);
-    r = r && tuple_type_constructor_compact_expression(b, l + 1);
-    r = r && abstraction_constructor_2(b, l + 1);
-    r = r && consumeToken(b, FAT_ARROW);
-    r = r && expression(b, l + 1);
-    exit_section_(b, m, ABSTRACTION_CONSTRUCTOR, r);
-    return r;
-  }
-
-  // generic_parameters_tuple?
-  private static boolean abstraction_constructor_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "abstraction_constructor_0")) return false;
-    generic_parameters_tuple(b, l + 1);
-    return true;
-  }
-
-  // (THIN_ARROW type_expression)?
-  private static boolean abstraction_constructor_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "abstraction_constructor_2")) return false;
-    abstraction_constructor_2_0(b, l + 1);
-    return true;
-  }
-
-  // THIN_ARROW type_expression
-  private static boolean abstraction_constructor_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "abstraction_constructor_2_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, THIN_ARROW);
-    r = r && type_expression(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
 
   /* ********************************************************** */
   // BRACE_LEFT <<p>> BRACE_RIGHT
@@ -119,27 +79,8 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokens(b, 0, CONST_KEYWORD, IDENTIFIER, ASSIGN);
-    r = r && expression(b, l + 1);
+    r = r && expression(b, l + 1, -1);
     exit_section_(b, m, CONSTANT_DEFINITION, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // if_expression |
-  //     is_undefined_expression |
-  //     let_expression |
-  //     abstraction_constructor | // Must be before tuple_constructor
-  //     term
-  public static boolean expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expression")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, EXPRESSION, "<expression>");
-    r = if_expression(b, l + 1);
-    if (!r) r = is_undefined_expression(b, l + 1);
-    if (!r) r = let_expression(b, l + 1);
-    if (!r) r = abstraction_constructor(b, l + 1);
-    if (!r) r = term(b, l + 1, -1);
-    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -171,20 +112,6 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IF_KEYWORD expression <<paren_wrapped if_expression_body>>
-  public static boolean if_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "if_expression")) return false;
-    if (!nextTokenIs(b, IF_KEYWORD)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, IF_KEYWORD);
-    r = r && expression(b, l + 1);
-    r = r && paren_wrapped(b, l + 1, SigmaParser::if_expression_body);
-    exit_section_(b, m, IF_EXPRESSION, r);
-    return r;
-  }
-
-  /* ********************************************************** */
   // THEN_KEYWORD expression COMMA
   //     ELSE_KEYWORD expression COMMA?
   public static boolean if_expression_body(PsiBuilder b, int l) {
@@ -193,9 +120,9 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, THEN_KEYWORD);
-    r = r && expression(b, l + 1);
+    r = r && expression(b, l + 1, -1);
     r = r && consumeTokens(b, 0, COMMA, ELSE_KEYWORD);
-    r = r && expression(b, l + 1);
+    r = r && expression(b, l + 1, -1);
     r = r && if_expression_body_5(b, l + 1);
     exit_section_(b, m, IF_EXPRESSION_BODY, r);
     return r;
@@ -206,34 +133,6 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "if_expression_body_5")) return false;
     consumeToken(b, COMMA);
     return true;
-  }
-
-  /* ********************************************************** */
-  // IS_UNDEFINED_KEYWORD expression
-  public static boolean is_undefined_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "is_undefined_expression")) return false;
-    if (!nextTokenIs(b, IS_UNDEFINED_KEYWORD)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, IS_UNDEFINED_KEYWORD);
-    r = r && expression(b, l + 1);
-    exit_section_(b, m, IS_UNDEFINED_EXPRESSION, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // LET_KEYWORD <<brace_wrapped let_expression_scope>> IN_KEYWORD expression
-  public static boolean let_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "let_expression")) return false;
-    if (!nextTokenIs(b, LET_KEYWORD)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, LET_KEYWORD);
-    r = r && brace_wrapped(b, l + 1, SigmaParser::let_expression_scope);
-    r = r && consumeToken(b, IN_KEYWORD);
-    r = r && expression(b, l + 1);
-    exit_section_(b, m, LET_EXPRESSION, r);
-    return r;
   }
 
   /* ********************************************************** */
@@ -258,7 +157,7 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, IDENTIFIER);
     r = r && let_expression_scope_entry_1(b, l + 1);
     r = r && consumeToken(b, ASSIGN);
-    r = r && expression(b, l + 1);
+    r = r && expression(b, l + 1, -1);
     exit_section_(b, m, LET_EXPRESSION_SCOPE_ENTRY, r);
     return r;
   }
@@ -420,20 +319,6 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ordered_tuple_constructor |
-  //     unordered_tuple_constructor
-  public static boolean tuple_constructor_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "tuple_constructor_expression")) return false;
-    if (!nextTokenIs(b, "<tuple constructor expression>", BRACE_LEFT, BRACKET_LEFT)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, TUPLE_CONSTRUCTOR_EXPRESSION, "<tuple constructor expression>");
-    r = ordered_tuple_constructor(b, l + 1);
-    if (!r) r = unordered_tuple_constructor(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
   // COLON type_expression
   public static boolean type_annotation(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "type_annotation")) return false;
@@ -452,7 +337,7 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "type_expression")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, TYPE_EXPRESSION, "<type expression>");
-    r = expression(b, l + 1);
+    r = expression(b, l + 1, -1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -479,7 +364,7 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokens(b, 0, IDENTIFIER, COLON);
-    r = r && expression(b, l + 1);
+    r = r && expression(b, l + 1, -1);
     exit_section_(b, m, UNORDERED_TUPLE_ENTRY, r);
     return r;
   }
@@ -513,38 +398,64 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Expression root: compact_expression
+  // Expression root: expression
   // Operator priority table:
-  // 0: ATOM(reference_compact_expression)
-  // 1: ATOM(tuple_constructor_compact_expression)
-  // 2: ATOM(tuple_type_constructor_compact_expression)
-  // 3: ATOM(literal_compact_expression)
-  // 4: POSTFIX(call_compact_expression)
-  // 5: ATOM(paren_compact_expression)
-  public static boolean compact_expression(PsiBuilder b, int l, int g) {
-    if (!recursion_guard_(b, l, "compact_expression")) return false;
-    addVariant(b, "<compact expression>");
+  // 0: PREFIX(unary_negation_expression)
+  // 1: BINARY(multiplication_expression) BINARY(division_expression)
+  // 2: BINARY(addition_expression) BINARY(subtraction_expression)
+  // 3: BINARY(equals_expression)
+  // 4: POSTFIX(call_chain_expression) PREFIX(if_expression) PREFIX(is_undefined_expression) PREFIX(let_expression)
+  //    ATOM(abstraction_constructor) ATOM(reference_expression) PREFIX(paren_expression) ATOM(tuple_constructor)
+  //    ATOM(tuple_type_constructor) ATOM(literal)
+  public static boolean expression(PsiBuilder b, int l, int g) {
+    if (!recursion_guard_(b, l, "expression")) return false;
+    addVariant(b, "<expression>");
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, "<compact expression>");
-    r = reference_compact_expression(b, l + 1);
-    if (!r) r = tuple_constructor_compact_expression(b, l + 1);
-    if (!r) r = tuple_type_constructor_compact_expression(b, l + 1);
-    if (!r) r = literal_compact_expression(b, l + 1);
-    if (!r) r = paren_compact_expression(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, "<expression>");
+    r = unary_negation_expression(b, l + 1);
+    if (!r) r = if_expression(b, l + 1);
+    if (!r) r = is_undefined_expression(b, l + 1);
+    if (!r) r = let_expression(b, l + 1);
+    if (!r) r = abstraction_constructor(b, l + 1);
+    if (!r) r = reference_expression(b, l + 1);
+    if (!r) r = paren_expression(b, l + 1);
+    if (!r) r = tuple_constructor(b, l + 1);
+    if (!r) r = tuple_type_constructor(b, l + 1);
+    if (!r) r = literal(b, l + 1);
     p = r;
-    r = r && compact_expression_0(b, l + 1, g);
+    r = r && expression_0(b, l + 1, g);
     exit_section_(b, l, m, null, r, p, null);
     return r || p;
   }
 
-  public static boolean compact_expression_0(PsiBuilder b, int l, int g) {
-    if (!recursion_guard_(b, l, "compact_expression_0")) return false;
+  public static boolean expression_0(PsiBuilder b, int l, int g) {
+    if (!recursion_guard_(b, l, "expression_0")) return false;
     boolean r = true;
     while (true) {
       Marker m = enter_section_(b, l, _LEFT_, null);
-      if (g < 4 && tuple_constructor_expression(b, l + 1)) {
+      if (g < 2 && consumeTokenSmart(b, MINUS)) {
+        r = expression(b, l, 2);
+        exit_section_(b, l, m, SUBTRACTION_EXPRESSION, r, true, null);
+      }
+      else if (g < 1 && consumeTokenSmart(b, ASTERISK)) {
+        r = expression(b, l, 1);
+        exit_section_(b, l, m, MULTIPLICATION_EXPRESSION, r, true, null);
+      }
+      else if (g < 1 && consumeTokenSmart(b, SLASH)) {
+        r = expression(b, l, 1);
+        exit_section_(b, l, m, DIVISION_EXPRESSION, r, true, null);
+      }
+      else if (g < 2 && consumeTokenSmart(b, PLUS)) {
+        r = expression(b, l, 2);
+        exit_section_(b, l, m, ADDITION_EXPRESSION, r, true, null);
+      }
+      else if (g < 3 && consumeTokenSmart(b, EQUALS)) {
+        r = expression(b, l, 3);
+        exit_section_(b, l, m, EQUALS_EXPRESSION, r, true, null);
+      }
+      else if (g < 4 && call_chain_expression_0(b, l + 1)) {
         r = true;
-        exit_section_(b, l, m, CALL_COMPACT_EXPRESSION, r, true, null);
+        exit_section_(b, l, m, CALL_CHAIN_EXPRESSION, r, true, null);
       }
       else {
         exit_section_(b, l, m, null, false, false, null);
@@ -554,141 +465,187 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
+  public static boolean unary_negation_expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "unary_negation_expression")) return false;
+    if (!nextTokenIsSmart(b, MINUS)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
+    r = consumeTokenSmart(b, MINUS);
+    p = r;
+    r = p && expression(b, l, 0);
+    exit_section_(b, l, m, UNARY_NEGATION_EXPRESSION, r, p, null);
+    return r || p;
+  }
+
+  // tuple_constructor+
+  private static boolean call_chain_expression_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "call_chain_expression_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = tuple_constructor(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!tuple_constructor(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "call_chain_expression_0", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  public static boolean if_expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "if_expression")) return false;
+    if (!nextTokenIsSmart(b, IF_KEYWORD)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
+    r = consumeTokenSmart(b, IF_KEYWORD);
+    p = r;
+    r = p && expression(b, l, -1);
+    r = p && report_error_(b, paren_wrapped(b, l + 1, SigmaParser::if_expression_body)) && r;
+    exit_section_(b, l, m, IF_EXPRESSION, r, p, null);
+    return r || p;
+  }
+
+  public static boolean is_undefined_expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "is_undefined_expression")) return false;
+    if (!nextTokenIsSmart(b, IS_UNDEFINED_KEYWORD)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
+    r = consumeTokenSmart(b, IS_UNDEFINED_KEYWORD);
+    p = r;
+    r = p && expression(b, l, -1);
+    exit_section_(b, l, m, IS_UNDEFINED_EXPRESSION, r, p, null);
+    return r || p;
+  }
+
+  public static boolean let_expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "let_expression")) return false;
+    if (!nextTokenIsSmart(b, LET_KEYWORD)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
+    r = let_expression_0(b, l + 1);
+    p = r;
+    r = p && expression(b, l, -1);
+    exit_section_(b, l, m, LET_EXPRESSION, r, p, null);
+    return r || p;
+  }
+
+  // LET_KEYWORD <<brace_wrapped let_expression_scope>> IN_KEYWORD
+  private static boolean let_expression_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "let_expression_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokenSmart(b, LET_KEYWORD);
+    r = r && brace_wrapped(b, l + 1, SigmaParser::let_expression_scope);
+    r = r && consumeToken(b, IN_KEYWORD);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // generic_parameters_tuple? tuple_type_constructor (THIN_ARROW type_expression)? FAT_ARROW expression
+  public static boolean abstraction_constructor(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "abstraction_constructor")) return false;
+    if (!nextTokenIsSmart(b, DASH)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = abstraction_constructor_0(b, l + 1);
+    r = r && tuple_type_constructor(b, l + 1);
+    r = r && abstraction_constructor_2(b, l + 1);
+    r = r && consumeToken(b, FAT_ARROW);
+    r = r && expression(b, l + 1, -1);
+    exit_section_(b, m, ABSTRACTION_CONSTRUCTOR, r);
+    return r;
+  }
+
+  // generic_parameters_tuple?
+  private static boolean abstraction_constructor_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "abstraction_constructor_0")) return false;
+    generic_parameters_tuple(b, l + 1);
+    return true;
+  }
+
+  // (THIN_ARROW type_expression)?
+  private static boolean abstraction_constructor_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "abstraction_constructor_2")) return false;
+    abstraction_constructor_2_0(b, l + 1);
+    return true;
+  }
+
+  // THIN_ARROW type_expression
+  private static boolean abstraction_constructor_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "abstraction_constructor_2_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokenSmart(b, THIN_ARROW);
+    r = r && type_expression(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
   // IDENTIFIER
-  public static boolean reference_compact_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "reference_compact_expression")) return false;
+  public static boolean reference_expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "reference_expression")) return false;
     if (!nextTokenIsSmart(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokenSmart(b, IDENTIFIER);
-    exit_section_(b, m, REFERENCE_COMPACT_EXPRESSION, r);
+    exit_section_(b, m, REFERENCE_EXPRESSION, r);
     return r;
   }
 
-  // tuple_constructor_expression
-  public static boolean tuple_constructor_compact_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "tuple_constructor_compact_expression")) return false;
+  public static boolean paren_expression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "paren_expression")) return false;
+    if (!nextTokenIsSmart(b, PAREN_LEFT)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
+    r = consumeTokenSmart(b, PAREN_LEFT);
+    p = r;
+    r = p && expression(b, l, -1);
+    r = p && report_error_(b, consumeToken(b, PAREN_RIGHT)) && r;
+    exit_section_(b, l, m, PAREN_EXPRESSION, r, p, null);
+    return r || p;
+  }
+
+  // ordered_tuple_constructor |
+  //     unordered_tuple_constructor
+  public static boolean tuple_constructor(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "tuple_constructor")) return false;
     if (!nextTokenIsSmart(b, BRACE_LEFT, BRACKET_LEFT)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, TUPLE_CONSTRUCTOR_COMPACT_EXPRESSION, "<tuple constructor compact expression>");
-    r = tuple_constructor_expression(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, TUPLE_CONSTRUCTOR, "<tuple constructor>");
+    r = ordered_tuple_constructor(b, l + 1);
+    if (!r) r = unordered_tuple_constructor(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   // ordered_tuple_type_constructor |
   //     unordered_tuple_type_constructor
-  public static boolean tuple_type_constructor_compact_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "tuple_type_constructor_compact_expression")) return false;
+  public static boolean tuple_type_constructor(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "tuple_type_constructor")) return false;
     if (!nextTokenIsSmart(b, DASH)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = ordered_tuple_type_constructor(b, l + 1);
     if (!r) r = unordered_tuple_type_constructor(b, l + 1);
-    exit_section_(b, m, TUPLE_TYPE_CONSTRUCTOR_COMPACT_EXPRESSION, r);
+    exit_section_(b, m, TUPLE_TYPE_CONSTRUCTOR, r);
     return r;
   }
 
   // INT_LITERAL
-  public static boolean literal_compact_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "literal_compact_expression")) return false;
+  public static boolean literal(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "literal")) return false;
     if (!nextTokenIsSmart(b, INT_LITERAL)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokenSmart(b, INT_LITERAL);
-    exit_section_(b, m, LITERAL_COMPACT_EXPRESSION, r);
+    exit_section_(b, m, LITERAL, r);
     return r;
   }
 
-  // <<paren_wrapped expression>>
-  public static boolean paren_compact_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "paren_compact_expression")) return false;
-    if (!nextTokenIsSmart(b, PAREN_LEFT)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = paren_wrapped(b, l + 1, SigmaParser::expression);
-    exit_section_(b, m, PAREN_COMPACT_EXPRESSION, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // Expression root: term
-  // Operator priority table:
-  // 0: PREFIX(unary_negation_term)
-  // 1: BINARY(multiplication_term) BINARY(division_term)
-  // 2: BINARY(addition_term) BINARY(subtraction_term)
-  // 3: BINARY(equals_term)
-  // 4: ATOM(compact_term)
-  public static boolean term(PsiBuilder b, int l, int g) {
-    if (!recursion_guard_(b, l, "term")) return false;
-    addVariant(b, "<term>");
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, "<term>");
-    r = unary_negation_term(b, l + 1);
-    if (!r) r = compact_term(b, l + 1);
-    p = r;
-    r = r && term_0(b, l + 1, g);
-    exit_section_(b, l, m, null, r, p, null);
-    return r || p;
-  }
-
-  public static boolean term_0(PsiBuilder b, int l, int g) {
-    if (!recursion_guard_(b, l, "term_0")) return false;
-    boolean r = true;
-    while (true) {
-      Marker m = enter_section_(b, l, _LEFT_, null);
-      if (g < 2 && consumeTokenSmart(b, MINUS)) {
-        r = term(b, l, 2);
-        exit_section_(b, l, m, SUBTRACTION_TERM, r, true, null);
-      }
-      else if (g < 1 && consumeTokenSmart(b, ASTERISK)) {
-        r = term(b, l, 1);
-        exit_section_(b, l, m, MULTIPLICATION_TERM, r, true, null);
-      }
-      else if (g < 1 && consumeTokenSmart(b, SLASH)) {
-        r = term(b, l, 1);
-        exit_section_(b, l, m, DIVISION_TERM, r, true, null);
-      }
-      else if (g < 2 && consumeTokenSmart(b, PLUS)) {
-        r = term(b, l, 2);
-        exit_section_(b, l, m, ADDITION_TERM, r, true, null);
-      }
-      else if (g < 3 && consumeTokenSmart(b, EQUALS)) {
-        r = term(b, l, 3);
-        exit_section_(b, l, m, EQUALS_TERM, r, true, null);
-      }
-      else {
-        exit_section_(b, l, m, null, false, false, null);
-        break;
-      }
-    }
-    return r;
-  }
-
-  public static boolean unary_negation_term(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "unary_negation_term")) return false;
-    if (!nextTokenIsSmart(b, MINUS)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
-    r = consumeTokenSmart(b, MINUS);
-    p = r;
-    r = p && term(b, l, 0);
-    exit_section_(b, l, m, UNARY_NEGATION_TERM, r, p, null);
-    return r || p;
-  }
-
-  // compact_expression
-  public static boolean compact_term(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "compact_term")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, COMPACT_TERM, "<compact term>");
-    r = compact_expression(b, l + 1, -1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
+  static final Parser expression_parser_ = (b, l) -> expression(b, l + 1, -1);
 
   private static final Parser generic_parameters_tuple_1_0_parser_ = list_$(SigmaParser::generic_parameter_declaration);
-  private static final Parser ordered_tuple_constructor_0_0_parser_ = list_$(SigmaParser::expression);
+  private static final Parser ordered_tuple_constructor_0_0_parser_ = list_$(expression_parser_);
   private static final Parser ordered_tuple_type_constructor_1_0_parser_ = list_$(SigmaParser::ordered_tuple_type_constructor_entry);
   private static final Parser unordered_tuple_constructor_0_0_parser_ = list_$(SigmaParser::unordered_tuple_entry);
   private static final Parser unordered_tuple_type_constructor_1_0_parser_ = list_$(SigmaParser::unordered_tuple_type_constructor_entry);

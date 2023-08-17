@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaTupleTypeConstructorCompactExpressionImpl extends SigmaCompactExpressionImpl implements SigmaTupleTypeConstructorCompactExpression {
+public class SigmaTupleTypeConstructorImpl extends SigmaExpressionImpl implements SigmaTupleTypeConstructor {
 
-  public SigmaTupleTypeConstructorCompactExpressionImpl(@NotNull ASTNode node) {
+  public SigmaTupleTypeConstructorImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitTupleTypeConstructorCompactExpression(this);
+    visitor.visitTupleTypeConstructor(this);
   }
 
   @Override

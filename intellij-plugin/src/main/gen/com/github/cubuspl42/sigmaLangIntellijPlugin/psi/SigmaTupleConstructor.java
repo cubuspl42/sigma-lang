@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaAdditionTerm extends SigmaTerm {
+public interface SigmaTupleConstructor extends SigmaExpression {
 
-  @NotNull
-  List<SigmaTerm> getTermList();
+  @Nullable
+  SigmaOrderedTupleConstructor getOrderedTupleConstructor();
+
+  @Nullable
+  SigmaUnorderedTupleConstructor getUnorderedTupleConstructor();
 
 }

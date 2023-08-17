@@ -8,35 +8,27 @@ import com.intellij.psi.PsiElement;
 public class SigmaVisitor extends PsiElementVisitor {
 
   public void visitAbstractionConstructor(@NotNull SigmaAbstractionConstructor o) {
-    visitPsiElement(o);
+    visitExpression(o);
   }
 
-  public void visitAdditionTerm(@NotNull SigmaAdditionTerm o) {
-    visitTerm(o);
+  public void visitAdditionExpression(@NotNull SigmaAdditionExpression o) {
+    visitExpression(o);
   }
 
-  public void visitCallCompactExpression(@NotNull SigmaCallCompactExpression o) {
-    visitCompactExpression(o);
-  }
-
-  public void visitCompactExpression(@NotNull SigmaCompactExpression o) {
-    visitPsiElement(o);
-  }
-
-  public void visitCompactTerm(@NotNull SigmaCompactTerm o) {
-    visitTerm(o);
+  public void visitCallChainExpression(@NotNull SigmaCallChainExpression o) {
+    visitExpression(o);
   }
 
   public void visitConstantDefinition(@NotNull SigmaConstantDefinition o) {
     visitPsiElement(o);
   }
 
-  public void visitDivisionTerm(@NotNull SigmaDivisionTerm o) {
-    visitTerm(o);
+  public void visitDivisionExpression(@NotNull SigmaDivisionExpression o) {
+    visitExpression(o);
   }
 
-  public void visitEqualsTerm(@NotNull SigmaEqualsTerm o) {
-    visitTerm(o);
+  public void visitEqualsExpression(@NotNull SigmaEqualsExpression o) {
+    visitExpression(o);
   }
 
   public void visitExpression(@NotNull SigmaExpression o) {
@@ -52,7 +44,7 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitIfExpression(@NotNull SigmaIfExpression o) {
-    visitPsiElement(o);
+    visitExpression(o);
   }
 
   public void visitIfExpressionBody(@NotNull SigmaIfExpressionBody o) {
@@ -60,11 +52,11 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitIsUndefinedExpression(@NotNull SigmaIsUndefinedExpression o) {
-    visitPsiElement(o);
+    visitExpression(o);
   }
 
   public void visitLetExpression(@NotNull SigmaLetExpression o) {
-    visitPsiElement(o);
+    visitExpression(o);
   }
 
   public void visitLetExpressionScope(@NotNull SigmaLetExpressionScope o) {
@@ -75,12 +67,12 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitLiteralCompactExpression(@NotNull SigmaLiteralCompactExpression o) {
-    visitCompactExpression(o);
+  public void visitLiteral(@NotNull SigmaLiteral o) {
+    visitExpression(o);
   }
 
-  public void visitMultiplicationTerm(@NotNull SigmaMultiplicationTerm o) {
-    visitTerm(o);
+  public void visitMultiplicationExpression(@NotNull SigmaMultiplicationExpression o) {
+    visitExpression(o);
   }
 
   public void visitNamespaceBody(@NotNull SigmaNamespaceBody o) {
@@ -107,32 +99,24 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitParenCompactExpression(@NotNull SigmaParenCompactExpression o) {
-    visitCompactExpression(o);
+  public void visitParenExpression(@NotNull SigmaParenExpression o) {
+    visitExpression(o);
   }
 
-  public void visitReferenceCompactExpression(@NotNull SigmaReferenceCompactExpression o) {
-    visitCompactExpression(o);
+  public void visitReferenceExpression(@NotNull SigmaReferenceExpression o) {
+    visitExpression(o);
   }
 
-  public void visitSubtractionTerm(@NotNull SigmaSubtractionTerm o) {
-    visitTerm(o);
+  public void visitSubtractionExpression(@NotNull SigmaSubtractionExpression o) {
+    visitExpression(o);
   }
 
-  public void visitTerm(@NotNull SigmaTerm o) {
-    visitPsiElement(o);
+  public void visitTupleConstructor(@NotNull SigmaTupleConstructor o) {
+    visitExpression(o);
   }
 
-  public void visitTupleConstructorCompactExpression(@NotNull SigmaTupleConstructorCompactExpression o) {
-    visitCompactExpression(o);
-  }
-
-  public void visitTupleConstructorExpression(@NotNull SigmaTupleConstructorExpression o) {
-    visitPsiElement(o);
-  }
-
-  public void visitTupleTypeConstructorCompactExpression(@NotNull SigmaTupleTypeConstructorCompactExpression o) {
-    visitCompactExpression(o);
+  public void visitTupleTypeConstructor(@NotNull SigmaTupleTypeConstructor o) {
+    visitExpression(o);
   }
 
   public void visitTypeAnnotation(@NotNull SigmaTypeAnnotation o) {
@@ -143,8 +127,8 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitUnaryNegationTerm(@NotNull SigmaUnaryNegationTerm o) {
-    visitTerm(o);
+  public void visitUnaryNegationExpression(@NotNull SigmaUnaryNegationExpression o) {
+    visitExpression(o);
   }
 
   public void visitUnorderedTupleConstructor(@NotNull SigmaUnorderedTupleConstructor o) {

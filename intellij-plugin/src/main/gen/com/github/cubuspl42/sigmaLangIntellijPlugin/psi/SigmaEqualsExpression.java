@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaTupleConstructorExpression extends PsiElement {
+public interface SigmaEqualsExpression extends SigmaExpression {
 
-  @Nullable
-  SigmaOrderedTupleConstructor getOrderedTupleConstructor();
-
-  @Nullable
-  SigmaUnorderedTupleConstructor getUnorderedTupleConstructor();
+  @NotNull
+  List<SigmaExpression> getExpressionList();
 
 }

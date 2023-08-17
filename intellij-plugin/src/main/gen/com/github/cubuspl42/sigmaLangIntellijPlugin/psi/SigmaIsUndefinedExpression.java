@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaIsUndefinedExpression extends PsiElement {
+public interface SigmaIsUndefinedExpression extends SigmaExpression {
 
-  @NotNull
+  @Nullable
   SigmaExpression getExpression();
 
 }
