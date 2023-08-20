@@ -140,11 +140,10 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   // <<list let_expression_scope_entry>>
   public static boolean let_expression_scope(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "let_expression_scope")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
-    Marker m = enter_section_(b);
+    Marker m = enter_section_(b, l, _NONE_, LET_EXPRESSION_SCOPE, "<let expression scope>");
     r = list(b, l + 1, SigmaParser::let_expression_scope_entry);
-    exit_section_(b, m, LET_EXPRESSION_SCOPE, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -175,32 +174,39 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     return (b, l) -> list(b, l + 1, _p);
   }
 
-  // <<p>> (COMMA <<p>>)* COMMA?
+  // (<<p>> (COMMA <<p>>)* COMMA?)?
   static boolean list(PsiBuilder b, int l, Parser _p) {
     if (!recursion_guard_(b, l, "list")) return false;
+    list_0(b, l + 1, _p);
+    return true;
+  }
+
+  // <<p>> (COMMA <<p>>)* COMMA?
+  private static boolean list_0(PsiBuilder b, int l, Parser _p) {
+    if (!recursion_guard_(b, l, "list_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = _p.parse(b, l);
-    r = r && list_1(b, l + 1, _p);
-    r = r && list_2(b, l + 1);
+    r = r && list_0_1(b, l + 1, _p);
+    r = r && list_0_2(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // (COMMA <<p>>)*
-  private static boolean list_1(PsiBuilder b, int l, Parser _p) {
-    if (!recursion_guard_(b, l, "list_1")) return false;
+  private static boolean list_0_1(PsiBuilder b, int l, Parser _p) {
+    if (!recursion_guard_(b, l, "list_0_1")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!list_1_0(b, l + 1, _p)) break;
-      if (!empty_element_parsed_guard_(b, "list_1", c)) break;
+      if (!list_0_1_0(b, l + 1, _p)) break;
+      if (!empty_element_parsed_guard_(b, "list_0_1", c)) break;
     }
     return true;
   }
 
   // COMMA <<p>>
-  private static boolean list_1_0(PsiBuilder b, int l, Parser _p) {
-    if (!recursion_guard_(b, l, "list_1_0")) return false;
+  private static boolean list_0_1_0(PsiBuilder b, int l, Parser _p) {
+    if (!recursion_guard_(b, l, "list_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
@@ -210,8 +216,8 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   // COMMA?
-  private static boolean list_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "list_2")) return false;
+  private static boolean list_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "list_0_2")) return false;
     consumeToken(b, COMMA);
     return true;
   }

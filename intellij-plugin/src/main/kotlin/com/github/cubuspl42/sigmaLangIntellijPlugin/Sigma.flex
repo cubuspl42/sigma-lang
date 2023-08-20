@@ -18,6 +18,8 @@ import com.intellij.psi.TokenType;
 
 [\ \n\t\f]+                   { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
+("//")[^\r\n]*                { yybegin(YYINITIAL); return SigmaTypes.LINE_COMMENT; }
+
 ","                           { yybegin(YYINITIAL); return SigmaTypes.COMMA; }
 "="                           { yybegin(YYINITIAL); return SigmaTypes.ASSIGN; }
 ":"                           { yybegin(YYINITIAL); return SigmaTypes.COLON; }
