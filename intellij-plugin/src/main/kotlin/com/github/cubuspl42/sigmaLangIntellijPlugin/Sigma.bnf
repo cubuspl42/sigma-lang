@@ -39,6 +39,7 @@ expression ::=
     multiplication_group |
     addition_group |
     equals_group |
+    comparison_group |
     primary_group
 
 // private rules to define operators with the same priority
@@ -74,6 +75,28 @@ private equals_group ::=
 
 equals_expression ::=
     expression EQUALS expression
+    { extends=expression }
+
+private comparison_group ::=
+    less_than_expression |
+    less_than_equals_expression |
+    greater_than_expression |
+    greater_than_equals_expression
+
+less_than_expression ::=
+    expression LESS_THAN expression
+    { extends=expression }
+
+less_than_equals_expression ::=
+    expression LESS_THAN_EQUALS expression
+    { extends=expression }
+
+greater_than_expression ::=
+    expression GREATER_THAN expression
+    { extends=expression }
+
+greater_than_equals_expression ::=
+    expression GREATER_THAN_EQUALS expression
     { extends=expression }
 
 private primary_group ::=

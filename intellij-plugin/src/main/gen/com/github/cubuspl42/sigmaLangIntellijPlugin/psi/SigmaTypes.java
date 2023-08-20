@@ -17,9 +17,13 @@ public interface SigmaTypes {
   IElementType EXPRESSION = new SigmaElementType("EXPRESSION");
   IElementType GENERIC_PARAMETERS_TUPLE = new SigmaElementType("GENERIC_PARAMETERS_TUPLE");
   IElementType GENERIC_PARAMETER_DECLARATION = new SigmaElementType("GENERIC_PARAMETER_DECLARATION");
+  IElementType GREATER_THAN_EQUALS_EXPRESSION = new SigmaElementType("GREATER_THAN_EQUALS_EXPRESSION");
+  IElementType GREATER_THAN_EXPRESSION = new SigmaElementType("GREATER_THAN_EXPRESSION");
   IElementType IF_EXPRESSION = new SigmaElementType("IF_EXPRESSION");
   IElementType IF_EXPRESSION_BODY = new SigmaElementType("IF_EXPRESSION_BODY");
   IElementType IS_UNDEFINED_EXPRESSION = new SigmaElementType("IS_UNDEFINED_EXPRESSION");
+  IElementType LESS_THAN_EQUALS_EXPRESSION = new SigmaElementType("LESS_THAN_EQUALS_EXPRESSION");
+  IElementType LESS_THAN_EXPRESSION = new SigmaElementType("LESS_THAN_EXPRESSION");
   IElementType LET_EXPRESSION = new SigmaElementType("LET_EXPRESSION");
   IElementType LET_EXPRESSION_SCOPE = new SigmaElementType("LET_EXPRESSION_SCOPE");
   IElementType LET_EXPRESSION_SCOPE_ENTRY = new SigmaElementType("LET_EXPRESSION_SCOPE_ENTRY");
@@ -57,11 +61,15 @@ public interface SigmaTypes {
   IElementType ELSE_KEYWORD = new SigmaTokenType("ELSE_KEYWORD");
   IElementType EQUALS = new SigmaTokenType("EQUALS");
   IElementType FAT_ARROW = new SigmaTokenType("FAT_ARROW");
+  IElementType GREATER_THAN = new SigmaTokenType("GREATER_THAN");
+  IElementType GREATER_THAN_EQUALS = new SigmaTokenType("GREATER_THAN_EQUALS");
   IElementType IDENTIFIER = new SigmaTokenType("IDENTIFIER");
   IElementType IF_KEYWORD = new SigmaTokenType("IF_KEYWORD");
   IElementType INT_LITERAL = new SigmaTokenType("INT_LITERAL");
   IElementType IN_KEYWORD = new SigmaTokenType("IN_KEYWORD");
   IElementType IS_UNDEFINED_KEYWORD = new SigmaTokenType("IS_UNDEFINED_KEYWORD");
+  IElementType LESS_THAN = new SigmaTokenType("LESS_THAN");
+  IElementType LESS_THAN_EQUALS = new SigmaTokenType("LESS_THAN_EQUALS");
   IElementType LET_KEYWORD = new SigmaTokenType("LET_KEYWORD");
   IElementType MINUS = new SigmaTokenType("MINUS");
   IElementType NAMESPACE_KEYWORD = new SigmaTokenType("NAMESPACE_KEYWORD");
@@ -99,6 +107,12 @@ public interface SigmaTypes {
       else if (type == GENERIC_PARAMETER_DECLARATION) {
         return new SigmaGenericParameterDeclarationImpl(node);
       }
+      else if (type == GREATER_THAN_EQUALS_EXPRESSION) {
+        return new SigmaGreaterThanEqualsExpressionImpl(node);
+      }
+      else if (type == GREATER_THAN_EXPRESSION) {
+        return new SigmaGreaterThanExpressionImpl(node);
+      }
       else if (type == IF_EXPRESSION) {
         return new SigmaIfExpressionImpl(node);
       }
@@ -107,6 +121,12 @@ public interface SigmaTypes {
       }
       else if (type == IS_UNDEFINED_EXPRESSION) {
         return new SigmaIsUndefinedExpressionImpl(node);
+      }
+      else if (type == LESS_THAN_EQUALS_EXPRESSION) {
+        return new SigmaLessThanEqualsExpressionImpl(node);
+      }
+      else if (type == LESS_THAN_EXPRESSION) {
+        return new SigmaLessThanExpressionImpl(node);
       }
       else if (type == LET_EXPRESSION) {
         return new SigmaLetExpressionImpl(node);

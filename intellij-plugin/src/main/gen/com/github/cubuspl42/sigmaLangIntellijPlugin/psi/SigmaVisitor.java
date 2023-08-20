@@ -43,6 +43,14 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitGreaterThanEqualsExpression(@NotNull SigmaGreaterThanEqualsExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitGreaterThanExpression(@NotNull SigmaGreaterThanExpression o) {
+    visitExpression(o);
+  }
+
   public void visitIfExpression(@NotNull SigmaIfExpression o) {
     visitExpression(o);
   }
@@ -52,6 +60,14 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitIsUndefinedExpression(@NotNull SigmaIsUndefinedExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitLessThanEqualsExpression(@NotNull SigmaLessThanEqualsExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitLessThanExpression(@NotNull SigmaLessThanExpression o) {
     visitExpression(o);
   }
 
