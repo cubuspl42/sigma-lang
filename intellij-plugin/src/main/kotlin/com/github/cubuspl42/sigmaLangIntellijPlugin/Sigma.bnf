@@ -11,6 +11,10 @@
   elementTypeHolderClass="com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes"
   elementTypeClass="com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaElementType"
   tokenTypeClass="com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTokenType"
+
+  tokens=[
+    LINE_COMMENT="regexp://.*"
+  ]
 }
 
 sigma_file ::=
@@ -220,4 +224,4 @@ private meta bracket_wrapped ::= BRACKET_LEFT <<p>> BRACKET_RIGHT
 
 private meta brace_wrapped ::= BRACE_LEFT <<p>> BRACE_RIGHT
 
-private meta list ::= <<p>> (COMMA <<p>>)* COMMA?
+private meta list ::= (<<p>> (COMMA <<p>>)* COMMA?)?

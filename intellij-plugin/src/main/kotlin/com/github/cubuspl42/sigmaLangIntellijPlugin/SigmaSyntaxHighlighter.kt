@@ -55,6 +55,7 @@ class SigmaSyntaxHighlighter : SyntaxHighlighterBase() {
     override fun getTokenHighlights(
         tokenType: IElementType,
     ): Array<out TextAttributesKey?> = when (tokenType) {
+        SigmaTypes.LINE_COMMENT -> CommentKeys
         SigmaTypes.IF_KEYWORD, SigmaTypes.THEN_KEYWORD, SigmaTypes.ELSE_KEYWORD, SigmaTypes.IS_UNDEFINED_KEYWORD, SigmaTypes.LET_KEYWORD, SigmaTypes.IN_KEYWORD, SigmaTypes.NAMESPACE_KEYWORD, SigmaTypes.CONST_KEYWORD -> KeywordKeys
         SigmaTypes.INT_LITERAL -> IntLiteralKeys
         SigmaTypes.COMMA -> CommaKeys

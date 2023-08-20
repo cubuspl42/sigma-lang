@@ -71,6 +71,7 @@ public interface SigmaTypes {
   IElementType LESS_THAN = new SigmaTokenType("LESS_THAN");
   IElementType LESS_THAN_EQUALS = new SigmaTokenType("LESS_THAN_EQUALS");
   IElementType LET_KEYWORD = new SigmaTokenType("LET_KEYWORD");
+  IElementType LINE_COMMENT = new SigmaTokenType("LINE_COMMENT");
   IElementType MINUS = new SigmaTokenType("MINUS");
   IElementType NAMESPACE_KEYWORD = new SigmaTokenType("NAMESPACE_KEYWORD");
   IElementType PAREN_LEFT = new SigmaTokenType("PAREN_LEFT");

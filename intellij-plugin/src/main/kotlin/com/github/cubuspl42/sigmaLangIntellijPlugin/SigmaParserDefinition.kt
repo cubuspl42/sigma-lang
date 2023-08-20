@@ -3,7 +3,6 @@ package com.github.cubuspl42.sigmaLangIntellijPlugin
 
 import com.github.cubuspl42.sigmaLangIntellijPlugin.parser.SigmaParser
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaFile
-import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTokenSets
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
@@ -19,11 +18,13 @@ import com.intellij.psi.tree.TokenSet
 class SigmaParserDefinition : ParserDefinition {
     companion object {
         val File = IFileElementType(SigmaLanguage)
+
+        val Comments = TokenSet.create(SigmaTypes.LINE_COMMENT)
     }
 
     override fun createLexer(project: Project): Lexer = SigmaLexerAdapter()
 
-    override fun getCommentTokens(): TokenSet = TokenSet.EMPTY
+    override fun getCommentTokens(): TokenSet = Comments
 
     override fun getStringLiteralElements(): TokenSet = TokenSet.EMPTY
 
