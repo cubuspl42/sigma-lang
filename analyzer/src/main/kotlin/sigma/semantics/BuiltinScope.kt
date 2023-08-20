@@ -241,6 +241,9 @@ object BuiltinScope : Scope, StaticScope {
     private val builtinDeclarations: Map<Symbol, BuiltinValueDefinition> =
         builtinValueDeclarations.associateBy { it.name }
 
+    val names: Set<Symbol>
+        get() = builtinDeclarations.keys
+
     override fun getValue(
         name: Symbol,
     ): Thunk<Value>? = getBuiltin(
