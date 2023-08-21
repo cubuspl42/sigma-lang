@@ -10,13 +10,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaUnaryNegationExpressionImpl extends SigmaExpressionImpl implements SigmaUnaryNegationExpression {
+public class SigmaUnaryNegationExpressionImpl extends SigmaGenericExpressionImplMixin implements SigmaUnaryNegationExpression {
 
   public SigmaUnaryNegationExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitUnaryNegationExpression(this);
   }

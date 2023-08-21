@@ -16,4 +16,10 @@ public interface SigmaAbstractionConstructor extends SigmaExpression {
   @Nullable
   SigmaTypeExpression getTypeExpression();
 
+  @NotNull
+  SigmaExpression getArgumentType();
+
+  @Nullable
+  SigmaExpression getImage();
+
 }

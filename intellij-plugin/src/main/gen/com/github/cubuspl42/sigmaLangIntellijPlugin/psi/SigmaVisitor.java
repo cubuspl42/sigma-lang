@@ -20,7 +20,7 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitConstantDefinition(@NotNull SigmaConstantDefinition o) {
-    visitPsiElement(o);
+    visitNamespaceEntry(o);
   }
 
   public void visitDivisionExpression(@NotNull SigmaDivisionExpression o) {
@@ -32,7 +32,7 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitExpression(@NotNull SigmaExpression o) {
-    visitPsiElement(o);
+    visitExpressionBase(o);
   }
 
   public void visitGenericParameterDeclaration(@NotNull SigmaGenericParameterDeclaration o) {
@@ -59,6 +59,10 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitIntLiteral(@NotNull SigmaIntLiteral o) {
+    visitExpression(o);
+  }
+
   public void visitIsUndefinedExpression(@NotNull SigmaIsUndefinedExpression o) {
     visitExpression(o);
   }
@@ -76,11 +80,7 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitLetExpressionScopeEntry(@NotNull SigmaLetExpressionScopeEntry o) {
-    visitPsiElement(o);
-  }
-
-  public void visitLiteral(@NotNull SigmaLiteral o) {
-    visitExpression(o);
+    visitLetExpressionScopeEntryBase(o);
   }
 
   public void visitMultiplicationExpression(@NotNull SigmaMultiplicationExpression o) {
@@ -88,7 +88,7 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitNamespaceDefinition(@NotNull SigmaNamespaceDefinition o) {
-    visitPsiElement(o);
+    visitNamespaceEntry(o);
   }
 
   public void visitOrderedTupleConstructor(@NotNull SigmaOrderedTupleConstructor o) {
@@ -148,6 +148,18 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitUnorderedTupleTypeConstructorEntry(@NotNull SigmaUnorderedTupleTypeConstructorEntry o) {
+    visitPsiElement(o);
+  }
+
+  public void visitExpressionBase(@NotNull SigmaExpressionBase o) {
+    visitPsiElement(o);
+  }
+
+  public void visitLetExpressionScopeEntryBase(@NotNull SigmaLetExpressionScopeEntryBase o) {
+    visitPsiElement(o);
+  }
+
+  public void visitNamespaceEntry(@NotNull SigmaNamespaceEntry o) {
     visitPsiElement(o);
   }
 

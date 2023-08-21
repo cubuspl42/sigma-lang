@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaNamespaceDefinitionImpl extends ASTWrapperPsiElement implements SigmaNamespaceDefinition {
+public class SigmaNamespaceDefinitionImpl extends SigmaNamespaceDefinitionImplMixin implements SigmaNamespaceDefinition {
 
   public SigmaNamespaceDefinitionImpl(@NotNull ASTNode node) {
     super(node);
@@ -37,6 +36,12 @@ public class SigmaNamespaceDefinitionImpl extends ASTWrapperPsiElement implement
   @NotNull
   public List<SigmaNamespaceDefinition> getNamespaceDefinitionList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaNamespaceDefinition.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getDefinedName() {
+    return findNotNullChildByType(IDENTIFIER);
   }
 
 }

@@ -15,8 +15,8 @@ class SigmaSyntaxHighlighter : SyntaxHighlighterBase() {
         private val Keyword: TextAttributesKey =
             TextAttributesKey.createTextAttributesKey("SIGMA_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
 
-        private val IntLiteral: TextAttributesKey =
-            TextAttributesKey.createTextAttributesKey("SIGMA_INT_LITERAL", DefaultLanguageHighlighterColors.NUMBER)
+        private val Number: TextAttributesKey =
+            TextAttributesKey.createTextAttributesKey("SIGMA_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
 
         private val Comment: TextAttributesKey =
             TextAttributesKey.createTextAttributesKey("SIGMA_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
@@ -37,7 +37,7 @@ class SigmaSyntaxHighlighter : SyntaxHighlighterBase() {
 
         private val KeywordKeys = arrayOf(Keyword)
 
-        private val IntLiteralKeys = arrayOf(IntLiteral)
+        private val NumberKeys = arrayOf(Number)
 
         private val CommaKeys = arrayOf(Comma)
 
@@ -57,7 +57,7 @@ class SigmaSyntaxHighlighter : SyntaxHighlighterBase() {
     ): Array<out TextAttributesKey?> = when (tokenType) {
         SigmaTypes.LINE_COMMENT -> CommentKeys
         SigmaTypes.IF_KEYWORD, SigmaTypes.THEN_KEYWORD, SigmaTypes.ELSE_KEYWORD, SigmaTypes.IS_UNDEFINED_KEYWORD, SigmaTypes.LET_KEYWORD, SigmaTypes.IN_KEYWORD, SigmaTypes.NAMESPACE_KEYWORD, SigmaTypes.CONST_KEYWORD -> KeywordKeys
-        SigmaTypes.INT_LITERAL -> IntLiteralKeys
+        SigmaTypes.INT -> NumberKeys
         SigmaTypes.COMMA -> CommaKeys
         SigmaTypes.BRACKET_LEFT, SigmaTypes.BRACKET_RIGHT -> BracketKeys
         SigmaTypes.IDENTIFIER -> IdentifierKeys

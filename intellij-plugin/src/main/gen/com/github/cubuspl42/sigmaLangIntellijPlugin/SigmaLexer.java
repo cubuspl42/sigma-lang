@@ -593,7 +593,7 @@ class SigmaLexer implements FlexLexer {
           // fall through
           case 43: break;
           case 10:
-            { yybegin(YYINITIAL); return SigmaTypes.INT_LITERAL;
+            { yybegin(YYINITIAL); return SigmaTypes.INT;
             }
           // fall through
           case 44: break;

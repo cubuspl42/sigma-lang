@@ -21,12 +21,12 @@ public interface SigmaTypes {
   IElementType GREATER_THAN_EXPRESSION = new SigmaElementType("GREATER_THAN_EXPRESSION");
   IElementType IF_EXPRESSION = new SigmaElementType("IF_EXPRESSION");
   IElementType IF_EXPRESSION_BODY = new SigmaElementType("IF_EXPRESSION_BODY");
+  IElementType INT_LITERAL = new SigmaElementType("INT_LITERAL");
   IElementType IS_UNDEFINED_EXPRESSION = new SigmaElementType("IS_UNDEFINED_EXPRESSION");
   IElementType LESS_THAN_EQUALS_EXPRESSION = new SigmaElementType("LESS_THAN_EQUALS_EXPRESSION");
   IElementType LESS_THAN_EXPRESSION = new SigmaElementType("LESS_THAN_EXPRESSION");
   IElementType LET_EXPRESSION = new SigmaElementType("LET_EXPRESSION");
   IElementType LET_EXPRESSION_SCOPE_ENTRY = new SigmaElementType("LET_EXPRESSION_SCOPE_ENTRY");
-  IElementType LITERAL = new SigmaElementType("LITERAL");
   IElementType MULTIPLICATION_EXPRESSION = new SigmaElementType("MULTIPLICATION_EXPRESSION");
   IElementType NAMESPACE_DEFINITION = new SigmaElementType("NAMESPACE_DEFINITION");
   IElementType ORDERED_TUPLE_CONSTRUCTOR = new SigmaElementType("ORDERED_TUPLE_CONSTRUCTOR");
@@ -62,7 +62,7 @@ public interface SigmaTypes {
   IElementType GREATER_THAN_EQUALS = new SigmaTokenType("GREATER_THAN_EQUALS");
   IElementType IDENTIFIER = new SigmaTokenType("IDENTIFIER");
   IElementType IF_KEYWORD = new SigmaTokenType("IF_KEYWORD");
-  IElementType INT_LITERAL = new SigmaTokenType("INT_LITERAL");
+  IElementType INT = new SigmaTokenType("INT");
   IElementType IN_KEYWORD = new SigmaTokenType("IN_KEYWORD");
   IElementType IS_UNDEFINED_KEYWORD = new SigmaTokenType("IS_UNDEFINED_KEYWORD");
   IElementType LESS_THAN = new SigmaTokenType("LESS_THAN");
@@ -117,6 +117,9 @@ public interface SigmaTypes {
       else if (type == IF_EXPRESSION_BODY) {
         return new SigmaIfExpressionBodyImpl(node);
       }
+      else if (type == INT_LITERAL) {
+        return new SigmaIntLiteralImpl(node);
+      }
       else if (type == IS_UNDEFINED_EXPRESSION) {
         return new SigmaIsUndefinedExpressionImpl(node);
       }
@@ -131,9 +134,6 @@ public interface SigmaTypes {
       }
       else if (type == LET_EXPRESSION_SCOPE_ENTRY) {
         return new SigmaLetExpressionScopeEntryImpl(node);
-      }
-      else if (type == LITERAL) {
-        return new SigmaLiteralImpl(node);
       }
       else if (type == MULTIPLICATION_EXPRESSION) {
         return new SigmaMultiplicationExpressionImpl(node);

@@ -94,7 +94,7 @@ class ModuleTermTests {
                         )
                     ),
                 ),
-                actual = module.staticStatements,
+                actual = module.namespaceEntries,
             )
         }
     }

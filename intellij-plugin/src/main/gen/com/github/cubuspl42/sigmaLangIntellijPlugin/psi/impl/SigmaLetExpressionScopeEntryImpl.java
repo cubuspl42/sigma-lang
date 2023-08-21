@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaLetExpressionScopeEntryImpl extends ASTWrapperPsiElement implements SigmaLetExpressionScopeEntry {
+public class SigmaLetExpressionScopeEntryImpl extends SigmaLetExpressionScopeEntryImplMixin implements SigmaLetExpressionScopeEntry {
 
   public SigmaLetExpressionScopeEntryImpl(@NotNull ASTNode node) {
     super(node);
@@ -28,15 +27,21 @@ public class SigmaLetExpressionScopeEntryImpl extends ASTWrapperPsiElement imple
   }
 
   @Override
-  @NotNull
-  public SigmaExpression getExpression() {
-    return findNotNullChildByClass(SigmaExpression.class);
-  }
-
-  @Override
   @Nullable
   public SigmaTypeAnnotation getTypeAnnotation() {
     return findChildByClass(SigmaTypeAnnotation.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getDefinedName() {
+    return findNotNullChildByType(IDENTIFIER);
+  }
+
+  @Override
+  @NotNull
+  public SigmaExpression getBody() {
+    return findNotNullChildByClass(SigmaExpression.class);
   }
 
 }

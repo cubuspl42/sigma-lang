@@ -27,15 +27,15 @@ public class SigmaLetExpressionImpl extends SigmaLetExpressionImplMixin implemen
   }
 
   @Override
-  @Nullable
-  public SigmaExpression getExpression() {
-    return findChildByClass(SigmaExpression.class);
-  }
-
-  @Override
   @NotNull
   public List<SigmaLetExpressionScopeEntry> getLetExpressionScopeEntryList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaLetExpressionScopeEntry.class);
+  }
+
+  @Override
+  @Nullable
+  public SigmaExpression getResult() {
+    return findChildByClass(SigmaExpression.class);
   }
 
 }
