@@ -2,10 +2,10 @@ package sigma.syntax.typeExpressions
 
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.ReferenceTerm
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm
-import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.ReferenceSourceTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorSourceTerm
+import sigma.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -13,12 +13,12 @@ class UnorderedTupleTypeConstructorTermTests {
     class ParsingTests {
         @Test
         fun testEmpty() {
-            val expression = ExpressionTerm.parse(
+            val expression = ExpressionSourceTerm.parse(
                 source = "^{}",
             )
 
             assertEquals(
-                expected = UnorderedTupleTypeConstructorTerm(
+                expected = UnorderedTupleTypeConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = emptyList(),
                 ),
@@ -28,31 +28,31 @@ class UnorderedTupleTypeConstructorTermTests {
 
         @Test
         fun testNonEmpty() {
-            val expression = ExpressionTerm.parse(
+            val expression = ExpressionSourceTerm.parse(
                 source = "^{a: A, b: B, c: C}",
             )
 
             assertEquals(
-                expected = UnorderedTupleTypeConstructorTerm(
+                expected = UnorderedTupleTypeConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        UnorderedTupleConstructorTerm.Entry(
+                        UnorderedTupleConstructorSourceTerm.Entry(
                             name = Symbol.of("a"),
-                            value = ReferenceTerm(
+                            value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                 referee = Symbol.of("A"),
                             ),
                         ),
-                        UnorderedTupleConstructorTerm.Entry(
+                        UnorderedTupleConstructorSourceTerm.Entry(
                             name = Symbol.of("b"),
-                            value = ReferenceTerm(
+                            value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 11),
                                 referee = Symbol.of("B"),
                             ),
                         ),
-                        UnorderedTupleConstructorTerm.Entry(
+                        UnorderedTupleConstructorSourceTerm.Entry(
                             name = Symbol.of("c"),
-                            value = ReferenceTerm(
+                            value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
                                 referee = Symbol.of("C"),
                             ),

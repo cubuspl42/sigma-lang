@@ -2,20 +2,17 @@ package sigma.syntax.expressions
 
 import sigma.parser.antlr.SigmaParser.IsUndefinedCheckContext
 import sigma.syntax.SourceLocation
-import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.UndefinedValue
-import sigma.evaluation.scope.Scope
 
-data class IsUndefinedCheckTerm(
+data class IsUndefinedCheckSourceTerm(
     override val location: SourceLocation,
-    val argument: ExpressionTerm,
-) : ExpressionTerm() {
+    val argument: ExpressionSourceTerm,
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: IsUndefinedCheckContext,
-        ): IsUndefinedCheckTerm = IsUndefinedCheckTerm(
+        ): IsUndefinedCheckSourceTerm = IsUndefinedCheckSourceTerm(
             location = SourceLocation.build(ctx),
-            argument = ExpressionTerm.build(ctx),
+            argument = ExpressionSourceTerm.build(ctx),
         )
     }
 

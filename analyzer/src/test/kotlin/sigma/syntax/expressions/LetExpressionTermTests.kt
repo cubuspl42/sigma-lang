@@ -1,7 +1,7 @@
 package sigma.syntax.expressions
 
 import sigma.evaluation.values.Symbol
-import sigma.syntax.LocalDefinitionTerm
+import sigma.syntax.LocalDefinitionSourceTerm
 import sigma.syntax.SourceLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -10,7 +10,7 @@ class LetExpressionTermTests {
     class ParsingTests {
         @Test
         fun testSimple() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     %let {
                         g = h(a),
@@ -20,43 +20,43 @@ class LetExpressionTermTests {
             )
 
             assertEquals(
-                expected = LetExpressionTerm(
+                expected = LetExpressionSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    localScope = LocalScopeTerm(
+                    localScope = LocalScopeSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 5),
                         definitions = listOf(
-                            LocalDefinitionTerm(
+                            LocalDefinitionSourceTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 4),
                                 name = Symbol.of("g"),
-                                body = CallTerm(
+                                body = CallSourceTerm(
                                     location = SourceLocation(lineIndex = 2, columnIndex = 8),
-                                    subject = ReferenceTerm(
+                                    subject = ReferenceSourceTerm(
                                         location = SourceLocation(lineIndex = 2, columnIndex = 8),
                                         referee = Symbol.of("h"),
                                     ),
-                                    argument = ReferenceTerm(
+                                    argument = ReferenceSourceTerm(
                                         location = SourceLocation(lineIndex = 2, columnIndex = 10),
                                         referee = Symbol.of("a"),
                                     ),
                                 ),
                             ),
-                            LocalDefinitionTerm(
+                            LocalDefinitionSourceTerm(
                                 location = SourceLocation(lineIndex = 3, columnIndex = 4),
                                 name = Symbol.of("f"),
-                                body = ReferenceTerm(
+                                body = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 8),
                                     referee = Symbol.of("g"),
                                 ),
                             ),
                         ),
                     ),
-                    result = CallTerm(
+                    result = CallSourceTerm(
                         location = SourceLocation(lineIndex = 4, columnIndex = 6),
-                        subject = ReferenceTerm(
+                        subject = ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 6),
                             referee = Symbol.of("f"),
                         ),
-                        argument = ReferenceTerm(
+                        argument = ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 8),
                             referee = Symbol.of("x"),
                         ),
@@ -68,33 +68,33 @@ class LetExpressionTermTests {
 
         @Test
         fun testWithTypeAnnotation() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                         %let { a: Int = b } %in a
                     """.trimIndent()
             )
 
             assertEquals(
-                expected = LetExpressionTerm(
+                expected = LetExpressionSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    localScope = LocalScopeTerm(
+                    localScope = LocalScopeSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 5),
                         definitions = listOf(
-                            LocalDefinitionTerm(
+                            LocalDefinitionSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 7),
                                 name = Symbol.of("a"),
-                                declaredTypeBody = ReferenceTerm(
+                                declaredTypeBody = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                     referee = Symbol.of("Int"),
                                 ),
-                                body = ReferenceTerm(
+                                body = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 16),
                                     referee = Symbol.of("b"),
                                 ),
                             ),
                         ),
                     ),
-                    result = ReferenceTerm(
+                    result = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 24),
                         referee = Symbol.of("a"),
                     ),

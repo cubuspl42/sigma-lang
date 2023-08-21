@@ -11,10 +11,10 @@ import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.FieldReadTerm
+import sigma.syntax.expressions.FieldReadSourceTerm
 
 class FieldRead(
-    override val term: FieldReadTerm,
+    override val term: FieldReadSourceTerm,
     val subject: Expression,
 ) : Expression() {
 
@@ -46,7 +46,7 @@ class FieldRead(
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: FieldReadTerm,
+            term: FieldReadSourceTerm,
         ): FieldRead = FieldRead(
             term = term,
             subject = Expression.build(

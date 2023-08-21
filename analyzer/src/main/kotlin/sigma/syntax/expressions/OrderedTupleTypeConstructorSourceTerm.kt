@@ -4,19 +4,19 @@ import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser.OrderedTupleTypeConstructorContext
 import sigma.syntax.SourceLocation
 
-data class OrderedTupleTypeConstructorTerm(
+data class OrderedTupleTypeConstructorSourceTerm(
     override val location: SourceLocation,
     val elements: List<Element>,
-) : TupleTypeConstructorTerm() {
+) : TupleTypeConstructorSourceTerm() {
     data class Element(
         val name: Symbol?,
-        val type: ExpressionTerm,
+        val type: ExpressionSourceTerm,
     )
 
     companion object {
         fun build(
             ctx: OrderedTupleTypeConstructorContext,
-        ): OrderedTupleTypeConstructorTerm = OrderedTupleTypeConstructorTerm(
+        ): OrderedTupleTypeConstructorSourceTerm = OrderedTupleTypeConstructorSourceTerm(
             location = SourceLocation.build(ctx),
             elements = ctx.orderedTupleTypeElement().map { elementCtx ->
                 Element(

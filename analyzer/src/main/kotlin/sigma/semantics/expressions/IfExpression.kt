@@ -9,10 +9,10 @@ import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.IfExpressionTerm
+import sigma.syntax.expressions.IfExpressionSourceTerm
 
 class IfExpression(
-    override val term: IfExpressionTerm,
+    override val term: IfExpressionSourceTerm,
     val guard: Expression,
     val trueBranch: Expression,
     val falseBranch: Expression,
@@ -20,7 +20,7 @@ class IfExpression(
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: IfExpressionTerm,
+            term: IfExpressionSourceTerm,
         ): IfExpression = IfExpression(
             term = term,
             guard = build(

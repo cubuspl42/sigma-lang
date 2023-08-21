@@ -7,8 +7,8 @@ import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorSourceTerm
 import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
@@ -18,9 +18,9 @@ class UnorderedTupleTests {
     class TypeCheckingTests {
         @Test
         fun testEmpty() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "{}",
-            ) as UnorderedTupleConstructorTerm
+            ) as UnorderedTupleConstructorSourceTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 declarationScope = StaticScope.Empty,
@@ -37,14 +37,14 @@ class UnorderedTupleTests {
 
         @Test
         fun testMultipleEntries() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     {
                         key1: value1,
                         key2: value2,
                     }
                 """.trimIndent(),
-            ) as UnorderedTupleConstructorTerm
+            ) as UnorderedTupleConstructorSourceTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 declarationScope = FakeStaticBlock.of(
@@ -73,14 +73,14 @@ class UnorderedTupleTests {
 
         @Test
         fun testDuplicatedName() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     {
                         key1: value1,
                         key1: value2,
                     }
                 """.trimIndent(),
-            ) as UnorderedTupleConstructorTerm
+            ) as UnorderedTupleConstructorSourceTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 declarationScope = FakeStaticBlock.of(

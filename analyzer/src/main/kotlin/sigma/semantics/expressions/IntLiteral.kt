@@ -9,14 +9,14 @@ import sigma.evaluation.values.asThunk
 import sigma.semantics.SemanticError
 import sigma.semantics.types.IntLiteralType
 import sigma.semantics.types.Type
-import sigma.syntax.expressions.IntLiteralTerm
+import sigma.syntax.expressions.IntLiteralSourceTerm
 
 data class IntLiteral(
-    override val term: IntLiteralTerm,
+    override val term: IntLiteralSourceTerm,
 ) : Expression() {
     companion object {
         fun build(
-            term: IntLiteralTerm,
+            term: IntLiteralSourceTerm,
         ): IntLiteral = IntLiteral(
             term = term,
         )

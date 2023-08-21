@@ -7,8 +7,8 @@ import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Value
 import sigma.semantics.StaticScope
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.FieldReadTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.FieldReadSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -26,7 +26,7 @@ class FieldReadTests {
 
             val fieldRead = FieldRead.build(
                 declarationScope = StaticScope.Empty,
-                term = ExpressionTerm.parse("foo.bar") as FieldReadTerm,
+                term = ExpressionSourceTerm.parse("foo.bar") as FieldReadSourceTerm,
             )
 
             val result = assertIs<EvaluationResult<Value>>(

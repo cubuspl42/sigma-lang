@@ -1,7 +1,7 @@
 package sigma.semantics
 
 import getResourceAsText
-import sigma.syntax.expressions.LocalScopeTerm
+import sigma.syntax.expressions.LocalScopeSourceTerm
 import sigma.evaluation.scope.Scope
 
 data class Prelude(
@@ -12,7 +12,7 @@ data class Prelude(
         fun load(): Prelude {
             val preludeSource = getResourceAsText("prelude.sigma") ?: throw RuntimeException("Couldn't load prelude")
 
-            val prelude = LocalScopeTerm.parse(
+            val prelude = LocalScopeSourceTerm.parse(
                 sourceName = "prelude",
                 source = preludeSource,
             )

@@ -3,15 +3,15 @@ package sigma.syntax.expressions
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 
-data class DictTypeConstructorTerm(
+data class DictTypeConstructorSourceTerm(
     override val location: SourceLocation,
-    val keyType: ExpressionTerm,
-    val valueType: ExpressionTerm,
-) : ExpressionTerm() {
+    val keyType: ExpressionSourceTerm,
+    val valueType: ExpressionSourceTerm,
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.DictTypeConstructorContext,
-        ): DictTypeConstructorTerm = DictTypeConstructorTerm(
+        ): DictTypeConstructorSourceTerm = DictTypeConstructorSourceTerm(
             location = SourceLocation.build(ctx),
             keyType = build(ctx.keyType),
             valueType = build(ctx.valueType),

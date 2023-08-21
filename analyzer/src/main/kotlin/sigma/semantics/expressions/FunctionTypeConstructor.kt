@@ -8,17 +8,17 @@ import sigma.semantics.StaticScope
 import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UniversalFunctionType
-import sigma.syntax.expressions.FunctionTypeConstructorTerm
+import sigma.syntax.expressions.FunctionTypeConstructorSourceTerm
 
 class FunctionTypeConstructor(
-    override val term: FunctionTypeConstructorTerm,
+    override val term: FunctionTypeConstructorSourceTerm,
     val argumentType: TupleTypeConstructor,
     val imageType: Expression,
 ) : Expression() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: FunctionTypeConstructorTerm,
+            term: FunctionTypeConstructorSourceTerm,
         ): FunctionTypeConstructor = FunctionTypeConstructor(
             term = term,
             argumentType = TupleTypeConstructor.build(

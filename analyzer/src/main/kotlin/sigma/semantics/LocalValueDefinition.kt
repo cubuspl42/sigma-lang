@@ -2,16 +2,16 @@ package sigma.semantics
 
 import sigma.evaluation.values.Symbol
 import sigma.semantics.expressions.Expression
-import sigma.syntax.LocalDefinitionTerm
+import sigma.syntax.LocalDefinitionSourceTerm
 
 class LocalValueDefinition(
     override val declarationScope: StaticScope,
-    private val term: LocalDefinitionTerm,
+    private val term: LocalDefinitionSourceTerm,
 ) : ValueDefinition() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: LocalDefinitionTerm,
+            term: LocalDefinitionSourceTerm,
         ): LocalValueDefinition = LocalValueDefinition(
             declarationScope = declarationScope,
             term = term,

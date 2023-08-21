@@ -4,19 +4,19 @@ import sigma.parser.antlr.SigmaParser.DictAssociationContext
 import sigma.parser.antlr.SigmaParser.DictConstructorContext
 import sigma.syntax.SourceLocation
 
-data class DictConstructorTerm(
+data class DictConstructorSourceTerm(
     override val location: SourceLocation,
     val associations: List<Association>,
-) : ExpressionTerm() {
+) : ExpressionSourceTerm() {
     data class Association(
-        val key: ExpressionTerm,
-        val value: ExpressionTerm,
+        val key: ExpressionSourceTerm,
+        val value: ExpressionSourceTerm,
     ) {
         companion object {
             fun build(ctx: DictAssociationContext): Association {
                 return Association(
-                    key = ExpressionTerm.build(ctx.key),
-                    value = ExpressionTerm.build(ctx.value),
+                    key = ExpressionSourceTerm.build(ctx.key),
+                    value = ExpressionSourceTerm.build(ctx.value),
                 )
             }
         }
@@ -25,7 +25,7 @@ data class DictConstructorTerm(
     companion object {
         fun build(
             ctx: DictConstructorContext,
-        ): DictConstructorTerm = DictConstructorTerm(
+        ): DictConstructorSourceTerm = DictConstructorSourceTerm(
             location = SourceLocation.build(ctx),
             associations = ctx.dictAssociation().map {
                 Association.build(it)

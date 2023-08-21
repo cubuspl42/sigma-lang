@@ -5,27 +5,27 @@ import sigma.parser.antlr.SigmaParser.UnorderedTupleConstructorContext
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
 
-data class UnorderedTupleConstructorTerm(
+data class UnorderedTupleConstructorSourceTerm(
     override val location: SourceLocation,
     val entries: List<Entry>,
-) : TupleConstructorTerm() {
+) : TupleConstructorSourceTerm() {
     data class Entry(
         val name: Symbol,
-        val value: ExpressionTerm,
+        val value: ExpressionSourceTerm,
     ) {
         companion object {
             fun build(
                 ctx: SigmaParser.UnorderedTupleAssociationContext,
             ): Entry = Entry(
                 name = Symbol.of(ctx.name.text),
-                value = ExpressionTerm.build(ctx.value),
+                value = ExpressionSourceTerm.build(ctx.value),
             )
 
             fun build(
                 ctx: SigmaParser.UnorderedTupleTypeEntryContext,
             ): Entry = Entry(
                 name = Symbol.of(ctx.name.text),
-                value = ExpressionTerm.build(ctx.valueType),
+                value = ExpressionSourceTerm.build(ctx.valueType),
             )
         }
     }
@@ -33,7 +33,7 @@ data class UnorderedTupleConstructorTerm(
     companion object {
         fun build(
             ctx: UnorderedTupleConstructorContext,
-        ): UnorderedTupleConstructorTerm = UnorderedTupleConstructorTerm(
+        ): UnorderedTupleConstructorSourceTerm = UnorderedTupleConstructorSourceTerm(
             location = SourceLocation.build(ctx),
             entries = ctx.unorderedTupleAssociation().map {
                 Entry.build(it)

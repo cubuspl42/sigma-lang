@@ -1,8 +1,5 @@
 package sigma.syntax.expressions
 
-import sigma.evaluation.scope.FixedScope
-import sigma.evaluation.values.IntValue
-import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Symbol
 import sigma.syntax.SourceLocation
 import kotlin.test.Test
@@ -13,24 +10,24 @@ class SetConstructorTermTests {
         @Test
         fun testSimple() {
             assertEquals(
-                expected = SetConstructorTerm(
+                expected = SetConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elements = listOf(
-                        ReferenceTerm(
+                        ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 1),
                             referee = Symbol.of("foo"),
                         ),
-                        ReferenceTerm(
+                        ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 6),
                             referee = Symbol.of("bar"),
                         ),
-                        ReferenceTerm(
+                        ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 11),
                             referee = Symbol.of("baz"),
                         ),
                     ),
                 ),
-                actual = ExpressionTerm.parse("{foo, bar, baz}"),
+                actual = ExpressionSourceTerm.parse("{foo, bar, baz}"),
             )
         }
     }

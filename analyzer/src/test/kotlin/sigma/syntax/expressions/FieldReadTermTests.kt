@@ -10,15 +10,15 @@ class FieldReadTermTests {
         @Test
         fun testSimple() {
             assertEquals(
-                expected = FieldReadTerm(
+                expected = FieldReadSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = ReferenceTerm(
+                    subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo"),
                     ),
                     fieldName = Symbol.of("bar"),
                 ),
-                actual = ExpressionTerm.parse("foo.bar"),
+                actual = ExpressionSourceTerm.parse("foo.bar"),
             )
         }
     }

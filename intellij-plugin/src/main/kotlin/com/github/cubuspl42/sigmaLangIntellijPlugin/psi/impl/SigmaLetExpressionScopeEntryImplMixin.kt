@@ -5,12 +5,12 @@ import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.ext.getSourceLocation
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import sigma.evaluation.values.Symbol
-import sigma.syntax.LocalDefinitionTerm
+import sigma.syntax.LocalDefinitionSourceTerm
 
 abstract class SigmaLetExpressionScopeEntryImplMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node), SigmaLetExpressionScopeEntry {
-    final override fun toTerm(): LocalDefinitionTerm = LocalDefinitionTerm(
+    final override fun toTerm(): LocalDefinitionSourceTerm = LocalDefinitionSourceTerm(
         location = getSourceLocation(),
         name = Symbol.of(definedName.text),
         declaredTypeBody = null,

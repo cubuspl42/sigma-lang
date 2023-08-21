@@ -3,17 +3,17 @@ package sigma.syntax.expressions
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeConstructorContext
 import sigma.syntax.SourceLocation
 
-data class UnorderedTupleTypeConstructorTerm(
+data class UnorderedTupleTypeConstructorSourceTerm(
     override val location: SourceLocation,
-    val entries: List<UnorderedTupleConstructorTerm.Entry>,
-) : TupleTypeConstructorTerm() {
+    val entries: List<UnorderedTupleConstructorSourceTerm.Entry>,
+) : TupleTypeConstructorSourceTerm() {
     companion object {
         fun build(
             ctx: UnorderedTupleTypeConstructorContext,
-        ): UnorderedTupleTypeConstructorTerm = UnorderedTupleTypeConstructorTerm(
+        ): UnorderedTupleTypeConstructorSourceTerm = UnorderedTupleTypeConstructorSourceTerm(
             location = SourceLocation.build(ctx),
             entries = ctx.unorderedTupleTypeEntry().map {
-                UnorderedTupleConstructorTerm.Entry.build(it)
+                UnorderedTupleConstructorSourceTerm.Entry.build(it)
             },
         )
     }

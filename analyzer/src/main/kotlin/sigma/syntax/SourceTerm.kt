@@ -1,5 +1,5 @@
 package sigma.syntax
 
-abstract class Term {
+abstract class SourceTerm {
     abstract val location: SourceLocation
 }

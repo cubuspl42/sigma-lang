@@ -4,15 +4,15 @@ import sigma.parser.antlr.SigmaParser.FieldReadAltContext
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
 
-data class FieldReadTerm(
+data class FieldReadSourceTerm(
     override val location: SourceLocation,
-    val subject: ExpressionTerm,
+    val subject: ExpressionSourceTerm,
     val fieldName: Symbol,
-) : ExpressionTerm() {
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: FieldReadAltContext,
-        ): FieldReadTerm = FieldReadTerm(
+        ): FieldReadSourceTerm = FieldReadSourceTerm(
             location = SourceLocation.build(ctx),
             subject = build(ctx.subject),
             fieldName = Symbol.of(ctx.fieldName.text),

@@ -5,12 +5,10 @@ import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.ext.getSourceLocation
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import sigma.evaluation.values.Symbol
-import sigma.syntax.ConstantDefinitionTerm
-import sigma.syntax.NamespaceEntryTerm
-import sigma.syntax.SourceLocation
+import sigma.syntax.ConstantDefinitionSourceTerm
 
 abstract class SigmaConstantDefinitionImplMixin(node: ASTNode) : ASTWrapperPsiElement(node), SigmaConstantDefinition {
-    final override fun toTerm(): ConstantDefinitionTerm = ConstantDefinitionTerm(
+    final override fun toTerm(): ConstantDefinitionSourceTerm = ConstantDefinitionSourceTerm(
         location = getSourceLocation(),
         name = Symbol.of(definedName.text),
         declaredTypeBody = null,

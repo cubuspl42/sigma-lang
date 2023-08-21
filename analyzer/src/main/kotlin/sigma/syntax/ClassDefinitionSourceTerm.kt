@@ -4,42 +4,42 @@ import sigma.evaluation.values.Symbol
 import sigma.parser.antlr.SigmaParser.ClassDefinitionContext
 import sigma.parser.antlr.SigmaParser.FieldDeclarationContext
 import sigma.parser.antlr.SigmaParser.MethodDefinitionContext
-import sigma.syntax.expressions.ExpressionTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
 
-data class ClassDefinitionTerm(
+data class ClassDefinitionSourceTerm(
     override val location: SourceLocation,
     val name: Symbol,
-    val fieldDeclarations: List<FieldDeclarationTerm>,
-    val methodDefinitions: List<MethodDefinitionTerm>,
-) : NamespaceEntryTerm() {
-    data class FieldDeclarationTerm(
+    val fieldDeclarations: List<FieldDeclarationSourceTerm>,
+    val methodDefinitions: List<MethodDefinitionSourceTerm>,
+) : NamespaceEntrySourceTerm() {
+    data class FieldDeclarationSourceTerm(
         override val location: SourceLocation,
         val name: Symbol,
-        val type: ExpressionTerm,
-    ) : Term() {
+        val type: ExpressionSourceTerm,
+    ) : SourceTerm() {
         companion object {
             fun build(
                 ctx: FieldDeclarationContext,
-            ): FieldDeclarationTerm = FieldDeclarationTerm(
+            ): FieldDeclarationSourceTerm = FieldDeclarationSourceTerm(
                 location = SourceLocation.build(ctx),
                 name = Symbol.of(ctx.name.text),
-                type = ExpressionTerm.build(ctx.type),
+                type = ExpressionSourceTerm.build(ctx.type),
             )
         }
     }
 
-    data class MethodDefinitionTerm(
+    data class MethodDefinitionSourceTerm(
         override val location: SourceLocation,
         val name: Symbol,
-        val body: ExpressionTerm,
-    ) : Term() {
+        val body: ExpressionSourceTerm,
+    ) : SourceTerm() {
         companion object {
             fun build(
                 ctx: MethodDefinitionContext,
-            ): MethodDefinitionTerm = MethodDefinitionTerm(
+            ): MethodDefinitionSourceTerm = MethodDefinitionSourceTerm(
                 location = SourceLocation.build(ctx),
                 name = Symbol.of(ctx.name.text),
-                body = ExpressionTerm.build(ctx.body),
+                body = ExpressionSourceTerm.build(ctx.body),
             )
         }
     }
@@ -47,14 +47,14 @@ data class ClassDefinitionTerm(
     companion object {
         fun build(
             ctx: ClassDefinitionContext,
-        ): ClassDefinitionTerm = ClassDefinitionTerm(
+        ): ClassDefinitionSourceTerm = ClassDefinitionSourceTerm(
             location = SourceLocation.build(ctx),
             name = Symbol.of(ctx.name.text),
             fieldDeclarations = ctx.fieldDeclaration().map {
-                FieldDeclarationTerm.build(it)
+                FieldDeclarationSourceTerm.build(it)
             },
             methodDefinitions = ctx.methodDefinition().map {
-                MethodDefinitionTerm.build(it)
+                MethodDefinitionSourceTerm.build(it)
             },
         )
     }

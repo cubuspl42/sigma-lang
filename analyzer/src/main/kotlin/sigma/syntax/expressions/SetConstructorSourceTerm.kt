@@ -2,20 +2,18 @@ package sigma.syntax.expressions
 
 import sigma.parser.antlr.SigmaParser.SetConstructorContext
 import sigma.syntax.SourceLocation
-import sigma.evaluation.scope.Scope
-import sigma.evaluation.values.SetValue
 
-data class SetConstructorTerm(
+data class SetConstructorSourceTerm(
     override val location: SourceLocation,
-    val elements: List<ExpressionTerm>,
-) : ExpressionTerm() {
+    val elements: List<ExpressionSourceTerm>,
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: SetConstructorContext,
-        ): SetConstructorTerm = SetConstructorTerm(
+        ): SetConstructorSourceTerm = SetConstructorSourceTerm(
             location = SourceLocation.build(ctx),
             elements = ctx.elements.map {
-                ExpressionTerm.build(it)
+                ExpressionSourceTerm.build(it)
             },
         )
     }

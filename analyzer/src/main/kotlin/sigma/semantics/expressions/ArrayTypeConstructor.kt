@@ -7,17 +7,17 @@ import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.ArrayType
 import sigma.semantics.types.Type
-import sigma.syntax.expressions.ArrayTypeConstructorTerm
-import sigma.syntax.expressions.ExpressionTerm
+import sigma.syntax.expressions.ArrayTypeConstructorSourceTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
 
 class ArrayTypeConstructor(
-    override val term: ExpressionTerm,
+    override val term: ExpressionSourceTerm,
     val elementType: Expression,
 ) : Expression() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: ArrayTypeConstructorTerm,
+            term: ArrayTypeConstructorSourceTerm,
         ): ArrayTypeConstructor = ArrayTypeConstructor(
             term = term,
             elementType = Expression.build(

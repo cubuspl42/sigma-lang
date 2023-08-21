@@ -11,8 +11,8 @@ import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.OrderedTupleConstructorTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.OrderedTupleConstructorSourceTerm
 import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
@@ -23,9 +23,9 @@ class OrderedTupleConstructorTests {
     class TypeInferenceTests {
         @Test
         fun testEmpty() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "[]",
-            ) as OrderedTupleConstructorTerm
+            ) as OrderedTupleConstructorSourceTerm
 
             val tupleLiteral = OrderedTupleConstructor.build(
                 declarationScope = StaticScope.Empty,
@@ -46,9 +46,9 @@ class OrderedTupleConstructorTests {
 
         @Test
         fun testNonEmpty() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "[a, b]",
-            ) as OrderedTupleConstructorTerm
+            ) as OrderedTupleConstructorSourceTerm
 
             val tupleLiteral = OrderedTupleConstructor.build(
                 declarationScope = FakeStaticBlock.of(
@@ -85,9 +85,9 @@ class OrderedTupleConstructorTests {
         fun testEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(
                 declarationScope = StaticScope.Empty,
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = "[]",
-                ) as OrderedTupleConstructorTerm,
+                ) as OrderedTupleConstructorSourceTerm,
             )
 
             val value = tupleConstructor.evaluateValue(
@@ -109,9 +109,9 @@ class OrderedTupleConstructorTests {
         fun testNonEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(
                 declarationScope = StaticScope.Empty,
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = "[a, b]",
-                ) as OrderedTupleConstructorTerm,
+                ) as OrderedTupleConstructorSourceTerm,
             )
 
             val value = tupleConstructor.evaluateValue(

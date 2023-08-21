@@ -2,25 +2,25 @@ package sigma.semantics
 
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.syntax.ClassDefinitionTerm
-import sigma.syntax.ConstantDefinitionTerm
-import sigma.syntax.NamespaceDefinitionTerm
-import sigma.syntax.NamespaceEntryTerm
+import sigma.syntax.ClassDefinitionSourceTerm
+import sigma.syntax.ConstantDefinitionSourceTerm
+import sigma.syntax.NamespaceDefinitionSourceTerm
+import sigma.syntax.NamespaceEntrySourceTerm
 
 abstract class StaticDefinition : Declaration {
     companion object {
         fun build(
             containingNamespace: Namespace,
-            term: NamespaceEntryTerm,
+            term: NamespaceEntrySourceTerm,
         ): StaticDefinition = when (term) {
-            is ConstantDefinitionTerm -> ConstantDefinition.build(
+            is ConstantDefinitionSourceTerm -> ConstantDefinition.build(
                 containingNamespace = containingNamespace,
                 term = term,
             )
 
-            is ClassDefinitionTerm -> TODO()
+            is ClassDefinitionSourceTerm -> TODO()
 
-            is NamespaceDefinitionTerm -> TODO()
+            is NamespaceDefinitionSourceTerm -> TODO()
         }
     }
 

@@ -10,11 +10,11 @@ class IntLiteralTermTests {
         @Test
         fun test() {
             assertEquals(
-                expected = IntLiteralTerm(
+                expected = IntLiteralSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     IntValue(123),
                 ),
-                actual = ExpressionTerm.parse(
+                actual = ExpressionSourceTerm.parse(
                     source = "123",
                 ),
             )

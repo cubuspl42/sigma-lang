@@ -1,13 +1,13 @@
 package sigma.semantics.types
 
 import sigma.semantics.StaticScope
-import sigma.syntax.expressions.ExpressionTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
 import sigma.syntax.expressions.GenericParametersTuple
 
 class GenericTypeConstructor(
     val context: StaticScope,
     val argumentMetaType: GenericParametersTuple,
-    val bodyTerm: ExpressionTerm,
+    val bodyTerm: ExpressionSourceTerm,
     val body: TypeEntity,
 ) : TypeEntity() {
     fun call(passedArgument: OrderedTypeTuple): TypeEntity {

@@ -9,14 +9,14 @@ class IsUndefinedTermCheckTests {
     class ParsingTests {
         @Test
         fun test() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "%isUndefined foo",
             )
 
             assertEquals(
-                expected = IsUndefinedCheckTerm(
+                expected = IsUndefinedCheckSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    argument = ReferenceTerm(
+                    argument = ReferenceSourceTerm(
                         SourceLocation(lineIndex = 1, columnIndex = 13),
                         referee = Symbol.of("foo"),
                     ),

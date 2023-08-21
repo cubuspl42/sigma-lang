@@ -5,8 +5,6 @@ import sigma.evaluation.values.DictValue
 import sigma.evaluation.values.PrimitiveValue
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateInitialValue
 import sigma.semantics.StaticScope
 import sigma.semantics.SemanticError
 import sigma.semantics.types.DictType
@@ -14,10 +12,10 @@ import sigma.semantics.types.IllType
 import sigma.semantics.types.PrimitiveType
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.DictConstructorTerm
+import sigma.syntax.expressions.DictConstructorSourceTerm
 
 class DictConstructor(
-    override val term: DictConstructorTerm,
+    override val term: DictConstructorSourceTerm,
     val associations: List<Association>,
 ) : Expression() {
     class Association(
@@ -27,7 +25,7 @@ class DictConstructor(
         companion object {
             fun build(
                 declarationScope: StaticScope,
-                term: DictConstructorTerm.Association,
+                term: DictConstructorSourceTerm.Association,
             ): Association = Association(
                 key = Expression.build(
                     declarationScope = declarationScope,
@@ -44,7 +42,7 @@ class DictConstructor(
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: DictConstructorTerm,
+            term: DictConstructorSourceTerm,
         ): DictConstructor = DictConstructor(
             term = term,
             associations = term.associations.map {

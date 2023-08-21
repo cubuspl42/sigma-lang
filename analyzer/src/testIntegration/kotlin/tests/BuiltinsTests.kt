@@ -1,30 +1,21 @@
 package tests
 
-import sigma.evaluation.values.ArrayTable
 import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.SetValue
 import sigma.evaluation.values.Symbol
 import sigma.semantics.Namespace
 import sigma.semantics.Prelude
-import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.MetaType
-import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.SetType
-import sigma.semantics.types.TypeVariable
-import sigma.semantics.types.UniversalFunctionType
-import sigma.semantics.types.UnorderedTupleType
-import sigma.syntax.NamespaceDefinitionTerm
+import sigma.syntax.NamespaceDefinitionSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertIs
 
 class BuiltinsTests {
     @Test
     fun testSet() {
-        val term = NamespaceDefinitionTerm.parse(
+        val term = NamespaceDefinitionSourceTerm.parse(
             source = """
                 %namespace EntryNamespace (
                     %const mySet1 = setOf[[1, 2, 3]]

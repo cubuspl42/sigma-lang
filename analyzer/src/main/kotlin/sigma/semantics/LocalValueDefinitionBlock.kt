@@ -3,16 +3,16 @@ package sigma.semantics
 import sigma.evaluation.scope.LoopedScope
 import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.Symbol
-import sigma.syntax.LocalDefinitionTerm
+import sigma.syntax.LocalDefinitionSourceTerm
 
 class LocalValueDefinitionBlock(
     private val declarationScope: StaticScope,
-    private val declarations: List<LocalDefinitionTerm>,
+    private val declarations: List<LocalDefinitionSourceTerm>,
 ) : StaticBlock() {
     companion object {
         fun build(
             outerDeclarationScope: StaticScope,
-            definitions: List<LocalDefinitionTerm>,
+            definitions: List<LocalDefinitionSourceTerm>,
         ): LocalValueDefinitionBlock = LocalValueDefinitionBlock(
             declarationScope = outerDeclarationScope,
             declarations = definitions,
