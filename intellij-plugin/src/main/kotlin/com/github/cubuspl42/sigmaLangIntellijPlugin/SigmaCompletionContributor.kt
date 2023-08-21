@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLangIntellijPlugin
 
-import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaExpression
-import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes
+import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaReferenceExpression
+import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.impl.SigmaLetExpressionImpl
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
@@ -15,10 +15,22 @@ class SigmaCompletionContributor : CompletionContributor() {
                 context: com.intellij.util.ProcessingContext,
                 resultSet: CompletionResultSet,
             ) {
+                val element = parameters.position.parent as SigmaReferenceExpression
+
                 BuiltinScope.names.forEach {
                     resultSet.addElement(
                         LookupElementBuilder.create(it.name),
                     )
+                }
+
+                val grandparent = element.parent?.parent
+
+                if (grandparent is SigmaLetExpressionImpl) {
+                    grandparent.getNames().forEach {
+                        resultSet.addElement(
+                            LookupElementBuilder.create(it),
+                        )
+                    }
                 }
             }
         }
@@ -27,7 +39,7 @@ class SigmaCompletionContributor : CompletionContributor() {
             CompletionType.BASIC,
             PlatformPatterns.psiElement()
                 .withLanguage(SigmaLanguage)
-                .withParent(SigmaExpression::class.java),
+                .withParent(SigmaReferenceExpression::class.java),
             completionProvider,
         )
     }

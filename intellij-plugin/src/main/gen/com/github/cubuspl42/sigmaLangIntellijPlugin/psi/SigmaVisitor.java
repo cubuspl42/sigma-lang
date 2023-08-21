@@ -75,10 +75,6 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitLetExpressionScope(@NotNull SigmaLetExpressionScope o) {
-    visitPsiElement(o);
-  }
-
   public void visitLetExpressionScopeEntry(@NotNull SigmaLetExpressionScopeEntry o) {
     visitPsiElement(o);
   }
@@ -91,15 +87,7 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitNamespaceBody(@NotNull SigmaNamespaceBody o) {
-    visitPsiElement(o);
-  }
-
   public void visitNamespaceDefinition(@NotNull SigmaNamespaceDefinition o) {
-    visitPsiElement(o);
-  }
-
-  public void visitNamespaceEntry(@NotNull SigmaNamespaceEntry o) {
     visitPsiElement(o);
   }
 

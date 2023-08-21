@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaConstantDefinitionImpl extends ASTWrapperPsiElement implements SigmaConstantDefinition {
+public class SigmaConstantDefinitionImpl extends SigmaConstantDefinitionImplMixin implements SigmaConstantDefinition {
 
   public SigmaConstantDefinitionImpl(@NotNull ASTNode node) {
     super(node);

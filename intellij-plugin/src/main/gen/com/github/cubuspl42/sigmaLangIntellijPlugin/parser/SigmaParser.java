@@ -138,13 +138,8 @@ public class SigmaParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // <<list let_expression_scope_entry>>
-  public static boolean let_expression_scope(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "let_expression_scope")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, LET_EXPRESSION_SCOPE, "<let expression scope>");
-    r = list(b, l + 1, SigmaParser::let_expression_scope_entry);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+  static boolean let_expression_scope(PsiBuilder b, int l) {
+    return list(b, l + 1, SigmaParser::let_expression_scope_entry);
   }
 
   /* ********************************************************** */
@@ -224,15 +219,13 @@ public class SigmaParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // namespace_entry*
-  public static boolean namespace_body(PsiBuilder b, int l) {
+  static boolean namespace_body(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "namespace_body")) return false;
-    Marker m = enter_section_(b, l, _NONE_, NAMESPACE_BODY, "<namespace body>");
     while (true) {
       int c = current_position_(b);
       if (!namespace_entry(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "namespace_body", c)) break;
     }
-    exit_section_(b, l, m, true, false, null);
     return true;
   }
 
@@ -252,14 +245,12 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // constant_definition |
   //     namespace_definition
-  public static boolean namespace_entry(PsiBuilder b, int l) {
+  static boolean namespace_entry(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "namespace_entry")) return false;
-    if (!nextTokenIs(b, "<namespace entry>", CONST_KEYWORD, NAMESPACE_KEYWORD)) return false;
+    if (!nextTokenIs(b, "", CONST_KEYWORD, NAMESPACE_KEYWORD)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, NAMESPACE_ENTRY, "<namespace entry>");
     r = constant_definition(b, l + 1);
     if (!r) r = namespace_definition(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
