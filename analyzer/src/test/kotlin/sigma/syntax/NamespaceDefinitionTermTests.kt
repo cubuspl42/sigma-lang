@@ -41,7 +41,7 @@ class NamespaceDefinitionTermTests {
                             name = Symbol.of("UserId"),
                             body = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 20),
-                                referee = Symbol.of("Int"),
+                                referredName = Symbol.of("Int"),
                             )
                         ),
                         ConstantDefinitionSourceTerm(
@@ -65,7 +65,7 @@ class NamespaceDefinitionTermTests {
                                             name = Symbol.of("a"),
                                             type = ReferenceSourceTerm(
                                                 location = SourceLocation(lineIndex = 6, columnIndex = 24),
-                                                referee = Symbol.of("Int"),
+                                                referredName = Symbol.of("Int"),
                                             ),
                                         ),
                                     ),

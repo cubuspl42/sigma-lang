@@ -14,7 +14,7 @@ class FieldReadTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        referee = Symbol.of("foo"),
+                        referredName = Symbol.of("foo"),
                     ),
                     fieldName = Symbol.of("bar"),
                 ),

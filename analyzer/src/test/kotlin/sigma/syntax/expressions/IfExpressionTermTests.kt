@@ -22,15 +22,15 @@ class IfExpressionTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     guard = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                        referee = Symbol.of("g"),
+                        referredName = Symbol.of("g"),
                     ),
                     trueBranch = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 2, columnIndex = 10),
-                        referee = Symbol.of("t"),
+                        referredName = Symbol.of("t"),
                     ),
                     falseBranch = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 3, columnIndex = 10),
-                        referee = Symbol.of("f"),
+                        referredName = Symbol.of("f"),
                     ),
                 ),
                 actual = term,

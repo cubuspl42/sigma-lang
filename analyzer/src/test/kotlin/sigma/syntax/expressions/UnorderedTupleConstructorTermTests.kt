@@ -28,7 +28,7 @@ class UnorderedTupleConstructorTermTests {
                             name = Symbol.of("foo"),
                             value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
-                                referee = Symbol.of("baz1"),
+                                referredName = Symbol.of("baz1"),
                             ),
                         ),
                     ),
@@ -47,14 +47,14 @@ class UnorderedTupleConstructorTermTests {
                             name = Symbol.of("foo"),
                             value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
-                                referee = Symbol.of("baz1"),
+                                referredName = Symbol.of("baz1"),
                             ),
                         ),
                         UnorderedTupleConstructorSourceTerm.Entry(
                             name = Symbol.of("bar"),
                             value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
-                                referee = Symbol.of("baz2"),
+                                referredName = Symbol.of("baz2"),
                             ),
                         ),
                     ),

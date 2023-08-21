@@ -1,13 +1,14 @@
 package sigma.syntax.expressions
 
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
+import sigma.syntax.LocalDefinitionTerm
 import sigma.syntax.SourceLocation
 
 data class LetExpressionSourceTerm(
     override val location: SourceLocation,
     val localScope: LocalScopeSourceTerm,
-    val result: ExpressionSourceTerm,
-) : ExpressionSourceTerm() {
+    override val result: ExpressionSourceTerm,
+) : ExpressionSourceTerm(), LetExpressionTerm {
     companion object {
         fun build(
             ctx: LetExpressionContext,
@@ -17,6 +18,9 @@ data class LetExpressionSourceTerm(
             result = ExpressionSourceTerm.build(ctx.result),
         )
     }
+
+    override val definitions: List<LocalDefinitionTerm>
+        get() = localScope.definitions
 
     override fun dump(): String = "(let expression)"
 }

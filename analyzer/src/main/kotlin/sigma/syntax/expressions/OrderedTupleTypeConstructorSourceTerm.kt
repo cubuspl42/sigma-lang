@@ -6,12 +6,12 @@ import sigma.syntax.SourceLocation
 
 data class OrderedTupleTypeConstructorSourceTerm(
     override val location: SourceLocation,
-    val elements: List<Element>,
-) : TupleTypeConstructorSourceTerm() {
+    override val elements: List<Element>,
+) : TupleTypeConstructorSourceTerm(), OrderedTupleTypeConstructorTerm {
     data class Element(
-        val name: Symbol?,
-        val type: ExpressionSourceTerm,
-    )
+        override val name: Symbol?,
+        override val type: ExpressionSourceTerm,
+    ) : OrderedTupleTypeConstructorTerm.Element
 
     companion object {
         fun build(
@@ -26,19 +26,6 @@ data class OrderedTupleTypeConstructorSourceTerm(
             },
         )
     }
-
-//    override fun evaluate(
-//        declarationScope: StaticScope,
-//    ): OrderedTupleType = OrderedTupleType(
-//        elements = elements.map {
-//            OrderedTupleType.Element(
-//                name = it.name,
-//                type = it.type.evaluateAsType(
-//                    declarationScope = declarationScope,
-//                ),
-//            )
-//        },
-//    )
 
     override fun dump(): String = "(ordered tuple type constructor)"
 }

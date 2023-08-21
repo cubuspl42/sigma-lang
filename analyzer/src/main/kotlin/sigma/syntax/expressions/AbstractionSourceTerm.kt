@@ -5,11 +5,11 @@ import sigma.syntax.SourceLocation
 
 data class AbstractionSourceTerm(
     override val location: SourceLocation,
-    val genericParametersTuple: GenericParametersTuple? = null,
-    val argumentType: TupleTypeConstructorSourceTerm,
-    val declaredImageType: ExpressionSourceTerm? = null,
-    val image: ExpressionSourceTerm,
-) : ExpressionSourceTerm() {
+    override val genericParametersTuple: GenericParametersTuple? = null,
+    override val argumentType: TupleTypeConstructorSourceTerm,
+    override val declaredImageType: ExpressionSourceTerm? = null,
+    override val image: ExpressionSourceTerm,
+) : ExpressionSourceTerm(), AbstractionTerm {
     companion object {
         fun build(
             ctx: AbstractionContext,

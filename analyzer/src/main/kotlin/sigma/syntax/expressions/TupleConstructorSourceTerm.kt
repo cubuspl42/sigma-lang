@@ -4,7 +4,7 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.TupleConstructorContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
-sealed class TupleConstructorSourceTerm : ExpressionSourceTerm() {
+sealed class TupleConstructorSourceTerm : ExpressionSourceTerm(), TupleConstructorTerm {
     companion object {
         fun build(
             ctx: TupleConstructorContext,

@@ -36,10 +36,10 @@ class Reference(
         )
     }
 
-    val referredName = term.referee
+    val referredName = term.referredName
 
     private val resolved: ResolvedName? by lazy {
-        declarationScope.resolveName(name = term.referee)
+        declarationScope.resolveName(name = term.referredName)
     }
 
     override val inferredType: Thunk<Type>
@@ -56,7 +56,7 @@ class Reference(
             when (resolved) {
                 null -> UnresolvedNameError(
                     location = term.location,
-                    name = term.referee,
+                    name = term.referredName,
                 )
 
                 else -> null

@@ -32,7 +32,7 @@ class AbstractionTermTests {
                                 name = Symbol.of("n"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 5),
-                                    referee = Symbol.of("Int"),
+                                    referredName = Symbol.of("Int"),
                                 ),
                             ),
                         ),
@@ -68,14 +68,14 @@ class AbstractionTermTests {
                                 name = Symbol.of("a"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 13),
-                                    referee = Symbol.of("a"),
+                                    referredName = Symbol.of("a"),
                                 ),
                             ),
                             OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("b"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 19),
-                                    referee = Symbol.of("b"),
+                                    referredName = Symbol.of("b"),
                                 ),
                             ),
                         ),
@@ -106,7 +106,7 @@ class AbstractionTermTests {
                                 name = Symbol.of("n"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 10),
-                                    referee = Symbol.of("Int"),
+                                    referredName = Symbol.of("Int"),
                                 ),
                             ),
                         ),

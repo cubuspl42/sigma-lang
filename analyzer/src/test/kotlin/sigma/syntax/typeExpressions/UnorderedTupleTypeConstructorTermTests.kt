@@ -40,21 +40,21 @@ class UnorderedTupleTypeConstructorTermTests {
                             name = Symbol.of("a"),
                             value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 5),
-                                referee = Symbol.of("A"),
+                                referredName = Symbol.of("A"),
                             ),
                         ),
                         UnorderedTupleConstructorSourceTerm.Entry(
                             name = Symbol.of("b"),
                             value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 11),
-                                referee = Symbol.of("B"),
+                                referredName = Symbol.of("B"),
                             ),
                         ),
                         UnorderedTupleConstructorSourceTerm.Entry(
                             name = Symbol.of("c"),
                             value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
-                                referee = Symbol.of("C"),
+                                referredName = Symbol.of("C"),
                             ),
                         ),
                     ),
