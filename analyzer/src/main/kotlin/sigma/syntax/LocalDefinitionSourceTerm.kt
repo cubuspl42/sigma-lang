@@ -9,7 +9,7 @@ data class LocalDefinitionSourceTerm(
     override val name: Symbol,
     override val declaredTypeBody: ExpressionSourceTerm? = null,
     override val body: ExpressionSourceTerm,
-) : SourceTerm(), DefinitionTerm {
+) : SourceTerm(), LocalDefinitionTerm {
     companion object {
         fun build(
             ctx: DefinitionContext,

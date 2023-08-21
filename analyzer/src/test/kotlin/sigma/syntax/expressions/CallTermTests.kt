@@ -14,11 +14,11 @@ class CallTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        referee = Symbol.of("foo"),
+                        referredName = Symbol.of("foo"),
                     ),
                     argument = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                        referee = Symbol.of("bar"),
+                        referredName = Symbol.of("bar"),
                     ),
                 ),
                 actual = ExpressionSourceTerm.parse("foo(bar)"),
@@ -35,13 +35,13 @@ class CallTermTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         subject = ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                            referee = Symbol.of("foo"),
+                            referredName = Symbol.of("foo"),
                         ),
                         fieldName = Symbol.of("bar"),
                     ),
                     argument = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 8),
-                        referee = Symbol.of("baz"),
+                        referredName = Symbol.of("baz"),
                     ),
                 ),
                 actual = ExpressionSourceTerm.parse("foo.bar(baz)"),
@@ -55,7 +55,7 @@ class CallTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        referee = Symbol.of("foo"),
+                        referredName = Symbol.of("foo"),
                     ),
                     argument = UnorderedTupleConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
@@ -64,14 +64,14 @@ class CallTermTests {
                                 name = Symbol.of("arg1"),
                                 value = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 10),
-                                    referee = Symbol.of("value1"),
+                                    referredName = Symbol.of("value1"),
                                 ),
                             ),
                             UnorderedTupleConstructorSourceTerm.Entry(
                                 name = Symbol.of("arg2"),
                                 value = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 24),
-                                    referee = Symbol.of("value2"),
+                                    referredName = Symbol.of("value2"),
                                 ),
                             ),
                         ),
@@ -88,18 +88,18 @@ class CallTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        referee = Symbol.of("foo"),
+                        referredName = Symbol.of("foo"),
                     ),
                     argument = OrderedTupleConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         elements = listOf(
                             ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                                referee = Symbol.of("value1"),
+                                referredName = Symbol.of("value1"),
                             ),
                             ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 12),
-                                referee = Symbol.of("value2"),
+                                referredName = Symbol.of("value2"),
                             ),
                         ),
                     ),

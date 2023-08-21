@@ -27,7 +27,7 @@ data class CallSourceTerm(
                 location = SourceLocation.build(ctx),
                 subject = ReferenceSourceTerm(
                     location = SourceLocation.build(ctx),
-                    referee = Symbol.of(prototype.functionName),
+                    referredName = Symbol.of(prototype.functionName),
                 ),
                 argument = UnorderedTupleConstructorSourceTerm(
                     location = SourceLocation.build(ctx),

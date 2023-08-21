@@ -45,14 +45,14 @@ class ClassDefinitionTermTests {
                                 name = Symbol.of("mArg1"),
                                 value = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 7, columnIndex = 36),
-                                    referee = Symbol.of("Int"),
+                                    referredName = Symbol.of("Int"),
                                 ),
                             ),
                             UnorderedTupleConstructorSourceTerm.Entry(
                                 name = Symbol.of("mArg2"),
                                 value = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 7, columnIndex = 48),
-                                    referee = Symbol.of("Bool"),
+                                    referredName = Symbol.of("Bool"),
                                 ),
                             ),
                         ),
@@ -76,7 +76,7 @@ class ClassDefinitionTermTests {
                                 name = Symbol.of("mArg1"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 9, columnIndex = 36),
-                                    referee = Symbol.of("Int"),
+                                    referredName = Symbol.of("Int"),
                                 ),
                             ),
                         ),
@@ -98,7 +98,7 @@ class ClassDefinitionTermTests {
                             name = Symbol.of("bar"),
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 3, columnIndex = 13),
-                                referee = Symbol.of("Bar"),
+                                referredName = Symbol.of("Bar"),
                             ),
                         ),
                         ClassDefinitionSourceTerm.FieldDeclarationSourceTerm(
@@ -106,7 +106,7 @@ class ClassDefinitionTermTests {
                             name = Symbol.of("id"),
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 4, columnIndex = 12),
-                                referee = Symbol.of("Int"),
+                                referredName = Symbol.of("Int"),
                             ),
                         ),
                     ),

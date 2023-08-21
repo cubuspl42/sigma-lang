@@ -6,8 +6,8 @@ import sigma.syntax.SourceLocation
 
 data class IntLiteralSourceTerm(
     override val location: SourceLocation,
-    val value: IntValue,
-) : ExpressionSourceTerm() {
+    override val value: IntValue,
+) : ExpressionSourceTerm(), IntLiteralTerm {
     companion object {
         fun build(
             ctx: IntLiteralAltContext,

@@ -34,7 +34,7 @@ class OrderedTupleConstructorTermTests {
                     elements = listOf(
                         ReferenceSourceTerm(
                             location = SourceLocation(1, 1),
-                            referee = Symbol.of("a"),
+                            referredName = Symbol.of("a"),
                         ),
                     ),
                 ),
@@ -54,17 +54,17 @@ class OrderedTupleConstructorTermTests {
                     elements = listOf(
                         ReferenceSourceTerm(
                             location = SourceLocation(1, 1),
-                            referee = Symbol.of("a"),
+                            referredName = Symbol.of("a"),
                         ),
 
                         ReferenceSourceTerm(
                             location = SourceLocation(1, 4),
-                            referee = Symbol.of("b"),
+                            referredName = Symbol.of("b"),
                         ),
 
                         ReferenceSourceTerm(
                             location = SourceLocation(1, 7),
-                            referee = Symbol.of("c"),
+                            referredName = Symbol.of("c"),
                         ),
                     ),
                 ),

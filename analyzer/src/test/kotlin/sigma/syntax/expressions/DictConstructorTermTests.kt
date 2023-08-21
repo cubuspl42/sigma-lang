@@ -16,21 +16,21 @@ class DictConstructorTermTests {
                         DictConstructorSourceTerm.Association(
                             key = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 2),
-                                referee = Symbol.of("foo"),
+                                referredName = Symbol.of("foo"),
                             ),
                             value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 8),
-                                referee = Symbol.of("value1"),
+                                referredName = Symbol.of("value1"),
                             ),
                         ),
                         DictConstructorSourceTerm.Association(
                             key = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
-                                referee = Symbol.of("baz"),
+                                referredName = Symbol.of("baz"),
                             ),
                             value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 23),
-                                referee = Symbol.of("value2"),
+                                referredName = Symbol.of("value2"),
                             ),
                         ),
                     ),

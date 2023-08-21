@@ -10,8 +10,8 @@ import sigma.parser.antlr.SigmaParser.ModuleContext
 data class ModuleSourceTerm(
     override val location: SourceLocation,
     val imports: List<Import>,
-    val namespaceEntries: List<NamespaceEntrySourceTerm>,
-) : SourceTerm() {
+    override val namespaceEntries: List<NamespaceEntrySourceTerm>,
+) : SourceTerm(), ModuleTerm {
     companion object {
         fun parse(
             source: String,

@@ -39,7 +39,7 @@ class OrderedTupleTypeConstructorTermTests {
                             name = null,
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 2),
-                                referee = Symbol.of("A"),
+                                referredName = Symbol.of("A"),
                             ),
                         ),
                     ),
@@ -62,21 +62,21 @@ class OrderedTupleTypeConstructorTermTests {
                             name = null,
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 2),
-                                referee = Symbol.of("A"),
+                                referredName = Symbol.of("A"),
                             ),
                         ),
                         OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 5),
-                                referee = Symbol.of("B"),
+                                referredName = Symbol.of("B"),
                             ),
                         ),
                         OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 8),
-                                referee = Symbol.of("C"),
+                                referredName = Symbol.of("C"),
                             ),
                         ),
                     ),
@@ -99,21 +99,21 @@ class OrderedTupleTypeConstructorTermTests {
                             name = Symbol.of("a"),
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 5),
-                                referee = Symbol.of("A"),
+                                referredName = Symbol.of("A"),
                             ),
                         ),
                         OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 8),
-                                referee = Symbol.of("B"),
+                                referredName = Symbol.of("B"),
                             ),
                         ),
                         OrderedTupleTypeConstructorSourceTerm.Element(
                             name = Symbol.of("c"),
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 14),
-                                referee = Symbol.of("C"),
+                                referredName = Symbol.of("C"),
                             ),
                         ),
                     ),

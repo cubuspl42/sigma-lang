@@ -21,11 +21,11 @@ class DictTypeTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     keyType = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
-                        referee = Symbol.of("K"),
+                        referredName = Symbol.of("K"),
                     ),
                     valueType = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 7),
-                        referee = Symbol.of("V"),
+                        referredName = Symbol.of("V"),
                     ),
                 ),
                 actual = expression,

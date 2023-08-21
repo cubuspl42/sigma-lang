@@ -18,7 +18,7 @@ class IsUndefinedTermCheckTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     argument = ReferenceSourceTerm(
                         SourceLocation(lineIndex = 1, columnIndex = 13),
-                        referee = Symbol.of("foo"),
+                        referredName = Symbol.of("foo"),
                     ),
                 ),
                 actual = term,

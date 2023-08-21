@@ -36,7 +36,7 @@ class ModuleTermTests {
                         name = Symbol.of("UserId"),
                         body = ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 16),
-                            referee = Symbol.of("Int"),
+                            referredName = Symbol.of("Int"),
                         )
                     ),
                     ConstantDefinitionSourceTerm(
@@ -60,7 +60,7 @@ class ModuleTermTests {
                                         name = Symbol.of("a"),
                                         type = ReferenceSourceTerm(
                                             location = SourceLocation(lineIndex = 5, columnIndex = 20),
-                                            referee = Symbol.of("Int"),
+                                            referredName = Symbol.of("Int"),
                                         ),
                                     ),
                                 ),

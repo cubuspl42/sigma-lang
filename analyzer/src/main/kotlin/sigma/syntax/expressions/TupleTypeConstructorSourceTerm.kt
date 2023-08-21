@@ -5,7 +5,7 @@ import sigma.parser.antlr.SigmaParser.OrderedTupleTypeConstructorContext
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeConstructorContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
-sealed class TupleTypeConstructorSourceTerm : ExpressionSourceTerm() {
+sealed class TupleTypeConstructorSourceTerm : ExpressionSourceTerm(), TupleTypeConstructorTerm {
     companion object {
         fun build(
             ctx: SigmaParser.TupleTypeConstructorContext,

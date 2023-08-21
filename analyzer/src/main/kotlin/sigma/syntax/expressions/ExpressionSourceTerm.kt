@@ -25,7 +25,7 @@ import sigma.parser.antlr.SigmaParser.TupleConstructorAltContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 import sigma.syntax.SourceTerm
 
-sealed class ExpressionSourceTerm : SourceTerm() {
+sealed class ExpressionSourceTerm : SourceTerm(), ExpressionTerm {
     companion object {
         fun parse(
             source: String,
