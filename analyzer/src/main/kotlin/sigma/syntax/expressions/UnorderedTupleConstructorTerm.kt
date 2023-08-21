@@ -9,6 +9,6 @@ interface UnorderedTupleConstructorTerm {
     interface Entry {
         val name: Symbol
 
-        val value: ExpressionSourceTerm
+        val value: ExpressionTerm
     }
 }

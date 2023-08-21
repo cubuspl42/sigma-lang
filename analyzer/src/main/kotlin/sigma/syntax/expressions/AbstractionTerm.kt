@@ -5,7 +5,7 @@ interface AbstractionTerm {
 
     val argumentType: TupleTypeConstructorTerm
 
-    val declaredImageType: ExpressionSourceTerm?
+    val declaredImageType: ExpressionTerm?
 
-    val image: ExpressionSourceTerm
+    val image: ExpressionTerm
 }
