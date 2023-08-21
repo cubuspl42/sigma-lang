@@ -4,8 +4,8 @@ import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.LetExpressionTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.LetExpressionSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -13,13 +13,13 @@ class LocalDefinitionTests {
     class TypeCheckingTests {
         @Test
         fun testUnmatchedInferredType() {
-            val letExpressionTerm = ExpressionTerm.parse(
+            val letExpressionTerm = ExpressionSourceTerm.parse(
                 source = """
                     %let {
                         a: Int = false
                     } %in a
                 """.trimIndent(),
-            ) as LetExpressionTerm
+            ) as LetExpressionSourceTerm
 
             val definitionTerm = letExpressionTerm.localScope.definitions.single()
 

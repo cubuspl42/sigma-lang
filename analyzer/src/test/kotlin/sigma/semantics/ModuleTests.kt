@@ -5,7 +5,7 @@ import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.UniversalFunctionType
-import sigma.syntax.ModuleTerm
+import sigma.syntax.ModuleSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -14,7 +14,7 @@ class ModuleTests {
     class TypeCheckingTests {
         @Test
         fun testTypeScope() {
-            val term = ModuleTerm.parse(
+            val term = ModuleSourceTerm.parse(
                 source = """
                     %const UserId = Int
                     

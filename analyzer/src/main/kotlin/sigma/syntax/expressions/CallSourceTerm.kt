@@ -6,39 +6,37 @@ import sigma.parser.antlr.SigmaParser.BinaryOperationAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionAltContext
 import sigma.parser.antlr.SigmaParser.CallExpressionTupleConstructorAltContext
 import sigma.syntax.SourceLocation
-import sigma.evaluation.values.FunctionValue
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.scope.Scope
 
-data class CallTerm(
+data class CallSourceTerm(
     override val location: SourceLocation,
     // Idea: Rename to `callee`? (again?)
-    val subject: ExpressionTerm,
-    val argument: ExpressionTerm,
-) : ExpressionTerm() {
+    val subject: ExpressionSourceTerm,
+    val argument: ExpressionSourceTerm,
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: BinaryOperationAltContext,
-        ): CallTerm {
-            val leftExpression = ExpressionTerm.build(ctx.left)
-            val rightExpression = ExpressionTerm.build(ctx.right)
+        ): CallSourceTerm {
+            val leftExpression = ExpressionSourceTerm.build(ctx.left)
+            val rightExpression = ExpressionSourceTerm.build(ctx.right)
 
             val prototype = BinaryOperationPrototype.build(ctx)
 
-            return CallTerm(
+            return CallSourceTerm(
                 location = SourceLocation.build(ctx),
-                subject = ReferenceTerm(
+                subject = ReferenceSourceTerm(
                     location = SourceLocation.build(ctx),
                     referee = Symbol.of(prototype.functionName),
                 ),
-                argument = UnorderedTupleConstructorTerm(
+                argument = UnorderedTupleConstructorSourceTerm(
                     location = SourceLocation.build(ctx),
                     entries = listOf(
-                        UnorderedTupleConstructorTerm.Entry(
+                        UnorderedTupleConstructorSourceTerm.Entry(
                             name = prototype.leftArgument,
                             value = leftExpression,
                         ),
-                        UnorderedTupleConstructorTerm.Entry(
+                        UnorderedTupleConstructorSourceTerm.Entry(
                             name = prototype.rightArgument,
                             value = rightExpression,
                         ),
@@ -49,18 +47,18 @@ data class CallTerm(
 
         fun build(
             ctx: CallExpressionAltContext,
-        ): CallTerm = CallTerm(
+        ): CallSourceTerm = CallSourceTerm(
             location = SourceLocation.build(ctx),
-            subject = ExpressionTerm.build(ctx.callee),
-            argument = ExpressionTerm.build(ctx.argument),
+            subject = ExpressionSourceTerm.build(ctx.callee),
+            argument = ExpressionSourceTerm.build(ctx.argument),
         )
 
         fun build(
             ctx: CallExpressionTupleConstructorAltContext,
-        ): CallTerm = CallTerm(
+        ): CallSourceTerm = CallSourceTerm(
             location = SourceLocation.build(ctx),
-            subject = ExpressionTerm.build(ctx.callee),
-            argument = TupleConstructorTerm.build(ctx.argument),
+            subject = ExpressionSourceTerm.build(ctx.callee),
+            argument = TupleConstructorSourceTerm.build(ctx.argument),
         )
     }
 

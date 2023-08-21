@@ -1,7 +1,6 @@
 package sigma.syntax.expressions
 
 import sigma.semantics.BuiltinScope
-import sigma.syntax.expressions.ReferenceTerm
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
@@ -19,26 +18,26 @@ class AbstractionTermTests {
     class ParsingTests {
         @Test
         fun test() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "^[n: Int] => 0",
             )
 
             assertEquals(
-                expected = AbstractionTerm(
+                expected = AbstractionSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    argumentType = OrderedTupleTypeConstructorTerm(
+                    argumentType = OrderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         elements = listOf(
-                            OrderedTupleTypeConstructorTerm.Element(
+                            OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("n"),
-                                type = ReferenceTerm(
+                                type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
                         ),
                     ),
-                    image = IntLiteralTerm(
+                    image = IntLiteralSourceTerm(
                         SourceLocation(lineIndex = 1, columnIndex = 13),
                         value = IntValue(0),
                     ),
@@ -49,12 +48,12 @@ class AbstractionTermTests {
 
         @Test
         fun testGenericWithMultipleParameters() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "![a, b] ^[a: a, b: b] => 0",
             )
 
             assertEquals(
-                expected = AbstractionTerm(
+                expected = AbstractionSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0), parametersDefinitions = listOf(
@@ -62,26 +61,26 @@ class AbstractionTermTests {
                             Symbol.of("b"),
                         )
                     ),
-                    argumentType = OrderedTupleTypeConstructorTerm(
+                    argumentType = OrderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 8),
                         elements = listOf(
-                            OrderedTupleTypeConstructorTerm.Element(
+                            OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("a"),
-                                type = ReferenceTerm(
+                                type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 13),
                                     referee = Symbol.of("a"),
                                 ),
                             ),
-                            OrderedTupleTypeConstructorTerm.Element(
+                            OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("b"),
-                                type = ReferenceTerm(
+                                type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 19),
                                     referee = Symbol.of("b"),
                                 ),
                             ),
                         ),
                     ),
-                    image = IntLiteralTerm(
+                    image = IntLiteralSourceTerm(
                         SourceLocation(lineIndex = 1, columnIndex = 25),
                         value = IntValue(0),
                     ),
@@ -93,31 +92,31 @@ class AbstractionTermTests {
         @Test
         fun testGenericWithSingleParameter() {
             assertEquals(
-                expected = AbstractionTerm(
+                expected = AbstractionSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0), parametersDefinitions = listOf(
                             Symbol.of("t"),
                         )
                     ),
-                    argumentType = OrderedTupleTypeConstructorTerm(
+                    argumentType = OrderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 5),
                         elements = listOf(
-                            OrderedTupleTypeConstructorTerm.Element(
+                            OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("n"),
-                                type = ReferenceTerm(
+                                type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 10),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
                         ),
                     ),
-                    image = IntLiteralTerm(
+                    image = IntLiteralSourceTerm(
                         SourceLocation(lineIndex = 1, columnIndex = 18),
                         value = IntValue(0),
                     ),
                 ),
-                actual = ExpressionTerm.parse(
+                actual = ExpressionSourceTerm.parse(
                     source = "![t] ^[n: Int] => 0",
                 ),
             )
@@ -127,7 +126,7 @@ class AbstractionTermTests {
     class TypeCheckingTests {
         @Test
         fun test() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "^[n: Int] => n",
             )
 
@@ -156,7 +155,7 @@ class AbstractionTermTests {
 
         @Test
         fun testGenericSingleParameter() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "![t] ^[t: t] => false",
             )
 
@@ -190,7 +189,7 @@ class AbstractionTermTests {
 
         @Test
         fun testRecursiveCallTest() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     %let {
                         f = ^[n: Int] -> Bool => f[n + 1]

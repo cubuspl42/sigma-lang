@@ -10,12 +10,12 @@ import sigma.semantics.StaticBlock
 import sigma.semantics.types.MetaType
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.SourceLocation
-import sigma.syntax.Term
+import sigma.syntax.SourceTerm
 
 data class GenericParametersTuple(
     override val location: SourceLocation,
     val parametersDefinitions: List<Symbol>,
-) : Term() {
+) : SourceTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.GenericParametersTupleContext,

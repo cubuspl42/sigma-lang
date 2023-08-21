@@ -10,56 +10,56 @@ class UnorderedTupleConstructorTermTests {
         @Test
         fun testEmpty() {
             assertEquals(
-                expected = UnorderedTupleConstructorTerm(
+                expected = UnorderedTupleConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = emptyList()
                 ),
-                actual = ExpressionTerm.parse("{}"),
+                actual = ExpressionSourceTerm.parse("{}"),
             )
         }
 
         @Test
         fun testSingleEntry() {
             assertEquals(
-                expected = UnorderedTupleConstructorTerm(
+                expected = UnorderedTupleConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        UnorderedTupleConstructorTerm.Entry(
+                        UnorderedTupleConstructorSourceTerm.Entry(
                             name = Symbol.of("foo"),
-                            value = ReferenceTerm(
+                            value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 referee = Symbol.of("baz1"),
                             ),
                         ),
                     ),
                 ),
-                actual = ExpressionTerm.parse("{foo: baz1}"),
+                actual = ExpressionSourceTerm.parse("{foo: baz1}"),
             )
         }
 
         @Test
         fun testMultipleEntries() {
             assertEquals(
-                expected = UnorderedTupleConstructorTerm(
+                expected = UnorderedTupleConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        UnorderedTupleConstructorTerm.Entry(
+                        UnorderedTupleConstructorSourceTerm.Entry(
                             name = Symbol.of("foo"),
-                            value = ReferenceTerm(
+                            value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                 referee = Symbol.of("baz1"),
                             ),
                         ),
-                        UnorderedTupleConstructorTerm.Entry(
+                        UnorderedTupleConstructorSourceTerm.Entry(
                             name = Symbol.of("bar"),
-                            value = ReferenceTerm(
+                            value = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
                                 referee = Symbol.of("baz2"),
                             ),
                         ),
                     ),
                 ),
-                actual = ExpressionTerm.parse("{foo: baz1, bar: baz2}"),
+                actual = ExpressionSourceTerm.parse("{foo: baz1, bar: baz2}"),
             )
         }
     }

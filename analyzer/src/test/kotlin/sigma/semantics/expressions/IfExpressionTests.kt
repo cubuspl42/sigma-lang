@@ -8,8 +8,8 @@ import sigma.semantics.StaticScope
 import sigma.semantics.types.IntLiteralType
 import sigma.semantics.types.IntType
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.IfExpressionTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.IfExpressionSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -18,14 +18,14 @@ class IfExpressionTests {
     class TypeCheckingTests {
         @Test
         fun testLegalGuard() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     %if true (
                         %then 3,
                         %else 4,
                     )
                 """.trimIndent()
-            ) as IfExpressionTerm
+            ) as IfExpressionSourceTerm
 
             val call = IfExpression.build(
                 declarationScope = BuiltinScope,
@@ -44,14 +44,14 @@ class IfExpressionTests {
 
         @Test
         fun testIllegalGuard() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     %if 2 (
                         %then 3,
                         %else 4,
                     )
                 """.trimIndent()
-            ) as IfExpressionTerm
+            ) as IfExpressionSourceTerm
 
             val call = IfExpression.build(
                 declarationScope = StaticScope.Empty,
@@ -79,14 +79,14 @@ class IfExpressionTests {
     class EvaluationTests {
         @Test
         fun testTrueGuard() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     %if true (
                         %then 3,
                         %else 4,
                     )
                 """.trimIndent()
-            ) as IfExpressionTerm
+            ) as IfExpressionSourceTerm
 
             val ifExpression = IfExpression.build(
                 declarationScope = StaticScope.Empty,
@@ -107,14 +107,14 @@ class IfExpressionTests {
 
         @Test
         fun testFalseGuard() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     %if false (
                         %then 3,
                         %else 4,
                     )
                 """.trimIndent()
-            ) as IfExpressionTerm
+            ) as IfExpressionSourceTerm
 
             val ifExpression = IfExpression.build(
                 declarationScope = BuiltinScope,

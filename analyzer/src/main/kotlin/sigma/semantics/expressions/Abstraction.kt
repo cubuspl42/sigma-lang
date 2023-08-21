@@ -6,7 +6,6 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.evaluation.values.asThunk
-import sigma.evaluation.values.evaluateValueHacky
 import sigma.semantics.DynamicResolution
 import sigma.semantics.Formula
 import sigma.semantics.ResolvedName
@@ -18,13 +17,12 @@ import sigma.semantics.types.FunctionType
 import sigma.semantics.types.TupleType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
-import sigma.semantics.types.TypeVariableResolution
 import sigma.semantics.types.UniversalFunctionType
-import sigma.syntax.expressions.AbstractionTerm
+import sigma.syntax.expressions.AbstractionSourceTerm
 
 class Abstraction(
     private val innerDeclarationScope: StaticScope,
-    override val term: AbstractionTerm,
+    override val term: AbstractionSourceTerm,
     val genericParameters: Set<TypeVariable>,
     val argumentType: TupleType,
     val declaredImageTypeConstructor: Expression?,
@@ -59,7 +57,7 @@ class Abstraction(
     companion object {
         fun build(
             outerDeclarationScope: StaticScope,
-            term: AbstractionTerm,
+            term: AbstractionSourceTerm,
         ): Abstraction {
             val genericDeclarationBlock = term.genericParametersTuple?.asDeclarationBlock
 

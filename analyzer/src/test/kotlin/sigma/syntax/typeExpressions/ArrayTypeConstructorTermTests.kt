@@ -2,9 +2,9 @@ package sigma.syntax.typeExpressions
 
 import sigma.evaluation.values.Symbol
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.ArrayTypeConstructorTerm
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.ReferenceTerm
+import sigma.syntax.expressions.ArrayTypeConstructorSourceTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.ReferenceSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -12,14 +12,14 @@ class ArrayTypeConstructorTermTests {
     class ParsingTests {
         @Test
         fun test() {
-            val expression = ExpressionTerm.parse(
+            val expression = ExpressionSourceTerm.parse(
                 source = "^[A*]",
             )
 
             assertEquals(
-                expected = ArrayTypeConstructorTerm(
+                expected = ArrayTypeConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    elementType = ReferenceTerm(
+                    elementType = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 2),
                         referee = Symbol.of("A"),
                     ),

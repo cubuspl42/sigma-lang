@@ -3,20 +3,20 @@ package sigma.syntax.expressions
 import sigma.parser.antlr.SigmaParser.IfExpressionContext
 import sigma.syntax.SourceLocation
 
-data class IfExpressionTerm(
+data class IfExpressionSourceTerm(
     override val location: SourceLocation,
-    val guard: ExpressionTerm,
-    val trueBranch: ExpressionTerm,
-    val falseBranch: ExpressionTerm,
-) : ExpressionTerm() {
+    val guard: ExpressionSourceTerm,
+    val trueBranch: ExpressionSourceTerm,
+    val falseBranch: ExpressionSourceTerm,
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: IfExpressionContext,
-        ): IfExpressionTerm = IfExpressionTerm(
+        ): IfExpressionSourceTerm = IfExpressionSourceTerm(
             location = SourceLocation.build(ctx),
-            guard = ExpressionTerm.build(ctx.guard),
-            trueBranch = ExpressionTerm.build(ctx.trueBranch),
-            falseBranch = ExpressionTerm.build(ctx.falseBranch),
+            guard = ExpressionSourceTerm.build(ctx.guard),
+            trueBranch = ExpressionSourceTerm.build(ctx.trueBranch),
+            falseBranch = ExpressionSourceTerm.build(ctx.falseBranch),
         )
     }
 

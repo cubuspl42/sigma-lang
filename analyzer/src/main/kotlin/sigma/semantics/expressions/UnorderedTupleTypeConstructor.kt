@@ -9,16 +9,16 @@ import sigma.semantics.StaticScope
 import sigma.semantics.types.MetaType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
-import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
+import sigma.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
 
 class UnorderedTupleTypeConstructor(
-    override val term: UnorderedTupleTypeConstructorTerm,
+    override val term: UnorderedTupleTypeConstructorSourceTerm,
     val entries: Set<UnorderedTupleConstructor.Entry>,
 ) : TupleTypeConstructor() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: UnorderedTupleTypeConstructorTerm,
+            term: UnorderedTupleTypeConstructorSourceTerm,
         ): UnorderedTupleTypeConstructor = UnorderedTupleTypeConstructor(
             term = term,
             entries = term.entries.map {

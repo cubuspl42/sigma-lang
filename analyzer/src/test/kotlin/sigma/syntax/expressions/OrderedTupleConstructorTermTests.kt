@@ -9,12 +9,12 @@ class OrderedTupleConstructorTermTests {
     class ParsingTests {
         @Test
         fun testEmpty() {
-            val expression = ExpressionTerm.parse(
+            val expression = ExpressionSourceTerm.parse(
                 source = "[]",
             )
 
             assertEquals(
-                expected = OrderedTupleConstructorTerm(
+                expected = OrderedTupleConstructorSourceTerm(
                     location = SourceLocation(1, 0),
                     elements = emptyList(),
                 ),
@@ -24,15 +24,15 @@ class OrderedTupleConstructorTermTests {
 
         @Test
         fun testSingleElement() {
-            val expression = ExpressionTerm.parse(
+            val expression = ExpressionSourceTerm.parse(
                 source = "[a]",
             )
 
             assertEquals(
-                expected = OrderedTupleConstructorTerm(
+                expected = OrderedTupleConstructorSourceTerm(
                     location = SourceLocation(1, 0),
                     elements = listOf(
-                        ReferenceTerm(
+                        ReferenceSourceTerm(
                             location = SourceLocation(1, 1),
                             referee = Symbol.of("a"),
                         ),
@@ -44,25 +44,25 @@ class OrderedTupleConstructorTermTests {
 
         @Test
         fun testMultipleElements() {
-            val expression = ExpressionTerm.parse(
+            val expression = ExpressionSourceTerm.parse(
                 source = "[a, b, c]",
             )
 
             assertEquals(
-                expected = OrderedTupleConstructorTerm(
+                expected = OrderedTupleConstructorSourceTerm(
                     location = SourceLocation(1, 0),
                     elements = listOf(
-                        ReferenceTerm(
+                        ReferenceSourceTerm(
                             location = SourceLocation(1, 1),
                             referee = Symbol.of("a"),
                         ),
 
-                        ReferenceTerm(
+                        ReferenceSourceTerm(
                             location = SourceLocation(1, 4),
                             referee = Symbol.of("b"),
                         ),
 
-                        ReferenceTerm(
+                        ReferenceSourceTerm(
                             location = SourceLocation(1, 7),
                             referee = Symbol.of("c"),
                         ),

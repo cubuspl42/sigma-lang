@@ -3,16 +3,15 @@ package sigma.syntax.expressions
 import sigma.parser.antlr.SigmaParser.ReferenceContext
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
-import sigma.evaluation.scope.Scope
 
-data class ReferenceTerm(
+data class ReferenceSourceTerm(
     override val location: SourceLocation,
     val referee: Symbol,
-) : ExpressionTerm() {
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: ReferenceContext,
-        ): ReferenceTerm = ReferenceTerm(
+        ): ReferenceSourceTerm = ReferenceSourceTerm(
             location = SourceLocation.build(ctx),
             referee = Symbol(name = ctx.referee.text),
         )

@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project
 import com.github.cubuspl42.sigmaLangIntellijPlugin.MyBundle
 import sigma.evaluation.values.IntValue
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.IntLiteralTerm
+import sigma.syntax.expressions.IntLiteralSourceTerm
 
 @Service(Service.Level.PROJECT)
 class MyProjectService(project: Project) {
@@ -15,7 +15,7 @@ class MyProjectService(project: Project) {
         thisLogger().info(MyBundle.message("projectService", project.name))
         thisLogger().warn("Don't forget to remove all non-needed sample code files with their corresponding registration entries in `plugin.xml`.")
 
-        IntLiteralTerm(
+        IntLiteralSourceTerm(
             location = SourceLocation(0, 0),
             value = IntValue.Zero,
         )

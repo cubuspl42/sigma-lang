@@ -9,8 +9,8 @@ import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Value
 import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.IsUndefinedCheckTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.IsUndefinedCheckSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -19,9 +19,9 @@ class IsUndefinedCheckTests {
     class TypeCheckingTests {
         @Test
         fun test() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "%isUndefined foo",
-            ) as IsUndefinedCheckTerm
+            ) as IsUndefinedCheckSourceTerm
 
             val isUndefinedCheck = IsUndefinedCheck.build(
                 declarationScope = StaticScope.Empty,
@@ -40,9 +40,9 @@ class IsUndefinedCheckTests {
         fun testNotUndefined() {
             val isUndefinedCheck = IsUndefinedCheck.build(
                 declarationScope = StaticScope.Empty,
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = "%isUndefined 0",
-                ) as IsUndefinedCheckTerm,
+                ) as IsUndefinedCheckSourceTerm,
             )
 
             val result = assertIs<EvaluationResult<Value>>(
@@ -63,9 +63,9 @@ class IsUndefinedCheckTests {
 
             val isUndefinedCheck = IsUndefinedCheck.build(
                 declarationScope = StaticScope.Empty,
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = "%isUndefined d(0)",
-                ) as IsUndefinedCheckTerm,
+                ) as IsUndefinedCheckSourceTerm,
             )
 
             val result = assertIs<EvaluationResult<Value>>(

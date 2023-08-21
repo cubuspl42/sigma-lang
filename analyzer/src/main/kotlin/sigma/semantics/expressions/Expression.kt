@@ -15,24 +15,24 @@ import sigma.semantics.types.MetaType
 import sigma.semantics.types.Type
 import sigma.semantics.types.TypeVariable
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.AbstractionTerm
-import sigma.syntax.expressions.ArrayTypeConstructorTerm
-import sigma.syntax.expressions.CallTerm
-import sigma.syntax.expressions.DictConstructorTerm
-import sigma.syntax.expressions.DictTypeConstructorTerm
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.FieldReadTerm
-import sigma.syntax.expressions.FunctionTypeConstructorTerm
-import sigma.syntax.expressions.GenericTypeConstructorTerm
-import sigma.syntax.expressions.IfExpressionTerm
-import sigma.syntax.expressions.IntLiteralTerm
-import sigma.syntax.expressions.IsUndefinedCheckTerm
-import sigma.syntax.expressions.LetExpressionTerm
-import sigma.syntax.expressions.ReferenceTerm
-import sigma.syntax.expressions.SetConstructorTerm
-import sigma.syntax.expressions.SymbolLiteralTerm
-import sigma.syntax.expressions.TupleConstructorTerm
-import sigma.syntax.expressions.TupleTypeConstructorTerm
+import sigma.syntax.expressions.AbstractionSourceTerm
+import sigma.syntax.expressions.ArrayTypeConstructorSourceTerm
+import sigma.syntax.expressions.CallSourceTerm
+import sigma.syntax.expressions.DictConstructorSourceTerm
+import sigma.syntax.expressions.DictTypeConstructorSourceTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.FieldReadSourceTerm
+import sigma.syntax.expressions.FunctionTypeConstructorSourceTerm
+import sigma.syntax.expressions.GenericTypeConstructorSourceTerm
+import sigma.syntax.expressions.IfExpressionSourceTerm
+import sigma.syntax.expressions.IntLiteralSourceTerm
+import sigma.syntax.expressions.IsUndefinedCheckSourceTerm
+import sigma.syntax.expressions.LetExpressionSourceTerm
+import sigma.syntax.expressions.ReferenceSourceTerm
+import sigma.syntax.expressions.SetConstructorSourceTerm
+import sigma.syntax.expressions.SymbolLiteralSourceTerm
+import sigma.syntax.expressions.TupleConstructorSourceTerm
+import sigma.syntax.expressions.TupleTypeConstructorSourceTerm
 
 data class EvaluationContext(
     val evaluationDepth: Int,
@@ -77,91 +77,91 @@ abstract class Expression {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: ExpressionTerm,
+            term: ExpressionSourceTerm,
         ): Expression = when (term) {
-            is AbstractionTerm -> Abstraction.build(
+            is AbstractionSourceTerm -> Abstraction.build(
                 outerDeclarationScope = declarationScope,
                 term = term,
             )
 
-            is CallTerm -> Call.build(
+            is CallSourceTerm -> Call.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is FieldReadTerm -> FieldRead.build(
+            is FieldReadSourceTerm -> FieldRead.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is IntLiteralTerm -> IntLiteral.build(
+            is IntLiteralSourceTerm -> IntLiteral.build(
                 term = term,
             )
 
-            is IsUndefinedCheckTerm -> IsUndefinedCheck.build(
+            is IsUndefinedCheckSourceTerm -> IsUndefinedCheck.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is LetExpressionTerm -> LetExpression.build(
+            is LetExpressionSourceTerm -> LetExpression.build(
                 outerDeclarationScope = declarationScope,
                 term = term,
             )
 
-            is ReferenceTerm -> Reference.build(
+            is ReferenceSourceTerm -> Reference.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is SymbolLiteralTerm -> TODO()
+            is SymbolLiteralSourceTerm -> TODO()
 
-            is TupleConstructorTerm -> TupleConstructor.build(
+            is TupleConstructorSourceTerm -> TupleConstructor.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is DictConstructorTerm -> DictConstructor.build(
+            is DictConstructorSourceTerm -> DictConstructor.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is SetConstructorTerm -> SetConstructor.build(
+            is SetConstructorSourceTerm -> SetConstructor.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is IfExpressionTerm -> IfExpression.build(
+            is IfExpressionSourceTerm -> IfExpression.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is TupleTypeConstructorTerm -> TupleTypeConstructor.build(
+            is TupleTypeConstructorSourceTerm -> TupleTypeConstructor.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is ArrayTypeConstructorTerm -> ArrayTypeConstructor.build(
+            is ArrayTypeConstructorSourceTerm -> ArrayTypeConstructor.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is DictTypeConstructorTerm -> DictTypeConstructor.build(
+            is DictTypeConstructorSourceTerm -> DictTypeConstructor.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is FunctionTypeConstructorTerm -> FunctionTypeConstructor.build(
+            is FunctionTypeConstructorSourceTerm -> FunctionTypeConstructor.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is GenericTypeConstructorTerm -> TODO()
+            is GenericTypeConstructorSourceTerm -> TODO()
         }
 
         fun parse(
             source: String,
         ): Expression {
-            val term = ExpressionTerm.parse(source = source)
+            val term = ExpressionSourceTerm.parse(source = source)
 
             return Expression.build(
                 declarationScope = StaticScope.Empty,
@@ -175,7 +175,7 @@ abstract class Expression {
 
     abstract val errors: Set<SemanticError>
 
-    protected abstract val term: ExpressionTerm
+    protected abstract val term: ExpressionSourceTerm
 
     abstract val inferredType: Thunk<Type>
 

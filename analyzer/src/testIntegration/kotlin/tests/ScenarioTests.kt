@@ -14,7 +14,7 @@ import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.UnorderedTupleType
-import sigma.syntax.NamespaceDefinitionTerm
+import sigma.syntax.NamespaceDefinitionSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -22,7 +22,7 @@ import kotlin.test.assertIs
 class ScenarioTests {
     @Test
     fun testGenericClass() {
-        val term = NamespaceDefinitionTerm.parse(
+        val term = NamespaceDefinitionSourceTerm.parse(
             source = """
                 %namespace EntryNamespace (
                     %const Entry = ^[valueType: Type] => ^{
@@ -156,7 +156,7 @@ class ScenarioTests {
 
     @Test
     fun testNonInferableGenericFunctionCall() {
-        val term = NamespaceDefinitionTerm.parse(
+        val term = NamespaceDefinitionSourceTerm.parse(
             source = """
                 namespace EntryNamespace (
                     %const f = ![type] ^[] -> ^[type*] => 0
@@ -196,7 +196,7 @@ class ScenarioTests {
 
     @Test
     fun testNestedGenericFunctions() {
-        val term = NamespaceDefinitionTerm.parse(
+        val term = NamespaceDefinitionSourceTerm.parse(
             source = """
                 %namespace EntryNamespace (
                     %const f = ![aType] ^[a: aType] -> Int => %let {

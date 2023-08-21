@@ -1,22 +1,22 @@
 package sigma.semantics.expressions
 
 import sigma.semantics.StaticScope
-import sigma.syntax.expressions.TupleTypeConstructorTerm
-import sigma.syntax.expressions.OrderedTupleTypeConstructorTerm
-import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
+import sigma.syntax.expressions.TupleTypeConstructorSourceTerm
+import sigma.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
+import sigma.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
 
 sealed class TupleTypeConstructor : Expression() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: TupleTypeConstructorTerm,
+            term: TupleTypeConstructorSourceTerm,
         ): TupleTypeConstructor = when (term) {
-            is OrderedTupleTypeConstructorTerm -> OrderedTupleTypeConstructor.build(
+            is OrderedTupleTypeConstructorSourceTerm -> OrderedTupleTypeConstructor.build(
                 declarationScope = declarationScope,
                 term = term,
             )
 
-            is UnorderedTupleTypeConstructorTerm -> UnorderedTupleTypeConstructor.build(
+            is UnorderedTupleTypeConstructorSourceTerm -> UnorderedTupleTypeConstructor.build(
                 declarationScope = declarationScope,
                 term = term,
             )

@@ -5,8 +5,8 @@ import sigma.evaluation.values.EvaluationStackExhaustionError
 import sigma.semantics.BuiltinScope
 import sigma.semantics.types.FunctionType
 import sigma.semantics.types.IntType
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.LetExpressionTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.LetExpressionSourceTerm
 import sigma.evaluation.values.Symbol
 import sigma.semantics.types.IntCollectiveType
 import kotlin.test.Test
@@ -17,14 +17,14 @@ class LetExpressionTests {
     class TypeCheckingTests {
         @Test
         fun testValidRecursiveDefinitions() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     %let {
                         f = ^[] -> Int => g[],
                         g = ^[] => f[],
                     } %in f[]
                 """.trimIndent(),
-            ) as LetExpressionTerm
+            ) as LetExpressionSourceTerm
 
             val let = LetExpression.build(
                 outerDeclarationScope = BuiltinScope,
@@ -58,14 +58,14 @@ class LetExpressionTests {
 
         @Test
         fun testCyclicRecursiveTypeInference() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     %let {
                         f = ^[] => g[],
                         g = ^[] => f[],
                     } %in f[]
                 """.trimIndent(),
-            ) as LetExpressionTerm
+            ) as LetExpressionSourceTerm
 
             val let = LetExpression.build(
                 outerDeclarationScope = BuiltinScope,
@@ -95,14 +95,14 @@ class LetExpressionTests {
 
         @Test
         fun testCyclicRecursiveDefinitions() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     %let {
                         a: Int = b,
                         b: Int = a,
                     } %in f[]
                 """.trimIndent(),
-            ) as LetExpressionTerm
+            ) as LetExpressionSourceTerm
 
             val let = LetExpression.build(
                 outerDeclarationScope = BuiltinScope,
@@ -134,14 +134,14 @@ class LetExpressionTests {
     class EvaluationTests {
         @Test
         fun testCyclicRecursiveDefinitions() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = """
                     %let {
                         a: Int = b,
                         b: Int = a,
                     } %in a
                 """.trimIndent(),
-            ) as LetExpressionTerm
+            ) as LetExpressionSourceTerm
 
             val let = LetExpression.build(
                 outerDeclarationScope = BuiltinScope,

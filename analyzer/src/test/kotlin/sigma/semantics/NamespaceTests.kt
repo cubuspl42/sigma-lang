@@ -5,7 +5,7 @@ import sigma.semantics.types.BoolType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.UniversalFunctionType
-import sigma.syntax.NamespaceDefinitionTerm
+import sigma.syntax.NamespaceDefinitionSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -14,7 +14,7 @@ class NamespaceTests {
     class TypeCheckingTests {
         @Test
         fun testInnerTypeScope() {
-            val term = NamespaceDefinitionTerm.parse(
+            val term = NamespaceDefinitionSourceTerm.parse(
                 source = """
                     %namespace Foo (
                         %const UserId = Int

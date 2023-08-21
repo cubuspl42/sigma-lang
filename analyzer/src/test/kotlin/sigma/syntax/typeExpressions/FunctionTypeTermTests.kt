@@ -2,10 +2,10 @@ package sigma.syntax.typeExpressions
 
 import sigma.syntax.SourceLocation
 import sigma.evaluation.values.Symbol
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.FunctionTypeConstructorTerm
-import sigma.syntax.expressions.OrderedTupleTypeConstructorTerm
-import sigma.syntax.expressions.ReferenceTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.FunctionTypeConstructorSourceTerm
+import sigma.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
+import sigma.syntax.expressions.ReferenceSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -13,34 +13,34 @@ class FunctionTypeTermTests {
     class ParsingTests {
         @Test
         fun test() {
-            val typeExpression = ExpressionTerm.parse(
+            val typeExpression = ExpressionSourceTerm.parse(
                 source = "^[a: A, b: B] -> C",
             )
 
             assertEquals(
-                expected = FunctionTypeConstructorTerm(
+                expected = FunctionTypeConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = null,
-                    argumentType = OrderedTupleTypeConstructorTerm(
+                    argumentType = OrderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         elements = listOf(
-                            OrderedTupleTypeConstructorTerm.Element(
+                            OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("a"),
-                                type = ReferenceTerm(
+                                type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                     referee = Symbol.of("A"),
                                 ),
                             ),
-                            OrderedTupleTypeConstructorTerm.Element(
+                            OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("b"),
-                                type = ReferenceTerm(
+                                type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 11),
                                     referee = Symbol.of("B"),
                                 ),
                             ),
                         ),
                     ),
-                    imageType = ReferenceTerm(
+                    imageType = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 17),
                         referee = Symbol.of("C"),
                     ),
