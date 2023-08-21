@@ -1,0 +1,20 @@
+package com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl
+
+import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaAbstractionConstructor
+import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.ext.getSourceLocation
+import com.intellij.extapi.psi.ASTWrapperPsiElement
+import com.intellij.lang.ASTNode
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorSourceTerm
+
+abstract class SigmaAbstractionConstructorImplMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node), SigmaAbstractionConstructor {
+    final override fun toTerm(): AbstractionSourceTerm = AbstractionSourceTerm(
+        location = getSourceLocation(),
+        genericParametersTuple = null,
+        argumentType = argumentType.toTerm() as TupleTypeConstructorSourceTerm,
+        declaredImageType = null,
+        image = image!!.toTerm(),
+    )
+}
