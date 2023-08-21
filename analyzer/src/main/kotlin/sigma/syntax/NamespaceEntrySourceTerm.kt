@@ -7,7 +7,7 @@ import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
 // TODO: Rename
-sealed class NamespaceEntrySourceTerm : SourceTerm() {
+sealed class NamespaceEntrySourceTerm : SourceTerm(), NamespaceEntryTerm {
     companion object {
         fun parse(
             source: String,

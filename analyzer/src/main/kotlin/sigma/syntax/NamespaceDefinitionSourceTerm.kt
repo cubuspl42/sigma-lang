@@ -9,9 +9,9 @@ import sigma.parser.antlr.SigmaParser.NamespaceDefinitionContext
 
 data class NamespaceDefinitionSourceTerm(
     override val location: SourceLocation,
-    val name: Symbol,
-    val namespaceEntries: List<NamespaceEntrySourceTerm>,
-) : NamespaceEntrySourceTerm() {
+    override val name: Symbol,
+    override val namespaceEntries: List<NamespaceEntrySourceTerm>,
+) : NamespaceEntrySourceTerm(), NamespaceDefinitionTerm {
     companion object {
         fun parse(
             source: String,

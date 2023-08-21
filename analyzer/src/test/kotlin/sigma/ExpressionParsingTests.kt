@@ -17,7 +17,7 @@ class ExpressionParsingTests {
             assertEquals(
                 expected = ReferenceSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    referee = Symbol("foo"),
+                    referredName = Symbol("foo"),
                 ),
                 actual = ExpressionSourceTerm.parse("foo"),
             )
@@ -60,7 +60,7 @@ class ExpressionParsingTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        referee = Symbol.of("foo")
+                        referredName = Symbol.of("foo")
                     ),
                     argument = UnorderedTupleConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),

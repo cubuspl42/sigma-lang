@@ -15,15 +15,15 @@ class SetConstructorTermTests {
                     elements = listOf(
                         ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                            referee = Symbol.of("foo"),
+                            referredName = Symbol.of("foo"),
                         ),
                         ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 6),
-                            referee = Symbol.of("bar"),
+                            referredName = Symbol.of("bar"),
                         ),
                         ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 11),
-                            referee = Symbol.of("baz"),
+                            referredName = Symbol.of("baz"),
                         ),
                     ),
                 ),

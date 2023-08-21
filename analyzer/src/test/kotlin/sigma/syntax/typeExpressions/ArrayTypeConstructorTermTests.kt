@@ -21,7 +21,7 @@ class ArrayTypeConstructorTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elementType = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 2),
-                        referee = Symbol.of("A"),
+                        referredName = Symbol.of("A"),
                     ),
                 ),
                 actual = expression,

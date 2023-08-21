@@ -28,21 +28,21 @@ class FunctionTypeTermTests {
                                 name = Symbol.of("a"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 5),
-                                    referee = Symbol.of("A"),
+                                    referredName = Symbol.of("A"),
                                 ),
                             ),
                             OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("b"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 11),
-                                    referee = Symbol.of("B"),
+                                    referredName = Symbol.of("B"),
                                 ),
                             ),
                         ),
                     ),
                     imageType = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 17),
-                        referee = Symbol.of("C"),
+                        referredName = Symbol.of("C"),
                     ),
                 ),
                 actual = typeExpression,

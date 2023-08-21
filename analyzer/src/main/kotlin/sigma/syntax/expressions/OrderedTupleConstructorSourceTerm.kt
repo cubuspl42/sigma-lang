@@ -5,8 +5,8 @@ import sigma.syntax.SourceLocation
 
 data class OrderedTupleConstructorSourceTerm(
     override val location: SourceLocation,
-    val elements: List<ExpressionSourceTerm>,
-) : TupleConstructorSourceTerm() {
+    override val elements: List<ExpressionSourceTerm>,
+) : TupleConstructorSourceTerm(), OrderedTupleConstructorTerm {
     companion object {
         fun build(
             ctx: OrderedTupleConstructorContext,

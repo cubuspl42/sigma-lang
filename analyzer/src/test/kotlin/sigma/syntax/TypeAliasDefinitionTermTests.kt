@@ -21,7 +21,7 @@ class ConstantDefinitionTermTests {
                     name = Symbol.of("UserId"),
                     body = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 16),
-                        referee = Symbol.of("Int"),
+                        referredName = Symbol.of("Int"),
                     )
                 ),
                 actual = term,

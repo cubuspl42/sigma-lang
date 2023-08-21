@@ -6,16 +6,16 @@ import sigma.evaluation.values.Symbol
 
 data class ReferenceSourceTerm(
     override val location: SourceLocation,
-    val referee: Symbol,
-) : ExpressionSourceTerm() {
+    override val referredName: Symbol,
+) : ExpressionSourceTerm(), ReferenceTerm {
     companion object {
         fun build(
             ctx: ReferenceContext,
         ): ReferenceSourceTerm = ReferenceSourceTerm(
             location = SourceLocation.build(ctx),
-            referee = Symbol(name = ctx.referee.text),
+            referredName = Symbol(name = ctx.referee.text),
         )
     }
 
-    override fun dump(): String = referee.dump()
+    override fun dump(): String = referredName.dump()
 }

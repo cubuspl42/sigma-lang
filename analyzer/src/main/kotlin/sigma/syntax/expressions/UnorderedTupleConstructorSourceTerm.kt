@@ -7,28 +7,8 @@ import sigma.evaluation.values.Symbol
 
 data class UnorderedTupleConstructorSourceTerm(
     override val location: SourceLocation,
-    val entries: List<Entry>,
-) : TupleConstructorSourceTerm() {
-    data class Entry(
-        val name: Symbol,
-        val value: ExpressionSourceTerm,
-    ) {
-        companion object {
-            fun build(
-                ctx: SigmaParser.UnorderedTupleAssociationContext,
-            ): Entry = Entry(
-                name = Symbol.of(ctx.name.text),
-                value = ExpressionSourceTerm.build(ctx.value),
-            )
-
-            fun build(
-                ctx: SigmaParser.UnorderedTupleTypeEntryContext,
-            ): Entry = Entry(
-                name = Symbol.of(ctx.name.text),
-                value = ExpressionSourceTerm.build(ctx.valueType),
-            )
-        }
-    }
+    override val entries: List<Entry>,
+) : TupleConstructorSourceTerm(), UnorderedTupleConstructorTerm {
 
     companion object {
         fun build(
@@ -41,5 +21,26 @@ data class UnorderedTupleConstructorSourceTerm(
         )
     }
 
-    override fun dump(): String = "(dict constructor)"
+    data class Entry(
+        override val name: Symbol,
+        override val value: ExpressionSourceTerm,
+    ) : UnorderedTupleConstructorTerm.Entry {
+        companion object {
+            fun build(
+                ctx: SigmaParser.UnorderedTupleAssociationContext,
+            ): UnorderedTupleConstructorSourceTerm.Entry = Entry(
+                name = Symbol.of(ctx.name.text),
+                value = ExpressionSourceTerm.build(ctx.value),
+            )
+
+            fun build(
+                ctx: SigmaParser.UnorderedTupleTypeEntryContext,
+            ): UnorderedTupleConstructorSourceTerm.Entry = Entry(
+                name = Symbol.of(ctx.name.text),
+                value = ExpressionSourceTerm.build(ctx.valueType),
+            )
+        }
+    }
+
+    override fun dump(): String = "(unordered tuple constructor)"
 }

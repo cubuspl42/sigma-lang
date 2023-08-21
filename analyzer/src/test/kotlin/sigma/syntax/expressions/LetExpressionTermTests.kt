@@ -32,11 +32,11 @@ class LetExpressionTermTests {
                                     location = SourceLocation(lineIndex = 2, columnIndex = 8),
                                     subject = ReferenceSourceTerm(
                                         location = SourceLocation(lineIndex = 2, columnIndex = 8),
-                                        referee = Symbol.of("h"),
+                                        referredName = Symbol.of("h"),
                                     ),
                                     argument = ReferenceSourceTerm(
                                         location = SourceLocation(lineIndex = 2, columnIndex = 10),
-                                        referee = Symbol.of("a"),
+                                        referredName = Symbol.of("a"),
                                     ),
                                 ),
                             ),
@@ -45,7 +45,7 @@ class LetExpressionTermTests {
                                 name = Symbol.of("f"),
                                 body = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 8),
-                                    referee = Symbol.of("g"),
+                                    referredName = Symbol.of("g"),
                                 ),
                             ),
                         ),
@@ -54,11 +54,11 @@ class LetExpressionTermTests {
                         location = SourceLocation(lineIndex = 4, columnIndex = 6),
                         subject = ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 6),
-                            referee = Symbol.of("f"),
+                            referredName = Symbol.of("f"),
                         ),
                         argument = ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 8),
-                            referee = Symbol.of("x"),
+                            referredName = Symbol.of("x"),
                         ),
                     ),
                 ),
@@ -85,18 +85,18 @@ class LetExpressionTermTests {
                                 name = Symbol.of("a"),
                                 declaredTypeBody = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 10),
-                                    referee = Symbol.of("Int"),
+                                    referredName = Symbol.of("Int"),
                                 ),
                                 body = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 16),
-                                    referee = Symbol.of("b"),
+                                    referredName = Symbol.of("b"),
                                 ),
                             ),
                         ),
                     ),
                     result = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 24),
-                        referee = Symbol.of("a"),
+                        referredName = Symbol.of("a"),
                     ),
                 ),
                 actual = term,
