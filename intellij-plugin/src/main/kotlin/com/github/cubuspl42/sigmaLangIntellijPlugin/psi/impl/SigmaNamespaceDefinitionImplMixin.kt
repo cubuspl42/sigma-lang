@@ -6,9 +6,9 @@ import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.ext.descendantsOfType
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.ext.getSourceLocation
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
-import sigma.evaluation.values.Symbol
-import sigma.syntax.NamespaceDefinitionSourceTerm
-import sigma.syntax.NamespaceEntrySourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntrySourceTerm
 
 abstract class SigmaNamespaceDefinitionImplMixin(
     node: ASTNode,

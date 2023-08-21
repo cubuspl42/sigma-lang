@@ -4,9 +4,9 @@ import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaNamespaceEntry
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.ext.descendantsOfType
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
-import sigma.syntax.ModuleSourceTerm
-import sigma.syntax.NamespaceEntrySourceTerm
-import sigma.syntax.SourceLocation
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntrySourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 abstract class SigmaFileImplMixin(node: ASTNode) : ASTWrapperPsiElement(node) {
     fun toTerm(): ModuleSourceTerm = ModuleSourceTerm(

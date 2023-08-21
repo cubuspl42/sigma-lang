@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLangIntellijPlugin.psi.ext
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import sigma.syntax.SourceLocation
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 fun PsiElement.getSourceLocation(): SourceLocation {
     // TODO: Use DocumentUtil

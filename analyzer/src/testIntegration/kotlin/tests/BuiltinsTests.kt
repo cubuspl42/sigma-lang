@@ -1,14 +1,14 @@
 package tests
 
-import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.IntValue
-import sigma.evaluation.values.SetValue
-import sigma.evaluation.values.Symbol
-import sigma.semantics.Namespace
-import sigma.semantics.Prelude
-import sigma.semantics.types.IntCollectiveType
-import sigma.semantics.types.SetType
-import sigma.syntax.NamespaceDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Namespace
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Prelude
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

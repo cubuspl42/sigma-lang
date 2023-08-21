@@ -4,8 +4,8 @@ import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaLetExpressionScopeE
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.ext.getSourceLocation
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
-import sigma.evaluation.values.Symbol
-import sigma.syntax.LocalDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionSourceTerm
 
 abstract class SigmaLetExpressionScopeEntryImplMixin(
     node: ASTNode,

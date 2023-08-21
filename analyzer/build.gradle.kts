@@ -42,8 +42,8 @@ tasks {
 
     generateGrammarSource {
         maxHeapSize = "64m"
-        arguments = arguments + listOf("-package", "sigma.parser.antlr", "-visitor", "-no-listener")
-        outputDirectory = File("${project.buildDir}/generated-src/antlr/main/sigma/parser/antlr")
+        arguments = arguments + listOf("-package", "com.github.cubuspl42.sigmaLang.analyzer.parser.antlr", "-visitor", "-no-listener")
+        outputDirectory = File("${project.buildDir}/generated-src/antlr/main/com/github/cubuspl42/sigmaLang/analyzer/parser/antlr")
     }
 
     compileKotlin {

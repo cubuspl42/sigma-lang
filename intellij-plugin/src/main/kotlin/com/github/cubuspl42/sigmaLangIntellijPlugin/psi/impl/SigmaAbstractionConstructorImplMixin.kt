@@ -4,8 +4,8 @@ import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaAbstractionConstruc
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.ext.getSourceLocation
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
-import sigma.syntax.expressions.AbstractionSourceTerm
-import sigma.syntax.expressions.TupleTypeConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorSourceTerm
 
 abstract class SigmaAbstractionConstructorImplMixin(
     node: ASTNode,
