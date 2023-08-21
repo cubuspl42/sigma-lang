@@ -1,17 +1,17 @@
 package sigma.semantics
 
-import sigma.syntax.ModuleTerm
+import sigma.syntax.ModuleSourceTerm
 import sigma.evaluation.values.Symbol
-import sigma.syntax.NamespaceDefinitionTerm
+import sigma.syntax.NamespaceDefinitionSourceTerm
 
 class Module(
     private val prelude: Prelude,
-    private val term: ModuleTerm,
+    private val term: ModuleSourceTerm,
 ) {
     companion object {
         fun build(
             prelude: Prelude,
-            term: ModuleTerm,
+            term: ModuleSourceTerm,
         ): Module = Module(
             prelude = prelude,
             term = term,
@@ -20,7 +20,7 @@ class Module(
 
     val rootNamespace = Namespace.build(
         prelude = prelude,
-        term = NamespaceDefinitionTerm(
+        term = NamespaceDefinitionSourceTerm(
             location = term.location,
             name = Symbol.of("__root__"),
             namespaceEntries = term.namespaceEntries,

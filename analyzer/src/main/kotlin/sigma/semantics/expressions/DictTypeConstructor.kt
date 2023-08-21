@@ -7,18 +7,18 @@ import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.DictType
 import sigma.semantics.types.Type
-import sigma.syntax.expressions.DictTypeConstructorTerm
-import sigma.syntax.expressions.ExpressionTerm
+import sigma.syntax.expressions.DictTypeConstructorSourceTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
 
 class DictTypeConstructor(
-    override val term: ExpressionTerm,
+    override val term: ExpressionSourceTerm,
     val keyType: Expression,
     val valueType: Expression,
 ) : Expression() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: DictTypeConstructorTerm,
+            term: DictTypeConstructorSourceTerm,
         ): DictTypeConstructor = DictTypeConstructor(
             term = term,
             keyType = Expression.build(

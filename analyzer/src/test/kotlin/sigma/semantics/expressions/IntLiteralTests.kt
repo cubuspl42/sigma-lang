@@ -4,8 +4,8 @@ import sigma.evaluation.scope.Scope
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.EvaluationResult
 import sigma.evaluation.values.Value
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.IntLiteralTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.IntLiteralSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -15,7 +15,7 @@ class IntLiteralTests {
         @Test
         fun test() {
             val intLiteral = IntLiteral.build(
-                term = ExpressionTerm.parse(source = "123") as IntLiteralTerm,
+                term = ExpressionSourceTerm.parse(source = "123") as IntLiteralSourceTerm,
             )
 
             val result = assertIs<EvaluationResult<Value>>(

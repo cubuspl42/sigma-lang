@@ -4,14 +4,14 @@ import sigma.evaluation.values.IntValue
 import sigma.parser.antlr.SigmaParser.IntLiteralAltContext
 import sigma.syntax.SourceLocation
 
-data class IntLiteralTerm(
+data class IntLiteralSourceTerm(
     override val location: SourceLocation,
     val value: IntValue,
-) : ExpressionTerm() {
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: IntLiteralAltContext,
-        ): IntLiteralTerm = IntLiteralTerm(
+        ): IntLiteralSourceTerm = IntLiteralSourceTerm(
             location = SourceLocation.build(ctx),
             value = IntValue(value = ctx.text.toLong()),
         )

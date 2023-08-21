@@ -8,10 +8,10 @@ import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.Type
-import sigma.syntax.expressions.OrderedTupleTypeConstructorTerm
+import sigma.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
 
 class OrderedTupleTypeConstructor(
-    override val term: OrderedTupleTypeConstructorTerm,
+    override val term: OrderedTupleTypeConstructorSourceTerm,
     val elements: List<Element>,
 ) : TupleTypeConstructor() {
     data class Element(
@@ -22,7 +22,7 @@ class OrderedTupleTypeConstructor(
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: OrderedTupleTypeConstructorTerm,
+            term: OrderedTupleTypeConstructorSourceTerm,
         ): OrderedTupleTypeConstructor = OrderedTupleTypeConstructor(
             term = term,
             elements = term.elements.map {

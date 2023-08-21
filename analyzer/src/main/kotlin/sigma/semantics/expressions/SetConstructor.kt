@@ -10,16 +10,16 @@ import sigma.semantics.types.IllType
 import sigma.semantics.types.SetType
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.SetConstructorTerm
+import sigma.syntax.expressions.SetConstructorSourceTerm
 
 class SetConstructor(
-    override val term: SetConstructorTerm,
+    override val term: SetConstructorSourceTerm,
     val elements: Set<Expression>,
 ) : Expression() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: SetConstructorTerm,
+            term: SetConstructorSourceTerm,
         ): SetConstructor = SetConstructor(
             term = term,
             elements = term.elements.map {

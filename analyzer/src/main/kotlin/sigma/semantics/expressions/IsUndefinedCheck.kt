@@ -9,16 +9,16 @@ import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.BoolType
 import sigma.semantics.types.Type
-import sigma.syntax.expressions.IsUndefinedCheckTerm
+import sigma.syntax.expressions.IsUndefinedCheckSourceTerm
 
 data class IsUndefinedCheck(
-    override val term: IsUndefinedCheckTerm,
+    override val term: IsUndefinedCheckSourceTerm,
     val argument: Expression,
 ) : Expression() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: IsUndefinedCheckTerm,
+            term: IsUndefinedCheckSourceTerm,
         ): IsUndefinedCheck = IsUndefinedCheck(
             term = term,
             argument = Expression.build(

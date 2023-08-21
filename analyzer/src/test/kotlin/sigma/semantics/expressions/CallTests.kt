@@ -23,8 +23,8 @@ import sigma.semantics.types.TypeVariable
 import sigma.semantics.types.UniversalFunctionType
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.CallTerm
-import sigma.syntax.expressions.ExpressionTerm
+import sigma.syntax.expressions.CallSourceTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
 import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
@@ -35,9 +35,9 @@ class CallTests {
     class TypeCheckingTests {
         @Test
         fun testLegalSubject() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "f[false]",
-            ) as CallTerm
+            ) as CallSourceTerm
 
             val call = Call.build(
                 declarationScope = FakeStaticBlock.of(
@@ -73,9 +73,9 @@ class CallTests {
 
         @Test
         fun testIllegalOrderedArgument() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "f[1]",
-            ) as CallTerm
+            ) as CallSourceTerm
 
             val call = Call.build(
                 declarationScope = FakeStaticBlock.of(
@@ -125,9 +125,9 @@ class CallTests {
 
         @Test
         fun testIllegalSubject() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "b[1]",
-            ) as CallTerm
+            ) as CallSourceTerm
 
             val call = Call.build(
                 declarationScope = FakeStaticBlock.of(
@@ -156,9 +156,9 @@ class CallTests {
 
         @Test
         fun testInferableGenericCall() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "f[false, 0]",
-            ) as CallTerm
+            ) as CallSourceTerm
 
             val call = Call.build(
                 declarationScope = FakeStaticBlock.of(
@@ -203,9 +203,9 @@ class CallTests {
 
         @Test
         fun testNonInferableGenericCall() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "f[]",
-            ) as CallTerm
+            ) as CallSourceTerm
 
             val call = Call.build(
                 declarationScope = FakeStaticBlock.of(
@@ -254,9 +254,9 @@ class CallTests {
 
         @Test
         fun testNestedGenericCall() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "f[false, 1]",
-            ) as CallTerm
+            ) as CallSourceTerm
 
             val call = Call.build(
                 declarationScope = FakeStaticBlock.of(
@@ -336,7 +336,7 @@ class CallTests {
 
             val call = Call.build(
                 declarationScope = StaticScope.Empty,
-                term = ExpressionTerm.parse("sq(3)") as CallTerm,
+                term = ExpressionSourceTerm.parse("sq(3)") as CallSourceTerm,
             )
 
             val result = assertIs<EvaluationResult<Value>>(
@@ -358,7 +358,7 @@ class CallTests {
         fun testDictSubject() {
             val call = Call.build(
                 declarationScope = StaticScope.Empty,
-                term = ExpressionTerm.parse("dict(2)") as CallTerm,
+                term = ExpressionSourceTerm.parse("dict(2)") as CallSourceTerm,
             )
 
             val result = assertIs<EvaluationResult<Value>>(

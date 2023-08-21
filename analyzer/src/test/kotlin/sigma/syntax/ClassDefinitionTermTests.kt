@@ -2,12 +2,12 @@ package sigma.syntax
 
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
-import sigma.syntax.expressions.AbstractionTerm
-import sigma.syntax.expressions.IntLiteralTerm
-import sigma.syntax.expressions.OrderedTupleTypeConstructorTerm
-import sigma.syntax.expressions.ReferenceTerm
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm
-import sigma.syntax.expressions.UnorderedTupleTypeConstructorTerm
+import sigma.syntax.expressions.AbstractionSourceTerm
+import sigma.syntax.expressions.IntLiteralSourceTerm
+import sigma.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
+import sigma.syntax.expressions.ReferenceSourceTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorSourceTerm
+import sigma.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -16,7 +16,7 @@ class ClassDefinitionTermTests {
     class ParsingTests {
         @Test
         fun test() {
-            val term = NamespaceEntryTerm.parse(
+            val term = NamespaceEntrySourceTerm.parse(
                 source = """
                     %class Foo (
                         %fields (
@@ -31,57 +31,57 @@ class ClassDefinitionTermTests {
                 """.trimIndent()
             )
 
-            assertIs<ClassDefinitionTerm>(term)
+            assertIs<ClassDefinitionSourceTerm>(term)
 
-            val methodDefinition1 = ClassDefinitionTerm.MethodDefinitionTerm(
+            val methodDefinition1 = ClassDefinitionSourceTerm.MethodDefinitionSourceTerm(
                 name = Symbol.of("doSomething1"),
                 location = SourceLocation(lineIndex = 7, columnIndex = 4),
-                body = AbstractionTerm(
+                body = AbstractionSourceTerm(
                     location = SourceLocation(lineIndex = 7, columnIndex = 27),
-                    argumentType = UnorderedTupleTypeConstructorTerm(
+                    argumentType = UnorderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 7, columnIndex = 27),
                         entries = listOf(
-                            UnorderedTupleConstructorTerm.Entry(
+                            UnorderedTupleConstructorSourceTerm.Entry(
                                 name = Symbol.of("mArg1"),
-                                value = ReferenceTerm(
+                                value = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 7, columnIndex = 36),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
-                            UnorderedTupleConstructorTerm.Entry(
+                            UnorderedTupleConstructorSourceTerm.Entry(
                                 name = Symbol.of("mArg2"),
-                                value = ReferenceTerm(
+                                value = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 7, columnIndex = 48),
                                     referee = Symbol.of("Bool"),
                                 ),
                             ),
                         ),
                     ),
-                    image = IntLiteralTerm(
+                    image = IntLiteralSourceTerm(
                         location = SourceLocation(lineIndex = 7, columnIndex = 57),
                         value = IntValue(value = 42L),
                     ),
                 ),
             )
 
-            val methodDefinition2 = ClassDefinitionTerm.MethodDefinitionTerm(
+            val methodDefinition2 = ClassDefinitionSourceTerm.MethodDefinitionSourceTerm(
                 name = Symbol.of("doSomething2"),
                 location = SourceLocation(lineIndex = 9, columnIndex = 4),
-                body = AbstractionTerm(
+                body = AbstractionSourceTerm(
                     location = SourceLocation(lineIndex = 9, columnIndex = 27),
-                    argumentType = OrderedTupleTypeConstructorTerm(
+                    argumentType = OrderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 9, columnIndex = 27),
                         elements = listOf(
-                            OrderedTupleTypeConstructorTerm.Element(
+                            OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("mArg1"),
-                                type = ReferenceTerm(
+                                type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 9, columnIndex = 36),
                                     referee = Symbol.of("Int"),
                                 ),
                             ),
                         ),
                     ),
-                    image = IntLiteralTerm(
+                    image = IntLiteralSourceTerm(
                         location = SourceLocation(lineIndex = 9, columnIndex = 44),
                         value = IntValue(value = 43L),
                     ),
@@ -89,22 +89,22 @@ class ClassDefinitionTermTests {
             )
 
             assertEquals(
-                expected = ClassDefinitionTerm(
+                expected = ClassDefinitionSourceTerm(
                     name = Symbol.of("Foo"),
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     fieldDeclarations = listOf(
-                        ClassDefinitionTerm.FieldDeclarationTerm(
+                        ClassDefinitionSourceTerm.FieldDeclarationSourceTerm(
                             location = SourceLocation(lineIndex = 3, columnIndex = 8),
                             name = Symbol.of("bar"),
-                            type = ReferenceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 3, columnIndex = 13),
                                 referee = Symbol.of("Bar"),
                             ),
                         ),
-                        ClassDefinitionTerm.FieldDeclarationTerm(
+                        ClassDefinitionSourceTerm.FieldDeclarationSourceTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 8),
                             name = Symbol.of("id"),
-                            type = ReferenceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 4, columnIndex = 12),
                                 referee = Symbol.of("Int"),
                             ),

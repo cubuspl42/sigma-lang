@@ -14,8 +14,8 @@ import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.IntType
 import sigma.semantics.types.OrderedTupleType
 import sigma.semantics.types.TypeVariable
-import sigma.syntax.expressions.AbstractionTerm
-import sigma.syntax.expressions.ExpressionTerm
+import sigma.syntax.expressions.AbstractionSourceTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -24,9 +24,9 @@ class AbstractionTests {
     class TypeCheckingTests {
         @Test
         fun testDeclaredImageType() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 source = "^[a: Int] -> Int => a + 3",
-            ) as AbstractionTerm
+            ) as AbstractionSourceTerm
 
             val abstraction = Abstraction.build(
                 outerDeclarationScope = BuiltinScope,
@@ -42,9 +42,9 @@ class AbstractionTests {
         class InferredTypeTests {
             @Test
             fun testInferredFromValue() {
-                val term = ExpressionTerm.parse(
+                val term = ExpressionSourceTerm.parse(
                     source = "^[a: Int] => 2 + 3",
-                ) as AbstractionTerm
+                ) as AbstractionSourceTerm
 
                 val abstraction = Abstraction.build(
                     outerDeclarationScope = BuiltinScope,
@@ -62,9 +62,9 @@ class AbstractionTests {
 
             @Test
             fun testInferredFromDeclaration() {
-                val term = ExpressionTerm.parse(
+                val term = ExpressionSourceTerm.parse(
                     source = "^[a: Int] -> Bool => 3 + 4",
-                ) as AbstractionTerm
+                ) as AbstractionSourceTerm
 
                 val abstraction = Abstraction.build(
                     outerDeclarationScope = BuiltinScope,
@@ -82,9 +82,9 @@ class AbstractionTests {
 
             @Test
             fun testInferredFromArguments() {
-                val term = ExpressionTerm.parse(
+                val term = ExpressionSourceTerm.parse(
                     source = "^[a: Int] => a",
-                ) as AbstractionTerm
+                ) as AbstractionSourceTerm
 
                 val abstraction = Abstraction.build(
                     outerDeclarationScope = BuiltinScope,
@@ -102,9 +102,9 @@ class AbstractionTests {
 
             @Test
             fun testDeclaredFromGenericArguments() {
-                val term = ExpressionTerm.parse(
+                val term = ExpressionSourceTerm.parse(
                     source = "![e] ^[a: e] -> e => a",
-                ) as AbstractionTerm
+                ) as AbstractionSourceTerm
 
                 val abstraction = Abstraction.build(
                     outerDeclarationScope = BuiltinScope,
@@ -140,9 +140,9 @@ class AbstractionTests {
         @Test
         fun testUnorderedArgumentTuple() {
             val abstraction = Abstraction.build(
-                outerDeclarationScope = BuiltinScope, term = ExpressionTerm.parse(
+                outerDeclarationScope = BuiltinScope, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
-                ) as AbstractionTerm
+                ) as AbstractionSourceTerm
             )
 
             val result = assertIs<EvaluationResult<Value>>(

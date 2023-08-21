@@ -4,16 +4,16 @@ import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
 import sigma.semantics.expressions.Expression
-import sigma.syntax.ConstantDefinitionTerm
+import sigma.syntax.ConstantDefinitionSourceTerm
 
 class ConstantDefinition(
     private val containingNamespace: Namespace,
-    val term: ConstantDefinitionTerm,
+    val term: ConstantDefinitionSourceTerm,
 ) : StaticDefinition() {
     companion object {
         fun build(
             containingNamespace: Namespace,
-            term: ConstantDefinitionTerm,
+            term: ConstantDefinitionSourceTerm,
         ): ConstantDefinition = ConstantDefinition(
             containingNamespace = containingNamespace,
             term = term,

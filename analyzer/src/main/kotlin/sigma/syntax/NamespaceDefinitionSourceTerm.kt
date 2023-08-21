@@ -7,15 +7,15 @@ import sigma.parser.antlr.SigmaLexer
 import sigma.parser.antlr.SigmaParser
 import sigma.parser.antlr.SigmaParser.NamespaceDefinitionContext
 
-data class NamespaceDefinitionTerm(
+data class NamespaceDefinitionSourceTerm(
     override val location: SourceLocation,
     val name: Symbol,
-    val namespaceEntries: List<NamespaceEntryTerm>,
-) : NamespaceEntryTerm() {
+    val namespaceEntries: List<NamespaceEntrySourceTerm>,
+) : NamespaceEntrySourceTerm() {
     companion object {
         fun parse(
             source: String,
-        ): NamespaceDefinitionTerm {
+        ): NamespaceDefinitionSourceTerm {
             val sourceName = "__namespace_definition__"
 
             val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
@@ -27,11 +27,11 @@ data class NamespaceDefinitionTerm(
 
         fun build(
             ctx: NamespaceDefinitionContext,
-        ): NamespaceDefinitionTerm = NamespaceDefinitionTerm(
+        ): NamespaceDefinitionSourceTerm = NamespaceDefinitionSourceTerm(
             location = SourceLocation.build(ctx),
             name = Symbol.of(ctx.name.text),
             namespaceEntries = ctx.namespaceBody().namespaceEntry().map {
-                NamespaceEntryTerm.build(it)
+                NamespaceEntrySourceTerm.build(it)
             },
         )
     }

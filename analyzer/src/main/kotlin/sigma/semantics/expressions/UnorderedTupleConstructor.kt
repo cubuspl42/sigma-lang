@@ -12,10 +12,10 @@ import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
 import sigma.semantics.types.UnorderedTupleType
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorSourceTerm
 
 class UnorderedTupleConstructor(
-    override val term: UnorderedTupleConstructorTerm,
+    override val term: UnorderedTupleConstructorSourceTerm,
     val entries: Set<Entry>,
 ) : TupleConstructor() {
     data class Entry(
@@ -25,7 +25,7 @@ class UnorderedTupleConstructor(
         companion object {
             fun build(
                 declarationScope: StaticScope,
-                entry: UnorderedTupleConstructorTerm.Entry,
+                entry: UnorderedTupleConstructorSourceTerm.Entry,
             ): Entry = Entry(
                 name = entry.name,
                 value = Expression.build(
@@ -50,7 +50,7 @@ class UnorderedTupleConstructor(
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: UnorderedTupleConstructorTerm,
+            term: UnorderedTupleConstructorSourceTerm,
         ): UnorderedTupleConstructor = UnorderedTupleConstructor(
             term = term,
             entries = term.entries.map {

@@ -1,11 +1,11 @@
 package sigma
 
-import sigma.syntax.expressions.CallTerm
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm
-import sigma.syntax.expressions.ReferenceTerm
+import sigma.syntax.expressions.CallSourceTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorSourceTerm
+import sigma.syntax.expressions.ReferenceSourceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.SymbolLiteralTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.SymbolLiteralSourceTerm
 import sigma.evaluation.values.Symbol
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,11 +15,11 @@ class ExpressionParsingTests {
         @Test
         fun test() {
             assertEquals(
-                expected = ReferenceTerm(
+                expected = ReferenceSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     referee = Symbol("foo"),
                 ),
-                actual = ExpressionTerm.parse("foo"),
+                actual = ExpressionSourceTerm.parse("foo"),
             )
         }
     }
@@ -28,26 +28,26 @@ class ExpressionParsingTests {
         @Test
         fun testDictSubject() {
             assertEquals(
-                expected = CallTerm(
+                expected = CallSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = UnorderedTupleConstructorTerm(
+                    subject = UnorderedTupleConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         entries = listOf(
-                            UnorderedTupleConstructorTerm.Entry(
+                            UnorderedTupleConstructorSourceTerm.Entry(
                                 name = Symbol.of("foo"),
-                                value = SymbolLiteralTerm(
+                                value = SymbolLiteralSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 6),
                                     symbol = Symbol.of("bar"),
                                 ),
                             ),
                         ),
                     ),
-                    argument = SymbolLiteralTerm(
+                    argument = SymbolLiteralSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 13),
                         symbol = Symbol.of("foo"),
                     ),
                 ),
-                actual = ExpressionTerm.parse(
+                actual = ExpressionSourceTerm.parse(
                     source = "{foo: `bar`}(`foo`)",
                 ),
             )
@@ -56,18 +56,18 @@ class ExpressionParsingTests {
         @Test
         fun testDictArgumentShorthand() {
             assertEquals(
-                expected = CallTerm(
+                expected = CallSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    subject = ReferenceTerm(
+                    subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         referee = Symbol.of("foo")
                     ),
-                    argument = UnorderedTupleConstructorTerm(
+                    argument = UnorderedTupleConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
                         entries = listOf(
-                            UnorderedTupleConstructorTerm.Entry(
+                            UnorderedTupleConstructorSourceTerm.Entry(
                                 name = Symbol.of("bar"),
-                                value = SymbolLiteralTerm(
+                                value = SymbolLiteralSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 9),
                                     symbol = Symbol.of("baz"),
                                 ),
@@ -75,7 +75,7 @@ class ExpressionParsingTests {
                         ),
                     ),
                 ),
-                actual = ExpressionTerm.parse(
+                actual = ExpressionSourceTerm.parse(
                     source = "foo{bar: `baz`}",
                 ),
             )

@@ -1,15 +1,13 @@
 package sigma.syntax.expressions
 
 import sigma.parser.antlr.SigmaParser
-import sigma.semantics.StaticScope
-import sigma.semantics.types.GenericTypeConstructor
 import sigma.syntax.SourceLocation
 
-data class GenericTypeConstructorTerm(
+data class GenericTypeConstructorSourceTerm(
     override val location: SourceLocation,
     val genericParametersTuple: GenericParametersTuple,
-    val body: ExpressionTerm,
-) : ExpressionTerm() {
+    val body: ExpressionSourceTerm,
+) : ExpressionSourceTerm() {
 //    override fun evaluate(
 //        declarationScope: StaticScope,
 //    ): GenericTypeConstructor = GenericTypeConstructor(
@@ -26,7 +24,7 @@ data class GenericTypeConstructorTerm(
     companion object {
         fun build(
             ctx: SigmaParser.GenericTypeConstructorContext,
-        ): ExpressionTerm = GenericTypeConstructorTerm(
+        ): ExpressionSourceTerm = GenericTypeConstructorSourceTerm(
             location = SourceLocation.build(ctx),
             genericParametersTuple = GenericParametersTuple.build(ctx.genericParametersTuple()),
             body = build(ctx.body),

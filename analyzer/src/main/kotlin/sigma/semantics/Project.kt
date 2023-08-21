@@ -1,6 +1,6 @@
 package sigma.semantics
 
-import sigma.syntax.ModuleTerm
+import sigma.syntax.ModuleSourceTerm
 
 class Project {
     interface Store {
@@ -35,7 +35,7 @@ class Project {
             val fileName = "${fileBaseName}.sigma"
             val source = store.load(fileName)
 
-            val moduleTerm = ModuleTerm.build(
+            val moduleTerm = ModuleSourceTerm.build(
                 ctx = Program.buildParser(
                     sourceName = fileName,
                     source = source,

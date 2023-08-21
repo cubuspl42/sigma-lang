@@ -2,19 +2,19 @@ package sigma.syntax.expressions
 
 import sigma.parser.antlr.SigmaParser
 import sigma.semantics.Program
-import sigma.syntax.LocalDefinitionTerm
+import sigma.syntax.LocalDefinitionSourceTerm
 import sigma.syntax.SourceLocation
-import sigma.syntax.Term
+import sigma.syntax.SourceTerm
 
-data class LocalScopeTerm(
+data class LocalScopeSourceTerm(
     override val location: SourceLocation,
-    val definitions: List<LocalDefinitionTerm>,
-) : Term() {
+    val definitions: List<LocalDefinitionSourceTerm>,
+) : SourceTerm() {
     companion object {
         fun parse(
             sourceName: String,
             source: String,
-        ): LocalScopeTerm = build(
+        ): LocalScopeSourceTerm = build(
             ctx = Program.buildParser(
                 sourceName = sourceName,
                 source = source,
@@ -23,10 +23,10 @@ data class LocalScopeTerm(
 
         fun build(
             ctx: SigmaParser.LocalScopeContext,
-        ): LocalScopeTerm = LocalScopeTerm(
+        ): LocalScopeSourceTerm = LocalScopeSourceTerm(
             location = SourceLocation.build(ctx),
             definitions = ctx.definition().map {
-                LocalDefinitionTerm.build(it)
+                LocalDefinitionSourceTerm.build(it)
             },
         )
     }

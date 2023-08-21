@@ -5,18 +5,18 @@ import sigma.parser.antlr.SigmaParser.OrderedTupleTypeConstructorContext
 import sigma.parser.antlr.SigmaParser.UnorderedTupleTypeConstructorContext
 import sigma.parser.antlr.SigmaParserBaseVisitor
 
-sealed class TupleTypeConstructorTerm : ExpressionTerm() {
+sealed class TupleTypeConstructorSourceTerm : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.TupleTypeConstructorContext,
-        ): TupleTypeConstructorTerm = object : SigmaParserBaseVisitor<TupleTypeConstructorTerm>() {
+        ): TupleTypeConstructorSourceTerm = object : SigmaParserBaseVisitor<TupleTypeConstructorSourceTerm>() {
             override fun visitUnorderedTupleTypeConstructor(
                 ctx: UnorderedTupleTypeConstructorContext,
-            ): TupleTypeConstructorTerm = UnorderedTupleTypeConstructorTerm.build(ctx)
+            ): TupleTypeConstructorSourceTerm = UnorderedTupleTypeConstructorSourceTerm.build(ctx)
 
             override fun visitOrderedTupleTypeConstructor(
                 ctx: OrderedTupleTypeConstructorContext,
-            ): TupleTypeConstructorTerm = OrderedTupleTypeConstructorTerm.build(ctx)
+            ): TupleTypeConstructorSourceTerm = OrderedTupleTypeConstructorSourceTerm.build(ctx)
         }.visit(ctx)
     }
 

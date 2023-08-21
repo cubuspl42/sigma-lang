@@ -2,9 +2,9 @@ package sigma.syntax.typeExpressions
 
 import sigma.evaluation.values.Symbol
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.OrderedTupleTypeConstructorTerm
-import sigma.syntax.expressions.ReferenceTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
+import sigma.syntax.expressions.ReferenceSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -12,12 +12,12 @@ class OrderedTupleTypeConstructorTermTests {
     class ParsingTests {
         @Test
         fun testEmpty() {
-            val expression = ExpressionTerm.parse(
+            val expression = ExpressionSourceTerm.parse(
                 source = "^[]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeConstructorTerm(
+                expected = OrderedTupleTypeConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elements = emptyList(),
                 ),
@@ -27,17 +27,17 @@ class OrderedTupleTypeConstructorTermTests {
 
         @Test
         fun testSingleUnnamed() {
-            val expression = ExpressionTerm.parse(
+            val expression = ExpressionSourceTerm.parse(
                 source = "^[A]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeConstructorTerm(
+                expected = OrderedTupleTypeConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elements = listOf(
-                        OrderedTupleTypeConstructorTerm.Element(
+                        OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
-                            type = ReferenceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 2),
                                 referee = Symbol.of("A"),
                             ),
@@ -50,31 +50,31 @@ class OrderedTupleTypeConstructorTermTests {
 
         @Test
         fun testAllUnnamed() {
-            val expression = ExpressionTerm.parse(
+            val expression = ExpressionSourceTerm.parse(
                 source = "^[A, B, C]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeConstructorTerm(
+                expected = OrderedTupleTypeConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elements = listOf(
-                        OrderedTupleTypeConstructorTerm.Element(
+                        OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
-                            type = ReferenceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 2),
                                 referee = Symbol.of("A"),
                             ),
                         ),
-                        OrderedTupleTypeConstructorTerm.Element(
+                        OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
-                            type = ReferenceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                 referee = Symbol.of("B"),
                             ),
                         ),
-                        OrderedTupleTypeConstructorTerm.Element(
+                        OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
-                            type = ReferenceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 8),
                                 referee = Symbol.of("C"),
                             ),
@@ -87,31 +87,31 @@ class OrderedTupleTypeConstructorTermTests {
 
         @Test
         fun testSomeNamed() {
-            val expression = ExpressionTerm.parse(
+            val expression = ExpressionSourceTerm.parse(
                 source = "^[a: A, B, c: C]",
             )
 
             assertEquals(
-                expected = OrderedTupleTypeConstructorTerm(
+                expected = OrderedTupleTypeConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elements = listOf(
-                        OrderedTupleTypeConstructorTerm.Element(
+                        OrderedTupleTypeConstructorSourceTerm.Element(
                             name = Symbol.of("a"),
-                            type = ReferenceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                 referee = Symbol.of("A"),
                             ),
                         ),
-                        OrderedTupleTypeConstructorTerm.Element(
+                        OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
-                            type = ReferenceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 8),
                                 referee = Symbol.of("B"),
                             ),
                         ),
-                        OrderedTupleTypeConstructorTerm.Element(
+                        OrderedTupleTypeConstructorSourceTerm.Element(
                             name = Symbol.of("c"),
-                            type = ReferenceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 14),
                                 referee = Symbol.of("C"),
                             ),

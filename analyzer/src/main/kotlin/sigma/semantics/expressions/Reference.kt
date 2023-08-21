@@ -6,7 +6,7 @@ import sigma.semantics.SemanticError
 import sigma.semantics.types.IllType
 import sigma.semantics.types.Type
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.ReferenceTerm
+import sigma.syntax.expressions.ReferenceSourceTerm
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
@@ -14,7 +14,7 @@ import sigma.semantics.ResolvedName
 
 class Reference(
     private val declarationScope: StaticScope,
-    override val term: ReferenceTerm,
+    override val term: ReferenceSourceTerm,
 ) : Expression() {
     data class UnresolvedNameError(
         override val location: SourceLocation,
@@ -29,7 +29,7 @@ class Reference(
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: ReferenceTerm,
+            term: ReferenceSourceTerm,
         ): Reference = Reference(
             declarationScope = declarationScope,
             term = term,

@@ -9,7 +9,7 @@ class IfExpressionTermTests {
     class ParsingTests {
         @Test
         fun testSimple() {
-            val term = ExpressionTerm.parse(
+            val term = ExpressionSourceTerm.parse(
                 """
                     %if g (
                         %then t,
@@ -18,17 +18,17 @@ class IfExpressionTermTests {
                 """.trimIndent()
             )
             assertEquals(
-                expected = IfExpressionTerm(
+                expected = IfExpressionSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    guard = ReferenceTerm(
+                    guard = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         referee = Symbol.of("g"),
                     ),
-                    trueBranch = ReferenceTerm(
+                    trueBranch = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 2, columnIndex = 10),
                         referee = Symbol.of("t"),
                     ),
-                    falseBranch = ReferenceTerm(
+                    falseBranch = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 3, columnIndex = 10),
                         referee = Symbol.of("f"),
                     ),

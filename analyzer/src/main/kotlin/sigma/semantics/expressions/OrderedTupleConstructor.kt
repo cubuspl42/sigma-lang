@@ -7,16 +7,16 @@ import sigma.evaluation.values.Value
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.OrderedTupleType
-import sigma.syntax.expressions.OrderedTupleConstructorTerm
+import sigma.syntax.expressions.OrderedTupleConstructorSourceTerm
 
 class OrderedTupleConstructor(
-    override val term: OrderedTupleConstructorTerm,
+    override val term: OrderedTupleConstructorSourceTerm,
     val elements: List<Expression>,
 ) : TupleConstructor() {
     companion object {
         fun build(
             declarationScope: StaticScope,
-            term: OrderedTupleConstructorTerm,
+            term: OrderedTupleConstructorSourceTerm,
         ): OrderedTupleConstructor = OrderedTupleConstructor(
             term = term,
             elements = term.elements.map {

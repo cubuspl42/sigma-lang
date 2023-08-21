@@ -12,8 +12,8 @@ import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
 import sigma.semantics.types.SetType
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.ExpressionTerm
-import sigma.syntax.expressions.SetConstructorTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
+import sigma.syntax.expressions.SetConstructorSourceTerm
 import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
@@ -31,9 +31,9 @@ class SetConstructorTests {
                         type = BoolType,
                     ),
                 ),
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = "{value1}",
-                ) as SetConstructorTerm,
+                ) as SetConstructorSourceTerm,
             )
 
             assertEquals(
@@ -57,14 +57,14 @@ class SetConstructorTests {
                         type = BoolType,
                     ),
                 ),
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = """
                         {
                             value1,
                             value2,
                         }
                     """.trimIndent(),
-                ) as SetConstructorTerm,
+                ) as SetConstructorSourceTerm,
             )
 
             assertEquals(
@@ -88,14 +88,14 @@ class SetConstructorTests {
                         type = IntCollectiveType,
                     ),
                 ),
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = """
                         {
                             value1,
                             value2,
                         }
                     """.trimIndent(),
-                ) as SetConstructorTerm,
+                ) as SetConstructorSourceTerm,
             )
 
             assertEquals(
@@ -119,7 +119,7 @@ class SetConstructorTests {
         fun testSimple() {
             val setConstructor = SetConstructor.build(
                 declarationScope = StaticScope.Empty,
-                term = ExpressionTerm.parse("{foo, bar, baz}") as SetConstructorTerm,
+                term = ExpressionSourceTerm.parse("{foo, bar, baz}") as SetConstructorSourceTerm,
             )
 
             val result = assertIs<EvaluationResult<Value>>(

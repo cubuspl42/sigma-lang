@@ -1,10 +1,10 @@
 package sigma.syntax
 
-import sigma.syntax.expressions.ReferenceTerm
-import sigma.syntax.expressions.AbstractionTerm
-import sigma.syntax.expressions.IntLiteralTerm
-import sigma.syntax.expressions.UnorderedTupleConstructorTerm
-import sigma.syntax.expressions.OrderedTupleTypeConstructorTerm
+import sigma.syntax.expressions.ReferenceSourceTerm
+import sigma.syntax.expressions.AbstractionSourceTerm
+import sigma.syntax.expressions.IntLiteralSourceTerm
+import sigma.syntax.expressions.UnorderedTupleConstructorSourceTerm
+import sigma.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
 import sigma.evaluation.values.IntValue
 import sigma.evaluation.values.Symbol
 import kotlin.test.Test
@@ -14,7 +14,7 @@ class NamespaceDefinitionTermTests {
     class ParsingTests {
         @Test
         fun testSimple() {
-            val term = NamespaceDefinitionTerm.parse(
+            val term = NamespaceDefinitionSourceTerm.parse(
                 source = """
                     %namespace Foo (
                         %const UserId = Int
@@ -32,65 +32,65 @@ class NamespaceDefinitionTermTests {
             )
 
             assertEquals(
-                expected = NamespaceDefinitionTerm(
+                expected = NamespaceDefinitionSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     name = Symbol.of("Foo"),
                     namespaceEntries = listOf(
-                        ConstantDefinitionTerm(
+                        ConstantDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 2, columnIndex = 4),
                             name = Symbol.of("UserId"),
-                            body = ReferenceTerm(
+                            body = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 20),
                                 referee = Symbol.of("Int"),
                             )
                         ),
-                        ConstantDefinitionTerm(
+                        ConstantDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 4),
                             name = Symbol.of("name1"),
                             declaredTypeBody = null,
-                            body = IntLiteralTerm(
+                            body = IntLiteralSourceTerm(
                                 location = SourceLocation(lineIndex = 4, columnIndex = 19),
                                 value = IntValue(value = 123L),
                             ),
                         ),
-                        ConstantDefinitionTerm(
+                        ConstantDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 6, columnIndex = 4),
                             name = Symbol.of("name2"), declaredTypeBody = null,
-                            body = AbstractionTerm(
+                            body = AbstractionSourceTerm(
                                 location = SourceLocation(lineIndex = 6, columnIndex = 19),
-                                argumentType = OrderedTupleTypeConstructorTerm(
+                                argumentType = OrderedTupleTypeConstructorSourceTerm(
                                     location = SourceLocation(lineIndex = 6, columnIndex = 19),
                                     elements = listOf(
-                                        OrderedTupleTypeConstructorTerm.Element(
+                                        OrderedTupleTypeConstructorSourceTerm.Element(
                                             name = Symbol.of("a"),
-                                            type = ReferenceTerm(
+                                            type = ReferenceSourceTerm(
                                                 location = SourceLocation(lineIndex = 6, columnIndex = 24),
                                                 referee = Symbol.of("Int"),
                                             ),
                                         ),
                                     ),
                                 ),
-                                image = IntLiteralTerm(
+                                image = IntLiteralSourceTerm(
                                     location = SourceLocation(lineIndex = 6, columnIndex = 32),
                                     value = IntValue(value = 42L),
                                 ),
                             ),
                         ),
-                        ConstantDefinitionTerm(
+                        ConstantDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 8, columnIndex = 4),
-                            name = Symbol.of("name3"), body = UnorderedTupleConstructorTerm(
+                            name = Symbol.of("name3"), body = UnorderedTupleConstructorSourceTerm(
                                 location = SourceLocation(lineIndex = 8, columnIndex = 19),
                                 entries = listOf(
-                                    UnorderedTupleConstructorTerm.Entry(
+                                    UnorderedTupleConstructorSourceTerm.Entry(
                                         name = Symbol.of("a"),
-                                        value = IntLiteralTerm(
+                                        value = IntLiteralSourceTerm(
                                             location = SourceLocation(lineIndex = 9, columnIndex = 11),
                                             value = IntValue(value = 1L),
                                         ),
                                     ),
-                                    UnorderedTupleConstructorTerm.Entry(
+                                    UnorderedTupleConstructorSourceTerm.Entry(
                                         name = Symbol.of("b"),
-                                        value = IntLiteralTerm(
+                                        value = IntLiteralSourceTerm(
                                             location = SourceLocation(lineIndex = 10, columnIndex = 11),
                                             value = IntValue(value = 2L),
                                         ),
@@ -106,7 +106,7 @@ class NamespaceDefinitionTermTests {
 
         @Test
         fun testNested() {
-            val term = NamespaceDefinitionTerm.parse(
+            val term = NamespaceDefinitionSourceTerm.parse(
                 source = """
                     %namespace Foo (
                         %namespace Bar (
@@ -117,19 +117,19 @@ class NamespaceDefinitionTermTests {
             )
 
             assertEquals(
-                expected = NamespaceDefinitionTerm(
+                expected = NamespaceDefinitionSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     name = Symbol.of("Foo"),
                     namespaceEntries = listOf(
-                        NamespaceDefinitionTerm(
+                        NamespaceDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 2, columnIndex = 4),
                             name = Symbol.of("Bar"),
                             namespaceEntries = listOf(
-                                ConstantDefinitionTerm(
+                                ConstantDefinitionSourceTerm(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 8),
                                     name = Symbol.of("foo"),
                                     declaredTypeBody = null,
-                                    body = IntLiteralTerm(
+                                    body = IntLiteralSourceTerm(
                                         location = SourceLocation(lineIndex = 3, columnIndex = 21),
                                         value = IntValue(value = 2L),
                                     ),

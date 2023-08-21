@@ -7,8 +7,8 @@ import sigma.semantics.types.DictType
 import sigma.semantics.types.IllType
 import sigma.semantics.types.IntCollectiveType
 import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.DictConstructorTerm
-import sigma.syntax.expressions.ExpressionTerm
+import sigma.syntax.expressions.DictConstructorSourceTerm
+import sigma.syntax.expressions.ExpressionSourceTerm
 import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
 import kotlin.test.Test
@@ -29,13 +29,13 @@ class DictConstructorTests {
                         type = BoolType,
                     ),
                 ),
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = """
                         {
                             [key1]: value1,
                         }
                     """.trimIndent(),
-                ) as DictConstructorTerm,
+                ) as DictConstructorSourceTerm,
             )
 
             assertEquals(
@@ -68,14 +68,14 @@ class DictConstructorTests {
                         type = BoolType,
                     ),
                 ),
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = """
                         {
                             [key1]: value1,
                             [key2]: value2,
                         }
                     """.trimIndent(),
-                ) as DictConstructorTerm,
+                ) as DictConstructorSourceTerm,
             )
 
             assertEquals(
@@ -108,14 +108,14 @@ class DictConstructorTests {
                         type = BoolType,
                     ),
                 ),
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = """
                         {
                             [key1]: value1,
                             [key2]: value2,
                         }
                     """.trimIndent(),
-                ) as DictConstructorTerm,
+                ) as DictConstructorSourceTerm,
             )
 
             assertEquals(
@@ -154,14 +154,14 @@ class DictConstructorTests {
                         type = Arbitrary.unorderedTupleType,
                     ),
                 ),
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = """
                         {
                             [key1]: value1,
                             [key2]: value2,
                         }
                     """.trimIndent(),
-                ) as DictConstructorTerm,
+                ) as DictConstructorSourceTerm,
             )
 
             assertEquals(
@@ -194,13 +194,13 @@ class DictConstructorTests {
                         type = BoolType,
                     ),
                 ),
-                term = ExpressionTerm.parse(
+                term = ExpressionSourceTerm.parse(
                     source = """
                         {
                             [key1]: value1,
                         }
                     """.trimIndent(),
-                ) as DictConstructorTerm,
+                ) as DictConstructorSourceTerm,
             )
 
             assertEquals(

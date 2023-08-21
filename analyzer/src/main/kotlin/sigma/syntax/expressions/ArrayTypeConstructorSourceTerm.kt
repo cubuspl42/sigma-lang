@@ -3,14 +3,14 @@ package sigma.syntax.expressions
 import sigma.syntax.SourceLocation
 import sigma.parser.antlr.SigmaParser
 
-data class ArrayTypeConstructorTerm(
+data class ArrayTypeConstructorSourceTerm(
     override val location: SourceLocation,
-    val elementType: ExpressionTerm,
-) : ExpressionTerm() {
+    val elementType: ExpressionSourceTerm,
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.ArrayTypeConstructorContext,
-        ): ArrayTypeConstructorTerm = ArrayTypeConstructorTerm(
+        ): ArrayTypeConstructorSourceTerm = ArrayTypeConstructorSourceTerm(
             location = SourceLocation.build(ctx),
             elementType = build(ctx.type),
         )

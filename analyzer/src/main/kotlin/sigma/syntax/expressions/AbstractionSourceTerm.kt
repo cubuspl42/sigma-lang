@@ -3,28 +3,28 @@ package sigma.syntax.expressions
 import sigma.parser.antlr.SigmaParser.AbstractionContext
 import sigma.syntax.SourceLocation
 
-data class AbstractionTerm(
+data class AbstractionSourceTerm(
     override val location: SourceLocation,
     val genericParametersTuple: GenericParametersTuple? = null,
-    val argumentType: TupleTypeConstructorTerm,
-    val declaredImageType: ExpressionTerm? = null,
-    val image: ExpressionTerm,
-) : ExpressionTerm() {
+    val argumentType: TupleTypeConstructorSourceTerm,
+    val declaredImageType: ExpressionSourceTerm? = null,
+    val image: ExpressionSourceTerm,
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: AbstractionContext,
-        ): AbstractionTerm = AbstractionTerm(
+        ): AbstractionSourceTerm = AbstractionSourceTerm(
             location = SourceLocation.build(ctx),
             genericParametersTuple = ctx.genericParametersTuple()?.let {
                 GenericParametersTuple.build(it)
             },
             argumentType = ctx.argumentType.let {
-                TupleTypeConstructorTerm.build(it)
+                TupleTypeConstructorSourceTerm.build(it)
             },
             declaredImageType = ctx.imageType?.let {
-                ExpressionTerm.build(it)
+                ExpressionSourceTerm.build(it)
             },
-            image = ExpressionTerm.build(ctx.image),
+            image = ExpressionSourceTerm.build(ctx.image),
         )
     }
 

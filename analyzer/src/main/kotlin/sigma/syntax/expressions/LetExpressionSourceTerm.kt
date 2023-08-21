@@ -2,20 +2,19 @@ package sigma.syntax.expressions
 
 import sigma.parser.antlr.SigmaParser.LetExpressionContext
 import sigma.syntax.SourceLocation
-import sigma.evaluation.scope.Scope
 
-data class LetExpressionTerm(
+data class LetExpressionSourceTerm(
     override val location: SourceLocation,
-    val localScope: LocalScopeTerm,
-    val result: ExpressionTerm,
-) : ExpressionTerm() {
+    val localScope: LocalScopeSourceTerm,
+    val result: ExpressionSourceTerm,
+) : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: LetExpressionContext,
-        ): LetExpressionTerm = LetExpressionTerm(
+        ): LetExpressionSourceTerm = LetExpressionSourceTerm(
             location = SourceLocation.build(ctx),
-            localScope = LocalScopeTerm.build(ctx.scope),
-            result = ExpressionTerm.build(ctx.result),
+            localScope = LocalScopeSourceTerm.build(ctx.scope),
+            result = ExpressionSourceTerm.build(ctx.result),
         )
     }
 

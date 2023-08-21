@@ -7,17 +7,17 @@ import sigma.semantics.LocalValueDefinitionBlock
 import sigma.semantics.SemanticError
 import sigma.semantics.StaticScope
 import sigma.semantics.types.Type
-import sigma.syntax.expressions.LetExpressionTerm
+import sigma.syntax.expressions.LetExpressionSourceTerm
 
 data class LetExpression(
-    override val term: LetExpressionTerm,
+    override val term: LetExpressionSourceTerm,
     val definitionBlock: LocalValueDefinitionBlock,
     val result: Expression,
 ) : Expression() {
     companion object {
         fun build(
             outerDeclarationScope: StaticScope,
-            term: LetExpressionTerm,
+            term: LetExpressionSourceTerm,
         ): LetExpression {
             val (definitionBlock, innerDeclarationScope) = StaticScope.looped { innerDeclarationScopeLooped ->
                 val definitionBlock = LocalValueDefinitionBlock.build(

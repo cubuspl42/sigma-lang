@@ -5,16 +5,16 @@ import sigma.evaluation.scope.chainWith
 import sigma.evaluation.values.Symbol
 import sigma.evaluation.values.Thunk
 import sigma.evaluation.values.Value
-import sigma.syntax.NamespaceDefinitionTerm
+import sigma.syntax.NamespaceDefinitionSourceTerm
 
 class Namespace(
     private val prelude: Prelude,
-    private val term: NamespaceDefinitionTerm,
+    private val term: NamespaceDefinitionSourceTerm,
 ) : Value() {
     companion object {
         fun build(
             prelude: Prelude,
-            term: NamespaceDefinitionTerm,
+            term: NamespaceDefinitionSourceTerm,
         ): Namespace = Namespace(
             prelude = prelude,
             term = term,
