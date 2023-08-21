@@ -56,5 +56,5 @@ import com.intellij.psi.TokenType;
 "%namespace"                  { yybegin(YYINITIAL); return SigmaTypes.NAMESPACE_KEYWORD; }
 "%const"                      { yybegin(YYINITIAL); return SigmaTypes.CONST_KEYWORD; }
 
-[0-9]+                        { yybegin(YYINITIAL); return SigmaTypes.INT_LITERAL; }
+[0-9]+                        { yybegin(YYINITIAL); return SigmaTypes.INT; }
 [^]                           { yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }

@@ -10,13 +10,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaIfExpressionImpl extends SigmaExpressionImpl implements SigmaIfExpression {
+public class SigmaIfExpressionImpl extends SigmaGenericExpressionImplMixin implements SigmaIfExpression {
 
   public SigmaIfExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitIfExpression(this);
   }

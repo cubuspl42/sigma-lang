@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaConstantDefinition extends PsiElement {
+public interface SigmaConstantDefinition extends SigmaNamespaceEntry {
 
   @NotNull
-  SigmaExpression getExpression();
+  PsiElement getDefinedName();
+
+  @NotNull
+  SigmaExpression getBody();
 
 }

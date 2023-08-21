@@ -7,10 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface SigmaLetExpression extends SigmaExpression {
 
-  @Nullable
-  SigmaExpression getExpression();
-
   @NotNull
   List<SigmaLetExpressionScopeEntry> getLetExpressionScopeEntryList();
+
+  @Nullable
+  SigmaExpression getResult();
 
 }

@@ -10,13 +10,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaAbstractionConstructorImpl extends SigmaExpressionImpl implements SigmaAbstractionConstructor {
+public class SigmaAbstractionConstructorImpl extends SigmaAbstractionConstructorImplMixin implements SigmaAbstractionConstructor {
 
   public SigmaAbstractionConstructorImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitAbstractionConstructor(this);
   }
@@ -43,6 +42,20 @@ public class SigmaAbstractionConstructorImpl extends SigmaExpressionImpl impleme
   @Nullable
   public SigmaTypeExpression getTypeExpression() {
     return findChildByClass(SigmaTypeExpression.class);
+  }
+
+  @Override
+  @NotNull
+  public SigmaExpression getArgumentType() {
+    List<SigmaExpression> p1 = getExpressionList();
+    return p1.get(0);
+  }
+
+  @Override
+  @Nullable
+  public SigmaExpression getImage() {
+    List<SigmaExpression> p1 = getExpressionList();
+    return p1.size() < 2 ? null : p1.get(1);
   }
 
 }

@@ -10,13 +10,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaIsUndefinedExpressionImpl extends SigmaExpressionImpl implements SigmaIsUndefinedExpression {
+public class SigmaIsUndefinedExpressionImpl extends SigmaGenericExpressionImplMixin implements SigmaIsUndefinedExpression {
 
   public SigmaIsUndefinedExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitIsUndefinedExpression(this);
   }

@@ -10,21 +10,26 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaLiteralImpl extends SigmaExpressionImpl implements SigmaLiteral {
+public class SigmaIntLiteralImpl extends SigmaIntLiteralImplMixin implements SigmaIntLiteral {
 
-  public SigmaLiteralImpl(@NotNull ASTNode node) {
+  public SigmaIntLiteralImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitLiteral(this);
+    visitor.visitIntLiteral(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof SigmaVisitor) accept((SigmaVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getContent() {
+    return findNotNullChildByType(INT);
   }
 
 }

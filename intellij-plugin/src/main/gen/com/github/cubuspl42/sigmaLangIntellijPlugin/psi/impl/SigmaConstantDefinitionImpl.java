@@ -28,7 +28,13 @@ public class SigmaConstantDefinitionImpl extends SigmaConstantDefinitionImplMixi
 
   @Override
   @NotNull
-  public SigmaExpression getExpression() {
+  public PsiElement getDefinedName() {
+    return findNotNullChildByType(IDENTIFIER);
+  }
+
+  @Override
+  @NotNull
+  public SigmaExpression getBody() {
     return findNotNullChildByClass(SigmaExpression.class);
   }
 

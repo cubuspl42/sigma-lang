@@ -10,13 +10,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaSubtractionExpressionImpl extends SigmaExpressionImpl implements SigmaSubtractionExpression {
+public class SigmaSubtractionExpressionImpl extends SigmaBinaryExpressionImplMixin implements SigmaSubtractionExpression {
 
   public SigmaSubtractionExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitSubtractionExpression(this);
   }

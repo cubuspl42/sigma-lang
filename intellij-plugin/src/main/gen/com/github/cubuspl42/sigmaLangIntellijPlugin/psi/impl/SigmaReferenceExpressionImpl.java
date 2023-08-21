@@ -26,4 +26,10 @@ public class SigmaReferenceExpressionImpl extends SigmaReferenceExpressionImplMi
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getReferredName() {
+    return findNotNullChildByType(IDENTIFIER);
+  }
+
 }

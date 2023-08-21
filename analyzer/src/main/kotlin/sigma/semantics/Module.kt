@@ -23,7 +23,7 @@ class Module(
         term = NamespaceDefinitionTerm(
             location = term.location,
             name = Symbol.of("__root__"),
-            namespaceEntries = term.staticStatements,
+            namespaceEntries = term.namespaceEntries,
         ),
     )
 
