@@ -25,13 +25,10 @@ public interface SigmaTypes {
   IElementType LESS_THAN_EQUALS_EXPRESSION = new SigmaElementType("LESS_THAN_EQUALS_EXPRESSION");
   IElementType LESS_THAN_EXPRESSION = new SigmaElementType("LESS_THAN_EXPRESSION");
   IElementType LET_EXPRESSION = new SigmaElementType("LET_EXPRESSION");
-  IElementType LET_EXPRESSION_SCOPE = new SigmaElementType("LET_EXPRESSION_SCOPE");
   IElementType LET_EXPRESSION_SCOPE_ENTRY = new SigmaElementType("LET_EXPRESSION_SCOPE_ENTRY");
   IElementType LITERAL = new SigmaElementType("LITERAL");
   IElementType MULTIPLICATION_EXPRESSION = new SigmaElementType("MULTIPLICATION_EXPRESSION");
-  IElementType NAMESPACE_BODY = new SigmaElementType("NAMESPACE_BODY");
   IElementType NAMESPACE_DEFINITION = new SigmaElementType("NAMESPACE_DEFINITION");
-  IElementType NAMESPACE_ENTRY = new SigmaElementType("NAMESPACE_ENTRY");
   IElementType ORDERED_TUPLE_CONSTRUCTOR = new SigmaElementType("ORDERED_TUPLE_CONSTRUCTOR");
   IElementType ORDERED_TUPLE_TYPE_CONSTRUCTOR = new SigmaElementType("ORDERED_TUPLE_TYPE_CONSTRUCTOR");
   IElementType ORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY = new SigmaElementType("ORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY");
@@ -132,9 +129,6 @@ public interface SigmaTypes {
       else if (type == LET_EXPRESSION) {
         return new SigmaLetExpressionImpl(node);
       }
-      else if (type == LET_EXPRESSION_SCOPE) {
-        return new SigmaLetExpressionScopeImpl(node);
-      }
       else if (type == LET_EXPRESSION_SCOPE_ENTRY) {
         return new SigmaLetExpressionScopeEntryImpl(node);
       }
@@ -144,14 +138,8 @@ public interface SigmaTypes {
       else if (type == MULTIPLICATION_EXPRESSION) {
         return new SigmaMultiplicationExpressionImpl(node);
       }
-      else if (type == NAMESPACE_BODY) {
-        return new SigmaNamespaceBodyImpl(node);
-      }
       else if (type == NAMESPACE_DEFINITION) {
         return new SigmaNamespaceDefinitionImpl(node);
-      }
-      else if (type == NAMESPACE_ENTRY) {
-        return new SigmaNamespaceEntryImpl(node);
       }
       else if (type == ORDERED_TUPLE_CONSTRUCTOR) {
         return new SigmaOrderedTupleConstructorImpl(node);

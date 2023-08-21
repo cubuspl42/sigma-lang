@@ -10,13 +10,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.*;
 
-public class SigmaLetExpressionImpl extends SigmaExpressionImpl implements SigmaLetExpression {
+public class SigmaLetExpressionImpl extends SigmaLetExpressionImplMixin implements SigmaLetExpression {
 
   public SigmaLetExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitLetExpression(this);
   }
@@ -35,8 +34,8 @@ public class SigmaLetExpressionImpl extends SigmaExpressionImpl implements Sigma
 
   @Override
   @NotNull
-  public SigmaLetExpressionScope getLetExpressionScope() {
-    return findNotNullChildByClass(SigmaLetExpressionScope.class);
+  public List<SigmaLetExpressionScopeEntry> getLetExpressionScopeEntryList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaLetExpressionScopeEntry.class);
   }
 
 }

@@ -11,6 +11,6 @@ public interface SigmaLetExpression extends SigmaExpression {
   SigmaExpression getExpression();
 
   @NotNull
-  SigmaLetExpressionScope getLetExpressionScope();
+  List<SigmaLetExpressionScopeEntry> getLetExpressionScopeEntryList();
 
 }

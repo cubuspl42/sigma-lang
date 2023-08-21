@@ -29,8 +29,14 @@ public class SigmaNamespaceDefinitionImpl extends ASTWrapperPsiElement implement
 
   @Override
   @NotNull
-  public SigmaNamespaceBody getNamespaceBody() {
-    return findNotNullChildByClass(SigmaNamespaceBody.class);
+  public List<SigmaConstantDefinition> getConstantDefinitionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaConstantDefinition.class);
+  }
+
+  @Override
+  @NotNull
+  public List<SigmaNamespaceDefinition> getNamespaceDefinitionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaNamespaceDefinition.class);
   }
 
 }

@@ -19,20 +19,22 @@
 
 sigma_file ::=
     namespace_body
+    { mixin="com.github.cubuspl42.sigmaLangIntellijPlugin.psi.impl.SigmaFileImplMixin" }
 
 // # Namespace
 
 namespace_definition ::=
     NAMESPACE_KEYWORD IDENTIFIER <<paren_wrapped namespace_body>>
 
-namespace_body ::= namespace_entry*
+private namespace_body ::= namespace_entry*
 
-namespace_entry ::=
+private namespace_entry ::=
     constant_definition |
     namespace_definition
 
 constant_definition ::=
     CONST_KEYWORD IDENTIFIER ASSIGN expression
+    { mixin="com.github.cubuspl42.sigmaLangIntellijPlugin.psi.impl.SigmaConstantDefinitionImplMixin" }
 
 // # end
 
@@ -132,9 +134,12 @@ is_undefined_expression ::=
 
 let_expression ::=
     LET_KEYWORD <<brace_wrapped let_expression_scope>> IN_KEYWORD expression
-    { extends=expression }
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLangIntellijPlugin.psi.impl.SigmaLetExpressionImplMixin"
+    }
 
-let_expression_scope ::=
+private let_expression_scope ::=
     <<list let_expression_scope_entry>>
 
 let_expression_scope_entry ::=
@@ -158,7 +163,10 @@ call_expression ::=
 
 reference_expression ::=
     IDENTIFIER
-    { extends=expression }
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLangIntellijPlugin.psi.impl.SigmaReferenceExpressionImplMixin"
+    }
 
 paren_expression ::=
     PAREN_LEFT expression PAREN_RIGHT
