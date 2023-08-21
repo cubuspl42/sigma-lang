@@ -1,0 +1,328 @@
+{
+  parserClass="com.github.cubuspl42.sigmaLang.intellijPlugin.parser.SigmaParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Sigma"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.github.cubuspl42.sigmaLang.intellijPlugin.psi"
+  psiImplPackage="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl"
+
+  elementTypeHolderClass="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes"
+  elementTypeClass="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaElementType"
+  tokenTypeClass="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTokenType"
+
+  tokens=[
+    LINE_COMMENT="regexp://.*"
+  ]
+}
+
+module ::=
+    namespace_body
+    { mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaFileImplMixin" }
+
+// # Namespace
+
+namespace_definition ::=
+    NAMESPACE_KEYWORD IDENTIFIER <<paren_wrapped namespace_body>>
+    {
+        methods=[
+            defined_name="IDENTIFIER"
+        ]
+        implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaNamespaceEntry"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaNamespaceDefinitionImplMixin"
+    }
+
+private namespace_body ::= namespace_entry*
+
+private namespace_entry ::=
+    constant_definition |
+    namespace_definition
+
+constant_definition ::=
+    CONST_KEYWORD IDENTIFIER ASSIGN expression
+    {
+        methods=[
+            defined_name="IDENTIFIER"
+            body="expression"
+        ]
+        implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaNamespaceEntry"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaConstantDefinitionImplMixin"
+    }
+
+// # end
+
+// # Expressions
+
+expression ::=
+    unary_group |
+    multiplication_group |
+    addition_group |
+    equals_group |
+    comparison_group |
+    primary_group
+    {
+        implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaExpressionBase"
+    }
+
+// private rules to define operators with the same priority
+private unary_group ::= unary_negation_expression
+
+unary_negation_expression ::= MINUS expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+private multiplication_group ::=
+    multiplication_expression | division_expression
+
+multiplication_expression ::=
+    expression ASTERISK expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaBinaryExpressionImplMixin"
+    }
+
+division_expression ::=
+    expression SLASH expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaBinaryExpressionImplMixin"
+    }
+
+private addition_group ::=
+    addition_expression | subtraction_expression
+
+addition_expression ::=
+    expression PLUS expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaBinaryExpressionImplMixin"
+    }
+
+subtraction_expression ::=
+    expression MINUS expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaBinaryExpressionImplMixin"
+    }
+
+private equals_group ::=
+    equals_expression
+
+equals_expression ::=
+    expression EQUALS expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+private comparison_group ::=
+    less_than_expression |
+    less_than_equals_expression |
+    greater_than_expression |
+    greater_than_equals_expression
+
+less_than_expression ::=
+    expression LESS_THAN expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+less_than_equals_expression ::=
+    expression LESS_THAN_EQUALS expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+greater_than_expression ::=
+    expression GREATER_THAN expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+greater_than_equals_expression ::=
+    expression GREATER_THAN_EQUALS expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+private primary_group ::=
+    call_expression |
+    if_expression |
+    is_undefined_expression |
+    let_expression |
+    abstraction_constructor | // Must be before tuple_constructor
+    compact_group
+
+private compact_group ::=
+    reference_expression |
+    paren_expression |
+    tuple_constructor  |
+    tuple_type_constructor |
+    int_literal
+
+if_expression ::=
+    IF_KEYWORD expression <<paren_wrapped if_expression_body>>
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+if_expression_body ::=
+    THEN_KEYWORD expression COMMA
+    ELSE_KEYWORD expression COMMA?
+
+is_undefined_expression ::=
+    IS_UNDEFINED_KEYWORD expression
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+let_expression ::=
+    LET_KEYWORD <<brace_wrapped let_expression_scope>> IN_KEYWORD expression
+    {
+        methods=[
+            result="expression"
+        ]
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaLetExpressionImplMixin"
+    }
+
+private let_expression_scope ::=
+    <<list let_expression_scope_entry>>
+
+let_expression_scope_entry ::=
+    IDENTIFIER type_annotation? ASSIGN expression
+    {
+        methods=[
+            defined_name="IDENTIFIER"
+            body="expression"
+        ]
+        implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaLetExpressionScopeEntryBase"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaLetExpressionScopeEntryImplMixin"
+    }
+
+
+abstraction_constructor ::=
+    generic_parameters_tuple? tuple_type_constructor (THIN_ARROW type_expression)? FAT_ARROW expression
+    {
+        methods=[
+            argument_type="expression[0]"
+            image="expression[1]"
+        ]
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaAbstractionConstructorImplMixin"
+    }
+
+generic_parameters_tuple ::=
+    DASH <<bracket_wrapped
+        <<list generic_parameter_declaration>>
+    >>
+
+generic_parameter_declaration ::=
+    IDENTIFIER
+
+call_expression ::=
+    expression tuple_constructor_raw
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaCallExpressionImplMixin"
+    }
+
+reference_expression ::=
+    IDENTIFIER
+    {
+        methods=[
+            referred_name="IDENTIFIER"
+        ]
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaReferenceExpressionImplMixin"
+    }
+
+paren_expression ::=
+    PAREN_LEFT expression PAREN_RIGHT
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+tuple_constructor ::=
+    tuple_constructor_raw
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+private tuple_constructor_raw ::=
+    ordered_tuple_constructor |
+    unordered_tuple_constructor
+
+ordered_tuple_constructor ::=
+    <<bracket_wrapped
+        <<list expression>>
+    >>
+
+unordered_tuple_constructor ::=
+    <<brace_wrapped
+        <<list unordered_tuple_entry>>
+    >>
+
+// Thought: Is colon the right syntax?
+unordered_tuple_entry ::=
+    IDENTIFIER COLON expression
+
+tuple_type_constructor ::=
+    ordered_tuple_type_constructor |
+    unordered_tuple_type_constructor
+    {
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+    }
+
+ordered_tuple_type_constructor ::=
+    DASH <<bracket_wrapped
+        <<list ordered_tuple_type_constructor_entry>>
+    >>
+
+ordered_tuple_type_constructor_entry ::=
+    IDENTIFIER type_annotation
+
+unordered_tuple_type_constructor ::=
+    DASH <<brace_wrapped
+        <<list unordered_tuple_type_constructor_entry>>
+    >>
+
+unordered_tuple_type_constructor_entry ::=
+    IDENTIFIER COLON type_expression
+
+int_literal ::= INT
+    {
+        methods=[
+            content="INT"
+        ]
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaIntLiteralImplMixin"
+    }
+
+// # end
+
+type_expression ::=
+    expression
+
+type_annotation ::=
+    COLON type_expression
+
+private meta paren_wrapped ::= PAREN_LEFT <<p>> PAREN_RIGHT
+
+private meta bracket_wrapped ::= BRACKET_LEFT <<p>> BRACKET_RIGHT
+
+private meta brace_wrapped ::= BRACE_LEFT <<p>> BRACE_RIGHT
+
+private meta list ::= (<<p>> (COMMA <<p>>)* COMMA?)?
