@@ -4,9 +4,9 @@ import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.SigmaLetExpression
 import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.ext.getSourceLocation
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
-import sigma.syntax.expressions.ExpressionSourceTerm
-import sigma.syntax.expressions.LetExpressionSourceTerm
-import sigma.syntax.expressions.LocalScopeSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LocalScopeSourceTerm
 
 abstract class SigmaLetExpressionImplMixin(node: ASTNode) : ASTWrapperPsiElement(node), SigmaLetExpression {
     fun getNames(): Set<String> = setOf("local1", "local2")

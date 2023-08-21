@@ -1,14 +1,14 @@
 package utils
 
-import sigma.semantics.ValueDeclaration
-import sigma.semantics.types.Type
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Thunk
-import sigma.evaluation.values.asThunk
-import sigma.semantics.DynamicResolution
-import sigma.semantics.Formula
-import sigma.semantics.ResolvedName
-import sigma.semantics.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ValueDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.DynamicResolution
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 
 data class FakeValueDeclaration(
     override val name: Symbol,

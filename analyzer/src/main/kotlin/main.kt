@@ -1,6 +1,6 @@
-import sigma.evaluation.values.EvaluationError
-import sigma.evaluation.values.EvaluationResult
-import sigma.semantics.Project
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationError
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
 
 fun main() {
     val store = Project.ResourceStore(javaClass = object {}.javaClass)

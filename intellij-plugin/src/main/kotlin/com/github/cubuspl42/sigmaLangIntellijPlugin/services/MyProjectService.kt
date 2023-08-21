@@ -4,9 +4,9 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
 import com.github.cubuspl42.sigmaLangIntellijPlugin.MyBundle
-import sigma.evaluation.values.IntValue
-import sigma.syntax.SourceLocation
-import sigma.syntax.expressions.IntLiteralSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IntLiteralSourceTerm
 
 @Service(Service.Level.PROJECT)
 class MyProjectService(project: Project) {

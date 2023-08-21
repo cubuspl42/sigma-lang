@@ -1,16 +1,16 @@
 package tests.euler
 
 import org.junit.Ignore
-import sigma.evaluation.values.BoolValue
-import sigma.evaluation.values.EvaluationStackExhaustionError
-import sigma.evaluation.values.IntValue
-import sigma.evaluation.values.PrimitiveValue
-import sigma.evaluation.values.Symbol
-import sigma.evaluation.values.Value
-import sigma.evaluation.values.DictValue
-import sigma.evaluation.values.EvaluationOutcome
-import sigma.evaluation.values.EvaluationResult
-import sigma.semantics.Project
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationStackExhaustionError
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationOutcome
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

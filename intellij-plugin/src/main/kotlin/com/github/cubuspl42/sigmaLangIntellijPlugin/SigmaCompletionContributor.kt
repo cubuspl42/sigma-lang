@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLangIntellijPlugin.psi.impl.SigmaLetExpressionI
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
-import sigma.semantics.BuiltinScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 
 class SigmaCompletionContributor : CompletionContributor() {
     init {
