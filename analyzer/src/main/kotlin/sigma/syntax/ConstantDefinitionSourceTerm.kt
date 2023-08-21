@@ -9,7 +9,7 @@ data class ConstantDefinitionSourceTerm(
     override val name: Symbol,
     override val declaredTypeBody: ExpressionSourceTerm? = null,
     override val body: ExpressionSourceTerm,
-) : NamespaceEntrySourceTerm(), DefinitionTerm, ConstantDefinitionTerm {
+) : NamespaceEntrySourceTerm(), DefinitionSourceTerm, ConstantDefinitionTerm {
     companion object {
         fun build(
             ctx: ConstantDefinitionContext,

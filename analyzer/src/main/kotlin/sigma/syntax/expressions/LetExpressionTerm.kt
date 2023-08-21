@@ -5,5 +5,5 @@ import sigma.syntax.LocalDefinitionTerm
 interface LetExpressionTerm {
     val definitions: List<LocalDefinitionTerm>
 
-    val result: ExpressionSourceTerm
+    val result: ExpressionTerm
 }
