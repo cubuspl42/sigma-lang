@@ -57,6 +57,10 @@ data class LetExpression(
         ),
     )
 
+    override val subExpressions: Set<Expression> by lazy {
+        definitionBlock.subExpressions + result
+    }
+
     override val errors: Set<SemanticError> by lazy {
         definitionBlock.errors + result.errors
     }

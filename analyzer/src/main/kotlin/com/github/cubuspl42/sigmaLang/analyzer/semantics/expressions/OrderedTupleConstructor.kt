@@ -45,6 +45,8 @@ class OrderedTupleConstructor(
         )
     }
 
+    override val subExpressions: Set<Expression> = elements.toSet()
+
     override val errors: Set<SemanticError> by lazy {
         elements.fold(emptySet()) { acc, it -> acc + it.errors }
     }

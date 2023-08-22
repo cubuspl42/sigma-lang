@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IntLiteralSourceTerm
 import kotlin.test.Test
@@ -15,6 +16,7 @@ class IntLiteralTests {
         @Test
         fun test() {
             val intLiteral = IntLiteral.build(
+                outerScope = StaticScope.Empty,
                 term = ExpressionSourceTerm.parse(source = "123") as IntLiteralSourceTerm,
             )
 

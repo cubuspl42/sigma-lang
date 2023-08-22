@@ -5,7 +5,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.chainWith
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
 class Namespace(
     private val prelude: Prelude,
@@ -21,7 +23,7 @@ class Namespace(
         )
     }
 
-    private val staticDefinitions: Set<StaticDefinition> = term.namespaceEntries.map {
+    private val entries: Set<StaticDefinition> = term.namespaceEntries.map {
         StaticDefinition.build(
             containingNamespace = this,
             term = it,
@@ -30,7 +32,7 @@ class Namespace(
 
     private fun getStaticDefinition(
         name: Symbol,
-    ): StaticDefinition? = staticDefinitions.singleOrNull {
+    ): StaticDefinition? = entries.singleOrNull {
         it.name == name
     }
 
@@ -43,8 +45,7 @@ class Namespace(
             name: Symbol,
         ): ResolvedName? = getConstantDefinition(name = name)?.let {
             ResolvedName(
-                type = it.asValueDefinition.effectiveValueType,
-                resolution = ConstDefinitionResolution(
+                type = it.asValueDefinition.effectiveValueType, resolution = ConstDefinitionResolution(
                     constantDefinition = it,
                 )
             )
@@ -68,8 +69,11 @@ class Namespace(
         context = prelude.scope,
     )
 
+
+    val expressionMap: ExpressionMap = ExpressionMap.unionAllOf(entries) { it.expressionMap }
+
     val errors: Set<SemanticError> by lazy {
-        staticDefinitions.fold(emptySet()) { acc, it -> acc + it.errors }
+        entries.fold(emptySet()) { acc, it -> acc + it.errors }
     }
 
     fun printErrors() {

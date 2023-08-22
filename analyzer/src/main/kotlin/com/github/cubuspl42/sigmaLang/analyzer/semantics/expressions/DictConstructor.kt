@@ -13,6 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.PrimitiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
 class DictConstructor(
     override val outerScope: StaticScope,
@@ -145,6 +146,8 @@ class DictConstructor(
             IllType
         }
     }
+
+    override val subExpressions: Set<Expression> = SetUtils.unionAllOf(associations) { setOf(it.key, it.value) }
 
     override fun bind(
         scope: Scope,

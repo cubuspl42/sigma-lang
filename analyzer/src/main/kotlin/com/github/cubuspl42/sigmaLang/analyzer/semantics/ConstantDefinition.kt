@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionSourceTerm
 
 class ConstantDefinition(
@@ -54,6 +55,9 @@ class ConstantDefinition(
 
     override val staticValue: Thunk<Value>
         get() = this.valueThunk
+
+    override val expressionMap: ExpressionMap
+        get() = asValueDefinition.body.expressionMap
 
     override val name: Symbol
         get() = term.name
