@@ -11,6 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictTypeConstr
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 
 class DictTypeConstructor(
+    override val outerScope: StaticScope,
     override val term: ExpressionSourceTerm,
     val keyType: Expression,
     val valueType: Expression,
@@ -20,6 +21,7 @@ class DictTypeConstructor(
             outerScope: StaticScope,
             term: DictTypeConstructorSourceTerm,
         ): DictTypeConstructor = DictTypeConstructor(
+            outerScope = outerScope,
             term = term,
             keyType = Expression.build(
                 outerScope = outerScope,

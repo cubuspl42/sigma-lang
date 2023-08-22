@@ -28,7 +28,7 @@ class OrderedTupleConstructorTests {
             ) as OrderedTupleConstructorSourceTerm
 
             val tupleLiteral = OrderedTupleConstructor.build(
-                declarationScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
                 term = term,
             )
 
@@ -51,7 +51,7 @@ class OrderedTupleConstructorTests {
             ) as OrderedTupleConstructorSourceTerm
 
             val tupleLiteral = OrderedTupleConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("a"),
                         type = BoolType,
@@ -84,7 +84,7 @@ class OrderedTupleConstructorTests {
         @Test
         fun testEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(
-                declarationScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
                 term = ExpressionSourceTerm.parse(
                     source = "[]",
                 ) as OrderedTupleConstructorSourceTerm,
@@ -108,7 +108,7 @@ class OrderedTupleConstructorTests {
         @Test
         fun testNonEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(
-                declarationScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
                 term = ExpressionSourceTerm.parse(
                     source = "[a, b]",
                 ) as OrderedTupleConstructorSourceTerm,

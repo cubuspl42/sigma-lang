@@ -12,6 +12,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IsUndefinedCheckSourceTerm
 
 data class IsUndefinedCheck(
+    override val outerScope: StaticScope,
     override val term: IsUndefinedCheckSourceTerm,
     val argument: Expression,
 ) : Expression() {
@@ -20,6 +21,7 @@ data class IsUndefinedCheck(
             outerScope: StaticScope,
             term: IsUndefinedCheckSourceTerm,
         ): IsUndefinedCheck = IsUndefinedCheck(
+            outerScope = outerScope,
             term = term,
             argument = Expression.build(
                 outerScope = outerScope,

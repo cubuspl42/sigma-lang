@@ -11,6 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
 
 class OrderedTupleTypeConstructor(
+    override val outerScope: StaticScope,
     override val term: OrderedTupleTypeConstructorSourceTerm,
     val elements: List<Element>,
 ) : TupleTypeConstructor() {
@@ -21,15 +22,16 @@ class OrderedTupleTypeConstructor(
 
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: OrderedTupleTypeConstructorSourceTerm,
         ): OrderedTupleTypeConstructor = OrderedTupleTypeConstructor(
+            outerScope = outerScope,
             term = term,
             elements = term.elements.map {
                 Element(
                     name = it.name,
                     type = Expression.build(
-                        outerScope = declarationScope,
+                        outerScope = outerScope,
                         term = it.type,
                     ),
                 )

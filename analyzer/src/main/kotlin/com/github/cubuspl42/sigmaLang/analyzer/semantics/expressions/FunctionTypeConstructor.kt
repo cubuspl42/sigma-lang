@@ -11,6 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunction
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorSourceTerm
 
 class FunctionTypeConstructor(
+    override val outerScope: StaticScope,
     override val term: FunctionTypeConstructorSourceTerm,
     val argumentType: TupleTypeConstructor,
     val imageType: Expression,
@@ -20,6 +21,7 @@ class FunctionTypeConstructor(
             outerScope: StaticScope,
             term: FunctionTypeConstructorSourceTerm,
         ): FunctionTypeConstructor = FunctionTypeConstructor(
+            outerScope = outerScope,
             term = term,
             argumentType = TupleTypeConstructor.build(
                 outerScope = outerScope,

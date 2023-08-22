@@ -13,6 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorSourceTerm
 
 class SetConstructor(
+    override val outerScope: StaticScope,
     override val term: SetConstructorSourceTerm,
     val elements: Set<Expression>,
 ) : Expression() {
@@ -21,6 +22,7 @@ class SetConstructor(
             outerScope: StaticScope,
             term: SetConstructorSourceTerm,
         ): SetConstructor = SetConstructor(
+            outerScope = outerScope,
             term = term,
             elements = term.elements.map {
                 Expression.build(

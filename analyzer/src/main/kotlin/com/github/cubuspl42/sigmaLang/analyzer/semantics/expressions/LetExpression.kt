@@ -10,6 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 
 data class LetExpression(
+    override val outerScope: StaticScope,
     override val term: LetExpressionSourceTerm,
     val definitionBlock: LocalValueDefinitionBlock,
     val result: Expression,
@@ -36,6 +37,7 @@ data class LetExpression(
             }
 
             return LetExpression(
+                outerScope = outerScope,
                 term = term,
                 definitionBlock = definitionBlock,
                 result = Expression.build(

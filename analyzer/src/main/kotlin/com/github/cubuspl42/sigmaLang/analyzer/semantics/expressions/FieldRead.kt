@@ -14,6 +14,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadSourceTerm
 
 class FieldRead(
+    override val outerScope: StaticScope,
     override val term: FieldReadSourceTerm,
     val subject: Expression,
 ) : Expression() {
@@ -48,6 +49,7 @@ class FieldRead(
             outerScope: StaticScope,
             term: FieldReadSourceTerm,
         ): FieldRead = FieldRead(
+            outerScope = outerScope,
             term = term,
             subject = Expression.build(
                 outerScope = outerScope,

@@ -23,7 +23,7 @@ class UnorderedTupleTests {
             ) as UnorderedTupleConstructorSourceTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                declarationScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
                 term = term,
             )
 
@@ -47,7 +47,7 @@ class UnorderedTupleTests {
             ) as UnorderedTupleConstructorSourceTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
@@ -83,7 +83,7 @@ class UnorderedTupleTests {
             ) as UnorderedTupleConstructorSourceTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,

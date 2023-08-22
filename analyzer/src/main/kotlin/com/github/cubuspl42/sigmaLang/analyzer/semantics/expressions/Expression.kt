@@ -173,6 +173,8 @@ abstract class Expression {
     val location: SourceLocation
         get() = term.location
 
+    abstract val outerScope: StaticScope
+
     abstract val errors: Set<SemanticError>
 
     protected abstract val term: ExpressionSourceTerm
