@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
-interface AbstractionTerm {
+interface AbstractionTerm : ExpressionTerm {
     val genericParametersTuple: GenericParametersTuple?
 
     val argumentType: TupleTypeConstructorTerm
