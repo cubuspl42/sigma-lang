@@ -21,7 +21,7 @@ class OrderedTupleConstructor(
             term = term,
             elements = term.elements.map {
                 Expression.build(
-                    declarationScope = declarationScope,
+                    outerScope = declarationScope,
                     term = it,
                 )
             },

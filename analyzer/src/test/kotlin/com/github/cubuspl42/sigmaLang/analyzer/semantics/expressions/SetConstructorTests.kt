@@ -25,7 +25,7 @@ class SetConstructorTests {
         @Test
         fun testSingleElement() {
             val setConstructor = SetConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
@@ -47,7 +47,7 @@ class SetConstructorTests {
         @Test
         fun testMultipleEntriesCompatibleElements() {
             val setConstructor = SetConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
@@ -78,7 +78,7 @@ class SetConstructorTests {
         @Test
         fun testMultipleEntriesIncompatibleElements() {
             val setConstructor = SetConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
@@ -118,7 +118,7 @@ class SetConstructorTests {
         @Test
         fun testSimple() {
             val setConstructor = SetConstructor.build(
-                declarationScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
                 term = ExpressionSourceTerm.parse("{foo, bar, baz}") as SetConstructorSourceTerm,
             )
 

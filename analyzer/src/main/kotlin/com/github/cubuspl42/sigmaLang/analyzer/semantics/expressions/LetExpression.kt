@@ -16,7 +16,7 @@ data class LetExpression(
 ) : Expression() {
     companion object {
         fun build(
-            outerDeclarationScope: StaticScope,
+            outerScope: StaticScope,
             term: LetExpressionSourceTerm,
         ): LetExpression {
             val (definitionBlock, innerDeclarationScope) = StaticScope.looped { innerDeclarationScopeLooped ->
@@ -26,7 +26,7 @@ data class LetExpression(
                 )
 
                 val innerDeclarationScope = definitionBlock.chainWith(
-                    outerScope = outerDeclarationScope,
+                    outerScope = outerScope,
                 )
 
                 return@looped Pair(
@@ -39,7 +39,7 @@ data class LetExpression(
                 term = term,
                 definitionBlock = definitionBlock,
                 result = Expression.build(
-                    declarationScope = innerDeclarationScope,
+                    outerScope = innerDeclarationScope,
                     term = term.result,
                 ),
             )

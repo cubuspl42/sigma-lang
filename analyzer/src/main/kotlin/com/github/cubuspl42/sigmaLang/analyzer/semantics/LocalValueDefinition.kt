@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionSourceTerm
 
 class LocalValueDefinition(
-    override val declarationScope: StaticScope,
+    override val outerScope: StaticScope,
     private val term: LocalDefinitionSourceTerm,
 ) : ValueDefinition() {
     companion object {
@@ -13,7 +13,7 @@ class LocalValueDefinition(
             declarationScope: StaticScope,
             term: LocalDefinitionSourceTerm,
         ): LocalValueDefinition = LocalValueDefinition(
-            declarationScope = declarationScope,
+            outerScope = declarationScope,
             term = term,
         )
     }
@@ -23,7 +23,7 @@ class LocalValueDefinition(
     override val declaredTypeBody: Expression? by lazy {
         term.declaredTypeBody?.let {
             Expression.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = it,
             )
         }
@@ -31,7 +31,7 @@ class LocalValueDefinition(
 
     override val body: Expression by lazy {
         Expression.build(
-            declarationScope = declarationScope,
+            outerScope = outerScope,
             term = term.body,
         )
     }

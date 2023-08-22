@@ -29,7 +29,7 @@ class UnorderedTupleConstructor(
             ): Entry = Entry(
                 name = entry.name,
                 value = Expression.build(
-                    declarationScope = declarationScope,
+                    outerScope = declarationScope,
                     term = entry.value,
                 ),
             )

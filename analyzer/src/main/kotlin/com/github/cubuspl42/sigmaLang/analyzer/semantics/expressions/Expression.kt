@@ -76,21 +76,21 @@ class TranslationScope(
 abstract class Expression {
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: ExpressionSourceTerm,
         ): Expression = when (term) {
             is AbstractionSourceTerm -> Abstraction.build(
-                outerDeclarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is CallSourceTerm -> Call.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is FieldReadSourceTerm -> FieldRead.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
@@ -99,59 +99,59 @@ abstract class Expression {
             )
 
             is IsUndefinedCheckSourceTerm -> IsUndefinedCheck.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is LetExpressionSourceTerm -> LetExpression.build(
-                outerDeclarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is ReferenceSourceTerm -> Reference.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is SymbolLiteralSourceTerm -> TODO()
 
             is TupleConstructorSourceTerm -> TupleConstructor.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is DictConstructorSourceTerm -> DictConstructor.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is SetConstructorSourceTerm -> SetConstructor.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is IfExpressionSourceTerm -> IfExpression.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is TupleTypeConstructorSourceTerm -> TupleTypeConstructor.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is ArrayTypeConstructorSourceTerm -> ArrayTypeConstructor.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is DictTypeConstructorSourceTerm -> DictTypeConstructor.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is FunctionTypeConstructorSourceTerm -> FunctionTypeConstructor.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term,
             )
 
@@ -164,7 +164,7 @@ abstract class Expression {
             val term = ExpressionSourceTerm.parse(source = source)
 
             return Expression.build(
-                declarationScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
                 term = term,
             )
         }

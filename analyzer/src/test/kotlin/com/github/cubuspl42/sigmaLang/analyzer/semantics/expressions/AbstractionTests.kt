@@ -29,7 +29,7 @@ class AbstractionTests {
             ) as AbstractionSourceTerm
 
             val abstraction = Abstraction.build(
-                outerDeclarationScope = BuiltinScope,
+                outerScope = BuiltinScope,
                 term = term,
             )
 
@@ -47,7 +47,7 @@ class AbstractionTests {
                 ) as AbstractionSourceTerm
 
                 val abstraction = Abstraction.build(
-                    outerDeclarationScope = BuiltinScope,
+                    outerScope = BuiltinScope,
                     term = term,
                 )
 
@@ -67,7 +67,7 @@ class AbstractionTests {
                 ) as AbstractionSourceTerm
 
                 val abstraction = Abstraction.build(
-                    outerDeclarationScope = BuiltinScope,
+                    outerScope = BuiltinScope,
                     term = term,
                 )
 
@@ -87,7 +87,7 @@ class AbstractionTests {
                 ) as AbstractionSourceTerm
 
                 val abstraction = Abstraction.build(
-                    outerDeclarationScope = BuiltinScope,
+                    outerScope = BuiltinScope,
                     term = term,
                 )
 
@@ -107,7 +107,7 @@ class AbstractionTests {
                 ) as AbstractionSourceTerm
 
                 val abstraction = Abstraction.build(
-                    outerDeclarationScope = BuiltinScope,
+                    outerScope = BuiltinScope,
                     term = term,
                 )
 
@@ -140,7 +140,7 @@ class AbstractionTests {
         @Test
         fun testUnorderedArgumentTuple() {
             val abstraction = Abstraction.build(
-                outerDeclarationScope = BuiltinScope, term = ExpressionSourceTerm.parse(
+                outerScope = BuiltinScope, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionSourceTerm
             )

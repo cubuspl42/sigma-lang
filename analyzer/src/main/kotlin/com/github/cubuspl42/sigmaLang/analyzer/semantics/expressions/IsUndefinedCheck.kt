@@ -17,12 +17,12 @@ data class IsUndefinedCheck(
 ) : Expression() {
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: IsUndefinedCheckSourceTerm,
         ): IsUndefinedCheck = IsUndefinedCheck(
             term = term,
             argument = Expression.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.argument,
             ),
         )

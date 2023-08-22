@@ -28,11 +28,11 @@ class DictConstructor(
                 term: DictConstructorSourceTerm.Association,
             ): Association = Association(
                 key = Expression.build(
-                    declarationScope = declarationScope,
+                    outerScope = declarationScope,
                     term = term.key,
                 ),
                 value = Expression.build(
-                    declarationScope = declarationScope,
+                    outerScope = declarationScope,
                     term = term.value,
                 ),
             )
@@ -41,13 +41,13 @@ class DictConstructor(
 
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: DictConstructorSourceTerm,
         ): DictConstructor = DictConstructor(
             term = term,
             associations = term.associations.map {
                 Association.build(
-                    declarationScope = declarationScope,
+                    declarationScope = outerScope,
                     term = it,
                 )
             },

@@ -17,16 +17,16 @@ class DictTypeConstructor(
 ) : Expression() {
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: DictTypeConstructorSourceTerm,
         ): DictTypeConstructor = DictTypeConstructor(
             term = term,
             keyType = Expression.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.keyType,
             ),
             valueType = Expression.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.valueType,
             ),
         )

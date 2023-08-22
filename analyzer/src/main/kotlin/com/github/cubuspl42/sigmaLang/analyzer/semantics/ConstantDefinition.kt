@@ -24,13 +24,13 @@ class ConstantDefinition(
         override val name: Symbol
             get() = this@ConstantDefinition.name
 
-        override val declarationScope: StaticScope
-            get() = containingNamespace.innerDeclarationScope
+        override val outerScope: StaticScope
+            get() = containingNamespace.innerStaticScope
 
         override val declaredTypeBody: Expression? by lazy {
             term.declaredTypeBody?.let {
                 Expression.build(
-                    declarationScope = declarationScope,
+                    outerScope = outerScope,
                     term = it,
                 )
             }
@@ -38,14 +38,13 @@ class ConstantDefinition(
 
         override val body: Expression by lazy {
             Expression.build(
-                declarationScope = containingNamespace.innerDeclarationScope,
+                outerScope = containingNamespace.innerStaticScope,
                 term = term.body,
             )
         }
     }
 
     val asValueDefinition = ConstantValueDefinition()
-
 
     val valueThunk by lazy {
         asValueDefinition.body.bind(

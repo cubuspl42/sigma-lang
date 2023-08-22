@@ -28,7 +28,7 @@ class IfExpressionTests {
             ) as IfExpressionSourceTerm
 
             val call = IfExpression.build(
-                declarationScope = BuiltinScope,
+                outerScope = BuiltinScope,
                 term = term,
             )
 
@@ -54,7 +54,7 @@ class IfExpressionTests {
             ) as IfExpressionSourceTerm
 
             val call = IfExpression.build(
-                declarationScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
                 term = term,
             )
 
@@ -89,7 +89,7 @@ class IfExpressionTests {
             ) as IfExpressionSourceTerm
 
             val ifExpression = IfExpression.build(
-                declarationScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
                 term = term,
             )
 
@@ -117,7 +117,7 @@ class IfExpressionTests {
             ) as IfExpressionSourceTerm
 
             val ifExpression = IfExpression.build(
-                declarationScope = BuiltinScope,
+                outerScope = BuiltinScope,
                 term = term,
             )
 

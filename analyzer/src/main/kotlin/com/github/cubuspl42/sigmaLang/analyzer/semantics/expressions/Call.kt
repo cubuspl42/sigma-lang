@@ -20,16 +20,16 @@ class Call(
 ) : Expression() {
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: CallSourceTerm,
         ): Call = Call(
             term = term,
             subject = build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.subject,
             ),
             argument = build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.argument,
             ),
         )
