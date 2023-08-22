@@ -34,13 +34,13 @@ public class SigmaLetExpressionScopeEntryImpl extends SigmaLetExpressionScopeEnt
 
   @Override
   @NotNull
-  public PsiElement getDefinedName() {
+  public PsiElement getDefinedNameElement() {
     return findNotNullChildByType(IDENTIFIER);
   }
 
   @Override
   @NotNull
-  public SigmaExpression getBody() {
+  public SigmaExpression getBodyElement() {
     return findNotNullChildByClass(SigmaExpression.class);
   }
 

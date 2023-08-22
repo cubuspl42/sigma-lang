@@ -46,14 +46,14 @@ public class SigmaAbstractionConstructorImpl extends SigmaAbstractionConstructor
 
   @Override
   @NotNull
-  public SigmaExpression getArgumentType() {
+  public SigmaExpression getArgumentTypeElement() {
     List<SigmaExpression> p1 = getExpressionList();
     return p1.get(0);
   }
 
   @Override
   @Nullable
-  public SigmaExpression getImage() {
+  public SigmaExpression getImageElement() {
     List<SigmaExpression> p1 = getExpressionList();
     return p1.size() < 2 ? null : p1.get(1);
   }

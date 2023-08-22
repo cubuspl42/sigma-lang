@@ -28,7 +28,7 @@ public class SigmaIntLiteralImpl extends SigmaIntLiteralImplMixin implements Sig
 
   @Override
   @NotNull
-  public PsiElement getContent() {
+  public PsiElement getValueElement() {
     return findNotNullChildByType(INT);
   }
 

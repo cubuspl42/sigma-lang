@@ -11,9 +11,9 @@ public interface SigmaLetExpressionScopeEntry extends SigmaLetExpressionScopeEnt
   SigmaTypeAnnotation getTypeAnnotation();
 
   @NotNull
-  PsiElement getDefinedName();
+  PsiElement getDefinedNameElement();
 
   @NotNull
-  SigmaExpression getBody();
+  SigmaExpression getBodyElement();
 
 }

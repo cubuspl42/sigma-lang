@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaTupleConstructorImpl extends SigmaGenericExpressionImplMixin implements SigmaTupleConstructor {
+public class SigmaTupleConstructorImpl extends SigmaUnimplementedExpressionImplMixin implements SigmaTupleConstructor {
 
   public SigmaTupleConstructorImpl(@NotNull ASTNode node) {
     super(node);

@@ -6,12 +6,21 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
-abstract class SigmaConstantDefinitionImplMixin(node: ASTNode) : ASTWrapperPsiElement(node), SigmaConstantDefinition {
-    final override fun toTerm(): ConstantDefinitionSourceTerm = ConstantDefinitionSourceTerm(
-        location = getSourceLocation(),
-        name = Symbol.of(definedName.text),
-        declaredTypeBody = null,
-        body = body.toTerm(),
-    )
+abstract class SigmaConstantDefinitionImplMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node), SigmaConstantDefinition {
+    final override val asTerm: ConstantDefinitionTerm = object : ConstantDefinitionTerm {
+        override val name: Symbol
+            get() = Symbol.of(definedNameElement.text)
+
+        override val declaredTypeBody: ExpressionTerm?
+            get() = null
+
+        override val body: ExpressionTerm
+            get() = bodyElement.asTerm
+    }
 }

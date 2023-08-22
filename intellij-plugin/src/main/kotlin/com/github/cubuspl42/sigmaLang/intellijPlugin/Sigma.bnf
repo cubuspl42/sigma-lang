@@ -19,7 +19,9 @@
 
 module ::=
     namespace_body
-    { mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaFileImplMixin" }
+    {
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaFileImplMixin"
+    }
 
 // # Namespace
 
@@ -27,7 +29,7 @@ namespace_definition ::=
     NAMESPACE_KEYWORD IDENTIFIER <<paren_wrapped namespace_body>>
     {
         methods=[
-            defined_name="IDENTIFIER"
+            defined_name_element="IDENTIFIER"
         ]
         implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaNamespaceEntry"
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaNamespaceDefinitionImplMixin"
@@ -43,10 +45,12 @@ constant_definition ::=
     CONST_KEYWORD IDENTIFIER ASSIGN expression
     {
         methods=[
-            defined_name="IDENTIFIER"
-            body="expression"
+            defined_name_element="IDENTIFIER"
+            body_element="expression"
         ]
-        implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaNamespaceEntry"
+        implements=[
+            "com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaNamespaceEntry"
+        ]
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaConstantDefinitionImplMixin"
     }
 
@@ -62,7 +66,9 @@ expression ::=
     comparison_group |
     primary_group
     {
-        implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaExpressionBase"
+        implements=[
+            "com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaExpressionBase"
+        ]
     }
 
 // private rules to define operators with the same priority
@@ -71,7 +77,7 @@ private unary_group ::= unary_negation_expression
 unary_negation_expression ::= MINUS expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 private multiplication_group ::=
@@ -115,7 +121,7 @@ equals_expression ::=
     expression EQUALS expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 private comparison_group ::=
@@ -128,28 +134,28 @@ less_than_expression ::=
     expression LESS_THAN expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 less_than_equals_expression ::=
     expression LESS_THAN_EQUALS expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 greater_than_expression ::=
     expression GREATER_THAN expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 greater_than_equals_expression ::=
     expression GREATER_THAN_EQUALS expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 private primary_group ::=
@@ -171,7 +177,7 @@ if_expression ::=
     IF_KEYWORD expression <<paren_wrapped if_expression_body>>
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 if_expression_body ::=
@@ -182,14 +188,14 @@ is_undefined_expression ::=
     IS_UNDEFINED_KEYWORD expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 let_expression ::=
     LET_KEYWORD <<brace_wrapped let_expression_scope>> IN_KEYWORD expression
     {
         methods=[
-            result="expression"
+            result_element="expression"
         ]
         extends=expression
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaLetExpressionImplMixin"
@@ -202,8 +208,8 @@ let_expression_scope_entry ::=
     IDENTIFIER type_annotation? ASSIGN expression
     {
         methods=[
-            defined_name="IDENTIFIER"
-            body="expression"
+            defined_name_element="IDENTIFIER"
+            body_element="expression"
         ]
         implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaLetExpressionScopeEntryBase"
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaLetExpressionScopeEntryImplMixin"
@@ -214,8 +220,8 @@ abstraction_constructor ::=
     generic_parameters_tuple? tuple_type_constructor (THIN_ARROW type_expression)? FAT_ARROW expression
     {
         methods=[
-            argument_type="expression[0]"
-            image="expression[1]"
+            argument_type_element="expression[0]"
+            image_element="expression[1]"
         ]
         extends=expression
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaAbstractionConstructorImplMixin"
@@ -240,7 +246,7 @@ reference_expression ::=
     IDENTIFIER
     {
         methods=[
-            referred_name="IDENTIFIER"
+            referred_name_element="IDENTIFIER"
         ]
         extends=expression
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaReferenceExpressionImplMixin"
@@ -250,14 +256,14 @@ paren_expression ::=
     PAREN_LEFT expression PAREN_RIGHT
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 tuple_constructor ::=
     tuple_constructor_raw
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 private tuple_constructor_raw ::=
@@ -283,7 +289,7 @@ tuple_type_constructor ::=
     unordered_tuple_type_constructor
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaGenericExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 ordered_tuple_type_constructor ::=
@@ -305,7 +311,7 @@ unordered_tuple_type_constructor_entry ::=
 int_literal ::= INT
     {
         methods=[
-            content="INT"
+            value_element="INT"
         ]
         extends=expression
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaIntLiteralImplMixin"

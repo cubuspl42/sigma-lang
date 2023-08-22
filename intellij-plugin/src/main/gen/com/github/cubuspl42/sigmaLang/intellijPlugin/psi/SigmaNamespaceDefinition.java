@@ -14,6 +14,6 @@ public interface SigmaNamespaceDefinition extends SigmaNamespaceEntry {
   List<SigmaNamespaceDefinition> getNamespaceDefinitionList();
 
   @NotNull
-  PsiElement getDefinedName();
+  PsiElement getDefinedNameElement();
 
 }

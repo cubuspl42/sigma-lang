@@ -28,7 +28,7 @@ public class SigmaReferenceExpressionImpl extends SigmaReferenceExpressionImplMi
 
   @Override
   @NotNull
-  public PsiElement getReferredName() {
+  public PsiElement getReferredNameElement() {
     return findNotNullChildByType(IDENTIFIER);
   }
 

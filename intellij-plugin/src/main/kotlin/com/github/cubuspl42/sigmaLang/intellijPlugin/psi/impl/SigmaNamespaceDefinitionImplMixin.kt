@@ -9,15 +9,13 @@ import com.intellij.lang.ASTNode
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntrySourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
 
 abstract class SigmaNamespaceDefinitionImplMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node), SigmaNamespaceDefinition {
-    final override fun toTerm(): NamespaceDefinitionSourceTerm = NamespaceDefinitionSourceTerm(
-        location = getSourceLocation(),
-        name = Symbol.of(definedName.text),
-        namespaceEntries = getNamespaceEntries().map { it as NamespaceEntrySourceTerm },
-    )
+    final override val asTerm: NamespaceEntryTerm
+        get() = TODO()
 
     private fun getNamespaceEntries(): Collection<SigmaNamespaceEntry> = descendantsOfType<SigmaNamespaceEntry>()
 }

@@ -5,12 +5,18 @@ import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.ext.getSourceLocation
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 
-abstract class SigmaReferenceExpressionImplMixin(node: ASTNode) : ASTWrapperPsiElement(node), SigmaReferenceExpression {
-   final override fun toTerm(): ExpressionSourceTerm = ReferenceSourceTerm(
-       location = getSourceLocation(),
-       referredName = Symbol.of(referredName.text)
-   )
+abstract class SigmaReferenceExpressionImplMixin(
+    node: ASTNode,
+) : ASTWrapperPsiElement(node), SigmaReferenceExpression {
+    final override val asTerm: ReferenceTerm
+        get() = object : ReferenceTerm {
+            override val referredName: Symbol
+                get() = Symbol.of(
+                    name = this@SigmaReferenceExpressionImplMixin.referredNameElement.text,
+                )
+        }
 }
