@@ -15,6 +15,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorSourceTerm
 
 class UnorderedTupleConstructor(
+    override val outerScope: StaticScope,
     override val term: UnorderedTupleConstructorSourceTerm,
     val entries: Set<Entry>,
 ) : TupleConstructor() {
@@ -49,13 +50,14 @@ class UnorderedTupleConstructor(
 
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: UnorderedTupleConstructorSourceTerm,
         ): UnorderedTupleConstructor = UnorderedTupleConstructor(
+            outerScope = outerScope,
             term = term,
             entries = term.entries.map {
                 Entry.build(
-                    declarationScope = declarationScope,
+                    declarationScope = outerScope,
                     entry = it,
                 )
             }.toSet(),

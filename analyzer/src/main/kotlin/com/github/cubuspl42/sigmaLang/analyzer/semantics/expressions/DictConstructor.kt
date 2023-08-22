@@ -15,6 +15,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorSourceTerm
 
 class DictConstructor(
+    override val outerScope: StaticScope,
     override val term: DictConstructorSourceTerm,
     val associations: List<Association>,
 ) : Expression() {
@@ -44,6 +45,7 @@ class DictConstructor(
             outerScope: StaticScope,
             term: DictConstructorSourceTerm,
         ): DictConstructor = DictConstructor(
+            outerScope = outerScope,
             term = term,
             associations = term.associations.map {
                 Association.build(

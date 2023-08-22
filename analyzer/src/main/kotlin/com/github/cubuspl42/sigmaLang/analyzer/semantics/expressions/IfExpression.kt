@@ -12,6 +12,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IfExpressionSourceTerm
 
 class IfExpression(
+    override val outerScope: StaticScope,
     override val term: IfExpressionSourceTerm,
     val guard: Expression,
     val trueBranch: Expression,
@@ -22,6 +23,7 @@ class IfExpression(
             outerScope: StaticScope,
             term: IfExpressionSourceTerm,
         ): IfExpression = IfExpression(
+            outerScope = outerScope,
             term = term,
             guard = build(
                 outerScope = outerScope,

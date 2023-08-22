@@ -12,12 +12,12 @@ sealed class TupleTypeConstructor : Expression() {
             term: TupleTypeConstructorSourceTerm,
         ): TupleTypeConstructor = when (term) {
             is OrderedTupleTypeConstructorSourceTerm -> OrderedTupleTypeConstructor.build(
-                declarationScope = outerScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is UnorderedTupleTypeConstructorSourceTerm -> UnorderedTupleTypeConstructor.build(
-                declarationScope = outerScope,
+                outerScope = outerScope,
                 term = term,
             )
         }

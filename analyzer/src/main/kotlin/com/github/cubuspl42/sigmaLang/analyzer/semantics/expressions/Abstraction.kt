@@ -21,7 +21,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunction
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
 
 class Abstraction(
-    private val innerDeclarationScope: StaticScope,
+    override val outerScope: StaticScope,
+    private val innerScope: StaticScope,
     override val term: AbstractionSourceTerm,
     val genericParameters: Set<TypeVariable>,
     val argumentType: TupleType,
@@ -94,7 +95,8 @@ class Abstraction(
             )
 
             return Abstraction(
-                innerDeclarationScope = innerDeclarationScope2,
+                outerScope = outerScope,
+                innerScope = innerDeclarationScope2,
                 term = term,
                 genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
                 argumentType = argumentType,
@@ -112,7 +114,7 @@ class Abstraction(
 
     val declaredImageType: Thunk<Type>? by lazy {
         declaredImageTypeConstructor?.bindTranslated(
-            staticScope = innerDeclarationScope,
+            staticScope = innerScope,
         )?.thenJust { it as Type }
     }
 

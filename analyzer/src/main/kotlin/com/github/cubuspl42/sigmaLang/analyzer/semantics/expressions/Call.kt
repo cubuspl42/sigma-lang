@@ -14,6 +14,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.CallSourceTerm
 
 class Call(
+    override val outerScope: StaticScope,
     override val term: CallSourceTerm,
     val subject: Expression,
     val argument: Expression,
@@ -23,6 +24,7 @@ class Call(
             outerScope: StaticScope,
             term: CallSourceTerm,
         ): Call = Call(
+            outerScope = outerScope,
             term = term,
             subject = build(
                 outerScope = outerScope,

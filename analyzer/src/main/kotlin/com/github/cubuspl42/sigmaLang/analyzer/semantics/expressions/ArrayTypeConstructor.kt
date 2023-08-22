@@ -11,6 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConst
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 
 class ArrayTypeConstructor(
+    override val outerScope: StaticScope,
     override val term: ExpressionSourceTerm,
     val elementType: Expression,
 ) : Expression() {
@@ -19,6 +20,7 @@ class ArrayTypeConstructor(
             outerScope: StaticScope,
             term: ArrayTypeConstructorSourceTerm,
         ): ArrayTypeConstructor = ArrayTypeConstructor(
+            outerScope = outerScope,
             term = term,
             elementType = Expression.build(
                 outerScope = outerScope,

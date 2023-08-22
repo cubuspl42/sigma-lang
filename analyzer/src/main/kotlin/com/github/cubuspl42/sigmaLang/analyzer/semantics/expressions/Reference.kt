@@ -13,6 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 
 class Reference(
+    override val outerScope: StaticScope,
     private val declarationScope: StaticScope,
     override val term: ReferenceSourceTerm,
 ) : Expression() {
@@ -31,6 +32,7 @@ class Reference(
             outerScope: StaticScope,
             term: ReferenceSourceTerm,
         ): Reference = Reference(
+            outerScope = outerScope,
             declarationScope = outerScope,
             term = term,
         )

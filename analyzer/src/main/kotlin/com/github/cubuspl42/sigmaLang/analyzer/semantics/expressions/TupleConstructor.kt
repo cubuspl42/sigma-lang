@@ -12,12 +12,12 @@ abstract class TupleConstructor : Expression() {
             term: TupleConstructorSourceTerm,
         ): TupleConstructor = when (term) {
             is OrderedTupleConstructorSourceTerm -> OrderedTupleConstructor.build(
-                declarationScope = outerScope,
+                outerScope = outerScope,
                 term = term,
             )
 
             is UnorderedTupleConstructorSourceTerm -> UnorderedTupleConstructor.build(
-                declarationScope = outerScope,
+                outerScope = outerScope,
                 term = term,
             )
         }
