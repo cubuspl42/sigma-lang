@@ -53,7 +53,7 @@ class Namespace(
 
     private val asDeclarationBlock = NamespaceStaticBlock()
 
-    val innerDeclarationScope: StaticScope = asDeclarationBlock.chainWith(
+    val innerStaticScope: StaticScope = asDeclarationBlock.chainWith(
         outerScope = prelude.declarationScope,
     )
 

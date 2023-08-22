@@ -45,12 +45,12 @@ class FieldRead(
 
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: FieldReadSourceTerm,
         ): FieldRead = FieldRead(
             term = term,
             subject = Expression.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.subject,
             ),
         )

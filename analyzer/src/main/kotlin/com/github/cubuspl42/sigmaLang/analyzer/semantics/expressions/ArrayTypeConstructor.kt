@@ -16,12 +16,12 @@ class ArrayTypeConstructor(
 ) : Expression() {
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: ArrayTypeConstructorSourceTerm,
         ): ArrayTypeConstructor = ArrayTypeConstructor(
             term = term,
             elementType = Expression.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.elementType,
             ),
         )

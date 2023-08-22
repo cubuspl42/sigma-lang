@@ -19,7 +19,7 @@ class DictConstructorTests {
         @Test
         fun testSingleEntry() {
             val dictLiteral = DictConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
@@ -50,7 +50,7 @@ class DictConstructorTests {
         @Test
         fun testMultipleEntriesCompatibleEntries() {
             val dictLiteral = DictConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
@@ -90,7 +90,7 @@ class DictConstructorTests {
         @Test
         fun testMultipleEntriesIncompatibleKeys() {
             val dictLiteral = DictConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
@@ -136,7 +136,7 @@ class DictConstructorTests {
         @Test
         fun testMultipleEntriesIncompatibleValues() {
             val dictLiteral = DictConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
@@ -184,7 +184,7 @@ class DictConstructorTests {
             val keyType = Arbitrary.unorderedTupleType
 
             val dictLiteral = DictConstructor.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("key1"),
                         type = keyType,

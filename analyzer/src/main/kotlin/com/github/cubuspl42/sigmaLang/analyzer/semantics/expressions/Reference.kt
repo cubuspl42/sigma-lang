@@ -28,10 +28,10 @@ class Reference(
 
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: ReferenceSourceTerm,
         ): Reference = Reference(
-            declarationScope = declarationScope,
+            declarationScope = outerScope,
             term = term,
         )
     }

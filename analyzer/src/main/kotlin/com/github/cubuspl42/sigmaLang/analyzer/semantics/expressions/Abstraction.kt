@@ -56,17 +56,17 @@ class Abstraction(
 
     companion object {
         fun build(
-            outerDeclarationScope: StaticScope,
+            outerScope: StaticScope,
             term: AbstractionSourceTerm,
         ): Abstraction {
             val genericDeclarationBlock = term.genericParametersTuple?.asDeclarationBlock
 
             val innerDeclarationScope1 = genericDeclarationBlock?.chainWith(
-                outerScope = outerDeclarationScope,
-            ) ?: outerDeclarationScope
+                outerScope = outerScope,
+            ) ?: outerScope
 
             val argumentTypeBody = TupleTypeConstructor.build(
-                declarationScope = innerDeclarationScope1,
+                outerScope = innerDeclarationScope1,
                 term = term.argumentType,
             )
 
@@ -83,13 +83,13 @@ class Abstraction(
 
             val declaredImageType = term.declaredImageType?.let {
                 Expression.build(
-                    declarationScope = innerDeclarationScope2,
+                    outerScope = innerDeclarationScope2,
                     term = it,
                 )
             }
 
             val image = build(
-                declarationScope = innerDeclarationScope2,
+                outerScope = innerDeclarationScope2,
                 term = term.image,
             )
 

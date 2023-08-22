@@ -29,7 +29,7 @@ class OrderedTupleTypeConstructor(
                 Element(
                     name = it.name,
                     type = Expression.build(
-                        declarationScope = declarationScope,
+                        outerScope = declarationScope,
                         term = it.type,
                     ),
                 )

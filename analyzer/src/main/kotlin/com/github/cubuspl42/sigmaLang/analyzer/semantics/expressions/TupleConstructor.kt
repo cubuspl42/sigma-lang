@@ -8,16 +8,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTuple
 abstract class TupleConstructor : Expression() {
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: TupleConstructorSourceTerm,
         ): TupleConstructor = when (term) {
             is OrderedTupleConstructorSourceTerm -> OrderedTupleConstructor.build(
-                declarationScope = declarationScope,
+                declarationScope = outerScope,
                 term = term,
             )
 
             is UnorderedTupleConstructorSourceTerm -> UnorderedTupleConstructor.build(
-                declarationScope = declarationScope,
+                declarationScope = outerScope,
                 term = term,
             )
         }

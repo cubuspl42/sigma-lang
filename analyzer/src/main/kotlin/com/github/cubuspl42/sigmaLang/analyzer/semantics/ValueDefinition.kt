@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.EvaluationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
@@ -12,7 +11,7 @@ abstract class ValueDefinition : ValueDeclaration {
         val matchResult: Type.MatchResult,
     ) : SemanticError
 
-    protected abstract val declarationScope: StaticScope
+    protected abstract val outerScope: StaticScope
 
     private val declaredType: Thunk<Type>? by lazy {
         declaredTypeBody?.let { expression ->

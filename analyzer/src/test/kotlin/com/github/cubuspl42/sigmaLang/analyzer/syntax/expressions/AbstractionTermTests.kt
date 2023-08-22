@@ -131,7 +131,7 @@ class AbstractionTermTests {
             )
 
             val expression = Expression.build(
-                declarationScope = BuiltinScope,
+                outerScope = BuiltinScope,
                 term = term,
             )
 
@@ -160,7 +160,7 @@ class AbstractionTermTests {
             )
 
             val expression = Expression.build(
-                declarationScope = BuiltinScope,
+                outerScope = BuiltinScope,
                 term = term,
             )
 
@@ -198,7 +198,7 @@ class AbstractionTermTests {
             )
 
             val expression = Expression.build(
-                declarationScope = BuiltinScope,
+                outerScope = BuiltinScope,
                 term = term,
             )
 

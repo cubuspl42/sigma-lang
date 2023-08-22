@@ -40,7 +40,7 @@ class CallTests {
             ) as CallSourceTerm
 
             val call = Call.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
@@ -78,7 +78,7 @@ class CallTests {
             ) as CallSourceTerm
 
             val call = Call.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
@@ -130,7 +130,7 @@ class CallTests {
             ) as CallSourceTerm
 
             val call = Call.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("b"),
                         type = BoolType,
@@ -161,7 +161,7 @@ class CallTests {
             ) as CallSourceTerm
 
             val call = Call.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
@@ -208,7 +208,7 @@ class CallTests {
             ) as CallSourceTerm
 
             val call = Call.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
@@ -259,7 +259,7 @@ class CallTests {
             ) as CallSourceTerm
 
             val call = Call.build(
-                declarationScope = FakeStaticBlock.of(
+                outerScope = FakeStaticBlock.of(
                     FakeValueDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
@@ -335,7 +335,7 @@ class CallTests {
             }
 
             val call = Call.build(
-                declarationScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
                 term = ExpressionSourceTerm.parse("sq(3)") as CallSourceTerm,
             )
 
@@ -357,7 +357,7 @@ class CallTests {
         @Test
         fun testDictSubject() {
             val call = Call.build(
-                declarationScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
                 term = ExpressionSourceTerm.parse("dict(2)") as CallSourceTerm,
             )
 

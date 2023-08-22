@@ -19,20 +19,20 @@ class IfExpression(
 ) : Expression() {
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: IfExpressionSourceTerm,
         ): IfExpression = IfExpression(
             term = term,
             guard = build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.guard,
             ),
             trueBranch = build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.trueBranch,
             ),
             falseBranch = build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.falseBranch,
             ),
         )

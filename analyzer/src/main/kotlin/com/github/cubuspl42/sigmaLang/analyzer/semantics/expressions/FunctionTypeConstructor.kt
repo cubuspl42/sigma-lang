@@ -17,16 +17,16 @@ class FunctionTypeConstructor(
 ) : Expression() {
     companion object {
         fun build(
-            declarationScope: StaticScope,
+            outerScope: StaticScope,
             term: FunctionTypeConstructorSourceTerm,
         ): FunctionTypeConstructor = FunctionTypeConstructor(
             term = term,
             argumentType = TupleTypeConstructor.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.argumentType,
             ),
             imageType = Expression.build(
-                declarationScope = declarationScope,
+                outerScope = outerScope,
                 term = term.imageType,
             ),
         )
