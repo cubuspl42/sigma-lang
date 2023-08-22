@@ -138,6 +138,8 @@ class Abstraction(
         }
     }
 
+    override val subExpressions: Set<Expression> = setOf(image)
+
     override val errors: Set<SemanticError> by lazy {
         image.errors
     }

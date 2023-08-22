@@ -56,4 +56,6 @@ class FunctionTypeConstructor(
         setOfNotNull(
         )
     }
+
+    override val subExpressions: Set<Expression> = setOf(argumentType, imageType)
 }

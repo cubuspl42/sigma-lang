@@ -73,6 +73,8 @@ class SetConstructor(
         }
     }
 
+    override val subExpressions: Set<Expression> = elements
+
     override fun bind(
         scope: Scope,
     ): Thunk<Value> = Thunk.traverseList(elements.toList()) {

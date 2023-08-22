@@ -34,12 +34,13 @@ class LocalValueDefinitionBlock(
         name: Symbol,
     ): ResolvedName? = getValueDefinition(name = name)?.let {
         ResolvedName(
-            type = it.effectiveValueType,
-            resolution = DynamicResolution(
+            type = it.effectiveValueType, resolution = DynamicResolution(
                 resolvedFormula = null,
             )
         )
     }
+
+    val subExpressions by lazy { definitionByName.values.map { it.body }.toSet() }
 
     val errors: Set<SemanticError> by lazy {
         definitionByName.values.fold(emptySet()) { acc, it -> acc + it.errors }

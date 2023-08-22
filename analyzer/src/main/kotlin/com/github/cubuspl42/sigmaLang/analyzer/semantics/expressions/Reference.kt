@@ -47,6 +47,8 @@ class Reference(
     override val inferredType: Thunk<Type>
         get() = resolved?.type ?: Thunk.pure(IllType)
 
+    override val subExpressions: Set<Expression> = emptySet()
+
     override fun bind(scope: Scope): Thunk<Value> = scope.getValue(
         name = referredName,
     ) ?: throw RuntimeException(

@@ -32,6 +32,8 @@ class ArrayTypeConstructor(
     override val inferredType: Thunk<Type>
         get() = TODO()
 
+    override val subExpressions: Set<Expression> = setOf(elementType)
+
     override val errors: Set<SemanticError> = emptySet()
 
     override fun bind(scope: Scope): Thunk<Value> = elementType.bind(

@@ -39,5 +39,7 @@ data class IsUndefinedCheck(
         )
     }
 
+    override val subExpressions: Set<Expression> = setOf(argument)
+
     override val errors: Set<SemanticError> = emptySet()
 }

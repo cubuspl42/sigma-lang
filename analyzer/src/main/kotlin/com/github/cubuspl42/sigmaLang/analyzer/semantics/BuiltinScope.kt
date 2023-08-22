@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
@@ -32,6 +33,9 @@ private class BuiltinValueDefinition(
 //    override val effectiveValueType: Computation<Type> = Computation.pure(type)
 
     override val staticValue: Thunk<Value> = value.asThunk
+
+    override val expressionMap: ExpressionMap = ExpressionMap.Empty
+
     override val errors: Set<SemanticError>
         get() = emptySet()
 

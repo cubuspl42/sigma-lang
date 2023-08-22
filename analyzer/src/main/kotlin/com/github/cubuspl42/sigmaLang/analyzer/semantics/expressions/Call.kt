@@ -155,6 +155,7 @@ class Call(
             }
         }
     }
+    override val subExpressions: Set<Expression> = setOf(subject, argument)
 
     override fun bind(
         scope: Scope,

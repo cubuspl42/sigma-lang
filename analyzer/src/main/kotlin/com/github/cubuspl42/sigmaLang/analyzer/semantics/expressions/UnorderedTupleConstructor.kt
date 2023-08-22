@@ -108,6 +108,8 @@ class UnorderedTupleConstructor(
         )
     }
 
+    override val subExpressions: Set<Expression> = entries.map { it.value }.toSet()
+
     override val errors: Set<SemanticError> by lazy {
         val entriesErrors: Set<SemanticError> = entries.fold(emptySet()) { acc, it -> acc + it.value.errors }
 

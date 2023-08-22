@@ -54,6 +54,8 @@ class OrderedTupleTypeConstructor(
         OrderedTupleType(elements = elements)
     }
 
+    override val subExpressions: Set<Expression> = elements.map { it.type }.toSet()
+
     override val errors: Set<SemanticError>
         get() = TODO()
 }

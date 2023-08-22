@@ -88,6 +88,8 @@ class IfExpression(
         }
     }
 
+    override val subExpressions: Set<Expression> = setOf(guard, trueBranch, falseBranch)
+
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
             guardValidationOutcome.value as? InvalidGuardError,

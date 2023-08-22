@@ -127,4 +127,6 @@ class FieldRead(
             inferredFieldTypeOutcome.value as? MissingFieldError,
         )
     }
+
+    override val subExpressions: Set<Expression> = setOf(subject)
 }

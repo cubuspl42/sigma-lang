@@ -27,6 +27,9 @@ class Module(
         ),
     )
 
+    val expressionMap
+        get() = rootNamespace.expressionMap
+
     val errors: Set<SemanticError>
         get() = rootNamespace.errors
 }

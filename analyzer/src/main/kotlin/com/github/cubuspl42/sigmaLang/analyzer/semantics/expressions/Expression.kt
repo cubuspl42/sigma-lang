@@ -8,24 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.CallSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictTypeConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.GenericTypeConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IfExpressionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IntLiteralSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IsUndefinedCheckSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SymbolLiteralSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 
 abstract class Expression {
     companion object {
@@ -49,6 +32,7 @@ abstract class Expression {
             )
 
             is IntLiteralSourceTerm -> IntLiteral.build(
+                outerScope = outerScope,
                 term = term,
             )
 
@@ -134,6 +118,20 @@ abstract class Expression {
     protected abstract val term: ExpressionSourceTerm
 
     abstract val inferredType: Thunk<Type>
+
+    abstract val subExpressions: Set<Expression>
+
+    val expressionMap: ExpressionMap by lazy {
+        ExpressionMap(
+            map = mapOf(term to this),
+        ).unionWith(
+            subExpressions.fold(
+                initial = ExpressionMap.Empty,
+            ) { acc, subExpression ->
+                acc.unionWith(subExpression.expressionMap)
+            },
+        )
+    }
 
     fun evaluateValue(
         context: EvaluationContext,

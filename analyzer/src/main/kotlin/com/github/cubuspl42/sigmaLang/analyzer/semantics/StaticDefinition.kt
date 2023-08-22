@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
@@ -25,6 +26,8 @@ abstract class StaticDefinition : Declaration {
     }
 
     abstract val staticValue: Thunk<Value>
+
+    abstract val expressionMap: ExpressionMap
 
     abstract val errors: Set<SemanticError>
 }

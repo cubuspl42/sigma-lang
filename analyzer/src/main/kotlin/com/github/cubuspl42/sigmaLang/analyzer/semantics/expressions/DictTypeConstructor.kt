@@ -53,4 +53,6 @@ class DictTypeConstructor(
             valueType = valueType as Type,
         )
     }
+
+    override val subExpressions: Set<Expression> = setOf(keyType, valueType)
 }
