@@ -1,19 +1,12 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.evaluateValueHacky
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.DynamicResolution
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticResolution
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorSourceTerm
@@ -33,45 +26,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SymbolLiteralSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorSourceTerm
-
-data class EvaluationContext(
-    val evaluationDepth: Int,
-) {
-    companion object {
-        val Initial: EvaluationContext = EvaluationContext(
-            evaluationDepth = 0,
-        )
-
-        const val maxEvaluationDepth: Int = 2048
-    }
-
-    fun withIncreasedDepth(): EvaluationContext = EvaluationContext(
-        evaluationDepth = evaluationDepth + 1,
-    )
-}
-
-class TranslationScope(
-    private val staticScope: StaticScope,
-) : Scope {
-    override fun getValue(
-        name: Symbol,
-    ): Thunk<Value>? = staticScope.resolveName(
-        name = name,
-    )?.let { resolvedName ->
-        when (val resolution = resolvedName.resolution) {
-            is StaticResolution -> resolution.resolvedValue
-
-            is DynamicResolution -> when (resolvedName.type.value) {
-                is MetaType -> TypeVariable(
-                    // FIXME
-                    formula = resolution.resolvedFormula ?: Formula(name = Symbol.of("?")),
-                ).asThunk
-
-                else -> null
-            }
-        }
-    }
-}
 
 abstract class Expression {
     companion object {
