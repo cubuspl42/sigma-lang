@@ -34,7 +34,7 @@ public class SigmaLetExpressionImpl extends SigmaLetExpressionImplMixin implemen
 
   @Override
   @Nullable
-  public SigmaExpression getResult() {
+  public SigmaExpression getResultElement() {
     return findChildByClass(SigmaExpression.class);
   }
 

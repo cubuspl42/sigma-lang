@@ -16,7 +16,7 @@ class SigmaCompletionContributor : CompletionContributor() {
                 resultSet: CompletionResultSet,
             ) {
                 val element = parameters.position.parent as SigmaReferenceExpression
-                val term = element.toTerm()
+                val term = element.asTerm
 
                 BuiltinScope.names.forEach {
                     resultSet.addElement(
@@ -27,7 +27,7 @@ class SigmaCompletionContributor : CompletionContributor() {
                 val grandparent = element.parent?.parent
 
                 if (grandparent is SigmaLetExpressionImpl) {
-                    val grandparentTerm = grandparent.toTerm()
+                    val grandparentTerm = grandparent.asTerm
 
                     grandparent.getNames().forEach {
                         resultSet.addElement(

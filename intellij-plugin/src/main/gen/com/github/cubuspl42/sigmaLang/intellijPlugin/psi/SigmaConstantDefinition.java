@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface SigmaConstantDefinition extends SigmaNamespaceEntry {
 
   @NotNull
-  PsiElement getDefinedName();
+  PsiElement getDefinedNameElement();
 
   @NotNull
-  SigmaExpression getBody();
+  SigmaExpression getBodyElement();
 
 }

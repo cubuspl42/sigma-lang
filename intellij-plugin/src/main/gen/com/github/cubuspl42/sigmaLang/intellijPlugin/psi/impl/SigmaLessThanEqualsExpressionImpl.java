@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaLessThanEqualsExpressionImpl extends SigmaGenericExpressionImplMixin implements SigmaLessThanEqualsExpression {
+public class SigmaLessThanEqualsExpressionImpl extends SigmaUnimplementedExpressionImplMixin implements SigmaLessThanEqualsExpression {
 
   public SigmaLessThanEqualsExpressionImpl(@NotNull ASTNode node) {
     super(node);

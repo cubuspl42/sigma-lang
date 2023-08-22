@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface SigmaIntLiteral extends SigmaExpression {
 
   @NotNull
-  PsiElement getContent();
+  PsiElement getValueElement();
 
 }

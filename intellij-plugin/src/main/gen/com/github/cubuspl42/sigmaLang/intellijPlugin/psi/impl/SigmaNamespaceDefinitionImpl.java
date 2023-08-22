@@ -40,7 +40,7 @@ public class SigmaNamespaceDefinitionImpl extends SigmaNamespaceDefinitionImplMi
 
   @Override
   @NotNull
-  public PsiElement getDefinedName() {
+  public PsiElement getDefinedNameElement() {
     return findNotNullChildByType(IDENTIFIER);
   }
 

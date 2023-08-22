@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface SigmaReferenceExpression extends SigmaExpression {
 
   @NotNull
-  PsiElement getReferredName();
+  PsiElement getReferredNameElement();
 
 }
