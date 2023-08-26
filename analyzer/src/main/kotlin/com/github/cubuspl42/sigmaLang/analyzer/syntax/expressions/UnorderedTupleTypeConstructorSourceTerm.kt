@@ -5,8 +5,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 data class UnorderedTupleTypeConstructorSourceTerm(
     override val location: SourceLocation,
-    val entries: List<UnorderedTupleConstructorSourceTerm.Entry>,
-) : TupleTypeConstructorSourceTerm() {
+    override val entries: List<UnorderedTupleConstructorSourceTerm.Entry>,
+) : TupleTypeConstructorSourceTerm(), UnorderedTupleTypeConstructorTerm {
     companion object {
         fun build(
             ctx: UnorderedTupleTypeConstructorContext,

@@ -5,10 +5,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 data class IfExpressionSourceTerm(
     override val location: SourceLocation,
-    val guard: ExpressionSourceTerm,
-    val trueBranch: ExpressionSourceTerm,
-    val falseBranch: ExpressionSourceTerm,
-) : ExpressionSourceTerm() {
+    override val guard: ExpressionSourceTerm,
+    override val trueBranch: ExpressionSourceTerm,
+    override val falseBranch: ExpressionSourceTerm,
+) : ExpressionSourceTerm(), IfExpressionTerm {
     companion object {
         fun build(
             ctx: IfExpressionContext,
