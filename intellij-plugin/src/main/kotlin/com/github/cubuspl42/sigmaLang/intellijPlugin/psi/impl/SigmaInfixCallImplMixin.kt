@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.InfixCallTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.InfixOperator
+import com.github.cubuspl42.sigmaLang.intellijPlugin.SigmaParserDefinition.Companion.InfixOperators
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaExpression
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
@@ -13,7 +14,7 @@ abstract class SigmaInfixCallImplMixin(
     override val asTerm: ExpressionTerm = object : PsiExpressionTerm(), InfixCallTerm {
         override val operator: InfixOperator
             get() {
-                val operatorElement = this@SigmaInfixCallImplMixin.children[1]
+                val operatorElement = node.findChildByType(InfixOperators)!!
                 return InfixOperator.fromSymbol(symbol = operatorElement.text)
             }
 
@@ -21,6 +22,6 @@ abstract class SigmaInfixCallImplMixin(
             get() = (this@SigmaInfixCallImplMixin.children[0] as SigmaExpression).asTerm
 
         override val rightArgument: ExpressionTerm
-            get() = (this@SigmaInfixCallImplMixin.children[2] as SigmaExpression).asTerm
+            get() = (this@SigmaInfixCallImplMixin.children[1] as SigmaExpression).asTerm
     }
 }

@@ -20,6 +20,18 @@ class SigmaParserDefinition : ParserDefinition {
         val File = IFileElementType(SigmaLanguage)
 
         val Comments = TokenSet.create(SigmaTypes.LINE_COMMENT)
+
+        val InfixOperators = TokenSet.create(
+            SigmaTypes.ASTERISK,
+            SigmaTypes.SLASH,
+            SigmaTypes.PLUS,
+            SigmaTypes.MINUS,
+            SigmaTypes.EQUALS,
+            SigmaTypes.LESS_THAN,
+            SigmaTypes.LESS_THAN_EQUALS,
+            SigmaTypes.GREATER_THAN,
+            SigmaTypes.GREATER_THAN_EQUALS,
+        )
     }
 
     override fun createLexer(project: Project): Lexer = SigmaLexerAdapter()
