@@ -13,6 +13,10 @@ enum class InfixOperator(
     companion object {
         fun build(
             ctx: Token,
-        ): InfixOperator = values().single { it.symbol == ctx.text }
+        ): InfixOperator = fromSymbol(symbol = ctx.text)
+
+        fun fromSymbol(
+            symbol: String,
+        ): InfixOperator = values().single { it.symbol == symbol }
     }
 }

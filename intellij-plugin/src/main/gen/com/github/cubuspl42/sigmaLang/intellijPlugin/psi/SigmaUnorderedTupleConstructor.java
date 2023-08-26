@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaUnorderedTupleConstructor extends PsiElement {
+public interface SigmaUnorderedTupleConstructor extends SigmaTupleConstructor {
 
   @NotNull
-  List<SigmaUnorderedTupleEntry> getUnorderedTupleEntryList();
+  List<SigmaUnorderedTupleConstructorEntry> getUnorderedTupleConstructorEntryList();
 
 }

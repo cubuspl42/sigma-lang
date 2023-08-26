@@ -39,9 +39,10 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     create_token_set_(ABSTRACTION_CONSTRUCTOR, ADDITION_EXPRESSION, CALL_EXPRESSION, DIVISION_EXPRESSION,
       EQUALS_EXPRESSION, EXPRESSION, GREATER_THAN_EQUALS_EXPRESSION, GREATER_THAN_EXPRESSION,
       IF_EXPRESSION, INT_LITERAL, IS_UNDEFINED_EXPRESSION, LESS_THAN_EQUALS_EXPRESSION,
-      LESS_THAN_EXPRESSION, LET_EXPRESSION, MULTIPLICATION_EXPRESSION, ORDERED_TUPLE_TYPE_CONSTRUCTOR,
-      PAREN_EXPRESSION, REFERENCE_EXPRESSION, SUBTRACTION_EXPRESSION, TUPLE_CONSTRUCTOR,
-      TUPLE_TYPE_CONSTRUCTOR, UNARY_NEGATION_EXPRESSION, UNORDERED_TUPLE_TYPE_CONSTRUCTOR),
+      LESS_THAN_EXPRESSION, LET_EXPRESSION, MULTIPLICATION_EXPRESSION, ORDERED_TUPLE_CONSTRUCTOR,
+      ORDERED_TUPLE_TYPE_CONSTRUCTOR, PAREN_EXPRESSION, REFERENCE_EXPRESSION, SUBTRACTION_EXPRESSION,
+      TUPLE_CONSTRUCTOR, TUPLE_TYPE_CONSTRUCTOR, UNARY_NEGATION_EXPRESSION, UNORDERED_TUPLE_CONSTRUCTOR,
+      UNORDERED_TUPLE_TYPE_CONSTRUCTOR),
   };
 
   /* ********************************************************** */
@@ -370,7 +371,7 @@ public class SigmaParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // <<brace_wrapped
-  //         <<list unordered_tuple_entry>>
+  //         <<list unordered_tuple_constructor_entry>>
   //     >>
   public static boolean unordered_tuple_constructor(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "unordered_tuple_constructor")) return false;
@@ -384,14 +385,14 @@ public class SigmaParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // IDENTIFIER COLON expression
-  public static boolean unordered_tuple_entry(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "unordered_tuple_entry")) return false;
+  public static boolean unordered_tuple_constructor_entry(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "unordered_tuple_constructor_entry")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokens(b, 0, IDENTIFIER, COLON);
     r = r && expression(b, l + 1, -1);
-    exit_section_(b, m, UNORDERED_TUPLE_ENTRY, r);
+    exit_section_(b, m, UNORDERED_TUPLE_CONSTRUCTOR_ENTRY, r);
     return r;
   }
 
@@ -525,7 +526,7 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "tuple_constructor")) return false;
     if (!nextTokenIsSmart(b, BRACE_LEFT, BRACKET_LEFT)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, TUPLE_CONSTRUCTOR, "<tuple constructor>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, TUPLE_CONSTRUCTOR, "<tuple constructor>");
     r = tuple_constructor_raw(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -673,6 +674,6 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   private static final Parser generic_parameters_tuple_1_0_parser_ = list_$(SigmaParser::generic_parameter_declaration);
   private static final Parser ordered_tuple_constructor_0_0_parser_ = list_$(expression_parser_);
   private static final Parser ordered_tuple_type_constructor_1_0_parser_ = list_$(SigmaParser::ordered_tuple_type_constructor_entry);
-  private static final Parser unordered_tuple_constructor_0_0_parser_ = list_$(SigmaParser::unordered_tuple_entry);
+  private static final Parser unordered_tuple_constructor_0_0_parser_ = list_$(SigmaParser::unordered_tuple_constructor_entry);
   private static final Parser unordered_tuple_type_constructor_1_0_parser_ = list_$(SigmaParser::unordered_tuple_type_constructor_entry);
 }

@@ -28,7 +28,7 @@ public class SigmaParenExpressionImpl extends SigmaUnimplementedExpressionImplMi
 
   @Override
   @Nullable
-  public SigmaExpression getExpression() {
+  public SigmaExpression getWrappedExpression() {
     return findChildByClass(SigmaExpression.class);
   }
 

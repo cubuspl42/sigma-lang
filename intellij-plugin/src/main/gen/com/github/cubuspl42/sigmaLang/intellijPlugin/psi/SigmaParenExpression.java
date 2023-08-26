@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface SigmaParenExpression extends SigmaExpression {
 
   @Nullable
-  SigmaExpression getExpression();
+  SigmaExpression getWrappedExpression();
 
 }
