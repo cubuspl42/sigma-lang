@@ -87,14 +87,14 @@ multiplication_expression ::=
     expression ASTERISK expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaBinaryExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaInfixCallImplMixin"
     }
 
 division_expression ::=
     expression SLASH expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaBinaryExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaInfixCallImplMixin"
     }
 
 private addition_group ::=
@@ -104,14 +104,14 @@ addition_expression ::=
     expression PLUS expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaBinaryExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaInfixCallImplMixin"
     }
 
 subtraction_expression ::=
     expression MINUS expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaBinaryExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaInfixCallImplMixin"
     }
 
 private equals_group ::=
@@ -121,7 +121,7 @@ equals_expression ::=
     expression EQUALS expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaInfixCallImplMixin"
     }
 
 private comparison_group ::=
@@ -134,28 +134,28 @@ less_than_expression ::=
     expression LESS_THAN expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaInfixCallImplMixin"
     }
 
 less_than_equals_expression ::=
     expression LESS_THAN_EQUALS expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaInfixCallImplMixin"
     }
 
 greater_than_expression ::=
     expression GREATER_THAN expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaInfixCallImplMixin"
     }
 
 greater_than_equals_expression ::=
     expression GREATER_THAN_EQUALS expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaInfixCallImplMixin"
     }
 
 private primary_group ::=
@@ -177,7 +177,7 @@ if_expression ::=
     IF_KEYWORD expression <<paren_wrapped if_expression_body>>
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaIfExpressionImplMixin"
     }
 
 if_expression_body ::=
@@ -255,6 +255,9 @@ reference_expression ::=
 paren_expression ::=
     PAREN_LEFT expression PAREN_RIGHT
     {
+        methods=[
+            wrapped_expression="expression"
+        ]
         extends=expression
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
@@ -263,7 +266,6 @@ tuple_constructor ::=
     tuple_constructor_raw
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 private tuple_constructor_raw ::=
@@ -274,15 +276,31 @@ ordered_tuple_constructor ::=
     <<bracket_wrapped
         <<list expression>>
     >>
+    {
+        extends=tuple_constructor
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaOrderedTupleConstructorImplMixin"
+    }
 
 unordered_tuple_constructor ::=
     <<brace_wrapped
-        <<list unordered_tuple_entry>>
+        <<list unordered_tuple_constructor_entry>>
     >>
+    {
+        extends=tuple_constructor
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnorderedTupleConstructorImplMixin"
+    }
 
 // Thought: Is colon the right syntax?
-unordered_tuple_entry ::=
+unordered_tuple_constructor_entry ::=
     IDENTIFIER COLON expression
+    {
+        methods=[
+            passed_name="IDENTIFIER"
+            passed_value="expression"
+        ]
+        implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaUnorderedTupleConstructorEntryBase"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnorderedTupleConstructorEntryImplMixin"
+    }
 
 tuple_type_constructor ::=
     ordered_tuple_type_constructor |
@@ -313,14 +331,25 @@ ordered_tuple_type_constructor_entry ::=
 unordered_tuple_type_constructor ::=
     DASH <<brace_wrapped
         <<list unordered_tuple_type_constructor_entry>>
-    >> {
+    >>
+    {
         extends=tuple_type_constructor
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnorderedTupleTypeConstructorImplMixin"
     }
 
 unordered_tuple_type_constructor_entry ::=
     IDENTIFIER COLON type_expression
+    {
+        methods=[
+            declared_name="IDENTIFIER"
+            declared_type="type_expression"
+        ]
+        implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaUnorderedTupleTypeConstructorEntryBase"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnorderedTupleTypeConstructorEntryImplMixin"
+    }
 
-int_literal ::= INT
+int_literal ::=
+    INT
     {
         methods=[
             value_element="INT"

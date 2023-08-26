@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaDivisionExpressionImpl extends SigmaBinaryExpressionImplMixin implements SigmaDivisionExpression {
+public class SigmaDivisionExpressionImpl extends SigmaInfixCallImplMixin implements SigmaDivisionExpression {
 
   public SigmaDivisionExpressionImpl(@NotNull ASTNode node) {
     super(node);

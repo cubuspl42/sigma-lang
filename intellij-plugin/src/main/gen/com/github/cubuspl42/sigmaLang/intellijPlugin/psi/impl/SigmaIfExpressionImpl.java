@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaIfExpressionImpl extends SigmaUnimplementedExpressionImplMixin implements SigmaIfExpression {
+public class SigmaIfExpressionImpl extends SigmaIfExpressionImplMixin implements SigmaIfExpression {
 
   public SigmaIfExpressionImpl(@NotNull ASTNode node) {
     super(node);

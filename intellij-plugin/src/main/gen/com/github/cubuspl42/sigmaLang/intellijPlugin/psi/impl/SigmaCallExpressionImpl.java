@@ -28,20 +28,8 @@ public class SigmaCallExpressionImpl extends SigmaCallExpressionImplMixin implem
 
   @Override
   @NotNull
-  public SigmaExpression getExpression() {
-    return findNotNullChildByClass(SigmaExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaOrderedTupleConstructor getOrderedTupleConstructor() {
-    return findChildByClass(SigmaOrderedTupleConstructor.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaUnorderedTupleConstructor getUnorderedTupleConstructor() {
-    return findChildByClass(SigmaUnorderedTupleConstructor.class);
+  public List<SigmaExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaExpression.class);
   }
 
 }

@@ -36,23 +36,23 @@ class UnorderedTupleTypeConstructorTermTests {
                 expected = UnorderedTupleTypeConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
-                        UnorderedTupleConstructorSourceTerm.Entry(
+                        UnorderedTupleTypeConstructorSourceTerm.Entry(
                             name = Symbol.of("a"),
-                            value = ReferenceSourceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 5),
                                 referredName = Symbol.of("A"),
                             ),
                         ),
-                        UnorderedTupleConstructorSourceTerm.Entry(
+                        UnorderedTupleTypeConstructorSourceTerm.Entry(
                             name = Symbol.of("b"),
-                            value = ReferenceSourceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 11),
                                 referredName = Symbol.of("B"),
                             ),
                         ),
-                        UnorderedTupleConstructorSourceTerm.Entry(
+                        UnorderedTupleTypeConstructorSourceTerm.Entry(
                             name = Symbol.of("c"),
-                            value = ReferenceSourceTerm(
+                            type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
                                 referredName = Symbol.of("C"),
                             ),

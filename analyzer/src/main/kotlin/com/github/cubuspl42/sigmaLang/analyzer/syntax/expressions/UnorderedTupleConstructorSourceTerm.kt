@@ -32,13 +32,6 @@ data class UnorderedTupleConstructorSourceTerm(
                 name = Symbol.of(ctx.name.text),
                 value = ExpressionSourceTerm.build(ctx.value),
             )
-
-            fun build(
-                ctx: SigmaParser.UnorderedTupleTypeEntryContext,
-            ): UnorderedTupleConstructorSourceTerm.Entry = Entry(
-                name = Symbol.of(ctx.name.text),
-                value = ExpressionSourceTerm.build(ctx.valueType),
-            )
         }
     }
 

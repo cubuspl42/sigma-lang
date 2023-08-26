@@ -41,16 +41,16 @@ class ClassDefinitionTermTests {
                     argumentType = UnorderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 7, columnIndex = 27),
                         entries = listOf(
-                            UnorderedTupleConstructorSourceTerm.Entry(
+                            UnorderedTupleTypeConstructorSourceTerm.Entry(
                                 name = Symbol.of("mArg1"),
-                                value = ReferenceSourceTerm(
+                                type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 7, columnIndex = 36),
                                     referredName = Symbol.of("Int"),
                                 ),
                             ),
-                            UnorderedTupleConstructorSourceTerm.Entry(
+                            UnorderedTupleTypeConstructorSourceTerm.Entry(
                                 name = Symbol.of("mArg2"),
-                                value = ReferenceSourceTerm(
+                                type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 7, columnIndex = 48),
                                     referredName = Symbol.of("Bool"),
                                 ),

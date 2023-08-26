@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaOrderedTupleConstructorImpl extends ASTWrapperPsiElement implements SigmaOrderedTupleConstructor {
+public class SigmaOrderedTupleConstructorImpl extends SigmaOrderedTupleConstructorImplMixin implements SigmaOrderedTupleConstructor {
 
   public SigmaOrderedTupleConstructorImpl(@NotNull ASTNode node) {
     super(node);

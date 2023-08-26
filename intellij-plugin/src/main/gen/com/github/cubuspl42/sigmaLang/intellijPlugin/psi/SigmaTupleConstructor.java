@@ -7,10 +7,4 @@ import com.intellij.psi.PsiElement;
 
 public interface SigmaTupleConstructor extends SigmaExpression {
 
-  @Nullable
-  SigmaOrderedTupleConstructor getOrderedTupleConstructor();
-
-  @Nullable
-  SigmaUnorderedTupleConstructor getUnorderedTupleConstructor();
-
 }

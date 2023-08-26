@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaUnorderedTupleConstructorImpl extends ASTWrapperPsiElement implements SigmaUnorderedTupleConstructor {
+public class SigmaUnorderedTupleConstructorImpl extends SigmaUnorderedTupleConstructorImplMixin implements SigmaUnorderedTupleConstructor {
 
   public SigmaUnorderedTupleConstructorImpl(@NotNull ASTNode node) {
     super(node);
@@ -29,8 +28,8 @@ public class SigmaUnorderedTupleConstructorImpl extends ASTWrapperPsiElement imp
 
   @Override
   @NotNull
-  public List<SigmaUnorderedTupleEntry> getUnorderedTupleEntryList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaUnorderedTupleEntry.class);
+  public List<SigmaUnorderedTupleConstructorEntry> getUnorderedTupleConstructorEntryList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaUnorderedTupleConstructorEntry.class);
   }
 
 }

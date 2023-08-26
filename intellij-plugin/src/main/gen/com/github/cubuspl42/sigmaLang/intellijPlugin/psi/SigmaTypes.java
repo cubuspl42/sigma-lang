@@ -41,7 +41,7 @@ public interface SigmaTypes {
   IElementType TYPE_EXPRESSION = new SigmaElementType("TYPE_EXPRESSION");
   IElementType UNARY_NEGATION_EXPRESSION = new SigmaElementType("UNARY_NEGATION_EXPRESSION");
   IElementType UNORDERED_TUPLE_CONSTRUCTOR = new SigmaElementType("UNORDERED_TUPLE_CONSTRUCTOR");
-  IElementType UNORDERED_TUPLE_ENTRY = new SigmaElementType("UNORDERED_TUPLE_ENTRY");
+  IElementType UNORDERED_TUPLE_CONSTRUCTOR_ENTRY = new SigmaElementType("UNORDERED_TUPLE_CONSTRUCTOR_ENTRY");
   IElementType UNORDERED_TUPLE_TYPE_CONSTRUCTOR = new SigmaElementType("UNORDERED_TUPLE_TYPE_CONSTRUCTOR");
   IElementType UNORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY = new SigmaElementType("UNORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY");
 
@@ -159,9 +159,6 @@ public interface SigmaTypes {
       else if (type == SUBTRACTION_EXPRESSION) {
         return new SigmaSubtractionExpressionImpl(node);
       }
-      else if (type == TUPLE_CONSTRUCTOR) {
-        return new SigmaTupleConstructorImpl(node);
-      }
       else if (type == TYPE_ANNOTATION) {
         return new SigmaTypeAnnotationImpl(node);
       }
@@ -174,8 +171,8 @@ public interface SigmaTypes {
       else if (type == UNORDERED_TUPLE_CONSTRUCTOR) {
         return new SigmaUnorderedTupleConstructorImpl(node);
       }
-      else if (type == UNORDERED_TUPLE_ENTRY) {
-        return new SigmaUnorderedTupleEntryImpl(node);
+      else if (type == UNORDERED_TUPLE_CONSTRUCTOR_ENTRY) {
+        return new SigmaUnorderedTupleConstructorEntryImpl(node);
       }
       else if (type == UNORDERED_TUPLE_TYPE_CONSTRUCTOR) {
         return new SigmaUnorderedTupleTypeConstructorImpl(node);

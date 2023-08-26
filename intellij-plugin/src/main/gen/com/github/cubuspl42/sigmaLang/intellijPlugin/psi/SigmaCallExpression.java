@@ -8,12 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface SigmaCallExpression extends SigmaExpression {
 
   @NotNull
-  SigmaExpression getExpression();
-
-  @Nullable
-  SigmaOrderedTupleConstructor getOrderedTupleConstructor();
-
-  @Nullable
-  SigmaUnorderedTupleConstructor getUnorderedTupleConstructor();
+  List<SigmaExpression> getExpressionList();
 
 }
