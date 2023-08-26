@@ -7,8 +7,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 data class PostfixCallSourceTerm(
     override val location: SourceLocation,
     // Idea: Rename to `callee`? (again?)
-    override val subject: ExpressionSourceTerm,
-    override val argument: ExpressionSourceTerm,
+    override val subject: ExpressionTerm,
+    override val argument: ExpressionTerm,
 ) : CallSourceTerm(), PostfixCallTerm {
     companion object {
         fun build(

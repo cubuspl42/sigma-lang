@@ -5,18 +5,20 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.*
 
-abstract class StaticDefinition : Declaration {
+abstract class NamespaceEntry : Declaration {
     companion object {
         fun build(
             containingNamespace: Namespace,
             term: NamespaceEntryTerm,
-        ): StaticDefinition = when (term) {
+        ): NamespaceEntry = when (term) {
             is ConstantDefinitionTerm -> ConstantDefinition.build(
                 containingNamespace = containingNamespace,
                 term = term,
             )
 
             is NamespaceDefinitionTerm -> TODO()
+
+            else -> throw UnsupportedOperationException("Unsupported namespace entry term: $term")
         }
     }
 

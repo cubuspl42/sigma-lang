@@ -5,6 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.ClassDef
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.FieldDeclarationContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.MethodDefinitionContext
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 data class ClassDefinitionSourceTerm(
     override val location: SourceLocation,
@@ -15,7 +16,7 @@ data class ClassDefinitionSourceTerm(
     data class FieldDeclarationSourceTerm(
         override val location: SourceLocation,
         val name: Symbol,
-        val type: ExpressionSourceTerm,
+        val type: ExpressionTerm,
     ) : SourceTerm() {
         companion object {
             fun build(
@@ -31,7 +32,7 @@ data class ClassDefinitionSourceTerm(
     data class MethodDefinitionSourceTerm(
         override val location: SourceLocation,
         val name: Symbol,
-        val body: ExpressionSourceTerm,
+        val body: ExpressionTerm,
     ) : SourceTerm() {
         companion object {
             fun build(

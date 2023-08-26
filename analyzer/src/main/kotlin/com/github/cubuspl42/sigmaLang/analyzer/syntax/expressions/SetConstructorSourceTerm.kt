@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 data class SetConstructorSourceTerm(
     override val location: SourceLocation,
-    override val elements: List<ExpressionSourceTerm>,
+    override val elements: List<ExpressionTerm>,
 ) : ExpressionSourceTerm(), SetConstructorTerm {
     companion object {
         fun build(

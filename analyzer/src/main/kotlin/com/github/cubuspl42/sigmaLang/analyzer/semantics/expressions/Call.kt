@@ -13,20 +13,29 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.CallSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.InfixCallSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 
 class Call(
     override val outerScope: StaticScope,
-    override val term: CallSourceTerm,
+    override val term: CallTerm,
     val subject: Expression,
     val argument: Expression,
 ) : Expression() {
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: PostfixCallSourceTerm,
+            term: CallTerm,
+        ): Call {
+            return when (term) {
+                is InfixCallTerm -> buildInfix(outerScope, term)
+                is PostfixCallTerm -> buildPostfix(outerScope, term)
+                else -> throw UnsupportedOperationException("Unsupported call term: $term")
+            }
+        }
+
+        private fun buildPostfix(
+            outerScope: StaticScope,
+            term: PostfixCallTerm,
         ): Call = Call(
             outerScope = outerScope,
             term = term,
@@ -40,9 +49,9 @@ class Call(
             ),
         )
 
-        fun build(
+        private fun buildInfix(
             outerScope: StaticScope,
-            term: InfixCallSourceTerm,
+            term: InfixCallTerm,
         ): Call {
             val prototype = BinaryOperationPrototype.build(term.operator)
 

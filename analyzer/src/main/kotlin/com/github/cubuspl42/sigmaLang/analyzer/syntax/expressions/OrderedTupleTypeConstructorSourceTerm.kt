@@ -10,7 +10,7 @@ data class OrderedTupleTypeConstructorSourceTerm(
 ) : TupleTypeConstructorSourceTerm(), OrderedTupleTypeConstructorTerm {
     data class Element(
         override val name: Symbol?,
-        override val type: ExpressionSourceTerm,
+        override val type: ExpressionTerm,
     ) : OrderedTupleTypeConstructorTerm.Element
 
     companion object {

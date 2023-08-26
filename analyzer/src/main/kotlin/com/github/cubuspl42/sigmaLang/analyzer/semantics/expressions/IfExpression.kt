@@ -10,10 +10,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IfExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IfExpressionTerm
 
 class IfExpression(
     override val outerScope: StaticScope,
-    override val term: IfExpressionSourceTerm,
+    override val term: IfExpressionTerm,
     val guard: Expression,
     val trueBranch: Expression,
     val falseBranch: Expression,
@@ -21,7 +22,7 @@ class IfExpression(
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: IfExpressionSourceTerm,
+            term: IfExpressionTerm,
         ): IfExpression = IfExpression(
             outerScope = outerScope,
             term = term,
@@ -56,7 +57,7 @@ class IfExpression(
             when (guardType) {
                 is BoolType -> ValidGuardResult
                 else -> InvalidGuardError(
-                    location = guard?.location,
+                    location = guard.location,
                     actualType = guardType,
                 )
             }

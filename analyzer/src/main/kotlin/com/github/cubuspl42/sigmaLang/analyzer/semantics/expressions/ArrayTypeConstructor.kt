@@ -8,17 +8,19 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 class ArrayTypeConstructor(
     override val outerScope: StaticScope,
-    override val term: ExpressionSourceTerm,
+    override val term: ExpressionTerm,
     val elementType: Expression,
 ) : Expression() {
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: ArrayTypeConstructorSourceTerm,
+            term: ArrayTypeConstructorTerm,
         ): ArrayTypeConstructor = ArrayTypeConstructor(
             outerScope = outerScope,
             term = term,

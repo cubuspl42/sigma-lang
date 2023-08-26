@@ -6,9 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
-import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
 class Namespace(
     private val prelude: Prelude,
@@ -24,8 +22,8 @@ class Namespace(
         )
     }
 
-    private val entries: Set<StaticDefinition> = term.namespaceEntries.map {
-        StaticDefinition.build(
+    private val entries: Set<NamespaceEntry> = term.namespaceEntries.map {
+        NamespaceEntry.build(
             containingNamespace = this,
             term = it,
         )
@@ -33,7 +31,7 @@ class Namespace(
 
     private fun getStaticDefinition(
         name: Symbol,
-    ): StaticDefinition? = entries.singleOrNull {
+    ): NamespaceEntry? = entries.singleOrNull {
         it.name == name
     }
 

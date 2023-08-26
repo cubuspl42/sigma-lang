@@ -10,7 +10,7 @@ import com.intellij.lang.ASTNode
 abstract class SigmaLetExpressionImplMixin(node: ASTNode) : ASTWrapperPsiElement(node), SigmaLetExpression {
     fun getNames(): Set<String> = setOf("local1", "local2")
 
-    final override val asTerm: LetExpressionTerm = object : LetExpressionTerm {
+    final override val asTerm: LetExpressionTerm = object : PsiExpressionTerm(), LetExpressionTerm {
         override val definitions: List<LocalDefinitionTerm>
             get() = this@SigmaLetExpressionImplMixin.letExpressionScopeEntryList.map { it.asTerm }
 

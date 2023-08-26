@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 data class ParenSourceTerm(
     override val location: SourceLocation,
-    override val wrappedTerm: ExpressionSourceTerm,
+    override val wrappedTerm: ExpressionTerm,
 ) : ExpressionSourceTerm(), ParenTerm {
     companion object {
         fun build(

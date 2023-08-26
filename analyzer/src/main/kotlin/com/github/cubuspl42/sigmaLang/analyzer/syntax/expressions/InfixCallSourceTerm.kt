@@ -6,8 +6,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 data class InfixCallSourceTerm(
     override val location: SourceLocation,
     override val operator: InfixOperator,
-    override val leftArgument: ExpressionSourceTerm,
-    override val rightArgument: ExpressionSourceTerm,
+    override val leftArgument: ExpressionTerm,
+    override val rightArgument: ExpressionTerm,
 ) : CallSourceTerm(), InfixCallTerm {
     companion object {
         fun build(

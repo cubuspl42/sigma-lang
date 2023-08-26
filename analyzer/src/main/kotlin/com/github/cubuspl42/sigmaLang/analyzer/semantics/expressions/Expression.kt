@@ -21,18 +21,12 @@ abstract class Expression {
                 term = term,
             )
 
-            is PostfixCallSourceTerm -> Call.build(
+            is CallTerm -> Call.build(
                 outerScope = outerScope,
                 term = term,
             )
 
-            is InfixCallSourceTerm -> Call.build(
-                outerScope = outerScope,
-                term = term,
-            )
-
-
-            is FieldReadSourceTerm -> FieldRead.build(
+            is FieldReadTerm -> FieldRead.build(
                 outerScope = outerScope,
                 term = term,
             )
@@ -42,7 +36,7 @@ abstract class Expression {
                 term = term,
             )
 
-            is IsUndefinedCheckSourceTerm -> IsUndefinedCheck.build(
+            is IsUndefinedCheckTerm -> IsUndefinedCheck.build(
                 outerScope = outerScope,
                 term = term,
             )
@@ -62,17 +56,17 @@ abstract class Expression {
                 term = term,
             )
 
-            is DictConstructorSourceTerm -> DictConstructor.build(
+            is DictConstructorTerm -> DictConstructor.build(
                 outerScope = outerScope,
                 term = term,
             )
 
-            is SetConstructorSourceTerm -> SetConstructor.build(
+            is SetConstructorTerm -> SetConstructor.build(
                 outerScope = outerScope,
                 term = term,
             )
 
-            is IfExpressionSourceTerm -> IfExpression.build(
+            is IfExpressionTerm -> IfExpression.build(
                 outerScope = outerScope,
                 term = term,
             )
@@ -82,30 +76,24 @@ abstract class Expression {
                 term = term,
             )
 
-            is ArrayTypeConstructorSourceTerm -> ArrayTypeConstructor.build(
+            is ArrayTypeConstructorTerm -> ArrayTypeConstructor.build(
                 outerScope = outerScope,
                 term = term,
             )
 
-            is DictTypeConstructorSourceTerm -> DictTypeConstructor.build(
+            is DictTypeConstructorTerm -> DictTypeConstructor.build(
                 outerScope = outerScope,
                 term = term,
             )
 
-            is FunctionTypeConstructorSourceTerm -> FunctionTypeConstructor.build(
+            is FunctionTypeConstructorTerm -> FunctionTypeConstructor.build(
                 outerScope = outerScope,
                 term = term,
             )
 
+            is GenericTypeConstructorTerm -> TODO()
 
-            is InfixCallSourceTerm -> Call.build(
-                outerScope = outerScope,
-                term = term,
-            )
-
-            is GenericTypeConstructorSourceTerm -> TODO()
-
-            is ParenSourceTerm -> TODO()
+            is ParenTerm -> TODO()
         }
 
         fun parse(

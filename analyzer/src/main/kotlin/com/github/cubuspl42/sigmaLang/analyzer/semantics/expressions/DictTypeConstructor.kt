@@ -8,18 +8,20 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictTypeConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 class DictTypeConstructor(
     override val outerScope: StaticScope,
-    override val term: ExpressionSourceTerm,
+    override val term: ExpressionTerm,
     val keyType: Expression,
     val valueType: Expression,
 ) : Expression() {
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: DictTypeConstructorSourceTerm,
+            term: DictTypeConstructorTerm,
         ): DictTypeConstructor = DictTypeConstructor(
             outerScope = outerScope,
             term = term,
