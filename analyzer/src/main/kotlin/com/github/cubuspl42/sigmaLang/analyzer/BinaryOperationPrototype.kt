@@ -1,8 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer
 
-import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
-import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.InfixOperator
 
 data class BinaryOperationPrototype(
     val functionName: String,
@@ -51,19 +50,18 @@ data class BinaryOperationPrototype(
         )
 
         fun build(
-            ctx: SigmaParser.BinaryOperationAltContext,
-        ): BinaryOperationPrototype = when (ctx.operator.type) {
-            SigmaLexer.Asterisk -> BinaryOperationPrototype.multiplication
-            SigmaLexer.Plus -> BinaryOperationPrototype.addition
-            SigmaLexer.Minus -> BinaryOperationPrototype.subtraction
-            SigmaLexer.Slash -> BinaryOperationPrototype.division
-            SigmaLexer.Lt -> BinaryOperationPrototype.lessThan
-            SigmaLexer.Lte -> BinaryOperationPrototype.lessThanOrEqual
-            SigmaLexer.Gt -> BinaryOperationPrototype.greaterThan
-            SigmaLexer.Gte -> BinaryOperationPrototype.greaterThanOrEqual
-            SigmaLexer.Equals -> BinaryOperationPrototype.equals
-            SigmaLexer.Link -> BinaryOperationPrototype.link
-            else -> throw UnsupportedOperationException()
+            operator: InfixOperator,
+        ): BinaryOperationPrototype = when (operator) {
+            InfixOperator.Multiply -> multiplication
+            InfixOperator.Add -> addition
+            InfixOperator.Subtract -> subtraction
+            InfixOperator.Divide -> division
+            InfixOperator.LessThan -> lessThan
+            InfixOperator.LessThanEqual -> lessThanOrEqual
+            InfixOperator.GreaterThan -> greaterThan
+            InfixOperator.GreaterThanEqual -> greaterThanOrEqual
+            InfixOperator.Equals -> equals
+            InfixOperator.Link -> link
         }
     }
 

@@ -23,7 +23,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.CallSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import utils.FakeStaticBlock
 import utils.FakeValueDeclaration
@@ -37,7 +37,7 @@ class CallTests {
         fun testLegalSubject() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[false]",
-            ) as CallSourceTerm
+            ) as PostfixCallSourceTerm
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
@@ -75,7 +75,7 @@ class CallTests {
         fun testIllegalOrderedArgument() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[1]",
-            ) as CallSourceTerm
+            ) as PostfixCallSourceTerm
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
@@ -127,7 +127,7 @@ class CallTests {
         fun testIllegalSubject() {
             val term = ExpressionSourceTerm.parse(
                 source = "b[1]",
-            ) as CallSourceTerm
+            ) as PostfixCallSourceTerm
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
@@ -158,7 +158,7 @@ class CallTests {
         fun testInferableGenericCall() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[false, 0]",
-            ) as CallSourceTerm
+            ) as PostfixCallSourceTerm
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
@@ -205,7 +205,7 @@ class CallTests {
         fun testNonInferableGenericCall() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[]",
-            ) as CallSourceTerm
+            ) as PostfixCallSourceTerm
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
@@ -256,7 +256,7 @@ class CallTests {
         fun testNestedGenericCall() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[false, 1]",
-            ) as CallSourceTerm
+            ) as PostfixCallSourceTerm
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
@@ -336,7 +336,7 @@ class CallTests {
 
             val call = Call.build(
                 outerScope = StaticScope.Empty,
-                term = ExpressionSourceTerm.parse("sq(3)") as CallSourceTerm,
+                term = ExpressionSourceTerm.parse("sq(3)") as PostfixCallSourceTerm,
             )
 
             val result = assertIs<EvaluationResult<Value>>(
@@ -358,7 +358,7 @@ class CallTests {
         fun testDictSubject() {
             val call = Call.build(
                 outerScope = StaticScope.Empty,
-                term = ExpressionSourceTerm.parse("dict(2)") as CallSourceTerm,
+                term = ExpressionSourceTerm.parse("dict(2)") as PostfixCallSourceTerm,
             )
 
             val result = assertIs<EvaluationResult<Value>>(

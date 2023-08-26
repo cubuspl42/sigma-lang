@@ -28,7 +28,7 @@ class LetExpressionTermTests {
                             LocalDefinitionSourceTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 4),
                                 name = Symbol.of("g"),
-                                body = CallSourceTerm(
+                                body = PostfixCallSourceTerm(
                                     location = SourceLocation(lineIndex = 2, columnIndex = 8),
                                     subject = ReferenceSourceTerm(
                                         location = SourceLocation(lineIndex = 2, columnIndex = 8),
@@ -50,7 +50,7 @@ class LetExpressionTermTests {
                             ),
                         ),
                     ),
-                    result = CallSourceTerm(
+                    result = PostfixCallSourceTerm(
                         location = SourceLocation(lineIndex = 4, columnIndex = 6),
                         subject = ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 6),

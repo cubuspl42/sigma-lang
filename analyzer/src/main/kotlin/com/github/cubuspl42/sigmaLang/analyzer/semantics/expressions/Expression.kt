@@ -21,10 +21,16 @@ abstract class Expression {
                 term = term,
             )
 
-            is CallSourceTerm -> Call.build(
+            is PostfixCallSourceTerm -> Call.build(
                 outerScope = outerScope,
                 term = term,
             )
+
+            is InfixCallSourceTerm -> Call.build(
+                outerScope = outerScope,
+                term = term,
+            )
+
 
             is FieldReadSourceTerm -> FieldRead.build(
                 outerScope = outerScope,
@@ -91,7 +97,14 @@ abstract class Expression {
                 term = term,
             )
 
+
+            is InfixCallSourceTerm -> Call.build(
+                outerScope = outerScope,
+                term = term,
+            )
+
             is GenericTypeConstructorSourceTerm -> TODO()
+            is ParenSourceTerm -> TODO()
         }
 
         fun parse(
@@ -106,23 +119,27 @@ abstract class Expression {
         }
     }
 
-    val location: SourceLocation
-        get() = term.location
+    val location: SourceLocation?
+        get() = term?.location
 
     abstract val outerScope: StaticScope
 
     abstract val errors: Set<SemanticError>
 
-    protected abstract val term: ExpressionSourceTerm
+    protected abstract val term: ExpressionSourceTerm?
 
     abstract val inferredType: Thunk<Type>
 
     abstract val subExpressions: Set<Expression>
 
     val expressionMap: ExpressionMap by lazy {
-        ExpressionMap(
-            map = mapOf(term to this),
-        ).unionWith(
+        val selfMap = term?.let {
+            ExpressionMap(
+                map = mapOf(it to this),
+            )
+        } ?: ExpressionMap.Empty
+
+        selfMap.unionWith(
             subExpressions.fold(
                 initial = ExpressionMap.Empty,
             ) { acc, subExpression ->

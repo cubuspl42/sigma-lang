@@ -16,7 +16,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTuple
 
 class UnorderedTupleConstructor(
     override val outerScope: StaticScope,
-    override val term: UnorderedTupleConstructorSourceTerm,
+    override val term: UnorderedTupleConstructorSourceTerm?,
     val entries: Set<Entry>,
 ) : TupleConstructor() {
     data class Entry(
@@ -44,7 +44,7 @@ class UnorderedTupleConstructor(
     ) : InferredTypeOutcome
 
     data class DuplicatedKeyError(
-        override val location: SourceLocation,
+        override val location: SourceLocation?,
         val duplicatedKey: PrimitiveValue,
     ) : InferredTypeOutcome, SemanticError
 
@@ -82,7 +82,7 @@ class UnorderedTupleConstructor(
             )
         } else {
             DuplicatedKeyError(
-                location = term.location,
+                location = term?.location,
                 duplicatedKey = firstDuplicatedKey,
             )
         }

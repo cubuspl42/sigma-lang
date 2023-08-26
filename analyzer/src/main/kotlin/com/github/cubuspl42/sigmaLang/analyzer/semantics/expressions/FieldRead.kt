@@ -26,7 +26,7 @@ class FieldRead(
     ) : InferredSubjectTypeOutcome
 
     data class InvalidSubjectTypeError(
-        override val location: SourceLocation,
+        override val location: SourceLocation?,
         val invalidSubjectType: Type,
     ) : InferredSubjectTypeOutcome, SemanticError
 
@@ -37,12 +37,12 @@ class FieldRead(
     ) : InferredFieldTypeOutcome
 
     data class MissingFieldError(
-        override val location: SourceLocation,
+        override val location: SourceLocation?,
         val subjectType: UnorderedTupleType,
         val missingFieldName: Symbol,
     ) : InferredFieldTypeOutcome, SemanticError
 
-    object InferredFieldTypeAbort : InferredFieldTypeOutcome
+    data object InferredFieldTypeAbort : InferredFieldTypeOutcome
 
     companion object {
         fun build(
@@ -71,7 +71,7 @@ class FieldRead(
                 )
             } else {
                 InvalidSubjectTypeError(
-                    location = subject.location,
+                    location = subject?.location,
                     invalidSubjectType = subjectType,
                 )
             }

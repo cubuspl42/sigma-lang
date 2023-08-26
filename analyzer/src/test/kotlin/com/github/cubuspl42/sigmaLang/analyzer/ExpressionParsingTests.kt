@@ -25,7 +25,7 @@ class ExpressionParsingTests {
         @Test
         fun testDictArgumentShorthand() {
             assertEquals(
-                expected = CallSourceTerm(
+                expected = PostfixCallSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),

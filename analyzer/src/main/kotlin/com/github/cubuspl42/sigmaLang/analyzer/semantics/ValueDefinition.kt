@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 abstract class ValueDefinition : ValueDeclaration {
     data class UnmatchedInferredTypeError(
-        override val location: SourceLocation,
+        override val location: SourceLocation?,
         val matchResult: Type.MatchResult,
     ) : SemanticError
 
@@ -28,7 +28,7 @@ abstract class ValueDefinition : ValueDeclaration {
 
             if (matchResult.isFull()) null
             else UnmatchedInferredTypeError(
-                location = body.location,
+                location = body?.location,
                 matchResult = matchResult,
             )
         } else null

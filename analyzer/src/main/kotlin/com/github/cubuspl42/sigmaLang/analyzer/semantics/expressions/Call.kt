@@ -1,7 +1,9 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
+import com.github.cubuspl42.sigmaLang.analyzer.BinaryOperationPrototype
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -12,6 +14,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.CallSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.InfixCallSourceTerm
 
 class Call(
     override val outerScope: StaticScope,
@@ -22,7 +26,7 @@ class Call(
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: CallSourceTerm,
+            term: PostfixCallSourceTerm,
         ): Call = Call(
             outerScope = outerScope,
             term = term,
@@ -35,6 +39,47 @@ class Call(
                 term = term.argument,
             ),
         )
+
+        fun build(
+            outerScope: StaticScope,
+            term: InfixCallSourceTerm,
+        ): Call {
+            val prototype = BinaryOperationPrototype.build(term.operator)
+
+            val leftArgument = Expression.build(
+                outerScope = outerScope,
+                term = term.leftArgument,
+            )
+
+            val rightArgument = Expression.build(
+                outerScope = outerScope,
+                term = term.rightArgument,
+            )
+
+            return Call(
+                outerScope = outerScope,
+                term = term,
+                subject = Reference(
+                    outerScope = outerScope,
+                    referredName = Symbol.of(prototype.functionName),
+                    term = null,
+                ),
+                argument = UnorderedTupleConstructor(
+                    outerScope = outerScope,
+                    term = null,
+                    entries = setOf(
+                        UnorderedTupleConstructor.Entry(
+                            name = prototype.leftArgument,
+                            value = leftArgument,
+                        ),
+                        UnorderedTupleConstructor.Entry(
+                            name = prototype.rightArgument,
+                            value = rightArgument,
+                        ),
+                    ),
+                ),
+            )
+        }
     }
 
     sealed interface SubjectCallOutcome
@@ -46,13 +91,13 @@ class Call(
     ) : SubjectCallOutcome
 
     data class NonFullyInferredCalleeTypeError(
-        override val location: SourceLocation,
+        override val location: SourceLocation?,
         val calleeGenericType: FunctionType,
         val nonInferredTypeVariables: Set<TypeVariable>,
     ) : SubjectCallOutcome, SemanticError
 
     data class NonFunctionCallError(
-        override val location: SourceLocation,
+        override val location: SourceLocation?,
         val illegalSubjectType: Type,
     ) : SubjectCallOutcome, SemanticError
 
@@ -61,7 +106,7 @@ class Call(
     data object ValidArgumentResult : ArgumentValidationOutcome
 
     data class InvalidArgumentError(
-        override val location: SourceLocation,
+        override val location: SourceLocation?,
         val matchResult: Type.MatchResult,
     ) : ArgumentValidationOutcome, SemanticError {
         override fun dump(): String = "$location: Invalid argument: ${matchResult.dump()}"
