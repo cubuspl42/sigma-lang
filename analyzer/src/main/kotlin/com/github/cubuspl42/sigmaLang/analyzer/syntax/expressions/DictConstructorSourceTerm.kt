@@ -9,8 +9,8 @@ data class DictConstructorSourceTerm(
     override val associations: List<Association>,
 ) : ExpressionSourceTerm(), DictConstructorTerm {
     data class Association(
-        override val key: ExpressionSourceTerm,
-        override val value: ExpressionSourceTerm,
+        override val key: ExpressionTerm,
+        override val value: ExpressionTerm,
     ): DictConstructorTerm.Association {
         companion object {
             fun build(ctx: DictAssociationContext): Association {

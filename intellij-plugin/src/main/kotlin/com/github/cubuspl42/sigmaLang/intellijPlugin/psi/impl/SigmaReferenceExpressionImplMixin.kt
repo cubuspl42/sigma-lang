@@ -13,7 +13,7 @@ abstract class SigmaReferenceExpressionImplMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node), SigmaReferenceExpression {
     final override val asTerm: ReferenceTerm
-        get() = object : ReferenceTerm {
+        get() = object : PsiExpressionTerm(), ReferenceTerm {
             override val referredName: Symbol
                 get() = Symbol.of(
                     name = this@SigmaReferenceExpressionImplMixin.referredNameElement.text,

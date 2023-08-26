@@ -13,11 +13,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.PrimitiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
 class DictConstructor(
     override val outerScope: StaticScope,
-    override val term: DictConstructorSourceTerm,
+    override val term: DictConstructorTerm,
     val associations: List<Association>,
 ) : Expression() {
     class Association(
@@ -27,7 +28,7 @@ class DictConstructor(
         companion object {
             fun build(
                 declarationScope: StaticScope,
-                term: DictConstructorSourceTerm.Association,
+                term: DictConstructorTerm.Association,
             ): Association = Association(
                 key = Expression.build(
                     outerScope = declarationScope,
@@ -44,7 +45,7 @@ class DictConstructor(
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: DictConstructorSourceTerm,
+            term: DictConstructorTerm,
         ): DictConstructor = DictConstructor(
             outerScope = outerScope,
             term = term,

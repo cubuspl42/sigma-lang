@@ -6,8 +6,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 data class FunctionTypeConstructorSourceTerm(
     override val location: SourceLocation,
     override val genericParametersTuple: GenericParametersTuple?,
-    override val argumentType: TupleTypeConstructorSourceTerm,
-    override val imageType: ExpressionSourceTerm,
+    override val argumentType: TupleTypeConstructorTerm,
+    override val imageType: ExpressionTerm,
 ) : ExpressionSourceTerm(), FunctionTypeConstructorTerm {
     companion object {
         fun build(

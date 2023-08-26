@@ -24,11 +24,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.TupleCon
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceTerm
 
-sealed class ExpressionSourceTerm : SourceTerm(), ExpressionTerm {
+sealed class ExpressionSourceTerm : SourceTerm() {
     companion object {
         fun parse(
             source: String,
-        ): ExpressionSourceTerm {
+        ): ExpressionTerm {
             val sourceName = "__expression__"
 
             val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
@@ -40,96 +40,94 @@ sealed class ExpressionSourceTerm : SourceTerm(), ExpressionTerm {
 
         fun build(
             ctx: ParserRuleContext,
-        ): ExpressionSourceTerm = object : SigmaParserBaseVisitor<ExpressionSourceTerm>() {
+        ): ExpressionTerm = object : SigmaParserBaseVisitor<ExpressionTerm>() {
             override fun visitBinaryOperationAlt(
                 ctx: BinaryOperationAltContext,
-            ): ExpressionSourceTerm = InfixCallSourceTerm.build(ctx)
+            ): ExpressionTerm = InfixCallSourceTerm.build(ctx)
 
             override fun visitParenExpressionAlt(
                 ctx: ParenExpressionAltContext,
-            ): ExpressionSourceTerm = build(ctx.parenExpression().expression())
+            ): ExpressionTerm = build(ctx.parenExpression().expression())
 
             override fun visitReferenceAlt(
                 ctx: ReferenceAltContext,
-            ): ExpressionSourceTerm = ReferenceSourceTerm.build(ctx.reference())
+            ): ExpressionTerm = ReferenceSourceTerm.build(ctx.reference())
 
             override fun visitAbstractionAlt(
                 ctx: AbstractionAltContext,
-            ): ExpressionSourceTerm = AbstractionSourceTerm.build(ctx.abstraction())
+            ): ExpressionTerm = AbstractionSourceTerm.build(ctx.abstraction())
 
             override fun visitTupleConstructorAlt(
                 ctx: TupleConstructorAltContext,
-            ): ExpressionSourceTerm = TupleConstructorSourceTerm.build(ctx.tupleConstructor())
+            ): ExpressionTerm = TupleConstructorSourceTerm.build(ctx.tupleConstructor())
 
             override fun visitDictConstructorAlt(
                 ctx: DictConstructorAltContext,
-            ): ExpressionSourceTerm = DictConstructorSourceTerm.build(ctx.dictConstructor())
+            ): ExpressionTerm = DictConstructorSourceTerm.build(ctx.dictConstructor())
 
             override fun visitLetExpressionAlt(
                 ctx: LetExpressionAltContext,
-            ): ExpressionSourceTerm = LetExpressionSourceTerm.build(ctx.letExpression())
+            ): ExpressionTerm = LetExpressionSourceTerm.build(ctx.letExpression())
 
             override fun visitIsUndefinedCheckAlt(
                 ctx: IsUndefinedCheckAltContext,
-            ): ExpressionSourceTerm = IsUndefinedCheckSourceTerm.build(ctx.isUndefinedCheck)
+            ): ExpressionTerm = IsUndefinedCheckSourceTerm.build(ctx.isUndefinedCheck)
 
             override fun visitIntLiteralAlt(
                 ctx: IntLiteralAltContext,
-            ): ExpressionSourceTerm = IntLiteralSourceTerm.build(ctx)
+            ): ExpressionTerm = IntLiteralSourceTerm.build(ctx)
 
             override fun visitCallableExpressionAlt(
                 ctx: CallableExpressionAltContext,
-            ): ExpressionSourceTerm = build(ctx.callableExpression())
+            ): ExpressionTerm = build(ctx.callableExpression())
 
             override fun visitCallExpressionAlt(
                 ctx: CallExpressionAltContext,
-            ): ExpressionSourceTerm = PostfixCallSourceTerm.build(ctx)
+            ): ExpressionTerm = PostfixCallSourceTerm.build(ctx)
 
             override fun visitCallExpressionTupleConstructorAlt(
                 ctx: CallExpressionTupleConstructorAltContext,
-            ): ExpressionSourceTerm = PostfixCallSourceTerm.build(ctx)
+            ): ExpressionTerm = PostfixCallSourceTerm.build(ctx)
 
             override fun visitCallableParenAlt(
                 ctx: CallableParenAltContext,
-            ): ExpressionSourceTerm = build(ctx.parenExpression().expression())
+            ): ExpressionTerm = build(ctx.parenExpression().expression())
 
             override fun visitCallableReferenceAlt(
                 ctx: CallableReferenceAltContext,
-            ): ExpressionSourceTerm = ReferenceSourceTerm.build(ctx.reference())
+            ): ExpressionTerm = ReferenceSourceTerm.build(ctx.reference())
 
             override fun visitCallableTupleConstructorAlt(
                 ctx: CallableTupleConstructorAltContext,
-            ): ExpressionSourceTerm = TupleConstructorSourceTerm.build(ctx.tupleConstructor())
+            ): ExpressionTerm = TupleConstructorSourceTerm.build(ctx.tupleConstructor())
 
             override fun visitFieldReadAlt(
                 ctx: FieldReadAltContext,
-            ): ExpressionSourceTerm = FieldReadSourceTerm.build(ctx)
+            ): ExpressionTerm = FieldReadSourceTerm.build(ctx)
 
             override fun visitSetConstructor(
                 ctx: SigmaParser.SetConstructorContext,
-            ): ExpressionSourceTerm = SetConstructorSourceTerm.build(ctx)
+            ): ExpressionTerm = SetConstructorSourceTerm.build(ctx)
 
             override fun visitIfExpressionAlt(
                 ctx: SigmaParser.IfExpressionAltContext,
-            ): ExpressionSourceTerm = IfExpressionSourceTerm.build(ctx.ifExpression())
+            ): ExpressionTerm = IfExpressionSourceTerm.build(ctx.ifExpression())
 
             override fun visitTupleTypeConstructorAlt(
                 ctx: SigmaParser.TupleTypeConstructorAltContext,
-            ): ExpressionSourceTerm = TupleTypeConstructorSourceTerm.build(ctx.tupleTypeConstructor())
+            ): ExpressionTerm = TupleTypeConstructorSourceTerm.build(ctx.tupleTypeConstructor())
 
             override fun visitFunctionTypeConstructorAlt(
                 ctx: SigmaParser.FunctionTypeConstructorAltContext,
-            ): ExpressionSourceTerm = FunctionTypeConstructorSourceTerm.build(ctx.functionTypeConstructor())
+            ): ExpressionTerm = FunctionTypeConstructorSourceTerm.build(ctx.functionTypeConstructor())
 
             override fun visitArrayTypeConstructorAlt(
                 ctx: SigmaParser.ArrayTypeConstructorAltContext,
-            ): ExpressionSourceTerm = ArrayTypeConstructorSourceTerm.build(ctx.arrayTypeConstructor())
+            ): ExpressionTerm = ArrayTypeConstructorSourceTerm.build(ctx.arrayTypeConstructor())
 
             override fun visitDictTypeConstructorAlt(
                 ctx: SigmaParser.DictTypeConstructorAltContext,
-            ): ExpressionSourceTerm = DictTypeConstructorSourceTerm.build(ctx.dictTypeConstructor())
+            ): ExpressionTerm = DictTypeConstructorSourceTerm.build(ctx.dictTypeConstructor())
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class.java}")
     }
-
-    abstract fun dump(): String
 }

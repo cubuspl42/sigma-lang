@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 data class GenericTypeConstructorSourceTerm(
     override val location: SourceLocation,
     override val genericParametersTuple: GenericParametersTuple,
-    override val body: ExpressionSourceTerm,
+    override val body: ExpressionTerm,
 ) : ExpressionSourceTerm(), GenericTypeConstructorTerm {
 //    override fun evaluate(
 //        declarationScope: StaticScope,

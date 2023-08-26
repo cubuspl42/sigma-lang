@@ -10,16 +10,17 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IsUndefinedCheckSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IsUndefinedCheckTerm
 
 data class IsUndefinedCheck(
     override val outerScope: StaticScope,
-    override val term: IsUndefinedCheckSourceTerm,
+    override val term: IsUndefinedCheckTerm,
     val argument: Expression,
 ) : Expression() {
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: IsUndefinedCheckSourceTerm,
+            term: IsUndefinedCheckTerm,
         ): IsUndefinedCheck = IsUndefinedCheck(
             outerScope = outerScope,
             term = term,

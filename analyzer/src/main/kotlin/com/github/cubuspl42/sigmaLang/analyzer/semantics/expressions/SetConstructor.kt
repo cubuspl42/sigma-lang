@@ -11,16 +11,17 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorTerm
 
 class SetConstructor(
     override val outerScope: StaticScope,
-    override val term: SetConstructorSourceTerm,
+    override val term: SetConstructorTerm,
     val elements: Set<Expression>,
 ) : Expression() {
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: SetConstructorSourceTerm,
+            term: SetConstructorTerm,
         ): SetConstructor = SetConstructor(
             outerScope = outerScope,
             term = term,

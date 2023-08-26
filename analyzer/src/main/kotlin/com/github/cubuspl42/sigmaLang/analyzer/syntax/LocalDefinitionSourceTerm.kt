@@ -3,12 +3,13 @@ package com.github.cubuspl42.sigmaLang.analyzer.syntax
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.DefinitionContext
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 data class LocalDefinitionSourceTerm(
     override val location: SourceLocation,
     override val name: Symbol,
-    override val declaredTypeBody: ExpressionSourceTerm? = null,
-    override val body: ExpressionSourceTerm,
+    override val declaredTypeBody: ExpressionTerm? = null,
+    override val body: ExpressionTerm,
 ) : SourceTerm(), LocalDefinitionTerm {
     companion object {
         fun build(

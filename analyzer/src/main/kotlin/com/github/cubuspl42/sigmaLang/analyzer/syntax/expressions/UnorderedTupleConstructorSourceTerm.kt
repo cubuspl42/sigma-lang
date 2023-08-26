@@ -23,7 +23,7 @@ data class UnorderedTupleConstructorSourceTerm(
 
     data class Entry(
         override val name: Symbol,
-        override val value: ExpressionSourceTerm,
+        override val value: ExpressionTerm,
     ) : UnorderedTupleConstructorTerm.Entry {
         companion object {
             fun build(

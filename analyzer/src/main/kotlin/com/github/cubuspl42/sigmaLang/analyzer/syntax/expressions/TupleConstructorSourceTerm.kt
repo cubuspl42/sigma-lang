@@ -8,7 +8,7 @@ sealed class TupleConstructorSourceTerm : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: TupleConstructorContext,
-        ): TupleConstructorSourceTerm = object : SigmaParserBaseVisitor<TupleConstructorSourceTerm>() {
+        ): TupleConstructorTerm = object : SigmaParserBaseVisitor<TupleConstructorTerm>() {
             override fun visitOrderedTupleConstructor(
                 ctx: SigmaParser.OrderedTupleConstructorContext,
             ): OrderedTupleConstructorSourceTerm {

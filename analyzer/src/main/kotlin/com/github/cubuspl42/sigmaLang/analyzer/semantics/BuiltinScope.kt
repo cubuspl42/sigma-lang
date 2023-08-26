@@ -29,7 +29,7 @@ private class BuiltinValueDefinition(
     override val name: Symbol,
     val value: Value,
     val type: Type,
-) : StaticDefinition() {
+) : NamespaceEntry() {
 //    override val effectiveValueType: Computation<Type> = Computation.pure(type)
 
     override val staticValue: Thunk<Value> = value.asThunk

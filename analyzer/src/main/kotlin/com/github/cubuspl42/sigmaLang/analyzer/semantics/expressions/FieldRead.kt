@@ -12,10 +12,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadTerm
 
 class FieldRead(
     override val outerScope: StaticScope,
-    override val term: FieldReadSourceTerm,
+    override val term: FieldReadTerm,
     val subject: Expression,
 ) : Expression() {
 
@@ -47,7 +48,7 @@ class FieldRead(
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: FieldReadSourceTerm,
+            term: FieldReadTerm,
         ): FieldRead = FieldRead(
             outerScope = outerScope,
             term = term,
@@ -71,7 +72,7 @@ class FieldRead(
                 )
             } else {
                 InvalidSubjectTypeError(
-                    location = subject?.location,
+                    location = subject.location,
                     invalidSubjectType = subjectType,
                 )
             }

@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 data class LetExpressionSourceTerm(
     override val location: SourceLocation,
     val localScope: LocalScopeSourceTerm,
-    override val result: ExpressionSourceTerm,
+    override val result: ExpressionTerm,
 ) : ExpressionSourceTerm(), LetExpressionTerm {
     companion object {
         fun build(
