@@ -33,4 +33,18 @@ public class SigmaIfExpressionBodyImpl extends ASTWrapperPsiElement implements S
     return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaExpression.class);
   }
 
+  @Override
+  @NotNull
+  public SigmaExpression getTrueBranch() {
+    List<SigmaExpression> p1 = getExpressionList();
+    return p1.get(0);
+  }
+
+  @Override
+  @Nullable
+  public SigmaExpression getFalseBranch() {
+    List<SigmaExpression> p1 = getExpressionList();
+    return p1.size() < 2 ? null : p1.get(1);
+  }
+
 }

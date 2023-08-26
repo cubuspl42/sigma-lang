@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaCallExpression extends SigmaExpression {
+public interface SigmaPostfixCallExpression extends SigmaExpression {
 
   @NotNull
   List<SigmaExpression> getExpressionList();
+
+  @NotNull
+  SigmaExpression getSubject();
 
 }

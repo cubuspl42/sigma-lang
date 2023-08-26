@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaUnaryNegationExpressionImpl extends SigmaUnimplementedExpressionImplMixin implements SigmaUnaryNegationExpression {
+public class SigmaPostfixCallExpressionImpl extends SigmaCallExpressionImplMixin implements SigmaPostfixCallExpression {
 
-  public SigmaUnaryNegationExpressionImpl(@NotNull ASTNode node) {
+  public SigmaPostfixCallExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitUnaryNegationExpression(this);
+    visitor.visitPostfixCallExpression(this);
   }
 
   @Override
@@ -27,9 +27,16 @@ public class SigmaUnaryNegationExpressionImpl extends SigmaUnimplementedExpressi
   }
 
   @Override
-  @Nullable
-  public SigmaExpression getExpression() {
-    return findChildByClass(SigmaExpression.class);
+  @NotNull
+  public List<SigmaExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaExpression.class);
+  }
+
+  @Override
+  @NotNull
+  public SigmaExpression getSubject() {
+    List<SigmaExpression> p1 = getExpressionList();
+    return p1.get(0);
   }
 
 }

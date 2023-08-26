@@ -10,7 +10,6 @@ public interface SigmaTypes {
 
   IElementType ABSTRACTION_CONSTRUCTOR = new SigmaElementType("ABSTRACTION_CONSTRUCTOR");
   IElementType ADDITION_EXPRESSION = new SigmaElementType("ADDITION_EXPRESSION");
-  IElementType CALL_EXPRESSION = new SigmaElementType("CALL_EXPRESSION");
   IElementType CONSTANT_DEFINITION = new SigmaElementType("CONSTANT_DEFINITION");
   IElementType DIVISION_EXPRESSION = new SigmaElementType("DIVISION_EXPRESSION");
   IElementType EQUALS_EXPRESSION = new SigmaElementType("EQUALS_EXPRESSION");
@@ -33,13 +32,13 @@ public interface SigmaTypes {
   IElementType ORDERED_TUPLE_TYPE_CONSTRUCTOR = new SigmaElementType("ORDERED_TUPLE_TYPE_CONSTRUCTOR");
   IElementType ORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY = new SigmaElementType("ORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY");
   IElementType PAREN_EXPRESSION = new SigmaElementType("PAREN_EXPRESSION");
+  IElementType POSTFIX_CALL_EXPRESSION = new SigmaElementType("POSTFIX_CALL_EXPRESSION");
   IElementType REFERENCE_EXPRESSION = new SigmaElementType("REFERENCE_EXPRESSION");
   IElementType SUBTRACTION_EXPRESSION = new SigmaElementType("SUBTRACTION_EXPRESSION");
   IElementType TUPLE_CONSTRUCTOR = new SigmaElementType("TUPLE_CONSTRUCTOR");
   IElementType TUPLE_TYPE_CONSTRUCTOR = new SigmaElementType("TUPLE_TYPE_CONSTRUCTOR");
   IElementType TYPE_ANNOTATION = new SigmaElementType("TYPE_ANNOTATION");
   IElementType TYPE_EXPRESSION = new SigmaElementType("TYPE_EXPRESSION");
-  IElementType UNARY_NEGATION_EXPRESSION = new SigmaElementType("UNARY_NEGATION_EXPRESSION");
   IElementType UNORDERED_TUPLE_CONSTRUCTOR = new SigmaElementType("UNORDERED_TUPLE_CONSTRUCTOR");
   IElementType UNORDERED_TUPLE_CONSTRUCTOR_ENTRY = new SigmaElementType("UNORDERED_TUPLE_CONSTRUCTOR_ENTRY");
   IElementType UNORDERED_TUPLE_TYPE_CONSTRUCTOR = new SigmaElementType("UNORDERED_TUPLE_TYPE_CONSTRUCTOR");
@@ -86,9 +85,6 @@ public interface SigmaTypes {
       }
       else if (type == ADDITION_EXPRESSION) {
         return new SigmaAdditionExpressionImpl(node);
-      }
-      else if (type == CALL_EXPRESSION) {
-        return new SigmaCallExpressionImpl(node);
       }
       else if (type == CONSTANT_DEFINITION) {
         return new SigmaConstantDefinitionImpl(node);
@@ -153,6 +149,9 @@ public interface SigmaTypes {
       else if (type == PAREN_EXPRESSION) {
         return new SigmaParenExpressionImpl(node);
       }
+      else if (type == POSTFIX_CALL_EXPRESSION) {
+        return new SigmaPostfixCallExpressionImpl(node);
+      }
       else if (type == REFERENCE_EXPRESSION) {
         return new SigmaReferenceExpressionImpl(node);
       }
@@ -164,9 +163,6 @@ public interface SigmaTypes {
       }
       else if (type == TYPE_EXPRESSION) {
         return new SigmaTypeExpressionImpl(node);
-      }
-      else if (type == UNARY_NEGATION_EXPRESSION) {
-        return new SigmaUnaryNegationExpressionImpl(node);
       }
       else if (type == UNORDERED_TUPLE_CONSTRUCTOR) {
         return new SigmaUnorderedTupleConstructorImpl(node);

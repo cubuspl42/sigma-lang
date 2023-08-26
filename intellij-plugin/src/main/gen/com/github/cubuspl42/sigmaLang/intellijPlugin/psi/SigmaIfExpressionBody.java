@@ -10,4 +10,10 @@ public interface SigmaIfExpressionBody extends PsiElement {
   @NotNull
   List<SigmaExpression> getExpressionList();
 
+  @NotNull
+  SigmaExpression getTrueBranch();
+
+  @Nullable
+  SigmaExpression getFalseBranch();
+
 }
