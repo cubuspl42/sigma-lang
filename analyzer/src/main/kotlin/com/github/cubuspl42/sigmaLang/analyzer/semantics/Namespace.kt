@@ -7,16 +7,17 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
 class Namespace(
     private val prelude: Prelude,
-    private val term: NamespaceDefinitionSourceTerm,
+    private val term: NamespaceDefinitionTerm,
 ) : Value() {
     companion object {
         fun build(
             prelude: Prelude,
-            term: NamespaceDefinitionSourceTerm,
+            term: NamespaceDefinitionTerm,
         ): Namespace = Namespace(
             prelude = prelude,
             term = term,

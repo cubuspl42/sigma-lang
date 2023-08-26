@@ -14,9 +14,9 @@ abstract class Expression {
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: ExpressionSourceTerm,
+            term: ExpressionTerm,
         ): Expression = when (term) {
-            is AbstractionSourceTerm -> Abstraction.build(
+            is AbstractionTerm -> Abstraction.build(
                 outerScope = outerScope,
                 term = term,
             )
@@ -37,7 +37,7 @@ abstract class Expression {
                 term = term,
             )
 
-            is IntLiteralSourceTerm -> IntLiteral.build(
+            is IntLiteralTerm -> IntLiteral.build(
                 outerScope = outerScope,
                 term = term,
             )
@@ -47,17 +47,17 @@ abstract class Expression {
                 term = term,
             )
 
-            is LetExpressionSourceTerm -> LetExpression.build(
+            is LetExpressionTerm -> LetExpression.build(
                 outerScope = outerScope,
                 term = term,
             )
 
-            is ReferenceSourceTerm -> Reference.build(
+            is ReferenceTerm -> Reference.build(
                 outerScope = outerScope,
                 term = term,
             )
 
-            is TupleConstructorSourceTerm -> TupleConstructor.build(
+            is TupleConstructorTerm -> TupleConstructor.build(
                 outerScope = outerScope,
                 term = term,
             )
@@ -77,7 +77,7 @@ abstract class Expression {
                 term = term,
             )
 
-            is TupleTypeConstructorSourceTerm -> TupleTypeConstructor.build(
+            is TupleTypeConstructorTerm -> TupleTypeConstructor.build(
                 outerScope = outerScope,
                 term = term,
             )
@@ -104,6 +104,7 @@ abstract class Expression {
             )
 
             is GenericTypeConstructorSourceTerm -> TODO()
+
             is ParenSourceTerm -> TODO()
         }
 
@@ -126,7 +127,7 @@ abstract class Expression {
 
     abstract val errors: Set<SemanticError>
 
-    protected abstract val term: ExpressionSourceTerm?
+    protected abstract val term: ExpressionTerm?
 
     abstract val inferredType: Thunk<Type>
 

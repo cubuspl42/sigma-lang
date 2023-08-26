@@ -19,11 +19,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionTerm
 
 class Abstraction(
     override val outerScope: StaticScope,
     private val innerScope: StaticScope,
-    override val term: AbstractionSourceTerm,
+    override val term: AbstractionTerm,
     val genericParameters: Set<TypeVariable>,
     val argumentType: TupleType,
     val declaredImageTypeConstructor: Expression?,
@@ -58,7 +59,7 @@ class Abstraction(
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: AbstractionSourceTerm,
+            term: AbstractionTerm,
         ): Abstraction {
             val genericDeclarationBlock = term.genericParametersTuple?.asDeclarationBlock
 

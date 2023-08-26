@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.TupleConstructorContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 
-sealed class TupleConstructorSourceTerm : ExpressionSourceTerm(), TupleConstructorTerm {
+sealed class TupleConstructorSourceTerm : ExpressionSourceTerm() {
     companion object {
         fun build(
             ctx: TupleConstructorContext,

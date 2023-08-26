@@ -6,7 +6,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 
-// TODO: Rename
 sealed class NamespaceEntrySourceTerm : SourceTerm(), NamespaceEntryTerm {
     companion object {
         fun parse(

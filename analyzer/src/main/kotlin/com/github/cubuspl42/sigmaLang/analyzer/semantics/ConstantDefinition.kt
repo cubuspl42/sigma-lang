@@ -6,15 +6,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
 
 class ConstantDefinition(
     private val containingNamespace: Namespace,
-    val term: ConstantDefinitionSourceTerm,
+    val term: ConstantDefinitionTerm,
 ) : StaticDefinition() {
     companion object {
         fun build(
             containingNamespace: Namespace,
-            term: ConstantDefinitionSourceTerm,
+            term: ConstantDefinitionTerm,
         ): ConstantDefinition = ConstantDefinition(
             containingNamespace = containingNamespace,
             term = term,

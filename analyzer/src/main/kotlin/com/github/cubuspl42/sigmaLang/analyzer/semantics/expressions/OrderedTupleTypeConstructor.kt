@@ -8,11 +8,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorTerm
 
 class OrderedTupleTypeConstructor(
     override val outerScope: StaticScope,
-    override val term: OrderedTupleTypeConstructorSourceTerm,
+    override val term: OrderedTupleTypeConstructorTerm,
     val elements: List<Element>,
 ) : TupleTypeConstructor() {
     data class Element(
@@ -23,7 +23,7 @@ class OrderedTupleTypeConstructor(
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: OrderedTupleTypeConstructorSourceTerm,
+            term: OrderedTupleTypeConstructorTerm,
         ): OrderedTupleTypeConstructor = OrderedTupleTypeConstructor(
             outerScope = outerScope,
             term = term,

@@ -9,17 +9,17 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorTerm
 
 class UnorderedTupleTypeConstructor(
     override val outerScope: StaticScope,
-    override val term: UnorderedTupleTypeConstructorSourceTerm,
+    override val term: UnorderedTupleTypeConstructorTerm,
     val entries: Set<UnorderedTupleConstructor.Entry>,
 ) : TupleTypeConstructor() {
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: UnorderedTupleTypeConstructorSourceTerm,
+            term: UnorderedTupleTypeConstructorTerm,
         ): UnorderedTupleTypeConstructor = UnorderedTupleTypeConstructor(
             outerScope = outerScope,
             term = term,

@@ -1,25 +1,25 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 
 sealed class TupleTypeConstructor : Expression() {
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: TupleTypeConstructorSourceTerm,
+            term: TupleTypeConstructorTerm,
         ): TupleTypeConstructor = when (term) {
-            is OrderedTupleTypeConstructorSourceTerm -> OrderedTupleTypeConstructor.build(
+            is OrderedTupleTypeConstructorTerm -> OrderedTupleTypeConstructor.build(
                 outerScope = outerScope,
                 term = term,
             )
 
-            is UnorderedTupleTypeConstructorSourceTerm -> UnorderedTupleTypeConstructor.build(
+            is UnorderedTupleTypeConstructorTerm -> UnorderedTupleTypeConstructor.build(
                 outerScope = outerScope,
                 term = term,
             )
+
+            else -> throw UnsupportedOperationException("Unsupported term: $term")
         }
     }
 }

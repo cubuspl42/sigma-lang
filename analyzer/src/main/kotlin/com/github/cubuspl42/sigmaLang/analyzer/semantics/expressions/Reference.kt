@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -14,7 +14,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 
 class Reference(
     override val outerScope: StaticScope,
-    override val term: ReferenceSourceTerm?,
+    override val term: ReferenceTerm?,
     val referredName: Symbol,
 ) : Expression() {
     data class UnresolvedNameError(
@@ -30,7 +30,7 @@ class Reference(
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: ReferenceSourceTerm,
+            term: ReferenceTerm,
         ): Reference = Reference(
             outerScope = outerScope,
             term = term,
