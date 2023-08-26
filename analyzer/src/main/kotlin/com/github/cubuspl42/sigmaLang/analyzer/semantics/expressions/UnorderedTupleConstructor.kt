@@ -1,22 +1,18 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
 
 class UnorderedTupleConstructor(
     override val outerScope: StaticScope,
-    override val term: UnorderedTupleConstructorSourceTerm?,
+    override val term: UnorderedTupleConstructorTerm?,
     val entries: Set<Entry>,
 ) : TupleConstructor() {
     data class Entry(
@@ -26,7 +22,7 @@ class UnorderedTupleConstructor(
         companion object {
             fun build(
                 declarationScope: StaticScope,
-                entry: UnorderedTupleConstructorSourceTerm.Entry,
+                entry: UnorderedTupleConstructorTerm.Entry,
             ): Entry = Entry(
                 name = entry.name,
                 value = Expression.build(
@@ -51,7 +47,7 @@ class UnorderedTupleConstructor(
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: UnorderedTupleConstructorSourceTerm,
+            term: UnorderedTupleConstructorTerm,
         ): UnorderedTupleConstructor = UnorderedTupleConstructor(
             outerScope = outerScope,
             term = term,

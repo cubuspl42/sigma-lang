@@ -1,5 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
-interface OrderedTupleConstructorTerm {
+interface OrderedTupleConstructorTerm : TupleConstructorTerm {
     val elements: List<ExpressionTerm>
 }

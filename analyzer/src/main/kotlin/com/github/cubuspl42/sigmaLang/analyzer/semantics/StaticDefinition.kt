@@ -3,25 +3,20 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntrySourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.*
 
 abstract class StaticDefinition : Declaration {
     companion object {
         fun build(
             containingNamespace: Namespace,
-            term: NamespaceEntrySourceTerm,
+            term: NamespaceEntryTerm,
         ): StaticDefinition = when (term) {
-            is ConstantDefinitionSourceTerm -> ConstantDefinition.build(
+            is ConstantDefinitionTerm -> ConstantDefinition.build(
                 containingNamespace = containingNamespace,
                 term = term,
             )
 
-            is ClassDefinitionSourceTerm -> TODO()
-
-            is NamespaceDefinitionSourceTerm -> TODO()
+            is NamespaceDefinitionTerm -> TODO()
         }
     }
 

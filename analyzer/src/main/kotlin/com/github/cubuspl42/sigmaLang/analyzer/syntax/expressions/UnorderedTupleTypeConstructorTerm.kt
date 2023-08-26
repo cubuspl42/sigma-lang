@@ -1,5 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
-interface UnorderedTupleTypeConstructorTerm {
+interface UnorderedTupleTypeConstructorTerm : TupleTypeConstructorTerm {
     val entries: List<UnorderedTupleConstructorTerm.Entry>
 }

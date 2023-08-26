@@ -8,18 +8,18 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorTerm
 
 class FunctionTypeConstructor(
     override val outerScope: StaticScope,
-    override val term: FunctionTypeConstructorSourceTerm,
+    override val term: FunctionTypeConstructorTerm,
     val argumentType: TupleTypeConstructor,
     val imageType: Expression,
 ) : Expression() {
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: FunctionTypeConstructorSourceTerm,
+            term: FunctionTypeConstructorTerm,
         ): FunctionTypeConstructor = FunctionTypeConstructor(
             outerScope = outerScope,
             term = term,

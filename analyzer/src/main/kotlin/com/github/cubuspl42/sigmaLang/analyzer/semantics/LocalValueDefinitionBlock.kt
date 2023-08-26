@@ -3,16 +3,16 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.LoopedScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
 class LocalValueDefinitionBlock(
     private val declarationScope: StaticScope,
-    private val declarations: List<LocalDefinitionSourceTerm>,
+    private val declarations: List<LocalDefinitionTerm>,
 ) : StaticBlock() {
     companion object {
         fun build(
             outerDeclarationScope: StaticScope,
-            definitions: List<LocalDefinitionSourceTerm>,
+            definitions: List<LocalDefinitionTerm>,
         ): LocalValueDefinitionBlock = LocalValueDefinitionBlock(
             declarationScope = outerDeclarationScope,
             declarations = definitions,
