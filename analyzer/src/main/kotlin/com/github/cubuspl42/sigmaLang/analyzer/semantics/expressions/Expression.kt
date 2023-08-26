@@ -51,8 +51,6 @@ abstract class Expression {
                 term = term,
             )
 
-            is SymbolLiteralSourceTerm -> TODO()
-
             is TupleConstructorSourceTerm -> TupleConstructor.build(
                 outerScope = outerScope,
                 term = term,

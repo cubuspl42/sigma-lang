@@ -5,8 +5,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 data class IsUndefinedCheckSourceTerm(
     override val location: SourceLocation,
-    val argument: ExpressionSourceTerm,
-) : ExpressionSourceTerm() {
+    override val argument: ExpressionSourceTerm,
+) : ExpressionSourceTerm(), IsUndefinedCheckTerm {
     companion object {
         fun build(
             ctx: IsUndefinedCheckContext,

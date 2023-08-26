@@ -6,12 +6,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 data class DictConstructorSourceTerm(
     override val location: SourceLocation,
-    val associations: List<Association>,
-) : ExpressionSourceTerm() {
+    override val associations: List<Association>,
+) : ExpressionSourceTerm(), DictConstructorTerm {
     data class Association(
-        val key: ExpressionSourceTerm,
-        val value: ExpressionSourceTerm,
-    ) {
+        override val key: ExpressionSourceTerm,
+        override val value: ExpressionSourceTerm,
+    ): DictConstructorTerm.Association {
         companion object {
             fun build(ctx: DictAssociationContext): Association {
                 return Association(

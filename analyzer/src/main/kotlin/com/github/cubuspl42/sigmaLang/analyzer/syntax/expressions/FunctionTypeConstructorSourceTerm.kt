@@ -3,13 +3,12 @@ package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.FunctionTypeConstructorContext
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
-// Thought: "FunctionTypeConstructorTerm"?
 data class FunctionTypeConstructorSourceTerm(
     override val location: SourceLocation,
-    val genericParametersTuple: GenericParametersTuple?,
-    val argumentType: TupleTypeConstructorSourceTerm,
-    val imageType: ExpressionSourceTerm,
-) : ExpressionSourceTerm() {
+    override val genericParametersTuple: GenericParametersTuple?,
+    override val argumentType: TupleTypeConstructorSourceTerm,
+    override val imageType: ExpressionSourceTerm,
+) : ExpressionSourceTerm(), FunctionTypeConstructorTerm {
     companion object {
         fun build(
             ctx: FunctionTypeConstructorContext,

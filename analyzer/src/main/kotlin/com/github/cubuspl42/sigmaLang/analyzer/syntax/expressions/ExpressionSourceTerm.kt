@@ -74,10 +74,6 @@ sealed class ExpressionSourceTerm : SourceTerm(), ExpressionTerm {
                 ctx: IsUndefinedCheckAltContext,
             ): ExpressionSourceTerm = IsUndefinedCheckSourceTerm.build(ctx.isUndefinedCheck)
 
-            override fun visitSymbolLiteralAlt(
-                ctx: SymbolLiteralAltContext,
-            ): ExpressionSourceTerm = SymbolLiteralSourceTerm.build(ctx)
-
             override fun visitIntLiteralAlt(
                 ctx: IntLiteralAltContext,
             ): ExpressionSourceTerm = IntLiteralSourceTerm.build(ctx)

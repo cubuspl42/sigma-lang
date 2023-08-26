@@ -11,9 +11,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 data class CallSourceTerm(
     override val location: SourceLocation,
     // Idea: Rename to `callee`? (again?)
-    val subject: ExpressionSourceTerm,
-    val argument: ExpressionSourceTerm,
-) : ExpressionSourceTerm() {
+    override val subject: ExpressionSourceTerm,
+    override val argument: ExpressionSourceTerm,
+) : ExpressionSourceTerm(), CallTerm {
     companion object {
         fun build(
             ctx: BinaryOperationAltContext,

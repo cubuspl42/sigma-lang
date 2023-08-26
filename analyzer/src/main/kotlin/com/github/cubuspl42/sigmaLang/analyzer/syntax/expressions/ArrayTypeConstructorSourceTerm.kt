@@ -5,8 +5,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 
 data class ArrayTypeConstructorSourceTerm(
     override val location: SourceLocation,
-    val elementType: ExpressionSourceTerm,
-) : ExpressionSourceTerm() {
+    override val elementType: ExpressionSourceTerm,
+) : ExpressionSourceTerm(), ArrayTypeConstructorTerm {
     companion object {
         fun build(
             ctx: SigmaParser.ArrayTypeConstructorContext,

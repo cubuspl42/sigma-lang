@@ -5,9 +5,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 
 data class DictTypeConstructorSourceTerm(
     override val location: SourceLocation,
-    val keyType: ExpressionSourceTerm,
-    val valueType: ExpressionSourceTerm,
-) : ExpressionSourceTerm() {
+    override val keyType: ExpressionSourceTerm,
+    override val valueType: ExpressionSourceTerm,
+) : ExpressionSourceTerm(), DictTypeConstructorTerm {
     companion object {
         fun build(
             ctx: SigmaParser.DictTypeConstructorContext,

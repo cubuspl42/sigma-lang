@@ -6,9 +6,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 
 data class FieldReadSourceTerm(
     override val location: SourceLocation,
-    val subject: ExpressionSourceTerm,
-    val fieldName: Symbol,
-) : ExpressionSourceTerm() {
+    override val subject: ExpressionSourceTerm,
+    override val fieldName: Symbol,
+) : ExpressionSourceTerm(), FieldReadTerm {
     companion object {
         fun build(
             ctx: FieldReadAltContext,
