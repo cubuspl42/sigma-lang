@@ -59,7 +59,7 @@ constant_definition ::=
 // # Expressions
 
 expression ::=
-    unary_group |
+//    unary_group |
     multiplication_group |
     addition_group |
     equals_group |
@@ -71,14 +71,14 @@ expression ::=
         ]
     }
 
-// private rules to define operators with the same priority
-private unary_group ::= unary_negation_expression
-
-unary_negation_expression ::= MINUS expression
-    {
-        extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
-    }
+//// private rules to define operators with the same priority
+//private unary_group ::= unary_negation_expression
+//
+//unary_negation_expression ::= MINUS expression
+//    {
+//        extends=expression
+//        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
+//    }
 
 private multiplication_group ::=
     multiplication_expression | division_expression
@@ -159,7 +159,7 @@ greater_than_equals_expression ::=
     }
 
 private primary_group ::=
-    call_expression |
+    postfix_call_expression |
     if_expression |
     is_undefined_expression |
     let_expression |
@@ -176,6 +176,9 @@ private compact_group ::=
 if_expression ::=
     IF_KEYWORD expression <<paren_wrapped if_expression_body>>
     {
+        methods=[
+            guard="expression"
+        ]
         extends=expression
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaIfExpressionImplMixin"
     }
@@ -183,12 +186,18 @@ if_expression ::=
 if_expression_body ::=
     THEN_KEYWORD expression COMMA
     ELSE_KEYWORD expression COMMA?
+    {
+        methods=[
+            true_branch="expression[0]"
+            false_branch="expression[1]"
+        ]
+    }
 
 is_undefined_expression ::=
     IS_UNDEFINED_KEYWORD expression
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaIsUndefinedExpressionImplMixin"
     }
 
 let_expression ::=
@@ -235,9 +244,13 @@ generic_parameters_tuple ::=
 generic_parameter_declaration ::=
     IDENTIFIER
 
-call_expression ::=
+postfix_call_expression ::=
     expression tuple_constructor_raw
     {
+        methods=[
+            subject="expression[0]"
+            passed_argument="tuple_constructor"
+        ]
         extends=expression
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaCallExpressionImplMixin"
     }
@@ -259,7 +272,7 @@ paren_expression ::=
             wrapped_expression="expression"
         ]
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaParenExpressionImplMixin"
     }
 
 tuple_constructor ::=
@@ -307,7 +320,6 @@ tuple_type_constructor ::=
     unordered_tuple_type_constructor
     {
         extends=expression
-        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnimplementedExpressionImplMixin"
     }
 
 ordered_tuple_type_constructor ::=

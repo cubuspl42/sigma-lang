@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface SigmaIfExpression extends SigmaExpression {
 
   @Nullable
-  SigmaExpression getExpression();
+  SigmaIfExpressionBody getIfExpressionBody();
 
   @Nullable
-  SigmaIfExpressionBody getIfExpressionBody();
+  SigmaExpression getGuard();
 
 }

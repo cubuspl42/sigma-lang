@@ -10,12 +10,13 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public abstract class SigmaTupleTypeConstructorImpl extends SigmaUnimplementedExpressionImplMixin implements SigmaTupleTypeConstructor {
+public abstract class SigmaTupleTypeConstructorImpl extends SigmaExpressionImpl implements SigmaTupleTypeConstructor {
 
   public SigmaTupleTypeConstructorImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitTupleTypeConstructor(this);
   }

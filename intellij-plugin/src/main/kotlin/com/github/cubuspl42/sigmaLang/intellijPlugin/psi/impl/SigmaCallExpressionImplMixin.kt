@@ -1,10 +1,20 @@
 package com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl
 
-import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaCallExpression
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallTerm
+import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaExpression
+import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaPostfixCallExpression
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 abstract class SigmaCallExpressionImplMixin(
     node: ASTNode,
-) : SigmaUnimplementedExpressionImplMixin(node), SigmaCallExpression
+) : ASTWrapperPsiElement(node), SigmaPostfixCallExpression {
+    override val asTerm: ExpressionTerm = object : PsiExpressionTerm(), PostfixCallTerm {
+        override val subject: ExpressionTerm
+            get() = this@SigmaCallExpressionImplMixin.subject.asTerm
+
+        override val argument: ExpressionTerm
+            get() = (this@SigmaCallExpressionImplMixin.children[1] as SigmaExpression).asTerm
+    }
+}

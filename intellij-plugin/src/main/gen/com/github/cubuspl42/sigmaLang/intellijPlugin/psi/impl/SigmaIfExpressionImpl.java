@@ -28,14 +28,14 @@ public class SigmaIfExpressionImpl extends SigmaIfExpressionImplMixin implements
 
   @Override
   @Nullable
-  public SigmaExpression getExpression() {
-    return findChildByClass(SigmaExpression.class);
+  public SigmaIfExpressionBody getIfExpressionBody() {
+    return findChildByClass(SigmaIfExpressionBody.class);
   }
 
   @Override
   @Nullable
-  public SigmaIfExpressionBody getIfExpressionBody() {
-    return findChildByClass(SigmaIfExpressionBody.class);
+  public SigmaExpression getGuard() {
+    return findChildByClass(SigmaExpression.class);
   }
 
 }

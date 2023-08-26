@@ -15,10 +15,6 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitCallExpression(@NotNull SigmaCallExpression o) {
-    visitExpression(o);
-  }
-
   public void visitConstantDefinition(@NotNull SigmaConstantDefinition o) {
     visitNamespaceEntry(o);
   }
@@ -107,6 +103,10 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitPostfixCallExpression(@NotNull SigmaPostfixCallExpression o) {
+    visitExpression(o);
+  }
+
   public void visitReferenceExpression(@NotNull SigmaReferenceExpression o) {
     visitExpression(o);
   }
@@ -129,10 +129,6 @@ public class SigmaVisitor extends PsiElementVisitor {
 
   public void visitTypeExpression(@NotNull SigmaTypeExpression o) {
     visitPsiElement(o);
-  }
-
-  public void visitUnaryNegationExpression(@NotNull SigmaUnaryNegationExpression o) {
-    visitExpression(o);
   }
 
   public void visitUnorderedTupleConstructor(@NotNull SigmaUnorderedTupleConstructor o) {

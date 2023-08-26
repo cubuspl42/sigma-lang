@@ -36,13 +36,12 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
-    create_token_set_(ABSTRACTION_CONSTRUCTOR, ADDITION_EXPRESSION, CALL_EXPRESSION, DIVISION_EXPRESSION,
-      EQUALS_EXPRESSION, EXPRESSION, GREATER_THAN_EQUALS_EXPRESSION, GREATER_THAN_EXPRESSION,
-      IF_EXPRESSION, INT_LITERAL, IS_UNDEFINED_EXPRESSION, LESS_THAN_EQUALS_EXPRESSION,
-      LESS_THAN_EXPRESSION, LET_EXPRESSION, MULTIPLICATION_EXPRESSION, ORDERED_TUPLE_CONSTRUCTOR,
-      ORDERED_TUPLE_TYPE_CONSTRUCTOR, PAREN_EXPRESSION, REFERENCE_EXPRESSION, SUBTRACTION_EXPRESSION,
-      TUPLE_CONSTRUCTOR, TUPLE_TYPE_CONSTRUCTOR, UNARY_NEGATION_EXPRESSION, UNORDERED_TUPLE_CONSTRUCTOR,
-      UNORDERED_TUPLE_TYPE_CONSTRUCTOR),
+    create_token_set_(ABSTRACTION_CONSTRUCTOR, ADDITION_EXPRESSION, DIVISION_EXPRESSION, EQUALS_EXPRESSION,
+      EXPRESSION, GREATER_THAN_EQUALS_EXPRESSION, GREATER_THAN_EXPRESSION, IF_EXPRESSION,
+      INT_LITERAL, IS_UNDEFINED_EXPRESSION, LESS_THAN_EQUALS_EXPRESSION, LESS_THAN_EXPRESSION,
+      LET_EXPRESSION, MULTIPLICATION_EXPRESSION, ORDERED_TUPLE_CONSTRUCTOR, ORDERED_TUPLE_TYPE_CONSTRUCTOR,
+      PAREN_EXPRESSION, POSTFIX_CALL_EXPRESSION, REFERENCE_EXPRESSION, SUBTRACTION_EXPRESSION,
+      TUPLE_CONSTRUCTOR, TUPLE_TYPE_CONSTRUCTOR, UNORDERED_TUPLE_CONSTRUCTOR, UNORDERED_TUPLE_TYPE_CONSTRUCTOR),
   };
 
   /* ********************************************************** */
@@ -427,12 +426,11 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // Expression root: expression
   // Operator priority table:
-  // 0: PREFIX(unary_negation_expression)
-  // 1: BINARY(multiplication_expression) BINARY(division_expression)
-  // 2: BINARY(addition_expression) BINARY(subtraction_expression)
-  // 3: BINARY(equals_expression)
-  // 4: BINARY(less_than_expression) BINARY(less_than_equals_expression) BINARY(greater_than_expression) BINARY(greater_than_equals_expression)
-  // 5: POSTFIX(call_expression) PREFIX(if_expression) PREFIX(is_undefined_expression) PREFIX(let_expression)
+  // 0: BINARY(multiplication_expression) BINARY(division_expression)
+  // 1: BINARY(addition_expression) BINARY(subtraction_expression)
+  // 2: BINARY(equals_expression)
+  // 3: BINARY(less_than_expression) BINARY(less_than_equals_expression) BINARY(greater_than_expression) BINARY(greater_than_equals_expression)
+  // 4: POSTFIX(postfix_call_expression) PREFIX(if_expression) PREFIX(is_undefined_expression) PREFIX(let_expression)
   //    ATOM(abstraction_constructor) ATOM(reference_expression) PREFIX(paren_expression) ATOM(tuple_constructor)
   //    ATOM(tuple_type_constructor) ATOM(int_literal)
   public static boolean expression(PsiBuilder b, int l, int g) {
@@ -440,8 +438,7 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     addVariant(b, "<expression>");
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, "<expression>");
-    r = unary_negation_expression(b, l + 1);
-    if (!r) r = tuple_constructor(b, l + 1);
+    r = tuple_constructor(b, l + 1);
     if (!r) r = if_expression(b, l + 1);
     if (!r) r = is_undefined_expression(b, l + 1);
     if (!r) r = let_expression(b, l + 1);
@@ -461,45 +458,45 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     boolean r = true;
     while (true) {
       Marker m = enter_section_(b, l, _LEFT_, null);
-      if (g < 2 && consumeTokenSmart(b, MINUS)) {
-        r = expression(b, l, 2);
-        exit_section_(b, l, m, SUBTRACTION_EXPRESSION, r, true, null);
-      }
-      else if (g < 1 && consumeTokenSmart(b, ASTERISK)) {
-        r = expression(b, l, 1);
+      if (g < 0 && consumeTokenSmart(b, ASTERISK)) {
+        r = expression(b, l, 0);
         exit_section_(b, l, m, MULTIPLICATION_EXPRESSION, r, true, null);
       }
-      else if (g < 1 && consumeTokenSmart(b, SLASH)) {
-        r = expression(b, l, 1);
+      else if (g < 0 && consumeTokenSmart(b, SLASH)) {
+        r = expression(b, l, 0);
         exit_section_(b, l, m, DIVISION_EXPRESSION, r, true, null);
       }
-      else if (g < 2 && consumeTokenSmart(b, PLUS)) {
-        r = expression(b, l, 2);
+      else if (g < 1 && consumeTokenSmart(b, PLUS)) {
+        r = expression(b, l, 1);
         exit_section_(b, l, m, ADDITION_EXPRESSION, r, true, null);
       }
-      else if (g < 3 && consumeTokenSmart(b, EQUALS)) {
-        r = expression(b, l, 3);
+      else if (g < 1 && consumeTokenSmart(b, MINUS)) {
+        r = expression(b, l, 1);
+        exit_section_(b, l, m, SUBTRACTION_EXPRESSION, r, true, null);
+      }
+      else if (g < 2 && consumeTokenSmart(b, EQUALS)) {
+        r = expression(b, l, 2);
         exit_section_(b, l, m, EQUALS_EXPRESSION, r, true, null);
       }
-      else if (g < 4 && consumeTokenSmart(b, LESS_THAN)) {
-        r = expression(b, l, 4);
+      else if (g < 3 && consumeTokenSmart(b, LESS_THAN)) {
+        r = expression(b, l, 3);
         exit_section_(b, l, m, LESS_THAN_EXPRESSION, r, true, null);
       }
-      else if (g < 4 && consumeTokenSmart(b, LESS_THAN_EQUALS)) {
-        r = expression(b, l, 4);
+      else if (g < 3 && consumeTokenSmart(b, LESS_THAN_EQUALS)) {
+        r = expression(b, l, 3);
         exit_section_(b, l, m, LESS_THAN_EQUALS_EXPRESSION, r, true, null);
       }
-      else if (g < 4 && consumeTokenSmart(b, GREATER_THAN)) {
-        r = expression(b, l, 4);
+      else if (g < 3 && consumeTokenSmart(b, GREATER_THAN)) {
+        r = expression(b, l, 3);
         exit_section_(b, l, m, GREATER_THAN_EXPRESSION, r, true, null);
       }
-      else if (g < 4 && consumeTokenSmart(b, GREATER_THAN_EQUALS)) {
-        r = expression(b, l, 4);
+      else if (g < 3 && consumeTokenSmart(b, GREATER_THAN_EQUALS)) {
+        r = expression(b, l, 3);
         exit_section_(b, l, m, GREATER_THAN_EQUALS_EXPRESSION, r, true, null);
       }
-      else if (g < 5 && tuple_constructor_raw(b, l + 1)) {
+      else if (g < 4 && tuple_constructor_raw(b, l + 1)) {
         r = true;
-        exit_section_(b, l, m, CALL_EXPRESSION, r, true, null);
+        exit_section_(b, l, m, POSTFIX_CALL_EXPRESSION, r, true, null);
       }
       else {
         exit_section_(b, l, m, null, false, false, null);
@@ -507,18 +504,6 @@ public class SigmaParser implements PsiParser, LightPsiParser {
       }
     }
     return r;
-  }
-
-  public static boolean unary_negation_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "unary_negation_expression")) return false;
-    if (!nextTokenIsSmart(b, MINUS)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
-    r = consumeTokenSmart(b, MINUS);
-    p = r;
-    r = p && expression(b, l, 0);
-    exit_section_(b, l, m, UNARY_NEGATION_EXPRESSION, r, p, null);
-    return r || p;
   }
 
   // tuple_constructor_raw
