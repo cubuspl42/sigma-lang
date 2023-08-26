@@ -49,6 +49,8 @@ class Namespace(
                 )
             )
         }
+
+        override fun getLocalNames(): Set<Symbol> = entries.map { it.name }.toSet()
     }
 
     private val asDeclarationBlock = NamespaceStaticBlock()

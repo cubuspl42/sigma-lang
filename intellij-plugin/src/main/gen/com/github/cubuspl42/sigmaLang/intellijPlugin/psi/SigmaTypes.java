@@ -162,9 +162,6 @@ public interface SigmaTypes {
       else if (type == TUPLE_CONSTRUCTOR) {
         return new SigmaTupleConstructorImpl(node);
       }
-      else if (type == TUPLE_TYPE_CONSTRUCTOR) {
-        return new SigmaTupleTypeConstructorImpl(node);
-      }
       else if (type == TYPE_ANNOTATION) {
         return new SigmaTypeAnnotationImpl(node);
       }

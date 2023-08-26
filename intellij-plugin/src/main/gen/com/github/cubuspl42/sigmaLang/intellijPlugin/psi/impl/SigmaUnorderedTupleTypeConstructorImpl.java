@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaUnorderedTupleTypeConstructorImpl extends ASTWrapperPsiElement implements SigmaUnorderedTupleTypeConstructor {
+public class SigmaUnorderedTupleTypeConstructorImpl extends SigmaTupleTypeConstructorImpl implements SigmaUnorderedTupleTypeConstructor {
 
   public SigmaUnorderedTupleTypeConstructorImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull SigmaVisitor visitor) {
     visitor.visitUnorderedTupleTypeConstructor(this);
   }

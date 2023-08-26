@@ -54,6 +54,8 @@ class Abstraction(
                 ),
             )
         }
+
+        override fun getLocalNames(): Set<Symbol> = declarationByName.keys
     }
 
     companion object {

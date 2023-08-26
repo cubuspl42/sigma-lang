@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaOrderedTupleTypeConstructorEntry extends PsiElement {
+public interface SigmaOrderedTupleTypeConstructorEntry extends SigmaOrderedTupleTypeConstructorEntryBase {
 
   @NotNull
-  SigmaTypeAnnotation getTypeAnnotation();
+  SigmaTypeExpression getTypeExpression();
+
+  @Nullable
+  PsiElement getDeclaredName();
 
 }

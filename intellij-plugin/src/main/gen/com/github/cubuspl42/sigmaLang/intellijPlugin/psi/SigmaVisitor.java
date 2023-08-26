@@ -96,11 +96,11 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitOrderedTupleTypeConstructor(@NotNull SigmaOrderedTupleTypeConstructor o) {
-    visitPsiElement(o);
+    visitTupleTypeConstructor(o);
   }
 
   public void visitOrderedTupleTypeConstructorEntry(@NotNull SigmaOrderedTupleTypeConstructorEntry o) {
-    visitPsiElement(o);
+    visitOrderedTupleTypeConstructorEntryBase(o);
   }
 
   public void visitParenExpression(@NotNull SigmaParenExpression o) {
@@ -144,7 +144,7 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitUnorderedTupleTypeConstructor(@NotNull SigmaUnorderedTupleTypeConstructor o) {
-    visitPsiElement(o);
+    visitTupleTypeConstructor(o);
   }
 
   public void visitUnorderedTupleTypeConstructorEntry(@NotNull SigmaUnorderedTupleTypeConstructorEntry o) {
@@ -160,6 +160,10 @@ public class SigmaVisitor extends PsiElementVisitor {
   }
 
   public void visitNamespaceEntry(@NotNull SigmaNamespaceEntry o) {
+    visitPsiElement(o);
+  }
+
+  public void visitOrderedTupleTypeConstructorEntryBase(@NotNull SigmaOrderedTupleTypeConstructorEntryBase o) {
     visitPsiElement(o);
   }
 

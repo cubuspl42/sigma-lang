@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaTupleTypeConstructorImpl extends SigmaUnimplementedExpressionImplMixin implements SigmaTupleTypeConstructor {
+public abstract class SigmaTupleTypeConstructorImpl extends SigmaUnimplementedExpressionImplMixin implements SigmaTupleTypeConstructor {
 
   public SigmaTupleTypeConstructorImpl(@NotNull ASTNode node) {
     super(node);
@@ -24,18 +24,6 @@ public class SigmaTupleTypeConstructorImpl extends SigmaUnimplementedExpressionI
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof SigmaVisitor) accept((SigmaVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public SigmaOrderedTupleTypeConstructor getOrderedTupleTypeConstructor() {
-    return findChildByClass(SigmaOrderedTupleTypeConstructor.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaUnorderedTupleTypeConstructor getUnorderedTupleTypeConstructor() {
-    return findChildByClass(SigmaUnorderedTupleTypeConstructor.class);
   }
 
 }

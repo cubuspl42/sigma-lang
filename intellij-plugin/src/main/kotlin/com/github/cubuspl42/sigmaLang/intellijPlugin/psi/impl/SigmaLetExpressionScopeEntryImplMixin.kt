@@ -12,15 +12,14 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 abstract class SigmaLetExpressionScopeEntryImplMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node), SigmaLetExpressionScopeEntry {
-    final override val asTerm: LocalDefinitionTerm
-        get() = object : LocalDefinitionTerm {
-            override val name: Symbol
-                get() = Symbol.of(this@SigmaLetExpressionScopeEntryImplMixin.definedNameElement.text)
+    final override val asTerm: LocalDefinitionTerm = object : LocalDefinitionTerm {
+        override val name: Symbol
+            get() = Symbol.of(this@SigmaLetExpressionScopeEntryImplMixin.definedNameElement.text)
 
-            override val declaredTypeBody: ExpressionTerm?
-                get() = null
+        override val declaredTypeBody: ExpressionTerm?
+            get() = null
 
-            override val body: ExpressionTerm
-                get() = this@SigmaLetExpressionScopeEntryImplMixin.bodyElement.asTerm
-        }
+        override val body: ExpressionTerm
+            get() = this@SigmaLetExpressionScopeEntryImplMixin.bodyElement.asTerm
+    }
 }
