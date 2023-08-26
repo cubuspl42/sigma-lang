@@ -39,9 +39,9 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     create_token_set_(ABSTRACTION_CONSTRUCTOR, ADDITION_EXPRESSION, CALL_EXPRESSION, DIVISION_EXPRESSION,
       EQUALS_EXPRESSION, EXPRESSION, GREATER_THAN_EQUALS_EXPRESSION, GREATER_THAN_EXPRESSION,
       IF_EXPRESSION, INT_LITERAL, IS_UNDEFINED_EXPRESSION, LESS_THAN_EQUALS_EXPRESSION,
-      LESS_THAN_EXPRESSION, LET_EXPRESSION, MULTIPLICATION_EXPRESSION, PAREN_EXPRESSION,
-      REFERENCE_EXPRESSION, SUBTRACTION_EXPRESSION, TUPLE_CONSTRUCTOR, TUPLE_TYPE_CONSTRUCTOR,
-      UNARY_NEGATION_EXPRESSION),
+      LESS_THAN_EXPRESSION, LET_EXPRESSION, MULTIPLICATION_EXPRESSION, ORDERED_TUPLE_TYPE_CONSTRUCTOR,
+      PAREN_EXPRESSION, REFERENCE_EXPRESSION, SUBTRACTION_EXPRESSION, TUPLE_CONSTRUCTOR,
+      TUPLE_TYPE_CONSTRUCTOR, UNARY_NEGATION_EXPRESSION, UNORDERED_TUPLE_TYPE_CONSTRUCTOR),
   };
 
   /* ********************************************************** */
@@ -290,15 +290,31 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER type_annotation
+  // (IDENTIFIER COLON)? type_expression
   public static boolean ordered_tuple_type_constructor_entry(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ordered_tuple_type_constructor_entry")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, ORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY, "<ordered tuple type constructor entry>");
+    r = ordered_tuple_type_constructor_entry_0(b, l + 1);
+    r = r && type_expression(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (IDENTIFIER COLON)?
+  private static boolean ordered_tuple_type_constructor_entry_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ordered_tuple_type_constructor_entry_0")) return false;
+    ordered_tuple_type_constructor_entry_0_0(b, l + 1);
+    return true;
+  }
+
+  // IDENTIFIER COLON
+  private static boolean ordered_tuple_type_constructor_entry_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ordered_tuple_type_constructor_entry_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, IDENTIFIER);
-    r = r && type_annotation(b, l + 1);
-    exit_section_(b, m, ORDERED_TUPLE_TYPE_CONSTRUCTOR_ENTRY, r);
+    r = consumeTokens(b, 0, IDENTIFIER, COLON);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -634,10 +650,10 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "tuple_type_constructor")) return false;
     if (!nextTokenIsSmart(b, DASH)) return false;
     boolean r;
-    Marker m = enter_section_(b);
+    Marker m = enter_section_(b, l, _COLLAPSE_, TUPLE_TYPE_CONSTRUCTOR, null);
     r = ordered_tuple_type_constructor(b, l + 1);
     if (!r) r = unordered_tuple_type_constructor(b, l + 1);
-    exit_section_(b, m, TUPLE_TYPE_CONSTRUCTOR, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 

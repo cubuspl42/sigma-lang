@@ -15,11 +15,14 @@ interface StaticScope {
             override fun resolveName(
                 name: Symbol,
             ): ResolvedName? = resultScope.resolveName(name = name)
+
+            override fun getAllNames(): Set<Symbol> = resultScope.getAllNames()
         }.result
     }
 
     object Empty : StaticScope {
         override fun resolveName(name: Symbol): ResolvedName? = null
+        override fun getAllNames(): Set<Symbol> = emptySet()
     }
 
     class Chained(
@@ -28,7 +31,11 @@ interface StaticScope {
     ) : StaticScope {
         override fun resolveName(name: Symbol): ResolvedName? =
             staticBlock.resolveNameLocally(name = name) ?: outerScope.resolveName(name = name)
+
+        override fun getAllNames(): Set<Symbol> = staticBlock.getLocalNames() + outerScope.getAllNames()
     }
 
     fun resolveName(name: Symbol): ResolvedName?
+
+    fun getAllNames(): Set<Symbol>
 }

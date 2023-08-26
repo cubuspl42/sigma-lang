@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaOrderedTupleTypeConstructorEntryImpl extends ASTWrapperPsiElement implements SigmaOrderedTupleTypeConstructorEntry {
+public class SigmaOrderedTupleTypeConstructorEntryImpl extends SigmaOrderedTupleTypeConstructorEntryImplMixin implements SigmaOrderedTupleTypeConstructorEntry {
 
   public SigmaOrderedTupleTypeConstructorEntryImpl(@NotNull ASTNode node) {
     super(node);
@@ -29,8 +28,14 @@ public class SigmaOrderedTupleTypeConstructorEntryImpl extends ASTWrapperPsiElem
 
   @Override
   @NotNull
-  public SigmaTypeAnnotation getTypeAnnotation() {
-    return findNotNullChildByClass(SigmaTypeAnnotation.class);
+  public SigmaTypeExpression getTypeExpression() {
+    return findNotNullChildByClass(SigmaTypeExpression.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getDeclaredName() {
+    return findChildByType(IDENTIFIER);
   }
 
 }

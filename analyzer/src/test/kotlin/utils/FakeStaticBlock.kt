@@ -42,4 +42,6 @@ class FakeStaticBlock(
             ),
         )
     }
+
+    override fun getLocalNames(): Set<Symbol> = declarationByName.keys
 }

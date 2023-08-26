@@ -261,4 +261,6 @@ object BuiltinScope : Scope, StaticScope {
     override fun resolveName(
         name: Symbol,
     ): ResolvedName? = builtinDeclarations[name]?.asResolvedName
+
+    override fun getAllNames(): Set<Symbol> = builtinDeclarations.keys
 }

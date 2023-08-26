@@ -295,15 +295,27 @@ tuple_type_constructor ::=
 ordered_tuple_type_constructor ::=
     DASH <<bracket_wrapped
         <<list ordered_tuple_type_constructor_entry>>
-    >>
+    >> {
+        extends=tuple_type_constructor
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaOrderedTupleTypeConstructorImplMixin"
+    }
 
 ordered_tuple_type_constructor_entry ::=
-    IDENTIFIER type_annotation
+    (IDENTIFIER COLON)? type_expression
+    {
+        methods=[
+            declared_name="IDENTIFIER"
+        ]
+        implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaOrderedTupleTypeConstructorEntryBase"
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaOrderedTupleTypeConstructorEntryImplMixin"
+    }
 
 unordered_tuple_type_constructor ::=
     DASH <<brace_wrapped
         <<list unordered_tuple_type_constructor_entry>>
-    >>
+    >> {
+        extends=tuple_type_constructor
+    }
 
 unordered_tuple_type_constructor_entry ::=
     IDENTIFIER COLON type_expression

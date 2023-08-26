@@ -40,6 +40,8 @@ class LocalValueDefinitionBlock(
         )
     }
 
+    override fun getLocalNames(): Set<Symbol> = definitionByName.keys
+
     val subExpressions by lazy { definitionByName.values.map { it.body }.toSet() }
 
     val errors: Set<SemanticError> by lazy {

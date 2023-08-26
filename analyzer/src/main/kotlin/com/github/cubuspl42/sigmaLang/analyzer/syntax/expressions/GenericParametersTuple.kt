@@ -42,6 +42,8 @@ data class GenericParametersTuple(
         } else {
             null
         }
+
+        override fun getLocalNames(): Set<Symbol> = parametersDefinitions.toSet()
     }
 
     val typeVariables: Set<TypeVariable>

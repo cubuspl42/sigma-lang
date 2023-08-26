@@ -20,35 +20,23 @@ class SigmaCompletionContributor : CompletionContributor() {
                 context: com.intellij.util.ProcessingContext,
                 resultSet: CompletionResultSet,
             ) {
-                val element = parameters.position.parent as SigmaReferenceExpression
-                val elementTerm = element.asTerm
+                val referenceElement = parameters.position.parent as SigmaReferenceExpression
+                val referenceTerm = referenceElement.asTerm
 
-                val file = parameters.originalFile as SigmaFile
+                val file = referenceElement.containingFile as SigmaFile
                 val moduleTerm = file.asTerm
 
+                val module = Module.build(
+                    prelude = prelude,
+                    term = moduleTerm,
+                )
 
-//                val module = Module.build(
-//                    prelude = prelude,
-//                    term = moduleTerm,
-//                )
+                val reference = module.expressionMap.getMappedExpression(referenceTerm)
 
-
-                BuiltinScope.names.forEach {
+                reference?.outerScope?.getAllNames()?.forEach {
                     resultSet.addElement(
                         LookupElementBuilder.create(it.name),
                     )
-                }
-
-                val grandparent = element.parent?.parent
-
-                if (grandparent is SigmaLetExpressionImpl) {
-                    val grandparentTerm = grandparent.asTerm
-
-                    grandparent.getNames().forEach {
-                        resultSet.addElement(
-                            LookupElementBuilder.create(it),
-                        )
-                    }
                 }
             }
         }
