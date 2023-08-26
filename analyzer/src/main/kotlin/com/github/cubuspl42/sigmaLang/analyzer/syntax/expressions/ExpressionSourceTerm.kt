@@ -20,7 +20,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.IsUndefi
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.LetExpressionAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.ParenExpressionAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.ReferenceAltContext
-import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.SymbolLiteralAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.TupleConstructorAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceTerm
@@ -44,7 +43,7 @@ sealed class ExpressionSourceTerm : SourceTerm(), ExpressionTerm {
         ): ExpressionSourceTerm = object : SigmaParserBaseVisitor<ExpressionSourceTerm>() {
             override fun visitBinaryOperationAlt(
                 ctx: BinaryOperationAltContext,
-            ): ExpressionSourceTerm = CallSourceTerm.build(ctx)
+            ): ExpressionSourceTerm = InfixCallSourceTerm.build(ctx)
 
             override fun visitParenExpressionAlt(
                 ctx: ParenExpressionAltContext,
@@ -84,11 +83,11 @@ sealed class ExpressionSourceTerm : SourceTerm(), ExpressionTerm {
 
             override fun visitCallExpressionAlt(
                 ctx: CallExpressionAltContext,
-            ): ExpressionSourceTerm = CallSourceTerm.build(ctx)
+            ): ExpressionSourceTerm = PostfixCallSourceTerm.build(ctx)
 
             override fun visitCallExpressionTupleConstructorAlt(
                 ctx: CallExpressionTupleConstructorAltContext,
-            ): ExpressionSourceTerm = CallSourceTerm.build(ctx)
+            ): ExpressionSourceTerm = PostfixCallSourceTerm.build(ctx)
 
             override fun visitCallableParenAlt(
                 ctx: CallableParenAltContext,

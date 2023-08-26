@@ -42,10 +42,10 @@ class IfExpression(
 
     sealed interface GuardValidationOutcome
 
-    object ValidGuardResult : GuardValidationOutcome
+    data object ValidGuardResult : GuardValidationOutcome
 
     data class InvalidGuardError(
-        override val location: SourceLocation,
+        override val location: SourceLocation?,
         val actualType: Type,
     ) : GuardValidationOutcome, SemanticError {
         override fun dump(): String = "$location: Invalid guard type: ${actualType.dump()} (should be: Bool)"
@@ -56,7 +56,7 @@ class IfExpression(
             when (guardType) {
                 is BoolType -> ValidGuardResult
                 else -> InvalidGuardError(
-                    location = guard.location,
+                    location = guard?.location,
                     actualType = guardType,
                 )
             }

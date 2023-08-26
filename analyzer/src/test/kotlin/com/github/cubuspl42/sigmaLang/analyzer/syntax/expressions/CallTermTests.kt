@@ -10,7 +10,7 @@ class CallTermTests {
         @Test
         fun testSimple() {
             assertEquals(
-                expected = CallSourceTerm(
+                expected = PostfixCallSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
@@ -28,7 +28,7 @@ class CallTermTests {
         @Test
         fun testFieldReadSubject() {
             assertEquals(
-                expected = CallSourceTerm(
+                expected = PostfixCallSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     subject = FieldReadSourceTerm(
 
@@ -51,7 +51,7 @@ class CallTermTests {
         @Test
         fun testUnorderedTupleArgumentSugar() {
             assertEquals(
-                expected = CallSourceTerm(
+                expected = PostfixCallSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
@@ -84,7 +84,7 @@ class CallTermTests {
         @Test
         fun testOrderedTupleArgumentSugar() {
             assertEquals(
-                expected = CallSourceTerm(
+                expected = PostfixCallSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     subject = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),

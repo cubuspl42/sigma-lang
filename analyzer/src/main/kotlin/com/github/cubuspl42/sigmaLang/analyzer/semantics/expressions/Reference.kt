@@ -14,16 +14,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 
 class Reference(
     override val outerScope: StaticScope,
-    private val declarationScope: StaticScope,
-    override val term: ReferenceSourceTerm,
+    override val term: ReferenceSourceTerm?,
+    val referredName: Symbol,
 ) : Expression() {
     data class UnresolvedNameError(
-        override val location: SourceLocation,
+        override val location: SourceLocation?,
         val name: Symbol,
     ) : SemanticError
 
     data class NonValueDeclarationError(
-        override val location: SourceLocation,
+        override val location: SourceLocation?,
         val name: Symbol,
     ) : SemanticError
 
@@ -33,15 +33,14 @@ class Reference(
             term: ReferenceSourceTerm,
         ): Reference = Reference(
             outerScope = outerScope,
-            declarationScope = outerScope,
             term = term,
+            referredName = term.referredName,
         )
     }
 
-    val referredName = term.referredName
 
     private val resolved: ResolvedName? by lazy {
-        declarationScope.resolveName(name = term.referredName)
+        outerScope.resolveName(name = referredName)
     }
 
     override val inferredType: Thunk<Type>
@@ -59,8 +58,8 @@ class Reference(
         setOfNotNull(
             when (resolved) {
                 null -> UnresolvedNameError(
-                    location = term.location,
-                    name = term.referredName,
+                    location = term?.location,
+                    name = referredName,
                 )
 
                 else -> null
