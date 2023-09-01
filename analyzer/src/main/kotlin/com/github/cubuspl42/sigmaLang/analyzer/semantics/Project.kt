@@ -32,7 +32,7 @@ class Project {
         }
 
         fun load(fileBaseName: String): Program {
-            val fileName = "${fileBaseName}.com.github.cubuspl42.sigmaLang.analyzer"
+            val fileName = "${fileBaseName}.sigma"
             val source = store.load(fileName)
 
             val moduleTerm = ModuleSourceTerm.build(
