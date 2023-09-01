@@ -40,6 +40,10 @@ tasks {
         classpath = sourceSets["testIntegration"].runtimeClasspath
     }
 
+    test {
+        dependsOn("testIntegration")
+    }
+
     generateGrammarSource {
         maxHeapSize = "64m"
         arguments = arguments + listOf("-package", "com.github.cubuspl42.sigmaLang.analyzer.parser.antlr", "-visitor", "-no-listener")
