@@ -37,12 +37,12 @@ public class SigmaParser implements PsiParser, LightPsiParser {
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
     create_token_set_(ABSTRACTION_CONSTRUCTOR, ADDITION_EXPRESSION, ARRAY_TYPE_CONSTRUCTOR, DIVISION_EXPRESSION,
-      EQUALS_EXPRESSION, EXPRESSION, GREATER_THAN_EQUALS_EXPRESSION, GREATER_THAN_EXPRESSION,
-      IF_EXPRESSION, INT_LITERAL, IS_UNDEFINED_EXPRESSION, LESS_THAN_EQUALS_EXPRESSION,
-      LESS_THAN_EXPRESSION, LET_EXPRESSION, MULTIPLICATION_EXPRESSION, ORDERED_TUPLE_CONSTRUCTOR,
-      ORDERED_TUPLE_TYPE_CONSTRUCTOR, PAREN_EXPRESSION, POSTFIX_CALL_EXPRESSION, REFERENCE_EXPRESSION,
-      SUBTRACTION_EXPRESSION, TUPLE_CONSTRUCTOR, TUPLE_TYPE_CONSTRUCTOR, UNORDERED_TUPLE_CONSTRUCTOR,
-      UNORDERED_TUPLE_TYPE_CONSTRUCTOR),
+      EQUALS_EXPRESSION, EXPRESSION, FUNCTION_TYPE_CONSTRUCTOR, GREATER_THAN_EQUALS_EXPRESSION,
+      GREATER_THAN_EXPRESSION, IF_EXPRESSION, INT_LITERAL, IS_UNDEFINED_EXPRESSION,
+      LESS_THAN_EQUALS_EXPRESSION, LESS_THAN_EXPRESSION, LET_EXPRESSION, MULTIPLICATION_EXPRESSION,
+      ORDERED_TUPLE_CONSTRUCTOR, ORDERED_TUPLE_TYPE_CONSTRUCTOR, PAREN_EXPRESSION, POSTFIX_CALL_EXPRESSION,
+      REFERENCE_EXPRESSION, SUBTRACTION_EXPRESSION, TUPLE_CONSTRUCTOR, TUPLE_TYPE_CONSTRUCTOR,
+      UNORDERED_TUPLE_CONSTRUCTOR, UNORDERED_TUPLE_TYPE_CONSTRUCTOR),
   };
 
   /* ********************************************************** */
@@ -99,15 +99,15 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // DASH <<bracket_wrapped
+  // BANG <<bracket_wrapped
   //         <<list generic_parameter_declaration>>
   //     >>
   public static boolean generic_parameters_tuple(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "generic_parameters_tuple")) return false;
-    if (!nextTokenIs(b, DASH)) return false;
+    if (!nextTokenIs(b, BANG)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, DASH);
+    r = consumeToken(b, BANG);
     r = r && bracket_wrapped(b, l + 1, generic_parameters_tuple_1_0_parser_);
     exit_section_(b, m, GENERIC_PARAMETERS_TUPLE, r);
     return r;
@@ -346,6 +346,18 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // ordered_tuple_type_constructor |
+  //     unordered_tuple_type_constructor
+  static boolean tuple_type_constructor_raw(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "tuple_type_constructor_raw")) return false;
+    if (!nextTokenIs(b, DASH)) return false;
+    boolean r;
+    r = ordered_tuple_type_constructor(b, l + 1);
+    if (!r) r = unordered_tuple_type_constructor(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
   // COLON type_expression
   public static boolean type_annotation(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "type_annotation")) return false;
@@ -427,13 +439,17 @@ public class SigmaParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // Expression root: expression
   // Operator priority table:
-  // 0: POSTFIX(postfix_call_expression) PREFIX(if_expression) PREFIX(is_undefined_expression) PREFIX(let_expression)
-  //    ATOM(abstraction_constructor)
-  // 1: BINARY(multiplication_expression) BINARY(division_expression)
-  // 2: BINARY(addition_expression) BINARY(subtraction_expression)
-  // 3: BINARY(equals_expression)
-  // 4: BINARY(less_than_expression) BINARY(less_than_equals_expression) BINARY(greater_than_expression) BINARY(greater_than_equals_expression)
-  // 5: ATOM(reference_expression) PREFIX(paren_expression) ATOM(tuple_constructor) ATOM(array_type_constructor)
+  // 0: POSTFIX(postfix_call_expression)
+  // 1: PREFIX(if_expression)
+  // 2: PREFIX(is_undefined_expression)
+  // 3: PREFIX(let_expression)
+  // 4: ATOM(abstraction_constructor)
+  // 5: ATOM(function_type_constructor)
+  // 6: BINARY(multiplication_expression) BINARY(division_expression)
+  // 7: BINARY(addition_expression) BINARY(subtraction_expression)
+  // 8: BINARY(equals_expression)
+  // 9: BINARY(less_than_expression) BINARY(less_than_equals_expression) BINARY(greater_than_expression) BINARY(greater_than_equals_expression)
+  // 10: ATOM(reference_expression) PREFIX(paren_expression) ATOM(tuple_constructor) ATOM(array_type_constructor)
   //    ATOM(tuple_type_constructor) ATOM(int_literal)
   public static boolean expression(PsiBuilder b, int l, int g) {
     if (!recursion_guard_(b, l, "expression")) return false;
@@ -445,6 +461,7 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     if (!r) r = is_undefined_expression(b, l + 1);
     if (!r) r = let_expression(b, l + 1);
     if (!r) r = abstraction_constructor(b, l + 1);
+    if (!r) r = function_type_constructor(b, l + 1);
     if (!r) r = reference_expression(b, l + 1);
     if (!r) r = paren_expression(b, l + 1);
     if (!r) r = array_type_constructor(b, l + 1);
@@ -465,40 +482,40 @@ public class SigmaParser implements PsiParser, LightPsiParser {
         r = true;
         exit_section_(b, l, m, POSTFIX_CALL_EXPRESSION, r, true, null);
       }
-      else if (g < 1 && consumeTokenSmart(b, ASTERISK)) {
-        r = expression(b, l, 1);
+      else if (g < 6 && consumeTokenSmart(b, ASTERISK)) {
+        r = expression(b, l, 6);
         exit_section_(b, l, m, MULTIPLICATION_EXPRESSION, r, true, null);
       }
-      else if (g < 1 && consumeTokenSmart(b, SLASH)) {
-        r = expression(b, l, 1);
+      else if (g < 6 && consumeTokenSmart(b, SLASH)) {
+        r = expression(b, l, 6);
         exit_section_(b, l, m, DIVISION_EXPRESSION, r, true, null);
       }
-      else if (g < 2 && consumeTokenSmart(b, PLUS)) {
-        r = expression(b, l, 2);
+      else if (g < 7 && consumeTokenSmart(b, PLUS)) {
+        r = expression(b, l, 7);
         exit_section_(b, l, m, ADDITION_EXPRESSION, r, true, null);
       }
-      else if (g < 2 && consumeTokenSmart(b, MINUS)) {
-        r = expression(b, l, 2);
+      else if (g < 7 && consumeTokenSmart(b, MINUS)) {
+        r = expression(b, l, 7);
         exit_section_(b, l, m, SUBTRACTION_EXPRESSION, r, true, null);
       }
-      else if (g < 3 && consumeTokenSmart(b, EQUALS)) {
-        r = expression(b, l, 3);
+      else if (g < 8 && consumeTokenSmart(b, EQUALS)) {
+        r = expression(b, l, 8);
         exit_section_(b, l, m, EQUALS_EXPRESSION, r, true, null);
       }
-      else if (g < 4 && consumeTokenSmart(b, LESS_THAN)) {
-        r = expression(b, l, 4);
+      else if (g < 9 && consumeTokenSmart(b, LESS_THAN)) {
+        r = expression(b, l, 9);
         exit_section_(b, l, m, LESS_THAN_EXPRESSION, r, true, null);
       }
-      else if (g < 4 && consumeTokenSmart(b, LESS_THAN_EQUALS)) {
-        r = expression(b, l, 4);
+      else if (g < 9 && consumeTokenSmart(b, LESS_THAN_EQUALS)) {
+        r = expression(b, l, 9);
         exit_section_(b, l, m, LESS_THAN_EQUALS_EXPRESSION, r, true, null);
       }
-      else if (g < 4 && consumeTokenSmart(b, GREATER_THAN)) {
-        r = expression(b, l, 4);
+      else if (g < 9 && consumeTokenSmart(b, GREATER_THAN)) {
+        r = expression(b, l, 9);
         exit_section_(b, l, m, GREATER_THAN_EXPRESSION, r, true, null);
       }
-      else if (g < 4 && consumeTokenSmart(b, GREATER_THAN_EQUALS)) {
-        r = expression(b, l, 4);
+      else if (g < 9 && consumeTokenSmart(b, GREATER_THAN_EQUALS)) {
+        r = expression(b, l, 9);
         exit_section_(b, l, m, GREATER_THAN_EQUALS_EXPRESSION, r, true, null);
       }
       else {
@@ -527,7 +544,7 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, null);
     r = consumeTokenSmart(b, IF_KEYWORD);
     p = r;
-    r = p && expression(b, l, 0);
+    r = p && expression(b, l, 1);
     r = p && report_error_(b, paren_wrapped(b, l + 1, SigmaParser::if_expression_body)) && r;
     exit_section_(b, l, m, IF_EXPRESSION, r, p, null);
     return r || p;
@@ -540,7 +557,7 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, null);
     r = consumeTokenSmart(b, IS_UNDEFINED_KEYWORD);
     p = r;
-    r = p && expression(b, l, 0);
+    r = p && expression(b, l, 2);
     exit_section_(b, l, m, IS_UNDEFINED_EXPRESSION, r, p, null);
     return r || p;
   }
@@ -552,7 +569,7 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, null);
     r = let_expression_0(b, l + 1);
     p = r;
-    r = p && expression(b, l, 0);
+    r = p && expression(b, l, 3);
     exit_section_(b, l, m, LET_EXPRESSION, r, p, null);
     return r || p;
   }
@@ -569,18 +586,18 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // generic_parameters_tuple? tuple_type_constructor (THIN_ARROW type_expression)? FAT_ARROW expression
+  // generic_parameters_tuple? tuple_type_constructor_raw (THIN_ARROW type_expression)? FAT_ARROW expression
   public static boolean abstraction_constructor(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "abstraction_constructor")) return false;
-    if (!nextTokenIsSmart(b, DASH)) return false;
+    if (!nextTokenIsSmart(b, BANG, DASH)) return false;
     boolean r;
-    Marker m = enter_section_(b);
+    Marker m = enter_section_(b, l, _COLLAPSE_, ABSTRACTION_CONSTRUCTOR, "<abstraction constructor>");
     r = abstraction_constructor_0(b, l + 1);
-    r = r && tuple_type_constructor(b, l + 1);
+    r = r && tuple_type_constructor_raw(b, l + 1);
     r = r && abstraction_constructor_2(b, l + 1);
     r = r && consumeToken(b, FAT_ARROW);
     r = r && expression(b, l + 1, -1);
-    exit_section_(b, m, ABSTRACTION_CONSTRUCTOR, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -607,6 +624,27 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     r = r && type_expression(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  // generic_parameters_tuple? tuple_type_constructor_raw THIN_ARROW type_expression
+  public static boolean function_type_constructor(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "function_type_constructor")) return false;
+    if (!nextTokenIsSmart(b, BANG, DASH)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _COLLAPSE_, FUNCTION_TYPE_CONSTRUCTOR, "<function type constructor>");
+    r = function_type_constructor_0(b, l + 1);
+    r = r && tuple_type_constructor_raw(b, l + 1);
+    r = r && consumeToken(b, THIN_ARROW);
+    r = r && type_expression(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // generic_parameters_tuple?
+  private static boolean function_type_constructor_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "function_type_constructor_0")) return false;
+    generic_parameters_tuple(b, l + 1);
+    return true;
   }
 
   // IDENTIFIER
@@ -656,15 +694,13 @@ public class SigmaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ordered_tuple_type_constructor |
-  //     unordered_tuple_type_constructor
+  // tuple_type_constructor_raw
   public static boolean tuple_type_constructor(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "tuple_type_constructor")) return false;
     if (!nextTokenIsSmart(b, DASH)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _COLLAPSE_, TUPLE_TYPE_CONSTRUCTOR, null);
-    r = ordered_tuple_type_constructor(b, l + 1);
-    if (!r) r = unordered_tuple_type_constructor(b, l + 1);
+    r = tuple_type_constructor_raw(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }

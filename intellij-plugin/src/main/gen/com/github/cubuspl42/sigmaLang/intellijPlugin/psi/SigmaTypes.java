@@ -15,6 +15,7 @@ public interface SigmaTypes {
   IElementType DIVISION_EXPRESSION = new SigmaElementType("DIVISION_EXPRESSION");
   IElementType EQUALS_EXPRESSION = new SigmaElementType("EQUALS_EXPRESSION");
   IElementType EXPRESSION = new SigmaElementType("EXPRESSION");
+  IElementType FUNCTION_TYPE_CONSTRUCTOR = new SigmaElementType("FUNCTION_TYPE_CONSTRUCTOR");
   IElementType GENERIC_PARAMETERS_TUPLE = new SigmaElementType("GENERIC_PARAMETERS_TUPLE");
   IElementType GENERIC_PARAMETER_DECLARATION = new SigmaElementType("GENERIC_PARAMETER_DECLARATION");
   IElementType GREATER_THAN_EQUALS_EXPRESSION = new SigmaElementType("GREATER_THAN_EQUALS_EXPRESSION");
@@ -47,6 +48,7 @@ public interface SigmaTypes {
 
   IElementType ASSIGN = new SigmaTokenType("ASSIGN");
   IElementType ASTERISK = new SigmaTokenType("ASTERISK");
+  IElementType BANG = new SigmaTokenType("BANG");
   IElementType BRACE_LEFT = new SigmaTokenType("BRACE_LEFT");
   IElementType BRACE_RIGHT = new SigmaTokenType("BRACE_RIGHT");
   IElementType BRACKET_LEFT = new SigmaTokenType("BRACKET_LEFT");
@@ -99,6 +101,9 @@ public interface SigmaTypes {
       }
       else if (type == EQUALS_EXPRESSION) {
         return new SigmaEqualsExpressionImpl(node);
+      }
+      else if (type == FUNCTION_TYPE_CONSTRUCTOR) {
+        return new SigmaFunctionTypeConstructorImpl(node);
       }
       else if (type == GENERIC_PARAMETERS_TUPLE) {
         return new SigmaGenericParametersTupleImpl(node);

@@ -5,21 +5,15 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SigmaAbstractionConstructor extends SigmaExpression {
-
-  @NotNull
-  List<SigmaExpression> getExpressionList();
+public interface SigmaFunctionTypeConstructor extends SigmaExpression {
 
   @Nullable
   SigmaGenericParametersTuple getGenericParametersTuple();
 
   @NotNull
-  SigmaExpression getArgumentType();
+  SigmaTupleTypeConstructor getArgumentType();
 
-  @Nullable
+  @NotNull
   SigmaTypeExpression getImageType();
-
-  @Nullable
-  SigmaExpression getImage();
 
 }

@@ -59,8 +59,12 @@ constant_definition ::=
 // # Expressions
 
 expression ::=
-//    unary_group |
-    primary_group |
+    postfix_call_expression |
+    if_expression |
+    is_undefined_expression |
+    let_expression |
+    abstraction_constructor |
+    function_type_constructor |
     multiplication_group |
     addition_group |
     equals_group |
@@ -159,13 +163,6 @@ greater_than_equals_expression ::=
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaInfixCallImplMixin"
     }
 
-private primary_group ::=
-    postfix_call_expression |
-    if_expression |
-    is_undefined_expression |
-    let_expression |
-    abstraction_constructor
-
 private compact_group ::=
     reference_expression |
     paren_expression |
@@ -227,18 +224,19 @@ let_expression_scope_entry ::=
 
 
 abstraction_constructor ::=
-    generic_parameters_tuple? tuple_type_constructor (THIN_ARROW type_expression)? FAT_ARROW expression
+    generic_parameters_tuple? tuple_type_constructor_raw (THIN_ARROW type_expression)? FAT_ARROW expression
     {
         methods=[
-            argument_type_element="expression[0]"
-            image_element="expression[1]"
+            argument_type="expression[0]"
+            image_type="type_expression"
+            image="expression[1]"
         ]
         extends=expression
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaAbstractionConstructorImplMixin"
     }
 
 generic_parameters_tuple ::=
-    DASH <<bracket_wrapped
+    BANG <<bracket_wrapped
         <<list generic_parameter_declaration>>
     >>
 
@@ -317,11 +315,15 @@ unordered_tuple_constructor_entry ::=
     }
 
 tuple_type_constructor ::=
-    ordered_tuple_type_constructor |
-    unordered_tuple_type_constructor
+    tuple_type_constructor_raw
     {
+        implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTupleTypeConstructorBase"
         extends=expression
     }
+
+private tuple_type_constructor_raw ::=
+    ordered_tuple_type_constructor |
+    unordered_tuple_type_constructor
 
 ordered_tuple_type_constructor ::=
     DASH <<bracket_wrapped
@@ -369,6 +371,17 @@ array_type_constructor ::=
         ]
         extends=expression
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaArrayTypeConstructorImplMixin"
+    }
+
+function_type_constructor ::=
+    generic_parameters_tuple? tuple_type_constructor_raw THIN_ARROW type_expression
+    {
+        methods=[
+            argument_type="tuple_type_constructor"
+            image_type="type_expression"
+        ]
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaFunctionTypeConstructorImplMixin"
     }
 
 int_literal ::=
