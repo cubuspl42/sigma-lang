@@ -1,20 +1,20 @@
 %const main = %let {
     concatAllOf = ![e, te] ^[
-        list: ^[e*],
-        transform: ^[e] -> ^[te*],
-    ] -> ^[te*] =>
+        list: ^[e...],
+        transform: ^[e] -> ^[te...],
+    ] -> ^[te...] =>
         concatAll[map[list, transform]],
 
     concatAll = ![e] ^[
-        lists: ^[^[e*]*],
-    ] -> ^[e*] => %let {
+        lists: ^[^[e...]...],
+    ] -> ^[e...] => %let {
         recurse = ^{
-            listAccumulated: ^[e*],
-            listsRemaining: ^[^[e*]*],
-        } -> ^[e*] => extractHead[listsRemaining, {
+            listAccumulated: ^[e...],
+            listsRemaining: ^[^[e...]...],
+        } -> ^[e...] => extractHead[listsRemaining, {
             ifExtracted: ^[
-                listsRemainingHead: ^[e*],
-                listsRemainingTail: ^[^[e*]*],
+                listsRemainingHead: ^[e...],
+                listsRemainingTail: ^[^[e...]...],
             ] => recurse{
                 listAccumulated: concat[listAccumulated, listsRemainingHead],
                 listsRemaining: listsRemainingTail,
@@ -26,7 +26,7 @@
         listsRemaining: lists,
     },
 
-    range = ^[start: Int, end: Int] -> ^[Int*] => %if end < start (
+    range = ^[start: Int, end: Int] -> ^[Int...] => %if end < start (
         %then [],
         %else concat[[start], range[start + 1, end]],
     ),
@@ -39,11 +39,11 @@
         ],
 
     extractHead = ![e, r] ^[
-        list: ^[e*],
+        list: ^[e...],
         branches: ^{
             ifExtracted: ^[
                 head: e,
-                tail: ^[e*],
+                tail: ^[e...],
             ] -> r,
             ifEmpty: r,
         },

@@ -13,7 +13,7 @@ class ArrayTypeConstructorTermTests {
         @Test
         fun test() {
             val expression = ExpressionSourceTerm.parse(
-                source = "^[A*]",
+                source = "^[A...]",
             )
 
             assertEquals(

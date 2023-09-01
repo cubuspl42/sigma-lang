@@ -221,7 +221,7 @@ orderedTupleTypeElement
 // end
 
 arrayTypeConstructor
-    : Dash LeftBracket type=expression Asterisk RightBracket
+    : Dash LeftBracket type=expression Ellipsis RightBracket
     ;
 
 dictTypeConstructor

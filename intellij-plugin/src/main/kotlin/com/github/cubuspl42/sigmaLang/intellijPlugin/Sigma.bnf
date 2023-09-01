@@ -60,11 +60,12 @@ constant_definition ::=
 
 expression ::=
 //    unary_group |
+    primary_group |
     multiplication_group |
     addition_group |
     equals_group |
     comparison_group |
-    primary_group
+    compact_group
     {
         implements=[
             "com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaExpressionBase"
@@ -163,13 +164,13 @@ private primary_group ::=
     if_expression |
     is_undefined_expression |
     let_expression |
-    abstraction_constructor | // Must be before tuple_constructor
-    compact_group
+    abstraction_constructor
 
 private compact_group ::=
     reference_expression |
     paren_expression |
     tuple_constructor  |
+    array_type_constructor |
     tuple_type_constructor |
     int_literal
 
@@ -358,6 +359,16 @@ unordered_tuple_type_constructor_entry ::=
         ]
         implements="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaUnorderedTupleTypeConstructorEntryBase"
         mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaUnorderedTupleTypeConstructorEntryImplMixin"
+    }
+
+array_type_constructor ::=
+    DASH <<bracket_wrapped (type_expression ELLIPSIS) >>
+    {
+        methods=[
+            element_type="type_expression"
+        ]
+        extends=expression
+        mixin="com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaArrayTypeConstructorImplMixin"
     }
 
 int_literal ::=

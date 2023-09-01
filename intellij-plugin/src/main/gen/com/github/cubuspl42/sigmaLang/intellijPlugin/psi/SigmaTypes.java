@@ -10,6 +10,7 @@ public interface SigmaTypes {
 
   IElementType ABSTRACTION_CONSTRUCTOR = new SigmaElementType("ABSTRACTION_CONSTRUCTOR");
   IElementType ADDITION_EXPRESSION = new SigmaElementType("ADDITION_EXPRESSION");
+  IElementType ARRAY_TYPE_CONSTRUCTOR = new SigmaElementType("ARRAY_TYPE_CONSTRUCTOR");
   IElementType CONSTANT_DEFINITION = new SigmaElementType("CONSTANT_DEFINITION");
   IElementType DIVISION_EXPRESSION = new SigmaElementType("DIVISION_EXPRESSION");
   IElementType EQUALS_EXPRESSION = new SigmaElementType("EQUALS_EXPRESSION");
@@ -54,6 +55,7 @@ public interface SigmaTypes {
   IElementType COMMA = new SigmaTokenType("COMMA");
   IElementType CONST_KEYWORD = new SigmaTokenType("CONST_KEYWORD");
   IElementType DASH = new SigmaTokenType("DASH");
+  IElementType ELLIPSIS = new SigmaTokenType("ELLIPSIS");
   IElementType ELSE_KEYWORD = new SigmaTokenType("ELSE_KEYWORD");
   IElementType EQUALS = new SigmaTokenType("EQUALS");
   IElementType FAT_ARROW = new SigmaTokenType("FAT_ARROW");
@@ -85,6 +87,9 @@ public interface SigmaTypes {
       }
       else if (type == ADDITION_EXPRESSION) {
         return new SigmaAdditionExpressionImpl(node);
+      }
+      else if (type == ARRAY_TYPE_CONSTRUCTOR) {
+        return new SigmaArrayTypeConstructorImpl(node);
       }
       else if (type == CONSTANT_DEFINITION) {
         return new SigmaConstantDefinitionImpl(node);
