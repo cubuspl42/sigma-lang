@@ -10,26 +10,20 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaTypes.*;
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.*;
 
-public class SigmaAbstractionConstructorImpl extends SigmaAbstractionConstructorImplMixin implements SigmaAbstractionConstructor {
+public class SigmaFunctionTypeConstructorImpl extends SigmaFunctionTypeConstructorImplMixin implements SigmaFunctionTypeConstructor {
 
-  public SigmaAbstractionConstructorImpl(@NotNull ASTNode node) {
+  public SigmaFunctionTypeConstructorImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SigmaVisitor visitor) {
-    visitor.visitAbstractionConstructor(this);
+    visitor.visitFunctionTypeConstructor(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof SigmaVisitor) accept((SigmaVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @NotNull
-  public List<SigmaExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaExpression.class);
   }
 
   @Override
@@ -40,22 +34,14 @@ public class SigmaAbstractionConstructorImpl extends SigmaAbstractionConstructor
 
   @Override
   @NotNull
-  public SigmaExpression getArgumentType() {
-    List<SigmaExpression> p1 = getExpressionList();
-    return p1.get(0);
+  public SigmaTupleTypeConstructor getArgumentType() {
+    return findNotNullChildByClass(SigmaTupleTypeConstructor.class);
   }
 
   @Override
-  @Nullable
+  @NotNull
   public SigmaTypeExpression getImageType() {
-    return findChildByClass(SigmaTypeExpression.class);
-  }
-
-  @Override
-  @Nullable
-  public SigmaExpression getImage() {
-    List<SigmaExpression> p1 = getExpressionList();
-    return p1.size() < 2 ? null : p1.get(1);
+    return findNotNullChildByClass(SigmaTypeExpression.class);
   }
 
 }

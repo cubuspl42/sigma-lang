@@ -35,6 +35,10 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitExpressionBase(o);
   }
 
+  public void visitFunctionTypeConstructor(@NotNull SigmaFunctionTypeConstructor o) {
+    visitExpression(o);
+  }
+
   public void visitGenericParameterDeclaration(@NotNull SigmaGenericParameterDeclaration o) {
     visitPsiElement(o);
   }
@@ -125,6 +129,7 @@ public class SigmaVisitor extends PsiElementVisitor {
 
   public void visitTupleTypeConstructor(@NotNull SigmaTupleTypeConstructor o) {
     visitExpression(o);
+    // visitTupleTypeConstructorBase(o);
   }
 
   public void visitTypeAnnotation(@NotNull SigmaTypeAnnotation o) {
