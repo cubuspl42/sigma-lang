@@ -159,7 +159,7 @@ class ScenarioTests {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
                 namespace EntryNamespace (
-                    %const f = ![type] ^[] -> ^[type*] => 0
+                    %const f = ![type] ^[] -> ^[type...] => 0
                     
                     %const a = f[]
                 )

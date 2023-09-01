@@ -39,6 +39,7 @@ Plus : '+' ;
 Minus : '-' ;
 Bang : '!' ;
 Dash : '^' ;
+Ellipsis : '...' ;
 
 ThinArrow : '->' ;
 FatArrow : '=>' ;

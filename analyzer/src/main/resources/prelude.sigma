@@ -3,5 +3,5 @@
 
     e = 2,
 
-    maxOf = ![e, te] ^[elements: ^[e*], transform: ^[e] -> te] => max[map[elements, transform]],
+    maxOf = ![e, te] ^[elements: ^[e...], transform: ^[e] -> te] => max[map[elements, transform]],
 }

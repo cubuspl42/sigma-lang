@@ -26,6 +26,7 @@ import com.intellij.psi.TokenType;
 "^"                           { yybegin(YYINITIAL); return SigmaTypes.DASH; }
 "->"                          { yybegin(YYINITIAL); return SigmaTypes.THIN_ARROW; }
 "=>"                          { yybegin(YYINITIAL); return SigmaTypes.FAT_ARROW; }
+"..."                         { yybegin(YYINITIAL); return SigmaTypes.ELLIPSIS; }
 
 "("                           { yybegin(YYINITIAL); return SigmaTypes.PAREN_LEFT; }
 ")"                           { yybegin(YYINITIAL); return SigmaTypes.PAREN_RIGHT; }

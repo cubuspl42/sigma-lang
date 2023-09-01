@@ -15,6 +15,10 @@ public class SigmaVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitArrayTypeConstructor(@NotNull SigmaArrayTypeConstructor o) {
+    visitExpression(o);
+  }
+
   public void visitConstantDefinition(@NotNull SigmaConstantDefinition o) {
     visitNamespaceEntry(o);
   }
