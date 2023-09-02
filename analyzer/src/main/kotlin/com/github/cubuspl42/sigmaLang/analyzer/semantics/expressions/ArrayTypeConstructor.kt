@@ -39,6 +39,6 @@ class ArrayTypeConstructor(
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = elementType.bind(
         dynamicScope = dynamicScope,
     ).thenJust {
-        ArrayType(elementType = it as Type)
+        ArrayType(elementType = it as Type).asValue
     }
 }

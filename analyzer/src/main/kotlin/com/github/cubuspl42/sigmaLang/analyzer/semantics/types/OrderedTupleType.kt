@@ -121,23 +121,23 @@ data class OrderedTupleType(
 
     override fun match(
         assignedType: Type,
-    ): MatchResult = when (assignedType) {
+    ): Type.MatchResult = when (val sealedAssignedType = assignedType.asSealed) {
         is OrderedTupleType -> OrderedTupleMatch(
-            elementsMatches = elements.zip(assignedType.elements) { element, assignedElement ->
+            elementsMatches = elements.zip(sealedAssignedType.elements) { element, assignedElement ->
                 element.type.match(assignedType = assignedElement.type)
             },
             sizeMatch = when {
-                assignedType.elements.size >= elements.size -> OrderedTupleMatch.SizeMatch
+                sealedAssignedType.elements.size >= elements.size -> OrderedTupleMatch.SizeMatch
                 else -> OrderedTupleMatch.WrongSizeMismatch(
                     size = elements.size,
-                    assignedSize = assignedType.elements.size,
+                    assignedSize = sealedAssignedType.elements.size,
                 )
             },
         )
 
         else -> Type.TotalMismatch(
             expectedType = this,
-            actualType = assignedType,
+            actualType = sealedAssignedType,
         )
     }
 

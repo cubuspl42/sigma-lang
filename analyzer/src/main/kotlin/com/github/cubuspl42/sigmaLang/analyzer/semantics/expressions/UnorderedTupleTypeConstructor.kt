@@ -4,7 +4,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
@@ -51,7 +50,7 @@ class UnorderedTupleTypeConstructor(
         )
     }
 
-    override val inferredType: Thunk<Type> = MetaType.asThunk
+    override val inferredType: Thunk<Type> = MetaType.asValueThunk
 
     override fun bind(
         dynamicScope: DynamicScope,
@@ -64,7 +63,7 @@ class UnorderedTupleTypeConstructor(
     }.thenJust { entries ->
         UnorderedTupleType(
             valueTypeByName = entries.toMap(),
-        )
+        ).asValue
     }
 
     override val subExpressions: Set<Expression> = entries.map { it.type }.toSet()

@@ -55,27 +55,27 @@ data class DictType(
 
     override fun match(
         assignedType: Type,
-    ): MatchResult = when (assignedType) {
+    ): Type.MatchResult = when (val sealedAssignedType = assignedType.asSealed) {
         is DictType -> DictMatch(
-            keyMatch = assignedType.keyType.match(
+            keyMatch = sealedAssignedType.keyType.match(
                 assignedType = keyType,
             ),
             valueMatch = valueType.match(
-                assignedType = assignedType.valueType,
+                assignedType = sealedAssignedType.valueType,
             ),
         )
 
         is UnorderedTupleType -> when {
-            assignedType.isDefinitelyEmpty() -> TotalMatch
+            sealedAssignedType.isDefinitelyEmpty() -> Type.TotalMatch
             else -> Type.TotalMismatch(
                 expectedType = this,
-                actualType = assignedType,
+                actualType = sealedAssignedType,
             )
         }
 
         else -> Type.TotalMismatch(
             expectedType = this,
-            actualType = assignedType,
+            actualType = sealedAssignedType,
         )
     }
 

@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-sealed class FunctionType : Type() {
+sealed class FunctionType : SealedType() {
     // This can be improved
     override fun findLowestCommonSupertype(
         other: Type,

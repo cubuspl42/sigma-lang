@@ -10,7 +10,7 @@ data class UniversalFunctionType(
     data class UniversalFunctionMatch(
         val argumentMatch: Type.MatchResult,
         val imageMatch: Type.MatchResult,
-    ) : PartialMatch() {
+    ) : Type.PartialMatch() {
         override fun isFull(): Boolean = argumentMatch.isFull() && imageMatch.isFull()
 
         override fun dump(): String = when {
@@ -60,7 +60,7 @@ data class UniversalFunctionType(
 
     override fun match(
         assignedType: Type,
-    ): MatchResult = when (assignedType) {
+    ): Type.MatchResult = when (assignedType) {
         is UniversalFunctionType -> UniversalFunctionMatch(
             argumentMatch = assignedType.argumentType.match(
                 assignedType = argumentType,
