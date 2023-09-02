@@ -15,7 +15,7 @@ importStatement
     ;
 
 importPath
-    : identifier (Dot identifier)*
+    : (packagePathSegment+=identifier Dot)* moduleName=identifier
     ;
 
 namespaceEntry
