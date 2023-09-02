@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.chainWith
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
@@ -59,7 +59,7 @@ class Namespace(
         outerScope = prelude.declarationScope,
     )
 
-    val innerScope = object : Scope {
+    val innerDynamicScope = object : DynamicScope {
         override fun getValue(
             name: Symbol,
         ): Thunk<Value>? {
@@ -67,7 +67,7 @@ class Namespace(
             return constantDefinition?.staticValue
         }
     }.chainWith(
-        context = prelude.scope,
+        context = prelude.dynamicScope,
     )
 
 

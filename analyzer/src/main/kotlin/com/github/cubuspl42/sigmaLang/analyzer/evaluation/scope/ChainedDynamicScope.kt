@@ -4,15 +4,15 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 
-class ChainedScope(
-    private val outerScope: Scope,
-    private val scope: Scope,
-) : Scope {
+class ChainedDynamicScope(
+    private val outerDynamicScope: DynamicScope,
+    private val dynamicScope: DynamicScope,
+) : DynamicScope {
     override fun getValue(
         name: Symbol,
-    ): Thunk<Value>? = scope.getValue(
+    ): Thunk<Value>? = dynamicScope.getValue(
         name = name,
-    ) ?: outerScope.getValue(
+    ) ?: outerDynamicScope.getValue(
         name = name,
     )
 }

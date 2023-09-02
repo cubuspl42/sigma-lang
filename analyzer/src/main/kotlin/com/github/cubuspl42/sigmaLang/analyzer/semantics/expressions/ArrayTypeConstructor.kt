@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
@@ -38,8 +38,8 @@ class ArrayTypeConstructor(
 
     override val errors: Set<SemanticError> = emptySet()
 
-    override fun bind(scope: Scope): Thunk<Value> = elementType.bind(
-        scope = scope,
+    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = elementType.bind(
+        dynamicScope = dynamicScope,
     ).thenJust {
         ArrayType(elementType = it as Type)
     }

@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -53,9 +53,9 @@ class OrderedTupleConstructor(
     }
 
     override fun bind(
-        scope: Scope,
+        dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(elements) {
-        it.bind(scope = scope)
+        it.bind(dynamicScope = dynamicScope)
     }.thenJust { elements ->
         ArrayTable(elements = elements)
     }

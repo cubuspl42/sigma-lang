@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
@@ -112,8 +112,8 @@ class FieldRead(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<Value> = subject.bind(
-        scope = scope,
+    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = subject.bind(
+        dynamicScope = dynamicScope,
     ).thenDo { subjectValue ->
         if (subjectValue !is DictValue) throw IllegalStateException("Subject $subjectValue is not a dict")
 

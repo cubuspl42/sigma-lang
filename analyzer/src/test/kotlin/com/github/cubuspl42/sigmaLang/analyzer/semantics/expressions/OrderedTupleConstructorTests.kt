@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
@@ -92,7 +92,7 @@ class OrderedTupleConstructorTests {
 
             val value = tupleConstructor.evaluateValue(
                 context = EvaluationContext.Initial,
-                scope = Scope.Empty,
+                dynamicScope = DynamicScope.Empty,
             )
 
             assertIs<DictValue>(value)
@@ -116,7 +116,7 @@ class OrderedTupleConstructorTests {
 
             val value = tupleConstructor.evaluateValue(
                 context = EvaluationContext.Initial,
-                scope = FixedScope(
+                dynamicScope = FixedDynamicScope(
                     entries = mapOf(
                         Symbol.of("a") to BoolValue(false),
                         Symbol.of("b") to IntValue(1),

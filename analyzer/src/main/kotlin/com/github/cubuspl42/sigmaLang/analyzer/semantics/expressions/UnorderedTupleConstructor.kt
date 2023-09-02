@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -93,9 +93,9 @@ class UnorderedTupleConstructor(
     }
 
     override fun bind(
-        scope: Scope,
+        dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(entries.toList()) { entry ->
-        entry.value.bind(scope = scope).thenJust { entryValue ->
+        entry.value.bind(dynamicScope = dynamicScope).thenJust { entryValue ->
             entry.name to entryValue
         }
     }.thenJust { entries ->

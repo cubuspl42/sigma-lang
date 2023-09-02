@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -73,18 +73,18 @@ class IfExpression(
         trueType.findLowestCommonSupertype(falseType)
     }
 
-    override fun bind(scope: Scope): Thunk<Value> = guard.bind(
-        scope = scope,
+    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = guard.bind(
+        dynamicScope = dynamicScope,
     ).thenDo { guardValue ->
         if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")
 
         if (guardValue.value) {
             trueBranch.bind(
-                scope = scope,
+                dynamicScope = dynamicScope,
             )
         } else {
             falseBranch.bind(
-                scope = scope,
+                dynamicScope = dynamicScope,
             )
         }
     }

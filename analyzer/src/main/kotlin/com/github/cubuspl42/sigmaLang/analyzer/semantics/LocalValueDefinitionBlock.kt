@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.LoopedScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.LoopedDynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
@@ -49,9 +49,9 @@ class LocalValueDefinitionBlock(
     }
 
     fun evaluate(
-        scope: Scope,
-    ): Scope = LoopedScope(
-        outerScope = scope,
+        dynamicScope: DynamicScope,
+    ): DynamicScope = LoopedDynamicScope(
+        outerDynamicScope = dynamicScope,
         expressionByName = definitionByName.mapValues { (_, definition) ->
             definition.body
         },

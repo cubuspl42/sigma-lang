@@ -50,7 +50,7 @@ class ConstantDefinition(
 
     val valueThunk by lazy {
         asValueDefinition.body.bind(
-            scope = containingNamespace.innerScope,
+            dynamicScope = containingNamespace.innerDynamicScope,
         )
     }
 

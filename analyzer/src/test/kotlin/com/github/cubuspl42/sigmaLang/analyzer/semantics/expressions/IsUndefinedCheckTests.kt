@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
@@ -47,7 +47,7 @@ class IsUndefinedCheckTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 isUndefinedCheck.bind(
-                    scope = Scope.Empty,
+                    dynamicScope = DynamicScope.Empty,
                 ).evaluateInitial(),
             )
 
@@ -70,7 +70,7 @@ class IsUndefinedCheckTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 isUndefinedCheck.bind(
-                    scope = FixedScope(
+                    dynamicScope = FixedDynamicScope(
                         entries = mapOf(
                             Symbol.of("d") to dictValue,
                         ),

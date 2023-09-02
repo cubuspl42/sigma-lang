@@ -5,9 +5,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
 
-class FixedScope(
+class FixedDynamicScope(
     private val entries: Map<Symbol, Value>,
-) : Scope {
+) : DynamicScope {
     override fun getValue(
         name: Symbol,
     ): Thunk<Value>? = entries[name]?.asThunk

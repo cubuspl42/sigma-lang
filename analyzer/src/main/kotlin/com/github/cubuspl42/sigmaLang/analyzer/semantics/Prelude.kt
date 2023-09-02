@@ -2,11 +2,11 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import getResourceAsText
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LocalScopeSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 
 data class Prelude(
     val declarationScope: StaticScope,
-    val scope: Scope,
+    val dynamicScope: DynamicScope,
 ) {
     companion object {
         fun load(): Prelude {
@@ -30,12 +30,12 @@ data class Prelude(
             }
 
             val preludeScope = definitionBlock.evaluate(
-                scope = BuiltinScope,
+                dynamicScope = BuiltinScope,
             )
 
             return Prelude(
                 declarationScope = declarationScope,
-                scope = preludeScope,
+                dynamicScope = preludeScope,
             )
         }
     }

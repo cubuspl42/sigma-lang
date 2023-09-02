@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationStackExhaustionError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
@@ -149,7 +149,7 @@ class LetExpressionTests {
             )
 
             assertIs<EvaluationStackExhaustionError>(
-                let.bind(scope = Scope.Empty).outcome,
+                let.bind(dynamicScope = DynamicScope.Empty).outcome,
             )
         }
     }

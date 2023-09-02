@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
@@ -48,7 +48,7 @@ class Reference(
 
     override val subExpressions: Set<Expression> = emptySet()
 
-    override fun bind(scope: Scope): Thunk<Value> = scope.getValue(
+    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(
         name = referredName,
     ) ?: throw RuntimeException(
         "Unresolved reference at run-time: $referredName",
