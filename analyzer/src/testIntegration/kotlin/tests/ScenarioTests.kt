@@ -60,7 +60,7 @@ class ScenarioTests {
 
         // Validate `Entry`
 
-        val entryTypeConstructorDefinition = namespace.getConstantDefinition(
+        val entryTypeConstructorDefinition = namespace.getEntry(
             name = Symbol.of("Entry"),
         )!!
 
@@ -76,7 +76,7 @@ class ScenarioTests {
                 ),
                 imageType = MetaType,
             ),
-            actual = entryTypeConstructorDefinition.asValueDefinition.effectiveValueType.value,
+            actual = entryTypeConstructorDefinition.effectiveType.value,
         )
 
         // Construct `Entry[Bool]` and validate it
@@ -105,7 +105,7 @@ class ScenarioTests {
 
         // Validate `entryOf`
 
-        val entryOfAbstractionDefinition = namespace.getConstantDefinition(
+        val entryOfAbstractionDefinition = namespace.getEntry(
             name = Symbol.of("entryOf"),
         )!!
 
@@ -127,12 +127,12 @@ class ScenarioTests {
                     ),
                 ),
             ),
-            actual = entryOfAbstractionDefinition.asValueDefinition.effectiveValueType.value,
+            actual = entryOfAbstractionDefinition.effectiveType.value,
         )
 
         // Validate `entryTrueOf`
 
-        val entryTrueOfAbstractionDefinition = namespace.getConstantDefinition(
+        val entryTrueOfAbstractionDefinition = namespace.getEntry(
             name = Symbol.of("entryTrueOf"),
         )!!
 
@@ -150,7 +150,7 @@ class ScenarioTests {
                     ),
                 ),
             ),
-            actual = entryTrueOfAbstractionDefinition.asValueDefinition.effectiveValueType.value,
+            actual = entryTrueOfAbstractionDefinition.effectiveType.value,
         )
     }
 
@@ -184,9 +184,9 @@ class ScenarioTests {
             actual = error.nonInferredTypeVariables,
         )
 
-        val aType = namespace.getConstantDefinition(
+        val aType = namespace.getEntry(
             name = Symbol.of("a"),
-        )!!.asValueDefinition.effectiveValueType.value
+        )!!.effectiveType.value
 
         assertEquals(
             expected = IllType,

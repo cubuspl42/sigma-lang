@@ -30,9 +30,9 @@ private class BuiltinValueDefinition(
     val value: Value,
     val type: Type,
 ) : NamespaceEntry() {
-//    override val effectiveValueType: Computation<Type> = Computation.pure(type)
+    override val valueThunk: Thunk<Value> = value.asThunk
 
-    override val staticValue: Thunk<Value> = value.asThunk
+    override val effectiveType: Thunk<Type> = Thunk.pure(type)
 
     override val expressionMap: ExpressionMap = ExpressionMap.Empty
 
@@ -42,8 +42,8 @@ private class BuiltinValueDefinition(
     val asResolvedName: ResolvedName
         get() = ResolvedName(
             type = type.asThunk,
-            resolution = BuiltinResolution(
-                builtinValue = value,
+            resolution = StaticResolution(
+                namespaceEntry = this,
             ),
         )
 }
