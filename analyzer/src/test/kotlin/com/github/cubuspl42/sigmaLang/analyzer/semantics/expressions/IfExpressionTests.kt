@@ -95,7 +95,7 @@ class IfExpressionTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 ifExpression.bind(
-                    scope = BuiltinScope,
+                    dynamicScope = BuiltinScope,
                 ).evaluateInitial(),
             )
 
@@ -123,7 +123,7 @@ class IfExpressionTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 ifExpression.bind(
-                    scope = BuiltinScope,
+                    dynamicScope = BuiltinScope,
                 ).evaluateInitial(),
             )
 

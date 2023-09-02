@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -55,10 +55,10 @@ class UnorderedTupleTypeConstructor(
     override val inferredType: Thunk<Type> = MetaType.asThunk
 
     override fun bind(
-        scope: Scope,
+        dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(entries.toList()) { entry ->
         entry.type.bind(
-            scope = scope,
+            dynamicScope = dynamicScope,
         ).thenJust { entryType ->
             entry.name to (entryType as Type)
         }

@@ -4,8 +4,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 
-interface Scope {
-    object Empty : Scope {
+interface DynamicScope {
+    object Empty : DynamicScope {
         override fun getValue(name: Symbol): Thunk<Value>? = null
     }
 
@@ -14,9 +14,9 @@ interface Scope {
     ): Thunk<Value>?
 }
 
-fun Scope.chainWith(
-    context: Scope,
-): Scope = ChainedScope(
-    outerScope = context,
-    scope = this,
+fun DynamicScope.chainWith(
+    context: DynamicScope,
+): DynamicScope = ChainedDynamicScope(
+    outerDynamicScope = context,
+    dynamicScope = this,
 )

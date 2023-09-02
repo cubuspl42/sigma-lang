@@ -15,7 +15,7 @@ abstract class ValueDefinition : ValueDeclaration {
 
     private val declaredType: Thunk<Type>? by lazy {
         declaredTypeBody?.let { expression ->
-            expression.bind(scope = BuiltinScope).thenJust { it as Type }
+            expression.bind(dynamicScope = BuiltinScope).thenJust { it as Type }
         }
     }
 

@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.evaluateValueHacky
@@ -139,17 +139,17 @@ abstract class Expression {
 
     fun evaluateValue(
         context: EvaluationContext,
-        scope: Scope,
-    ): Value? = bind(scope = scope).evaluateValueHacky(context = context)
+        dynamicScope: DynamicScope,
+    ): Value? = bind(dynamicScope = dynamicScope).evaluateValueHacky(context = context)
 
     abstract fun bind(
-        scope: Scope,
+        dynamicScope: DynamicScope,
     ): Thunk<Value>
 
     fun bindTranslated(
         staticScope: StaticScope,
     ): Thunk<Value> = bind(
-        scope = TranslationScope(
+        dynamicScope = TranslationDynamicScope(
             staticScope = staticScope,
         ),
     )

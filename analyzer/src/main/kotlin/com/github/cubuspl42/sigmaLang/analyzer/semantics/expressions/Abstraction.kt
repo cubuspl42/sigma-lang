@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Closure
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
@@ -76,7 +76,7 @@ class Abstraction(
 
             val argumentType = argumentTypeBody.evaluateValue(
                 context = EvaluationContext.Initial,
-                scope = TranslationScope(
+                dynamicScope = TranslationDynamicScope(
                     staticScope = innerDeclarationScope1,
                 ),
             ) as TupleType
@@ -109,8 +109,8 @@ class Abstraction(
         }
     }
 
-    override fun bind(scope: Scope): Thunk<Value> = Closure(
-        outerScope = scope,
+    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Closure(
+        outerDynamicScope = dynamicScope,
         argumentType = argumentType,
         image = image,
     ).asThunk

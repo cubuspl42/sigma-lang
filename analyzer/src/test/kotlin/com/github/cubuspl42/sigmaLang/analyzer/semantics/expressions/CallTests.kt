@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableFunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
@@ -341,7 +341,7 @@ class CallTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 call.bind(
-                    scope = FixedScope(
+                    dynamicScope = FixedDynamicScope(
                         entries = mapOf(
                             Symbol.of("sq") to sq,
                         )
@@ -363,7 +363,7 @@ class CallTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 call.bind(
-                    scope = FixedScope(
+                    dynamicScope = FixedDynamicScope(
                         entries = mapOf(
                             Symbol.of("dict") to DictValue(
                                 entries = mapOf(

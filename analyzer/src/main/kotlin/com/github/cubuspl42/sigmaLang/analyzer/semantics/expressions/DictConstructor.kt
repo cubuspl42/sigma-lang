@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
@@ -151,14 +151,14 @@ class DictConstructor(
     override val subExpressions: Set<Expression> = SetUtils.unionAllOf(associations) { setOf(it.key, it.value) }
 
     override fun bind(
-        scope: Scope,
+        dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(associations) { association ->
         Thunk.combine2(
             association.key.bind(
-                scope = scope,
+                dynamicScope = dynamicScope,
             ),
             association.value.bind(
-                scope = scope,
+                dynamicScope = dynamicScope,
             ),
         ) { key, value ->
             (key as PrimitiveValue) to value

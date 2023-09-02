@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.BinaryOperationPrototype
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
@@ -212,12 +212,12 @@ class Call(
     override val subExpressions: Set<Expression> = setOf(subject, argument)
 
     override fun bind(
-        scope: Scope,
+        dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.combine2(
         subject.bind(
-            scope = scope,
+            dynamicScope = dynamicScope,
         ), argument.bind(
-            scope = scope,
+            dynamicScope = dynamicScope,
         )
     ) { subjectValue, argumentValue ->
         if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")

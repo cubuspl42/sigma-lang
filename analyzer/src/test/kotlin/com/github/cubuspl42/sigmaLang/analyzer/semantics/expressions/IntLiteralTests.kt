@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -22,7 +22,7 @@ class IntLiteralTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 intLiteral.bind(
-                    scope = Scope.Empty,
+                    dynamicScope = DynamicScope.Empty,
                 ).evaluateInitial(),
             )
 

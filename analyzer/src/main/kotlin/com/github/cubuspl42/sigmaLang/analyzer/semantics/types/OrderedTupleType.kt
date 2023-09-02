@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 import indexOfOrNull
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Abstraction
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
@@ -167,7 +167,7 @@ data class OrderedTupleType(
         )
     }
 
-    override fun toArgumentScope(argument: DictValue): Scope = object : Scope {
+    override fun toArgumentScope(argument: DictValue): DynamicScope = object : DynamicScope {
         override fun getValue(name: Symbol): Thunk<Value>? {
             val index = elements.indexOfOrNull { it.name == name } ?: return null
 

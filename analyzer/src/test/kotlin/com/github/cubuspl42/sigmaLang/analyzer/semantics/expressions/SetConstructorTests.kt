@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
@@ -124,7 +124,7 @@ class SetConstructorTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 setConstructor.bind(
-                    scope = FixedScope(
+                    dynamicScope = FixedDynamicScope(
                         entries = mapOf(
                             Symbol.of("foo") to IntValue(value = 1L),
                             Symbol.of("bar") to IntValue(value = 2L),

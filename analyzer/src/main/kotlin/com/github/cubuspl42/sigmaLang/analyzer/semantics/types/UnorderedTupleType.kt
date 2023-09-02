@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
@@ -141,7 +141,7 @@ data class UnorderedTupleType(
         },
     )
 
-    override fun toArgumentScope(argument: DictValue): Scope = object : Scope {
+    override fun toArgumentScope(argument: DictValue): DynamicScope = object : DynamicScope {
         override fun getValue(
             name: Symbol,
         ): Thunk<Value>? = argument.read(name)?.asThunk

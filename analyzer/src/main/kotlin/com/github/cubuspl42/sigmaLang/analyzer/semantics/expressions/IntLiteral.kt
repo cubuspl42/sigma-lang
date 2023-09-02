@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -41,6 +41,6 @@ data class IntLiteral(
     override val errors: Set<SemanticError> = emptySet()
 
     override fun bind(
-        scope: Scope,
+        dynamicScope: DynamicScope,
     ): Thunk<Value> = value.asThunk
 }

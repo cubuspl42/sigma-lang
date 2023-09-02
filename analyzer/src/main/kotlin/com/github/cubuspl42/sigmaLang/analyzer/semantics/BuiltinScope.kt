@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.Scope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
@@ -48,7 +48,7 @@ private class BuiltinValueDefinition(
         )
 }
 
-object BuiltinScope : Scope, StaticScope {
+object BuiltinScope : DynamicScope, StaticScope {
     data class SimpleBuiltinValue(
         override val type: Type,
         override val value: Value,

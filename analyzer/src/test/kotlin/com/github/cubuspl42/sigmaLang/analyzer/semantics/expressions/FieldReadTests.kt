@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
@@ -31,7 +31,7 @@ class FieldReadTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 fieldRead.bind(
-                    scope = FixedScope(
+                    dynamicScope = FixedDynamicScope(
                         entries = mapOf(
                             Symbol.of("foo") to foo,
                         )

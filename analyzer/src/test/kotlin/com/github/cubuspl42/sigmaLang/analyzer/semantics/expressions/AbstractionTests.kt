@@ -147,7 +147,7 @@ class AbstractionTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 abstraction.bind(
-                    scope = BuiltinScope,
+                    dynamicScope = BuiltinScope,
                 ).evaluateInitial(),
             )
 
