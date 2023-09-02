@@ -12,7 +12,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.PrimitiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 

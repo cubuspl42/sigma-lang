@@ -11,7 +11,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadTerm
 
 class FieldRead(
