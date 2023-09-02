@@ -1,55 +1,70 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
 
-class Project {
-    interface Store {
-        fun load(fileName: String): String
+data class ModulePath(
+    /**
+     * The name of the module
+     */
+    val name: String,
+) {
+    companion object {
+        fun root(name: String): ModulePath = ModulePath(
+            name = name,
+        )
     }
+}
 
-    class ResourceStore(private val javaClass: Class<*>) : Store {
-        override fun load(fileName: String): String {
-            val content = javaClass.getResource(fileName)?.readText()
-            return content ?: throw RuntimeException("Couldn't load the source file: $fileName")
-        }
-    }
-
+class Project(
+    private val projectStore: ProjectStore,
+    val mainModule: Module,
+) {
     class Loader private constructor(
         private val prelude: Prelude,
-        private val store: Store,
     ) {
         companion object {
-            fun create(
-                store: Store,
-            ): Loader {
+            fun create(): Loader {
                 val prelude = Prelude.load()
 
                 return Loader(
                     prelude = prelude,
-                    store = store,
                 )
             }
         }
 
-        fun load(fileBaseName: String): Program {
-            val fileName = "${fileBaseName}.sigma"
-            val source = store.load(fileName)
+        fun load(
+            projectStore: ProjectStore,
+            mainModuleName: String = "main",
+        ): Project {
+            val source = projectStore.load(
+                modulePath = ModulePath.root(mainModuleName)
+            )
 
             val moduleTerm = ModuleSourceTerm.build(
                 ctx = Program.buildParser(
-                    sourceName = fileName,
+                    sourceName = mainModuleName,
                     source = source,
                 ).module(),
             )
 
-            val module = Module.build(
+            val mainModule = Module.build(
                 prelude = prelude,
                 term = moduleTerm,
             )
 
-            return Program(
-                module = module,
+            return Project(
+                projectStore = projectStore,
+                mainModule = mainModule,
             )
         }
     }
+
+    val errors: Set<SemanticError>
+        get() = mainModule.errors
+
+    val entryPoint: ConstantDefinition
+        get() = mainModule.rootNamespace.getConstantDefinition(
+            name = Symbol.of("main"),
+        )!!
 }
