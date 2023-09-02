@@ -11,7 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 class Namespace(
     private val prelude: Prelude,
     private val term: NamespaceDefinitionTerm,
-) : Value() {
+) {
     companion object {
         fun build(
             prelude: Prelude,
@@ -74,6 +74,4 @@ class Namespace(
     fun printErrors() {
         errors.forEach { println(it.dump()) }
     }
-
-    override fun dump(): String = "(namespace)"
 }
