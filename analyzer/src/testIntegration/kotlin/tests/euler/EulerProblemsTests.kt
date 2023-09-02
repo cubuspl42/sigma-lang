@@ -1,15 +1,6 @@
 package tests.euler
 
-import org.junit.Ignore
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationStackExhaustionError
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationOutcome
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -66,6 +57,46 @@ class EulerProblemsTests {
         assertEquals(
             expected = EvaluationResult(IntValue(value = 4227L)),
             actual = solveProblem(10),
+        )
+    }
+
+    @Test
+    fun testProblem11() {
+        assertEquals(
+            expected = EvaluationResult(IntValue(value = 70600674L)),
+            actual = solveProblem(11),
+        )
+    }
+
+    @Test
+    fun testProblem12() {
+        assertEquals(
+            expected = EvaluationResult(BoolValue(value = false)),
+            actual = solveProblem(12),
+        )
+    }
+
+    @Test
+    fun testProblem13() {
+        assertEquals(
+            expected = EvaluationResult(BoolValue(value = false)),
+            actual = solveProblem(13),
+        )
+    }
+
+    @Test
+    fun testProblem14() {
+        assertEquals(
+            expected = EvaluationResult(BoolValue(value = false)),
+            actual = solveProblem(14),
+        )
+    }
+
+    @Test
+    fun testProblem15() {
+        assertEquals(
+            expected = EvaluationResult(BoolValue(value = false)),
+            actual = solveProblem(15),
         )
     }
 }

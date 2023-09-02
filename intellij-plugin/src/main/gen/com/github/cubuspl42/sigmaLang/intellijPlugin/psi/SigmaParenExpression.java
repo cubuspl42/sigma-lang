@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface SigmaParenExpression extends SigmaExpression {
 
-  @Nullable
+  @NotNull
   SigmaExpression getWrappedExpression();
 
 }
