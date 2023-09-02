@@ -45,7 +45,7 @@ class Abstraction(
             name: Symbol,
         ): ResolvedName? = declarationByName[name]?.let {
             ResolvedName(
-                type = it.type.asThunk,
+                type = it.type.asValueThunk,
                 resolution = DynamicResolution(
                     resolvedFormula = Formula(
                         name = name,

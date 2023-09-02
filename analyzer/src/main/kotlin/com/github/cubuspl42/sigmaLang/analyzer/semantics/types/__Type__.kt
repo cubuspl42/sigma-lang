@@ -1,75 +1,37 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
 
-sealed class Type : Value() {
-    sealed class MatchResult {
-        abstract fun isFull(): Boolean
+sealed class SealedType : Value(), Type {
+    final override val asSealed: SealedType
+        get() = this
 
-        abstract fun dump(): String
-    }
+    final override val asValue: Value
+        get() = this
 
-    sealed class Match : MatchResult()
-
-    sealed class PartialMatch : Match()
-
-    data object TotalMatch : Match() {
-        override fun isFull(): Boolean = true
-
-        override fun dump(): String = "(total match)"
-    }
-
-    sealed class Mismatch : MatchResult() {
-        final override fun isFull(): Boolean = false
-    }
-
-    data class TotalMismatch(
-        val expectedType: Type,
-        val actualType: Type,
-    ) : Mismatch() {
-        override fun dump(): String = "expected ${expectedType.dump()}, actual: ${actualType.dump()}"
-    }
+    override val asValueThunk: Thunk<Type>
+        get() = this.asThunk
 
     final override fun toString(): String = dump()
 
-    open val asLiteral: PrimitiveLiteralType? = null
+    override val asLiteral: PrimitiveLiteralType? = null
 
-    open val asArray: ArrayType? = null
+    override val asArray: ArrayType? = null
 
-    abstract fun findLowestCommonSupertype(
-        other: Type,
-    ): Type
+    override fun walk(): Sequence<Type> = sequenceOf(this) + walkRecursive()
 
-    abstract fun resolveTypeVariables(
-        assignedType: Type,
-    ): TypeVariableResolution
-
-    abstract fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): Type
-
-    abstract fun match(
-        assignedType: Type,
-    ): MatchResult
-
-    fun walk(): Sequence<Type> = sequenceOf(this) + walkRecursive()
-
-    abstract fun walkRecursive(): Sequence<Type>
 }
 
-object MetaType : Type() {
+object MetaType : SealedType() {
     override fun findLowestCommonSupertype(other: Type): Type = AnyType
 
     override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution = TypeVariableResolution.Empty
 
     override fun substituteTypeVariables(resolution: TypeVariableResolution): Type = this
 
-    override fun match(assignedType: Type): MatchResult = when (assignedType) {
-        is MetaType -> TotalMatch
-        else -> TotalMismatch(
+    override fun match(assignedType: Type): Type.MatchResult = when (assignedType) {
+        is MetaType -> Type.TotalMatch
+        else -> Type.TotalMismatch(
             expectedType = MetaType,
             actualType = assignedType,
         )
@@ -81,7 +43,7 @@ object MetaType : Type() {
 
 }
 
-object AnyType : Type() {
+object AnyType : SealedType() {
     override fun findLowestCommonSupertype(
         other: Type,
     ): Type = AnyType
@@ -96,7 +58,7 @@ object AnyType : Type() {
 
     override fun match(
         assignedType: Type,
-    ): MatchResult = Type.TotalMatch
+    ): Type.MatchResult = Type.TotalMatch
 
     override fun dump(): String = "Any"
 
@@ -104,13 +66,13 @@ object AnyType : Type() {
 }
 
 sealed interface PrimitiveLiteralType {
-    val asType: PrimitiveType
+    val asPrimitiveType: PrimitiveType
 
     val value: PrimitiveValue
 }
 
 // TODO: Extract
-sealed class PrimitiveType : Type() {
+sealed class PrimitiveType : SealedType() {
     override fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution = TypeVariableResolution.Empty
@@ -121,9 +83,9 @@ sealed class PrimitiveType : Type() {
 
     override fun match(
         assignedType: Type,
-    ): MatchResult = when (this.findLowestCommonSupertype(assignedType)) {
-        this -> TotalMatch
-        else -> TotalMismatch(
+    ): Type.MatchResult = when (this.findLowestCommonSupertype(assignedType)) {
+        this -> Type.TotalMatch
+        else -> Type.TotalMismatch(
             expectedType = this,
             actualType = assignedType,
         )
@@ -144,7 +106,7 @@ object UndefinedType : PrimitiveType() {
     override fun dump(): String = "Undefined"
 }
 
-object NeverType : Type() {
+object NeverType : SealedType() {
     data object AssignmentMismatch : Type.Mismatch() {
         override fun dump(): String = "nothing can be assigned to Never"
     }
@@ -165,7 +127,7 @@ object NeverType : Type() {
 
     override fun match(
         assignedType: Type,
-    ): MatchResult = AssignmentMismatch
+    ): Type.MatchResult = AssignmentMismatch
 
     override fun dump(): String = "Never"
 
@@ -219,7 +181,7 @@ data class IntLiteralType(
 
     override val asLiteral = this
 
-    override val asType: PrimitiveType = this
+    override val asPrimitiveType: PrimitiveType = this
 }
 
 data class SymbolType(
@@ -244,13 +206,13 @@ data class SymbolType(
         else -> AnyType
     }
 
-    override val asType: PrimitiveType = this
+    override val asPrimitiveType: PrimitiveType = this
 }
 
 /**
  * A symbol for an illegal type, a result of a typing error.
  */
-object IllType : Type() {
+object IllType : SealedType() {
     override fun findLowestCommonSupertype(other: Type): Type = IllType
 
     override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution {
@@ -259,7 +221,7 @@ object IllType : Type() {
     }
 
     override fun substituteTypeVariables(resolution: TypeVariableResolution): Type = IllType
-    override fun match(assignedType: Type): MatchResult = TotalMatch
+    override fun match(assignedType: Type): Type.MatchResult = Type.TotalMatch
 
     override fun dump(): String = "IllType"
 

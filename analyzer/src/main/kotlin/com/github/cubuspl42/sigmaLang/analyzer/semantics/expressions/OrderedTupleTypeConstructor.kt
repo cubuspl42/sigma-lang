@@ -51,7 +51,7 @@ class OrderedTupleTypeConstructor(
             )
         }
     }.thenJust { elements ->
-        OrderedTupleType(elements = elements)
+        OrderedTupleType(elements = elements).asValue
     }
 
     override val subExpressions: Set<Expression> = elements.map { it.type }.toSet()

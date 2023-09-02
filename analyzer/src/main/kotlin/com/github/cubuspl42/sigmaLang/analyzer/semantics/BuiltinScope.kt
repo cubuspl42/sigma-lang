@@ -41,7 +41,7 @@ private class BuiltinValueDefinition(
 
     val asResolvedName: ResolvedName
         get() = ResolvedName(
-            type = type.asThunk,
+            type = type.asValueThunk,
             resolution = StaticResolution(
                 namespaceEntry = this,
             ),
@@ -57,15 +57,15 @@ object BuiltinScope : DynamicScope, StaticScope {
     private val builtinValues: Map<Symbol, BuiltinValue> = mapOf(
         Symbol.of("Bool") to SimpleBuiltinValue(
             type = MetaType,
-            value = BoolType,
+            value = BoolType.asValue,
         ),
         Symbol.of("Int") to SimpleBuiltinValue(
             type = MetaType,
-            value = IntCollectiveType,
+            value = IntCollectiveType.asValue,
         ),
         Symbol.of("Type") to SimpleBuiltinValue(
             type = MetaType,
-            value = MetaType,
+            value = MetaType.asValue,
         ),
         Symbol.of("Set") to SetType.constructor,
         Symbol.of("setOf") to SetType.setOf,

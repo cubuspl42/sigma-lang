@@ -68,24 +68,25 @@ data class ArrayType(
         ),
     )
 
-    override fun match(assignedType: Type): MatchResult = when (assignedType) {
-        is ArrayType -> ArrayMatch(
-            elementMatch = elementType.match(
-                assignedType = assignedType.elementType,
-            ),
-        )
+    override fun match(assignedType: Type): Type.MatchResult =
+        when (val sealedAssignedType = assignedType.asSealed) {
+            is ArrayType -> ArrayMatch(
+                elementMatch = elementType.match(
+                    assignedType = sealedAssignedType.elementType,
+                ),
+            )
 
-        is OrderedTupleType -> OrderedTupleMatch(
-            elementsMatches = assignedType.elements.map {
-                elementType.match(assignedType = it.type)
-            },
-        )
+            is OrderedTupleType -> OrderedTupleMatch(
+                elementsMatches = sealedAssignedType.elements.map {
+                    elementType.match(assignedType = it.type)
+                },
+            )
 
-        else -> Type.TotalMismatch(
-            expectedType = this,
-            actualType = assignedType,
-        )
-    }
+            else -> Type.TotalMismatch(
+                expectedType = this,
+                actualType = sealedAssignedType,
+            )
+        }
 
     override fun dump(): String = "[${elementType.dump()}*]"
 

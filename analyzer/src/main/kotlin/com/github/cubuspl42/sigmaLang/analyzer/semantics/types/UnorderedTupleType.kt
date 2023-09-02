@@ -98,7 +98,7 @@ data class UnorderedTupleType(
 
     override fun match(
         assignedType: Type,
-    ): MatchResult = when (assignedType) {
+    ): Type.MatchResult = when (assignedType) {
         is UnorderedTupleType -> UnorderedTupleMatch(valuesMatches = valueTypeByName.mapValues { (name, valueType) ->
             val assignedValueType = assignedType.getFieldType(key = name)
 

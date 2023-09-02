@@ -2,7 +2,6 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 import cutOffFront
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.EvaluationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType

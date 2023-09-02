@@ -49,7 +49,7 @@ class FunctionTypeConstructor(
             genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
             argumentType = argumentType as TupleType,
             imageType = imageType as Type,
-        )
+        ).asValue
     }
 
     override val errors: Set<SemanticError> by lazy {

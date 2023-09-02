@@ -1,12 +1,11 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 
 data class TypeVariable(
     // TODO
     val formula: Formula,
-) : Type() {
+) : SealedType() {
     companion object {
         fun of(name: String) = TypeVariable(
             formula = Formula.of(name),
@@ -28,9 +27,9 @@ data class TypeVariable(
         resolution: TypeVariableResolution,
     ): Type = resolution.resolvedTypeByVariable[this] ?: this
 
-    override fun match(assignedType: Type): MatchResult = when (assignedType) {
-        this -> TotalMatch
-        else -> TotalMismatch(
+    override fun match(assignedType: Type): Type.MatchResult = when (assignedType) {
+        this -> Type.TotalMatch
+        else -> Type.TotalMismatch(
             expectedType = this,
             actualType = assignedType,
         )
