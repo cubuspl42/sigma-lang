@@ -42,7 +42,7 @@ class BuiltinsTests {
 
         // Validate `mySet1`
 
-        val mySet1Definition = namespace.getConstantDefinition(
+        val mySet1Definition = namespace.getEntry(
             name = Symbol.of("mySet1"),
         )!!
 
@@ -50,7 +50,7 @@ class BuiltinsTests {
             expected = SetType(
                 elementType = IntCollectiveType,
             ),
-            actual = mySet1Definition.asValueDefinition.effectiveValueType.value,
+            actual = mySet1Definition.effectiveType.value,
         )
 
         assertEquals(
@@ -61,34 +61,34 @@ class BuiltinsTests {
                     IntValue(value = 3L),
                 ),
             ),
-            actual = mySet1Definition.staticValue.value,
+            actual = mySet1Definition.valueThunk.value,
         )
 
         // Validate `contains2`
 
-        val contains2Definition = namespace.getConstantDefinition(
+        val contains2Definition = namespace.getEntry(
             name = Symbol.of("contains2"),
         )!!
 
         assertEquals(
             expected = BoolValue(value = true),
-            actual = contains2Definition.staticValue.value,
+            actual = contains2Definition.valueThunk.value,
         )
 
         // Validate `contains5`
 
-        val contains5Definition = namespace.getConstantDefinition(
+        val contains5Definition = namespace.getEntry(
             name = Symbol.of("contains5"),
         )!!
 
         assertEquals(
             expected = BoolValue(value = false),
-            actual = contains5Definition.staticValue.value,
+            actual = contains5Definition.valueThunk.value,
         )
 
         // Validate `mySet2`
 
-        val mySet2Definition = namespace.getConstantDefinition(
+        val mySet2Definition = namespace.getEntry(
             name = Symbol.of("mySet2"),
         )!!
 
@@ -101,7 +101,7 @@ class BuiltinsTests {
                     IntValue(value = 4L),
                 ),
             ),
-            actual = mySet2Definition.staticValue.value,
+            actual = mySet2Definition.valueThunk.value,
         )
     }
 }

@@ -29,7 +29,7 @@ class NamespaceTests {
                 term = term,
             )
 
-            val isUserIdValidDefinition = namespace.getConstantDefinition(
+            val isUserIdValidDefinition = namespace.getEntry(
                 name = Symbol.of("isUserIdValid"),
             )
 
@@ -47,7 +47,7 @@ class NamespaceTests {
                     ),
                     imageType = BoolType,
                 ),
-                actual = isUserIdValidDefinition.asValueDefinition.effectiveValueType.value,
+                actual = isUserIdValidDefinition.effectiveType.value,
             )
         }
     }

@@ -29,24 +29,21 @@ class Namespace(
         )
     }.toSet()
 
-    private fun getStaticDefinition(
+    fun getEntry(
         name: Symbol,
     ): NamespaceEntry? = entries.singleOrNull {
         it.name == name
     }
 
-    fun getConstantDefinition(
-        name: Symbol,
-    ): ConstantDefinition? = getStaticDefinition(name = name) as? ConstantDefinition
-
     inner class NamespaceStaticBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
-        ): ResolvedName? = getConstantDefinition(name = name)?.let {
+        ): ResolvedName? = getEntry(name = name)?.let {
             ResolvedName(
-                type = it.asValueDefinition.effectiveValueType, resolution = ConstDefinitionResolution(
-                    constantDefinition = it,
-                )
+                type = it.effectiveType,
+                resolution = StaticResolution(
+                    namespaceEntry = it,
+                ),
             )
         }
 
@@ -62,10 +59,7 @@ class Namespace(
     val innerDynamicScope = object : DynamicScope {
         override fun getValue(
             name: Symbol,
-        ): Thunk<Value>? {
-            val constantDefinition = getStaticDefinition(name = name) as? ConstantDefinition
-            return constantDefinition?.staticValue
-        }
+        ): Thunk<Value>? = getEntry(name = name)?.valueThunk
     }.chainWith(
         context = prelude.dynamicScope,
     )

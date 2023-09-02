@@ -27,7 +27,7 @@ class ModuleTests {
                 term = term,
             )
 
-            val isUserIdValid = module.rootNamespace.getConstantDefinition(
+            val isUserIdValid = module.rootNamespace.getEntry(
                 name = Symbol.of("isUserIdValid"),
             )
 
@@ -45,7 +45,7 @@ class ModuleTests {
                     ),
                     imageType = BoolType,
                 ),
-                actual = isUserIdValid.asValueDefinition.effectiveValueType.value,
+                actual = isUserIdValid.effectiveType.value,
             )
         }
     }

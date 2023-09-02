@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
 
 class ConstantDefinition(
@@ -48,16 +49,14 @@ class ConstantDefinition(
 
     val asValueDefinition = ConstantValueDefinition()
 
-    val valueThunk by lazy {
+    override val valueThunk by lazy {
         asValueDefinition.body.bind(
             dynamicScope = containingNamespace.innerDynamicScope,
         )
     }
 
-    fun evaluateResult(): EvaluationOutcome<Value> = valueThunk.evaluateInitial()
-
-    override val staticValue: Thunk<Value>
-        get() = this.valueThunk
+    override val effectiveType: Thunk<Type>
+        get() = asValueDefinition.effectiveValueType
 
     override val expressionMap: ExpressionMap
         get() = asValueDefinition.body.expressionMap
