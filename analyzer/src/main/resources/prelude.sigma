@@ -1,7 +1,52 @@
 {
-    pi = 3,
-
-    e = 2,
-
     maxOf = ![e, te] ^[elements: ^[e...], transform: ^[e] -> te] => max[map[elements, transform]],
+
+    upTo = ^[
+        start: Int,
+        end: Int,
+    ] -> ^[Int...] => %if start >= end (
+        %then [],
+        %else concat[
+            [start],
+            upTo[start + 1, end],
+        ],
+    ),
+
+    isEmpty = ![e] ^[
+        elements: ^[e...],
+    ] => length[elements] == 0,
+
+
+    fold = ![eT, rT] ^{
+        initial: rT,
+        combine: ^{acc: rT, el: eT} -> rT,
+    } => %let {
+        innerFold = ^[
+            elements: ^[eT...],
+        ] => %if isEmpty[elements] (
+            %then initial,
+            %else %let {
+                head = elements(0),
+                tail = dropFirst[elements, 1],
+            } %in combine{
+                acc: head,
+                el: innerFold[tail],
+            }
+        )
+    } %in innerFold,
+
+    concatAll = ![eT] ^[
+        lists: ^[^[eT...]...],
+    ] -> ^[eT...] => fold{
+        initial: [],
+        combine: ^{
+            acc: ^[eT...],
+            el: ^[eT...],
+        } => concat[acc, el],
+    }[lists],
+
+    concatAllOf = ![eT, rT] ^[
+        elements: ^[eT...],
+        extract: ^[e: eT] -> ^[rT...],
+    ] => concatAll[map[elements, extract]],
 }
