@@ -1,13 +1,17 @@
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationError
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResourceProjectStore
 
 fun main() {
-    val store = Project.ResourceStore(javaClass = object {}.javaClass)
-    val loader = Project.Loader.create(store = store)
-    val program = loader.load(fileBaseName = "problem")
+    val projectStore = ResourceProjectStore(javaClass = object {}.javaClass)
+    val projectLoader = Project.Loader.create()
+    val project = projectLoader.load(
+        projectStore = projectStore,
+        mainModuleName = "problem",
+    )
 
-    when (val outcome = program.evaluateResult()) {
+    when (val outcome = project.entryPoint.evaluateResult()) {
         is EvaluationError -> println("Error: $outcome")
         is EvaluationResult -> println("Result: ${outcome.value.dump()}")
     }

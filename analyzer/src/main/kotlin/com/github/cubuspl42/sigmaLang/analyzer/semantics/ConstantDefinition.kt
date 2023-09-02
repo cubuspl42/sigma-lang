@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationOutcome
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -52,6 +53,8 @@ class ConstantDefinition(
             scope = containingNamespace.innerScope,
         )
     }
+
+    fun evaluateResult(): EvaluationOutcome<Value> = valueThunk.evaluateInitial()
 
     override val staticValue: Thunk<Value>
         get() = this.valueThunk

@@ -2,6 +2,7 @@ package tests.euler
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResourceProjectStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -102,11 +103,14 @@ class EulerProblemsTests {
 }
 
 private fun solveProblem(n: Int): EvaluationOutcome<Value> {
-    val store = Project.ResourceStore(javaClass = EulerProblemsTests::class.java)
-    val loader = Project.Loader.create(store = store)
-    val program = loader.load(fileBaseName = "problem$n")
+    val store = ResourceProjectStore(javaClass = EulerProblemsTests::class.java)
+    val loader = Project.Loader.create()
+    val project = loader.load(
+        projectStore = store,
+        mainModuleName = "problem$n",
+    )
 
-    val errors = program.errors
+    val errors = project.errors
 
     println()
     println("[Problem $n]")
@@ -119,18 +123,16 @@ private fun solveProblem(n: Int): EvaluationOutcome<Value> {
         }
     }
 
-    val result = program.evaluateResult()
+    val evaluationResult = project.entryPoint.evaluateResult()
 
-    println()
-
-    when (val evaluationResult = program.evaluateResult()) {
+    when (evaluationResult) {
         EvaluationStackExhaustionError -> println("Error: call stack exhausted")
         is EvaluationResult -> println("Result: ${evaluationResult.value.dump()}")
     }
 
     println()
 
-    return result
+    return evaluationResult
 }
 
 private fun getResourceAsText(
