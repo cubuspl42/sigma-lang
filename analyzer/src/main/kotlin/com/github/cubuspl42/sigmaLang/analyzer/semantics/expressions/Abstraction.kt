@@ -18,7 +18,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionTerm
 
 class Abstraction(
