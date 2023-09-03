@@ -10,6 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorTerm
 
 class UnorderedTupleTypeConstructor(
