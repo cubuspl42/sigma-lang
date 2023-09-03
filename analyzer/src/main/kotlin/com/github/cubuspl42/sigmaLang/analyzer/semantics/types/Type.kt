@@ -1,8 +1,8 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeValue
 
-interface Type {
+sealed class Type {
     sealed class MatchResult {
         abstract fun isFull(): Boolean
 
@@ -30,29 +30,35 @@ interface Type {
         override fun dump(): String = "expected ${expectedType.dump()}, actual: ${actualType.dump()}"
     }
 
-    val asLiteral: PrimitiveLiteralType?
 
-    val asArray: ArrayType?
+    open val asLiteral: PrimitiveLiteralType? = null
 
-    fun dump(): String
+    open val asArray: ArrayType? = null
 
-    fun findLowestCommonSupertype(
+    abstract fun dump(): String
+
+    abstract fun findLowestCommonSupertype(
         other: Type,
     ): Type
 
-    fun resolveTypeVariables(
+    abstract fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution
 
-    fun substituteTypeVariables(
+    abstract fun substituteTypeVariables(
         resolution: TypeVariableResolution,
     ): Type
 
-    fun match(
+    abstract fun match(
         assignedType: Type,
     ): Type.MatchResult
 
-    fun walk(): Sequence<Type>
+    abstract fun walkRecursive(): Sequence<Type>
 
-    fun walkRecursive(): Sequence<Type>
+    final override fun toString(): String = dump()
 }
+
+fun Type.walk(): Sequence<Type> = sequenceOf(this) + walkRecursive()
+
+val <TypeType : Type> TypeType.asValue: TypeValue<TypeType>
+    get() = TypeValue(this)

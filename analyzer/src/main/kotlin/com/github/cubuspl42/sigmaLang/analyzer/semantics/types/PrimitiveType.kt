@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-sealed class PrimitiveType : SealedType() {
+sealed class PrimitiveType : Type() {
     override fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution = TypeVariableResolution.Empty

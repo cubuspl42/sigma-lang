@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 
-abstract class FunctionValue : SealedValue() {
+abstract class FunctionValue : Value() {
 
     object Link : ComputableFunctionValue() {
         override fun apply(
