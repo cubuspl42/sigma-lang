@@ -27,7 +27,7 @@ data class BoolValue(
                 }
 
                 override fun dump(): String = "(if')"
-            }.asThunk
+            }.toThunk()
         }
 
         override fun dump(): String = "(if)"

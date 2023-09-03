@@ -23,7 +23,7 @@ data class SetType(
 
                     return SetType(
                         elementType = elementType,
-                    ).asValue.asThunk
+                    ).asValue.toThunk()
                 }
 
                 override fun dump(): String = "(set type constructor)"
@@ -49,7 +49,7 @@ data class SetType(
 
                     return SetValue(
                         elements = elements.toSet(),
-                    ).asThunk
+                    ).toThunk()
                 }
 
                 override fun dump(): String = "(setOf)"
@@ -79,7 +79,7 @@ data class SetType(
 
                     return SetValue(
                         elements = set0 + set1,
-                    ).asThunk
+                    ).toThunk()
                 }
 
                 override fun dump(): String = "(setUnion)"
@@ -105,7 +105,7 @@ data class SetType(
 
                     return BoolValue(
                         value = set.elements.contains(element),
-                    ).asThunk
+                    ).toThunk()
                 }
 
                 override fun dump(): String = "(setContains)"
@@ -122,7 +122,7 @@ data class SetType(
             value = object : FunctionValue() {
                 override fun apply(argument: Value): Thunk<Value> = SetValue(
                     elements = emptySet(),
-                ).asThunk
+                ).toThunk()
 
                 override fun dump(): String = "(emptySet)"
             },

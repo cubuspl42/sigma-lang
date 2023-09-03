@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.DynamicResolution
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
@@ -32,7 +32,7 @@ data class GenericParametersTuple(
             name: Symbol,
         ): ResolvedName? = if (parametersDefinitions.any { it == name }) {
             ResolvedName(
-                type = MetaType.asThunk,
+                type = MetaType.toThunk(),
                 resolution = DynamicResolution(
                     resolvedFormula = Formula(
                         name = name,

@@ -22,7 +22,7 @@ data class IntValue(
             return calculate(
                 left = left.value,
                 right = right.value,
-            ).asThunk
+            ).toThunk()
         }
 
         override fun dump(): String = "(${prototype.functionName})"
@@ -68,7 +68,7 @@ data class IntValue(
         override fun apply(argument: Value): Thunk<Value> {
             val arg = (argument as DictValue).read(Zero)!! as IntValue
 
-            return IntValue(arg.value * arg.value).asThunk
+            return IntValue(arg.value * arg.value).toThunk()
         }
 
         override fun dump(): String = "(sq)"

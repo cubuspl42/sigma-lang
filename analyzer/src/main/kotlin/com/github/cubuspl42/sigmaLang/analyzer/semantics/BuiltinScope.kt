@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.DictType
@@ -31,7 +31,7 @@ private class BuiltinValueDefinition(
     val value: Value,
     val type: Type,
 ) : NamespaceEntry() {
-    override val valueThunk: Thunk<Value> = value.asThunk
+    override val valueThunk: Thunk<Value> = value.toThunk()
 
     override val effectiveType: Thunk<Type> = Thunk.pure(type)
 
@@ -253,7 +253,7 @@ object BuiltinScope : DynamicScope, StaticScope {
         name: Symbol,
     ): Thunk<Value>? = getBuiltin(
         name = name,
-    )?.value?.asThunk
+    )?.value?.toThunk()
 
     private fun getBuiltin(
         name: Symbol,

@@ -108,7 +108,7 @@ class Abstraction(
         outerDynamicScope = dynamicScope,
         argumentType = argumentType,
         image = image,
-    ).asThunk
+    ).toThunk()
 
     val declaredImageType: Thunk<Type>? by lazy {
         declaredImageTypeConstructor?.bindTranslated(

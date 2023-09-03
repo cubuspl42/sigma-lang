@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
@@ -330,7 +330,7 @@ class CallTests {
             val sq = object : ComputableFunctionValue() {
                 override fun apply(argument: Value): Thunk<Value> {
                     val n = argument as IntValue
-                    return IntValue(n.value * n.value).asThunk
+                    return IntValue(n.value * n.value).toThunk()
                 }
             }
 

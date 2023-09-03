@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Abstraction
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
@@ -144,6 +144,6 @@ data class UnorderedTupleType(
     override fun toArgumentScope(argument: DictValue): DynamicScope = object : DynamicScope {
         override fun getValue(
             name: Symbol,
-        ): Thunk<Value>? = argument.read(name)?.asThunk
+        ): Thunk<Value>? = argument.read(name)?.toThunk()
     }
 }
