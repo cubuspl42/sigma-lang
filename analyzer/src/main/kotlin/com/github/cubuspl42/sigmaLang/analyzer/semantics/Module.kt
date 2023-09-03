@@ -19,7 +19,7 @@ class Module(
         )
     }
 
-    val rootNamespace = Namespace.build(
+    val rootNamespaceDefinition = NamespaceDefinition.build(
         prelude = prelude,
         term = object : NamespaceDefinitionTerm {
             override val name: Symbol = Symbol.of("__root__")
@@ -30,8 +30,8 @@ class Module(
     )
 
     val expressionMap
-        get() = rootNamespace.expressionMap
+        get() = rootNamespaceDefinition.expressionMap
 
     val errors: Set<SemanticError>
-        get() = rootNamespace.errors
+        get() = rootNamespaceDefinition.errors
 }

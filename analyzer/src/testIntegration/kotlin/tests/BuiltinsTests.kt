@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Namespace
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Prelude
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
@@ -29,7 +29,7 @@ class BuiltinsTests {
             """.trimIndent(),
         )
 
-        val namespace = Namespace.build(
+        val namespaceDefinition = NamespaceDefinition.build(
             prelude = Prelude.load(),
             term = term,
         )
@@ -42,7 +42,7 @@ class BuiltinsTests {
 
         // Validate `mySet1`
 
-        val mySet1Definition = namespace.getEntry(
+        val mySet1Definition = namespaceDefinition.getDefinition(
             name = Symbol.of("mySet1"),
         )!!
 
@@ -66,7 +66,7 @@ class BuiltinsTests {
 
         // Validate `contains2`
 
-        val contains2Definition = namespace.getEntry(
+        val contains2Definition = namespaceDefinition.getDefinition(
             name = Symbol.of("contains2"),
         )!!
 
@@ -77,7 +77,7 @@ class BuiltinsTests {
 
         // Validate `contains5`
 
-        val contains5Definition = namespace.getEntry(
+        val contains5Definition = namespaceDefinition.getDefinition(
             name = Symbol.of("contains5"),
         )!!
 
@@ -88,7 +88,7 @@ class BuiltinsTests {
 
         // Validate `mySet2`
 
-        val mySet2Definition = namespace.getEntry(
+        val mySet2Definition = namespaceDefinition.getDefinition(
             name = Symbol.of("mySet2"),
         )!!
 

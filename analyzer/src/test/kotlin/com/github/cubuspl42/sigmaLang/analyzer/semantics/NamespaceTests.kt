@@ -24,12 +24,12 @@ class NamespaceTests {
                 """.trimIndent(),
             )
 
-            val namespace = Namespace.build(
+            val namespaceDefinition = NamespaceDefinition.build(
                 prelude = Prelude.load(),
                 term = term,
             )
 
-            val isUserIdValidDefinition = namespace.getEntry(
+            val isUserIdValidDefinition = namespaceDefinition.getDefinition(
                 name = Symbol.of("isUserIdValid"),
             )
 

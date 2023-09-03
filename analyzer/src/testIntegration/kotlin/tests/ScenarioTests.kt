@@ -3,7 +3,7 @@ package tests
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Namespace
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Prelude
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
@@ -49,19 +49,19 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespace = Namespace.build(
+        val namespaceDefinition = NamespaceDefinition.build(
             prelude = Prelude.load(),
             term = term,
         )
 
         assertEquals(
             expected = emptySet(),
-            actual = namespace.errors,
+            actual = namespaceDefinition.errors,
         )
 
         // Validate `Entry`
 
-        val entryTypeConstructorDefinition = namespace.getEntry(
+        val entryTypeConstructorDefinition = namespaceDefinition.getDefinition(
             name = Symbol.of("Entry"),
         )!!
 
@@ -106,7 +106,7 @@ class ScenarioTests {
 
         // Validate `entryOf`
 
-        val entryOfAbstractionDefinition = namespace.getEntry(
+        val entryOfAbstractionDefinition = namespaceDefinition.getDefinition(
             name = Symbol.of("entryOf"),
         )!!
 
@@ -133,7 +133,7 @@ class ScenarioTests {
 
         // Validate `entryTrueOf`
 
-        val entryTrueOfAbstractionDefinition = namespace.getEntry(
+        val entryTrueOfAbstractionDefinition = namespaceDefinition.getDefinition(
             name = Symbol.of("entryTrueOf"),
         )!!
 
@@ -167,15 +167,15 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespace = Namespace.build(
+        val namespaceDefinition = NamespaceDefinition.build(
             prelude = Prelude.load(),
             term = term,
         )
 
-        namespace.printErrors()
+        namespaceDefinition.printErrors()
 
         val error = assertIs<Call.NonFullyInferredCalleeTypeError>(
-            namespace.errors.singleOrNull(),
+            namespaceDefinition.errors.singleOrNull(),
         )
 
         assertEquals(
@@ -185,7 +185,7 @@ class ScenarioTests {
             actual = error.nonInferredTypeVariables,
         )
 
-        val aType = namespace.getEntry(
+        val aType = namespaceDefinition.getDefinition(
             name = Symbol.of("a"),
         )!!.effectiveType.value
 
@@ -209,14 +209,14 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespace = Namespace.build(
+        val namespaceDefinition = NamespaceDefinition.build(
             prelude = Prelude.load(),
             term = term,
         )
 
         assertEquals(
             expected = emptySet(),
-            actual = namespace.errors,
+            actual = namespaceDefinition.errors,
         )
     }
 }

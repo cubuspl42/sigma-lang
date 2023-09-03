@@ -26,7 +26,7 @@ class Program internal constructor(
     val errors: Set<SemanticError> by lazy { module.errors }
 
     fun evaluateResult(): EvaluationOutcome<Value> {
-        val result = module.rootNamespace.getEntry(
+        val result = module.rootNamespaceDefinition.getDefinition(
             name = Symbol.of("main")
         )!!
 

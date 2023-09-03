@@ -63,8 +63,8 @@ class Project(
     val errors: Set<SemanticError>
         get() = mainModule.errors
 
-    val entryPoint: NamespaceEntry
-        get() = mainModule.rootNamespace.getEntry(
+    val entryPoint: ConstantDefinition
+        get() = mainModule.rootNamespaceDefinition.getDefinition(
             name = Symbol.of("main"),
         )!!
 }
