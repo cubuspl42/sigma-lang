@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
-import cutOffFront
+import com.github.cubuspl42.sigmaLang.analyzer.cutOffFront
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 
-abstract class FunctionValue : Value() {
+abstract class FunctionValue : SealedValue() {
 
     object Link : ComputableFunctionValue() {
         override fun apply(

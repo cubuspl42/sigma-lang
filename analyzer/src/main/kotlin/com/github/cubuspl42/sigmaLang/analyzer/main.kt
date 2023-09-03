@@ -1,3 +1,5 @@
+package com.github.cubuspl42.sigmaLang.analyzer
+
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationError
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project

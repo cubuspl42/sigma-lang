@@ -2,9 +2,11 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.EvaluationContext
 
-abstract class Value {
-    abstract fun dump(): String
+interface Value {
+    fun dump(): String
 }
+
+abstract class SealedValue : Value
 
 val <ValueType : Value> ValueType.asEvaluationResult: EvaluationResult<ValueType>
     get() = EvaluationResult(value = this)

@@ -1,3 +1,5 @@
+package com.github.cubuspl42.sigmaLang.analyzer
+
 fun getResourceAsText(
     path: String,
 ): String? = object {}.javaClass.getResource(path)?.readText()

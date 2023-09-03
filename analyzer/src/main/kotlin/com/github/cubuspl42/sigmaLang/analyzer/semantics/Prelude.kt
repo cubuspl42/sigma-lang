@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import getResourceAsText
+import com.github.cubuspl42.sigmaLang.analyzer.getResourceAsText
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LocalScopeSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 
