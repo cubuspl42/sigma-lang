@@ -6,9 +6,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 
-class Namespace(
+class NamespaceDefinition(
     private val prelude: Prelude,
     private val term: NamespaceDefinitionTerm,
 ) {
@@ -16,38 +17,38 @@ class Namespace(
         fun build(
             prelude: Prelude,
             term: NamespaceDefinitionTerm,
-        ): Namespace = Namespace(
+        ): NamespaceDefinition = NamespaceDefinition(
             prelude = prelude,
             term = term,
         )
     }
 
-    val entries: Set<NamespaceEntry> = term.namespaceEntries.map {
-        NamespaceEntry.build(
-            containingNamespace = this,
+    val definitions: Set<ConstantDefinition> = term.namespaceEntries.map {
+        ConstantDefinition.build(
+            containingNamespaceDefinition = this,
             term = it,
         )
     }.toSet()
 
-    fun getEntry(
+    fun getDefinition(
         name: Symbol,
-    ): NamespaceEntry? = entries.singleOrNull {
+    ): ConstantDefinition? = definitions.singleOrNull {
         it.name == name
     }
 
     inner class NamespaceStaticBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
-        ): ResolvedName? = getEntry(name = name)?.let {
+        ): ResolvedName? = getDefinition(name = name)?.let {
             ResolvedName(
                 type = it.effectiveType,
                 resolution = StaticResolution(
-                    namespaceEntry = it,
+                    constantDefinition = it,
                 ),
             )
         }
 
-        override fun getLocalNames(): Set<Symbol> = entries.map { it.name }.toSet()
+        override fun getLocalNames(): Set<Symbol> = definitions.map { it.name }.toSet()
     }
 
     private val asDeclarationBlock = NamespaceStaticBlock()
@@ -59,16 +60,16 @@ class Namespace(
     val innerDynamicScope = object : DynamicScope {
         override fun getValue(
             name: Symbol,
-        ): Thunk<Value>? = getEntry(name = name)?.valueThunk
+        ): Thunk<Value>? = getDefinition(name = name)?.valueThunk
     }.chainWith(
         context = prelude.dynamicScope,
     )
 
 
-    val expressionMap: ExpressionMap = ExpressionMap.unionAllOf(entries) { it.expressionMap }
+    val expressionMap: ExpressionMap = ExpressionMap.unionAllOf(definitions) { it.expressionMap }
 
     val errors: Set<SemanticError> by lazy {
-        entries.fold(emptySet()) { acc, it -> acc + it.errors }
+        definitions.fold(emptySet()) { acc, it -> acc + it.errors }
     }
 
     fun printErrors() {

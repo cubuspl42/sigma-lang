@@ -22,9 +22,9 @@ class DynamicResolution(
 ) : Resolution()
 
 class StaticResolution(
-    private val namespaceEntry: NamespaceEntry,
+    private val constantDefinition: ConstantDefinition,
 ) : Resolution() {
-    val resolvedValue: Thunk<Value> = namespaceEntry.valueThunk
+    val resolvedValue: Thunk<Value> = constantDefinition.valueThunk
 }
 
 data class ResolvedName(

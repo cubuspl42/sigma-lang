@@ -27,7 +27,7 @@ class ModuleTests {
                 term = term,
             )
 
-            val isUserIdValid = module.rootNamespace.getEntry(
+            val isUserIdValid = module.rootNamespaceDefinition.getDefinition(
                 name = Symbol.of("isUserIdValid"),
             )
 

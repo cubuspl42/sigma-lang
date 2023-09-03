@@ -30,7 +30,7 @@ private class BuiltinValueDefinition(
     override val name: Symbol,
     val value: Value,
     val type: Type,
-) : NamespaceEntry() {
+) : ConstantDefinition() {
     override val valueThunk: Thunk<Value> = value.toThunk()
 
     override val effectiveType: Thunk<Type> = Thunk.pure(type)
@@ -44,7 +44,7 @@ private class BuiltinValueDefinition(
         get() = ResolvedName(
             type = Thunk.pure(type),
             resolution = StaticResolution(
-                namespaceEntry = this,
+                constantDefinition = this,
             ),
         )
 }

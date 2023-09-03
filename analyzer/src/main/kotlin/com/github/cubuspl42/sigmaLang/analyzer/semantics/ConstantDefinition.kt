@@ -1,67 +1,36 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationOutcome
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.*
 
-class ConstantDefinition(
-    private val containingNamespace: Namespace,
-    val term: ConstantDefinitionTerm,
-) : NamespaceEntry() {
+abstract class ConstantDefinition : Declaration {
     companion object {
         fun build(
-            containingNamespace: Namespace,
-            term: ConstantDefinitionTerm,
-        ): ConstantDefinition = ConstantDefinition(
-            containingNamespace = containingNamespace,
-            term = term,
-        )
-    }
-
-    inner class ConstantValueDefinition : ValueDefinition() {
-        override val name: Symbol
-            get() = this@ConstantDefinition.name
-
-        override val outerScope: StaticScope
-            get() = containingNamespace.innerStaticScope
-
-        override val declaredTypeBody: Expression? by lazy {
-            term.declaredTypeBody?.let {
-                Expression.build(
-                    outerScope = outerScope,
-                    term = it,
-                )
-            }
-        }
-
-        override val body: Expression by lazy {
-            Expression.build(
-                outerScope = containingNamespace.innerStaticScope,
-                term = term.body,
+            containingNamespaceDefinition: NamespaceDefinition,
+            term: NamespaceEntryTerm,
+        ): ConstantDefinition = when (term) {
+            is ConstantDefinitionTerm -> UserConstantDefinition.build(
+                containingNamespaceDefinition = containingNamespaceDefinition,
+                term = term,
             )
+
+            is NamespaceDefinitionTerm -> TODO()
+
+            else -> throw UnsupportedOperationException("Unsupported namespace entry term: $term")
         }
     }
 
-    val asValueDefinition = ConstantValueDefinition()
+    fun evaluateResult(): EvaluationOutcome<Value> = valueThunk.evaluateInitial()
 
-    override val valueThunk by lazy {
-        asValueDefinition.body.bind(
-            dynamicScope = containingNamespace.innerDynamicScope,
-        )
-    }
+    abstract val valueThunk: Thunk<Value>
 
-    override val effectiveType: Thunk<Type>
-        get() = asValueDefinition.effectiveValueType
+    abstract val effectiveType: Thunk<Type>
 
-    override val expressionMap: ExpressionMap
-        get() = asValueDefinition.body.expressionMap
+    abstract val expressionMap: ExpressionMap
 
-    override val name: Symbol
-        get() = term.name
-
-    override val errors: Set<SemanticError>
-        get() = asValueDefinition.errors
+    abstract val errors: Set<SemanticError>
 }
