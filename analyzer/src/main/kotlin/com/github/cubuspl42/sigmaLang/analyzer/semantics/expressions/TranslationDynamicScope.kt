@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.DynamicResolution
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticResolution
@@ -23,10 +24,12 @@ class TranslationDynamicScope(
             is StaticResolution -> resolution.resolvedValue
 
             is DynamicResolution -> when (resolvedName.type.value) {
-                is MetaType -> TypeVariable(
-                    // FIXME
-                    formula = resolution.resolvedFormula ?: Formula(name = Symbol.of("?")),
-                ).asValueThunk.thenJust { it.asValue }
+                is MetaType -> Thunk.pure(
+                    TypeVariable(
+                        // FIXME
+                        formula = resolution.resolvedFormula ?: Formula(name = Symbol.of("?")),
+                    ).asValue,
+                )
 
                 else -> null
             }

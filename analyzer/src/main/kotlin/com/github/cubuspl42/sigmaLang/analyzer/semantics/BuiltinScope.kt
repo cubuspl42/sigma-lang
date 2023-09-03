@@ -41,7 +41,7 @@ private class BuiltinValueDefinition(
 
     val asResolvedName: ResolvedName
         get() = ResolvedName(
-            type = type.asValueThunk,
+            type = Thunk.pure(type),
             resolution = StaticResolution(
                 namespaceEntry = this,
             ),

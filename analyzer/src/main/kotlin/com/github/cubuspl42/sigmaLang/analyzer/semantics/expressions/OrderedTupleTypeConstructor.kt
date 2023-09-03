@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
@@ -47,7 +48,7 @@ class OrderedTupleTypeConstructor(
     ): Thunk<Value> = Thunk.traverseList(elements) { element ->
         element.type.bind(dynamicScope = dynamicScope).thenJust { elementType ->
             OrderedTupleType.Element(
-                name = element.name, type = elementType as Type,
+                name = element.name, type = elementType.asType!!,
             )
         }
     }.thenJust { elements ->

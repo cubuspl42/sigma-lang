@@ -55,7 +55,7 @@ data class DictType(
 
     override fun match(
         assignedType: Type,
-    ): Type.MatchResult = when (val sealedAssignedType = assignedType.asSealed) {
+    ): Type.MatchResult = when (val sealedAssignedType = assignedType) {
         is DictType -> DictMatch(
             keyMatch = sealedAssignedType.keyType.match(
                 assignedType = keyType,

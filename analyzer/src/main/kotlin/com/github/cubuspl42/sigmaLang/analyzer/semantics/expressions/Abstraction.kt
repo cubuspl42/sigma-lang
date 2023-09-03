@@ -1,11 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Closure
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.DynamicResolution
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
@@ -45,7 +41,7 @@ class Abstraction(
             name: Symbol,
         ): ResolvedName? = declarationByName[name]?.let {
             ResolvedName(
-                type = it.type.asValueThunk,
+                type = Thunk.pure(it.type),
                 resolution = DynamicResolution(
                     resolvedFormula = Formula(
                         name = name,
@@ -78,7 +74,7 @@ class Abstraction(
                 dynamicScope = TranslationDynamicScope(
                     staticScope = innerDeclarationScope1,
                 ),
-            ) as TupleType
+            )?.asType as TupleType
 
             val innerDeclarationScope2 = argumentType.toArgumentDeclarationBlock().chainWith(
                 outerScope = innerDeclarationScope1,
@@ -117,7 +113,7 @@ class Abstraction(
     val declaredImageType: Thunk<Type>? by lazy {
         declaredImageTypeConstructor?.bindTranslated(
             staticScope = innerScope,
-        )?.thenJust { it as Type }
+        )?.thenJust { it.asType!! }
     }
 
     private val effectiveImageType: Thunk<Type> by lazy {

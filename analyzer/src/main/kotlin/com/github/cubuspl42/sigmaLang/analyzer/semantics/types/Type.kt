@@ -1,6 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 
 interface Type {
@@ -31,12 +30,7 @@ interface Type {
         override fun dump(): String = "expected ${expectedType.dump()}, actual: ${actualType.dump()}"
     }
 
-    val asSealed: SealedType
-
-    // TODO: Nuke
     val asValue: Value
-
-    val asValueThunk: Thunk<Type>
 
     val asLiteral: PrimitiveLiteralType?
 

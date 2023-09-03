@@ -69,22 +69,22 @@ data class ArrayType(
     )
 
     override fun match(assignedType: Type): Type.MatchResult =
-        when (val sealedAssignedType = assignedType.asSealed) {
+        when (assignedType) {
             is ArrayType -> ArrayMatch(
                 elementMatch = elementType.match(
-                    assignedType = sealedAssignedType.elementType,
+                    assignedType = assignedType.elementType,
                 ),
             )
 
             is OrderedTupleType -> OrderedTupleMatch(
-                elementsMatches = sealedAssignedType.elements.map {
+                elementsMatches = assignedType.elements.map {
                     elementType.match(assignedType = it.type)
                 },
             )
 
             else -> Type.TotalMismatch(
                 expectedType = this,
-                actualType = sealedAssignedType,
+                actualType = assignedType,
             )
         }
 

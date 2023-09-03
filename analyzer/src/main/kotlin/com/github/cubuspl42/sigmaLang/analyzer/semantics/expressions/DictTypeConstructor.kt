@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.DictType
@@ -49,8 +50,8 @@ class DictTypeConstructor(
         )
     ) { keyType, valueType ->
         DictType(
-            keyType = keyType as Type,
-            valueType = valueType as Type,
+            keyType = keyType.asType!!,
+            valueType = valueType.asType!!,
         ).asValue
     }
 
