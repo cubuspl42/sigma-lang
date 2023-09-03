@@ -30,8 +30,6 @@ interface Type {
         override fun dump(): String = "expected ${expectedType.dump()}, actual: ${actualType.dump()}"
     }
 
-    val asValue: Value
-
     val asLiteral: PrimitiveLiteralType?
 
     val asArray: ArrayType?

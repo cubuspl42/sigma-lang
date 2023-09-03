@@ -6,8 +6,6 @@ sealed class SealedType : Type {
 //    final override val asSealed: SealedType
 //        get() = this
 
-    final override val asValue: TypeValue<SealedType>
-        get() = TypeValue(this)
 
     final override fun toString(): String = dump()
 
@@ -17,3 +15,6 @@ sealed class SealedType : Type {
 
     override fun walk(): Sequence<Type> = sequenceOf(this) + walkRecursive()
 }
+
+val <TypeType : Type> TypeType.asValue: TypeValue<TypeType>
+    get() = TypeValue(this)
