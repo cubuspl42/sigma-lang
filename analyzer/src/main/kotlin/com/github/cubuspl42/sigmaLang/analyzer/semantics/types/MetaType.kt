@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-object MetaType : SealedType() {
+object MetaType : Type() {
     override fun findLowestCommonSupertype(other: Type): Type = AnyType
 
     override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution = TypeVariableResolution.Empty

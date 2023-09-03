@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 /**
  * A symbol for an illegal type, a result of a typing error.
  */
-object IllType : SealedType() {
+object IllType : Type() {
     override fun findLowestCommonSupertype(other: Type): Type = IllType
 
     override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution {

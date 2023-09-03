@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 
 data class TypeValue<TypeType : Type>(
     val asType: TypeType,
-) : SealedValue() {
+) : Value() {
     override fun dump(): String = "(type)"
 }
 

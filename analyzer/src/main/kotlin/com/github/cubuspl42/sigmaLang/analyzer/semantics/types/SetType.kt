@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope.SimpleBuil
 // Type of sets
 data class SetType(
     val elementType: Type,
-) : SealedType() {
+) : Type() {
     companion object {
         val constructor = SimpleBuiltinValue(
             type = UniversalFunctionType(

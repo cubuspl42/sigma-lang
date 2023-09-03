@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-object NeverType : SealedType() {
+object NeverType : Type() {
     data object AssignmentMismatch : Type.Mismatch() {
         override fun dump(): String = "nothing can be assigned to Never"
     }

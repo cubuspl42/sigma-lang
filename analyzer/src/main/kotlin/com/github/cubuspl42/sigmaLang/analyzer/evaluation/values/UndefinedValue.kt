@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 class UndefinedValue private constructor(
     val name: Value? = null,
-) : SealedValue() {
+) : Value() {
     companion object {
         fun withName(
             name: Value,

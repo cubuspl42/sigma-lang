@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 data class TypeVariable(
     // TODO
     val formula: Formula,
-) : SealedType() {
+) : Type() {
     companion object {
         fun of(name: String) = TypeVariable(
             formula = Formula.of(name),

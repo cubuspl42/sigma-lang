@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-object AnyType : SealedType() {
+object AnyType : Type() {
     override fun findLowestCommonSupertype(
         other: Type,
     ): Type = AnyType
