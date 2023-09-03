@@ -6,8 +6,6 @@ interface Value {
     fun dump(): String
 }
 
-abstract class SealedValue : Value
-
 val <ValueType : Value> ValueType.asEvaluationResult: EvaluationResult<ValueType>
     get() = EvaluationResult(value = this)
 
