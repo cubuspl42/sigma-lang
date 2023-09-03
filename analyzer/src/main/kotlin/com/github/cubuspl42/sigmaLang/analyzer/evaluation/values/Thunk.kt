@@ -132,6 +132,14 @@ abstract class Thunk<out ResultType> {
     }
 }
 
+fun <ResultType> ResultType.toEvaluationResult(): EvaluationResult<ResultType> = EvaluationResult(value = this)
+
+fun <ResultType> ResultType.toThunk(): Thunk<ResultType> = object : Thunk<ResultType>() {
+    override fun evaluateDirectly(
+        context: EvaluationContext,
+    ): EvaluationOutcome<ResultType> = this@toThunk.toEvaluationResult()
+}
+
 fun Thunk<Value>.evaluateInitialValue(): Value = (evaluateInitial() as EvaluationResult).value
 
 fun Thunk<Value>.evaluateValueHacky(

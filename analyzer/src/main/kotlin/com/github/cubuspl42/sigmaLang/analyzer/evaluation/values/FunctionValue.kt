@@ -35,7 +35,7 @@ abstract class FunctionValue : Value() {
                                     argument = argument,
                                 )
 
-                                else -> result.asThunk
+                                else -> result.toThunk()
                             }
                         }
 

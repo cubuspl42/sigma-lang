@@ -24,7 +24,7 @@ class DictValue(
         key = argument,
     ) ?: UndefinedValue.withName(
         name = argument,
-    )).asThunk
+    )).toThunk()
 
     override fun dump(): String {
         val content = dumpContent()
