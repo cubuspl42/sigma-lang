@@ -88,7 +88,7 @@ class ScenarioTests {
         val entryTypeValue = entryTypeConstructorValue.apply(
             ArrayTable(
                 elements = listOf(
-                    BoolType,
+                    BoolType.asValue,
                 ),
             ),
         ).value
@@ -99,7 +99,7 @@ class ScenarioTests {
                     Symbol.of("key") to IntCollectiveType,
                     Symbol.of("value") to BoolType,
                 ),
-            ),
+            ).asValue,
             actual = entryTypeValue,
         )
 

@@ -121,7 +121,7 @@ data class OrderedTupleType(
 
     override fun match(
         assignedType: Type,
-    ): Type.MatchResult = when (val sealedAssignedType = assignedType.asSealed) {
+    ): Type.MatchResult = when (val sealedAssignedType = assignedType) {
         is OrderedTupleType -> OrderedTupleMatch(
             elementsMatches = elements.zip(sealedAssignedType.elements) { element, assignedElement ->
                 element.type.match(assignedType = assignedElement.type)

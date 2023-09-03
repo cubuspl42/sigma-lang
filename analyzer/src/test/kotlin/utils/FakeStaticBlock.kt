@@ -33,7 +33,7 @@ class FakeStaticBlock(
         name: Symbol,
     ): ResolvedName? = declarationByName[name]?.let {
         ResolvedName(
-            type = it.type.asValueThunk,
+            type = Thunk.pure(it.type),
             resolution = DynamicResolution(
                 resolvedFormula = Formula(
                     name = name,

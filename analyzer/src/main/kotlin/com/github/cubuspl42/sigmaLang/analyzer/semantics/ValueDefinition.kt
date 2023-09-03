@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
@@ -15,7 +16,7 @@ abstract class ValueDefinition : ValueDeclaration {
 
     private val declaredType: Thunk<Type>? by lazy {
         declaredTypeBody?.let { expression ->
-            expression.bind(dynamicScope = BuiltinScope).thenJust { it as Type }
+            expression.bind(dynamicScope = BuiltinScope).thenJust { it.asType!! }
         }
     }
 

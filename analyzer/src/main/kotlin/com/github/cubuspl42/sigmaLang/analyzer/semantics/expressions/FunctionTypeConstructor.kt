@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
@@ -47,8 +48,8 @@ class FunctionTypeConstructor(
     ) { argumentType, imageType ->
         UniversalFunctionType(
             genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
-            argumentType = argumentType as TupleType,
-            imageType = imageType as Type,
+            argumentType = argumentType.asType as TupleType,
+            imageType = imageType.asType as Type,
         ).asValue
     }
 

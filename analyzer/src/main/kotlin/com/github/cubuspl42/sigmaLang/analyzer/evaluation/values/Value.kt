@@ -6,12 +6,12 @@ interface Value {
     fun dump(): String
 }
 
-val <ValueType : Value> ValueType.asEvaluationResult: EvaluationResult<ValueType>
+val <ResultType> ResultType.asEvaluationResult: EvaluationResult<ResultType>
     get() = EvaluationResult(value = this)
 
-val <ValueType : Value> ValueType.asThunk: Thunk<ValueType>
-    get() = object : Thunk<ValueType>() {
+val <ResultType> ResultType.asThunk: Thunk<ResultType>
+    get() = object : Thunk<ResultType>() {
         override fun evaluateDirectly(
             context: EvaluationContext,
-        ): EvaluationOutcome<ValueType> = this@asThunk.asEvaluationResult
+        ): EvaluationOutcome<ResultType> = this@asThunk.asEvaluationResult
     }

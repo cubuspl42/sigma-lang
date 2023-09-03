@@ -1,14 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinOrderedFunction
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeErrorException
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asThunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope.SimpleBuiltinValue
 
 // Type of sets
@@ -27,11 +19,11 @@ data class SetType(
                 override fun apply(argument: Value): Thunk<Value> {
                     val args = (argument as FunctionValue).toList()
 
-                    val elementType = args[0] as Type
+                    val elementType = args[0].asType!!
 
                     return SetType(
                         elementType = elementType,
-                    ).asThunk
+                    ).asValue.asThunk
                 }
 
                 override fun dump(): String = "(set type constructor)"
@@ -198,7 +190,7 @@ data class SetType(
 
     override fun match(
         assignedType: Type,
-    ): Type.MatchResult = when (val sealedAssignedType = assignedType.asSealed) {
+    ): Type.MatchResult = when (val sealedAssignedType = assignedType) {
         is SetType -> SetMatch(
             elementMatch = elementType.match(
                 assignedType = sealedAssignedType.elementType,
