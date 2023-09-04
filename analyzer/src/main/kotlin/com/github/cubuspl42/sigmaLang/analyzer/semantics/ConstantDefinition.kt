@@ -7,7 +7,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
 
-abstract class ConstantDefinition : ResolvableDeclaration {
+abstract class ConstantDefinition :
+    ClassifiedDeclaration {
     companion object {
         fun build(
             outerScope: StaticScope,

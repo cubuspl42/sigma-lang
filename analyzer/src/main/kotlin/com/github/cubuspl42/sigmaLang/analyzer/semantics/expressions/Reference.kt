@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvableDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassifiedDeclaration
 
 class Reference(
     override val outerScope: StaticScope,
@@ -39,7 +39,7 @@ class Reference(
     }
 
 
-    private val resolved: ResolvableDeclaration? by lazy {
+    private val resolved: ClassifiedDeclaration? by lazy {
         outerScope.resolveName(name = referredName)
     }
 

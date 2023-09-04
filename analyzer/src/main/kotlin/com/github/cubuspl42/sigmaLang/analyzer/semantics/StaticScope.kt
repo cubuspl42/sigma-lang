@@ -13,14 +13,14 @@ interface StaticScope {
 
             override fun resolveName(
                 name: Symbol,
-            ): ResolvableDeclaration? = resultScope.resolveName(name = name)
+            ): ClassifiedDeclaration? = resultScope.resolveName(name = name)
 
             override fun getAllNames(): Set<Symbol> = resultScope.getAllNames()
         }.result
     }
 
     object Empty : StaticScope {
-        override fun resolveName(name: Symbol): ResolvableDeclaration? = null
+        override fun resolveName(name: Symbol): ClassifiedDeclaration? = null
         override fun getAllNames(): Set<Symbol> = emptySet()
     }
 
@@ -28,13 +28,13 @@ interface StaticScope {
         private val outerScope: StaticScope,
         private val staticBlock: StaticBlock,
     ) : StaticScope {
-        override fun resolveName(name: Symbol): ResolvableDeclaration? =
+        override fun resolveName(name: Symbol): ClassifiedDeclaration? =
             staticBlock.resolveNameLocally(name = name) ?: outerScope.resolveName(name = name)
 
         override fun getAllNames(): Set<Symbol> = staticBlock.getLocalNames() + outerScope.getAllNames()
     }
 
-    fun resolveName(name: Symbol): ResolvableDeclaration?
+    fun resolveName(name: Symbol): ClassifiedDeclaration?
 
     fun getAllNames(): Set<Symbol>
 }
