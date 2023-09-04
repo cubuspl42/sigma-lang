@@ -20,7 +20,7 @@ class Module(
     }
 
     val rootNamespaceDefinition = NamespaceDefinition.build(
-        prelude = prelude,
+        outerScope = prelude.staticScope,
         term = object : NamespaceDefinitionTerm {
             override val name: Symbol = Symbol.of("__root__")
 

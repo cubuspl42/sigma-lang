@@ -30,7 +30,7 @@ class BuiltinsTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            prelude = Prelude.load(),
+            outerScope = Prelude.load().staticScope,
             term = term,
         )
 

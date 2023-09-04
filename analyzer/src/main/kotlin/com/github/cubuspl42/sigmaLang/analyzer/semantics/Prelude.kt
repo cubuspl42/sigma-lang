@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LocalScopeSour
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 
 data class Prelude(
-    val declarationScope: StaticScope,
+    val staticScope: StaticScope,
     val dynamicScope: DynamicScope,
 ) {
     companion object {
@@ -34,7 +34,7 @@ data class Prelude(
             )
 
             return Prelude(
-                declarationScope = declarationScope,
+                staticScope = declarationScope,
                 dynamicScope = preludeScope,
             )
         }

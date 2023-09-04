@@ -9,15 +9,15 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionM
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 
 class NamespaceDefinition(
-    private val prelude: Prelude,
+    private val outerScope: StaticScope,
     private val term: NamespaceDefinitionTerm,
 ) {
     companion object {
         fun build(
-            prelude: Prelude,
+            outerScope: StaticScope,
             term: NamespaceDefinitionTerm,
         ): NamespaceDefinition = NamespaceDefinition(
-            prelude = prelude,
+            outerScope = outerScope,
             term = term,
         )
     }
@@ -33,7 +33,7 @@ class NamespaceDefinition(
     private val asDeclarationBlock = NamespaceStaticBlock()
 
     private val innerStaticScope: StaticScope = asDeclarationBlock.chainWith(
-        outerScope = prelude.declarationScope,
+        outerScope = outerScope,
     )
 
     val definitions: Set<UserConstantDefinition> = term.namespaceEntries.map {
@@ -48,14 +48,6 @@ class NamespaceDefinition(
     ): ConstantDefinition? = definitions.singleOrNull {
         it.name == name
     }
-
-    val innerDynamicScope = object : DynamicScope {
-        override fun getValue(
-            name: Symbol,
-        ): Thunk<Value>? = getDefinition(name = name)?.valueThunk
-    }.chainWith(
-        context = prelude.dynamicScope,
-    )
 
     val expressionMap: ExpressionMap = ExpressionMap.unionAllOf(definitions) {
         it.expressionMap
