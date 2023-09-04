@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvableDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
@@ -30,8 +30,8 @@ data class GenericParametersTuple(
     inner class GenericParametersTupleBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
-        ): ResolvedName? = if (parametersDefinitions.any { it == name }) {
-            ResolvedName(
+        ): ResolvableDeclaration? = if (parametersDefinitions.any { it == name }) {
+            ResolvableDeclaration(
                 type = MetaType.toThunk(),
                 expressionClassification = VariableClassification(
                     resolvedFormula = Formula(

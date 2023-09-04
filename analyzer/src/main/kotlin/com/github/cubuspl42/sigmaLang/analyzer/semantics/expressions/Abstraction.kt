@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvableDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -39,8 +39,8 @@ class Abstraction(
 
         override fun resolveNameLocally(
             name: Symbol,
-        ): ResolvedName? = declarationByName[name]?.let {
-            ResolvedName(
+        ): ResolvableDeclaration? = declarationByName[name]?.let {
+            ResolvableDeclaration(
                 type = Thunk.pure(it.type),
                 expressionClassification = VariableClassification(
                     resolvedFormula = Formula(
