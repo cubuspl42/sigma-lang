@@ -20,7 +20,7 @@ class ReverseTranslationScope(
         }
 }
 
-class UserConstantDefinition(
+class UserConstantDefinition private constructor(
     private val outerScope: StaticScope,
     term: ConstantDefinitionTerm,
     private val userDefinition: UserDefinitionMixin = UserDefinitionMixin(

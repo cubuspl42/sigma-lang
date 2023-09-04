@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
-class UserVariableDefinition(
+class UserVariableDefinition private constructor(
     outerScope: StaticScope,
     term: LocalDefinitionTerm,
     userDefinition: UserDefinitionMixin = UserDefinitionMixin(
