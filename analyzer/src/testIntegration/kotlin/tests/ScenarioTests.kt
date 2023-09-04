@@ -50,7 +50,7 @@ class ScenarioTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            prelude = Prelude.load(),
+            outerScope = Prelude.load().staticScope,
             term = term,
         )
 
@@ -168,7 +168,7 @@ class ScenarioTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            prelude = Prelude.load(),
+            outerScope = Prelude.load().staticScope,
             term = term,
         )
 
@@ -210,7 +210,7 @@ class ScenarioTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            prelude = Prelude.load(),
+            outerScope = Prelude.load().staticScope,
             term = term,
         )
 
