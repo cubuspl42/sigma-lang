@@ -31,14 +31,9 @@ private class BuiltinDefinition(
     val value: Value,
     val type: Type,
 ) : ConstantDefinition() {
-    override val constantValue: Thunk<Value> = value.toThunk()
+    override val valueThunk: Thunk<Value> = value.toThunk()
 
-    override val constantType: Thunk<Type> = Thunk.pure(type)
-
-    override val expressionMap: ExpressionMap = ExpressionMap.Empty
-
-    override val errors: Set<SemanticError>
-        get() = emptySet()
+    override val declaredTypeThunk: Thunk<Type> = Thunk.pure(type)
 }
 
 object BuiltinScope : DynamicScope, StaticScope {

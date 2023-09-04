@@ -35,7 +35,7 @@ abstract class UserDefinition : UserDeclaration {
         } else null
     }
 
-    final override val declaredType: Thunk<Type> by lazy {
+    final override val declaredTypeThunk: Thunk<Type> by lazy {
         annotatedType ?: body.inferredType
     }
 

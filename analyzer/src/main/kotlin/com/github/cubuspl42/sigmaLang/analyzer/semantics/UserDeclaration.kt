@@ -4,10 +4,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 
-interface Declaration {
+interface NamedDeclaration {
     val name: Symbol
+}
 
-    val declaredType: Thunk<Type>
+interface Declaration : NamedDeclaration {
+    val declaredTypeThunk: Thunk<Type>
 }
 
 // TODO: Sealed

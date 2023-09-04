@@ -44,7 +44,7 @@ class Reference(
     }
 
     override val inferredType: Thunk<Type>
-        get() = resolved?.declaredType ?: Thunk.pure(IllType)
+        get() = resolved?.declaredTypeThunk ?: Thunk.pure(IllType)
 
     override val subExpressions: Set<Expression> = emptySet()
 
