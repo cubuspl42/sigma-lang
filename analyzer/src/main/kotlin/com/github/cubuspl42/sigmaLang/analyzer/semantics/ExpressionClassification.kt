@@ -34,3 +34,10 @@ interface ClassifiedDeclaration {
 interface ResolvableDeclaration : Declaration, ClassifiedDeclaration {
     override val name: Symbol
 }
+
+abstract class VariableDeclaration : ResolvableDeclaration {
+    final override val expressionClassification: ExpressionClassification
+        get() = VariableClassification(
+            resolvedFormula = Formula(name = name),
+        )
+}

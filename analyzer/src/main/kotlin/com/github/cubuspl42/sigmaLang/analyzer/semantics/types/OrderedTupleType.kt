@@ -59,7 +59,7 @@ data class OrderedTupleType(
         fun toArgumentDeclaration(): Abstraction.ArgumentDeclaration? = name?.let {
             Abstraction.ArgumentDeclaration(
                 name = it,
-                type = type,
+                annotatedType = type,
             )
         }
     }
