@@ -27,7 +27,7 @@ class EulerProblemsTests {
     }
 
     @Test
-    @Ignore // FIXME: Prelude should expose const definitions
+    @Ignore
     fun testProblem8() {
         val result = solveProblem(8)
 
@@ -64,7 +64,7 @@ class EulerProblemsTests {
     }
 
     @Test
-    @Ignore // FIXME: Prelude should expose const definitions
+    @Ignore
     fun testProblem11() {
         assertEquals(
             expected = EvaluationResult(IntValue(value = 70600674L)),
