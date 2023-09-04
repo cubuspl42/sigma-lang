@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvableDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
@@ -31,14 +32,8 @@ data class GenericParametersTuple(
 
     class GenericParameterDeclaration(
         override val name: Symbol,
-    ) : ResolvableDeclaration {
+    ) : VariableDeclaration() {
         override val declaredTypeThunk: Thunk<Type> = Thunk.pure(MetaType)
-
-        override val expressionClassification: ExpressionClassification = VariableClassification(
-            resolvedFormula = Formula(
-                name = name,
-            ),
-        )
     }
 
     inner class GenericParametersTupleBlock : StaticBlock() {

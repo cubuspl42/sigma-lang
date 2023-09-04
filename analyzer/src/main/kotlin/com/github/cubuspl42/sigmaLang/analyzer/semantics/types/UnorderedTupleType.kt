@@ -126,7 +126,7 @@ data class UnorderedTupleType(
             argumentDeclarations = valueTypeByName.map { (name, type) ->
                 Abstraction.ArgumentDeclaration(
                     name = name,
-                    type = type,
+                    annotatedType = type,
                 )
             },
         )

@@ -13,4 +13,8 @@ interface Declaration : NamedDeclaration {
 }
 
 // TODO: Sealed
-interface UserDeclaration : Declaration
+interface UserDeclaration : Declaration {
+    val errors: Set<SemanticError>
+
+    val annotatedTypeThunk: Thunk<Type>?
+}
