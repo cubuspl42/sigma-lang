@@ -15,19 +15,19 @@ data class Formula(
     }
 }
 
-sealed class Resolution
+sealed class ExpressionClassification
 
-class DynamicResolution(
+class VariableClassification(
     val resolvedFormula: Formula?,
-) : Resolution()
+) : ExpressionClassification()
 
-class StaticResolution(
+class ConstClassification(
     private val constantDefinition: ConstantDefinition,
-) : Resolution() {
+) : ExpressionClassification() {
     val resolvedValue: Thunk<Value> = constantDefinition.valueThunk
 }
 
 data class ResolvedName(
     val type: Thunk<Type>,
-    val resolution: Resolution,
+    val expressionClassification: ExpressionClassification,
 )

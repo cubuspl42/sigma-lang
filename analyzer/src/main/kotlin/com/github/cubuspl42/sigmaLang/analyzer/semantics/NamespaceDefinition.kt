@@ -6,7 +6,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 
 class NamespaceDefinition(
@@ -42,7 +41,7 @@ class NamespaceDefinition(
         ): ResolvedName? = getDefinition(name = name)?.let {
             ResolvedName(
                 type = it.effectiveType,
-                resolution = StaticResolution(
+                expressionClassification = ConstClassification(
                     constantDefinition = it,
                 ),
             )
