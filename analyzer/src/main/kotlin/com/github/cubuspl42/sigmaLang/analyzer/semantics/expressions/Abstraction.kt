@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvableDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.UserDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
@@ -29,10 +29,8 @@ class Abstraction(
     class ArgumentDeclaration(
         override val name: Symbol,
         val type: Type,
-    ) : Declaration, ResolvableDeclaration {
+    ) : UserDeclaration, ResolvableDeclaration {
         override val declaredType: Thunk<Type> = Thunk.pure(type)
-
-        override val resolvedType: Thunk<Type> = Thunk.pure(type)
 
         override val expressionClassification: ExpressionClassification = VariableClassification(
             Formula(name = name),

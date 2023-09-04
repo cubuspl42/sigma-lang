@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
-abstract class UserDefinition : Declaration {
+abstract class UserDefinition : UserDeclaration {
     data class UnmatchedInferredTypeError(
         override val location: SourceLocation?,
         val matchResult: Type.MatchResult,

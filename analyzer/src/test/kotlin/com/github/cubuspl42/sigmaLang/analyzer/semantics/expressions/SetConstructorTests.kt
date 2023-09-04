@@ -15,7 +15,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorSourceTerm
 import utils.FakeStaticBlock
-import utils.FakeDeclaration
+import utils.FakeUserDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -26,7 +26,7 @@ class SetConstructorTests {
         fun testSingleElement() {
             val setConstructor = SetConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
                     ),
@@ -48,11 +48,11 @@ class SetConstructorTests {
         fun testMultipleEntriesCompatibleElements() {
             val setConstructor = SetConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value2"),
                         type = BoolType,
                     ),
@@ -79,11 +79,11 @@ class SetConstructorTests {
         fun testMultipleEntriesIncompatibleElements() {
             val setConstructor = SetConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value2"),
                         type = IntCollectiveType,
                     ),
