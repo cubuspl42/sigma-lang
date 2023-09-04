@@ -23,7 +23,7 @@ class TranslationDynamicScope(
         when (val resolution = resolvedName.expressionClassification) {
             is ConstClassification -> resolution.resolvedValue
 
-            is VariableClassification -> when (resolvedName.type.value) {
+            is VariableClassification -> when (resolvedName.resolvedType.value) {
                 is MetaType -> Thunk.pure(
                     TypeVariable(
                         // FIXME

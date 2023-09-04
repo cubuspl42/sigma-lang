@@ -9,6 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
@@ -28,8 +29,14 @@ class Abstraction(
     class ArgumentDeclaration(
         override val name: Symbol,
         val type: Type,
-    ) : Declaration {
+    ) : Declaration, ResolvableDeclaration {
         override val effectiveValueType: Thunk<Type> = Thunk.pure(type)
+
+        override val resolvedType: Thunk<Type> = Thunk.pure(type)
+
+        override val expressionClassification: ExpressionClassification = VariableClassification(
+            Formula(name = name),
+        )
     }
 
     class ArgumentStaticBlock(
@@ -39,16 +46,7 @@ class Abstraction(
 
         override fun resolveNameLocally(
             name: Symbol,
-        ): ResolvableDeclaration? = declarationByName[name]?.let {
-            ResolvableDeclaration(
-                type = Thunk.pure(it.type),
-                expressionClassification = VariableClassification(
-                    resolvedFormula = Formula(
-                        name = name,
-                    ),
-                ),
-            )
-        }
+        ): ResolvableDeclaration? = declarationByName[name]
 
         override fun getLocalNames(): Set<Symbol> = declarationByName.keys
     }

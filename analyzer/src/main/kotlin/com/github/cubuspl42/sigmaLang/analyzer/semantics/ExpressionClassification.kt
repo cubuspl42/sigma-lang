@@ -27,7 +27,7 @@ class ConstClassification(
     val resolvedValue: Thunk<Value> = constantDefinition.valueThunk
 }
 
-data class ResolvableDeclaration(
-    val type: Thunk<Type>,
-    val expressionClassification: ExpressionClassification,
-)
+interface ResolvableDeclaration {
+    val resolvedType: Thunk<Type>
+    val expressionClassification: ExpressionClassification
+}

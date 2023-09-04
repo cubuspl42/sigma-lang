@@ -38,14 +38,7 @@ class NamespaceDefinition(
     inner class NamespaceStaticBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
-        ): ResolvableDeclaration? = getDefinition(name = name)?.let {
-            ResolvableDeclaration(
-                type = it.effectiveType,
-                expressionClassification = ConstClassification(
-                    constantDefinition = it,
-                ),
-            )
-        }
+        ): ResolvableDeclaration? = getDefinition(name = name)
 
         override fun getLocalNames(): Set<Symbol> = definitions.map { it.name }.toSet()
     }
