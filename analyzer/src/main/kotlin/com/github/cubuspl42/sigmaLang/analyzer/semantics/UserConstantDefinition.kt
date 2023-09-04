@@ -27,7 +27,7 @@ class UserConstantDefinition private constructor(
         outerScope = outerScope,
         term = term,
     ),
-) : ConstantDefinition(), Declaration by userDefinition {
+) : ConstantDefinition(), UserDefinition by userDefinition {
     companion object {
         fun build(
             outerScope: StaticScope,
@@ -46,9 +46,6 @@ class UserConstantDefinition private constructor(
         )
     }
 
-    val expressionMap: ExpressionMap
-        get() = userDefinition.body.expressionMap
-
-    val errors: Set<SemanticError>
+    override val errors: Set<SemanticError>
         get() = userDefinition.body.errors
 }
