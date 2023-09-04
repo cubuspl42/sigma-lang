@@ -1,13 +1,15 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvableDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceTerm
@@ -27,17 +29,24 @@ data class GenericParametersTuple(
         )
     }
 
+    class GenericParameterDeclaration(
+        val name: Symbol,
+    ) : ResolvableDeclaration {
+        override val resolvedType: Thunk<Type> = Thunk.pure(MetaType)
+
+        override val expressionClassification: ExpressionClassification = VariableClassification(
+            resolvedFormula = Formula(
+                name = name,
+            ),
+        )
+    }
+
     inner class GenericParametersTupleBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
         ): ResolvableDeclaration? = if (parametersDefinitions.any { it == name }) {
-            ResolvableDeclaration(
-                type = MetaType.toThunk(),
-                expressionClassification = VariableClassification(
-                    resolvedFormula = Formula(
-                        name = name,
-                    ),
-                ),
+            GenericParameterDeclaration(
+                name = name,
             )
         } else {
             null

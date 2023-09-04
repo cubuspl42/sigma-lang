@@ -39,14 +39,6 @@ private class BuiltinDefinition(
 
     override val errors: Set<SemanticError>
         get() = emptySet()
-
-    val asResolvableDeclaration: ResolvableDeclaration
-        get() = ResolvableDeclaration(
-            type = Thunk.pure(type),
-            expressionClassification = ConstClassification(
-                constantDefinition = this,
-            ),
-        )
 }
 
 object BuiltinScope : DynamicScope, StaticScope {
@@ -260,7 +252,7 @@ object BuiltinScope : DynamicScope, StaticScope {
 
     override fun resolveName(
         name: Symbol,
-    ): ResolvableDeclaration? = builtinDeclarations[name]?.asResolvableDeclaration
+    ): ResolvableDeclaration? = builtinDeclarations[name]
 
     override fun getAllNames(): Set<Symbol> = builtinDeclarations.keys
 }

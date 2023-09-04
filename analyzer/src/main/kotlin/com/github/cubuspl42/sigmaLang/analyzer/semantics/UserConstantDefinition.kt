@@ -45,7 +45,7 @@ class UserConstantDefinition(
         }
     }
 
-    val asValueDefinition = UserConstantValueDefinition()
+    private val asValueDefinition = UserConstantValueDefinition()
 
     override val valueThunk by lazy {
         asValueDefinition.body.bind(

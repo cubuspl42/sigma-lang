@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
 
-abstract class ConstantDefinition {
+abstract class ConstantDefinition : ResolvableDeclaration {
     companion object {
         fun build(
             containingNamespaceDefinition: NamespaceDefinition,
@@ -38,4 +38,12 @@ abstract class ConstantDefinition {
     abstract val expressionMap: ExpressionMap
 
     abstract val errors: Set<SemanticError>
+
+    final override val resolvedType: Thunk<Type>
+        get() = effectiveType
+
+    final override val expressionClassification: ExpressionClassification
+        get() = ConstClassification(
+            constantDefinition = this,
+        )
 }
