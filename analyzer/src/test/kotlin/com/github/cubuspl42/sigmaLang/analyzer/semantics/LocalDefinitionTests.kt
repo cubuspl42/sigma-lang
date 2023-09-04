@@ -6,9 +6,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
+import org.junit.experimental.runners.Enclosed
+import org.junit.runner.RunWith
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@RunWith(Enclosed::class)
 class LocalDefinitionTests {
     class TypeCheckingTests {
         @Test
@@ -23,14 +26,14 @@ class LocalDefinitionTests {
 
             val definitionTerm = letExpressionTerm.localScope.definitions.single()
 
-            val definition = LocalValueDefinition.build(
+            val definition = UserVariableDefinition.build(
                 declarationScope = BuiltinScope,
                 term = definitionTerm,
             )
 
             assertEquals(
                 expected = setOf(
-                    ValueDefinition.UnmatchedInferredTypeError(
+                    UserDefinition.UnmatchedInferredTypeError(
                         location = SourceLocation(lineIndex = 2, columnIndex = 13),
                         matchResult = Type.TotalMismatch(
                             expectedType = IntCollectiveType,

@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.LocalValueDefinitionBlock
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableDefinitionBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
@@ -12,7 +12,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionT
 data class LetExpression(
     override val outerScope: StaticScope,
     override val term: LetExpressionTerm,
-    val definitionBlock: LocalValueDefinitionBlock,
+    val definitionBlock: VariableDefinitionBlock,
     val result: Expression,
 ) : Expression() {
     companion object {
@@ -21,7 +21,7 @@ data class LetExpression(
             term: LetExpressionTerm,
         ): LetExpression {
             val (definitionBlock, innerDeclarationScope) = StaticScope.looped { innerDeclarationScopeLooped ->
-                val definitionBlock = LocalValueDefinitionBlock.build(
+                val definitionBlock = VariableDefinitionBlock.build(
                     outerDeclarationScope = innerDeclarationScopeLooped,
                     definitions = term.definitions,
                 )
