@@ -4,11 +4,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 
-interface NamedDeclaration {
+interface Declaration {
     val name: Symbol
-}
 
-interface Declaration : NamedDeclaration {
     val effectiveTypeThunk: Thunk<Type>
 }
 
