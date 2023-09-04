@@ -57,7 +57,9 @@ class NamespaceDefinition(
         context = prelude.dynamicScope,
     )
 
-    val expressionMap: ExpressionMap = ExpressionMap.unionAllOf(definitions) { it.expressionMap }
+    val expressionMap: ExpressionMap = ExpressionMap.unionAllOf(definitions) {
+        it.expressionMap
+    }
 
     val errors: Set<SemanticError> by lazy {
         definitions.fold(emptySet()) { acc, it -> acc + it.errors }
