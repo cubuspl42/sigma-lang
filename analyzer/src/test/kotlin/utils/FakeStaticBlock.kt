@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ValueDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.DynamicResolution
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
@@ -34,7 +34,7 @@ class FakeStaticBlock(
     ): ResolvedName? = declarationByName[name]?.let {
         ResolvedName(
             type = Thunk.pure(it.type),
-            resolution = DynamicResolution(
+            expressionClassification = VariableClassification(
                 resolvedFormula = Formula(
                     name = name,
                 ),

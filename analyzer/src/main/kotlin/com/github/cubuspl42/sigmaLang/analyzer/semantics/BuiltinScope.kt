@@ -43,7 +43,7 @@ private class BuiltinValueDefinition(
     val asResolvedName: ResolvedName
         get() = ResolvedName(
             type = Thunk.pure(type),
-            resolution = StaticResolution(
+            expressionClassification = ConstClassification(
                 constantDefinition = this,
             ),
         )

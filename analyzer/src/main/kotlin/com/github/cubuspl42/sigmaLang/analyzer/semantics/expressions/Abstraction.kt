@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.DynamicResolution
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
@@ -42,7 +42,7 @@ class Abstraction(
         ): ResolvedName? = declarationByName[name]?.let {
             ResolvedName(
                 type = Thunk.pure(it.type),
-                resolution = DynamicResolution(
+                expressionClassification = VariableClassification(
                     resolvedFormula = Formula(
                         name = name,
                     ),
