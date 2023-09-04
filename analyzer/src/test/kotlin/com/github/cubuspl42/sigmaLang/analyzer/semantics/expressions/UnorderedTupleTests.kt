@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorSourceTerm
 import utils.FakeStaticBlock
-import utils.FakeValueDeclaration
+import utils.FakeDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -48,11 +48,11 @@ class UnorderedTupleTests {
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeValueDeclaration(
+                    FakeDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
                     ),
-                    FakeValueDeclaration(
+                    FakeDeclaration(
                         name = Symbol.of("value2"),
                         type = IntCollectiveType,
                     ),
@@ -84,11 +84,11 @@ class UnorderedTupleTests {
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeValueDeclaration(
+                    FakeDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
                     ),
-                    FakeValueDeclaration(
+                    FakeDeclaration(
                         name = Symbol.of("value2"),
                         type = IntCollectiveType,
                     ),
