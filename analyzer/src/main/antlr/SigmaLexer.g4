@@ -40,6 +40,7 @@ Minus : '-' ;
 Bang : '!' ;
 Dash : '^' ;
 Ellipsis : '...' ;
+Pipe : '|' ;
 
 ThinArrow : '->' ;
 FatArrow : '=>' ;

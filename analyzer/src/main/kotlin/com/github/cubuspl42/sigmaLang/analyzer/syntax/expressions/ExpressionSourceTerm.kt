@@ -21,6 +21,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.LetExpre
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.ParenExpressionAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.ReferenceAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.TupleConstructorAltContext
+import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.UnionTypeConstructorAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceTerm
 
@@ -44,6 +45,10 @@ sealed class ExpressionSourceTerm : SourceTerm() {
             override fun visitBinaryOperationAlt(
                 ctx: BinaryOperationAltContext,
             ): ExpressionTerm = InfixCallSourceTerm.build(ctx)
+
+            override fun visitUnionTypeConstructorAlt(
+                ctx: UnionTypeConstructorAltContext,
+            ): ExpressionTerm = UnionTypeConstructorSourceTerm.build(ctx)
 
             override fun visitParenExpressionAlt(
                 ctx: ParenExpressionAltContext,

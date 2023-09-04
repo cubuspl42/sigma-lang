@@ -91,6 +91,8 @@ abstract class Expression {
                 term = term,
             )
 
+            is UnionTypeConstructorTerm -> TODO()
+
             is GenericTypeConstructorTerm -> TODO()
 
             is ParenTerm -> TODO()

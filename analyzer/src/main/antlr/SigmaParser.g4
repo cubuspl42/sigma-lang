@@ -68,6 +68,7 @@ expression
     | left=expression operator=Lt right=expression # binaryOperationAlt
     | left=expression operator=Gt right=expression # binaryOperationAlt
     | left=expression operator=Link right=expression # binaryOperationAlt
+    | left=expression operator=Pipe right=expression # unionTypeConstructorAlt
     | parenExpression # parenExpressionAlt
     | reference # referenceAlt
     | abstraction # abstractionAlt
