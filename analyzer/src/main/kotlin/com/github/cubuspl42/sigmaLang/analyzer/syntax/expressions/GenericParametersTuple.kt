@@ -30,7 +30,7 @@ data class GenericParametersTuple(
     }
 
     class GenericParameterDeclaration(
-        val name: Symbol,
+        override val name: Symbol,
     ) : ResolvableDeclaration {
         override val resolvedType: Thunk<Type> = Thunk.pure(MetaType)
 
