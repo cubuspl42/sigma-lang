@@ -24,7 +24,7 @@ class VariableClassification(
 class ConstClassification(
     private val constantDefinition: ConstantDefinition,
 ) : ExpressionClassification() {
-    val resolvedValue: Thunk<Value> = constantDefinition.valueThunk
+    val resolvedValue: Thunk<Value> = constantDefinition.constantValue
 }
 
 interface ResolvableDeclaration {

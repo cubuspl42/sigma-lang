@@ -31,9 +31,9 @@ private class BuiltinDefinition(
     val value: Value,
     val type: Type,
 ) : ConstantDefinition() {
-    override val valueThunk: Thunk<Value> = value.toThunk()
+    override val constantValue: Thunk<Value> = value.toThunk()
 
-    override val effectiveType: Thunk<Type> = Thunk.pure(type)
+    override val constantType: Thunk<Type> = Thunk.pure(type)
 
     override val expressionMap: ExpressionMap = ExpressionMap.Empty
 

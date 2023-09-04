@@ -27,20 +27,20 @@ abstract class ConstantDefinition : ResolvableDeclaration {
         }
     }
 
-    fun evaluateResult(): EvaluationOutcome<Value> = valueThunk.evaluateInitial()
+    fun evaluateResult(): EvaluationOutcome<Value> = constantValue.evaluateInitial()
 
     abstract val name: Symbol
 
-    abstract val valueThunk: Thunk<Value>
+    abstract val constantValue: Thunk<Value>
 
-    abstract val effectiveType: Thunk<Type>
+    abstract val constantType: Thunk<Type>
 
     abstract val expressionMap: ExpressionMap
 
     abstract val errors: Set<SemanticError>
 
     final override val resolvedType: Thunk<Type>
-        get() = effectiveType
+        get() = constantType
 
     final override val expressionClassification: ExpressionClassification
         get() = ConstClassification(

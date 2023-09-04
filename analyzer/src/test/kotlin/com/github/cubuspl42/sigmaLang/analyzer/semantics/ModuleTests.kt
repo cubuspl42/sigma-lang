@@ -45,7 +45,7 @@ class ModuleTests {
                     ),
                     imageType = BoolType,
                 ),
-                actual = isUserIdValid.effectiveType.value,
+                actual = isUserIdValid.constantType.value,
             )
         }
     }
