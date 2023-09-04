@@ -14,7 +14,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleConstructorSourceTerm
 import utils.FakeStaticBlock
-import utils.FakeValueDeclaration
+import utils.FakeDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -52,11 +52,11 @@ class OrderedTupleConstructorTests {
 
             val tupleLiteral = OrderedTupleConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeValueDeclaration(
+                    FakeDeclaration(
                         name = Symbol.of("a"),
                         type = BoolType,
                     ),
-                    FakeValueDeclaration(
+                    FakeDeclaration(
                         name = Symbol.of("b"),
                         type = IntCollectiveType,
                     ),

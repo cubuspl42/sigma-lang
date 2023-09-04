@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ValueDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
@@ -28,7 +28,7 @@ class Abstraction(
     class ArgumentDeclaration(
         override val name: Symbol,
         val type: Type,
-    ) : ValueDeclaration {
+    ) : Declaration {
         override val effectiveValueType: Thunk<Type> = Thunk.pure(type)
     }
 
