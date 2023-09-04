@@ -14,14 +14,14 @@ abstract class UserDefinition : Declaration {
 
     protected abstract val outerScope: StaticScope
 
-    private val declaredType: Thunk<Type>? by lazy {
+    private val annotatedType: Thunk<Type>? by lazy {
         declaredTypeBody?.let { expression ->
             expression.bind(dynamicScope = BuiltinScope).thenJust { it.asType!! }
         }
     }
 
     private val unmatchedInferredTypeError: UnmatchedInferredTypeError? by lazy {
-        val declaredType = this.declaredType?.value
+        val declaredType = this.annotatedType?.value
         val inferredType = body.inferredType.value
 
         if (declaredType != null && inferredType != null) {
@@ -35,8 +35,8 @@ abstract class UserDefinition : Declaration {
         } else null
     }
 
-    final override val effectiveValueType: Thunk<Type> by lazy {
-        declaredType ?: body.inferredType
+    final override val declaredType: Thunk<Type> by lazy {
+        annotatedType ?: body.inferredType
     }
 
     val errors: Set<SemanticError> by lazy {

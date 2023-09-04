@@ -30,7 +30,7 @@ class Abstraction(
         override val name: Symbol,
         val type: Type,
     ) : Declaration, ResolvableDeclaration {
-        override val effectiveValueType: Thunk<Type> = Thunk.pure(type)
+        override val declaredType: Thunk<Type> = Thunk.pure(type)
 
         override val resolvedType: Thunk<Type> = Thunk.pure(type)
 
