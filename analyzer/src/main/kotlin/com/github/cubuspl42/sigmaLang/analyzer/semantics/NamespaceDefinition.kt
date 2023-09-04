@@ -2,16 +2,19 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.chainWith
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 
 class NamespaceDefinition(
     private val outerScope: StaticScope,
     private val term: NamespaceDefinitionTerm,
-) {
+) : ConstantDefinition() {
     companion object {
         fun build(
             outerScope: StaticScope,
@@ -29,6 +32,9 @@ class NamespaceDefinition(
 
         override fun getLocalNames(): Set<Symbol> = definitions.map { it.name }.toSet()
     }
+
+    override val name: Symbol
+        get() = term.name
 
     private val asDeclarationBlock = NamespaceStaticBlock()
 
@@ -59,5 +65,25 @@ class NamespaceDefinition(
 
     fun printErrors() {
         errors.forEach { println(it.dump()) }
+    }
+
+    override val valueThunk: Thunk<Value> by lazy {
+        Thunk.pure(
+            DictValue(
+                entries = definitions.associate {
+                    it.name to it.valueThunk.value!!
+                },
+            )
+        )
+    }
+
+    override val effectiveTypeThunk: Thunk<Type> by lazy {
+        Thunk.pure(
+            UnorderedTupleType(
+                valueTypeByName = definitions.associate {
+                    it.name to it.effectiveTypeThunk.value!!
+                },
+            ),
+        )
     }
 }

@@ -6,10 +6,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.ImportStatementContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.ModuleContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ModulePath
+import java.lang.IllegalArgumentException
 
 data class ModuleSourceTerm(
     override val location: SourceLocation,
-    val imports: List<Import>,
+    override val imports: List<ImportSourceTerm>,
     override val namespaceEntries: List<NamespaceEntrySourceTerm>,
 ) : SourceTerm(), ModuleTerm {
     companion object {
@@ -29,7 +31,7 @@ data class ModuleSourceTerm(
             return ModuleSourceTerm(
                 location = SourceLocation.build(ctx),
                 imports = ctx.importSection().importStatement().map {
-                    Import.build(it)
+                    ImportSourceTerm.build(it)
                 },
                 namespaceEntries = ctx.namespaceBody().namespaceEntry().map {
                     NamespaceEntrySourceTerm.build(it)
@@ -38,15 +40,22 @@ data class ModuleSourceTerm(
         }
     }
 
-    data class Import(
+    data class ImportSourceTerm(
         override val location: SourceLocation,
-        val path: List<String>,
-    ) : SourceTerm() {
+        override val modulePath: ModulePath,
+    ) : SourceTerm(), ImportTerm {
         companion object {
-            fun build(ctx: ImportStatementContext): Import {
-                return Import(
+            fun build(ctx: ImportStatementContext): ImportSourceTerm {
+                val pathSegments = ctx.importPath().packagePathSegment
+                val moduleName = ctx.importPath().moduleName.text
+
+                if (pathSegments.isNotEmpty()) {
+                    throw IllegalArgumentException()
+                }
+
+                return ImportSourceTerm(
                     location = SourceLocation.build(ctx),
-                    path = ctx.importPath().identifier().map { it.text },
+                    modulePath = ModulePath.root(name = moduleName),
                 )
             }
         }

@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.getResourceAsText
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
+import java.lang.IllegalArgumentException
 
 data class ModulePath(
     /**
@@ -22,29 +23,12 @@ class Project(
     val mainModule: Module,
 ) {
     companion object {
-        private fun loadModule(
-            outerScope: StaticScope?,
-            source: String,
-            name: String,
-        ): Module {
-            val moduleTerm = ModuleSourceTerm.build(
-                ctx = Program.buildParser(
-                    sourceName = name,
-                    source = source,
-                ).module(),
-            )
-
-            return Module.build(
-                outerScope = outerScope,
-                term = moduleTerm,
-            )
-        }
-
         fun loadPrelude(): Module {
             val preludeSource = getResourceAsText("prelude.sigma") ?: throw RuntimeException("Couldn't load prelude")
 
-            return loadModule(
+            return Module.build(
                 outerScope = BuiltinScope,
+                moduleResolver = ModuleResolver.Empty,
                 source = preludeSource,
                 name = "__prelude__",
             )
@@ -52,14 +36,14 @@ class Project(
     }
 
     class Loader private constructor(
-        private val module: Module,
+        private val prelude: Module,
     ) {
         companion object {
             fun create(): Loader {
                 val prelude = loadPrelude()
 
                 return Loader(
-                    module = prelude,
+                    prelude = prelude,
                 )
             }
         }
@@ -68,15 +52,14 @@ class Project(
             projectStore: ProjectStore,
             mainModuleName: String = "main",
         ): Project {
-            val moduleSource = projectStore.load(
-                modulePath = ModulePath.root(mainModuleName)
+            val moduleResolver = StoreModuleResolver(
+                outerScope = prelude.innerStaticScope,
+                store = projectStore,
             )
 
-            val mainModule = loadModule(
-                outerScope = module.innerStaticScope,
-                source = moduleSource,
-                name = mainModuleName,
-            )
+            val mainModule = moduleResolver.resolveModule(
+                modulePath = ModulePath.root(name = mainModuleName),
+            ) ?: throw IllegalArgumentException("Could not load main module: $mainModuleName")
 
             return Project(
                 projectStore = projectStore,
