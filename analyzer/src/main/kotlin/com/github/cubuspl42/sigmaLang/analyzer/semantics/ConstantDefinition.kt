@@ -1,11 +1,8 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationOutcome
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
@@ -13,11 +10,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
 abstract class ConstantDefinition : ResolvableDeclaration {
     companion object {
         fun build(
-            containingNamespaceDefinition: NamespaceDefinition,
+            outerScope: StaticScope,
             term: NamespaceEntryTerm,
-        ): ConstantDefinition = when (term) {
+        ): UserConstantDefinition = when (term) {
             is ConstantDefinitionTerm -> UserConstantDefinition.build(
-                containingNamespaceDefinition = containingNamespaceDefinition,
+                outerScope = outerScope,
                 term = term,
             )
 
@@ -27,18 +24,9 @@ abstract class ConstantDefinition : ResolvableDeclaration {
         }
     }
 
-    fun evaluateResult(): EvaluationOutcome<Value> = constantValue.evaluateInitial()
+    fun evaluateResult(): EvaluationOutcome<Value> = valueThunk.evaluateInitial()
 
-    abstract val constantValue: Thunk<Value>
-
-    abstract val constantType: Thunk<Type>
-
-    abstract val expressionMap: ExpressionMap
-
-    abstract val errors: Set<SemanticError>
-
-    final override val declaredType: Thunk<Type>
-        get() = constantType
+    abstract val valueThunk: Thunk<Value>
 
     final override val expressionClassification: ExpressionClassification
         get() = ConstClassification(

@@ -30,7 +30,7 @@ class Abstraction(
         override val name: Symbol,
         val type: Type,
     ) : UserDeclaration, ResolvableDeclaration {
-        override val declaredType: Thunk<Type> = Thunk.pure(type)
+        override val declaredTypeThunk: Thunk<Type> = Thunk.pure(type)
 
         override val expressionClassification: ExpressionClassification = VariableClassification(
             Formula(name = name),

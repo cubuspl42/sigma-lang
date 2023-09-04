@@ -22,19 +22,6 @@ class NamespaceDefinition(
         )
     }
 
-    val definitions: Set<ConstantDefinition> = term.namespaceEntries.map {
-        ConstantDefinition.build(
-            containingNamespaceDefinition = this,
-            term = it,
-        )
-    }.toSet()
-
-    fun getDefinition(
-        name: Symbol,
-    ): ConstantDefinition? = definitions.singleOrNull {
-        it.name == name
-    }
-
     inner class NamespaceStaticBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
@@ -45,18 +32,30 @@ class NamespaceDefinition(
 
     private val asDeclarationBlock = NamespaceStaticBlock()
 
-    val innerStaticScope: StaticScope = asDeclarationBlock.chainWith(
+    private val innerStaticScope: StaticScope = asDeclarationBlock.chainWith(
         outerScope = prelude.declarationScope,
     )
+
+    val definitions: Set<UserConstantDefinition> = term.namespaceEntries.map {
+        ConstantDefinition.build(
+            outerScope = innerStaticScope,
+            term = it,
+        )
+    }.toSet()
+
+    fun getDefinition(
+        name: Symbol,
+    ): ConstantDefinition? = definitions.singleOrNull {
+        it.name == name
+    }
 
     val innerDynamicScope = object : DynamicScope {
         override fun getValue(
             name: Symbol,
-        ): Thunk<Value>? = getDefinition(name = name)?.constantValue
+        ): Thunk<Value>? = getDefinition(name = name)?.valueThunk
     }.chainWith(
         context = prelude.dynamicScope,
     )
-
 
     val expressionMap: ExpressionMap = ExpressionMap.unionAllOf(definitions) { it.expressionMap }
 

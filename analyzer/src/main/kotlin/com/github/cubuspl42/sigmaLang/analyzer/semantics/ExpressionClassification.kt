@@ -3,7 +3,6 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 
 data class Formula(
     val name: Symbol,
@@ -24,12 +23,14 @@ class VariableClassification(
 class ConstClassification(
     private val constantDefinition: ConstantDefinition,
 ) : ExpressionClassification() {
-    val resolvedValue: Thunk<Value> = constantDefinition.constantValue
+    val resolvedValue: Thunk<Value> = constantDefinition.valueThunk
+}
+
+interface ClassifiedDeclaration {
+    val expressionClassification: ExpressionClassification
 }
 
 // TODO: Sealed
-interface ResolvableDeclaration : Declaration {
+interface ResolvableDeclaration : Declaration, ClassifiedDeclaration {
     override val name: Symbol
-
-    val expressionClassification: ExpressionClassification
 }
