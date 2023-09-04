@@ -38,8 +38,8 @@ class NamespaceDefinition(
     inner class NamespaceStaticBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
-        ): ResolvedName? = getDefinition(name = name)?.let {
-            ResolvedName(
+        ): ResolvableDeclaration? = getDefinition(name = name)?.let {
+            ResolvableDeclaration(
                 type = it.effectiveType,
                 expressionClassification = ConstClassification(
                     constantDefinition = it,

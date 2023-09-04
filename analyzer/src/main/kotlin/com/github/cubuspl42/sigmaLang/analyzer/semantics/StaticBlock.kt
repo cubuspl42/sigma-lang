@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 
 abstract class StaticBlock : StaticScope {
-    abstract fun resolveNameLocally(name: Symbol): ResolvedName?
+    abstract fun resolveNameLocally(name: Symbol): ResolvableDeclaration?
 
     abstract fun getLocalNames(): Set<Symbol>
 
@@ -11,7 +11,7 @@ abstract class StaticBlock : StaticScope {
 
     final override fun resolveName(
         name: Symbol,
-    ): ResolvedName? = resolveNameLocally(name = name)
+    ): ResolvableDeclaration? = resolveNameLocally(name = name)
 
     fun chainWith(outerScope: StaticScope): StaticScope = StaticScope.Chained(
         outerScope = outerScope,

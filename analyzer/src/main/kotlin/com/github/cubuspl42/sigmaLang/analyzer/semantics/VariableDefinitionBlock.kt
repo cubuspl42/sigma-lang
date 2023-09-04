@@ -32,8 +32,8 @@ class VariableDefinitionBlock(
 
     override fun resolveNameLocally(
         name: Symbol,
-    ): ResolvedName? = getValueDefinition(name = name)?.let {
-        ResolvedName(
+    ): ResolvableDeclaration? = getValueDefinition(name = name)?.let {
+        ResolvableDeclaration(
             type = it.effectiveValueType, expressionClassification = VariableClassification(
                 resolvedFormula = null,
             )

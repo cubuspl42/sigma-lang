@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvableDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 
 data class FakeDeclaration(
@@ -31,8 +31,8 @@ class FakeStaticBlock(
 
     override fun resolveNameLocally(
         name: Symbol,
-    ): ResolvedName? = declarationByName[name]?.let {
-        ResolvedName(
+    ): ResolvableDeclaration? = declarationByName[name]?.let {
+        ResolvableDeclaration(
             type = Thunk.pure(it.type),
             expressionClassification = VariableClassification(
                 resolvedFormula = Formula(
