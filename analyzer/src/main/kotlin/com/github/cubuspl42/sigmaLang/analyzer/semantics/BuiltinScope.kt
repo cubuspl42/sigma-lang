@@ -243,8 +243,7 @@ object BuiltinScope : DynamicScope, StaticScope {
         )
     }.toSet()
 
-    private val builtinDeclarations: Map<Symbol, BuiltinDefinition> =
-        builtinValueDeclarations.associateBy { it.name }
+    private val builtinDeclarations: Map<Symbol, BuiltinDefinition> = builtinValueDeclarations.associateBy { it.name }
 
     val names: Set<Symbol>
         get() = builtinDeclarations.keys

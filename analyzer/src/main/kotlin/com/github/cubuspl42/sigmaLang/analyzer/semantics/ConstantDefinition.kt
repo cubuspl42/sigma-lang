@@ -1,13 +1,16 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationOutcome
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.*
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
 
-abstract class ConstantDefinition : Declaration {
+abstract class ConstantDefinition {
     companion object {
         fun build(
             containingNamespaceDefinition: NamespaceDefinition,
@@ -25,6 +28,8 @@ abstract class ConstantDefinition : Declaration {
     }
 
     fun evaluateResult(): EvaluationOutcome<Value> = valueThunk.evaluateInitial()
+
+    abstract val name: Symbol
 
     abstract val valueThunk: Thunk<Value>
 
