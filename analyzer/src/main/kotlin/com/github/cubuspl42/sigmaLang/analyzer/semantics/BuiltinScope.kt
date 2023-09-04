@@ -33,7 +33,7 @@ private class BuiltinDefinition(
 ) : ConstantDefinition() {
     override val valueThunk: Thunk<Value> = value.toThunk()
 
-    override val declaredTypeThunk: Thunk<Type> = Thunk.pure(type)
+    override val effectiveTypeThunk: Thunk<Type> = Thunk.pure(type)
 }
 
 object BuiltinScope : DynamicScope, StaticScope {

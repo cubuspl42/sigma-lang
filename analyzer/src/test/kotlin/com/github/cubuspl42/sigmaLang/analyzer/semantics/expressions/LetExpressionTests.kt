@@ -38,7 +38,7 @@ class LetExpressionTests {
             )
 
             val fType = assertIs<FunctionType>(
-                value = fDefinition.declaredTypeThunk.value,
+                value = fDefinition.effectiveTypeThunk.value,
             )
 
             assertIs<IntType>(value = fType.imageType)
@@ -50,7 +50,7 @@ class LetExpressionTests {
             )
 
             val gType = assertIs<FunctionType>(
-                value = gDefinition.declaredTypeThunk.value,
+                value = gDefinition.effectiveTypeThunk.value,
             )
 
             assertIs<IntType>(value = gType.imageType)
@@ -79,7 +79,7 @@ class LetExpressionTests {
             )
 
             assertIs<EvaluationStackExhaustionError>(
-                value = fDefinition.declaredTypeThunk.outcome,
+                value = fDefinition.effectiveTypeThunk.outcome,
             )
 
             val gDefinition = assertNotNull(
@@ -89,7 +89,7 @@ class LetExpressionTests {
             )
 
             assertIs<EvaluationStackExhaustionError>(
-                value = gDefinition.declaredTypeThunk.outcome,
+                value = gDefinition.effectiveTypeThunk.outcome,
             )
         }
 
@@ -116,7 +116,7 @@ class LetExpressionTests {
             )
 
             assertIs<IntCollectiveType>(
-                value = aDefinition.declaredTypeThunk.value,
+                value = aDefinition.effectiveTypeThunk.value,
             )
 
             val bDefinition = assertNotNull(
@@ -126,7 +126,7 @@ class LetExpressionTests {
             )
 
             assertIs<IntCollectiveType>(
-                value = bDefinition.declaredTypeThunk.value,
+                value = bDefinition.effectiveTypeThunk.value,
             )
         }
     }

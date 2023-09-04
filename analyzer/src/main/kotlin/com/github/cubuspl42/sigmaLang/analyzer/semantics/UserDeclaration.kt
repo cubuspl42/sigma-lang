@@ -9,7 +9,7 @@ interface NamedDeclaration {
 }
 
 interface Declaration : NamedDeclaration {
-    val declaredTypeThunk: Thunk<Type>
+    val effectiveTypeThunk: Thunk<Type>
 }
 
 // TODO: Sealed

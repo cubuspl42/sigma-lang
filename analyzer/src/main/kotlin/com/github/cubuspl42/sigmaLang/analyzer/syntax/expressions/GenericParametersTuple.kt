@@ -33,7 +33,7 @@ data class GenericParametersTuple(
     class GenericParameterDeclaration(
         override val name: Symbol,
     ) : VariableDeclaration() {
-        override val declaredTypeThunk: Thunk<Type> = Thunk.pure(MetaType)
+        override val effectiveTypeThunk: Thunk<Type> = Thunk.pure(MetaType)
     }
 
     inner class GenericParametersTupleBlock : StaticBlock() {
