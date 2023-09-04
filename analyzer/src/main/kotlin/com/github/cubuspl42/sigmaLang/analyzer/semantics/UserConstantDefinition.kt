@@ -21,7 +21,7 @@ class UserConstantDefinition(
         )
     }
 
-    inner class UserConstantValueDefinition : UserDefinition() {
+    inner class ConstantUserDefinition : UserDefinition() {
         override val name: Symbol
             get() = this@UserConstantDefinition.name
 
@@ -45,7 +45,7 @@ class UserConstantDefinition(
         }
     }
 
-    private val asUserDefinition = UserConstantValueDefinition()
+    private val asUserDefinition = ConstantUserDefinition()
 
     override val constantValue by lazy {
         asUserDefinition.body.bind(
