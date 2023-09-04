@@ -47,7 +47,7 @@ class NamespaceTests {
                     ),
                     imageType = BoolType,
                 ),
-                actual = isUserIdValidDefinition.declaredTypeThunk.value,
+                actual = isUserIdValidDefinition.effectiveTypeThunk.value,
             )
         }
     }

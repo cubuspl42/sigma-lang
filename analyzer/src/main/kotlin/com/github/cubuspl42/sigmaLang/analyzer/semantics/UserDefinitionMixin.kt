@@ -58,7 +58,7 @@ class UserDefinitionMixin(
     override val name: Symbol
         get() = term.name
 
-    override val declaredTypeThunk: Thunk<Type> by lazy {
+    override val effectiveTypeThunk: Thunk<Type> by lazy {
         annotatedTypeThunk ?: body.inferredType
     }
 }

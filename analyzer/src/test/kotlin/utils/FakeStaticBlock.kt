@@ -18,7 +18,7 @@ data class FakeUserDeclaration(
 ) : VariableDeclaration(), UserDeclaration {
     override val annotatedTypeThunk: Thunk<Type> = Thunk.pure(type)
 
-    override val declaredTypeThunk: Thunk<Type> = Thunk.pure(type)
+    override val effectiveTypeThunk: Thunk<Type> = Thunk.pure(type)
 
     override val errors: Set<SemanticError> = emptySet()
 }

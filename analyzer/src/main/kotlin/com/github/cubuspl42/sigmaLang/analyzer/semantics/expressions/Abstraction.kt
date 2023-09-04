@@ -30,7 +30,7 @@ class Abstraction(
     ) : VariableDeclaration(), UserDeclaration {
         override val annotatedTypeThunk: Thunk<Type> = Thunk.pure(annotatedType)
 
-        override val declaredTypeThunk: Thunk<Type> = Thunk.pure(annotatedType)
+        override val effectiveTypeThunk: Thunk<Type> = annotatedTypeThunk
 
         override val errors: Set<SemanticError> = emptySet()
     }

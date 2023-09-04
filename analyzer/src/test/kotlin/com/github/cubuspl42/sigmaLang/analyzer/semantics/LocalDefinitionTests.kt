@@ -46,7 +46,7 @@ class LocalDefinitionTests {
 
             assertEquals(
                 expected = IntCollectiveType,
-                actual = definition.declaredTypeThunk.value,
+                actual = definition.effectiveTypeThunk.value,
             )
         }
 
