@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaReferenceExpressio
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Module
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ModuleResolver
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaFile
 import com.intellij.codeInsight.completion.*
@@ -26,6 +27,7 @@ class SigmaCompletionContributor : CompletionContributor() {
 
                 val module = Module.build(
                     outerScope = prelude.innerStaticScope,
+                    moduleResolver = ModuleResolver.Empty,
                     term = moduleTerm,
                 )
 

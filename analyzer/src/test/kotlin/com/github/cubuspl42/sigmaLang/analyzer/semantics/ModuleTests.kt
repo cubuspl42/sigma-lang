@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
@@ -10,6 +11,7 @@ import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
 @RunWith(Enclosed::class)
@@ -27,6 +29,7 @@ class ModuleTests {
 
             val module = Module.build(
                 outerScope = BuiltinScope,
+                moduleResolver = ModuleResolver.Empty,
                 term = term,
             )
 
@@ -49,6 +52,62 @@ class ModuleTests {
                     imageType = BoolType,
                 ),
                 actual = isUserIdValid.effectiveTypeThunk.value,
+            )
+        }
+
+        @Test
+        fun testImport() {
+            val module1Term = ModuleSourceTerm.parse(
+                source = """
+                    %const bar: Int = 123
+                """.trimIndent(),
+            )
+
+            val module2Term = ModuleSourceTerm.parse(
+                source = """
+                    %import foo
+                    
+                    %const baz = foo.bar
+                """.trimIndent(),
+            )
+
+            val module = Module.build(
+                outerScope = BuiltinScope,
+                moduleResolver = object : ModuleResolver {
+                    override fun resolveModule(
+                        modulePath: ModulePath,
+                    ): Module? = Module.build(
+                        outerScope = BuiltinScope,
+                        moduleResolver = this,
+                        term = module1Term,
+                    ).takeIf {
+                        modulePath.name == "foo"
+                    }
+                },
+                term = module2Term,
+            )
+
+            val bazDefinition = module.rootNamespaceDefinition.getDefinition(
+                name = Symbol.of("baz"),
+            )
+
+            assertEquals(
+                actual = module.errors,
+                expected = emptySet(),
+            )
+
+            assertNotNull(bazDefinition)
+
+            assertIs<ConstantDefinition>(bazDefinition)
+
+            assertEquals(
+                expected = bazDefinition.effectiveTypeThunk.value,
+                actual = IntCollectiveType,
+            )
+
+            assertEquals(
+                expected = bazDefinition.valueThunk.value,
+                actual = IntValue(value = 123L),
             )
         }
     }
