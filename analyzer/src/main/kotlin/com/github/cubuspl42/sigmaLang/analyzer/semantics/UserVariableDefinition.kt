@@ -9,7 +9,7 @@ class UserVariableDefinition private constructor(
         outerScope = outerScope,
         term = term,
     ),
-) : VariableDeclaration(), UserDefinition by userDefinition, ResolvableDeclaration {
+) : VariableDeclaration(), UserDefinition by userDefinition {
     companion object {
         fun build(
             declarationScope: StaticScope,
