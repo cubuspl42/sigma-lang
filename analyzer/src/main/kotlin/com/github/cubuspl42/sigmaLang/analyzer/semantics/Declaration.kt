@@ -7,5 +7,5 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 interface Declaration {
     val name: Symbol
 
-    val effectiveValueType: Thunk<Type>
+    val declaredType: Thunk<Type>
 }

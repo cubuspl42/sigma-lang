@@ -38,7 +38,7 @@ class UserVariableDefinition(
         )
     }
 
-    override val resolvedType: Thunk<Type> by lazy { effectiveValueType }
+    override val resolvedType: Thunk<Type> by lazy { declaredType }
 
     override val expressionClassification: ExpressionClassification = VariableClassification(
         resolvedFormula = Formula(name = name),

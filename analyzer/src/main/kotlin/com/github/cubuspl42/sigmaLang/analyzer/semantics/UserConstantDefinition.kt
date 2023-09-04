@@ -54,7 +54,7 @@ class UserConstantDefinition(
     }
 
     override val constantType: Thunk<Type>
-        get() = asUserDefinition.effectiveValueType
+        get() = asUserDefinition.declaredType
 
     override val expressionMap: ExpressionMap
         get() = asUserDefinition.body.expressionMap
