@@ -26,7 +26,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import utils.FakeStaticBlock
-import utils.FakeDeclaration
+import utils.FakeUserDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -41,7 +41,7 @@ class CallTests {
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
                             argumentType = OrderedTupleType(
@@ -79,7 +79,7 @@ class CallTests {
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
                             argumentType = OrderedTupleType(
@@ -131,7 +131,7 @@ class CallTests {
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("b"),
                         type = BoolType,
                     ),
@@ -162,7 +162,7 @@ class CallTests {
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
                             genericParameters = setOf(
@@ -209,7 +209,7 @@ class CallTests {
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
                             genericParameters = setOf(
@@ -260,7 +260,7 @@ class CallTests {
 
             val call = Call.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
                             genericParameters = setOf(

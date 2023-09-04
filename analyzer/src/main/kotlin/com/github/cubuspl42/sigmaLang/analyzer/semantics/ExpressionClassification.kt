@@ -27,10 +27,9 @@ class ConstClassification(
     val resolvedValue: Thunk<Value> = constantDefinition.constantValue
 }
 
-interface ResolvableDeclaration {
-    val name: Symbol
-
-    val resolvedType: Thunk<Type>
+// TODO: Sealed
+interface ResolvableDeclaration : Declaration {
+    override val name: Symbol
 
     val expressionClassification: ExpressionClassification
 }

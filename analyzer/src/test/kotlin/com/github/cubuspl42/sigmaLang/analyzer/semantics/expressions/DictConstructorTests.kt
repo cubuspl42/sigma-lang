@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import utils.FakeStaticBlock
-import utils.FakeDeclaration
+import utils.FakeUserDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -20,11 +20,11 @@ class DictConstructorTests {
         fun testSingleEntry() {
             val dictLiteral = DictConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
                     ),
@@ -51,19 +51,19 @@ class DictConstructorTests {
         fun testMultipleEntriesCompatibleEntries() {
             val dictLiteral = DictConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("key2"),
                         type = IntCollectiveType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value2"),
                         type = BoolType,
                     ),
@@ -91,19 +91,19 @@ class DictConstructorTests {
         fun testMultipleEntriesIncompatibleKeys() {
             val dictLiteral = DictConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("key2"),
                         type = BoolType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value2"),
                         type = BoolType,
                     ),
@@ -137,19 +137,19 @@ class DictConstructorTests {
         fun testMultipleEntriesIncompatibleValues() {
             val dictLiteral = DictConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("key1"),
                         type = IntCollectiveType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("key2"),
                         type = IntCollectiveType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value2"),
                         type = Arbitrary.unorderedTupleType,
                     ),
@@ -185,11 +185,11 @@ class DictConstructorTests {
 
             val dictLiteral = DictConstructor.build(
                 outerScope = FakeStaticBlock.of(
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("key1"),
                         type = keyType,
                     ),
-                    FakeDeclaration(
+                    FakeUserDeclaration(
                         name = Symbol.of("value1"),
                         type = BoolType,
                     ),

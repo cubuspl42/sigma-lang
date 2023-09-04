@@ -37,7 +37,7 @@ abstract class ConstantDefinition : ResolvableDeclaration {
 
     abstract val errors: Set<SemanticError>
 
-    final override val resolvedType: Thunk<Type>
+    final override val declaredType: Thunk<Type>
         get() = constantType
 
     final override val expressionClassification: ExpressionClassification

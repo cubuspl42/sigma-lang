@@ -9,3 +9,6 @@ interface Declaration {
 
     val declaredType: Thunk<Type>
 }
+
+// TODO: Sealed
+interface UserDeclaration : Declaration

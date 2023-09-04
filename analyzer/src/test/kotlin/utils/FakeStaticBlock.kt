@@ -1,6 +1,6 @@
 package utils
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.UserDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
@@ -10,13 +10,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvableDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 
-data class FakeDeclaration(
+data class FakeUserDeclaration(
     override val name: Symbol,
     val type: Type,
-) : Declaration, ResolvableDeclaration {
+) : UserDeclaration, ResolvableDeclaration {
     override val declaredType: Thunk<Type> = Thunk.pure(type)
-
-    override val resolvedType: Thunk<Type> = Thunk.pure(type)
 
     override val expressionClassification: ExpressionClassification = VariableClassification(
         resolvedFormula = Formula(name = name),
@@ -24,11 +22,11 @@ data class FakeDeclaration(
 }
 
 class FakeStaticBlock(
-    declarations: Set<FakeDeclaration>,
+    declarations: Set<FakeUserDeclaration>,
 ) : StaticBlock() {
     companion object {
         fun of(
-            vararg declarations: FakeDeclaration,
+            vararg declarations: FakeUserDeclaration,
         ): FakeStaticBlock = FakeStaticBlock(
             declarations = declarations.toSet(),
         )
