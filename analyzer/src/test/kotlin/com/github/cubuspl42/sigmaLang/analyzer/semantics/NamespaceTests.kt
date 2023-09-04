@@ -6,10 +6,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import org.junit.experimental.runners.Enclosed
+import org.junit.runner.RunWith
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
+@RunWith(Enclosed::class)
 class NamespaceTests {
     class TypeCheckingTests {
         @Test
@@ -25,7 +28,7 @@ class NamespaceTests {
             )
 
             val namespaceDefinition = NamespaceDefinition.build(
-                outerScope = Prelude.load().staticScope,
+                outerScope = BuiltinScope,
                 term = term,
             )
 

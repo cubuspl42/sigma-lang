@@ -6,10 +6,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
+import org.junit.experimental.runners.Enclosed
+import org.junit.runner.RunWith
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
+@RunWith(Enclosed::class)
 class ModuleTests {
     class TypeCheckingTests {
         @Test
@@ -23,7 +26,7 @@ class ModuleTests {
             )
 
             val module = Module.build(
-                prelude = Prelude.load(),
+                outerScope = BuiltinScope,
                 term = term,
             )
 

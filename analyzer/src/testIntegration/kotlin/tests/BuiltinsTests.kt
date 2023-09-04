@@ -4,8 +4,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.NamespaceDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Prelude
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Module
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
@@ -30,7 +32,7 @@ class BuiltinsTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            outerScope = Prelude.load().staticScope,
+            outerScope = BuiltinScope,
             term = term,
         )
 

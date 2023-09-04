@@ -3,8 +3,11 @@ package tests
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.NamespaceDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Prelude
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Module
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
@@ -50,7 +53,7 @@ class ScenarioTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            outerScope = Prelude.load().staticScope,
+            outerScope = Project.loadPrelude().innerStaticScope,
             term = term,
         )
 
@@ -168,7 +171,7 @@ class ScenarioTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            outerScope = Prelude.load().staticScope,
+            outerScope = BuiltinScope,
             term = term,
         )
 
@@ -210,7 +213,7 @@ class ScenarioTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            outerScope = Prelude.load().staticScope,
+            outerScope = BuiltinScope,
             term = term,
         )
 
