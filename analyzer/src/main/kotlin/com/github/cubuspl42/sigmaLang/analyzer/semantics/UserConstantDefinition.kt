@@ -45,23 +45,23 @@ class UserConstantDefinition(
         }
     }
 
-    private val asValueDefinition = UserConstantValueDefinition()
+    private val asUserDefinition = UserConstantValueDefinition()
 
-    override val valueThunk by lazy {
-        asValueDefinition.body.bind(
+    override val constantValue by lazy {
+        asUserDefinition.body.bind(
             dynamicScope = containingNamespaceDefinition.innerDynamicScope,
         )
     }
 
-    override val effectiveType: Thunk<Type>
-        get() = asValueDefinition.effectiveValueType
+    override val constantType: Thunk<Type>
+        get() = asUserDefinition.effectiveValueType
 
     override val expressionMap: ExpressionMap
-        get() = asValueDefinition.body.expressionMap
+        get() = asUserDefinition.body.expressionMap
 
     override val name: Symbol
         get() = term.name
 
     override val errors: Set<SemanticError>
-        get() = asValueDefinition.errors
+        get() = asUserDefinition.errors
 }

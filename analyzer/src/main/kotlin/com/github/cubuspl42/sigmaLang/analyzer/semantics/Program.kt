@@ -30,6 +30,6 @@ class Program internal constructor(
             name = Symbol.of("main")
         )!!
 
-        return result.valueThunk.evaluateInitial()
+        return result.constantValue.evaluateInitial()
     }
 }

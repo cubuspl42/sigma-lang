@@ -52,7 +52,7 @@ class NamespaceDefinition(
     val innerDynamicScope = object : DynamicScope {
         override fun getValue(
             name: Symbol,
-        ): Thunk<Value>? = getDefinition(name = name)?.valueThunk
+        ): Thunk<Value>? = getDefinition(name = name)?.constantValue
     }.chainWith(
         context = prelude.dynamicScope,
     )
