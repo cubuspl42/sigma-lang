@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.getResourceAsText
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
 
 data class ModulePath(
@@ -20,15 +21,45 @@ class Project(
     private val projectStore: ProjectStore,
     val mainModule: Module,
 ) {
+    companion object {
+        private fun loadModule(
+            outerScope: StaticScope?,
+            source: String,
+            name: String,
+        ): Module {
+            val moduleTerm = ModuleSourceTerm.build(
+                ctx = Program.buildParser(
+                    sourceName = name,
+                    source = source,
+                ).module(),
+            )
+
+            return Module.build(
+                outerScope = outerScope,
+                term = moduleTerm,
+            )
+        }
+
+        fun loadPrelude(): Module {
+            val preludeSource = getResourceAsText("prelude.sigma") ?: throw RuntimeException("Couldn't load prelude")
+
+            return loadModule(
+                outerScope = BuiltinScope,
+                source = preludeSource,
+                name = "__prelude__",
+            )
+        }
+    }
+
     class Loader private constructor(
-        private val prelude: Prelude,
+        private val module: Module,
     ) {
         companion object {
             fun create(): Loader {
-                val prelude = Prelude.load()
+                val prelude = loadPrelude()
 
                 return Loader(
-                    prelude = prelude,
+                    module = prelude,
                 )
             }
         }
@@ -37,20 +68,14 @@ class Project(
             projectStore: ProjectStore,
             mainModuleName: String = "main",
         ): Project {
-            val source = projectStore.load(
+            val moduleSource = projectStore.load(
                 modulePath = ModulePath.root(mainModuleName)
             )
 
-            val moduleTerm = ModuleSourceTerm.build(
-                ctx = Program.buildParser(
-                    sourceName = mainModuleName,
-                    source = source,
-                ).module(),
-            )
-
-            val mainModule = Module.build(
-                prelude = prelude,
-                term = moduleTerm,
+            val mainModule = loadModule(
+                outerScope = module.innerStaticScope,
+                source = moduleSource,
+                name = mainModuleName,
             )
 
             return Project(

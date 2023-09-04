@@ -1,18 +1,16 @@
 package com.github.cubuspl42.sigmaLang.intellijPlugin
 
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaReferenceExpression
-import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl.SigmaLetExpressionImpl
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Module
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Prelude
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaFile
 import com.intellij.codeInsight.completion.*
 
 class SigmaCompletionContributor : CompletionContributor() {
     init {
-        val prelude = Prelude.load()
+        val prelude = Project.loadPrelude()
 
         val completionProvider = object : CompletionProvider<CompletionParameters>() {
             override fun addCompletions(
@@ -27,7 +25,7 @@ class SigmaCompletionContributor : CompletionContributor() {
                 val moduleTerm = file.asTerm
 
                 val module = Module.build(
-                    prelude = prelude,
+                    outerScope = prelude.innerStaticScope,
                     term = moduleTerm,
                 )
 

@@ -32,7 +32,7 @@ class NamespaceDefinition(
 
     private val asDeclarationBlock = NamespaceStaticBlock()
 
-    private val innerStaticScope: StaticScope = asDeclarationBlock.chainWith(
+    val innerStaticScope: StaticScope = asDeclarationBlock.chainWith(
         outerScope = outerScope,
     )
 
