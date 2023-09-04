@@ -28,6 +28,9 @@ class ConstClassification(
 }
 
 interface ResolvableDeclaration {
+    val name: Symbol
+
     val resolvedType: Thunk<Type>
+
     val expressionClassification: ExpressionClassification
 }

@@ -29,8 +29,6 @@ abstract class ConstantDefinition : ResolvableDeclaration {
 
     fun evaluateResult(): EvaluationOutcome<Value> = constantValue.evaluateInitial()
 
-    abstract val name: Symbol
-
     abstract val constantValue: Thunk<Value>
 
     abstract val constantType: Thunk<Type>
