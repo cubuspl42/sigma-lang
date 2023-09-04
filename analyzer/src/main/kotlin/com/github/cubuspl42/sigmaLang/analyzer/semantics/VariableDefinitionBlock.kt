@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
-class LocalValueDefinitionBlock(
+class VariableDefinitionBlock(
     private val declarationScope: StaticScope,
     private val declarations: List<LocalDefinitionTerm>,
 ) : StaticBlock() {
@@ -13,7 +13,7 @@ class LocalValueDefinitionBlock(
         fun build(
             outerDeclarationScope: StaticScope,
             definitions: List<LocalDefinitionTerm>,
-        ): LocalValueDefinitionBlock = LocalValueDefinitionBlock(
+        ): VariableDefinitionBlock = VariableDefinitionBlock(
             declarationScope = outerDeclarationScope,
             declarations = definitions,
         )
@@ -21,14 +21,14 @@ class LocalValueDefinitionBlock(
 
     private val definitionByName by lazy {
         declarations.associate {
-            it.name to LocalValueDefinition.build(
+            it.name to UserVariableDefinition.build(
                 declarationScope = declarationScope,
                 term = it,
             )
         }
     }
 
-    fun getValueDefinition(name: Symbol): LocalValueDefinition? = definitionByName[name]
+    fun getValueDefinition(name: Symbol): UserVariableDefinition? = definitionByName[name]
 
     override fun resolveNameLocally(
         name: Symbol,

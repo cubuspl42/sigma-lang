@@ -26,7 +26,7 @@ interface BuiltinValue {
     val value: Value
 }
 
-private class BuiltinValueDefinition(
+private class BuiltinDefinition(
     override val name: Symbol,
     val value: Value,
     val type: Type,
@@ -236,14 +236,14 @@ object BuiltinScope : DynamicScope, StaticScope {
     )
 
     private val builtinValueDeclarations = builtinValues.map { (name, builtinValue) ->
-        BuiltinValueDefinition(
+        BuiltinDefinition(
             name = name,
             value = builtinValue.value,
             type = builtinValue.type,
         )
     }.toSet()
 
-    private val builtinDeclarations: Map<Symbol, BuiltinValueDefinition> =
+    private val builtinDeclarations: Map<Symbol, BuiltinDefinition> =
         builtinValueDeclarations.associateBy { it.name }
 
     val names: Set<Symbol>

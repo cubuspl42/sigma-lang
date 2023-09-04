@@ -3,7 +3,6 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 
 interface StaticScope {
-
     companion object {
         fun <A> looped(
             build: (StaticScope) -> Pair<A, StaticScope>,

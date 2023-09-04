@@ -4,15 +4,15 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
-class LocalValueDefinition(
+class UserVariableDefinition(
     override val outerScope: StaticScope,
     private val term: LocalDefinitionTerm,
-) : ValueDefinition() {
+) : UserDefinition() {
     companion object {
         fun build(
             declarationScope: StaticScope,
             term: LocalDefinitionTerm,
-        ): LocalValueDefinition = LocalValueDefinition(
+        ): UserVariableDefinition = UserVariableDefinition(
             outerScope = declarationScope,
             term = term,
         )
