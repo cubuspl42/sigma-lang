@@ -32,7 +32,7 @@ class VariableDefinitionBlock(
 
     override fun resolveNameLocally(
         name: Symbol,
-    ): ResolvableDeclaration? = getValueDefinition(name = name)
+    ): ClassifiedDeclaration? = getValueDefinition(name = name)
 
     override fun getLocalNames(): Set<Symbol> = definitionByName.keys
 

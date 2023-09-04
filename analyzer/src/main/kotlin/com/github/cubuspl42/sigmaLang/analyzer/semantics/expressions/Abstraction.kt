@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvableDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassifiedDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -42,7 +42,7 @@ class Abstraction(
 
         override fun resolveNameLocally(
             name: Symbol,
-        ): ResolvableDeclaration? = declarationByName[name]
+        ): ClassifiedDeclaration? = declarationByName[name]
 
         override fun getLocalNames(): Set<Symbol> = declarationByName.keys
     }

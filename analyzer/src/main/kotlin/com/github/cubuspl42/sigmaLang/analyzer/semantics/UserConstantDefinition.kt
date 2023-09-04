@@ -1,24 +1,8 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
-
-class ReverseTranslationScope(
-    private val staticScope: StaticScope,
-) : DynamicScope {
-    override fun getValue(name: Symbol): Thunk<Value>? =
-        staticScope.resolveName(name = name)?.let { resolvableDeclaration ->
-            if (resolvableDeclaration is ConstantDefinition) {
-                resolvableDeclaration.valueThunk
-            } else {
-                null
-            }
-        }
-}
 
 class UserConstantDefinition private constructor(
     private val outerScope: StaticScope,

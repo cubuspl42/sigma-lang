@@ -4,10 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.UserDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionClassification
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassification
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvableDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassifiedDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableDeclaration
@@ -38,7 +35,7 @@ class FakeStaticBlock(
 
     override fun resolveNameLocally(
         name: Symbol,
-    ): ResolvableDeclaration? = declarationByName[name]
+    ): ClassifiedDeclaration? = declarationByName[name]
 
     override fun getLocalNames(): Set<Symbol> = declarationByName.keys
 }
