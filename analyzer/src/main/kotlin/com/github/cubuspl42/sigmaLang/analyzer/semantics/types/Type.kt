@@ -53,6 +53,7 @@ sealed class Type {
         assignedType: Type,
     ): Type.MatchResult
 
+    // Thought: Wrong name? `walkChildren`?
     abstract fun walkRecursive(): Sequence<Type>
 
     final override fun toString(): String = dump()
