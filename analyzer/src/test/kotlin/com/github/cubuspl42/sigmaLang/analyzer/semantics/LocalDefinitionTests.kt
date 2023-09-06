@@ -1,5 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type

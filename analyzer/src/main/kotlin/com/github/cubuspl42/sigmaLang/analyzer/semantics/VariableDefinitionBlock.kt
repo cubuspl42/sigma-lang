@@ -3,6 +3,8 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.LoopedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
 class VariableDefinitionBlock(
@@ -32,7 +34,7 @@ class VariableDefinitionBlock(
 
     override fun resolveNameLocally(
         name: Symbol,
-    ): ClassifiedDeclaration? = getValueDefinition(name = name)
+    ): ClassifiedIntroduction? = getValueDefinition(name = name)
 
     override fun getLocalNames(): Set<Symbol> = definitionByName.keys
 

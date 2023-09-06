@@ -1,18 +1,17 @@
 package utils
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.UserDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassifiedDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
 
 data class FakeUserDeclaration(
     override val name: Symbol,
     val type: Type,
-) : VariableDeclaration(), UserDeclaration {
+) : UserDeclaration {
     override val annotatedTypeThunk: Thunk<Type> = Thunk.pure(type)
 
     override val effectiveTypeThunk: Thunk<Type> = Thunk.pure(type)
@@ -35,7 +34,7 @@ class FakeStaticBlock(
 
     override fun resolveNameLocally(
         name: Symbol,
-    ): ClassifiedDeclaration? = declarationByName[name]
+    ): ClassifiedIntroduction? = declarationByName[name]
 
     override fun getLocalNames(): Set<Symbol> = declarationByName.keys
 }

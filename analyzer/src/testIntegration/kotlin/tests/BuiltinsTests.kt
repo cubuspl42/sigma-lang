@@ -5,9 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.NamespaceDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Module
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm

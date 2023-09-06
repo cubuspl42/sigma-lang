@@ -1,5 +1,6 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics
+package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
 class UserVariableDefinition private constructor(
@@ -9,7 +10,7 @@ class UserVariableDefinition private constructor(
         outerScope = outerScope,
         term = term,
     ),
-) : VariableDeclaration(), UserDefinition by userDefinition {
+) : VariableIntroduction, EmbodiedUserDefinition by userDefinition {
     companion object {
         fun build(
             declarationScope: StaticScope,

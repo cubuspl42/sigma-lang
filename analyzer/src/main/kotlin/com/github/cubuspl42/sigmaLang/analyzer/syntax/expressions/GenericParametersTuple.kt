@@ -4,11 +4,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassifiedDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.UserDeclaration
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
@@ -32,7 +31,7 @@ data class GenericParametersTuple(
 
     class GenericParameterDeclaration(
         override val name: Symbol,
-    ) : VariableDeclaration(), UserDeclaration {
+    ) : UserDeclaration {
         override val annotatedTypeThunk: Thunk<Type> = Thunk.pure(MetaType)
 
         override val effectiveTypeThunk: Thunk<Type> = annotatedTypeThunk
@@ -43,7 +42,7 @@ data class GenericParametersTuple(
     inner class GenericParametersTupleBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
-        ): ClassifiedDeclaration? = if (parametersDefinitions.any { it == name }) {
+        ): ClassifiedIntroduction? = if (parametersDefinitions.any { it == name }) {
             GenericParameterDeclaration(
                 name = name,
             )

@@ -8,6 +8,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
@@ -246,7 +248,7 @@ object BuiltinScope : DynamicScope, StaticScope {
 
     override fun resolveName(
         name: Symbol,
-    ): ClassifiedDeclaration? = builtinDeclarations[name]
+    ): ClassifiedIntroduction? = builtinDeclarations[name]
 
     override fun getAllNames(): Set<Symbol> = builtinDeclarations.keys
 }
