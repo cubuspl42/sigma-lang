@@ -36,6 +36,12 @@ abstract class Expression {
                 term = term,
             )
 
+
+            is StringLiteralTerm -> StringLiteral.build(
+                outerScope = outerScope,
+                term = term,
+            )
+
             is IsUndefinedCheckTerm -> IsUndefinedCheck.build(
                 outerScope = outerScope,
                 term = term,

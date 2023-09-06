@@ -48,6 +48,9 @@ Identifier : [a-zA-Z] [a-zA-Z0-9]* ;
 
 IntLiteral : [0-9]+ ;
 SymbolLiteral : Backtick [a-zA-Z0-9]+ Backtick ;
+StringLiteral : '"' StringLiteralContent '"' ;
+
+fragment StringLiteralContent : (~["\r\n])* ;
 
 Whitespace : (' ' | '\n') -> skip ;
 LineComment : '//' ~[\r\n]* -> skip ;

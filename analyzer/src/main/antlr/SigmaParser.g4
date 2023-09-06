@@ -69,6 +69,7 @@ expression
     | ifExpression # ifExpressionAlt
     | SymbolLiteral # symbolLiteralAlt
     | IntLiteral # intLiteralAlt
+    | StringLiteral # stringLiteralAlt
     | tupleTypeConstructor # tupleTypeConstructorAlt
     | functionTypeConstructor # functionTypeConstructorAlt
     | arrayTypeConstructor # arrayTypeConstructorAlt
