@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.getResourceAsText
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import java.lang.IllegalArgumentException
 
 data class ModulePath(

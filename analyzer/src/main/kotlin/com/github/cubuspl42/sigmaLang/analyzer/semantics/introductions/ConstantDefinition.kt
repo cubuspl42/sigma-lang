@@ -1,13 +1,16 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics
+package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationOutcome
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassification
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionClassification
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
 
-abstract class ConstantDefinition : ClassifiedDeclaration {
+abstract class ConstantDefinition : ClassifiedIntroduction, Definition {
     companion object {
         fun build(
             outerScope: StaticScope,

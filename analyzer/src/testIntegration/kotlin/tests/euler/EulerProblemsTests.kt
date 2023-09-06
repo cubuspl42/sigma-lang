@@ -126,7 +126,7 @@ private fun solveProblem(n: Int): EvaluationOutcome<Value> {
     val evaluationResult = project.entryPoint.evaluateResult()
 
     when (evaluationResult) {
-        EvaluationStackExhaustionError -> println("Error: call stack exhausted")
+        EvaluationStackExhaustionError -> println("Error: call stack exhausted!")
         is EvaluationResult -> println("Result: ${evaluationResult.value.dump()}")
     }
 

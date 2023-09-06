@@ -1,11 +1,12 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics
+package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.chainWith
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
@@ -14,7 +15,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 class NamespaceDefinition(
     private val outerScope: StaticScope,
     private val term: NamespaceDefinitionTerm,
-) : ConstantDefinition() {
+) : ConstantDefinition(), UserDefinition {
     companion object {
         fun build(
             outerScope: StaticScope,
@@ -28,7 +29,7 @@ class NamespaceDefinition(
     inner class NamespaceStaticBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
-        ): ClassifiedDeclaration? = getDefinition(name = name)
+        ): ClassifiedIntroduction? = getDefinition(name = name)
 
         override fun getLocalNames(): Set<Symbol> = definitions.map { it.name }.toSet()
     }
@@ -43,7 +44,7 @@ class NamespaceDefinition(
     )
 
     val definitions: Set<UserConstantDefinition> = term.namespaceEntries.map {
-        ConstantDefinition.build(
+        build(
             outerScope = innerStaticScope,
             term = it,
         )
@@ -59,7 +60,7 @@ class NamespaceDefinition(
         it.expressionMap
     }
 
-    val errors: Set<SemanticError> by lazy {
+    override val errors: Set<SemanticError> by lazy {
         definitions.fold(emptySet()) { acc, it -> acc + it.errors }
     }
 
