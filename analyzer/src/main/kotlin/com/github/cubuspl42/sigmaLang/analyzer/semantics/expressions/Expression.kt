@@ -97,7 +97,10 @@ abstract class Expression {
                 term = term,
             )
 
-            is UnionTypeConstructorTerm -> TODO()
+            is UnionTypeConstructorTerm -> UnionTypeConstructor.build(
+                outerScope = outerScope,
+                term = term,
+            )
 
             is GenericTypeConstructorTerm -> TODO()
 

@@ -1,0 +1,17 @@
+%class HtmlElement ^{
+    tagName: String,
+    children: ^[],
+}
+
+%class TextNode ^{
+    content: String,
+}
+
+%const Node = HtmlElement | TextNode
+
+%const element: Node = HtmlElement.new{
+    tagName: "div",
+    children: [],
+}
+
+%const main = element
