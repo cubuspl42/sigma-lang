@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.intellijPlugin.psi
 
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.ImportTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntrySourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
@@ -19,6 +20,9 @@ class SigmaFile(
     override fun toString(): String = "Sigma File"
 
     val asTerm = object  : ModuleTerm {
+        override val imports: List<ImportTerm>
+            get() = emptyList()
+
         override val namespaceEntries: List<NamespaceEntryTerm>
             get() = this@SigmaFile.namespaceEntries.map { it.asTerm }
     }
