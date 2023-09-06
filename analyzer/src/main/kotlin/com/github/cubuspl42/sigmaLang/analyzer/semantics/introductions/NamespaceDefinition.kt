@@ -43,12 +43,14 @@ class NamespaceDefinition(
         outerScope = outerScope,
     )
 
-    val definitions: Set<UserConstantDefinition> = term.namespaceEntries.map {
-        build(
-            outerScope = innerStaticScope,
-            term = it,
-        )
-    }.toSet()
+    val definitions: Set<ConstantDefinition> by lazy {
+        term.namespaceEntries.map {
+            build(
+                outerScope = innerStaticScope,
+                term = it,
+            )
+        }.toSet()
+    }
 
     fun getDefinition(
         name: Symbol,
@@ -56,7 +58,7 @@ class NamespaceDefinition(
         it.name == name
     }
 
-    val expressionMap: ExpressionMap = ExpressionMap.unionAllOf(definitions) {
+    override val expressionMap: ExpressionMap = ExpressionMap.unionAllOf(definitions) {
         it.expressionMap
     }
 

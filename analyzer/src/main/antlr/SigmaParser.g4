@@ -39,18 +39,7 @@ namespaceBody
 // Class
 
 classDefinition
-    : ClassKeyword name=Identifier LeftParen
-          FieldsKeyword LeftParen fieldDeclaration+ RightParen
-          methodDefinition*
-      RightParen
-    ;
-
-fieldDeclaration
-    : name=Identifier Colon type=expression
-    ;
-
-methodDefinition
-    : MethodKeyword name=Identifier Assign body=expression
+    : ClassKeyword name=Identifier body=unorderedTupleTypeConstructor
     ;
 
 // end
