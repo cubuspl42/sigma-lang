@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
-class DictValue(
+data class DictValue(
     val entries: Map<PrimitiveValue, Value>,
 ) : FunctionValue() {
 
@@ -33,14 +33,6 @@ class DictValue(
             content != null -> "{ $content }"
             else -> "∅"
         }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        throw UnsupportedOperationException()
-    }
-
-    override fun hashCode(): Int {
-        throw UnsupportedOperationException()
     }
 
     fun read(
