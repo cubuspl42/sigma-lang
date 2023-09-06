@@ -16,6 +16,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.StringType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
@@ -51,6 +52,10 @@ object BuiltinScope : DynamicScope, StaticScope {
         Symbol.of("Int") to SimpleBuiltinValue(
             type = MetaType,
             value = IntCollectiveType.asValue,
+        ),
+        Symbol.of("String") to SimpleBuiltinValue(
+            type = MetaType,
+            value = StringType.asValue,
         ),
         Symbol.of("Type") to SimpleBuiltinValue(
             type = MetaType,

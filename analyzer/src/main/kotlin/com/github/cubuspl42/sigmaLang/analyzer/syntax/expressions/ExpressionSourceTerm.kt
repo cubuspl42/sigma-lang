@@ -20,6 +20,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.IsUndefi
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.LetExpressionAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.ParenExpressionAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.ReferenceAltContext
+import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.StringLiteralAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.TupleConstructorAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.UnionTypeConstructorAltContext
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
@@ -81,6 +82,10 @@ sealed class ExpressionSourceTerm : SourceTerm() {
             override fun visitIntLiteralAlt(
                 ctx: IntLiteralAltContext,
             ): ExpressionTerm = IntLiteralSourceTerm.build(ctx)
+
+            override fun visitStringLiteralAlt(
+                ctx: StringLiteralAltContext,
+            ): ExpressionTerm = StringLiteralSourceTerm.build(ctx)
 
             override fun visitCallableExpressionAlt(
                 ctx: CallableExpressionAltContext,
