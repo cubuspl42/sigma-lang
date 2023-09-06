@@ -2,15 +2,16 @@ package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceTerm
 
@@ -29,21 +30,23 @@ data class GenericParametersTuple(
         )
     }
 
-    class GenericParameterDeclaration(
+    class TypeVariableDefinition(
         override val name: Symbol,
-    ) : UserDeclaration {
-        override val annotatedTypeThunk: Thunk<Type> = Thunk.pure(MetaType)
+    ) : ConstantDefinition() {
+        override val valueThunk: Thunk<Value> = Thunk.pure(
+            TypeVariable(
+                formula = Formula(name = name),
+            ).asValue
+        )
 
-        override val effectiveTypeThunk: Thunk<Type> = annotatedTypeThunk
-
-        override val errors: Set<SemanticError> = emptySet()
+        override val effectiveTypeThunk: Thunk<Type> = Thunk.pure(MetaType)
     }
 
     inner class GenericParametersTupleBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
         ): ClassifiedIntroduction? = if (parametersDefinitions.any { it == name }) {
-            GenericParameterDeclaration(
+            TypeVariableDefinition(
                 name = name,
             )
         } else {

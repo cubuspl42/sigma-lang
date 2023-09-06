@@ -8,6 +8,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.VariableIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
@@ -19,18 +21,11 @@ class TranslationDynamicScope(
         name: Symbol,
     ): Thunk<Value>? = staticScope.resolveName(
         name = name,
-    )?.let { resolvedName ->
-        when (val resolution = resolvedName.expressionClassification) {
-            is ConstClassification -> resolution.resolvedValue
+    )?.let { resolvedIntroduction ->
+        when (resolvedIntroduction) {
+            is ConstantDefinition -> resolvedIntroduction.valueThunk
 
-            is VariableClassification -> when (resolvedName.effectiveTypeThunk.value) {
-                is MetaType -> Thunk.pure(
-                    TypeVariable(
-                        // FIXME
-                        formula = resolution.resolvedFormula ?: Formula(name = Symbol.of("?")),
-                    ).asValue,
-                )
-
+            is VariableIntroduction -> when (resolvedIntroduction.effectiveTypeThunk.value) {
                 else -> null
             }
         }
