@@ -16,6 +16,10 @@ data class ModulePath(
             name = name,
         )
     }
+
+    fun toQualifiedPath(): QualifiedPath = QualifiedPath(
+        segments = listOf(Symbol.of(name)),
+    )
 }
 
 class Project(

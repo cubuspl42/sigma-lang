@@ -129,7 +129,7 @@ data class SetType(
         )
     }
 
-    object SetSum : BuiltinOrderedFunction() {
+    object SetSum : StrictBuiltinOrderedFunction() {
         override val argTypes: List<Type> = listOf(
             SetType(
                 elementType = IntCollectiveType,

@@ -1,3 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax
 
-sealed interface NamespaceEntryTerm
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+
+sealed interface NamespaceEntryTerm {
+    val name: Symbol
+}

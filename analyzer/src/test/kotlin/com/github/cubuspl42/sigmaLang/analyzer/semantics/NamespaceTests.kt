@@ -30,6 +30,7 @@ class NamespaceTests {
 
             val namespaceDefinition = NamespaceDefinition.build(
                 outerScope = BuiltinScope,
+                qualifiedPath = QualifiedPath.Root,
                 term = term,
             )
 

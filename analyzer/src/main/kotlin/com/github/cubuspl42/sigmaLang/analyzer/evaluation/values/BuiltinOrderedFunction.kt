@@ -39,15 +39,19 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
 
     abstract val imageType: Type
 
-    open fun computeThunk(
+    abstract fun computeThunk(
+        args: List<Value>,
+    ): Thunk<Value>
+}
+
+abstract class StrictBuiltinOrderedFunction : BuiltinOrderedFunction() {
+    override fun computeThunk(
         args: List<Value>,
     ): Thunk<Value> = Thunk.lazy {
         Thunk.pure(compute(args))
     }
 
-    open fun compute(
+    abstract fun compute(
         args: List<Value>,
-    ): Value {
-        throw NotImplementedError()
-    }
+    ): Value
 }

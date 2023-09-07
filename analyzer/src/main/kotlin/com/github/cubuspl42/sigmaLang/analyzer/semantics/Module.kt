@@ -9,8 +9,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
 
 class Module(
-    private val outerScope: StaticScope,
     private val moduleResolver: ModuleResolver,
+    private val outerScope: StaticScope,
+    private val modulePath: ModulePath,
     private val term: ModuleTerm,
 ) {
     companion object {
@@ -28,8 +29,9 @@ class Module(
             )
 
             return Module.build(
-                outerScope = outerScope,
                 moduleResolver = moduleResolver,
+                outerScope = outerScope,
+                modulePath = ModulePath(name = name),
                 term = moduleTerm,
             )
         }
@@ -38,10 +40,12 @@ class Module(
         fun build(
             outerScope: StaticScope?,
             moduleResolver: ModuleResolver,
+            modulePath: ModulePath,
             term: ModuleTerm,
         ): Module = Module(
-            outerScope = outerScope ?: StaticScope.Empty,
             moduleResolver = moduleResolver,
+            outerScope = outerScope ?: StaticScope.Empty,
+            modulePath = modulePath,
             term = term,
         )
     }
@@ -66,6 +70,7 @@ class Module(
 
     val rootNamespaceDefinition = NamespaceDefinition.build(
         outerScope = importBlock.chainWith(outerScope),
+        qualifiedPath = modulePath.toQualifiedPath(),
         term = object : NamespaceDefinitionTerm {
             override val name: Symbol = Symbol.of("__root__")
 

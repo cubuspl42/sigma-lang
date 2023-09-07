@@ -31,6 +31,7 @@ class ModuleTests {
             val module = Module.build(
                 outerScope = BuiltinScope,
                 moduleResolver = ModuleResolver.Empty,
+                modulePath = ModulePath(name = "__module__"),
                 term = term,
             )
 
@@ -80,11 +81,13 @@ class ModuleTests {
                     ): Module? = Module.build(
                         outerScope = BuiltinScope,
                         moduleResolver = this,
+                        modulePath = modulePath,
                         term = module1Term,
                     ).takeIf {
                         modulePath.name == "foo"
                     }
                 },
+                modulePath = ModulePath(name = "__module__"),
                 term = module2Term,
             )
 

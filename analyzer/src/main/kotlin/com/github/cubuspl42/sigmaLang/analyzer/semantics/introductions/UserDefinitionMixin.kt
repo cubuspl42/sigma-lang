@@ -26,7 +26,7 @@ class UserDefinitionMixin(
 
     override val annotatedTypeThunk: Thunk<Type>? by lazy {
         this.annotatedTypeBody?.let { expression ->
-            expression.bind(dynamicScope = BuiltinScope).thenJust { it.asType!! }
+            expression.bindTranslated(staticScope = outerScope).thenJust { it.asType!! }
         }
     }
 
