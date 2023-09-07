@@ -1,22 +1,26 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -165,6 +169,82 @@ class AbstractionConstructorTests {
                         imageType = BoolType,
                     ),
                     actual = type,
+                )
+            }
+
+            @Test
+            @Ignore // TODO: Const analysis of arbitrary expression
+            fun testConstArgument() {
+                val term = ExpressionSourceTerm.parse(
+                    source = """
+                        !^[
+                            t: ^{t1: Type, t2: Type},
+                        ] ^[
+                            l: ^[t.t1...],
+                            f: ^[t.t1] -> t.t2,
+                        ] -> ^[t.t2...] => map[l, f]
+                    """.trimIndent(),
+                ) as AbstractionConstructorSourceTerm
+
+                val abstraction = AbstractionConstructor.build(
+                    outerScope = BuiltinScope,
+                    term = term,
+                )
+
+                assertEquals(
+                    expected = emptySet(),
+                    abstraction.errors,
+                )
+
+                val inferredType = assertIs<FunctionType>(
+                    value = abstraction.inferredTypeOrIllType.getOrCompute(),
+                )
+
+                val innerAbstractionType = UniversalFunctionType(
+                    argumentType = OrderedTupleType(
+                        elements = listOf(
+                            OrderedTupleType.Element(
+                                name = Symbol.of("l"),
+                                type = ArrayType(
+                                    elementType = TypeVariable.of("t.t1"), // FIXME
+                                ),
+                            ),
+                            OrderedTupleType.Element(
+                                name = Symbol.of("f"),
+                                type = UniversalFunctionType(
+                                    argumentType = OrderedTupleType.of(
+                                        TypeVariable.of("t.t1"), // FIXME
+                                    ),
+                                    imageType = TypeVariable.of("t.t2"), // FIXME
+                                ),
+                            ),
+                        ),
+                    ),
+                    imageType = ArrayType(
+                        elementType = TypeVariable.of("t.t2"), // FIXME
+                    ),
+                )
+
+                val metaAbstractionType = UniversalFunctionType(
+                    argumentType = OrderedTupleType(
+                        elements = listOf(
+                            OrderedTupleType.Element(
+                                name = Symbol.of("t"),
+                                type = UnorderedTupleType(
+                                    valueTypeByName = mapOf(
+                                        Symbol.of("t1") to TypeType,
+                                        Symbol.of("t2") to TypeType,
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                    imageType = innerAbstractionType,
+                )
+
+                assertEquals(
+                    expected = metaAbstractionType,
+                    actual = inferredType,
                 )
             }
         }
