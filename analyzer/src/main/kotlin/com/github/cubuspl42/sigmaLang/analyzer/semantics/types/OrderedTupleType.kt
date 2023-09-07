@@ -11,6 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 
 data class OrderedTupleType(
+    override val constness: Constness = Constness.Variable,
     val elements: List<Element>,
 ) : TupleType() {
     data class OrderedTupleMatch(

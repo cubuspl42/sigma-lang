@@ -175,11 +175,11 @@ reference
 
 // Type expressions
 
-typeTupleConstructor
-    : LeftBracket (elements+=expression (Comma elements+=expression)* Comma?)? RightBracket
+tupleTypeConstructor
+    : constnessMarker=(Dash | Bang) tupleTypeConstructorBody
     ;
 
-tupleTypeConstructor
+tupleTypeConstructorBody
     : unorderedTupleTypeConstructor
     | orderedTupleTypeConstructor
     ;
@@ -191,7 +191,7 @@ functionTypeConstructor
 // Unordered tuple type constructor
 
 unorderedTupleTypeConstructor
-    : Dash LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
+    : LeftBrace (unorderedTupleTypeEntry (Comma unorderedTupleTypeEntry)*)? Comma? RightBrace ;
 
 unorderedTupleTypeEntry
     : name=identifier Colon valueType=expression
@@ -202,7 +202,7 @@ unorderedTupleTypeEntry
 // Ordered tuple type constructor
 
 orderedTupleTypeConstructor
-    : Dash LeftBracket (orderedTupleTypeElement (Comma orderedTupleTypeElement)* Comma?)? RightBracket
+    : LeftBracket (orderedTupleTypeElement (Comma orderedTupleTypeElement)* Comma?)? RightBracket
     ;
 
 orderedTupleTypeElement

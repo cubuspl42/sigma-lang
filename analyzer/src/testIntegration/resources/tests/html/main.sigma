@@ -1,9 +1,9 @@
-%class HtmlElement ^{
+%class HtmlElement {
     tagName: String,
     children: ^[],
 }
 
-%class TextNode ^{
+%class TextNode {
     content: String,
 }
 

@@ -1,21 +1,28 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Constness
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -131,6 +138,83 @@ class AbstractionTests {
 
                 assertIs<TypeVariable>(
                     value = inferredType.imageType,
+                )
+            }
+
+            @Test
+            @Ignore // TODO: Const analysis of arbitrary expression
+            fun testConstArgument() {
+                val term = ExpressionSourceTerm.parse(
+                    source = """
+                        ![
+                            t: ^{t1: Type, t2: Type},
+                        ] => ^[
+                            l: ^[t.t1...],
+                            f: ^[t.t1] -> t.t2,
+                        ] -> ^[t.t2...] => map[l, f]
+                    """.trimIndent(),
+                ) as AbstractionTerm
+
+                val abstraction = Abstraction.build(
+                    outerScope = BuiltinScope,
+                    term = term,
+                )
+
+                assertEquals(
+                    expected = emptySet(),
+                    abstraction.errors,
+                )
+
+                val inferredType = assertIs<FunctionType>(
+                    value = abstraction.inferredType.value,
+                )
+
+                val innerAbstractionType = UniversalFunctionType(
+                    argumentType = OrderedTupleType(
+                        elements = listOf(
+                            OrderedTupleType.Element(
+                                name = Symbol.of("l"),
+                                type = ArrayType(
+                                    elementType = TypeVariable.of("t.t1"), // FIXME
+                                ),
+                            ),
+                            OrderedTupleType.Element(
+                                name = Symbol.of("f"),
+                                type = UniversalFunctionType(
+                                    argumentType = OrderedTupleType.of(
+                                        TypeVariable.of("t.t1"), // FIXME
+                                    ),
+                                    imageType = TypeVariable.of("t.t2"), // FIXME
+                                ),
+                            ),
+                        ),
+                    ),
+                    imageType = ArrayType(
+                        elementType = TypeVariable.of("t.t2"), // FIXME
+                    ),
+                )
+
+                val metaAbstractionType = UniversalFunctionType(
+                    argumentType = OrderedTupleType(
+                        constness = Constness.Const,
+                        elements = listOf(
+                            OrderedTupleType.Element(
+                                name = Symbol.of("t"),
+                                type = UnorderedTupleType(
+                                    valueTypeByName = mapOf(
+                                        Symbol.of("t1") to MetaType,
+                                        Symbol.of("t2") to MetaType,
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                    imageType = innerAbstractionType,
+                )
+
+                assertEquals(
+                    expected = metaAbstractionType,
+                    actual = inferredType,
                 )
             }
         }

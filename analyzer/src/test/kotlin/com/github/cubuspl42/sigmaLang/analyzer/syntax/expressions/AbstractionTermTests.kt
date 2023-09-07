@@ -99,6 +99,7 @@ class AbstractionTermTests {
                             Symbol.of("t"),
                         )
                     ),
+
                     argumentType = OrderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 5),
                         elements = listOf(

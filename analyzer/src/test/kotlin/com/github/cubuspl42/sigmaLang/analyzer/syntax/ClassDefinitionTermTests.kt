@@ -13,7 +13,7 @@ class ClassDefinitionTermTests {
         fun test() {
             val term = NamespaceEntrySourceTerm.parse(
                 source = """
-                    %class Foo ^{
+                    %class Foo {
                         foo: Foo,
                         bar: Bar,
                     }

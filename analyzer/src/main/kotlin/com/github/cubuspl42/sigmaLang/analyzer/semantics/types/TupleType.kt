@@ -5,6 +5,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Abstraction
 
 abstract class TupleType : TableType() {
+    abstract val constness: Constness
+
     abstract fun toArgumentDeclarationBlock(): Abstraction.ArgumentStaticBlock
 
     abstract override fun substituteTypeVariables(

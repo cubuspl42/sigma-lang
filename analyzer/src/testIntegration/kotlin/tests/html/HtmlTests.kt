@@ -8,6 +8,7 @@ import kotlin.test.assertEquals
 class HtmlTests {
     @Test
     fun test() {
+
         val projectStore = ResourceProjectStore(javaClass = HtmlTests::class.java)
 
         val project = Project.Loader.create().load(

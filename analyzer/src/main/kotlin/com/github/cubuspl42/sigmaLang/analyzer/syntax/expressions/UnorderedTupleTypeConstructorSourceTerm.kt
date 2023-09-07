@@ -3,9 +3,11 @@ package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.UnorderedTupleTypeConstructorContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Constness
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 data class UnorderedTupleTypeConstructorSourceTerm(
+    override val constness: Constness = Constness.Variable,
     override val location: SourceLocation,
     override val entries: List<Entry>,
 ) : TupleTypeConstructorSourceTerm(), UnorderedTupleTypeConstructorTerm {
@@ -25,9 +27,12 @@ data class UnorderedTupleTypeConstructorSourceTerm(
 
     companion object {
         fun build(
+            location: SourceLocation,
+            constness: Constness,
             ctx: UnorderedTupleTypeConstructorContext,
         ): UnorderedTupleTypeConstructorSourceTerm = UnorderedTupleTypeConstructorSourceTerm(
-            location = SourceLocation.build(ctx),
+            location = location,
+            constness = constness,
             entries = ctx.unorderedTupleTypeEntry().map {
                 Entry.build(it)
             },

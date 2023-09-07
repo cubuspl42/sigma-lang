@@ -7,10 +7,25 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Abstraction
+import org.antlr.v4.runtime.Token
+import java.lang.IllegalArgumentException
+
+enum class Constness {
+    Const, Variable;
+
+    companion object {
+        fun build(ctx: Token): Constness = when (ctx.text) {
+            "^" -> Constness.Variable
+            "!" -> Constness.Const
+            else -> throw IllegalArgumentException()
+        }
+    }
+}
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
 data class UnorderedTupleType(
+    override val constness: Constness = Constness.Variable,
     val valueTypeByName: Map<Symbol, Type>,
 ) : TupleType() {
     data class UnorderedTupleMatch(
@@ -121,15 +136,14 @@ data class UnorderedTupleType(
 
     override fun walkRecursive(): Sequence<Type> = valueTypeByName.values.asSequence().flatMap { it.walk() }
 
-    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentStaticBlock =
-        Abstraction.ArgumentStaticBlock(
-            argumentDeclarations = valueTypeByName.map { (name, type) ->
-                Abstraction.ArgumentDeclaration(
-                    name = name,
-                    annotatedType = type,
-                )
-            },
-        )
+    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentStaticBlock = Abstraction.ArgumentStaticBlock(
+        argumentDeclarations = valueTypeByName.map { (name, type) ->
+            Abstraction.ArgumentDeclaration(
+                name = name,
+                annotatedType = type,
+            )
+        },
+    )
 
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
