@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionClassification
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
@@ -18,21 +19,27 @@ abstract class ConstantDefinition : ClassifiedIntroduction, Definition {
     companion object {
         fun build(
             outerScope: StaticScope,
+            qualifiedPath: QualifiedPath,
             term: NamespaceEntryTerm,
-        ): ConstantDefinition = when (term) {
-            is ConstantDefinitionTerm -> UserConstantDefinition.build(
-                outerScope = outerScope,
-                term = term,
-            )
+        ): ConstantDefinition {
+            val extendedQualifiedPath = qualifiedPath.extend(term.name)
 
-            is ClassDefinitionTerm -> ClassDefinition.build(
-                outerScope = outerScope,
-                term = term,
-            )
+            return when (term) {
+                is ConstantDefinitionTerm -> UserConstantDefinition.build(
+                    outerScope = outerScope,
+                    term = term,
+                )
 
-            is NamespaceDefinitionTerm -> TODO()
+                is ClassDefinitionTerm -> ClassDefinition.build(
+                    outerScope = outerScope,
+                    qualifiedPath = extendedQualifiedPath,
+                    term = term,
+                )
 
-            else -> throw UnsupportedOperationException("Unsupported namespace entry term: $term")
+                is NamespaceDefinitionTerm -> TODO()
+
+                else -> throw UnsupportedOperationException("Unsupported namespace entry term: $term")
+            }
         }
     }
 
