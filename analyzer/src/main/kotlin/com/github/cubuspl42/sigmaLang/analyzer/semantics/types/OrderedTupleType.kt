@@ -97,7 +97,7 @@ data class OrderedTupleType(
 
     override fun isDefinitelyEmpty(): Boolean = elements.isEmpty()
 
-    override fun resolveTypeVariables(
+    override fun resolveTypeVariablesShape(
         assignedType: Type,
     ): TypeVariableResolution {
         if (assignedType !is OrderedTupleType) throw TypeVariableResolutionError(

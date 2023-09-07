@@ -23,4 +23,16 @@ sealed class ShapeType : Type() {
     abstract fun matchShape(
         assignedType: Type,
     ): MatchResult
+
+    override fun resolveTypeVariables(
+        assignedType: Type,
+    ): TypeVariableResolution = if (assignedType is UnionType) {
+        TypeVariableResolution.Empty // TODO
+    } else {
+        resolveTypeVariablesShape(assignedType = assignedType)
+    }
+
+    abstract fun resolveTypeVariablesShape(
+        assignedType: Type,
+    ): TypeVariableResolution
 }

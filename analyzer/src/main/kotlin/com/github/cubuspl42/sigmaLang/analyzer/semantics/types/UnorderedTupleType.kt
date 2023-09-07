@@ -76,7 +76,7 @@ data class UnorderedTupleType(
 
     override fun isDefinitelyEmpty(): Boolean = valueTypeByName.isEmpty()
 
-    override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution {
+    override fun resolveTypeVariablesShape(assignedType: Type): TypeVariableResolution {
         if (assignedType !is UnorderedTupleType) throw TypeVariableResolutionError(
             message = "Cannot resolve type variables, non-(unordered tuple) is assigned",
         )

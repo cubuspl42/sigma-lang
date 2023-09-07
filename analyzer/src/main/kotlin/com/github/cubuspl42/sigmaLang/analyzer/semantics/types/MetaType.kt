@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 object MetaType : ShapeType() {
     override fun findLowestCommonSupertype(other: Type): Type = AnyType
 
-    override fun resolveTypeVariables(assignedType: Type): TypeVariableResolution = TypeVariableResolution.Empty
+    override fun resolveTypeVariablesShape(assignedType: Type): TypeVariableResolution = TypeVariableResolution.Empty
 
     override fun substituteTypeVariables(resolution: TypeVariableResolution): Type = this
 
