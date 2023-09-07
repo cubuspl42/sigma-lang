@@ -24,7 +24,7 @@ data class DictType(
 
     override fun isDefinitelyEmpty(): Boolean = false
 
-    override fun resolveTypeVariables(
+    override fun resolveTypeVariablesShape(
         assignedType: Type,
     ): TypeVariableResolution {
         if (assignedType !is DictType) throw TypeErrorException(
