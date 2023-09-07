@@ -20,7 +20,7 @@ data class UniversalFunctionType(
         }
     }
 
-    override fun resolveTypeVariables(
+    override fun resolveTypeVariablesShape(
         assignedType: Type,
     ): TypeVariableResolution {
         if (assignedType !is UniversalFunctionType) throw TypeErrorException(

@@ -166,7 +166,7 @@ data class SetType(
         else -> AnyType
     }
 
-    override fun resolveTypeVariables(
+    override fun resolveTypeVariablesShape(
         assignedType: Type,
     ): TypeVariableResolution {
         if (assignedType !is SetType) throw TypeErrorException(
