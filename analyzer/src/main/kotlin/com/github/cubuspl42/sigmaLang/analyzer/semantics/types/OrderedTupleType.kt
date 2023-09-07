@@ -119,7 +119,7 @@ data class OrderedTupleType(
         }
     }
 
-    override fun match(
+    override fun matchShape(
         assignedType: Type,
     ): Type.MatchResult = when (val sealedAssignedType = assignedType) {
         is OrderedTupleType -> OrderedTupleMatch(

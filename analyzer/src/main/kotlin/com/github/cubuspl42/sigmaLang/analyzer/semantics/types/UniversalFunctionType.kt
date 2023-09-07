@@ -58,7 +58,7 @@ data class UniversalFunctionType(
         )
     }
 
-    override fun match(
+    override fun matchShape(
         assignedType: Type,
     ): Type.MatchResult = when (assignedType) {
         is UniversalFunctionType -> UniversalFunctionMatch(

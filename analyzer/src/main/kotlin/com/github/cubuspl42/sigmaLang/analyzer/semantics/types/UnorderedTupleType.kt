@@ -96,7 +96,7 @@ data class UnorderedTupleType(
         }
     }
 
-    override fun match(
+    override fun matchShape(
         assignedType: Type,
     ): Type.MatchResult = when (assignedType) {
         is UnorderedTupleType -> UnorderedTupleMatch(valuesMatches = valueTypeByName.mapValues { (name, valueType) ->

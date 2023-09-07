@@ -53,7 +53,7 @@ data class DictType(
         ),
     )
 
-    override fun match(
+    override fun matchShape(
         assignedType: Type,
     ): Type.MatchResult = when (val sealedAssignedType = assignedType) {
         is DictType -> DictMatch(

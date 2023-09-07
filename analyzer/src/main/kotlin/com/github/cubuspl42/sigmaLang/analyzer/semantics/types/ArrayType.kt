@@ -68,7 +68,7 @@ data class ArrayType(
         ),
     )
 
-    override fun match(assignedType: Type): Type.MatchResult =
+    override fun matchShape(assignedType: Type): Type.MatchResult =
         when (assignedType) {
             is ArrayType -> ArrayMatch(
                 elementMatch = elementType.match(
