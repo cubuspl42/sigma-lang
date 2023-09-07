@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -14,14 +15,17 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 
 class NamespaceDefinition(
     private val outerScope: StaticScope,
+    private val qualifiedPath: QualifiedPath,
     private val term: NamespaceDefinitionTerm,
 ) : ConstantDefinition(), UserDefinition {
     companion object {
         fun build(
             outerScope: StaticScope,
+            qualifiedPath: QualifiedPath,
             term: NamespaceDefinitionTerm,
         ): NamespaceDefinition = NamespaceDefinition(
             outerScope = outerScope,
+            qualifiedPath = qualifiedPath,
             term = term,
         )
     }
@@ -47,6 +51,7 @@ class NamespaceDefinition(
         term.namespaceEntries.map {
             build(
                 outerScope = innerStaticScope,
+                qualifiedPath = qualifiedPath,
                 term = it,
             )
         }.toSet()

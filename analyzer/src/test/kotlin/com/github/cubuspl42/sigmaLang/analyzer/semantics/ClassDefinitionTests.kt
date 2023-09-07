@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
@@ -31,26 +32,38 @@ class ClassDefinitionTests {
 
             val classDefinition = ClassDefinition.build(
                 outerScope = BuiltinScope,
+                qualifiedPath = QualifiedPath(
+                    segments = listOf(
+                        Symbol.of("Foo"),
+                    ),
+                ),
                 term = term,
-            )
-
-            val bodyType = UnorderedTupleType(
-                valueTypeByName = mapOf(
-                    Symbol.of("foo") to IntCollectiveType,
-                    Symbol.of("bar") to BoolType,
-                )
             )
 
             val classType = classDefinition.effectiveTypeThunk.value
 
+            val tagType = SymbolType.of("Foo")
+
             assertEquals(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Symbol.of("type") to MetaType,
+                        ClassDefinition.classTagKey to tagType,
+                        ClassDefinition.classTypeKey to MetaType,
                         Symbol.of("new") to UniversalFunctionType(
-                            argumentType = bodyType,
-                            imageType = bodyType,
-                        ),
+                            argumentType = UnorderedTupleType(
+                                valueTypeByName = mapOf(
+                                    Symbol.of("foo") to IntCollectiveType,
+                                    Symbol.of("bar") to BoolType,
+                                )
+                            ),
+                            imageType = UnorderedTupleType(
+                                valueTypeByName = mapOf(
+                                    ClassDefinition.instanceTagKey to tagType,
+                                    Symbol.of("foo") to IntCollectiveType,
+                                    Symbol.of("bar") to BoolType,
+                                )
+                            ),
+                        )
                     ),
                 ),
                 actual = classType,
@@ -73,14 +86,13 @@ class ClassDefinitionTests {
 
             val classDefinition = ClassDefinition.build(
                 outerScope = BuiltinScope,
+                qualifiedPath = QualifiedPath(
+                    segments = listOf(
+                        Symbol.of("foo"),
+                        Symbol.of("Foo"),
+                    ),
+                ),
                 term = term,
-            )
-
-            val bodyType = UnorderedTupleType(
-                valueTypeByName = mapOf(
-                    Symbol.of("foo") to IntCollectiveType,
-                    Symbol.of("bar") to BoolType,
-                )
             )
 
             val classValue = assertIs<DictValue>(
@@ -90,14 +102,27 @@ class ClassDefinitionTests {
             )
 
             assertEquals(
-                expected = 2,
+                expected = 3,
                 actual = classValue.entries.size,
             )
 
             assertEquals(
-                expected = bodyType.asValue,
+                expected = Symbol.of("foo.Foo"),
                 actual = classValue.read(
-                    key = Symbol.of("type"),
+                    key = ClassDefinition.classTagKey,
+                ),
+            )
+
+            assertEquals(
+                expected = UnorderedTupleType(
+                    valueTypeByName = mapOf(
+                        ClassDefinition.instanceTagKey to SymbolType.of("foo.Foo"),
+                        Symbol.of("foo") to IntCollectiveType,
+                        Symbol.of("bar") to BoolType,
+                    )
+                ).asValue,
+                actual = classValue.read(
+                    key = ClassDefinition.classTypeKey,
                 ),
             )
 

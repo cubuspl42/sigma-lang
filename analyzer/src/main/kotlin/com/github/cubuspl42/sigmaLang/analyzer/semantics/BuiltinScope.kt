@@ -226,6 +226,7 @@ object BuiltinScope : DynamicScope, StaticScope {
         Symbol.of("max") to FunctionValue.Max,
         Symbol.of("length") to FunctionValue.LengthFunction,
         Symbol.of("concat") to FunctionValue.ConcatFunction,
+        Symbol.of("is") to ClassDefinition.Is,
     )
 
     private val builtinValueDeclarations = builtinValues.map { (name, builtinValue) ->

@@ -33,7 +33,7 @@ data class BoolValue(
         override fun dump(): String = "(if)"
     }
 
-    object Not : BuiltinOrderedFunction() {
+    object Not : StrictBuiltinOrderedFunction() {
         override val argTypes: List<Type> = listOf(BoolType)
 
         override val imageType: Type = BoolType

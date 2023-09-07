@@ -7,11 +7,14 @@
     content: String,
 }
 
-%const Node = HtmlElement | TextNode
+%const Node = HtmlElement.type | TextNode.type
 
-%const element: Node = HtmlElement.new{
+%const node: Node = HtmlElement.new{
     tagName: "div",
     children: [],
 }
 
-%const main = element
+%const main = %if is[node, HtmlElement] (
+    %then { htmlElement: node },
+    %else { textNode: node }
+)

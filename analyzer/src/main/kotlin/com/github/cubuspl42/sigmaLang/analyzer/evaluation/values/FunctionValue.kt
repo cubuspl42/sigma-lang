@@ -47,7 +47,7 @@ abstract class FunctionValue : Value() {
         override fun dump(): String = "(link function)"
     }
 
-    object Chunked4 : BuiltinOrderedFunction() {
+    object Chunked4 : StrictBuiltinOrderedFunction() {
         override val argTypes: List<Type> = listOf(
             ArrayType(
                 elementType = TypeVariable(
@@ -75,7 +75,7 @@ abstract class FunctionValue : Value() {
         }
     }
 
-    object DropFirst : BuiltinOrderedFunction() {
+    object DropFirst : StrictBuiltinOrderedFunction() {
         override val argTypes: List<Type> = listOf(
             ArrayType(
                 elementType = TypeVariable(
@@ -99,7 +99,7 @@ abstract class FunctionValue : Value() {
         }
     }
 
-    object Take : BuiltinOrderedFunction() {
+    object Take : StrictBuiltinOrderedFunction() {
         override val argTypes: List<Type> = listOf(
             ArrayType(
                 elementType = TypeVariable(
@@ -124,7 +124,7 @@ abstract class FunctionValue : Value() {
         }
     }
 
-    object Windows : BuiltinOrderedFunction() {
+    object Windows : StrictBuiltinOrderedFunction() {
         override val argTypes: List<Type> = listOf(
             ArrayType(
                 elementType = TypeVariable(
@@ -207,7 +207,7 @@ abstract class FunctionValue : Value() {
         }
     }
 
-    object LengthFunction : BuiltinOrderedFunction() {
+    object LengthFunction : StrictBuiltinOrderedFunction() {
         override val argTypes = listOf(
             ArrayType(
                 elementType = TypeVariable(
@@ -225,7 +225,7 @@ abstract class FunctionValue : Value() {
         }
     }
 
-    object ConcatFunction : BuiltinOrderedFunction() {
+    object ConcatFunction : StrictBuiltinOrderedFunction() {
         override val argTypes = listOf(
             ArrayType(
                 elementType = TypeVariable(
@@ -253,7 +253,7 @@ abstract class FunctionValue : Value() {
         }
     }
 
-    object Sum : BuiltinOrderedFunction() {
+    object Sum : StrictBuiltinOrderedFunction() {
         override val argTypes = listOf(
             ArrayType(elementType = IntCollectiveType),
         )
@@ -269,7 +269,7 @@ abstract class FunctionValue : Value() {
         }
     }
 
-    object Product : BuiltinOrderedFunction() {
+    object Product : StrictBuiltinOrderedFunction() {
         override val argTypes = listOf(
             ArrayType(elementType = IntCollectiveType),
         )
@@ -289,7 +289,7 @@ abstract class FunctionValue : Value() {
         }
     }
 
-    object Max : BuiltinOrderedFunction() {
+    object Max : StrictBuiltinOrderedFunction() {
         override val argTypes = listOf(
             ArrayType(elementType = IntCollectiveType),
         )
