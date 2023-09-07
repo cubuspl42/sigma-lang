@@ -13,6 +13,16 @@ data class UnionType(
             "union members ${unmatchedTypes.joinToString { it.dump() }} didn't match any of ${expectedType.dump()}"
     }
 
+    data class AssignedUnionMatch(
+        val expectedType: ShapeType,
+        val nonMatchingTypes: Set<Type>,
+    ) : Type.PartialMatch() {
+        override fun isFull(): Boolean = false
+
+        override fun dump(): String =
+            "union members ${nonMatchingTypes.joinToString { it.dump() }} didn't match type ${expectedType.dump()}"
+    }
+
     override fun dump(): String = memberTypes.joinToString(separator = " | ") { it.dump() }
 
     override fun findLowestCommonSupertype(

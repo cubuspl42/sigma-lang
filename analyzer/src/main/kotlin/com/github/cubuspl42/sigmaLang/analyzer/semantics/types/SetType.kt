@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope.SimpleBuil
 // Type of sets
 data class SetType(
     val elementType: Type,
-) : Type() {
+) : ShapeType() {
     companion object {
         val constructor = SimpleBuiltinValue(
             type = UniversalFunctionType(
@@ -188,7 +188,7 @@ data class SetType(
         ),
     )
 
-    override fun match(
+    override fun matchShape(
         assignedType: Type,
     ): Type.MatchResult = when (val sealedAssignedType = assignedType) {
         is SetType -> SetMatch(

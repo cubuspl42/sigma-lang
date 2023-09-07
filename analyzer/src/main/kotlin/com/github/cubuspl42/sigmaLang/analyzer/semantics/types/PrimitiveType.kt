@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-sealed class PrimitiveType : Type() {
+sealed class PrimitiveType : ShapeType() {
     override fun resolveTypeVariables(
         assignedType: Type,
     ): TypeVariableResolution = TypeVariableResolution.Empty
@@ -9,7 +9,7 @@ sealed class PrimitiveType : Type() {
         resolution: TypeVariableResolution,
     ): PrimitiveType = this
 
-    override fun match(
+    override fun matchShape(
         assignedType: Type,
     ): Type.MatchResult = when (this.findLowestCommonSupertype(assignedType)) {
         this -> Type.TotalMatch
