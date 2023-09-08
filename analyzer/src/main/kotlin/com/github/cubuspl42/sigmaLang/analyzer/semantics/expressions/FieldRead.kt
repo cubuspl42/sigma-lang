@@ -61,52 +61,63 @@ class FieldRead(
     private val fieldName: Symbol
         get() = term.fieldName
 
-    private val inferredSubjectTypeOutcome: Thunk<InferredSubjectTypeOutcome> =
-        subject.inferredType.thenJust { subjectType ->
-            val validSubjectType = subjectType as? UnorderedTupleType
+    override val analyzedExpression: Thunk<AnalyzedExpression> by lazy {
+        subject.analyzedExpression.thenJust {
+            analyzeWithSubject(analyzedSubject = it)
+        }
+    }
 
-            if (validSubjectType != null) {
-                InferredSubjectTypeResult(
-                    subjectType = validSubjectType,
+    private fun analyzeWithSubject(
+        analyzedSubject: AnalyzedExpression,
+    ): AnalyzedExpression {
+        return if (analyzedSubject is AcceptableExpression) {
+            val subjectType = analyzedSubject.inferredType
+
+            if (subjectType is UnorderedTupleType) {
+                analyzeWithUnorderedTupleSubject(
+                    subjectType = subjectType,
+                    classifiedSubject = analyzedSubject.classifiedExpression,
                 )
             } else {
-                InvalidSubjectTypeError(
-                    location = subject.location,
-                    invalidSubjectType = subjectType,
-                )
-            }
-        }
-
-    private val inferredFieldTypeOutcome: Thunk<InferredFieldTypeOutcome> = inferredSubjectTypeOutcome.thenJust {
-        when (it) {
-            is InferredSubjectTypeResult -> {
-                val subjectType = it.subjectType
-
-                val fieldType = subjectType.getFieldType(key = fieldName)
-
-                if (fieldType != null) {
-                    InferredFieldTypeResult(
-                        fieldType = fieldType,
+                object : UnacceptableExpression() {
+                    override val criticalErrors: Set<SemanticError> = setOf(
+                        InvalidSubjectTypeError(
+                            location = subject.location,
+                            invalidSubjectType = subjectType,
+                        )
                     )
-                } else {
+                }
+            }
+        } else {
+            TransitiveUnacceptableExpression
+        }
+    }
+
+    private fun analyzeWithUnorderedTupleSubject(
+        subjectType: UnorderedTupleType,
+        classifiedSubject: ClassifiedExpression?,
+    ): AnalyzedExpression {
+        val fieldType = subjectType.getFieldType(key = fieldName)
+
+        return if (fieldType != null) {
+            object : AcceptableExpression() {
+                override val inferredType: Type = fieldType
+
+                override val classifiedExpression: ClassifiedExpression? = classifiedSubject?.wrapOf { subjectValue ->
+                    if (subjectValue !is DictValue) throw IllegalStateException("Subject $subjectValue is not a dict")
+
+                    subjectValue.read(key = fieldName)!!
+                }
+            }
+        } else {
+            object : UnacceptableExpression() {
+                override val criticalErrors: Set<SemanticError> = setOf(
                     MissingFieldError(
                         location = term.location,
                         subjectType = subjectType,
                         missingFieldName = fieldName,
                     )
-                }
-            }
-
-            is InvalidSubjectTypeError -> InferredFieldTypeAbort
-        }
-    }
-
-    override val inferredType: Thunk<Type> by lazy {
-        inferredFieldTypeOutcome.thenJust {
-            if (it is InferredFieldTypeResult) {
-                it.fieldType
-            } else {
-                IllType
+                )
             }
         }
     }
@@ -118,13 +129,6 @@ class FieldRead(
 
         subjectValue.apply(
             argument = fieldName,
-        )
-    }
-
-    override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
-            inferredSubjectTypeOutcome.value as? InvalidSubjectTypeError,
-            inferredFieldTypeOutcome.value as? MissingFieldError,
         )
     }
 

@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Classifie
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
@@ -17,6 +18,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionTer
 class Abstraction(
     override val outerScope: StaticScope,
     private val innerScope: StaticScope,
+    private val argumentBlock: ArgumentStaticBlock,
     override val term: AbstractionTerm,
     val genericParameters: Set<TypeVariable>,
     val argumentType: TupleType,
@@ -36,6 +38,8 @@ class Abstraction(
         argumentDeclarations: List<ArgumentDeclaration>,
     ) : StaticBlock() {
         private val declarationByName = argumentDeclarations.associateBy { it.name }
+
+        fun getAll(): Set<ArgumentDeclaration> = declarationByName.values.toSet()
 
         override fun resolveNameLocally(
             name: Symbol,
@@ -67,7 +71,9 @@ class Abstraction(
                 ),
             )?.asType as TupleType
 
-            val innerDeclarationScope2 = argumentType.toArgumentDeclarationBlock().chainWith(
+            val argumentBlock = argumentType.toArgumentDeclarationBlock()
+
+            val innerDeclarationScope2 = argumentBlock.chainWith(
                 outerScope = innerDeclarationScope1,
             )
 
@@ -86,6 +92,7 @@ class Abstraction(
             return Abstraction(
                 outerScope = outerScope,
                 innerScope = innerDeclarationScope2,
+                argumentBlock = argumentBlock,
                 term = term,
                 genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
                 argumentType = argumentType,
@@ -108,13 +115,7 @@ class Abstraction(
     }
 
     private val effectiveImageType: Thunk<Type> by lazy {
-        val declaredImageType = this.declaredImageType
-
-        if (declaredImageType != null) {
-            return@lazy declaredImageType
-        } else {
-            return@lazy image.inferredType
-        }
+        this.declaredImageType ?: image.inferredType
     }
 
     override val inferredType: Thunk<FunctionType> by lazy {
