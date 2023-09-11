@@ -21,7 +21,7 @@ configurations {
 
 dependencies {
     antlr("org.antlr:antlr4:4.13.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
