@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 import com.github.cubuspl42.sigmaLang.analyzer.indexOfOrNull
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Abstraction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
@@ -56,8 +56,8 @@ data class OrderedTupleType(
             )
         )
 
-        fun toArgumentDeclaration(): Abstraction.ArgumentDeclaration? = name?.let {
-            Abstraction.ArgumentDeclaration(
+        fun toArgumentDeclaration(): AbstractionConstructor.ArgumentDeclaration? = name?.let {
+            AbstractionConstructor.ArgumentDeclaration(
                 name = it,
                 annotatedType = type,
             )
@@ -141,7 +141,7 @@ data class OrderedTupleType(
         )
     }
 
-    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentStaticBlock = Abstraction.ArgumentStaticBlock(
+    override fun toArgumentDeclarationBlock(): AbstractionConstructor.ArgumentStaticBlock = AbstractionConstructor.ArgumentStaticBlock(
         argumentDeclarations = elements.mapNotNull { element ->
             element.toArgumentDeclaration()
         },

@@ -14,7 +14,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVa
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionTerm
 
-class Abstraction(
+class AbstractionConstructor(
     override val outerScope: StaticScope,
     private val innerScope: StaticScope,
     override val term: AbstractionTerm,
@@ -48,7 +48,7 @@ class Abstraction(
         fun build(
             outerScope: StaticScope,
             term: AbstractionTerm,
-        ): Abstraction {
+        ): AbstractionConstructor {
             val genericDeclarationBlock = term.genericParametersTuple?.asDeclarationBlock
 
             val innerDeclarationScope1 = genericDeclarationBlock?.chainWith(
@@ -83,7 +83,7 @@ class Abstraction(
                 term = term.image,
             )
 
-            return Abstraction(
+            return AbstractionConstructor(
                 outerScope = outerScope,
                 innerScope = innerDeclarationScope2,
                 term = term,
