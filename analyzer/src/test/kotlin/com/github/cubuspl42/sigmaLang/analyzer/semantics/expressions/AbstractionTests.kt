@@ -28,14 +28,14 @@ class AbstractionTests {
                 source = "^[a: Int] -> Int => a + 3",
             ) as AbstractionSourceTerm
 
-            val abstraction = Abstraction.build(
+            val abstractionConstructor = AbstractionConstructor.build(
                 outerScope = BuiltinScope,
                 term = term,
             )
 
             assertEquals(
                 expected = IntCollectiveType,
-                actual = abstraction.declaredImageType?.value,
+                actual = abstractionConstructor.declaredImageType?.value,
             )
         }
 
@@ -46,13 +46,13 @@ class AbstractionTests {
                     source = "^[a: Int] => 2 + 3",
                 ) as AbstractionSourceTerm
 
-                val abstraction = Abstraction.build(
+                val abstractionConstructor = AbstractionConstructor.build(
                     outerScope = BuiltinScope,
                     term = term,
                 )
 
                 val inferredType = assertIs<FunctionType>(
-                    value = abstraction.inferredType.value,
+                    value = abstractionConstructor.inferredType.value,
                 )
 
                 assertIs<IntType>(
@@ -66,13 +66,13 @@ class AbstractionTests {
                     source = "^[a: Int] -> Bool => 3 + 4",
                 ) as AbstractionSourceTerm
 
-                val abstraction = Abstraction.build(
+                val abstractionConstructor = AbstractionConstructor.build(
                     outerScope = BuiltinScope,
                     term = term,
                 )
 
                 val inferredType = assertIs<FunctionType>(
-                    value = abstraction.inferredType.value,
+                    value = abstractionConstructor.inferredType.value,
                 )
 
                 assertIs<BoolType>(
@@ -86,13 +86,13 @@ class AbstractionTests {
                     source = "^[a: Int] => a",
                 ) as AbstractionSourceTerm
 
-                val abstraction = Abstraction.build(
+                val abstractionConstructor = AbstractionConstructor.build(
                     outerScope = BuiltinScope,
                     term = term,
                 )
 
                 val inferredType = assertIs<FunctionType>(
-                    value = abstraction.inferredType.value,
+                    value = abstractionConstructor.inferredType.value,
                 )
 
                 assertIs<IntType>(
@@ -106,13 +106,13 @@ class AbstractionTests {
                     source = "![e] ^[a: e] -> e => a",
                 ) as AbstractionSourceTerm
 
-                val abstraction = Abstraction.build(
+                val abstractionConstructor = AbstractionConstructor.build(
                     outerScope = BuiltinScope,
                     term = term,
                 )
 
                 val inferredType = assertIs<FunctionType>(
-                    value = abstraction.inferredType.value,
+                    value = abstractionConstructor.inferredType.value,
                 )
 
                 assertEquals(
@@ -139,14 +139,14 @@ class AbstractionTests {
     class EvaluationTests {
         @Test
         fun testUnorderedArgumentTuple() {
-            val abstraction = Abstraction.build(
+            val abstractionConstructor = AbstractionConstructor.build(
                 outerScope = BuiltinScope, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionSourceTerm
             )
 
             val result = assertIs<EvaluationResult<Value>>(
-                abstraction.bind(
+                abstractionConstructor.bind(
                     dynamicScope = BuiltinScope,
                 ).evaluateInitial(),
             )

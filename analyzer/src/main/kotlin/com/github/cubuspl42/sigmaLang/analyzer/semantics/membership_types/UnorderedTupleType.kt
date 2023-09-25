@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Abstraction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
@@ -121,10 +121,10 @@ data class UnorderedTupleType(
 
     override fun walkRecursive(): Sequence<MembershipType> = valueTypeByName.values.asSequence().flatMap { it.walk() }
 
-    override fun toArgumentDeclarationBlock(): Abstraction.ArgumentStaticBlock =
-        Abstraction.ArgumentStaticBlock(
+    override fun toArgumentDeclarationBlock(): AbstractionConstructor.ArgumentStaticBlock =
+        AbstractionConstructor.ArgumentStaticBlock(
             argumentDeclarations = valueTypeByName.map { (name, type) ->
-                Abstraction.ArgumentDeclaration(
+                AbstractionConstructor.ArgumentDeclaration(
                     name = name,
                     annotatedType = type,
                 )
