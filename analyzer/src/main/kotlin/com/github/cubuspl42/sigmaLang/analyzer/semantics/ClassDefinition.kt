@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinOrderedFunction
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableFunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StrictBuiltinOrderedFunction
@@ -11,14 +10,14 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.AnyType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SymbolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.AnyType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SymbolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 
 class ClassDefinition(
@@ -27,12 +26,12 @@ class ClassDefinition(
     private val term: ClassDefinitionTerm,
 ) : ConstantDefinition() {
     object Is : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<Type> = listOf(
+        override val argTypes: List<MembershipType> = listOf(
             AnyInstanceType,
             AnyClassType,
         )
 
-        override val imageType: Type = BoolType
+        override val imageType: MembershipType = BoolType
 
         override fun compute(args: List<Value>): Value {
             val instanceValue = args[0] as DictValue
@@ -123,7 +122,7 @@ class ClassDefinition(
         )
     }
 
-    override val effectiveTypeThunk: Thunk<Type> by lazy {
+    override val effectiveTypeThunk: Thunk<MembershipType> by lazy {
         Thunk.pure(
             UnorderedTupleType(
                 valueTypeByName = mapOf(

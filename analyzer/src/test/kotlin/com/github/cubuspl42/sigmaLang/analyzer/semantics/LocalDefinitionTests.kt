@@ -2,9 +2,9 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
@@ -37,7 +37,7 @@ class LocalDefinitionTests {
                 expected = setOf(
                     UserDefinition.UnmatchedInferredTypeError(
                         location = SourceLocation(lineIndex = 2, columnIndex = 13),
-                        matchResult = Type.TotalMismatch(
+                        matchResult = MembershipType.TotalMismatch(
                             expectedType = IntCollectiveType,
                             actualType = BoolType,
                         ),

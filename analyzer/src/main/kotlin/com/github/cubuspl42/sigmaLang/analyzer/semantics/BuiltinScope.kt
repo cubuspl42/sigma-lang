@@ -10,37 +10,37 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.DictType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.StringType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.StringType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 
 interface BuiltinValue {
-    val type: Type
+    val type: MembershipType
     val value: Value
 }
 
 private class BuiltinDefinition(
     override val name: Symbol,
     val value: Value,
-    val type: Type,
+    val type: MembershipType,
 ) : ConstantDefinition() {
     override val valueThunk: Thunk<Value> = value.toThunk()
 
-    override val effectiveTypeThunk: Thunk<Type> = Thunk.pure(type)
+    override val effectiveTypeThunk: Thunk<MembershipType> = Thunk.pure(type)
 }
 
 object BuiltinScope : DynamicScope, StaticScope {
     data class SimpleBuiltinValue(
-        override val type: Type,
+        override val type: MembershipType,
         override val value: Value,
     ) : BuiltinValue
 

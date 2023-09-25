@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 
 data class BoolValue(
     val value: Boolean,
@@ -34,9 +34,9 @@ data class BoolValue(
     }
 
     object Not : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<Type> = listOf(BoolType)
+        override val argTypes: List<MembershipType> = listOf(BoolType)
 
-        override val imageType: Type = BoolType
+        override val imageType: MembershipType = BoolType
 
         override fun compute(args: List<Value>): Value {
             val arg = args[0] as BoolValue

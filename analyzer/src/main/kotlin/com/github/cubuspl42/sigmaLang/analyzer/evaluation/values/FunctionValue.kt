@@ -2,12 +2,12 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 import com.github.cubuspl42.sigmaLang.analyzer.cutOffFront
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 
 abstract class FunctionValue : Value() {
 
@@ -48,7 +48,7 @@ abstract class FunctionValue : Value() {
     }
 
     object Chunked4 : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<Type> = listOf(
+        override val argTypes: List<MembershipType> = listOf(
             ArrayType(
                 elementType = TypeVariable(
                     formula = Formula.of("e"),
@@ -56,7 +56,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override val imageType: Type = ArrayType(
+        override val imageType: MembershipType = ArrayType(
             elementType = ArrayType(
                 elementType = TypeVariable(
                     formula = Formula.of("e"),
@@ -76,7 +76,7 @@ abstract class FunctionValue : Value() {
     }
 
     object DropFirst : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<Type> = listOf(
+        override val argTypes: List<MembershipType> = listOf(
             ArrayType(
                 elementType = TypeVariable(
                     formula = Formula.of("e"),
@@ -84,7 +84,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override val imageType: Type = ArrayType(
+        override val imageType: MembershipType = ArrayType(
             elementType = TypeVariable(
                 formula = Formula.of("e"),
             ),
@@ -100,7 +100,7 @@ abstract class FunctionValue : Value() {
     }
 
     object Take : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<Type> = listOf(
+        override val argTypes: List<MembershipType> = listOf(
             ArrayType(
                 elementType = TypeVariable(
                     formula = Formula.of("e"),
@@ -108,7 +108,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override val imageType: Type = ArrayType(
+        override val imageType: MembershipType = ArrayType(
             elementType = TypeVariable(
                 formula = Formula.of("e"),
             ),
@@ -125,7 +125,7 @@ abstract class FunctionValue : Value() {
     }
 
     object Windows : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<Type> = listOf(
+        override val argTypes: List<MembershipType> = listOf(
             ArrayType(
                 elementType = TypeVariable(
                     formula = Formula.of("e"),
@@ -133,7 +133,7 @@ abstract class FunctionValue : Value() {
             ),
         )
 
-        override val imageType: Type = ArrayType(
+        override val imageType: MembershipType = ArrayType(
             elementType = ArrayType(
                 elementType = TypeVariable(
                     formula = Formula.of("e"),

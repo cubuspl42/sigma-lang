@@ -3,12 +3,11 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDefinition.UnmatchedInferredTypeError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
 
 class UserDefinitionMixin(
@@ -24,7 +23,7 @@ class UserDefinitionMixin(
         }
     }
 
-    override val annotatedTypeThunk: Thunk<Type>? by lazy {
+    override val annotatedTypeThunk: Thunk<MembershipType>? by lazy {
         this.annotatedTypeBody?.let { expression ->
             expression.bindTranslated(staticScope = outerScope).thenJust { it.asType!! }
         }
@@ -61,7 +60,7 @@ class UserDefinitionMixin(
     override val name: Symbol
         get() = term.name
 
-    override val effectiveTypeThunk: Thunk<Type> by lazy {
+    override val effectiveTypeThunk: Thunk<MembershipType> by lazy {
         annotatedTypeThunk ?: body.inferredType
     }
 }

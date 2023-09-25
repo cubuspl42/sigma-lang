@@ -6,9 +6,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorTerm
 
@@ -36,7 +36,7 @@ class SetConstructor(
     sealed interface InferredElementTypeOutcome
 
     data class InferredElementTypeResult(
-        val elementType: Type,
+        val elementType: MembershipType,
     ) : InferredElementTypeOutcome
 
     data class InconsistentElementTypeError(
@@ -63,7 +63,7 @@ class SetConstructor(
         }
     }
 
-    override val inferredType: Thunk<Type> = inferredElementTypeOutcome.thenJust { inferredValueTypeOutcome ->
+    override val inferredType: Thunk<MembershipType> = inferredElementTypeOutcome.thenJust { inferredValueTypeOutcome ->
         if (inferredValueTypeOutcome is InferredElementTypeResult) {
             SetType(
                 elementType = inferredValueTypeOutcome.elementType,

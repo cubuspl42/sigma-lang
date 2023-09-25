@@ -1,6 +1,6 @@
 package utils
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
@@ -10,11 +10,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDecla
 
 data class FakeUserDeclaration(
     override val name: Symbol,
-    val type: Type,
+    val type: MembershipType,
 ) : UserDeclaration {
-    override val annotatedTypeThunk: Thunk<Type> = Thunk.pure(type)
+    override val annotatedTypeThunk: Thunk<MembershipType> = Thunk.pure(type)
 
-    override val effectiveTypeThunk: Thunk<Type> = Thunk.pure(type)
+    override val effectiveTypeThunk: Thunk<MembershipType> = Thunk.pure(type)
 
     override val errors: Set<SemanticError> = emptySet()
 }

@@ -8,8 +8,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.StringType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.StringType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.StringLiteralTerm
 
 data class StringLiteral(
@@ -29,7 +29,7 @@ data class StringLiteral(
     val value: StringValue
         get() = term.value
 
-    override val inferredType: Thunk<Type> = Thunk.pure(StringType)
+    override val inferredType: Thunk<MembershipType> = Thunk.pure(StringType)
 
     override val subExpressions: Set<Expression> = emptySet()
 

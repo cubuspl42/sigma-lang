@@ -6,10 +6,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorTerm
 
 class FunctionTypeConstructor(
@@ -36,7 +36,7 @@ class FunctionTypeConstructor(
         )
     }
 
-    override val inferredType: Thunk<Type>
+    override val inferredType: Thunk<MembershipType>
         get() = TODO()
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine2(
@@ -50,7 +50,7 @@ class FunctionTypeConstructor(
         UniversalFunctionType(
             genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
             argumentType = argumentType.asType as TupleType,
-            imageType = imageType.asType as Type,
+            imageType = imageType.asType as MembershipType,
         ).asValue
     }
 

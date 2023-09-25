@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.*
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.*
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 
@@ -91,9 +91,9 @@ class Call(
     sealed interface SubjectCallOutcome
 
     data class LegalSubjectCallResult(
-        val effectiveCalleeArgumentType: Type,
-        val effectiveResultType: Type,
-        val passedArgumentType: Type,
+        val effectiveCalleeArgumentType: MembershipType,
+        val effectiveResultType: MembershipType,
+        val passedArgumentType: MembershipType,
     ) : SubjectCallOutcome
 
     data class NonFullyInferredCalleeTypeError(
@@ -104,7 +104,7 @@ class Call(
 
     data class NonFunctionCallError(
         override val location: SourceLocation?,
-        val illegalSubjectType: Type,
+        val illegalSubjectType: MembershipType,
     ) : SubjectCallOutcome, SemanticError
 
     sealed interface ArgumentValidationOutcome
@@ -113,7 +113,7 @@ class Call(
 
     data class InvalidArgumentError(
         override val location: SourceLocation?,
-        val matchResult: Type.MatchResult,
+        val matchResult: MembershipType.MatchResult,
     ) : ArgumentValidationOutcome, SemanticError {
         override fun dump(): String = "$location: Invalid argument: ${matchResult.dump()}"
     }
@@ -197,7 +197,7 @@ class Call(
         }
     }
 
-    override val inferredType: Thunk<Type> by lazy {
+    override val inferredType: Thunk<MembershipType> by lazy {
         subjectCallOutcome.thenJust { subjectCall ->
             if (subjectCall is LegalSubjectCallResult) {
                 subjectCall.effectiveResultType
