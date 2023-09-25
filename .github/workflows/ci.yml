@@ -29,7 +29,7 @@ jobs:
           distribution: "temurin"
 
       - name: Check commit messages
-        uses: GsActions/commit-message-checker@v1
+        uses: GsActions/commit-message-checker@v2
         with:
           pattern: "^(?!WIP).*$"
           error: "The first line cannot start with WIP"
