@@ -8,10 +8,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceTerm
 
@@ -39,7 +39,7 @@ data class GenericParametersTuple(
             ).asValue
         )
 
-        override val effectiveTypeThunk: Thunk<Type> = Thunk.pure(MetaType)
+        override val effectiveTypeThunk: Thunk<MembershipType> = Thunk.pure(MetaType)
     }
 
     inner class GenericParametersTupleBlock : StaticBlock() {

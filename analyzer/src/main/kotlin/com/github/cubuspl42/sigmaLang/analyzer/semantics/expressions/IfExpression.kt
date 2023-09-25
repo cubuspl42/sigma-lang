@@ -6,8 +6,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IfExpressionTerm
 
@@ -46,7 +46,7 @@ class IfExpression(
 
     data class InvalidGuardError(
         override val location: SourceLocation?,
-        val actualType: Type,
+        val actualType: MembershipType,
     ) : GuardValidationOutcome, SemanticError {
         override fun dump(): String = "$location: Invalid guard type: ${actualType.dump()} (should be: Bool)"
     }
@@ -62,7 +62,7 @@ class IfExpression(
             }
         }
 
-    override val inferredType: Thunk<Type> = Thunk.combine2(
+    override val inferredType: Thunk<MembershipType> = Thunk.combine2(
         trueBranch.inferredType,
         falseBranch.inferredType,
     ) {

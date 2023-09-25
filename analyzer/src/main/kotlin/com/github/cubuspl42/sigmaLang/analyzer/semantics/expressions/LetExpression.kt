@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableDefinitionBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionTerm
 
 data class LetExpression(
@@ -48,7 +48,7 @@ data class LetExpression(
         }
     }
 
-    override val inferredType: Thunk<Type>
+    override val inferredType: Thunk<MembershipType>
         get() = result.inferredType
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = result.bind(

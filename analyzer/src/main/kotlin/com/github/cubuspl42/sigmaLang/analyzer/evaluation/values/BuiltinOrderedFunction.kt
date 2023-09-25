@@ -1,9 +1,9 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinValue
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 
 abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
     final override fun dump(): String = "(builtin ordered function)"
@@ -18,7 +18,7 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
         )
     }
 
-    final override val type: Type
+    final override val type: MembershipType
         get() = UniversalFunctionType(
             argumentType = OrderedTupleType(
                 elements = argTypes.map {
@@ -35,9 +35,9 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
         get() = this
 
     // Thought: allow for names
-    abstract val argTypes: List<Type>
+    abstract val argTypes: List<MembershipType>
 
-    abstract val imageType: Type
+    abstract val imageType: MembershipType
 
     abstract fun computeThunk(
         args: List<Value>,

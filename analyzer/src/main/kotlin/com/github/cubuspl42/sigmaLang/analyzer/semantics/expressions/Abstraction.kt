@@ -7,11 +7,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.FunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionTerm
 
 class Abstraction(
@@ -25,9 +25,9 @@ class Abstraction(
 ) : Expression() {
     class ArgumentDeclaration(
         override val name: Symbol,
-        val annotatedType: Type,
+        val annotatedType: MembershipType,
     ) : UserDeclaration {
-        override val annotatedTypeThunk: Thunk<Type> = Thunk.pure(annotatedType)
+        override val annotatedTypeThunk: Thunk<MembershipType> = Thunk.pure(annotatedType)
 
         override val errors: Set<SemanticError> = emptySet()
     }
@@ -101,13 +101,13 @@ class Abstraction(
         image = image,
     ).toThunk()
 
-    val declaredImageType: Thunk<Type>? by lazy {
+    val declaredImageType: Thunk<MembershipType>? by lazy {
         declaredImageTypeConstructor?.bindTranslated(
             staticScope = innerScope,
         )?.thenJust { it.asType!! }
     }
 
-    private val effectiveImageType: Thunk<Type> by lazy {
+    private val effectiveImageType: Thunk<MembershipType> by lazy {
         val declaredImageType = this.declaredImageType
 
         if (declaredImageType != null) {

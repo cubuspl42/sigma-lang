@@ -7,9 +7,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadTerm
 
@@ -27,13 +27,13 @@ class FieldRead(
 
     data class InvalidSubjectTypeError(
         override val location: SourceLocation?,
-        val invalidSubjectType: Type,
+        val invalidSubjectType: MembershipType,
     ) : InferredSubjectTypeOutcome, SemanticError
 
     sealed interface InferredFieldTypeOutcome
 
     data class InferredFieldTypeResult(
-        val fieldType: Type,
+        val fieldType: MembershipType,
     ) : InferredFieldTypeOutcome
 
     data class MissingFieldError(
@@ -101,7 +101,7 @@ class FieldRead(
         }
     }
 
-    override val inferredType: Thunk<Type> by lazy {
+    override val inferredType: Thunk<MembershipType> by lazy {
         inferredFieldTypeOutcome.thenJust {
             if (it is InferredFieldTypeResult) {
                 it.fieldType

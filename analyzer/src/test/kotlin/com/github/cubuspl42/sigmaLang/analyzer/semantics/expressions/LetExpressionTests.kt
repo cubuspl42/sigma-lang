@@ -3,12 +3,12 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationStackExhaustionError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.FunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import kotlin.test.Test
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull

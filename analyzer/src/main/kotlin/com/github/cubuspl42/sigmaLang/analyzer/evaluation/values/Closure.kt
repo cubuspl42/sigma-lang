@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.chainWith
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
 
 class Closure(
     private val outerDynamicScope: DynamicScope,

@@ -10,9 +10,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.VariableIntroduction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MetaType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 
 class TranslationDynamicScope(
     private val staticScope: StaticScope,
