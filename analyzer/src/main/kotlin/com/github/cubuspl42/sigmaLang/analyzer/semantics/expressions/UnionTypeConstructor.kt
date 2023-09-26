@@ -16,7 +16,7 @@ class UnionTypeConstructor(
     override val outerScope: StaticScope,
     override val term: UnionTypeConstructorTerm,
     val types: Set<Expression>,
-) : Expression() {
+) : TypeConstructor() {
     init {
         if (types.isEmpty()) {
             throw IllegalArgumentException("Union has to consist of at least one type")
@@ -73,9 +73,6 @@ class UnionTypeConstructor(
         }
     }
 
-    // TODO: Extract to `TypeConstructor`
-    override val inferredType: Thunk<MembershipType> = Thunk.pure(MetaType)
-
     override fun bind(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(types.toList()) { typeExpression ->
@@ -89,8 +86,4 @@ class UnionTypeConstructor(
     }
 
     override val subExpressions: Set<Expression> = types
-
-    override val errors: Set<SemanticError> by lazy {
-        types.flatMap { it.errors }.toSet()
-    }
 }

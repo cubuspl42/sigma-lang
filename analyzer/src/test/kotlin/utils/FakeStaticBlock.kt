@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
 
 data class FakeUserDeclaration(
@@ -14,7 +15,7 @@ data class FakeUserDeclaration(
 ) : UserDeclaration {
     override val annotatedTypeThunk: Thunk<MembershipType> = Thunk.pure(type)
 
-    override val effectiveTypeThunk: Thunk<MembershipType> = Thunk.pure(type)
+    override val computedEffectiveType: Expression.Computation<MembershipType> = Expression.Computation.pure(type)
 
     override val errors: Set<SemanticError> = emptySet()
 }

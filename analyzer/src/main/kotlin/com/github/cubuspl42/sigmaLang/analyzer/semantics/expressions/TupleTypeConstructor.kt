@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 
-sealed class TupleTypeConstructor : Expression() {
+sealed class TupleTypeConstructor : TypeConstructor() {
     companion object {
         fun build(
             outerScope: StaticScope,

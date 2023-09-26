@@ -30,26 +30,27 @@ class OrderedTupleConstructor(
         )
     }
 
-    override val inferredType: Thunk<OrderedTupleType> = Thunk.traverseList(
-        elements,
-    ) { element ->
-        element.inferredType.thenJust { elementType ->
-            OrderedTupleType.Element(
-                name = null,
-                type = elementType,
-            )
+    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        val elementsAnalyses = elements.map {
+            compute(it.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         }
-    }.thenJust { elements ->
-        OrderedTupleType(
-            elements = elements,
+
+        DiagnosedAnalysis(
+            analysis = Analysis(
+                inferredType = OrderedTupleType(
+                    elements = elementsAnalyses.map {
+                        OrderedTupleType.Element(
+                            name = null,
+                            type = it.inferredType,
+                        )
+                    },
+                ),
+            ),
+            directErrors = emptySet(),
         )
     }
 
     override val subExpressions: Set<Expression> = elements.toSet()
-
-    override val errors: Set<SemanticError> by lazy {
-        elements.fold(emptySet()) { acc, it -> acc + it.errors }
-    }
 
     override fun bind(
         dynamicScope: DynamicScope,

@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.FunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
@@ -27,7 +27,7 @@ class AbstractionConstructor(
         override val name: Symbol,
         val annotatedType: MembershipType,
     ) : UserDeclaration {
-        override val annotatedTypeThunk: Thunk<MembershipType> = Thunk.pure(annotatedType)
+        override val annotatedTypeThunk = Thunk.pure(annotatedType)
 
         override val errors: Set<SemanticError> = emptySet()
     }
@@ -101,35 +101,30 @@ class AbstractionConstructor(
         image = image,
     ).toThunk()
 
-    val declaredImageType: Thunk<MembershipType>? by lazy {
+    private val declaredImageTypeThunk: Thunk<MembershipType>? by lazy {
         declaredImageTypeConstructor?.bindTranslated(
             staticScope = innerScope,
         )?.thenJust { it.asType!! }
     }
 
-    private val effectiveImageType: Thunk<MembershipType> by lazy {
-        val declaredImageType = this.declaredImageType
+    val declaredImageType = declaredImageTypeThunk?.let { it.value ?: IllType }
 
-        if (declaredImageType != null) {
-            return@lazy declaredImageType
-        } else {
-            return@lazy image.inferredType
+    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        val effectiveImageType = this@AbstractionConstructor.declaredImageType ?: run {
+            compute(image.inferredTypeOrIllType)
         }
+
+        DiagnosedAnalysis(
+            analysis = Analysis(
+                inferredType = UniversalFunctionType(
+                    genericParameters = genericParameters,
+                    argumentType = argumentType,
+                    imageType = effectiveImageType,
+                )
+            ),
+            directErrors = emptySet(),
+        )
     }
 
-    override val inferredType: Thunk<FunctionType> by lazy {
-        effectiveImageType.thenJust { effectiveImageType ->
-            UniversalFunctionType(
-                genericParameters = genericParameters,
-                argumentType = argumentType,
-                imageType = effectiveImageType,
-            )
-        }
-    }
-
-    override val subExpressions: Set<Expression> = setOf(image)
-
-    override val errors: Set<SemanticError> by lazy {
-        image.errors
-    }
+    override val subExpressions: Set<Expression> = setOfNotNull(declaredImageTypeConstructor, image)
 }

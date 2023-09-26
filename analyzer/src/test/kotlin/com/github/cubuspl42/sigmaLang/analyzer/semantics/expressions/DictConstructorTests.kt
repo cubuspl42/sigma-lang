@@ -43,7 +43,7 @@ class DictConstructorTests {
                     keyType = IntCollectiveType,
                     valueType = BoolType,
                 ),
-                actual = dictLiteral.inferredType.value,
+                actual = dictLiteral.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -83,7 +83,7 @@ class DictConstructorTests {
                     keyType = IntCollectiveType,
                     valueType = BoolType,
                 ),
-                actual = dictLiteral.inferredType.value,
+                actual = dictLiteral.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -124,12 +124,15 @@ class DictConstructorTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     ),
                 ),
-                actual = dictLiteral.errors,
+                actual = dictLiteral.directErrors,
             )
 
             assertEquals(
-                expected = IllType,
-                actual = dictLiteral.inferredType.value,
+                expected = DictType(
+                    keyType = IllType,
+                    valueType = BoolType,
+                ),
+                actual = dictLiteral.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -170,12 +173,15 @@ class DictConstructorTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     ),
                 ),
-                actual = dictLiteral.errors,
+                actual = dictLiteral.directErrors,
             )
 
             assertEquals(
-                expected = IllType,
-                actual = dictLiteral.inferredType.value,
+                expected = DictType(
+                    keyType = IntCollectiveType,
+                    valueType = IllType,
+                ),
+                actual = dictLiteral.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -210,12 +216,15 @@ class DictConstructorTests {
                         keyType = keyType,
                     ),
                 ),
-                actual = dictLiteral.errors,
+                actual = dictLiteral.directErrors,
             )
 
             assertEquals(
-                expected = IllType,
-                actual = dictLiteral.inferredType.value,
+                expected = DictType(
+                    keyType = IllType,
+                    valueType = BoolType,
+                ),
+                actual = dictLiteral.inferredTypeOrIllType.getOrCompute(),
             )
         }
     }

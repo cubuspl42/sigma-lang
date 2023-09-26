@@ -52,8 +52,6 @@ class UnorderedTupleTypeConstructor(
         )
     }
 
-    override val inferredType: Thunk<MembershipType> = Thunk.pure(MetaType)
-
     override fun bind(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(entries.toList()) { entry ->
@@ -69,9 +67,4 @@ class UnorderedTupleTypeConstructor(
     }
 
     override val subExpressions: Set<Expression> = entries.map { it.type }.toSet()
-
-    override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
-        )
-    }
 }

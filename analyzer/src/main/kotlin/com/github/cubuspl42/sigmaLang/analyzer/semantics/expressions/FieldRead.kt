@@ -7,7 +7,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
@@ -18,17 +17,10 @@ class FieldRead(
     override val term: FieldReadTerm,
     val subject: Expression,
 ) : Expression() {
-
-    sealed interface InferredSubjectTypeOutcome
-
-    data class InferredSubjectTypeResult(
-        val subjectType: UnorderedTupleType,
-    ) : InferredSubjectTypeOutcome
-
     data class InvalidSubjectTypeError(
         override val location: SourceLocation?,
         val invalidSubjectType: MembershipType,
-    ) : InferredSubjectTypeOutcome, SemanticError
+    ) : SemanticError
 
     sealed interface InferredFieldTypeOutcome
 
@@ -61,53 +53,38 @@ class FieldRead(
     private val fieldName: Symbol
         get() = term.fieldName
 
-    private val inferredSubjectTypeOutcome: Thunk<InferredSubjectTypeOutcome> =
-        subject.inferredType.thenJust { subjectType ->
-            val validSubjectType = subjectType as? UnorderedTupleType
+    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
 
-            if (validSubjectType != null) {
-                InferredSubjectTypeResult(
-                    subjectType = validSubjectType,
+        val inferredSubjectType = subjectAnalysis.inferredType
+        val validSubjectType = inferredSubjectType as? UnorderedTupleType
+
+        if (validSubjectType != null) {
+            val fieldType = validSubjectType.getFieldType(key = fieldName)
+
+            if (fieldType != null) {
+                DiagnosedAnalysis(
+                    analysis = Analysis(
+                        inferredType = fieldType,
+                    ),
+                    directErrors = emptySet(),
                 )
             } else {
-                InvalidSubjectTypeError(
-                    location = subject.location,
-                    invalidSubjectType = subjectType,
-                )
-            }
-        }
-
-    private val inferredFieldTypeOutcome: Thunk<InferredFieldTypeOutcome> = inferredSubjectTypeOutcome.thenJust {
-        when (it) {
-            is InferredSubjectTypeResult -> {
-                val subjectType = it.subjectType
-
-                val fieldType = subjectType.getFieldType(key = fieldName)
-
-                if (fieldType != null) {
-                    InferredFieldTypeResult(
-                        fieldType = fieldType,
-                    )
-                } else {
+                DiagnosedAnalysis.fromError(
                     MissingFieldError(
                         location = term.location,
-                        subjectType = subjectType,
+                        subjectType = validSubjectType,
                         missingFieldName = fieldName,
                     )
-                }
+                )
             }
-
-            is InvalidSubjectTypeError -> InferredFieldTypeAbort
-        }
-    }
-
-    override val inferredType: Thunk<MembershipType> by lazy {
-        inferredFieldTypeOutcome.thenJust {
-            if (it is InferredFieldTypeResult) {
-                it.fieldType
-            } else {
-                IllType
-            }
+        } else {
+            DiagnosedAnalysis.fromError(
+                InvalidSubjectTypeError(
+                    location = subject.location,
+                    invalidSubjectType = inferredSubjectType,
+                )
+            )
         }
     }
 
@@ -118,13 +95,6 @@ class FieldRead(
 
         subjectValue.apply(
             argument = fieldName,
-        )
-    }
-
-    override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
-            inferredSubjectTypeOutcome.value as? InvalidSubjectTypeError,
-            inferredFieldTypeOutcome.value as? MissingFieldError,
         )
     }
 

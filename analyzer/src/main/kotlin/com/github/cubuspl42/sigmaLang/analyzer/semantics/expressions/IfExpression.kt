@@ -40,36 +40,36 @@ class IfExpression(
         )
     }
 
-    sealed interface GuardValidationOutcome
-
-    data object ValidGuardResult : GuardValidationOutcome
-
     data class InvalidGuardError(
         override val location: SourceLocation?,
         val actualType: MembershipType,
-    ) : GuardValidationOutcome, SemanticError {
+    ) : SemanticError {
         override fun dump(): String = "$location: Invalid guard type: ${actualType.dump()} (should be: Bool)"
     }
 
-    private val guardValidationOutcome: Thunk<GuardValidationOutcome?> =
-        this.guard.inferredType.thenJust { guardType ->
-            when (guardType) {
-                is BoolType -> ValidGuardResult
-                else -> InvalidGuardError(
-                    location = guard.location,
-                    actualType = guardType,
-                )
-            }
+    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        val guardAnalysis = compute(guard.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+        val trueBranchAnalysis = compute(trueBranch.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+        val falseBranchAnalysis = compute(falseBranch.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+
+        val guardError = when (val inferredGuardType = guardAnalysis.inferredType) {
+            is BoolType -> null
+            else -> InvalidGuardError(
+                location = guard.location,
+                actualType = inferredGuardType,
+            )
         }
 
-    override val inferredType: Thunk<MembershipType> = Thunk.combine2(
-        trueBranch.inferredType,
-        falseBranch.inferredType,
-    ) {
-            trueType,
-            falseType,
-        ->
-        trueType.findLowestCommonSupertype(falseType)
+        val inferredTrueType = trueBranchAnalysis.inferredType
+        val inferredFalseType = falseBranchAnalysis.inferredType
+        val inferredResultType = inferredTrueType.findLowestCommonSupertype(inferredFalseType)
+
+        DiagnosedAnalysis(
+            analysis = Analysis(
+                inferredType = inferredResultType,
+            ),
+            directErrors = setOfNotNull(guardError),
+        )
     }
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = guard.bind(
@@ -89,10 +89,4 @@ class IfExpression(
     }
 
     override val subExpressions: Set<Expression> = setOf(guard, trueBranch, falseBranch)
-
-    override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
-            guardValidationOutcome.value as? InvalidGuardError,
-        ) + guard.errors + trueBranch.errors + falseBranch.errors
-    }
 }

@@ -33,7 +33,7 @@ class OrderedTupleConstructorTests {
             )
 
             val type = assertIs<OrderedTupleType>(
-                value = tupleLiteral.inferredType.value,
+                value = tupleLiteral.inferredTypeOrIllType.getOrCompute(),
             )
 
             assertEquals(
@@ -65,7 +65,7 @@ class OrderedTupleConstructorTests {
             )
 
             val type = assertIs<OrderedTupleType>(
-                value = tupleLiteral.inferredType.value,
+                value = tupleLiteral.inferredTypeOrIllType.getOrCompute(),
             )
 
             assertEquals(

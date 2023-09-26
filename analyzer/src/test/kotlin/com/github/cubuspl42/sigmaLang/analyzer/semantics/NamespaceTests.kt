@@ -52,7 +52,7 @@ class NamespaceTests {
                     ),
                     imageType = BoolType,
                 ),
-                actual = isUserIdValidDefinition.effectiveTypeThunk.value,
+                actual = isUserIdValidDefinition.computedEffectiveType.getOrCompute(),
             )
         }
     }

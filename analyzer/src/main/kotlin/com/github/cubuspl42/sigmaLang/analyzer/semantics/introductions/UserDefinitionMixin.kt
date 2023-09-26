@@ -7,6 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDefinition.UnmatchedInferredTypeError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
 
@@ -29,6 +30,8 @@ class UserDefinitionMixin(
         }
     }
 
+    val annotatedType by lazy { annotatedTypeThunk?.let { it.value ?: IllType } }
+
     override val body: Expression by lazy {
         Expression.build(
             outerScope = outerScope,
@@ -38,7 +41,8 @@ class UserDefinitionMixin(
 
     private val unmatchedInferredTypeError: UnmatchedInferredTypeError? by lazy {
         val declaredType = this.annotatedTypeThunk?.value
-        val inferredType = body.inferredType.value
+        val bodyAnalysis = body.computedAnalysis.getOrCompute()
+        val inferredType = bodyAnalysis?.inferredType
 
         if (declaredType != null && inferredType != null) {
             val matchResult = declaredType.match(inferredType)
@@ -54,13 +58,13 @@ class UserDefinitionMixin(
     override val errors: Set<SemanticError> by lazy {
         setOfNotNull(
             unmatchedInferredTypeError
-        ) + body.errors
+        ) + body.directErrors
     }
 
     override val name: Symbol
         get() = term.name
 
-    override val effectiveTypeThunk: Thunk<MembershipType> by lazy {
-        annotatedTypeThunk ?: body.inferredType
+    override val computedEffectiveType: Expression.Computation<MembershipType> by lazy {
+        annotatedType?.let { Expression.Computation.pure(it) } ?: body.inferredTypeOrIllType
     }
 }

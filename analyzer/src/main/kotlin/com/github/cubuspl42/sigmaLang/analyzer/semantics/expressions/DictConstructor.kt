@@ -24,6 +24,17 @@ class DictConstructor(
         val key: Expression,
         val value: Expression,
     ) {
+        data class Analysis(
+            val keyAnalysis: Expression.Analysis?,
+            val valueAnalysis: Expression.Analysis?,
+        ) {
+            val inferredKeyType: MembershipType?
+                get() = keyAnalysis?.inferredType
+
+            val inferredValueType: MembershipType?
+                get() = valueAnalysis?.inferredType
+        }
+
         companion object {
             fun build(
                 declarationScope: StaticScope,
@@ -57,13 +68,7 @@ class DictConstructor(
         )
     }
 
-    sealed interface InferredKeyTypeOutcome
-
-    data class InferredKeyTypeResult(
-        val keyType: PrimitiveType,
-    ) : InferredKeyTypeOutcome
-
-    sealed interface InferredKeyTypeError : InferredKeyTypeOutcome, SemanticError
+    sealed interface InferredKeyTypeError : SemanticError
 
     data class InconsistentKeyTypeError(
         override val location: SourceLocation,
@@ -74,77 +79,82 @@ class DictConstructor(
         val keyType: MembershipType,
     ) : InferredKeyTypeError, SemanticError
 
-    sealed interface InferredValueTypeOutcome
-
     data class InferredValueTypeResult(
         val valueType: MembershipType,
-    ) : InferredValueTypeOutcome
+    )
 
     data class InconsistentValueTypeError(
         override val location: SourceLocation,
-    ) : InferredValueTypeOutcome, SemanticError
+    ) : SemanticError
 
-    private val inferredKeyTypeOutcome: Thunk<InferredKeyTypeOutcome> = Thunk.traverseList(
-        associations
-    ) {
-        it.key.inferredType
-    }.thenJust { keyTypes ->
-        val distinctiveKeyTypes = keyTypes.toSet()
+    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        val associationsAnalyses = associations.map {
+            Association.Analysis(
+                keyAnalysis = compute(it.key.computedAnalysis),
+                valueAnalysis = compute(it.value.computedAnalysis),
+            )
+        }
 
-        val keyType = distinctiveKeyTypes.singleOrNull()
+        val distinctiveKeyTypes = associationsAnalyses.map { it.inferredKeyType }.toSet()
+        val distinctiveValueTypes = associationsAnalyses.map { it.inferredValueType }.toSet()
 
-        if (keyType != null) {
-            val primitiveKeyType = keyType as? PrimitiveType
+        fun analyzeKeys(): Pair<MembershipType, SemanticError?> {
+            val keyType = distinctiveKeyTypes.singleOrNull()
 
-            if (primitiveKeyType != null) {
-                InferredKeyTypeResult(
-                    keyType = keyType,
-                )
+            return if (keyType != null) {
+                val primitiveKeyType = keyType as? PrimitiveType
+
+                if (primitiveKeyType != null) {
+                    Pair(keyType, null)
+                } else {
+                    Pair(
+                        IllType,
+                        NonPrimitiveKeyTypeError(
+                            location = term.location,
+                            keyType = keyType,
+                        ),
+                    )
+                }
             } else {
-                NonPrimitiveKeyTypeError(
-                    location = term.location,
-                    keyType = keyType,
+                Pair(
+                    IllType,
+                    InconsistentKeyTypeError(
+                        location = term.location,
+                    ),
                 )
             }
-        } else {
-            InconsistentKeyTypeError(
-                location = term.location,
-            )
         }
-    }
 
-    private val inferredValueTypeOutcome: Thunk<InferredValueTypeOutcome> = Thunk.traverseList(
-        associations
-    ) {
-        it.value.inferredType
-    }.thenJust { valueTypes ->
-        val distinctiveValueTypes = valueTypes.toSet()
+        fun analyzeValues(): Pair<MembershipType, SemanticError?> {
+            val valueType = distinctiveValueTypes.singleOrNull()
 
-        val valueType = distinctiveValueTypes.singleOrNull()
-
-        if (valueType != null) {
-            InferredValueTypeResult(
-                valueType = valueType,
-            )
-        } else {
-            InconsistentValueTypeError(
-                location = term.location,
-            )
+            return if (valueType != null) {
+                Pair(valueType, null)
+            } else {
+                Pair(
+                    IllType,
+                    InconsistentValueTypeError(
+                        location = term.location,
+                    ),
+                )
+            }
         }
-    }
 
-    override val inferredType: Thunk<MembershipType> = Thunk.combine2(
-        inferredKeyTypeOutcome,
-        inferredValueTypeOutcome,
-    ) { inferredKeyTypeOutcome, inferredValueTypeOutcome ->
-        if (inferredKeyTypeOutcome is InferredKeyTypeResult && inferredValueTypeOutcome is InferredValueTypeResult) {
-            DictType(
-                keyType = inferredKeyTypeOutcome.keyType,
-                valueType = inferredValueTypeOutcome.valueType,
-            )
-        } else {
-            IllType
-        }
+        val (keyType, keysError) = analyzeKeys()
+        val (valueType, valuesError) = analyzeValues()
+
+        DiagnosedAnalysis(
+            analysis = Analysis(
+                inferredType = DictType(
+                    keyType = keyType,
+                    valueType = valueType,
+                ),
+            ),
+            directErrors = setOfNotNull(
+                keysError,
+                valuesError,
+            ),
+        )
     }
 
     override val subExpressions: Set<Expression> = SetUtils.unionAllOf(associations) { setOf(it.key, it.value) }
@@ -165,13 +175,6 @@ class DictConstructor(
     }.thenJust {
         DictValue(
             entries = it.toMap(),
-        )
-    }
-
-    override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
-            inferredKeyTypeOutcome.value as? InferredKeyTypeError,
-            inferredValueTypeOutcome.value as? InconsistentValueTypeError,
         )
     }
 }

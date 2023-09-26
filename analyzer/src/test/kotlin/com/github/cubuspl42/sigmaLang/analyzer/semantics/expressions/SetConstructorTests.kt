@@ -40,7 +40,7 @@ class SetConstructorTests {
                 expected = SetType(
                     elementType = BoolType,
                 ),
-                actual = setConstructor.inferredType.value,
+                actual = setConstructor.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -71,7 +71,7 @@ class SetConstructorTests {
                 expected = SetType(
                     elementType = BoolType,
                 ),
-                actual = setConstructor.inferredType.value,
+                actual = setConstructor.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -104,12 +104,12 @@ class SetConstructorTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     ),
                 ),
-                actual = setConstructor.errors,
+                actual = setConstructor.directErrors,
             )
 
             assertEquals(
                 expected = IllType,
-                actual = setConstructor.inferredType.value,
+                actual = setConstructor.inferredTypeOrIllType.getOrCompute(),
             )
         }
     }

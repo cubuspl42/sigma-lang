@@ -33,43 +33,34 @@ class SetConstructor(
         )
     }
 
-    sealed interface InferredElementTypeOutcome
-
-    data class InferredElementTypeResult(
-        val elementType: MembershipType,
-    ) : InferredElementTypeOutcome
-
     data class InconsistentElementTypeError(
         override val location: SourceLocation,
-    ) : InferredElementTypeOutcome, SemanticError
+    ) :  SemanticError
 
-    private val inferredElementTypeOutcome: Thunk<InferredElementTypeOutcome> = Thunk.traverseList(
-        elements.toList()
-    ) {
-        it.inferredType
-    }.thenJust { elementTypes ->
-        val distinctiveElementTypes = elementTypes.toSet()
+    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        val elementsAnalyses = elements.map {
+           compute(it.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+        }
+
+        val distinctiveElementTypes = elementsAnalyses.map { it.inferredType }.toSet()
 
         val elementType = distinctiveElementTypes.singleOrNull()
 
         if (elementType != null) {
-            InferredElementTypeResult(
-                elementType = elementType,
+            DiagnosedAnalysis(
+                analysis = Analysis(
+                    inferredType = SetType(
+                        elementType = elementType,
+                    ),
+                ),
+                directErrors = emptySet(),
             )
         } else {
-            InconsistentElementTypeError(
-                location = term.location,
+            DiagnosedAnalysis.fromError(
+                InconsistentElementTypeError(
+                    location = term.location,
+                )
             )
-        }
-    }
-
-    override val inferredType: Thunk<MembershipType> = inferredElementTypeOutcome.thenJust { inferredValueTypeOutcome ->
-        if (inferredValueTypeOutcome is InferredElementTypeResult) {
-            SetType(
-                elementType = inferredValueTypeOutcome.elementType,
-            )
-        } else {
-            IllType
         }
     }
 
@@ -82,12 +73,6 @@ class SetConstructor(
     }.thenJust { elements ->
         SetValue(
             elements = elements.toSet(),
-        )
-    }
-
-    override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
-            inferredElementTypeOutcome.value as? InconsistentElementTypeError,
         )
     }
 }

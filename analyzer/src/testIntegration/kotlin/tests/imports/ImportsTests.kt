@@ -29,7 +29,7 @@ class ImportsTests {
         )
 
         assertEquals(
-            expected = mainDefinition.effectiveTypeThunk.value,
+            expected = mainDefinition.computedEffectiveType.getOrCompute(),
             actual = IntCollectiveType,
         )
 

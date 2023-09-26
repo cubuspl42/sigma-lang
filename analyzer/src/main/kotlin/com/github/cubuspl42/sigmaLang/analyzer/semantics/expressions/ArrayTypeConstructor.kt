@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
@@ -16,7 +17,7 @@ class ArrayTypeConstructor(
     override val outerScope: StaticScope,
     override val term: ExpressionTerm,
     val elementType: Expression,
-) : Expression() {
+) : TypeConstructor() {
     companion object {
         fun build(
             outerScope: StaticScope,
@@ -31,12 +32,7 @@ class ArrayTypeConstructor(
         )
     }
 
-    override val inferredType: Thunk<MembershipType>
-        get() = TODO()
-
     override val subExpressions: Set<Expression> = setOf(elementType)
-
-    override val errors: Set<SemanticError> = emptySet()
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = elementType.bind(
         dynamicScope = dynamicScope,

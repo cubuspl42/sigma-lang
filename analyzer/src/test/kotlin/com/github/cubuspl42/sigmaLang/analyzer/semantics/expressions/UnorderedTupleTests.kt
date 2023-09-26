@@ -31,7 +31,7 @@ class UnorderedTupleTests {
                 expected = UnorderedTupleType(
                     valueTypeByName = emptyMap(),
                 ),
-                actual = unorderedTupleConstructor.inferredType.value,
+                actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -67,7 +67,7 @@ class UnorderedTupleTests {
                         Symbol.of("key2") to IntCollectiveType,
                     ),
                 ),
-                actual = unorderedTupleConstructor.inferredType.value,
+                actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -103,12 +103,16 @@ class UnorderedTupleTests {
                         duplicatedKey = Symbol.of("key1"),
                     ),
                 ),
-                actual = unorderedTupleConstructor.errors,
+                actual = unorderedTupleConstructor.directErrors,
             )
 
             assertEquals(
-                expected = IllType,
-                actual = unorderedTupleConstructor.inferredType.value,
+                expected = UnorderedTupleType(
+                    valueTypeByName = mapOf(
+                        Symbol.of("key1") to IllType,
+                    ),
+                ),
+                actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute(),
             )
         }
     }

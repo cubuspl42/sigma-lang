@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
@@ -35,7 +36,7 @@ private class BuiltinDefinition(
 ) : ConstantDefinition() {
     override val valueThunk: Thunk<Value> = value.toThunk()
 
-    override val effectiveTypeThunk: Thunk<MembershipType> = Thunk.pure(type)
+    override val computedEffectiveType = Expression.Computation.pure(type)
 }
 
 object BuiltinScope : DynamicScope, StaticScope {

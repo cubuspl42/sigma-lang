@@ -30,7 +30,7 @@ class IsUndefinedCheckTests {
 
             assertEquals(
                 expected = BoolType,
-                actual = isUndefinedCheck.inferredType.value,
+                actual = isUndefinedCheck.inferredTypeOrIllType.getOrCompute(),
             )
         }
     }

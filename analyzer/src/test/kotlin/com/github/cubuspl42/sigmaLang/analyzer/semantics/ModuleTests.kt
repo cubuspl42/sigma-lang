@@ -53,7 +53,7 @@ class ModuleTests {
                     ),
                     imageType = BoolType,
                 ),
-                actual = isUserIdValid.effectiveTypeThunk.value,
+                actual = isUserIdValid.computedEffectiveType.getOrCompute(),
             )
         }
 
@@ -105,7 +105,7 @@ class ModuleTests {
             assertIs<ConstantDefinition>(bazDefinition)
 
             assertEquals(
-                expected = bazDefinition.effectiveTypeThunk.value,
+                expected = bazDefinition.computedEffectiveType.getOrCompute(),
                 actual = IntCollectiveType,
             )
 

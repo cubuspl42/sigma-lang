@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntLiteralType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.StringType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.StringLiteralTerm
@@ -29,11 +30,16 @@ data class StringLiteral(
     val value: StringValue
         get() = term.value
 
-    override val inferredType: Thunk<MembershipType> = Thunk.pure(StringType)
+    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        DiagnosedAnalysis(
+            analysis = Analysis(
+                inferredType = StringType,
+            ),
+            directErrors = emptySet(),
+        )
+    }
 
     override val subExpressions: Set<Expression> = emptySet()
-
-    override val errors: Set<SemanticError> = emptySet()
 
     override fun bind(
         dynamicScope: DynamicScope,

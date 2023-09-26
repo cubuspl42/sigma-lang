@@ -19,6 +19,14 @@ class UnorderedTupleConstructor(
         val name: Symbol,
         val value: Expression,
     ) {
+        data class Analysis(
+            val name: Symbol,
+            val valueAnalysis: Expression.Analysis?,
+        ) {
+            val inferredValueType: MembershipType
+                get() = valueAnalysis?.inferredType ?: IllType
+        }
+
         companion object {
             fun build(
                 declarationScope: StaticScope,
@@ -33,16 +41,10 @@ class UnorderedTupleConstructor(
         }
     }
 
-    sealed interface InferredTypeOutcome
-
-    data class InferredTypeResult(
-        val type: UnorderedTupleType,
-    ) : InferredTypeOutcome
-
     data class DuplicatedKeyError(
         override val location: SourceLocation?,
         val duplicatedKey: PrimitiveValue,
-    ) : InferredTypeOutcome, SemanticError
+    ) : SemanticError
 
     companion object {
         fun build(
@@ -60,36 +62,39 @@ class UnorderedTupleConstructor(
         )
     }
 
-    private val inferredTypeOutcome: Thunk<InferredTypeOutcome> = Thunk.traverseList(
-        entries.toList()
-    ) { entry ->
-        entry.value.inferredType.thenJust { entry.name to it }
-    }.thenJust { entryPairs ->
-        val entryPairByName = entryPairs.groupBy { it.first }
+    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        val entriesAnalyses = entries.map {
+            Entry.Analysis(
+                name = it.name,
+                valueAnalysis = compute(it.value.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null,
+            )
+        }
 
-        val firstDuplicatedKey =
-            entryPairByName.entries.firstNotNullOfOrNull { (name, entryPairs) -> name.takeIf { entryPairs.size > 1 } }
+        val entryTypeByName = entriesAnalyses.groupBy { it.name }.mapValues { (name, entryAnalyses) ->
+            entryAnalyses.map { it.inferredValueType }
+        }
 
-        if (firstDuplicatedKey == null) {
-            InferredTypeResult(
-                type = UnorderedTupleType(
-                    valueTypeByName = entryPairs.toMap()
+        val duplicatedKeyErrors = entryTypeByName.entries.mapNotNull { (name, entryTypes) ->
+            if (entryTypes.size > 1) {
+                DuplicatedKeyError(
+                    location = term?.location,
+                    duplicatedKey = name,
+                )
+            } else {
+                null
+            }
+        }
+
+        DiagnosedAnalysis(
+            analysis = Analysis(
+                inferredType = UnorderedTupleType(
+                    valueTypeByName = entryTypeByName.mapValues { (_, entryTypes) ->
+                        entryTypes.singleOrNull() ?: IllType
+                    },
                 ),
-            )
-        } else {
-            DuplicatedKeyError(
-                location = term?.location,
-                duplicatedKey = firstDuplicatedKey,
-            )
-        }
-
-    }
-
-    override val inferredType: Thunk<MembershipType> = inferredTypeOutcome.thenJust {
-        when (it) {
-            is InferredTypeResult -> it.type
-            is DuplicatedKeyError -> IllType
-        }
+            ),
+            directErrors = duplicatedKeyErrors.toSet(),
+        )
     }
 
     override fun bind(
@@ -105,12 +110,4 @@ class UnorderedTupleConstructor(
     }
 
     override val subExpressions: Set<Expression> = entries.map { it.value }.toSet()
-
-    override val errors: Set<SemanticError> by lazy {
-        val entriesErrors: Set<SemanticError> = entries.fold(emptySet()) { acc, it -> acc + it.value.errors }
-
-        entriesErrors + setOfNotNull(
-            inferredTypeOutcome.value as? DuplicatedKeyError,
-        )
-    }
 }

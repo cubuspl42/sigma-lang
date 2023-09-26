@@ -63,11 +63,11 @@ class CallTests {
 
             assertEquals(
                 expected = emptySet(),
-                actual = call.errors,
+                actual = call.directErrors,
             )
 
             assertIs<IntType>(
-                value = call.inferredType.value,
+                value = call.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -114,12 +114,12 @@ class CallTests {
                         ),
                     ),
                 ),
-                actual = call.errors,
+                actual = call.directErrors,
             )
 
             // Wrong argument does not affect the inferred type
             assertIs<IntType>(
-                value = call.inferredType.value,
+                value = call.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -140,7 +140,7 @@ class CallTests {
             )
 
             assertIs<IllType>(
-                value = call.inferredType.value,
+                value = call.inferredTypeOrIllType.getOrCompute(),
             )
 
             assertEquals(
@@ -150,7 +150,7 @@ class CallTests {
                         illegalSubjectType = BoolType,
                     ),
                 ),
-                actual = call.errors,
+                actual = call.directErrors,
             )
         }
 
@@ -187,7 +187,7 @@ class CallTests {
 
             assertEquals(
                 expected = emptySet(),
-                actual = call.errors,
+                actual = call.directErrors,
             )
 
             assertEquals(
@@ -197,7 +197,7 @@ class CallTests {
                         Symbol.of("key2") to IntLiteralType.of(0L),
                     ),
                 ),
-                actual = call.inferredType.value,
+                actual = call.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -243,12 +243,12 @@ class CallTests {
                         ),
                     )
                 ),
-                actual = call.errors,
+                actual = call.directErrors,
             )
 
             assertEquals(
                 expected = IllType,
-                actual = call.inferredType.value,
+                actual = call.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -292,7 +292,7 @@ class CallTests {
 
             assertEquals(
                 expected = emptySet(),
-                actual = call.errors,
+                actual = call.directErrors,
             )
 
             assertEquals(
@@ -309,7 +309,7 @@ class CallTests {
                         TypeVariable.of("type2"),
                     ),
                 ),
-                actual = call.inferredType.value,
+                actual = call.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
