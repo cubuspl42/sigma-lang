@@ -6,5 +6,5 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllTyp
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 
 interface AnnotatableIntroduction : Introduction {
-    val annotatedTypeThunk: Thunk<MembershipType>?
+    val annotatedType: MembershipType?
 }

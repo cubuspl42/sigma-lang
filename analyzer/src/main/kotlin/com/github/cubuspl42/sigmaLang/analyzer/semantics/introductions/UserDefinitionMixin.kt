@@ -7,6 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDefinition.UnmatchedInferredTypeError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
@@ -15,22 +16,16 @@ class UserDefinitionMixin(
     private val outerScope: StaticScope,
     private val term: DefinitionTerm,
 ) : EmbodiedUserDefinition {
-    private val annotatedTypeBody: Expression? by lazy {
+    private val annotatedTypeBody: TypeExpression? by lazy {
         term.declaredTypeBody?.let {
-            Expression.build(
+            TypeExpression.build(
                 outerScope = outerScope,
                 term = it,
             )
         }
     }
 
-    override val annotatedTypeThunk: Thunk<MembershipType>? by lazy {
-        this.annotatedTypeBody?.let { expression ->
-            expression.bindTranslated(staticScope = outerScope).thenJust { it.asType!! }
-        }
-    }
-
-    val annotatedType by lazy { annotatedTypeThunk?.let { it.value ?: IllType } }
+    override val annotatedType by lazy { annotatedTypeBody?.typeOrIllType }
 
     override val body: Expression by lazy {
         Expression.build(
@@ -40,7 +35,7 @@ class UserDefinitionMixin(
     }
 
     private val unmatchedInferredTypeError: UnmatchedInferredTypeError? by lazy {
-        val declaredType = this.annotatedTypeThunk?.value
+        val declaredType = this.annotatedType
         val bodyAnalysis = body.computedAnalysis.getOrCompute()
         val inferredType = bodyAnalysis?.inferredType
 
@@ -56,9 +51,11 @@ class UserDefinitionMixin(
     }
 
     override val errors: Set<SemanticError> by lazy {
+        val annotatedTypeErrors = annotatedTypeBody?.errors ?: emptySet()
+
         setOfNotNull(
             unmatchedInferredTypeError
-        ) + body.directErrors
+        ) + annotatedTypeErrors + body.directErrors
     }
 
     override val name: Symbol

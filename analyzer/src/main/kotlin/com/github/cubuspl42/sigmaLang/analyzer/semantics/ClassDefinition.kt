@@ -9,6 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.AnyType
@@ -85,14 +86,14 @@ class ClassDefinition(
     private val tagType = SymbolType(value = tag)
 
     private val body by lazy {
-        UnorderedTupleTypeConstructor.build(
+        TypeExpression.build(
             outerScope = outerScope,
             term = term.body,
         )
     }
 
     private val bodyType: UnorderedTupleType by lazy {
-        body.bindTranslated(staticScope = outerScope).value!!.asType as UnorderedTupleType
+        body.typeOrIllType as UnorderedTupleType
     }
 
     private val instanceType: UnorderedTupleType by lazy {
