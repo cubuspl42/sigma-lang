@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 /**
  * A symbol for an illegal type, a result of a typing error.
  */
-object IllType : MembershipType() {
+data object IllType : MembershipType() {
     override fun findLowestCommonSupertype(other: MembershipType): MembershipType = IllType
 
     override fun resolveTypeVariables(assignedType: MembershipType): TypeVariableResolution {

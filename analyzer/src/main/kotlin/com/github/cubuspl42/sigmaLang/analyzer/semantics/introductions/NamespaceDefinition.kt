@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
@@ -85,11 +86,11 @@ class NamespaceDefinition(
         )
     }
 
-    override val effectiveTypeThunk: Thunk<MembershipType> by lazy {
-        Thunk.pure(
+    override val computedEffectiveType: Expression.Computation<MembershipType> by lazy {
+        Expression.Computation.pure(
             UnorderedTupleType(
                 valueTypeByName = definitions.associate {
-                    it.name to it.effectiveTypeThunk.value!!
+                    it.name to it.computedEffectiveType.getOrCompute()
                 },
             ),
         )

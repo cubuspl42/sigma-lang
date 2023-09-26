@@ -40,9 +40,6 @@ class OrderedTupleTypeConstructor(
         )
     }
 
-    override val inferredType: Thunk<OrderedTupleType>
-        get() = TODO()
-
     override fun bind(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(elements) { element ->
@@ -56,7 +53,4 @@ class OrderedTupleTypeConstructor(
     }
 
     override val subExpressions: Set<Expression> = elements.map { it.type }.toSet()
-
-    override val errors: Set<SemanticError>
-        get() = TODO()
 }

@@ -4,9 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableDefinitionBlock
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionTerm
 
 data class LetExpression(
@@ -48,8 +46,17 @@ data class LetExpression(
         }
     }
 
-    override val inferredType: Thunk<MembershipType>
-        get() = result.inferredType
+    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        val resultAnalysis = compute(result.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+        val inferredResultType = resultAnalysis.inferredType
+
+        DiagnosedAnalysis(
+            analysis = Analysis(
+                inferredType = inferredResultType,
+            ),
+            directErrors = emptySet(),
+        )
+    }
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = result.bind(
         dynamicScope = definitionBlock.evaluate(
@@ -59,9 +66,5 @@ data class LetExpression(
 
     override val subExpressions: Set<Expression> by lazy {
         definitionBlock.subExpressions + result
-    }
-
-    override val errors: Set<SemanticError> by lazy {
-        definitionBlock.errors + result.errors
     }
 }

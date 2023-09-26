@@ -14,13 +14,14 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-class AbstractionTests {
+class AbstractionConstructorTests {
     class TypeCheckingTests {
         @Test
         fun testDeclaredImageType() {
@@ -35,7 +36,7 @@ class AbstractionTests {
 
             assertEquals(
                 expected = IntCollectiveType,
-                actual = abstractionConstructor.declaredImageType?.value,
+                actual = abstractionConstructor.declaredImageType,
             )
         }
 
@@ -52,7 +53,7 @@ class AbstractionTests {
                 )
 
                 val inferredType = assertIs<FunctionType>(
-                    value = abstractionConstructor.inferredType.value,
+                    value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
                 )
 
                 assertIs<IntType>(
@@ -72,7 +73,7 @@ class AbstractionTests {
                 )
 
                 val inferredType = assertIs<FunctionType>(
-                    value = abstractionConstructor.inferredType.value,
+                    value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
                 )
 
                 assertIs<BoolType>(
@@ -92,7 +93,7 @@ class AbstractionTests {
                 )
 
                 val inferredType = assertIs<FunctionType>(
-                    value = abstractionConstructor.inferredType.value,
+                    value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
                 )
 
                 assertIs<IntType>(
@@ -112,7 +113,7 @@ class AbstractionTests {
                 )
 
                 val inferredType = assertIs<FunctionType>(
-                    value = abstractionConstructor.inferredType.value,
+                    value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
                 )
 
                 assertEquals(
@@ -131,6 +132,39 @@ class AbstractionTests {
 
                 assertIs<TypeVariable>(
                     value = inferredType.imageType,
+                )
+            }
+
+            @Test
+            fun testRecursiveCallTest() {
+                val term = ExpressionSourceTerm.parse(
+                    source = """
+                    %let {
+                        f = ^[n: Int] -> Bool => f[n + 1]
+                    } %in f
+                """.trimIndent(),
+                )
+
+                val expression = Expression.build(
+                    outerScope = BuiltinScope,
+                    term = term,
+                )
+
+                val type = expression.inferredTypeOrIllType.getOrCompute()
+
+                assertEquals(
+                    expected = UniversalFunctionType(
+                        argumentType = OrderedTupleType(
+                            elements = listOf(
+                                OrderedTupleType.Element(
+                                    name = Symbol.of("n"),
+                                    type = IntCollectiveType,
+                                ),
+                            ),
+                        ),
+                        imageType = BoolType,
+                    ),
+                    actual = type,
                 )
             }
         }

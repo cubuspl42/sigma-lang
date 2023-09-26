@@ -3,8 +3,6 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
@@ -38,13 +36,31 @@ class Reference(
         )
     }
 
-
     private val resolved: ClassifiedIntroduction? by lazy {
         outerScope.resolveName(name = referredName)
     }
 
-    override val inferredType: Thunk<MembershipType>
-        get() = resolved?.effectiveTypeThunk ?: Thunk.pure(IllType)
+    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        val resolved = resolved
+
+        if (resolved != null) {
+            val inferredTargetType = compute(resolved.computedEffectiveType)
+
+            DiagnosedAnalysis(
+                analysis = Analysis(
+                    inferredType = inferredTargetType,
+                ),
+                directErrors = emptySet(),
+            )
+        } else {
+            DiagnosedAnalysis.fromError(
+                UnresolvedNameError(
+                    location = term?.location,
+                    name = referredName,
+                )
+            )
+        }
+    }
 
     override val subExpressions: Set<Expression> = emptySet()
 
@@ -53,17 +69,4 @@ class Reference(
     ) ?: throw RuntimeException(
         "Unresolved reference at run-time: $referredName",
     )
-
-    override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
-            when (resolved) {
-                null -> UnresolvedNameError(
-                    location = term?.location,
-                    name = referredName,
-                )
-
-                else -> null
-            }
-        )
-    }
 }

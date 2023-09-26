@@ -8,8 +8,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntTyp
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
@@ -38,7 +42,7 @@ class LetExpressionTests {
             )
 
             val fType = assertIs<FunctionType>(
-                value = fDefinition.effectiveTypeThunk.value,
+                value = fDefinition.computedEffectiveType.getOrCompute(),
             )
 
             assertIs<IntType>(value = fType.imageType)
@@ -50,7 +54,7 @@ class LetExpressionTests {
             )
 
             val gType = assertIs<FunctionType>(
-                value = gDefinition.effectiveTypeThunk.value,
+                value = gDefinition.computedEffectiveType.getOrCompute(),
             )
 
             assertIs<IntType>(value = gType.imageType)
@@ -67,29 +71,37 @@ class LetExpressionTests {
                 """.trimIndent(),
             ) as LetExpressionSourceTerm
 
-            val let = LetExpression.build(
+            val letExpression = LetExpression.build(
                 outerScope = BuiltinScope,
                 term = term,
             )
 
             val fDefinition = assertNotNull(
-                actual = let.definitionBlock.getValueDefinition(
+                actual = letExpression.definitionBlock.getValueDefinition(
                     name = Symbol.of("f"),
                 ),
             )
 
-            assertIs<EvaluationStackExhaustionError>(
-                value = fDefinition.effectiveTypeThunk.outcome,
+            assertEquals(
+                expected = UniversalFunctionType(
+                    argumentType = OrderedTupleType.Empty,
+                    imageType = IllType,
+                ),
+                actual = fDefinition.computedEffectiveType.getOrCompute(),
             )
 
             val gDefinition = assertNotNull(
-                actual = let.definitionBlock.getValueDefinition(
+                actual = letExpression.definitionBlock.getValueDefinition(
                     name = Symbol.of("g"),
                 ),
             )
 
-            assertIs<EvaluationStackExhaustionError>(
-                value = gDefinition.effectiveTypeThunk.outcome,
+            assertEquals(
+                expected = UniversalFunctionType(
+                    argumentType = OrderedTupleType.Empty,
+                    imageType = IllType,
+                ),
+                actual = gDefinition.computedEffectiveType.getOrCompute(),
             )
         }
 
@@ -116,7 +128,7 @@ class LetExpressionTests {
             )
 
             assertIs<IntCollectiveType>(
-                value = aDefinition.effectiveTypeThunk.value,
+                value = aDefinition.computedEffectiveType.getOrCompute(),
             )
 
             val bDefinition = assertNotNull(
@@ -126,7 +138,7 @@ class LetExpressionTests {
             )
 
             assertIs<IntCollectiveType>(
-                value = bDefinition.effectiveTypeThunk.value,
+                value = bDefinition.computedEffectiveType.getOrCompute(),
             )
         }
     }

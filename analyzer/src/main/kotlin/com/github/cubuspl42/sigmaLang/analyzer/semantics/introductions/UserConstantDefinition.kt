@@ -34,5 +34,5 @@ class UserConstantDefinition private constructor(
     }
 
     override val errors: Set<SemanticError>
-        get() = userDefinition.body.errors
+        get() = userDefinition.body.directErrors
 }

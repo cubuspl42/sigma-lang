@@ -19,7 +19,7 @@ class TranslationDynamicScope(
         when (resolvedIntroduction) {
             is ConstantDefinition -> resolvedIntroduction.valueThunk
 
-            is VariableIntroduction -> when (resolvedIntroduction.effectiveTypeThunk.value) {
+            is VariableIntroduction -> when (resolvedIntroduction.computedEffectiveType.getOrCompute()) {
                 else -> null
             }
         }

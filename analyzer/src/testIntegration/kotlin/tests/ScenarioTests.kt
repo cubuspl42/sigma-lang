@@ -80,7 +80,7 @@ class ScenarioTests {
                 ),
                 imageType = MetaType,
             ),
-            actual = entryTypeConstructorDefinition.effectiveTypeThunk.value,
+            actual = entryTypeConstructorDefinition.computedEffectiveType.getOrCompute(),
         )
 
         // Construct `Entry[Bool]` and validate it
@@ -131,7 +131,7 @@ class ScenarioTests {
                     ),
                 ),
             ),
-            actual = entryOfAbstractionDefinition.effectiveTypeThunk.value,
+            actual = entryOfAbstractionDefinition.computedEffectiveType.getOrCompute(),
         )
 
         // Validate `entryTrueOf`
@@ -154,7 +154,7 @@ class ScenarioTests {
                     ),
                 ),
             ),
-            actual = entryTrueOfAbstractionDefinition.effectiveTypeThunk.value,
+            actual = entryTrueOfAbstractionDefinition.computedEffectiveType.getOrCompute(),
         )
     }
 
@@ -191,7 +191,7 @@ class ScenarioTests {
 
         val aType = namespaceDefinition.getDefinition(
             name = Symbol.of("a"),
-        )!!.effectiveTypeThunk.value
+        )!!.computedEffectiveType.getOrCompute()
 
         assertEquals(
             expected = IllType,

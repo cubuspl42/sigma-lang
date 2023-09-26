@@ -17,7 +17,7 @@ class FunctionTypeConstructor(
     override val term: FunctionTypeConstructorTerm,
     val argumentType: TupleTypeConstructor,
     val imageType: Expression,
-) : Expression() {
+) : TypeConstructor() {
     companion object {
         fun build(
             outerScope: StaticScope,
@@ -36,9 +36,6 @@ class FunctionTypeConstructor(
         )
     }
 
-    override val inferredType: Thunk<MembershipType>
-        get() = TODO()
-
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine2(
         argumentType.bind(
             dynamicScope = dynamicScope,
@@ -52,11 +49,6 @@ class FunctionTypeConstructor(
             argumentType = argumentType.asType as TupleType,
             imageType = imageType.asType as MembershipType,
         ).asValue
-    }
-
-    override val errors: Set<SemanticError> by lazy {
-        setOfNotNull(
-        )
     }
 
     override val subExpressions: Set<Expression> = setOf(argumentType, imageType)

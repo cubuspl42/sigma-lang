@@ -34,11 +34,11 @@ class IfExpressionTests {
 
             assertEquals(
                 expected = emptySet(),
-                actual = call.errors,
+                actual = call.directErrors,
             )
 
             assertIs<IntType>(
-                value = call.inferredType.value,
+                value = call.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
@@ -67,11 +67,11 @@ class IfExpressionTests {
                         ),
                     )
                 ),
-                actual = call.errors,
+                actual = call.directErrors,
             )
 
             assertIs<IntType>(
-                value = call.inferredType.value,
+                value = call.inferredTypeOrIllType.getOrCompute(),
             )
         }
     }

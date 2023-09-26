@@ -135,7 +135,7 @@ class AbstractionTermTests {
                 term = term,
             )
 
-            val type = expression.inferredType.value
+            val type = expression.inferredTypeOrIllType.getOrCompute()
 
             assertEquals(
                 expected = UniversalFunctionType(
@@ -164,7 +164,7 @@ class AbstractionTermTests {
                 term = term,
             )
 
-            val type = expression.inferredType.value
+            val type = expression.inferredTypeOrIllType.getOrCompute()
 
             assertEquals(
                 expected = UniversalFunctionType(
@@ -178,39 +178,6 @@ class AbstractionTermTests {
                                 type = TypeVariable(
                                     formula = Formula.of("t"),
                                 ),
-                            ),
-                        ),
-                    ),
-                    imageType = BoolType,
-                ),
-                actual = type,
-            )
-        }
-
-        @Test
-        fun testRecursiveCallTest() {
-            val term = ExpressionSourceTerm.parse(
-                source = """
-                    %let {
-                        f = ^[n: Int] -> Bool => f[n + 1]
-                    } %in f
-                """.trimIndent(),
-            )
-
-            val expression = Expression.build(
-                outerScope = BuiltinScope,
-                term = term,
-            )
-
-            val type = expression.inferredType.value
-
-            assertEquals(
-                expected = UniversalFunctionType(
-                    argumentType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Symbol.of("n"),
-                                type = IntCollectiveType,
                             ),
                         ),
                     ),

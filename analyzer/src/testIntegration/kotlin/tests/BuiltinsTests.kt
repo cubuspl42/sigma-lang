@@ -52,7 +52,7 @@ class BuiltinsTests {
             expected = SetType(
                 elementType = IntCollectiveType,
             ),
-            actual = mySet1Definition.effectiveTypeThunk.value,
+            actual = mySet1Definition.computedEffectiveType.getOrCompute(),
         )
 
         assertEquals(
