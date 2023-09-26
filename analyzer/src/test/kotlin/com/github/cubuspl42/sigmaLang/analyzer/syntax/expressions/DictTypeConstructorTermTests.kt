@@ -1,4 +1,4 @@
-package com.github.cubuspl42.sigmaLang.analyzer.syntax.typeExpressions
+package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourc
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class DictTypeTermTests {
+class DictTypeConstructorTermTests {
     class ParsingTests {
         @Test
         fun test() {
