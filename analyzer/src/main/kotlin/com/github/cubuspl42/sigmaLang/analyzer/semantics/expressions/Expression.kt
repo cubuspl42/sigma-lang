@@ -266,11 +266,13 @@ abstract class Expression {
         }
     }
 
-    val inferredTypeOrNull: Expression.Computation<MembershipType?> by lazy {
+    private val inferredTypeOrNull: Expression.Computation<MembershipType?> by lazy {
         computedAnalysis.transform { it?.inferredType }
     }
 
-    val inferredTypeOrIllType: Computation<MembershipType> by lazy { inferredTypeOrNull.transform { it ?: IllType } }
+    val inferredTypeOrIllType: Computation<MembershipType> by lazy {
+        inferredTypeOrNull.transform { it ?: IllType }
+    }
 
     abstract val subExpressions: Set<Expression>
 
@@ -298,12 +300,4 @@ abstract class Expression {
     abstract fun bind(
         dynamicScope: DynamicScope,
     ): Thunk<Value>
-
-    fun bindTranslated(
-        staticScope: StaticScope,
-    ): Thunk<Value> = bind(
-        dynamicScope = TranslationDynamicScope(
-            staticScope = staticScope,
-        ),
-    )
 }

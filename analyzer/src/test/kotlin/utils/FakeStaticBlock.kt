@@ -13,7 +13,7 @@ data class FakeUserDeclaration(
     override val name: Symbol,
     val type: MembershipType,
 ) : UserDeclaration {
-    override val annotatedTypeThunk: Thunk<MembershipType> = Thunk.pure(type)
+    override val annotatedType = type
 
     override val computedEffectiveType: Expression.Computation<MembershipType> = Expression.Computation.pure(type)
 

@@ -20,15 +20,13 @@ class AbstractionConstructor(
     override val term: AbstractionTerm,
     val genericParameters: Set<TypeVariable>,
     val argumentType: TupleType,
-    val declaredImageTypeConstructor: Expression?,
+    val declaredImageTypeBody: TypeExpression?,
     val image: Expression,
 ) : Expression() {
     class ArgumentDeclaration(
         override val name: Symbol,
-        val annotatedType: MembershipType,
+        override val annotatedType: MembershipType,
     ) : UserDeclaration {
-        override val annotatedTypeThunk = Thunk.pure(annotatedType)
-
         override val errors: Set<SemanticError> = emptySet()
     }
 
@@ -55,24 +53,19 @@ class AbstractionConstructor(
                 outerScope = outerScope,
             ) ?: outerScope
 
-            val argumentTypeBody = TupleTypeConstructor.build(
+            val argumentTypeBody = TypeExpression.build(
                 outerScope = innerDeclarationScope1,
                 term = term.argumentType,
             )
 
-            val argumentType = argumentTypeBody.evaluateValue(
-                context = EvaluationContext.Initial,
-                dynamicScope = TranslationDynamicScope(
-                    staticScope = innerDeclarationScope1,
-                ),
-            )?.asType as TupleType
+            val argumentType = argumentTypeBody.typeOrIllType as TupleType
 
             val innerDeclarationScope2 = argumentType.toArgumentDeclarationBlock().chainWith(
                 outerScope = innerDeclarationScope1,
             )
 
-            val declaredImageType = term.declaredImageType?.let {
-                Expression.build(
+            val declaredImageTypeBody = term.declaredImageType?.let {
+                TypeExpression.build(
                     outerScope = innerDeclarationScope2,
                     term = it,
                 )
@@ -89,7 +82,7 @@ class AbstractionConstructor(
                 term = term,
                 genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
                 argumentType = argumentType,
-                declaredImageTypeConstructor = declaredImageType,
+                declaredImageTypeBody = declaredImageTypeBody,
                 image = image,
             )
         }
@@ -101,13 +94,7 @@ class AbstractionConstructor(
         image = image,
     ).toThunk()
 
-    private val declaredImageTypeThunk: Thunk<MembershipType>? by lazy {
-        declaredImageTypeConstructor?.bindTranslated(
-            staticScope = innerScope,
-        )?.thenJust { it.asType!! }
-    }
-
-    val declaredImageType = declaredImageTypeThunk?.let { it.value ?: IllType }
+    val declaredImageType = declaredImageTypeBody?.typeOrIllType
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val effectiveImageType = this@AbstractionConstructor.declaredImageType ?: run {
@@ -122,9 +109,9 @@ class AbstractionConstructor(
                     imageType = effectiveImageType,
                 )
             ),
-            directErrors = emptySet(),
+            directErrors = declaredImageTypeBody?.errors ?: emptySet(),
         )
     }
 
-    override val subExpressions: Set<Expression> = setOfNotNull(declaredImageTypeConstructor, image)
+    override val subExpressions: Set<Expression> = setOfNotNull(image)
 }
