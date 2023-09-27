@@ -14,7 +14,7 @@ import utils.FakeUserDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class UnorderedTupleTests {
+class UnorderedTupleConstructorTests {
     class TypeCheckingTests {
         @Test
         fun testEmpty() {
