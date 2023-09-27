@@ -132,6 +132,7 @@ abstract class Thunk<out ResultType> {
     }
 }
 
+// Nuke?
 fun <ResultType> ResultType.toEvaluationResult(): EvaluationResult<ResultType> = EvaluationResult(value = this)
 
 fun <ResultType> ResultType.toThunk(): Thunk<ResultType> = object : Thunk<ResultType>() {
