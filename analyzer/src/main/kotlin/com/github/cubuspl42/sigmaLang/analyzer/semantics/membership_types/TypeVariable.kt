@@ -37,7 +37,7 @@ data class TypeVariable(
 
     override fun walkRecursive(): Sequence<MembershipType> = emptySequence()
 
-    override fun dump(): String = "#${formula.name.name}"
+    override fun dumpDirectly(depth: Int): String = "#${formula.name.name}"
 }
 
 data class TypeVariableResolution(

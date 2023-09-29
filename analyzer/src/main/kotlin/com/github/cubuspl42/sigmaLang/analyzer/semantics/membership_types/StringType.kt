@@ -8,5 +8,5 @@ object StringType : PrimitiveType() {
         else -> AnyType
     }
 
-    override fun dump(): String = "String"
+    override fun dumpDirectly(depth: Int): String = "String"
 }

@@ -78,8 +78,20 @@ data class UniversalFunctionType(
 
     override fun walkRecursive(): Sequence<MembershipType> = argumentType.walk() + imageType.walk()
 
-    override fun dump(): String = listOfNotNull(
+    override fun dumpDirectly(depth: Int): String = listOfNotNull(
         if (genericParameters.isNotEmpty()) "!{${genericParameters.joinToString(separator = ", ")}}" else null,
-        "${argumentType.dump()} -> ${imageType.dump()}",
+        "${argumentType.dumpRecursively(depth = depth + 1)} -> ${imageType.dumpRecursively(depth = depth + 1)}",
     ).joinToString(separator = " ")
+
+    override fun isNonEquivalentToDirectly(innerContext: NonEquivalenceContext, otherType: MembershipType): Boolean {
+        if (otherType !is UniversalFunctionType) return true
+
+        return argumentType.isNonEquivalentToRecursively(
+            outerContext = innerContext,
+            otherType = otherType.argumentType,
+        ) || imageType.isNonEquivalentToRecursively(
+            outerContext = innerContext,
+            otherType = otherType.imageType,
+        )
+    }
 }

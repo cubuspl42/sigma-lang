@@ -8,4 +8,4 @@ data class EvaluationResult<ResultType>(
 
 sealed interface EvaluationError : EvaluationOutcome<Nothing>
 
-object EvaluationStackExhaustionError : EvaluationError
+data object EvaluationStackExhaustionError : EvaluationError

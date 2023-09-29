@@ -8,11 +8,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UndefinedType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
+import utils.assertTypeIsEquivalent
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class UnorderedTupleTypeConstructorTests {
     @Test
@@ -31,11 +36,15 @@ class UnorderedTupleTypeConstructorTests {
             actual = unorderedTupleTypeConstructor.inferredTypeOrIllType.getOrCompute(),
         )
 
-        assertEquals(
+        val actualType = assertNotNull(
+            actual = unorderedTupleTypeConstructor.bind(dynamicScope = DynamicScope.Empty).value?.asType,
+        )
+
+        assertTypeIsEquivalent(
             expected = UnorderedTupleType(
                 valueTypeByName = emptyMap(),
             ),
-            actual = unorderedTupleTypeConstructor.bind(dynamicScope = DynamicScope.Empty).value?.asType,
+            actual = actualType,
         )
     }
 
@@ -55,14 +64,62 @@ class UnorderedTupleTypeConstructorTests {
             actual = unorderedTupleTypeConstructor.inferredTypeOrIllType.getOrCompute(),
         )
 
-        assertEquals(
+        val actualType = assertNotNull(
+            actual = unorderedTupleTypeConstructor.bind(dynamicScope = BuiltinScope).value?.asType,
+        )
+
+        assertTypeIsEquivalent(
             expected = UnorderedTupleType(
                 valueTypeByName = mapOf(
                     Symbol.of("k1") to IntCollectiveType,
                     Symbol.of("k2") to BoolType,
                 ),
             ),
-            actual = unorderedTupleTypeConstructor.bind(dynamicScope = BuiltinScope).value?.asType,
+            actual = actualType,
+        )
+    }
+
+    @Test
+    @Ignore
+    fun testRecursive() {
+        val term = ExpressionSourceTerm.parse(
+            source = """
+                %let {
+                    Entry = ^{
+                        k1: Int,
+                        k2: Entry | Undefined,
+                    },
+                } %in Entry
+            """.trimIndent(),
+        ) as LetExpressionTerm
+
+        val letExpression = LetExpression.build(
+            outerScope = BuiltinScope,
+            term = term,
+        )
+
+        assertEquals(
+            expected = MetaType,
+            actual = letExpression.inferredTypeOrIllType.getOrCompute(),
+        )
+
+        assertEquals(
+            expected = emptySet(),
+            actual = letExpression.errors,
+        )
+
+        val actualType = assertNotNull(
+            actual = letExpression.bind(dynamicScope = BuiltinScope).value?.asType,
+        )
+
+        assertTypeIsEquivalent(
+            expected = UnorderedTupleType(
+                valueTypeByName = mapOf(
+                    Symbol.of("k1") to IntCollectiveType,
+                    Symbol.of("k2") to /* Entry | */ UndefinedType, // TODO: Recursive types
+                ),
+            ),
+            actual = actualType,
         )
     }
 }

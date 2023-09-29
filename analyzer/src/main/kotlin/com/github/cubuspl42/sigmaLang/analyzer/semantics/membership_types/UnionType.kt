@@ -23,7 +23,7 @@ data class UnionType(
             "union members ${nonMatchingTypes.joinToString { it.dump() }} didn't match type ${expectedType.dump()}"
     }
 
-    override fun dump(): String = memberTypes.joinToString(separator = " | ") { it.dump() }
+    override fun dumpDirectly(depth: Int): String = memberTypes.joinToString(separator = " | ") { it.dumpRecursively(depth = depth + 1) }
 
     override fun findLowestCommonSupertype(
         other: MembershipType,

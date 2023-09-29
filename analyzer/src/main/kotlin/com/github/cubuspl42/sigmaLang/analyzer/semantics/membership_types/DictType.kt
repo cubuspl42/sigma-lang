@@ -20,7 +20,7 @@ data class DictType(
         }
     }
 
-    override fun dump(): String = "{${keyType.dump()} ~> ${valueType.dump()}}"
+    override fun dumpDirectly(depth: Int): String = "{${keyType.dump()} ~> ${valueType.dumpRecursively(depth = depth + 1)}}"
 
     override fun isDefinitelyEmpty(): Boolean = false
 

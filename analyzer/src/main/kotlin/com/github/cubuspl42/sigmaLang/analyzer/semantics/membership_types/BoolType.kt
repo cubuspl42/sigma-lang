@@ -8,5 +8,5 @@ object BoolType : PrimitiveType() {
         else -> AnyType
     }
 
-    override fun dump(): String = "Bool"
+    override fun dumpDirectly(depth: Int): String = "Bool"
 }

@@ -78,10 +78,10 @@ data class OrderedTupleType(
         )
     }
 
-    override fun dump(): String {
+    override fun dumpDirectly(depth: Int): String {
         val dumpedEntries = elements.map { (name, type) ->
             listOfNotNull(
-                name?.let { "${it.name}:" }, type.dump()
+                name?.let { "${it.name}:" }, type.dumpRecursively(depth = depth + 1)
             ).joinToString(
                 separator = " ",
             )

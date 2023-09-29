@@ -11,6 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSour
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorSourceTerm
 import utils.FakeStaticBlock
 import utils.FakeUserDeclaration
+import utils.assertTypeIsEquivalent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -27,7 +28,7 @@ class UnorderedTupleConstructorTests {
                 term = term,
             )
 
-            assertEquals(
+            assertTypeIsEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = emptyMap(),
                 ),
@@ -60,7 +61,7 @@ class UnorderedTupleConstructorTests {
                 term = term,
             )
 
-            assertEquals(
+            assertTypeIsEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         Symbol.of("key1") to BoolType,
@@ -106,7 +107,7 @@ class UnorderedTupleConstructorTests {
                 actual = unorderedTupleConstructor.directErrors,
             )
 
-            assertEquals(
+            assertTypeIsEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         Symbol.of("key1") to IllType,

@@ -23,7 +23,7 @@ object NeverType : MembershipType() {
         assignedType: MembershipType,
     ): MembershipType.MatchResult = AssignmentMismatch
 
-    override fun dump(): String = "Never"
+    override fun dumpDirectly(depth: Int): String = "Never"
 
     override fun walkRecursive(): Sequence<MembershipType> = emptySequence()
 }

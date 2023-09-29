@@ -10,9 +10,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Abstraction
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
-data class UnorderedTupleType(
-    val valueTypeByName: Map<Symbol, MembershipType>,
-) : TupleType() {
+abstract class UnorderedTupleType : TupleType() {
+    abstract val valueTypeByName: Map<Symbol, MembershipType>
+
+    val keys: Set<Symbol>
+        get() = valueTypeByName.keys
+
     data class UnorderedTupleMatch(
         val valuesMatches: Map<Symbol, ValueMatchResult>,
     ) : MembershipType.PartialMatch() {
@@ -30,12 +33,10 @@ data class UnorderedTupleType(
             override fun dump(): String = valueMatch.dump()
         }
 
-        object AbsentValueMismatch : ValueMatchResult() {
+        data object AbsentValueMismatch : ValueMatchResult() {
             override fun isFull(): Boolean = false
 
             override fun dump(): String = "absent value"
-
-            override fun toString(): String = "AbsentValueMismatch"
         }
 
         override fun isFull(): Boolean = valuesMatches.values.all { it.isFull() }
@@ -56,9 +57,9 @@ data class UnorderedTupleType(
         )
     }
 
-    override fun dump(): String {
+    override fun dumpDirectly(depth: Int): String {
         val dumpedEntries = valueTypeByName.map { (name, valueType) ->
-            "(${name.dump()}): ${valueType.dump()}"
+            "(${name.dump()}): ${valueType.dumpRecursively(depth = depth + 1)}"
         }
 
         return "{${dumpedEntries.joinToString()}}"
@@ -146,4 +147,29 @@ data class UnorderedTupleType(
             name: Symbol,
         ): Thunk<Value>? = argument.read(name)?.toThunk()
     }
+
+    override fun isNonEquivalentToDirectly(
+        innerContext: NonEquivalenceContext,
+        otherType: MembershipType,
+    ): Boolean {
+        if (otherType !is UnorderedTupleType) return true
+
+        if (keys != otherType.keys) return true
+
+        return keys.any { key ->
+            val thisValueType = valueTypeByName[key] ?: return true
+            val otherValueType = otherType.valueTypeByName[key] ?: return true
+
+            thisValueType.isNonEquivalentToRecursively(
+                outerContext = innerContext,
+                otherType = otherValueType,
+            )
+        }
+    }
+}
+
+fun UnorderedTupleType(
+    valueTypeByName: Map<Symbol, MembershipType>
+): UnorderedTupleType = object : UnorderedTupleType() {
+    override val valueTypeByName: Map<Symbol, MembershipType> = valueTypeByName
 }
