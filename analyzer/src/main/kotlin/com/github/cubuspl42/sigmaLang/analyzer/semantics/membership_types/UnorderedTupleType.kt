@@ -11,10 +11,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Abstraction
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
 abstract class UnorderedTupleType : TupleType() {
-    abstract val valueTypeByName: Map<Symbol, MembershipType>
+    abstract val valueTypeThunkByName: Map<Symbol, Thunk<MembershipType>>
+
+    val valueTypeByName by lazy {
+        valueTypeThunkByName.mapValues { (_, thunk) ->
+            thunk.value ?: throw IllegalStateException("Unable to evaluate the thunk")
+        }
+    }
 
     val keys: Set<Symbol>
-        get() = valueTypeByName.keys
+        get() = valueTypeThunkByName.keys
 
     data class UnorderedTupleMatch(
         val valuesMatches: Map<Symbol, ValueMatchResult>,
@@ -75,7 +81,7 @@ abstract class UnorderedTupleType : TupleType() {
     override val valueType: MembershipType
         get() = TODO("value1 | value2 | ...")
 
-    override fun isDefinitelyEmpty(): Boolean = valueTypeByName.isEmpty()
+    override fun isDefinitelyEmpty(): Boolean = valueTypeThunkByName.isEmpty()
 
     override fun resolveTypeVariablesShape(assignedType: MembershipType): TypeVariableResolution {
         if (assignedType !is UnorderedTupleType) throw TypeVariableResolutionError(
@@ -171,5 +177,7 @@ abstract class UnorderedTupleType : TupleType() {
 fun UnorderedTupleType(
     valueTypeByName: Map<Symbol, MembershipType>
 ): UnorderedTupleType = object : UnorderedTupleType() {
-    override val valueTypeByName: Map<Symbol, MembershipType> = valueTypeByName
+    override val valueTypeThunkByName = valueTypeByName.mapValues { (_, type) ->
+        Thunk.pure(type)
+    }
 }

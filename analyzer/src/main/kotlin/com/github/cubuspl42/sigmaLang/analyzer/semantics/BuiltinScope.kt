@@ -94,8 +94,8 @@ object BuiltinScope : DynamicScope, StaticScope {
                     ),
                 ),
                 imageType = UniversalFunctionType(
-                    argumentType = object : UnorderedTupleType() {
-                        override val valueTypeByName = mapOf(
+                    argumentType = UnorderedTupleType(
+                        valueTypeByName = mapOf(
                             Symbol.of("then") to TypeVariable(
                                 formula = Formula.of("r"),
                             ),
@@ -103,7 +103,7 @@ object BuiltinScope : DynamicScope, StaticScope {
                                 formula = Formula.of("r"),
                             ),
                         )
-                    },
+                    ),
                     imageType = TypeVariable(
                         formula = Formula.of("r"),
                     ),
