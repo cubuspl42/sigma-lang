@@ -1,6 +1,8 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import utils.assertTypeIsEquivalent
+import utils.assertTypeIsNonEquivalent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -143,6 +145,122 @@ class UnorderedTupleTypeTests {
                 actual = unorderedTupleType.match(
                     assignedType = unionType,
                 ),
+            )
+        }
+    }
+
+    class IsEquivalentTests {
+        @Test
+        fun testAcyclicEquivalent() {
+            val unorderedTupleType = object : UnorderedTupleType() {
+                override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to BoolType,
+                )
+            }
+
+            assertTypeIsEquivalent(
+                expected = object : UnorderedTupleType() {
+                    override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                        Symbol.of("foo") to IntCollectiveType,
+                        Symbol.of("bar") to BoolType,
+                    )
+                },
+                actual = unorderedTupleType,
+            )
+        }
+
+        @Test
+        fun testAcyclicNonEquivalent() {
+            val unorderedTupleType = object : UnorderedTupleType() {
+                override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to BoolType,
+                )
+            }
+
+            assertTypeIsNonEquivalent(
+                expected = object : UnorderedTupleType() {
+                    override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                        Symbol.of("foo") to IntCollectiveType,
+                        Symbol.of("bar") to StringType,
+                    )
+                },
+                actual = unorderedTupleType,
+            )
+        }
+
+        @Test
+        fun testCyclicSimpleEquivalent() {
+            val unorderedTupleType = object : UnorderedTupleType() {
+                override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to this,
+                )
+            }
+
+            assertTypeIsEquivalent(
+                expected = object : UnorderedTupleType() {
+                    override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                        Symbol.of("foo") to IntCollectiveType,
+                        Symbol.of("bar") to this,
+                    )
+                },
+                actual = unorderedTupleType,
+            )
+        }
+
+        @Test
+        fun testCyclicComplexEquivalent() {
+            val unorderedTupleType = object : UnorderedTupleType() {
+                private val outer = this
+
+                override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to object : UnorderedTupleType() {
+                        override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                            Symbol.of("foo") to IntCollectiveType,
+                            Symbol.of("bar") to outer,
+                        )
+                    },
+                )
+            }
+
+            assertTypeIsEquivalent(
+                expected = object : UnorderedTupleType() {
+                    override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                        Symbol.of("foo") to IntCollectiveType,
+                        Symbol.of("bar") to this,
+                    )
+                },
+                actual = unorderedTupleType,
+            )
+        }
+
+        @Test
+        fun testCyclicComplexNonEquivalent() {
+            val unorderedTupleType = object : UnorderedTupleType() {
+                private val outer = this
+
+                override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to object : UnorderedTupleType() {
+                        override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                            Symbol.of("foo") to BoolType,
+                            Symbol.of("bar") to outer,
+                        )
+                    },
+                )
+            }
+
+            assertTypeIsNonEquivalent(
+                expected = object : UnorderedTupleType() {
+                    override val valueTypeByName: Map<Symbol, MembershipType> = mapOf(
+                        Symbol.of("foo") to IntCollectiveType,
+                        Symbol.of("bar") to this,
+                    )
+                },
+                actual = unorderedTupleType,
             )
         }
     }

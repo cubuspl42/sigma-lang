@@ -17,5 +17,5 @@ object MetaType : ShapeType() {
 
     override fun walkRecursive(): Sequence<MembershipType> = emptySequence()
 
-    override fun dump(): String = "(meta-type)"
+    override fun dumpDirectly(depth: Int): String = "(meta-type)"
 }

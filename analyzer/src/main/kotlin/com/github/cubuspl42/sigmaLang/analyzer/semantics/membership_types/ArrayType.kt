@@ -88,7 +88,7 @@ data class ArrayType(
             )
         }
 
-    override fun dump(): String = "[${elementType.dump()}*]"
+    override fun dumpDirectly(depth: Int): String = "[${elementType.dumpRecursively(depth = depth + 1)}*]"
 
     override fun walkRecursive(): Sequence<MembershipType> = elementType.walk()
 }

@@ -8,5 +8,5 @@ object UndefinedType : PrimitiveType() {
         else -> AnyType
     }
 
-    override fun dump(): String = "Undefined"
+    override fun dumpDirectly(depth: Int): String = "Undefined"
 }

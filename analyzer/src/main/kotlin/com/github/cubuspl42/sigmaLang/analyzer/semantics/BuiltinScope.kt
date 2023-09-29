@@ -14,12 +14,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantD
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.StringType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UndefinedType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
@@ -62,6 +63,10 @@ object BuiltinScope : DynamicScope, StaticScope {
             type = MetaType,
             value = MetaType.asValue,
         ),
+        Symbol.of("Undefined") to SimpleBuiltinValue(
+            type = MetaType,
+            value = UndefinedType.asValue,
+        ),
         Symbol.of("Set") to SetType.constructor,
         Symbol.of("setOf") to SetType.setOf,
         Symbol.of("setContains") to SetType.setContains,
@@ -89,8 +94,8 @@ object BuiltinScope : DynamicScope, StaticScope {
                     ),
                 ),
                 imageType = UniversalFunctionType(
-                    argumentType = UnorderedTupleType(
-                        valueTypeByName = mapOf(
+                    argumentType = object : UnorderedTupleType() {
+                        override val valueTypeByName = mapOf(
                             Symbol.of("then") to TypeVariable(
                                 formula = Formula.of("r"),
                             ),
@@ -98,7 +103,7 @@ object BuiltinScope : DynamicScope, StaticScope {
                                 formula = Formula.of("r"),
                             ),
                         )
-                    ),
+                    },
                     imageType = TypeVariable(
                         formula = Formula.of("r"),
                     ),

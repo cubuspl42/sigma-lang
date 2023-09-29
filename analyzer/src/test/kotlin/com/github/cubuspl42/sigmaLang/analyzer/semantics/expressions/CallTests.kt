@@ -27,6 +27,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallSou
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import utils.FakeStaticBlock
 import utils.FakeUserDeclaration
+import utils.assertTypeIsEquivalent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -190,7 +191,7 @@ class CallTests {
                 actual = call.directErrors,
             )
 
-            assertEquals(
+            assertTypeIsEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         Symbol.of("key1") to BoolType,

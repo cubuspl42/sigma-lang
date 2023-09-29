@@ -21,7 +21,7 @@ data class IntLiteralType(
         else -> AnyType
     }
 
-    override fun dump(): String = "${value.value}"
+    override fun dumpDirectly(depth: Int): String = "${value.value}"
 
     override val asLiteral = this
 

@@ -14,7 +14,7 @@ data object IllType : MembershipType() {
     override fun substituteTypeVariables(resolution: TypeVariableResolution): MembershipType = IllType
     override fun match(assignedType: MembershipType): MembershipType.MatchResult = MembershipType.TotalMatch
 
-    override fun dump(): String = "IllType"
+    override fun dumpDirectly(depth: Int): String = "IllType"
 
     override fun walkRecursive(): Sequence<MembershipType> = emptySequence()
 }

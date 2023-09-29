@@ -13,7 +13,7 @@ data class SymbolType(
         )
     }
 
-    override fun dump(): String = value.dump()
+    override fun dumpDirectly(depth: Int): String = value.dump()
 
     override val asLiteral = this
 

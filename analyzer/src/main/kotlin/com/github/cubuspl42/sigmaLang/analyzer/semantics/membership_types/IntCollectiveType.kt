@@ -8,5 +8,5 @@ object IntCollectiveType : IntType() {
         else -> AnyType
     }
 
-    override fun dump(): String = "Int"
+    override fun dumpDirectly(depth: Int): String = "Int"
 }

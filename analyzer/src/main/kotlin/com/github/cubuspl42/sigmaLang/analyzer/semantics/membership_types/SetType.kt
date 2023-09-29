@@ -154,7 +154,7 @@ data class SetType(
         }
     }
 
-    override fun dump(): String = "{${elementType.dump()}*}"
+    override fun dumpDirectly(depth: Int): String = "{${elementType.dumpRecursively(depth = depth + 1)}*}"
 
     override fun findLowestCommonSupertype(
         other: MembershipType,

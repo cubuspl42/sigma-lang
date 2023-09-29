@@ -17,7 +17,7 @@ object AnyType : MembershipType() {
         assignedType: MembershipType,
     ): MembershipType.MatchResult = MembershipType.TotalMatch
 
-    override fun dump(): String = "Any"
+    override fun dumpDirectly(depth: Int): String = "Any"
 
     override fun walkRecursive(): Sequence<MembershipType> = emptySequence()
 }

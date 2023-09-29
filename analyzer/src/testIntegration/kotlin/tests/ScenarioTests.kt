@@ -3,6 +3,7 @@ package tests
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
@@ -18,9 +19,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Univer
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import utils.assertTypeIsEquivalent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 
 class ScenarioTests {
     @Test
@@ -89,22 +92,24 @@ class ScenarioTests {
 
         assertIs<FunctionValue>(entryTypeConstructorValue)
 
-        val entryTypeValue = entryTypeConstructorValue.apply(
-            ArrayTable(
-                elements = listOf(
-                    BoolType.asValue,
+        val entryType = assertNotNull(
+            actual = entryTypeConstructorValue.apply(
+                ArrayTable(
+                    elements = listOf(
+                        BoolType.asValue,
+                    ),
                 ),
-            ),
-        ).value
+            ).value?.asType,
+        )
 
-        assertEquals(
+        assertTypeIsEquivalent(
             expected = UnorderedTupleType(
                 valueTypeByName = mapOf(
                     Symbol.of("key") to IntCollectiveType,
                     Symbol.of("value") to BoolType,
                 ),
-            ).asValue,
-            actual = entryTypeValue,
+            ),
+            actual = entryType,
         )
 
         // Validate `entryOf`
@@ -113,7 +118,7 @@ class ScenarioTests {
             name = Symbol.of("entryOf"),
         )!!
 
-        assertEquals(
+        assertTypeIsEquivalent(
             expected = UniversalFunctionType(
                 genericParameters = setOf(
                     TypeVariable.of("valueType"),
@@ -140,7 +145,7 @@ class ScenarioTests {
             name = Symbol.of("entryTrueOf"),
         )!!
 
-        assertEquals(
+        assertTypeIsEquivalent(
             expected = UniversalFunctionType(
                 argumentType = UnorderedTupleType(
                     valueTypeByName = mapOf(
