@@ -7,10 +7,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StrictBuiltinOr
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.AnyType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
