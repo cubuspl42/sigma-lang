@@ -54,17 +54,19 @@ class UnorderedTupleTypeConstructor(
 
     override fun bind(
         dynamicScope: DynamicScope,
-    ): Thunk<Value> = Thunk.traverseList(entries.toList()) { entry ->
-        entry.type.bind(
-            dynamicScope = dynamicScope,
-        ).thenJust { entryType ->
-            entry.name to entryType.asType!!
-        }
-    }.thenJust { entries ->
-        UnorderedTupleType(
-            valueTypeByName = entries.toMap(),
-        ).asValue
-    }
+    ): Thunk<Value> = Thunk.pure(
+        object : UnorderedTupleType() {
+            override val valueTypeThunkByName = entries.associate {
+                val entryType = it.type.bind(
+                    dynamicScope = dynamicScope,
+                ).thenJust { entryType ->
+                    entryType.asType!!
+                }
+
+                it.name to entryType
+            }
+        }.asValue
+    )
 
     override val subExpressions: Set<Expression> = entries.map { it.type }.toSet()
 }

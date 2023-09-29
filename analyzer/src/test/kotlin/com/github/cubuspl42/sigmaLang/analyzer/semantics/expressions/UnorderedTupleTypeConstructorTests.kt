@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -80,14 +81,13 @@ class UnorderedTupleTypeConstructorTests {
     }
 
     @Test
-    @Ignore
     fun testRecursive() {
         val term = ExpressionSourceTerm.parse(
             source = """
                 %let {
                     Entry = ^{
                         k1: Int,
-                        k2: Entry | Undefined,
+                        k2: Entry,
                     },
                 } %in Entry
             """.trimIndent(),
@@ -113,12 +113,12 @@ class UnorderedTupleTypeConstructorTests {
         )
 
         assertTypeIsEquivalent(
-            expected = UnorderedTupleType(
-                valueTypeByName = mapOf(
-                    Symbol.of("k1") to IntCollectiveType,
-                    Symbol.of("k2") to /* Entry | */ UndefinedType, // TODO: Recursive types
-                ),
-            ),
+            expected = object : UnorderedTupleType() {
+                override val valueTypeThunkByName = mapOf(
+                    Symbol.of("k1") to Thunk.pure(IntCollectiveType),
+                    Symbol.of("k2") to Thunk.pure(this),
+                )
+            },
             actual = actualType,
         )
     }
