@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Classifie
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
@@ -40,7 +40,7 @@ data class GenericParametersTuple(
             ).asValue
         )
 
-        override val computedEffectiveType: Expression.Computation<MembershipType> = Expression.Computation.pure(MetaType)
+        override val computedEffectiveType: Expression.Computation<MembershipType> = Expression.Computation.pure(TypeType)
     }
 
     inner class GenericParametersTupleBlock : StaticBlock() {

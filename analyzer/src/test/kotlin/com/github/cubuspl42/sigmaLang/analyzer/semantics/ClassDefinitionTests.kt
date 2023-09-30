@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
@@ -49,7 +49,7 @@ class ClassDefinitionTests {
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         ClassDefinition.classTagKey to tagType,
-                        ClassDefinition.classTypeKey to MetaType,
+                        ClassDefinition.classTypeKey to TypeType,
                         Symbol.of("new") to UniversalFunctionType(
                             argumentType = UnorderedTupleType(
                                 valueTypeByName = mapOf(

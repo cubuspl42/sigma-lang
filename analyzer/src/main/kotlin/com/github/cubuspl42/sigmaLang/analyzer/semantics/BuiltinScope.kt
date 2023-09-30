@@ -15,7 +15,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolTy
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.StringType
@@ -48,23 +48,23 @@ object BuiltinScope : DynamicScope, StaticScope {
 
     private val builtinValues: Map<Symbol, BuiltinValue> = mapOf(
         Symbol.of("Bool") to SimpleBuiltinValue(
-            type = MetaType,
+            type = TypeType,
             value = BoolType.asValue,
         ),
         Symbol.of("Int") to SimpleBuiltinValue(
-            type = MetaType,
+            type = TypeType,
             value = IntCollectiveType.asValue,
         ),
         Symbol.of("String") to SimpleBuiltinValue(
-            type = MetaType,
+            type = TypeType,
             value = StringType.asValue,
         ),
         Symbol.of("Type") to SimpleBuiltinValue(
-            type = MetaType,
-            value = MetaType.asValue,
+            type = TypeType,
+            value = TypeType.asValue,
         ),
         Symbol.of("Undefined") to SimpleBuiltinValue(
-            type = MetaType,
+            type = TypeType,
             value = UndefinedType.asValue,
         ),
         Symbol.of("Set") to SetType.constructor,

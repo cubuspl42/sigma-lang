@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
-object MetaType : ShapeType() {
+/// Type of types
+object TypeType : ShapeType() {
     override fun findLowestCommonSupertype(other: MembershipType): MembershipType = AnyType
 
     override fun resolveTypeVariablesShape(assignedType: MembershipType): TypeVariableResolution = TypeVariableResolution.Empty
@@ -8,9 +9,9 @@ object MetaType : ShapeType() {
     override fun substituteTypeVariables(resolution: TypeVariableResolution): MembershipType = this
 
     override fun matchShape(assignedType: MembershipType): MembershipType.MatchResult = when (assignedType) {
-        is MetaType -> MembershipType.TotalMatch
+        is TypeType -> MembershipType.TotalMatch
         else -> MembershipType.TotalMismatch(
-            expectedType = MetaType,
+            expectedType = TypeType,
             actualType = assignedType,
         )
     }
