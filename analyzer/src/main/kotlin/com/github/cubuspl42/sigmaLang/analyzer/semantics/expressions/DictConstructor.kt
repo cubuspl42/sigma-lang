@@ -5,12 +5,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.PrimitiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.PrimitiveType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
@@ -25,9 +26,17 @@ class DictConstructor(
         val value: Expression,
     ) {
         data class Analysis(
-            val keyAnalysis: Expression.Analysis?,
-            val valueAnalysis: Expression.Analysis?,
+            val keyAnalysis: Expression.Analysis,
+            val valueAnalysis: Expression.Analysis,
         ) {
+            val pair: ClassificationContext<Pair<Value, Value>>
+                get() = ClassificationContext.transform2(
+                    keyAnalysis.classifiedValue,
+                    valueAnalysis.classifiedValue,
+                ) { key, value ->
+                    Thunk.pure((key as PrimitiveValue) to value)
+                }
+
             val inferredKeyType: MembershipType?
                 get() = keyAnalysis?.inferredType
 
@@ -90,8 +99,8 @@ class DictConstructor(
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val associationsAnalyses = associations.map {
             Association.Analysis(
-                keyAnalysis = compute(it.key.computedAnalysis),
-                valueAnalysis = compute(it.value.computedAnalysis),
+                keyAnalysis = compute(it.key.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null,
+                valueAnalysis = compute(it.value.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null,
             )
         }
 
@@ -149,6 +158,15 @@ class DictConstructor(
                     keyType = keyType,
                     valueType = valueType,
                 ),
+                classifiedValue = ClassificationContext.traverseList(
+                    associationsAnalyses,
+                ) { it.pair }.transform { pairs ->
+                    DictValue(
+                        entries = pairs.associate { (key, value) ->
+                            key as PrimitiveValue to value
+                        }
+                    )
+                },
             ),
             directErrors = setOfNotNull(
                 keysError,

@@ -4,6 +4,17 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.EvaluationC
 
 abstract class Thunk<out ResultType> {
     companion object {
+        fun <A> flatten(thunk: Thunk<Thunk<A>>): Thunk<A> = object : Thunk<A>() {
+            override fun evaluateDirectly(context: EvaluationContext): EvaluationOutcome<A> {
+                val innerThunk = when (val outcome = thunk.evaluate(context = context)) {
+                    is EvaluationResult -> outcome.value
+                    is EvaluationError -> return outcome
+                }
+
+                return innerThunk.evaluate(context = context)
+            }
+        }
+
         fun <A : Any> lazy(get: () -> Thunk<A>): Thunk<A> = object : Thunk<A>() {
             private val computation by kotlin.lazy { get() }
 
@@ -19,7 +30,7 @@ abstract class Thunk<out ResultType> {
             ): EvaluationOutcome<A> = EvaluationResult(value = value)
         }
 
-        fun <A : Any, B : Any, C : Any> combine2(
+        fun <A, B, C> combine2(
             thunk1: Thunk<A>,
             thunk2: Thunk<B>,
             combine: (A, B) -> C,
@@ -138,7 +149,7 @@ abstract class Thunk<out ResultType> {
         }
     }
 
-    fun <B : Any> thenDo(
+    fun <B> thenDo(
         transform: (ResultType) -> Thunk<B>,
     ): Thunk<B> = object : Thunk<B>() {
         override fun evaluateDirectly(context: EvaluationContext): EvaluationOutcome<B> {

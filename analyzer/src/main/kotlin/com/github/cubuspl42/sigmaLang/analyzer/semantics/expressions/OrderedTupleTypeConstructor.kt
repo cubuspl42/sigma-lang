@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
@@ -19,7 +19,12 @@ class OrderedTupleTypeConstructor(
     data class Element(
         val name: Symbol?,
         val type: Expression,
-    )
+    ) {
+        data class Analysis(
+            val name: Symbol?,
+            val typeAnalysis: Expression.Analysis,
+        )
+    }
 
     companion object {
         fun build(
@@ -38,6 +43,30 @@ class OrderedTupleTypeConstructor(
                 )
             },
         )
+    }
+
+    override val computedClassifiedValue: Computation<ClassificationContext<Value>?> = Computation {
+        val elementsAnalyses = elements.map {
+            val typeAnalysis = compute(it.type.computedAnalysis) ?: return@Computation null
+
+            Element.Analysis(
+                name = it.name,
+                typeAnalysis = typeAnalysis,
+            )
+        }
+
+        ClassificationContext.traverseList(elementsAnalyses) { elementAnalysis ->
+            elementAnalysis.typeAnalysis.classifiedValue.transform { elementAnalysis.name to it }
+        }.transform { elementPairs ->
+            OrderedTupleType(
+                elements = elementPairs.map { (name, typeValue) ->
+                    OrderedTupleType.Element(
+                        name = name,
+                        type = typeValue.asType!!,
+                    )
+                },
+            ).asValue
+        }
     }
 
     override fun bind(

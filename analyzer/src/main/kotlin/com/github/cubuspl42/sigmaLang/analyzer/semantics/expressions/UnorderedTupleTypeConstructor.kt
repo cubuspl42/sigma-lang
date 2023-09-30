@@ -5,7 +5,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorTerm
@@ -19,6 +21,11 @@ class UnorderedTupleTypeConstructor(
         val name: Symbol,
         val type: Expression,
     ) {
+        data class Analysis(
+            val name: Symbol,
+            val typeAnalysis: Expression.Analysis,
+        )
+
         companion object {
             fun build(
                 declarationScope: StaticScope,
@@ -47,6 +54,33 @@ class UnorderedTupleTypeConstructor(
                 )
             }.toSet(),
         )
+    }
+
+    override val computedClassifiedValue: Computation<ClassificationContext<Value>?> = Computation {
+        val entriesAnalyses = entries.map {
+            val typeAnalysis = compute(it.type.computedAnalysis) ?: return@Computation null
+
+            Entry.Analysis(
+                name = it.name,
+                typeAnalysis = typeAnalysis,
+            )
+        }
+
+        ClassificationContext.traverseListThunk(entriesAnalyses) { entryAnalysis ->
+            entryAnalysis.typeAnalysis.classifiedValue.transformThunk { valueThunk ->
+                Thunk.pure(entryAnalysis.name to valueThunk)
+            }
+        }.transform { entryPairs ->
+            object : UnorderedTupleType() {
+                override val valueTypeThunkByName = entryPairs.associate { (name, typeValueThunk) ->
+                    val typeThunk = typeValueThunk.thenJust { entryType ->
+                        entryType.asType!!
+                    }
+
+                    name to typeThunk
+                }
+            }.asValue
+        }
     }
 
     override fun bind(

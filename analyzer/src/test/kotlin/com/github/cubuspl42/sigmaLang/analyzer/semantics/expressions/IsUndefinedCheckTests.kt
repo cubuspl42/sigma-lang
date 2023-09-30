@@ -9,8 +9,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResul
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IsUndefinedCheckSourceTerm
+import utils.FakeStaticBlock
+import utils.FakeUserDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -24,7 +27,12 @@ class IsUndefinedCheckTests {
             ) as IsUndefinedCheckSourceTerm
 
             val isUndefinedCheck = IsUndefinedCheck.build(
-                outerScope = StaticScope.Empty,
+                outerScope = FakeStaticBlock.of(
+                    FakeUserDeclaration(
+                        name = Symbol.of("foo"),
+                        type = IntCollectiveType,
+                    ),
+                ),
                 term = term,
             )
 

@@ -4,7 +4,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
@@ -43,6 +46,31 @@ class FunctionTypeConstructor(
             ),
         )
     }
+
+    override val computedClassifiedValue: Computation<ClassificationContext<Value>?> = Computation {
+        val metaArgumentTypeAnalysis = metaArgumentType?.let {
+            compute(it.body.computedAnalysis)
+        }
+
+        val argumentTypeAnalysis = compute(argumentType.computedAnalysis) ?: return@Computation null
+
+        val imageTypeAnalysis = compute(imageType.computedAnalysis) ?: return@Computation null
+
+        ClassificationContext.transform3(
+            metaArgumentTypeAnalysis?.classifiedValue ?: ConstClassificationContext.pure<Value?>(null),
+            argumentTypeAnalysis.classifiedValue,
+            imageTypeAnalysis.classifiedValue,
+        ) { metaArgumentTypeValue, argumentTypeValue, imageTypeValue ->
+            Thunk.pure(
+                UniversalFunctionType(
+                    metaArgumentType = metaArgumentTypeValue?.asType as TupleType?,
+                    argumentType = argumentTypeValue.asType as TupleType,
+                    imageType = imageTypeValue.asType as MembershipType,
+                ).asValue
+            )
+        }
+    }
+
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine3(
         metaArgumentType?.body?.bind(

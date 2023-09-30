@@ -66,6 +66,13 @@ class FieldRead(
                 DiagnosedAnalysis(
                     analysis = Analysis(
                         inferredType = fieldType,
+                        classifiedValue = subjectAnalysis.classifiedValue.transformThen {
+                            if (it !is DictValue) throw IllegalStateException("Subject $it is not a dict")
+
+                            it.apply(
+                                argument = fieldName,
+                            )
+                        },
                     ),
                     directErrors = emptySet(),
                 )

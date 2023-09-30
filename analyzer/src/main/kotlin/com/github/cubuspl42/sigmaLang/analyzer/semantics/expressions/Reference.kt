@@ -8,7 +8,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.VariableIntroduction
 
 class Reference(
     override val outerScope: StaticScope,
@@ -41,14 +47,31 @@ class Reference(
     }
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val resolved = resolved
+        val resolvedIntroduction = resolved
 
-        if (resolved != null) {
-            val inferredTargetType = compute(resolved.computedEffectiveType)
+        if (resolvedIntroduction != null) {
+            val inferredTargetType = compute(resolvedIntroduction.computedEffectiveType)
 
             DiagnosedAnalysis(
                 analysis = Analysis(
                     inferredType = inferredTargetType,
+                    classifiedValue = when(resolvedIntroduction) {
+                        is ConstantDefinition -> object : ConstClassificationContext<Value>() {
+                            override val valueThunk: Thunk<Value>
+                                get() = resolvedIntroduction.valueThunk
+                        }
+
+                        is VariableIntroduction -> object : VariableClassificationContext<Value>() {
+                            override val referredDeclarations: Set<Introduction>
+                                get() = setOf(resolvedIntroduction)
+
+                            override fun bind(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(
+                                name = referredName,
+                            ) ?: throw RuntimeException(
+                                "Unresolved reference at run-time: $referredName",
+                            )
+                        }
+                    }
                 ),
                 directErrors = emptySet(),
             )

@@ -27,6 +27,20 @@ inline fun <K, V, R : Any> Map<K, V>.mapKeysNotNullTo(
     return destination
 }
 
+data class CutHeadList<E>(
+    val head: E,
+    val tail: List<E>,
+)
+
+fun <E> List<E>.cutOffHead(): CutHeadList<E>? {
+    if (this.isEmpty()) return null
+
+    return CutHeadList(
+        head = this.first(),
+        tail = this.drop(1),
+    )
+}
+
 data class CutList<E>(
     val front: List<E>,
     val tail: List<E>?,
