@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.intellijPlugin.psi.impl
 
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.GenericParametersTuple
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
@@ -12,7 +12,7 @@ import com.intellij.lang.ASTNode
 abstract class SigmaAbstractionConstructorImplMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node), SigmaAbstractionConstructor {
-    override val asTerm: ExpressionTerm = object : PsiExpressionTerm(), AbstractionTerm {
+    override val asTerm: ExpressionTerm = object : PsiExpressionTerm(), AbstractionConstructorTerm {
         override val genericParametersTuple: GenericParametersTuple?
             get() = null
 
