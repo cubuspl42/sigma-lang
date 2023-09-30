@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax
 
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IntLiteralSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
@@ -56,7 +56,7 @@ class NamespaceDefinitionTermTests {
                         ConstantDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 6, columnIndex = 4),
                             name = Symbol.of("name2"), declaredTypeBody = null,
-                            body = AbstractionSourceTerm(
+                            body = AbstractionConstructorSourceTerm(
                                 location = SourceLocation(lineIndex = 6, columnIndex = 19),
                                 argumentType = OrderedTupleTypeConstructorSourceTerm(
                                     location = SourceLocation(lineIndex = 6, columnIndex = 19),

@@ -23,7 +23,7 @@ class AbstractionTermTests {
             )
 
             assertEquals(
-                expected = AbstractionSourceTerm(
+                expected = AbstractionConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     argumentType = OrderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
@@ -53,7 +53,7 @@ class AbstractionTermTests {
             )
 
             assertEquals(
-                expected = AbstractionSourceTerm(
+                expected = AbstractionConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0), parametersDefinitions = listOf(
@@ -92,7 +92,7 @@ class AbstractionTermTests {
         @Test
         fun testGenericWithSingleParameter() {
             assertEquals(
-                expected = AbstractionSourceTerm(
+                expected = AbstractionConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     genericParametersTuple = GenericParametersTuple(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0), parametersDefinitions = listOf(

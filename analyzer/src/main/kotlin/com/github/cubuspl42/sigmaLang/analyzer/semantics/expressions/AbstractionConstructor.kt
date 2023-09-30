@@ -11,12 +11,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleT
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 
 class AbstractionConstructor(
     override val outerScope: StaticScope,
     private val innerScope: StaticScope,
-    override val term: AbstractionTerm,
+    override val term: AbstractionConstructorTerm,
     val genericParameters: Set<TypeVariable>,
     val argumentType: TupleType,
     val declaredImageTypeBody: TypeExpression?,
@@ -44,7 +44,7 @@ class AbstractionConstructor(
     companion object {
         fun build(
             outerScope: StaticScope,
-            term: AbstractionTerm,
+            term: AbstractionConstructorTerm,
         ): AbstractionConstructor {
             val genericDeclarationBlock = term.genericParametersTuple?.asDeclarationBlock
 

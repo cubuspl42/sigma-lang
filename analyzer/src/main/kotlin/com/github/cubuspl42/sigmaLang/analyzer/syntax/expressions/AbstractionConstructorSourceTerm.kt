@@ -1,19 +1,19 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.AbstractionContext
+import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.AbstractionConstructorContext
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
-data class AbstractionSourceTerm(
+data class AbstractionConstructorSourceTerm(
     override val location: SourceLocation,
     override val genericParametersTuple: GenericParametersTuple? = null,
     override val argumentType: TupleTypeConstructorTerm,
     override val declaredImageType: ExpressionTerm? = null,
     override val image: ExpressionTerm,
-) : ExpressionSourceTerm(), AbstractionTerm {
+) : ExpressionSourceTerm(), AbstractionConstructorTerm {
     companion object {
         fun build(
-            ctx: AbstractionContext,
-        ): AbstractionSourceTerm = AbstractionSourceTerm(
+            ctx: AbstractionConstructorContext,
+        ): AbstractionConstructorSourceTerm = AbstractionConstructorSourceTerm(
             location = SourceLocation.build(ctx),
             genericParametersTuple = ctx.genericParametersTuple()?.let {
                 GenericParametersTuple.build(it)

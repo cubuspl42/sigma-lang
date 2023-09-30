@@ -60,7 +60,7 @@ expression
     | left=expression operator=Pipe right=expression # unionTypeConstructorAlt
     | parenExpression # parenExpressionAlt
     | reference # referenceAlt
-    | abstraction # abstractionAlt
+    | abstractionConstructor # abstractionAlt
     | tupleConstructor # tupleConstructorAlt
     | dictConstructor # dictConstructorAlt
     | setConstructor # setConstructorAlt
@@ -113,7 +113,7 @@ ifExpression
       RightParen
     ;
 
-abstraction
+abstractionConstructor
     :   genericParametersTuple? argumentType=tupleTypeConstructor
         (ThinArrow imageType=expression)? FatArrow image=expression
     ;

@@ -15,7 +15,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntTyp
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -27,7 +27,7 @@ class AbstractionConstructorTests {
         fun testDeclaredImageType() {
             val term = ExpressionSourceTerm.parse(
                 source = "^[a: Int] -> Int => a + 3",
-            ) as AbstractionSourceTerm
+            ) as AbstractionConstructorSourceTerm
 
             val abstractionConstructor = AbstractionConstructor.build(
                 outerScope = BuiltinScope,
@@ -45,7 +45,7 @@ class AbstractionConstructorTests {
             fun testInferredFromValue() {
                 val term = ExpressionSourceTerm.parse(
                     source = "^[a: Int] => 2 + 3",
-                ) as AbstractionSourceTerm
+                ) as AbstractionConstructorSourceTerm
 
                 val abstractionConstructor = AbstractionConstructor.build(
                     outerScope = BuiltinScope,
@@ -65,7 +65,7 @@ class AbstractionConstructorTests {
             fun testInferredFromDeclaration() {
                 val term = ExpressionSourceTerm.parse(
                     source = "^[a: Int] -> Bool => 3 + 4",
-                ) as AbstractionSourceTerm
+                ) as AbstractionConstructorSourceTerm
 
                 val abstractionConstructor = AbstractionConstructor.build(
                     outerScope = BuiltinScope,
@@ -85,7 +85,7 @@ class AbstractionConstructorTests {
             fun testInferredFromArguments() {
                 val term = ExpressionSourceTerm.parse(
                     source = "^[a: Int] => a",
-                ) as AbstractionSourceTerm
+                ) as AbstractionConstructorSourceTerm
 
                 val abstractionConstructor = AbstractionConstructor.build(
                     outerScope = BuiltinScope,
@@ -105,7 +105,7 @@ class AbstractionConstructorTests {
             fun testDeclaredFromGenericArguments() {
                 val term = ExpressionSourceTerm.parse(
                     source = "![e] ^[a: e] -> e => a",
-                ) as AbstractionSourceTerm
+                ) as AbstractionConstructorSourceTerm
 
                 val abstractionConstructor = AbstractionConstructor.build(
                     outerScope = BuiltinScope,
@@ -176,7 +176,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 outerScope = BuiltinScope, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
-                ) as AbstractionSourceTerm
+                ) as AbstractionConstructorSourceTerm
             )
 
             val result = assertIs<EvaluationResult<Value>>(

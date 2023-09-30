@@ -61,7 +61,7 @@ sealed class ExpressionSourceTerm : SourceTerm() {
 
             override fun visitAbstractionAlt(
                 ctx: AbstractionAltContext,
-            ): ExpressionTerm = AbstractionSourceTerm.build(ctx.abstraction())
+            ): ExpressionTerm = AbstractionConstructorSourceTerm.build(ctx.abstractionConstructor())
 
             override fun visitTupleConstructorAlt(
                 ctx: TupleConstructorAltContext,

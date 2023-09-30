@@ -140,7 +140,7 @@ abstract class Expression {
             outerScope: StaticScope,
             term: ExpressionTerm,
         ): Expression = when (term) {
-            is AbstractionTerm -> AbstractionConstructor.build(
+            is AbstractionConstructorTerm -> AbstractionConstructor.build(
                 outerScope = outerScope,
                 term = term,
             )
