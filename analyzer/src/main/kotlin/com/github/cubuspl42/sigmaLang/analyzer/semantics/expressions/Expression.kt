@@ -226,8 +226,6 @@ abstract class Expression {
                 term = term,
             )
 
-            is GenericTypeConstructorTerm -> TODO()
-
             is ParenTerm -> TODO()
         }
 

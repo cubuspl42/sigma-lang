@@ -4,7 +4,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
@@ -12,9 +11,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Univer
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorTerm
 
+// I think that this class
 class FunctionTypeConstructor(
     override val outerScope: StaticScope,
     override val term: FunctionTypeConstructorTerm,
+    val metaArgumentType: TypeExpression?,
     val argumentType: TupleTypeConstructor,
     val imageType: Expression,
 ) : TypeConstructor() {
@@ -25,6 +26,13 @@ class FunctionTypeConstructor(
         ): FunctionTypeConstructor = FunctionTypeConstructor(
             outerScope = outerScope,
             term = term,
+            metaArgumentType = term.metaArgumentType?.let {
+                TypeExpression.build(
+                    outerScope = outerScope,
+                    term = it,
+                )
+            },
+            // TODO: Use the scope of the meta-argument type
             argumentType = TupleTypeConstructor.build(
                 outerScope = outerScope,
                 term = term.argumentType,
@@ -36,16 +44,19 @@ class FunctionTypeConstructor(
         )
     }
 
-    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine2(
+    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine3(
+        metaArgumentType?.body?.bind(
+            dynamicScope = dynamicScope,
+        ) ?: Thunk.pure(null),
         argumentType.bind(
             dynamicScope = dynamicScope,
         ),
         imageType.bind(
             dynamicScope = dynamicScope,
         ),
-    ) { argumentType, imageType ->
+    ) { metaArgumentType, argumentType, imageType ->
         UniversalFunctionType(
-            genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
+            metaArgumentType = metaArgumentType?.asType as TupleType?,
             argumentType = argumentType.asType as TupleType,
             imageType = imageType.asType as MembershipType,
         ).asValue

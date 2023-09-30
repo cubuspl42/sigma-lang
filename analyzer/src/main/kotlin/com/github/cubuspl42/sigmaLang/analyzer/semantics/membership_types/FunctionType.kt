@@ -1,5 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
+
 sealed class FunctionType : ShapeType() {
     // This can be improved
     override fun findLowestCommonSupertype(
@@ -8,7 +10,18 @@ sealed class FunctionType : ShapeType() {
 
     abstract override fun substituteTypeVariables(resolution: TypeVariableResolution): FunctionType
 
-    open val genericParameters: Set<TypeVariable> = emptySet()
+    open val metaArgumentType: TupleType? = null
+
+    val typeVariables: Set<TypeVariable>
+        get() = metaArgumentType?.typeVariableDefinitions?.let { definitions ->
+            definitions.map {
+                TypeVariable(
+                    formula = Formula(
+                        name = it.name,
+                    )
+                )
+            }.toSet()
+        } ?: emptySet()
 
     abstract val argumentType: MembershipType
 

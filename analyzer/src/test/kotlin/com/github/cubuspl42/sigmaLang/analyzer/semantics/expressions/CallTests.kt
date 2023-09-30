@@ -19,6 +19,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntLit
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
@@ -166,9 +167,17 @@ class CallTests {
                     FakeUserDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
-                            genericParameters = setOf(
-                                TypeVariable.of("type1"),
-                                TypeVariable.of("type2"),
+                            metaArgumentType = OrderedTupleType(
+                                elements = listOf(
+                                    OrderedTupleType.Element(
+                                        name = Symbol.of("type1"),
+                                        type = TypeType,
+                                    ),
+                                    OrderedTupleType.Element(
+                                        name = Symbol.of("type2"),
+                                        type = TypeType,
+                                    ),
+                                )
                             ),
                             argumentType = OrderedTupleType.of(
                                 TypeVariable.of("type1"),
@@ -213,8 +222,13 @@ class CallTests {
                     FakeUserDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
-                            genericParameters = setOf(
-                                TypeVariable.of("type"),
+                            metaArgumentType = OrderedTupleType(
+                                elements = listOf(
+                                    OrderedTupleType.Element(
+                                        name = Symbol.of("type"),
+                                        type = TypeType,
+                                    ),
+                                )
                             ),
                             argumentType = OrderedTupleType.Empty,
                             imageType = ArrayType(
@@ -231,8 +245,13 @@ class CallTests {
                     Call.NonFullyInferredCalleeTypeError(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         calleeGenericType = UniversalFunctionType(
-                            genericParameters = setOf(
-                                TypeVariable.of("type"),
+                            metaArgumentType = OrderedTupleType(
+                                elements = listOf(
+                                    OrderedTupleType.Element(
+                                        name = Symbol.of("type"),
+                                        type = TypeType,
+                                    ),
+                                )
                             ),
                             argumentType = OrderedTupleType.Empty,
                             imageType = ArrayType(
@@ -264,17 +283,30 @@ class CallTests {
                     FakeUserDeclaration(
                         name = Symbol.of("f"),
                         type = UniversalFunctionType(
-                            genericParameters = setOf(
-                                TypeVariable.of("type1"),
-                                TypeVariable.of("type2"),
+                            metaArgumentType = OrderedTupleType(
+                                elements = listOf(
+                                    OrderedTupleType.Element(
+                                        name = Symbol.of("type1"),
+                                        type = TypeType,
+                                    ),
+                                    OrderedTupleType.Element(
+                                        name = Symbol.of("type2"),
+                                        type = TypeType,
+                                    ),
+                                )
                             ),
                             argumentType = OrderedTupleType.of(
                                 TypeVariable.of("type1"),
                                 TypeVariable.of("type2"),
                             ),
                             imageType = UniversalFunctionType(
-                                genericParameters = setOf(
-                                    TypeVariable.of("type2"),
+                                metaArgumentType = OrderedTupleType(
+                                    elements = listOf(
+                                        OrderedTupleType.Element(
+                                            name = Symbol.of("type2"),
+                                            type = TypeType,
+                                        ),
+                                    )
                                 ),
                                 argumentType = OrderedTupleType.of(
                                     TypeVariable.of("type1"),
@@ -298,8 +330,13 @@ class CallTests {
 
             assertEquals(
                 expected = UniversalFunctionType(
-                    genericParameters = setOf(
-                        TypeVariable.of("type2"),
+                    metaArgumentType = OrderedTupleType(
+                        elements = listOf(
+                            OrderedTupleType.Element(
+                                name = Symbol.of("type2"),
+                                type = TypeType,
+                            ),
+                        )
                     ),
                     argumentType = OrderedTupleType.of(
                         BoolType,

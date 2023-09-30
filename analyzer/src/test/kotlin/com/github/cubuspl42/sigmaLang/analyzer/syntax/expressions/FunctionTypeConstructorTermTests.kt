@@ -20,7 +20,7 @@ class FunctionTypeConstructorTermTests {
             assertEquals(
                 expected = FunctionTypeConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    genericParametersTuple = null,
+                    metaArgumentType = null,
                     argumentType = OrderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         elements = listOf(

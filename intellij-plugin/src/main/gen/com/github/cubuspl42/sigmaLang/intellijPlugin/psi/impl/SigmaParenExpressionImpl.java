@@ -27,9 +27,9 @@ public class SigmaParenExpressionImpl extends SigmaParenExpressionImplMixin impl
   }
 
   @Override
-  @NotNull
+  @Nullable
   public SigmaExpression getWrappedExpression() {
-    return findNotNullChildByClass(SigmaExpression.class);
+    return findChildByClass(SigmaExpression.class);
   }
 
 }

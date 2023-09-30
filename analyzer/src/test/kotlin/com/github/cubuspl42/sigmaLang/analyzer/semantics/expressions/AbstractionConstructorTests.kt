@@ -104,7 +104,7 @@ class AbstractionConstructorTests {
             @Test
             fun testDeclaredFromGenericArguments() {
                 val term = ExpressionSourceTerm.parse(
-                    source = "![e] ^[a: e] -> e => a",
+                    source = "!^[e: Type] ^[a: e] -> e => a",
                 ) as AbstractionConstructorSourceTerm
 
                 val abstractionConstructor = AbstractionConstructor.build(

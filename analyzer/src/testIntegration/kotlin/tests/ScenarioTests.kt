@@ -36,7 +36,7 @@ class ScenarioTests {
                         value: valueType,
                     }
                     
-                    %const entryOf = ![valueType] ^{
+                    %const entryOf = !^[valueType: Type] ^{
                         key: Int,
                         value: valueType,
                     } -> Entry[valueType] => {
@@ -120,8 +120,13 @@ class ScenarioTests {
 
         assertTypeIsEquivalent(
             expected = UniversalFunctionType(
-                genericParameters = setOf(
-                    TypeVariable.of("valueType"),
+                metaArgumentType = OrderedTupleType(
+                    elements = listOf(
+                        OrderedTupleType.Element(
+                            name = Symbol.of("valueType"),
+                            type = TypeType,
+                        ),
+                    ),
                 ),
                 argumentType = UnorderedTupleType(
                     valueTypeByName = mapOf(
@@ -167,8 +172,8 @@ class ScenarioTests {
     fun testNonInferableGenericFunctionCall() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
-                namespace EntryNamespace (
-                    %const f = ![type] ^[] -> ^[type...] => 0
+                %namespace EntryNamespace (
+                    %const f = !^[type: Type] ^[] -> ^[type...] => 0
                     
                     %const a = f[]
                 )
@@ -209,8 +214,8 @@ class ScenarioTests {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
                 %namespace EntryNamespace (
-                    %const f = ![aType] ^[a: aType] -> Int => %let {
-                        g = ![bType, cType] ^[a: aType, b: bType, c: cType] -> Int => 0,
+                    %const f = !^[aType: Type] ^[a: aType] -> Int => %let {
+                        g = !^[bType: Type, cType: Type] ^[a: aType, b: bType, c: cType] -> Int => 0,
                     } %in g[a, false, {}]
                     
                     %const a = f[1]

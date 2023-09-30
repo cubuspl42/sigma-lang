@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface SigmaGenericParametersTuple extends PsiElement {
 
   @NotNull
-  List<SigmaGenericParameterDeclaration> getGenericParameterDeclarationList();
+  SigmaTupleTypeConstructor getTupleTypeConstructor();
 
 }

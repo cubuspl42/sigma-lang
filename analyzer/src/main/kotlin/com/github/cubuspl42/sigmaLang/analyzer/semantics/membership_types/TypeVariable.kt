@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 
 data class TypeVariable(
@@ -9,6 +10,10 @@ data class TypeVariable(
     companion object {
         fun of(name: String) = TypeVariable(
             formula = Formula.of(name),
+        )
+
+        fun of(name: Symbol) = TypeVariable(
+            formula = Formula(name = name),
         )
     }
 

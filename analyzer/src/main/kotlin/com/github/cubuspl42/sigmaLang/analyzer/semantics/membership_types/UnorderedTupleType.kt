@@ -172,6 +172,15 @@ abstract class UnorderedTupleType : TupleType() {
             )
         }
     }
+
+    override val typeVariableDefinitions: Set<TypeVariableDefinition>
+        get() = valueTypeByName.mapNotNull { (name, type) ->
+            if (type is TypeType) {
+                TypeVariableDefinition(
+                    name = name,
+                )
+            } else null
+        }.toSet()
 }
 
 fun UnorderedTupleType(

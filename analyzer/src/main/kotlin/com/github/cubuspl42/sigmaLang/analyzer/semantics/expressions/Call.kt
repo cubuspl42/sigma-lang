@@ -128,9 +128,9 @@ class Call(
                 )
 
                 val remainingTypeVariables =
-                    subjectType.genericParameters - typeVariableResolution.resolvedTypeVariables
+                    subjectType.typeVariables - typeVariableResolution.resolvedTypeVariables
 
-                val nonInferredTypeVariables = subjectType.genericParameters.intersect(remainingTypeVariables)
+                val nonInferredTypeVariables = subjectType.typeVariables.intersect(remainingTypeVariables)
 
                 when {
                     nonInferredTypeVariables.isEmpty() -> {
