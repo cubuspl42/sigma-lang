@@ -135,7 +135,7 @@ abstract class UnorderedTupleType : TupleType() {
                     name = name,
                     annotatedType = type,
                 )
-            },
+            }.toSet(),
         )
 
     override fun substituteTypeVariables(

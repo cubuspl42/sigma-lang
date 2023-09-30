@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.*
@@ -92,7 +93,7 @@ class Call(
         override val location: SourceLocation?,
         val calleeGenericType: FunctionType,
         val nonInferredTypeVariables: Set<TypeVariable>,
-    ) :  SemanticError
+    ) : SemanticError
 
     data class NonFunctionCallError(
         override val location: SourceLocation?,
@@ -109,6 +110,9 @@ class Call(
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         val argumentAnalysis = compute(argument.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+
+        val classifiedSubjectValue = subjectAnalysis.classifiedValue
+        val classifiedArgumentValue = argumentAnalysis.classifiedValue
 
         val subjectType = subjectAnalysis.inferredType
         val argumentType = argumentAnalysis.inferredType
@@ -137,6 +141,17 @@ class Call(
                         DiagnosedAnalysis(
                             analysis = Analysis(
                                 inferredType = effectiveImageType,
+                                classifiedValue = ClassificationContext.transform2(
+                                    context1 = classifiedSubjectValue,
+                                    context2 = classifiedArgumentValue,
+                                    combine = { subjectValue, argumentValue ->
+                                        if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
+
+                                        subjectValue.apply(
+                                            argument = argumentValue,
+                                        )
+                                    },
+                                )
                             ),
                             directErrors = setOfNotNull(
                                 run {

@@ -29,9 +29,16 @@ data class IsUndefinedCheck(
     }
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+        val argumentAnalysis = compute(argument.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+
         DiagnosedAnalysis(
             analysis = Analysis(
                 inferredType = BoolType,
+                classifiedValue = argumentAnalysis.classifiedValue.transform { argumentValue ->
+                    BoolValue(
+                        value = argumentValue is UndefinedValue,
+                    )
+                },
             ),
             directErrors = emptySet(),
         )

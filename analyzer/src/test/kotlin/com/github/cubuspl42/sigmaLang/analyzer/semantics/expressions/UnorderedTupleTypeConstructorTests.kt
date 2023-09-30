@@ -3,8 +3,10 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
@@ -16,6 +18,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTuple
 import utils.assertTypeIsEquivalent
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
 class UnorderedTupleTypeConstructorTests {
@@ -59,22 +62,38 @@ class UnorderedTupleTypeConstructorTests {
         )
 
         assertEquals(
+            expected = emptySet(),
+            actual = unorderedTupleTypeConstructor.errors,
+        )
+
+        assertEquals(
             expected = TypeType,
             actual = unorderedTupleTypeConstructor.inferredTypeOrIllType.getOrCompute(),
         )
 
-        val actualType = assertNotNull(
-            actual = unorderedTupleTypeConstructor.bind(dynamicScope = BuiltinScope).value?.asType,
+        val valueClassification = assertIs<ConstClassificationContext<Value>>(
+            unorderedTupleTypeConstructor.computedClassifiedValue.getOrCompute()
         )
 
-        assertTypeIsEquivalent(
-            expected = UnorderedTupleType(
-                valueTypeByName = mapOf(
-                    Symbol.of("k1") to IntCollectiveType,
-                    Symbol.of("k2") to BoolType,
-                ),
+        val expectedType = UnorderedTupleType(
+            valueTypeByName = mapOf(
+                Symbol.of("k1") to IntCollectiveType,
+                Symbol.of("k2") to BoolType,
             ),
-            actual = actualType,
+        )
+
+        val classifiedType = assertNotNull(valueClassification.valueThunk.value?.asType)
+
+        assertTypeIsEquivalent(
+            expected = expectedType,
+            actual = classifiedType,
+        )
+
+        val evaluatedType = assertNotNull(unorderedTupleTypeConstructor.bind(dynamicScope = BuiltinScope).value?.asType)
+
+        assertTypeIsEquivalent(
+            expected = expectedType,
+            actual = evaluatedType,
         )
     }
 
