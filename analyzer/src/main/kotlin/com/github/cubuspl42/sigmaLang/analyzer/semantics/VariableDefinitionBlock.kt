@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
 class VariableDefinitionBlock(
     private val declarationScope: StaticScope,
-    private val declarations: List<LocalDefinitionTerm>,
+    private val declarationTerms: List<LocalDefinitionTerm>,
 ) : StaticBlock() {
     companion object {
         fun build(
@@ -17,17 +17,19 @@ class VariableDefinitionBlock(
             definitions: List<LocalDefinitionTerm>,
         ): VariableDefinitionBlock = VariableDefinitionBlock(
             declarationScope = outerDeclarationScope,
-            declarations = definitions,
+            declarationTerms = definitions,
         )
     }
 
+    val declarations = declarationTerms.map {
+        UserVariableDefinition.build(
+            declarationScope = declarationScope,
+            term = it,
+        )
+    }.toSet()
+
     private val definitionByName by lazy {
-        declarations.associate {
-            it.name to UserVariableDefinition.build(
-                declarationScope = declarationScope,
-                term = it,
-            )
-        }
+        declarations.associateBy { it.name }
     }
 
     fun getValueDefinition(name: Symbol): UserVariableDefinition? = definitionByName[name]
@@ -45,9 +47,9 @@ class VariableDefinitionBlock(
     }
 
     fun evaluate(
-        dynamicScope: DynamicScope,
+        outerScope: DynamicScope,
     ): DynamicScope = LoopedDynamicScope(
-        outerDynamicScope = dynamicScope,
+        outerDynamicScope = outerScope,
         expressionByName = definitionByName.mapValues { (_, definition) ->
             definition.body
         },

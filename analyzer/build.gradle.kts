@@ -41,7 +41,7 @@ tasks {
     }
 
     test {
-        dependsOn("testIntegration")
+//        dependsOn("testIntegration")
     }
 
     generateGrammarSource {

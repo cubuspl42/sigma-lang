@@ -145,7 +145,7 @@ data class OrderedTupleType(
         AbstractionConstructor.ArgumentStaticBlock(
             argumentDeclarations = elements.mapNotNull { element ->
                 element.toArgumentDeclaration()
-            },
+            }.toSet(),
         )
 
     override fun substituteTypeVariables(

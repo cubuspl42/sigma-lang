@@ -4,8 +4,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
 
@@ -67,6 +69,20 @@ class UnionTypeConstructor(
 
                 extendedTypes + leftType
             }
+        }
+    }
+
+    override val computedClassifiedValue: Computation<ClassificationContext<Value>?> = Computation {
+        val typesAnalyses = types.map {
+            compute(it.computedAnalysis) ?: return@Computation null
+        }
+
+        ClassificationContext.traverseList(typesAnalyses) { typeAnalysis ->
+            typeAnalysis.classifiedValue.transform { it.asType!! }
+        }.transform { memberTypes ->
+            UnionType(
+                memberTypes = memberTypes.toSet(),
+            ).asValue
         }
     }
 
