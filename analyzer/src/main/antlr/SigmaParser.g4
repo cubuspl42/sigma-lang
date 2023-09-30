@@ -114,7 +114,7 @@ ifExpression
     ;
 
 abstractionConstructor
-    :   genericParametersTuple? argumentType=tupleTypeConstructor
+    :   metaArgumentType? argumentType=tupleTypeConstructor
         (ThinArrow imageType=expression)? FatArrow image=expression
     ;
 
@@ -185,7 +185,7 @@ tupleTypeConstructor
     ;
 
 functionTypeConstructor
-    : genericParametersTuple? argumentType=tupleTypeConstructor ThinArrow imageType=expression
+    : metaArgumentType? argumentType=tupleTypeConstructor ThinArrow imageType=expression
     ;
 
 // Unordered tuple type constructor
@@ -219,14 +219,10 @@ dictTypeConstructor
     : Dash LeftBrace LeftBracket keyType=expression RightBracket Colon valueType=expression RightBrace
     ;
 
-genericTypeConstructor
-    : genericParametersTuple body=expression
-    ;
-
 // Other
 
-genericParametersTuple
-    : Bang LeftBracket genericParameterDeclaration ((Comma genericParameterDeclaration)+ Comma?)? RightBracket
+metaArgumentType
+    : Bang tupleTypeConstructor
     ;
 
 genericParameterDeclaration

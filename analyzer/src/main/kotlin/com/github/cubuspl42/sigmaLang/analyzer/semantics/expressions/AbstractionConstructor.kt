@@ -9,7 +9,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 
@@ -17,7 +16,7 @@ class AbstractionConstructor(
     override val outerScope: StaticScope,
     private val innerScope: StaticScope,
     override val term: AbstractionConstructorTerm,
-    val genericParameters: Set<TypeVariable>,
+    val metaArgumentType: TupleType?,
     val argumentType: TupleType,
     val declaredImageTypeBody: TypeExpression?,
     val image: Expression,
@@ -46,9 +45,18 @@ class AbstractionConstructor(
             outerScope: StaticScope,
             term: AbstractionConstructorTerm,
         ): AbstractionConstructor {
-            val genericDeclarationBlock = term.genericParametersTuple?.asDeclarationBlock
+            val metaArgumentTypeConstructor = term.metaArgumentType?.let {
+                TypeExpression.build(
+                    outerScope = outerScope,
+                    term = it,
+                )
+            }
 
-            val innerDeclarationScope1 = genericDeclarationBlock?.chainWith(
+            val metaArgumentType = metaArgumentTypeConstructor?.typeOrIllType?.let { it as TupleType }
+
+            val metaArgumentBlock = metaArgumentType?.toMetaArgumentDeclarationBlock()
+
+            val innerDeclarationScope1 = metaArgumentBlock?.chainWith(
                 outerScope = outerScope,
             ) ?: outerScope
 
@@ -79,7 +87,7 @@ class AbstractionConstructor(
                 outerScope = outerScope,
                 innerScope = innerDeclarationScope2,
                 term = term,
-                genericParameters = term.genericParametersTuple?.typeVariables ?: emptySet(),
+                metaArgumentType = metaArgumentType,
                 argumentType = argumentType,
                 declaredImageTypeBody = declaredImageTypeBody,
                 image = image,
@@ -103,7 +111,7 @@ class AbstractionConstructor(
         DiagnosedAnalysis(
             analysis = Analysis(
                 inferredType = UniversalFunctionType(
-                    genericParameters = genericParameters,
+                    metaArgumentType = metaArgumentType,
                     argumentType = argumentType,
                     imageType = effectiveImageType,
                 )

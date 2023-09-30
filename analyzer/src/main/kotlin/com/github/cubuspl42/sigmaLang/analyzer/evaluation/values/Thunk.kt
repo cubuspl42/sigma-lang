@@ -11,7 +11,7 @@ abstract class Thunk<out ResultType> {
                 computation.evaluate(context = context)
         }
 
-        fun <A : Any> pure(
+        fun <A> pure(
             value: A,
         ): Thunk<A> = object : Thunk<A>() {
             override fun evaluateDirectly(
@@ -37,6 +37,34 @@ abstract class Thunk<out ResultType> {
 
                 return EvaluationResult(
                     value = combine(value1, value2)
+                )
+            }
+        }
+
+        fun <A, B, C, D> combine3(
+            thunk1: Thunk<A>,
+            thunk2: Thunk<B>,
+            thunk3: Thunk<C>,
+            combine: (A, B, C) -> D,
+        ): Thunk<D> = object : Thunk<D>() {
+            override fun evaluateDirectly(context: EvaluationContext): EvaluationOutcome<D> {
+                val value1 = when (val outcome = thunk1.evaluate(context = context)) {
+                    is EvaluationResult -> outcome.value
+                    is EvaluationError -> return outcome
+                }
+
+                val value2 = when (val outcome = thunk2.evaluate(context = context)) {
+                    is EvaluationResult -> outcome.value
+                    is EvaluationError -> return outcome
+                }
+
+                val value3 = when (val outcome = thunk3.evaluate(context = context)) {
+                    is EvaluationResult -> outcome.value
+                    is EvaluationError -> return outcome
+                }
+
+                return EvaluationResult(
+                    value = combine(value1, value2, value3)
                 )
             }
         }

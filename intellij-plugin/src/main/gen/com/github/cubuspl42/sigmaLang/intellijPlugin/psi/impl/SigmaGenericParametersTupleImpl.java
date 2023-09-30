@@ -29,8 +29,8 @@ public class SigmaGenericParametersTupleImpl extends ASTWrapperPsiElement implem
 
   @Override
   @NotNull
-  public List<SigmaGenericParameterDeclaration> getGenericParameterDeclarationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SigmaGenericParameterDeclaration.class);
+  public SigmaTupleTypeConstructor getTupleTypeConstructor() {
+    return findNotNullChildByClass(SigmaTupleTypeConstructor.class);
   }
 
 }

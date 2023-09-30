@@ -141,11 +141,12 @@ data class OrderedTupleType(
         )
     }
 
-    override fun toArgumentDeclarationBlock(): AbstractionConstructor.ArgumentStaticBlock = AbstractionConstructor.ArgumentStaticBlock(
-        argumentDeclarations = elements.mapNotNull { element ->
-            element.toArgumentDeclaration()
-        },
-    )
+    override fun toArgumentDeclarationBlock(): AbstractionConstructor.ArgumentStaticBlock =
+        AbstractionConstructor.ArgumentStaticBlock(
+            argumentDeclarations = elements.mapNotNull { element ->
+                element.toArgumentDeclaration()
+            },
+        )
 
     override fun substituteTypeVariables(
         resolution: TypeVariableResolution,
@@ -174,6 +175,18 @@ data class OrderedTupleType(
             return argument.read(IntValue(value = index.toLong()))?.toThunk()
         }
     }
+
+    override val typeVariableDefinitions: Set<TypeVariableDefinition>
+        get() = elements.mapNotNull {
+            val name = it.name
+            val type = it.type
+
+            if (name != null && type is TypeType) {
+                TypeVariableDefinition(
+                    name = name,
+                )
+            } else null
+        }.toSet()
 
     override fun walkRecursive(): Sequence<MembershipType> = elements.asSequence().flatMap {
         it.type.walk()

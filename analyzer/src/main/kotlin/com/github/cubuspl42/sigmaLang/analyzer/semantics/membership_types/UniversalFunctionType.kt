@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeErrorException
 
 data class UniversalFunctionType(
-    override val genericParameters: Set<TypeVariable> = emptySet(),
+    override val metaArgumentType: TupleType? = null,
     override val argumentType: TupleType,
     override val imageType: MembershipType,
 ) : FunctionType() {
@@ -36,7 +36,7 @@ data class UniversalFunctionType(
         )
 
         return argumentResolution.mergeWith(imageResolution).withoutTypeVariables(
-            typeVariables = genericParameters,
+            typeVariables = typeVariables,
         )
     }
 
@@ -44,11 +44,11 @@ data class UniversalFunctionType(
         resolution: TypeVariableResolution,
     ): UniversalFunctionType {
         val innerResolution = resolution.withoutTypeVariables(
-            typeVariables = genericParameters,
+            typeVariables = typeVariables,
         )
 
         return UniversalFunctionType(
-            genericParameters = genericParameters,
+            metaArgumentType = metaArgumentType,
             argumentType = argumentType.substituteTypeVariables(
                 resolution = innerResolution,
             ),
@@ -79,7 +79,7 @@ data class UniversalFunctionType(
     override fun walkRecursive(): Sequence<MembershipType> = argumentType.walk() + imageType.walk()
 
     override fun dumpDirectly(depth: Int): String = listOfNotNull(
-        if (genericParameters.isNotEmpty()) "!{${genericParameters.joinToString(separator = ", ")}}" else null,
+        metaArgumentType?.dumpRecursively(depth = depth + 1),
         "${argumentType.dumpRecursively(depth = depth + 1)} -> ${imageType.dumpRecursively(depth = depth + 1)}",
     ).joinToString(separator = " ")
 

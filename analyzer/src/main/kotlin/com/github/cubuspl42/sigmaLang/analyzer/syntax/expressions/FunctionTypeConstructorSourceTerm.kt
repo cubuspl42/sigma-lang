@@ -5,23 +5,27 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 data class FunctionTypeConstructorSourceTerm(
     override val location: SourceLocation,
-    override val genericParametersTuple: GenericParametersTuple?,
+    override val metaArgumentType: TupleTypeConstructorTerm?,
     override val argumentType: TupleTypeConstructorTerm,
     override val imageType: ExpressionTerm,
 ) : ExpressionSourceTerm(), FunctionTypeConstructorTerm {
     companion object {
         fun build(
             ctx: FunctionTypeConstructorContext,
-        ): FunctionTypeConstructorSourceTerm = FunctionTypeConstructorSourceTerm(
-            location = SourceLocation.build(ctx),
-            genericParametersTuple = ctx.genericParametersTuple()?.let {
-                GenericParametersTuple.build(it)
-            },
-            argumentType = ctx.argumentType.let {
-                TupleTypeConstructorSourceTerm.build(it)
-            },
-            imageType = ExpressionSourceTerm.build(ctx.imageType),
-        )
+        ): FunctionTypeConstructorSourceTerm {
+
+
+            return FunctionTypeConstructorSourceTerm(
+                location = SourceLocation.build(ctx),
+                metaArgumentType = ctx.metaArgumentType()?.let {
+                    TupleTypeConstructorSourceTerm.build(it.tupleTypeConstructor())
+                },
+                argumentType = ctx.argumentType.let {
+                    TupleTypeConstructorSourceTerm.build(it)
+                },
+                imageType = ExpressionSourceTerm.build(ctx.imageType),
+            )
+        }
     }
 
     override fun dump(): String = "(function type constructor)"

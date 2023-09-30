@@ -236,9 +236,7 @@ abstraction_constructor ::=
     }
 
 generic_parameters_tuple ::=
-    BANG <<bracket_wrapped
-        <<list generic_parameter_declaration>>
-    >>
+    BANG tuple_type_constructor
 
 generic_parameter_declaration ::=
     IDENTIFIER

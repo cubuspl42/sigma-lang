@@ -11,6 +11,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.OrderedTupleTypeConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -49,39 +51,52 @@ class AbstractionTermTests {
         @Test
         fun testGenericWithMultipleParameters() {
             val term = ExpressionSourceTerm.parse(
-                source = "![a, b] ^[a: a, b: b] => 0",
+                source = "!^[a: Type, b: Type] ^[a: a, b: b] => 0",
             )
 
             assertEquals(
                 expected = AbstractionConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    genericParametersTuple = GenericParametersTuple(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 0), parametersDefinitions = listOf(
-                            Symbol.of("a"),
-                            Symbol.of("b"),
-                        )
-                    ),
-                    argumentType = OrderedTupleTypeConstructorSourceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 8),
+                    metaArgumentType = OrderedTupleTypeConstructorSourceTerm(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         elements = listOf(
                             OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("a"),
                                 type = ReferenceSourceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 13),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 6),
+                                    referredName = Symbol.of("Type"),
+                                ),
+                            ),
+                            OrderedTupleTypeConstructorSourceTerm.Element(
+                                name = Symbol.of("b"),
+                                type = ReferenceSourceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 15),
+                                    referredName = Symbol.of("Type"),
+                                ),
+                            ),
+                        ),
+                    ),
+                    argumentType = OrderedTupleTypeConstructorSourceTerm(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 21),
+                        elements = listOf(
+                            OrderedTupleTypeConstructorSourceTerm.Element(
+                                name = Symbol.of("a"),
+                                type = ReferenceSourceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 26),
                                     referredName = Symbol.of("a"),
                                 ),
                             ),
                             OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("b"),
                                 type = ReferenceSourceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 19),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 32),
                                     referredName = Symbol.of("b"),
                                 ),
                             ),
                         ),
                     ),
                     image = IntLiteralSourceTerm(
-                        SourceLocation(lineIndex = 1, columnIndex = 25),
+                        SourceLocation(lineIndex = 1, columnIndex = 38),
                         value = IntValue(0),
                     ),
                 ),
@@ -94,30 +109,37 @@ class AbstractionTermTests {
             assertEquals(
                 expected = AbstractionConstructorSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    genericParametersTuple = GenericParametersTuple(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 0), parametersDefinitions = listOf(
-                            Symbol.of("t"),
-                        )
+                    metaArgumentType = OrderedTupleTypeConstructorSourceTerm(
+                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
+                        elements = listOf(
+                            OrderedTupleTypeConstructorSourceTerm.Element(
+                                name = Symbol.of("t"),
+                                type = ReferenceSourceTerm(
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 6),
+                                    referredName = Symbol.of("Type"),
+                                ),
+                            ),
+                        ),
                     ),
                     argumentType = OrderedTupleTypeConstructorSourceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 5),
+                        location = SourceLocation(lineIndex = 1, columnIndex = 12),
                         elements = listOf(
                             OrderedTupleTypeConstructorSourceTerm.Element(
                                 name = Symbol.of("n"),
                                 type = ReferenceSourceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 10),
+                                    location = SourceLocation(lineIndex = 1, columnIndex = 17),
                                     referredName = Symbol.of("Int"),
                                 ),
                             ),
                         ),
                     ),
                     image = IntLiteralSourceTerm(
-                        SourceLocation(lineIndex = 1, columnIndex = 18),
+                        SourceLocation(lineIndex = 1, columnIndex = 25),
                         value = IntValue(0),
                     ),
                 ),
                 actual = ExpressionSourceTerm.parse(
-                    source = "![t] ^[n: Int] => 0",
+                    source = "!^[t: Type] ^[n: Int] => 0",
                 ),
             )
         }
@@ -156,7 +178,7 @@ class AbstractionTermTests {
         @Test
         fun testGenericSingleParameter() {
             val term = ExpressionSourceTerm.parse(
-                source = "![t] ^[t: t] => false",
+                source = "!^[t: Type] ^[t: t] => false",
             )
 
             val expression = Expression.build(
@@ -168,8 +190,13 @@ class AbstractionTermTests {
 
             assertEquals(
                 expected = UniversalFunctionType(
-                    genericParameters = setOf(
-                        TypeVariable.of("t"),
+                    metaArgumentType = OrderedTupleType(
+                        elements = listOf(
+                            OrderedTupleType.Element(
+                                name = Symbol.of("t"),
+                                type = TypeType,
+                            ),
+                        ),
                     ),
                     argumentType = OrderedTupleType(
                         elements = listOf(
