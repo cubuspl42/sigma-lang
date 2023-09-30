@@ -11,9 +11,9 @@ data class SetType(
         val constructor = SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = OrderedTupleType.of(
-                    MetaType,
+                    TypeType,
                 ),
-                imageType = MetaType,
+                imageType = TypeType,
             ),
             value = object : FunctionValue() {
                 override fun apply(argument: Value): Thunk<Value> {

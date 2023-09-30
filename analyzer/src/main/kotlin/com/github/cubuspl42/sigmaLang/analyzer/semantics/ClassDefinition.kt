@@ -12,7 +12,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpress
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.AnyType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
@@ -55,7 +55,7 @@ class ClassDefinition(
         val AnyClassType = UnorderedTupleType(
             valueTypeByName = mapOf(
                 classTagKey to AnyType,
-                classTypeKey to MetaType,
+                classTypeKey to TypeType,
             ),
         )
 
@@ -127,7 +127,7 @@ class ClassDefinition(
             UnorderedTupleType(
                 valueTypeByName = mapOf(
                     classTagKey to tagType,
-                    classTypeKey to MetaType,
+                    classTypeKey to TypeType,
                     Symbol.of("new") to UniversalFunctionType(
                         argumentType = bodyType,
                         imageType = instanceType,

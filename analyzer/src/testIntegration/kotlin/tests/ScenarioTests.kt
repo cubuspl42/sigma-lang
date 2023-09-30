@@ -12,7 +12,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
@@ -77,11 +77,11 @@ class ScenarioTests {
                     elements = listOf(
                         OrderedTupleType.Element(
                             name = Symbol.of("valueType"),
-                            type = MetaType,
+                            type = TypeType,
                         ),
                     ),
                 ),
-                imageType = MetaType,
+                imageType = TypeType,
             ),
             actual = entryTypeConstructorDefinition.computedEffectiveType.getOrCompute(),
         )

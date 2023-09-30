@@ -8,14 +8,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MetaType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UndefinedType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
 import utils.assertTypeIsEquivalent
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -33,7 +31,7 @@ class UnorderedTupleTypeConstructorTests {
         )
 
         assertEquals(
-            expected = MetaType,
+            expected = TypeType,
             actual = unorderedTupleTypeConstructor.inferredTypeOrIllType.getOrCompute(),
         )
 
@@ -61,7 +59,7 @@ class UnorderedTupleTypeConstructorTests {
         )
 
         assertEquals(
-            expected = MetaType,
+            expected = TypeType,
             actual = unorderedTupleTypeConstructor.inferredTypeOrIllType.getOrCompute(),
         )
 
@@ -99,7 +97,7 @@ class UnorderedTupleTypeConstructorTests {
         )
 
         assertEquals(
-            expected = MetaType,
+            expected = TypeType,
             actual = letExpression.inferredTypeOrIllType.getOrCompute(),
         )
 
