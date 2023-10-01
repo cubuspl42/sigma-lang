@@ -4,10 +4,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationCont
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
@@ -38,7 +38,7 @@ class AbstractionConstructor(
 
         override fun resolveNameLocally(
             name: Symbol,
-        ): ClassifiedIntroduction? = declarationByName[name]
+        ): Introduction? = declarationByName[name]
 
         override fun getLocalNames(): Set<Symbol> = declarationByName.keys
     }
@@ -118,9 +118,8 @@ class AbstractionConstructor(
                 }
 
                 override val inferredType = run {
-                    val effectiveImageType = this@AbstractionConstructor.declaredImageType ?: run {
-                        imageAnalysis?.inferredType ?: IllType
-                    }
+                    val effectiveImageType =
+                        this@AbstractionConstructor.declaredImageType ?: imageAnalysis?.inferredType ?: IllType
 
                     UniversalFunctionType(
                         metaArgumentType = metaArgumentType,

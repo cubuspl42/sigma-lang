@@ -12,9 +12,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassificationContext
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.VariableIntroduction
 
@@ -44,29 +44,38 @@ class Reference(
         )
     }
 
-    private val resolved: ClassifiedIntroduction? by lazy {
+    private val resolved: Introduction? by lazy {
         outerScope.resolveName(name = referredName)
     }
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val resolvedIntroduction = resolved
+        when (val resolvedIntroduction = resolved) {
+            is Declaration -> {
+                DiagnosedAnalysis(
+                    analysis = Analysis(
+                        inferredType = resolvedIntroduction.annotatedType,
+                    ),
+                    directErrors = emptySet(),
+                )
+            }
 
-        if (resolvedIntroduction != null) {
-            val inferredTargetType = compute(resolvedIntroduction.computedEffectiveType)
+            is Definition -> {
+                val targetAnalysis = compute(resolvedIntroduction.body.computedAnalysis)
 
-            DiagnosedAnalysis(
-                analysis = Analysis(
-                    inferredType = inferredTargetType,
-                ),
-                directErrors = emptySet(),
-            )
-        } else {
-            DiagnosedAnalysis.fromError(
+                DiagnosedAnalysis(
+                    analysis = targetAnalysis,
+                    directErrors = emptySet(),
+                )
+            }
+
+            null -> DiagnosedAnalysis.fromError(
                 UnresolvedNameError(
                     location = term?.location,
                     name = referredName,
                 )
             )
+
+            else -> throw UnsupportedOperationException("Unexpected introduction type: $resolvedIntroduction")
         }
     }
 
@@ -75,21 +84,18 @@ class Reference(
             this.resolved ?: throw IllegalStateException("Unresolved reference at classification time: $referredName")
 
         when (resolvedIntroduction) {
-            is ConstantDefinition -> object : ConstClassificationContext<Value>() {
-                override val valueThunk: Thunk<Value>
-                    get() = resolvedIntroduction.valueThunk
-            }
-
-            is VariableIntroduction -> object : VariableClassificationContext<Value>() {
-                override val referredDeclarations: Set<Introduction>
+            is Declaration -> object : VariableClassificationContext<Value>() {
+                override val referredDeclarations: Set<Declaration>
                     get() = setOf(resolvedIntroduction)
 
-                override fun bind(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(
-                    name = referredName,
-                ) ?: throw IllegalStateException(
-                    "Unresolved dynamic reference at run-time: $referredName",
-                )
+                override fun bind(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(referredName)
+                    ?: throw IllegalStateException("Unresolved reference at run-time: $referredName")
             }
+
+
+            is Definition -> resolvedIntroduction.body.classifiedValue
+
+            else -> throw UnsupportedOperationException("Unexpected introduction type: $resolvedIntroduction")
         }
     }
 

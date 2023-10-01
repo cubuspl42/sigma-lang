@@ -152,7 +152,6 @@ class LetExpressionTests {
         }
 
         @Test
-        @Ignore // TODO: Const-analysis of let expression scopes
         fun testReferringConst() {
             val term = NamespaceDefinitionSourceTerm.parse(
                 source = """
@@ -174,10 +173,10 @@ class LetExpressionTests {
 
             val bDefinition = namespaceDefinition.getDefinition(name = Symbol.of("b")) as UserConstantDefinition
 
-            val letExpression = bDefinition.body as LetExpression
+            val letExpression = bDefinition.assignedBody as LetExpression
 
             val classifiedValue = assertIs<ConstClassificationContext<Value>>(
-                letExpression.computedAnalysis.getOrCompute()
+                letExpression.classifiedValue
             )
 
             assertEquals(

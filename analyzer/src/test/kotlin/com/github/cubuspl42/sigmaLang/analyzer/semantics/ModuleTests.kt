@@ -110,7 +110,7 @@ class ModuleTests {
             )
 
             assertEquals(
-                expected = bazDefinition.valueThunk.value,
+                expected = bazDefinition.getValueThunk().value,
                 actual = IntValue(value = 123L),
             )
         }
