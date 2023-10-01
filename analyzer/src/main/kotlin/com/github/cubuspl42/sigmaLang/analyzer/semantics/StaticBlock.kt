@@ -1,10 +1,10 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 
 abstract class StaticBlock : StaticScope {
-    abstract fun resolveNameLocally(name: Symbol): ClassifiedIntroduction?
+    abstract fun resolveNameLocally(name: Symbol): Introduction?
 
     abstract fun getLocalNames(): Set<Symbol>
 
@@ -12,7 +12,7 @@ abstract class StaticBlock : StaticScope {
 
     final override fun resolveName(
         name: Symbol,
-    ): ClassifiedIntroduction? = resolveNameLocally(name = name)
+    ): Introduction? = resolveNameLocally(name = name)
 
     fun chainWith(outerScope: StaticScope): StaticScope = StaticScope.Chained(
         outerScope = outerScope,

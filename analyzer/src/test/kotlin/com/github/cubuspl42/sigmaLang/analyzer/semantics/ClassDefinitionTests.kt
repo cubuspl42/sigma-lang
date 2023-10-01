@@ -98,7 +98,7 @@ class ClassDefinitionTests {
 
             val classValue = assertIs<DictValue>(
                 assertNotNull(
-                    classDefinition.valueThunk.value
+                    classDefinition.getValueThunk().value
                 )
             )
 
