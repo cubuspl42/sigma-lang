@@ -1,4 +1,9 @@
-%const maxOf = !^[e: Type, te: Type] ^[elements: ^[e...], transform: ^[e] -> te] => max[map[elements, transform]]
+%const maxOf = !^[e: Type, te: Type] ^[
+    elements: ^[e...],
+    transform: ^[e] -> te,
+] => max[
+    map[elements, transform],
+]
 
 %const upTo = ^[
     start: Int,
