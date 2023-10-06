@@ -51,11 +51,6 @@ class SetConstructor(
                     inferredType = SetType(
                         elementType = elementType,
                     ),
-                    classifiedValue = ClassificationContext.traverseList(
-                        elementsAnalyses
-                    ) { it.classifiedValue }.transform { elements ->
-                        SetValue(elements = elements.toSet())
-                    },
                 ),
                 directErrors = emptySet(),
             )
@@ -65,6 +60,14 @@ class SetConstructor(
                     location = term.location,
                 )
             )
+        }
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.traverseList(elements.toList()) {
+            it.classifiedValue
+        }.transform { elements ->
+            SetValue(elements = elements.toSet())
         }
     }
 

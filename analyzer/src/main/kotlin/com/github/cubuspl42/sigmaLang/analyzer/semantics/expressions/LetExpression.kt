@@ -1,8 +1,11 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.UndefinedValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableDefinitionBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -55,30 +58,34 @@ data class LetExpression(
         DiagnosedAnalysis(
             analysis = Analysis(
                 inferredType = inferredResultType,
-                classifiedValue = when (val classifiedResult = resultAnalysis.classifiedValue) {
-                    is ConstClassificationContext -> classifiedResult
-                    is VariableClassificationContext -> classifiedResult.withResolvedDeclarations(
-                        declarations = definitionBlock.declarations, // FIXME
-                        buildConst = {
-                            classifiedResult.bind(
-                                dynamicScope = definitionBlock.evaluate(
-                                    outerScope = DynamicScope.Empty,
-                                ),
-                            )
-                        },
-                        buildVariable = {
-                            classifiedResult.bind(
-                                dynamicScope = definitionBlock.evaluate(
-                                    outerScope = it,
-                                ),
-                            )
-                        },
-                    )
-                }
             ),
             directErrors = emptySet(),
         )
     }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        when (val classifiedResult = result.classifiedValue) {
+            is ConstClassificationContext -> classifiedResult
+            is VariableClassificationContext -> classifiedResult.withResolvedDeclarations(
+                declarations = definitionBlock.declarations, // FIXME
+                buildConst = {
+                    classifiedResult.bind(
+                        dynamicScope = definitionBlock.evaluate(
+                            outerScope = DynamicScope.Empty,
+                        ),
+                    )
+                },
+                buildVariable = {
+                    classifiedResult.bind(
+                        dynamicScope = definitionBlock.evaluate(
+                            outerScope = it,
+                        ),
+                    )
+                },
+            )
+        }
+    }
+
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = result.bind(
         dynamicScope = definitionBlock.evaluate(

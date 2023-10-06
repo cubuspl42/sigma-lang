@@ -38,6 +38,16 @@ class UnorderedTupleTypeConstructor(
                 ),
             )
         }
+
+        val classifiedEntry: ClassificationContext<UnorderedTupleType.Entry>
+            get() = type.classifiedValue.transformThunk { typeValueThunk ->
+                Thunk.pure(
+                    UnorderedTupleType.Entry(
+                        name = name,
+                        typeThunk = typeValueThunk.thenJust { it.asType!! },
+                    )
+                )
+            }
     }
 
     companion object {
@@ -56,30 +66,13 @@ class UnorderedTupleTypeConstructor(
         )
     }
 
-    override val computedClassifiedValue: Computation<ClassificationContext<Value>?> = Computation {
-        val entriesAnalyses = entries.map {
-            val typeAnalysis = compute(it.type.computedAnalysis) ?: return@Computation null
-
-            Entry.Analysis(
-                name = it.name,
-                typeAnalysis = typeAnalysis,
-            )
-        }
-
-        ClassificationContext.traverseListThunk(entriesAnalyses) { entryAnalysis ->
-            entryAnalysis.typeAnalysis.classifiedValue.transformThunk { valueThunk ->
-                Thunk.pure(entryAnalysis.name to valueThunk)
-            }
-        }.transform { entryPairs ->
-            object : UnorderedTupleType() {
-                override val valueTypeThunkByName = entryPairs.associate { (name, typeValueThunk) ->
-                    val typeThunk = typeValueThunk.thenJust { entryType ->
-                        entryType.asType!!
-                    }
-
-                    name to typeThunk
-                }
-            }.asValue
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.traverseList(entries.toList()) { entry ->
+            entry.classifiedEntry
+        }.transform { entries ->
+            UnorderedTupleType.fromEntries(
+                entries = entries,
+            ).asValue
         }
     }
 

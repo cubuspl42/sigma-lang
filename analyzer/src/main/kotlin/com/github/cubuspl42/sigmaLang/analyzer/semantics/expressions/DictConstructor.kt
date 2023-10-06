@@ -29,20 +29,27 @@ class DictConstructor(
             val keyAnalysis: Expression.Analysis,
             val valueAnalysis: Expression.Analysis,
         ) {
-            val pair: ClassificationContext<Pair<Value, Value>>
-                get() = ClassificationContext.transform2(
-                    keyAnalysis.classifiedValue,
-                    valueAnalysis.classifiedValue,
-                ) { key, value ->
-                    Thunk.pure((key as PrimitiveValue) to value)
-                }
+
 
             val inferredKeyType: MembershipType?
-                get() = keyAnalysis?.inferredType
+                get() = keyAnalysis.inferredType
 
             val inferredValueType: MembershipType?
-                get() = valueAnalysis?.inferredType
+                get() = valueAnalysis.inferredType
         }
+
+        val classifiedEntry: ClassificationContext<DictValue.Entry>
+            get() = ClassificationContext.transform2(
+                key.classifiedValue,
+                value.classifiedValue,
+            ) { key, value ->
+                Thunk.pure(
+                    DictValue.Entry(
+                        key = (key as PrimitiveValue),
+                        value = value,
+                    ),
+                )
+            }
 
         companion object {
             fun build(
@@ -158,21 +165,20 @@ class DictConstructor(
                     keyType = keyType,
                     valueType = valueType,
                 ),
-                classifiedValue = ClassificationContext.traverseList(
-                    associationsAnalyses,
-                ) { it.pair }.transform { pairs ->
-                    DictValue(
-                        entries = pairs.associate { (key, value) ->
-                            key as PrimitiveValue to value
-                        }
-                    )
-                },
             ),
             directErrors = setOfNotNull(
                 keysError,
                 valuesError,
             ),
         )
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.traverseList(associations) {
+            it.classifiedEntry
+        }.transform { entries ->
+            DictValue.fromEntries(entries = entries)
+        }
     }
 
     override val subExpressions: Set<Expression> = SetUtils.unionAllOf(associations) { setOf(it.key, it.value) }

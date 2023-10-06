@@ -72,7 +72,7 @@ class UnorderedTupleTypeConstructorTests {
         )
 
         val valueClassification = assertIs<ConstClassificationContext<Value>>(
-            unorderedTupleTypeConstructor.computedClassifiedValue.getOrCompute()
+            unorderedTupleTypeConstructor.classifiedValue
         )
 
         val expectedType = UnorderedTupleType(

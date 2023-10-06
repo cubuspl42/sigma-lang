@@ -24,6 +24,14 @@ class OrderedTupleTypeConstructor(
             val name: Symbol?,
             val typeAnalysis: Expression.Analysis,
         )
+
+        val classifiedElement: ClassificationContext<OrderedTupleType.Element>
+            get() = type.classifiedValue.transform { typeValue ->
+                OrderedTupleType.Element(
+                    name = name,
+                    type = typeValue.asType!!,
+                )
+            }
     }
 
     companion object {
@@ -45,26 +53,12 @@ class OrderedTupleTypeConstructor(
         )
     }
 
-    override val computedClassifiedValue: Computation<ClassificationContext<Value>?> = Computation {
-        val elementsAnalyses = elements.map {
-            val typeAnalysis = compute(it.type.computedAnalysis) ?: return@Computation null
-
-            Element.Analysis(
-                name = it.name,
-                typeAnalysis = typeAnalysis,
-            )
-        }
-
-        ClassificationContext.traverseList(elementsAnalyses) { elementAnalysis ->
-            elementAnalysis.typeAnalysis.classifiedValue.transform { elementAnalysis.name to it }
-        }.transform { elementPairs ->
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.traverseList(elements) { element ->
+            element.classifiedElement
+        }.transform { elements ->
             OrderedTupleType(
-                elements = elementPairs.map { (name, typeValue) ->
-                    OrderedTupleType.Element(
-                        name = name,
-                        type = typeValue.asType!!,
-                    )
-                },
+                elements = elements,
             ).asValue
         }
     }

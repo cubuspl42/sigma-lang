@@ -47,19 +47,11 @@ class FunctionTypeConstructor(
         )
     }
 
-    override val computedClassifiedValue: Computation<ClassificationContext<Value>?> = Computation {
-        val metaArgumentTypeAnalysis = metaArgumentType?.let {
-            compute(it.body.computedAnalysis)
-        }
-
-        val argumentTypeAnalysis = compute(argumentType.computedAnalysis) ?: return@Computation null
-
-        val imageTypeAnalysis = compute(imageType.computedAnalysis) ?: return@Computation null
-
+    override val classifiedValue: ClassificationContext<Value> by lazy {
         ClassificationContext.transform3(
-            metaArgumentTypeAnalysis?.classifiedValue ?: ConstClassificationContext.pure<Value?>(null),
-            argumentTypeAnalysis.classifiedValue,
-            imageTypeAnalysis.classifiedValue,
+            metaArgumentType?.body?.classifiedValue ?: ConstClassificationContext.pure(null),
+            argumentType.classifiedValue,
+            imageType.classifiedValue,
         ) { metaArgumentTypeValue, argumentTypeValue, imageTypeValue ->
             Thunk.pure(
                 UniversalFunctionType(
@@ -70,7 +62,6 @@ class FunctionTypeConstructor(
             )
         }
     }
-
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine3(
         metaArgumentType?.body?.bind(

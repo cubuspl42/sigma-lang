@@ -25,7 +25,16 @@ class UnorderedTupleConstructor(
             val valueAnalysis: Expression.Analysis,
         ) {
             val inferredValueType: MembershipType
-                get() = valueAnalysis?.inferredType ?: IllType
+                get() = valueAnalysis.inferredType
+        }
+
+        val classifiedEntryValue: ClassificationContext<DictValue.Entry> by lazy {
+            value.classifiedValue.transform { value ->
+                DictValue.Entry(
+                    key = name,
+                    value = value,
+                )
+            }
         }
 
         companion object {
@@ -93,20 +102,17 @@ class UnorderedTupleConstructor(
                         entryTypes.singleOrNull() ?: IllType
                     },
                 ),
-                classifiedValue = ClassificationContext.traverseList(
-                    entriesAnalyses
-                ) { entryAnalysis ->
-                    entryAnalysis.valueAnalysis.classifiedValue.transform { value ->
-                        entryAnalysis.name to value
-                    }
-                }.transform { entries ->
-                    DictValue(
-                        entries = entries.toMap(),
-                    )
-                },
             ),
             directErrors = duplicatedKeyErrors.toSet(),
         )
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.traverseList(entries.toList()) { entry ->
+            entry.classifiedEntryValue
+        }.transform { entries ->
+            DictValue.fromEntries(entries = entries)
+        }
     }
 
     override fun bind(

@@ -111,9 +111,6 @@ class Call(
         val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         val argumentAnalysis = compute(argument.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
 
-        val classifiedSubjectValue = subjectAnalysis.classifiedValue
-        val classifiedArgumentValue = argumentAnalysis.classifiedValue
-
         val subjectType = subjectAnalysis.inferredType
         val argumentType = argumentAnalysis.inferredType
 
@@ -141,17 +138,6 @@ class Call(
                         DiagnosedAnalysis(
                             analysis = Analysis(
                                 inferredType = effectiveImageType,
-                                classifiedValue = ClassificationContext.transform2(
-                                    context1 = classifiedSubjectValue,
-                                    context2 = classifiedArgumentValue,
-                                    combine = { subjectValue, argumentValue ->
-                                        if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
-
-                                        subjectValue.apply(
-                                            argument = argumentValue,
-                                        )
-                                    },
-                                )
                             ),
                             directErrors = setOfNotNull(
                                 run {
@@ -191,6 +177,20 @@ class Call(
                 )
             )
         }
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.transform2(
+            context1 = subject.classifiedValue,
+            context2 = argument.classifiedValue,
+            combine = { subjectValue, argumentValue ->
+                if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
+
+                subjectValue.apply(
+                    argument = argumentValue,
+                )
+            },
+        )
     }
 
     override val subExpressions: Set<Expression> = setOf(subject, argument)

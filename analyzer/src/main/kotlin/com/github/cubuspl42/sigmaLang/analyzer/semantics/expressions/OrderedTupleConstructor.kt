@@ -45,14 +45,17 @@ class OrderedTupleConstructor(
                         )
                     },
                 ),
-                classifiedValue = ClassificationContext.traverseList(
-                    elementsAnalyses
-                ) { it.classifiedValue }.transform { elements ->
-                    ArrayTable(elements = elements)
-                },
             ),
             directErrors = emptySet(),
         )
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.traverseList(elements) {
+            it.classifiedValue
+        }.transform { elements ->
+            ArrayTable(elements = elements)
+        }
     }
 
     override val subExpressions: Set<Expression> = elements.toSet()
