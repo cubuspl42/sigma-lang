@@ -21,6 +21,7 @@ class AbstractionConstructor(
     override val term: AbstractionConstructorTerm,
     val metaArgumentType: TupleType?,
     val argumentType: TupleType,
+    val argumentDeclarationBlock: AbstractionConstructor.ArgumentStaticBlock,
     val declaredImageTypeBody: TypeExpression?,
     val image: Expression,
 ) : Expression() {
@@ -94,6 +95,7 @@ class AbstractionConstructor(
                 term = term,
                 metaArgumentType = metaArgumentType,
                 argumentType = argumentType,
+                argumentDeclarationBlock = argumentDeclarationBlock,
                 declaredImageTypeBody = declaredImageTypeBody,
                 image = image,
             )
@@ -105,8 +107,6 @@ class AbstractionConstructor(
         argumentType = argumentType,
         image = image,
     ).toThunk()
-
-    private val argumentDeclarationBlock = argumentType.toArgumentDeclarationBlock()
 
     val declaredImageType = declaredImageTypeBody?.typeOrIllType
 

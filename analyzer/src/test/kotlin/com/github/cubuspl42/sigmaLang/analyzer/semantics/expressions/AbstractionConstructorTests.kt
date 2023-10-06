@@ -1,12 +1,14 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableAbstraction
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
@@ -41,6 +43,28 @@ class AbstractionConstructorTests {
             assertEquals(
                 expected = IntCollectiveType,
                 actual = abstractionConstructor.declaredImageType,
+            )
+        }
+
+        @Test
+        fun testConstClassification() {
+            val term = ExpressionSourceTerm.parse(
+                source = "^[a: Int] => a * 2",
+            ) as AbstractionConstructorSourceTerm
+
+            val abstractionConstructor = AbstractionConstructor.build(
+                outerScope = BuiltinScope,
+                term = term,
+            )
+
+            val classifiedValue = abstractionConstructor.classifiedValue
+
+            val constValue = assertIs<ConstClassificationContext<Value>>(
+                classifiedValue,
+            )
+
+            assertIs<ComputableAbstraction>(
+                constValue.valueThunk.value
             )
         }
 
