@@ -68,20 +68,23 @@ class IfExpression(
         DiagnosedAnalysis(
             analysis = Analysis(
                 inferredType = inferredResultType,
-                classifiedValue = ClassificationContext.transform3(
-                    guardAnalysis.classifiedValue,
-                    trueBranchAnalysis.classifiedValue,
-                    falseBranchAnalysis.classifiedValue,
-                ) { guardValue, trueValue, falseValue ->
-                    if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")
-
-                    Thunk.pure(
-                        if (guardValue.value) trueValue else falseValue
-                    )
-                },
             ),
             directErrors = setOfNotNull(guardError),
         )
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.transform3(
+            guard.classifiedValue,
+            trueBranch.classifiedValue,
+            falseBranch.classifiedValue,
+        ) { guardValue, trueValue, falseValue ->
+            if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")
+
+            Thunk.pure(
+                if (guardValue.value) trueValue else falseValue
+            )
+        }
     }
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = guard.bind(

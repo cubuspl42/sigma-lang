@@ -128,42 +128,41 @@ class AbstractionConstructor(
                         imageType = effectiveImageType,
                     )
                 }
-
-                override val classifiedValue by lazy {
-                    // TODO: Support proper const-classification of recursive abstractions
-                    val imageAnalysis = this.imageAnalysis ?: throw IllegalStateException()
-
-                    when (val classifiedImageValue = imageAnalysis.classifiedValue) {
-                        is ConstClassificationContext -> classifiedImageValue.transform {
-                            ProviderAbstraction(result = it)
-                        }
-
-                        is VariableClassificationContext -> classifiedImageValue.withResolvedDeclarations(
-                            declarations = argumentDeclarationBlock.argumentDeclarations,
-                            buildConst = {
-                                Thunk.pure(
-                                    ComputableAbstraction(
-                                        outerDynamicScope = DynamicScope.Empty,
-                                        argumentType = argumentType,
-                                        image = image,
-                                    )
-                                )
-                            },
-                            buildVariable = { dynamicScope ->
-                                Thunk.pure(
-                                    ComputableAbstraction(
-                                        outerDynamicScope = dynamicScope,
-                                        argumentType = argumentType,
-                                        image = image,
-                                    )
-                                )
-                            },
-                        )
-                    }
-                }
             },
             directErrors = declaredImageTypeBody?.errors ?: emptySet(),
         )
+    }
+
+
+    override val classifiedValue by lazy {
+        // TODO: Support proper const-classification of recursive abstractions
+        when (val classifiedImageValue = this.image.classifiedValue) {
+            is ConstClassificationContext -> classifiedImageValue.transform {
+                ProviderAbstraction(result = it)
+            }
+
+            is VariableClassificationContext -> classifiedImageValue.withResolvedDeclarations(
+                declarations = argumentDeclarationBlock.argumentDeclarations,
+                buildConst = {
+                    Thunk.pure(
+                        ComputableAbstraction(
+                            outerDynamicScope = DynamicScope.Empty,
+                            argumentType = argumentType,
+                            image = image,
+                        )
+                    )
+                },
+                buildVariable = { dynamicScope ->
+                    Thunk.pure(
+                        ComputableAbstraction(
+                            outerDynamicScope = dynamicScope,
+                            argumentType = argumentType,
+                            image = image,
+                        )
+                    )
+                },
+            )
+        }
     }
 
     override val subExpressions: Set<Expression> = setOfNotNull(image)

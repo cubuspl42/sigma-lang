@@ -63,6 +63,36 @@ sealed class ClassificationContext<out A> {
             ).thenDo { it }
         }
 
+        fun <A, B, C> transformThunk3(
+            context1: ClassificationContext<A>,
+            context2: ClassificationContext<B>,
+            context3: ClassificationContext<C>,
+            combine: (Thunk<A>, Thunk<B>, Thunk<C>) -> Thunk<Value>,
+        ): ClassificationContext<Value> = when {
+            context1 is ConstClassificationContext && context2 is ConstClassificationContext && context3 is ConstClassificationContext -> {
+                object : ConstClassificationContext<Value>() {
+                    override val valueThunk: Thunk<Value> = combine(
+                        context1.valueThunk,
+                        context2.valueThunk,
+                        context3.valueThunk,
+                    )
+                }
+            }
+
+            else -> {
+                object : VariableClassificationContext<Value>() {
+                    override val referredDeclarations: Set<Introduction> =
+                        context1.referredDeclarations + context2.referredDeclarations + context3.referredDeclarations
+
+                    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = combine(
+                        context1.bind(dynamicScope = dynamicScope),
+                        context2.bind(dynamicScope = dynamicScope),
+                        context3.bind(dynamicScope = dynamicScope),
+                    )
+                }
+            }
+        }
+
         fun <A, B, C, D> transform3(
             context1: ClassificationContext<A>,
             context2: ClassificationContext<B>,

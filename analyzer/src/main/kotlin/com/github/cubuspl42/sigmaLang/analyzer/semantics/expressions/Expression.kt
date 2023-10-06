@@ -107,17 +107,12 @@ abstract class Expression {
 
     abstract class Analysis {
         abstract val inferredType: MembershipType
-
-        abstract val classifiedValue: ClassificationContext<Value>
     }
 
     fun Analysis(
         inferredType: MembershipType,
-        classifiedValue: ClassificationContext<Value>,
     ): Analysis = object : Analysis() {
         override val inferredType: MembershipType = inferredType
-
-        override val classifiedValue: ClassificationContext<Value> = classifiedValue
     }
 
     data class DiagnosedAnalysis(
@@ -256,6 +251,8 @@ abstract class Expression {
     protected abstract val term: ExpressionTerm?
 
     protected abstract val computedDiagnosedAnalysis: Expression.Computation<DiagnosedAnalysis?>
+
+    abstract val classifiedValue: ClassificationContext<Value>
 
     val computedAnalysis: Expression.Computation<Analysis?> by lazy {
         computedDiagnosedAnalysis.transform {

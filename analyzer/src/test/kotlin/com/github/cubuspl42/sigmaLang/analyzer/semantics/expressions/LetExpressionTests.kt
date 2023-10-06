@@ -177,7 +177,7 @@ class LetExpressionTests {
             val letExpression = bDefinition.body as LetExpression
 
             val classifiedValue = assertIs<ConstClassificationContext<Value>>(
-                letExpression.computedAnalysis.getOrCompute()?.classifiedValue
+                letExpression.computedAnalysis.getOrCompute()
             )
 
             assertEquals(

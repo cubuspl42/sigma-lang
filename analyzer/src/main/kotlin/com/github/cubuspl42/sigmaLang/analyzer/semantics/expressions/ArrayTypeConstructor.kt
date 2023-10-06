@@ -38,12 +38,8 @@ class ArrayTypeConstructor(
         ArrayType(elementType = it.asType!!).asValue
     }
 
-    override val computedClassifiedValue: Computation<ClassificationContext<Value>?> =
-        elementType.computedAnalysis.transform { elementAnalysis ->
-            elementAnalysis?.let { analysis ->
-                analysis.classifiedValue.transform { elementValue ->
-                    ArrayType(elementType = elementValue.asType!!).asValue
-                }
-            }
+    override val classifiedValue: ClassificationContext<Value> =
+        elementType.classifiedValue.transform { elementAnalysis ->
+            ArrayType(elementType = elementAnalysis.asType!!).asValue
         }
 }

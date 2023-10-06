@@ -35,13 +35,10 @@ class DictTypeConstructor(
         )
     }
 
-    override val computedClassifiedValue: Computation<ClassificationContext<Value>?> = Computation {
-        val keyTypeAnalysis = compute(keyType.computedAnalysis) ?: return@Computation null
-        val valueTypeAnalysis = compute(valueType.computedAnalysis) ?: return@Computation null
-
+    override val classifiedValue: ClassificationContext<Value> by lazy {
         ClassificationContext.transform2(
-            keyTypeAnalysis.classifiedValue,
-            valueTypeAnalysis.classifiedValue,
+            keyType.classifiedValue,
+            valueType.classifiedValue,
         ) { keyValue, valueValue ->
             Thunk.pure(
                 DictType(

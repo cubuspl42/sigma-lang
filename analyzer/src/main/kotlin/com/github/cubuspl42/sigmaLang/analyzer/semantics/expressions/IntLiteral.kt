@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntLiteralType
@@ -34,11 +35,12 @@ data class IntLiteral(
                 inferredType = IntLiteralType(
                     value = value,
                 ),
-                classifiedValue = ConstClassificationContext.pure(value),
             ),
             directErrors = emptySet(),
         )
     }
+
+    override val classifiedValue: ClassificationContext<Value> = ConstClassificationContext.pure(value)
 
     override val subExpressions: Set<Expression> = emptySet()
 

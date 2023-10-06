@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
@@ -8,6 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
@@ -55,23 +57,6 @@ class Reference(
             DiagnosedAnalysis(
                 analysis = Analysis(
                     inferredType = inferredTargetType,
-                    classifiedValue = when(resolvedIntroduction) {
-                        is ConstantDefinition -> object : ConstClassificationContext<Value>() {
-                            override val valueThunk: Thunk<Value>
-                                get() = resolvedIntroduction.valueThunk
-                        }
-
-                        is VariableIntroduction -> object : VariableClassificationContext<Value>() {
-                            override val referredDeclarations: Set<Introduction>
-                                get() = setOf(resolvedIntroduction)
-
-                            override fun bind(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(
-                                name = referredName,
-                            ) ?: throw RuntimeException(
-                                "Unresolved reference at run-time: $referredName",
-                            )
-                        }
-                    }
                 ),
                 directErrors = emptySet(),
             )
@@ -82,6 +67,29 @@ class Reference(
                     name = referredName,
                 )
             )
+        }
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        val resolvedIntroduction =
+            this.resolved ?: throw IllegalStateException("Unresolved reference at classification time: $referredName")
+
+        when (resolvedIntroduction) {
+            is ConstantDefinition -> object : ConstClassificationContext<Value>() {
+                override val valueThunk: Thunk<Value>
+                    get() = resolvedIntroduction.valueThunk
+            }
+
+            is VariableIntroduction -> object : VariableClassificationContext<Value>() {
+                override val referredDeclarations: Set<Introduction>
+                    get() = setOf(resolvedIntroduction)
+
+                override fun bind(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(
+                    name = referredName,
+                ) ?: throw IllegalStateException(
+                    "Unresolved dynamic reference at run-time: $referredName",
+                )
+            }
         }
     }
 
