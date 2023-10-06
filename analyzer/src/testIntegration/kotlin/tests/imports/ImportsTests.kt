@@ -34,7 +34,7 @@ class ImportsTests {
         )
 
         assertEquals(
-            expected = mainDefinition.valueThunk.value,
+            expected = mainDefinition.getValueThunk().value,
             actual = IntValue(value = 42L),
         )
     }
