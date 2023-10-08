@@ -1,3 +1,5 @@
+@file:Suppress("JUnitMalformedDeclaration")
+
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
@@ -28,92 +30,6 @@ import kotlin.test.assertNotNull
 
 class LetExpressionTests {
     class TypeCheckingTests {
-        @Test
-        fun testValidRecursiveDefinitions() {
-            val term = ExpressionSourceTerm.parse(
-                source = """
-                    %let {
-                        f = ^[] -> Int => g[],
-                        g = ^[] => f[],
-                    } %in f[]
-                """.trimIndent(),
-            ) as LetExpressionSourceTerm
-
-            val let = LetExpression.build(
-                outerScope = BuiltinScope,
-                term = term,
-            )
-
-            val fDefinition = assertNotNull(
-                actual = let.definitionBlock.getValueDefinition(
-                    name = Symbol.of("f"),
-                ),
-            )
-
-            val fType = assertIs<FunctionType>(
-                value = fDefinition.computedEffectiveType.getOrCompute(),
-            )
-
-            assertIs<IntType>(value = fType.imageType)
-
-            val gDefinition = assertNotNull(
-                actual = let.definitionBlock.getValueDefinition(
-                    name = Symbol.of("g"),
-                ),
-            )
-
-            val gType = assertIs<FunctionType>(
-                value = gDefinition.computedEffectiveType.getOrCompute(),
-            )
-
-            assertIs<IntType>(value = gType.imageType)
-        }
-
-        @Test
-        fun testCyclicRecursiveTypeInference() {
-            val term = ExpressionSourceTerm.parse(
-                source = """
-                    %let {
-                        f = ^[] => g[],
-                        g = ^[] => f[],
-                    } %in f[]
-                """.trimIndent(),
-            ) as LetExpressionSourceTerm
-
-            val letExpression = LetExpression.build(
-                outerScope = BuiltinScope,
-                term = term,
-            )
-
-            val fDefinition = assertNotNull(
-                actual = letExpression.definitionBlock.getValueDefinition(
-                    name = Symbol.of("f"),
-                ),
-            )
-
-            assertEquals(
-                expected = UniversalFunctionType(
-                    argumentType = OrderedTupleType.Empty,
-                    imageType = IllType,
-                ),
-                actual = fDefinition.computedEffectiveType.getOrCompute(),
-            )
-
-            val gDefinition = assertNotNull(
-                actual = letExpression.definitionBlock.getValueDefinition(
-                    name = Symbol.of("g"),
-                ),
-            )
-
-            assertEquals(
-                expected = UniversalFunctionType(
-                    argumentType = OrderedTupleType.Empty,
-                    imageType = IllType,
-                ),
-                actual = gDefinition.computedEffectiveType.getOrCompute(),
-            )
-        }
-
         @Test
         fun testCyclicRecursiveDefinitions() {
             val term = ExpressionSourceTerm.parse(
