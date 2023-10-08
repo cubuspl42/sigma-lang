@@ -1,4 +1,4 @@
-package tests
+package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import kotlin.test.Test
 

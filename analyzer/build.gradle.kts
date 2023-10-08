@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     alias(libs.plugins.kotlin)
     antlr
@@ -21,29 +19,15 @@ configurations {
 
 dependencies {
     antlr("org.antlr:antlr4:4.13.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    implementation(kotlin("stdlib"))
+    implementation(libs.kotlinxSerialization)
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
 }
 
-sourceSets {
-    create("testIntegration") {
-        compileClasspath += sourceSets["main"].output
-        runtimeClasspath += sourceSets["main"].output
-    }
-}
-
 tasks {
-    register<Test>("testIntegration") {
-        testClassesDirs = sourceSets["testIntegration"].output.classesDirs
-        classpath = sourceSets["testIntegration"].runtimeClasspath
-    }
-
-    test {
-//        dependsOn("testIntegration")
-    }
-
     generateGrammarSource {
         maxHeapSize = "64m"
         arguments = arguments + listOf("-package", "com.github.cubuspl42.sigmaLang.analyzer.parser.antlr", "-visitor", "-no-listener")
@@ -56,10 +40,6 @@ tasks {
 
     compileTestKotlin {
         dependsOn(generateTestGrammarSource)
-    }
-
-    getByName("compileTestIntegrationKotlin") {
-        dependsOn("generateTestIntegrationGrammarSource")
     }
 }
 

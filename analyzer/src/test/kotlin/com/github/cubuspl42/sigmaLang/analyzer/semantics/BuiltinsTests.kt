@@ -1,11 +1,9 @@
-package tests
+package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType

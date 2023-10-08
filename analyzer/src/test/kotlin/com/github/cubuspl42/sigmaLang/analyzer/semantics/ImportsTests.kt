@@ -1,8 +1,6 @@
-package tests.imports
+package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResourceProjectStore
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import kotlin.test.Test
 import kotlin.test.assertEquals
