@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
@@ -21,10 +22,19 @@ class UnorderedTupleConstructor(
     ) {
         data class Analysis(
             val name: Symbol,
-            val valueAnalysis: Expression.Analysis?,
+            val valueAnalysis: Expression.Analysis,
         ) {
             val inferredValueType: MembershipType
-                get() = valueAnalysis?.inferredType ?: IllType
+                get() = valueAnalysis.inferredType
+        }
+
+        val classifiedEntryValue: ClassificationContext<DictValue.Entry> by lazy {
+            value.classifiedValue.transform { value ->
+                DictValue.Entry(
+                    key = name,
+                    value = value,
+                )
+            }
         }
 
         companion object {
@@ -95,6 +105,14 @@ class UnorderedTupleConstructor(
             ),
             directErrors = duplicatedKeyErrors.toSet(),
         )
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.traverseList(entries.toList()) { entry ->
+            entry.classifiedEntryValue
+        }.transform { entries ->
+            DictValue.fromEntries(entries = entries)
+        }
     }
 
     override fun bind(

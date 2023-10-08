@@ -1,11 +1,9 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationOutcome
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassification
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionClassification
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -15,7 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
 
-abstract class ConstantDefinition : ClassifiedIntroduction, Definition {
+abstract class ConstantDefinition : Definition {
     companion object {
         fun build(
             outerScope: StaticScope,
@@ -43,16 +41,15 @@ abstract class ConstantDefinition : ClassifiedIntroduction, Definition {
         }
     }
 
-    fun evaluateResult(): EvaluationOutcome<Value> = valueThunk.evaluateInitial()
-
-    abstract val valueThunk: Thunk<Value>
-
     open val expressionMap: ExpressionMap = ExpressionMap.Empty
 
     open val errors: Set<SemanticError> = emptySet()
 
-    final override val expressionClassification: ExpressionClassification
-        get() = ConstClassification(
-            constantDefinition = this,
+    fun getValueThunk(): Thunk<Value> {
+        val classifiedValue = body.classifiedValue as? ConstClassificationContext<Value> ?: throw IllegalStateException(
+            "Const definition body is not constant"
         )
+
+        return classifiedValue.valueThunk
+    }
 }

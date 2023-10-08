@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
@@ -34,6 +35,19 @@ class DictTypeConstructor(
         )
     }
 
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.transform2(
+            keyType.classifiedValue,
+            valueType.classifiedValue,
+        ) { keyValue, valueValue ->
+            Thunk.pure(
+                DictType(
+                    keyType = keyValue.asType!!,
+                    valueType = valueValue.asType!!,
+                ).asValue,
+            )
+        }
+    }
 
     override fun bind(
         dynamicScope: DynamicScope,

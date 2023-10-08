@@ -5,7 +5,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorTerm
@@ -19,6 +21,11 @@ class UnorderedTupleTypeConstructor(
         val name: Symbol,
         val type: Expression,
     ) {
+        data class Analysis(
+            val name: Symbol,
+            val typeAnalysis: Expression.Analysis,
+        )
+
         companion object {
             fun build(
                 declarationScope: StaticScope,
@@ -31,6 +38,16 @@ class UnorderedTupleTypeConstructor(
                 ),
             )
         }
+
+        val classifiedEntry: ClassificationContext<UnorderedTupleType.Entry>
+            get() = type.classifiedValue.transformThunk { typeValueThunk ->
+                Thunk.pure(
+                    UnorderedTupleType.Entry(
+                        name = name,
+                        typeThunk = typeValueThunk.thenJust { it.asType!! },
+                    )
+                )
+            }
     }
 
     companion object {
@@ -47,6 +64,16 @@ class UnorderedTupleTypeConstructor(
                 )
             }.toSet(),
         )
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.traverseList(entries.toList()) { entry ->
+            entry.classifiedEntry
+        }.transform { entries ->
+            UnorderedTupleType.fromEntries(
+                entries = entries,
+            ).asValue
+        }
     }
 
     override fun bind(

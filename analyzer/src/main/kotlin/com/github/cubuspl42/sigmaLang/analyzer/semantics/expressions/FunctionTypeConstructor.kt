@@ -4,7 +4,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
@@ -42,6 +45,22 @@ class FunctionTypeConstructor(
                 term = term.imageType,
             ),
         )
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.transform3(
+            metaArgumentType?.body?.classifiedValue ?: ConstClassificationContext.pure(null),
+            argumentType.classifiedValue,
+            imageType.classifiedValue,
+        ) { metaArgumentTypeValue, argumentTypeValue, imageTypeValue ->
+            Thunk.pure(
+                UniversalFunctionType(
+                    metaArgumentType = metaArgumentTypeValue?.asType as TupleType?,
+                    argumentType = argumentTypeValue.asType as TupleType,
+                    imageType = imageTypeValue.asType as MembershipType,
+                ).asValue
+            )
+        }
     }
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine3(

@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -12,29 +13,44 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
-abstract class Expression {
-    abstract class Computation<out R> {
-        class Context(
-            private val state: State,
-        ) {
-            fun <R> compute(
-                computation: Computation<R>,
-            ): R = computation.compute(
-                state = state,
-            )
-        }
+// Thought: Switch to composition -> ClassifiedType ?
+abstract class QuasiExpression {
+    abstract val computedAnalysis: Expression.Computation<Expression.Analysis?>
 
-        data class State(
-            val visitedExpressions: Set<Expression>,
+    abstract val classifiedValue: ClassificationContext<Value>
+
+    private val inferredTypeOrNull: Expression.Computation<MembershipType?> by lazy {
+        computedAnalysis.transform { it?.inferredType }
+    }
+
+    val inferredTypeOrIllType: Expression.Computation<MembershipType> by lazy {
+        inferredTypeOrNull.transform { it ?: IllType }
+    }
+}
+
+abstract class Expression : QuasiExpression() {
+    abstract class Computation<out R> {
+        data class Context(
+            private val visitedExpressions: Set<Expression>,
         ) {
-            fun withVisited(
+            fun withAnalyzed(
                 expression: Expression,
-            ): State = State(
+            ): Context = Context(
                 visitedExpressions = visitedExpressions + expression,
             )
 
+            fun isAnalyzed(
+                expression: Expression,
+            ): Boolean = visitedExpressions.contains(expression)
+
+            fun <R> compute(
+                computation: Computation<R>,
+            ): R = computation.compute(
+                context = this,
+            )
+
             companion object {
-                val Empty: Expression.Computation.State = State(
+                val Empty: Expression.Computation.Context = Context(
                     visitedExpressions = emptySet(),
                 )
             }
@@ -47,7 +63,7 @@ abstract class Expression {
 
         companion object {
             fun <R> pure(result: R): Computation<R> = object : Computation<R>() {
-                override fun computeDirectly(state: State): R = result
+                override fun computeDirectly(context: Context): R = result
             }
         }
 
@@ -55,17 +71,17 @@ abstract class Expression {
             function: (R) -> R2,
         ): Computation<R2> = object : Computation<R2>() {
             override fun computeDirectly(
-                state: State,
+                context: Context,
             ): R2 = function(
-                this@Computation.compute(state = state),
+                this@Computation.compute(context = context),
             )
         }
 
-        abstract fun computeDirectly(state: State): R
+        abstract fun computeDirectly(context: Context): R
 
-        fun compute(state: State): R = when (val cachedResult = this.cachedResult) {
+        fun compute(context: Context): R = when (val cachedResult = this.cachedResult) {
             null -> {
-                val newResult = computeDirectly(state = state)
+                val newResult = computeDirectly(context = context)
 
                 this.cachedResult = Result(result = newResult)
 
@@ -78,54 +94,47 @@ abstract class Expression {
         private var cachedResult: Result<R>? = null
 
         fun getOrCompute(): R = compute(
-            state = State.Empty,
+            context = Context.Empty,
         )
     }
 
-    private fun <R> Computation(
-        handleCycle: () -> R,
+    fun <R> Computation(
         block: Computation.Context.() -> R,
     ): Computation<R> = object : Computation<R>() {
         override fun computeDirectly(
-            state: State,
-        ): R = if (state.visitedExpressions.contains(this@Expression)) {
-            handleCycle()
-        } else Context(
-            state = state.withVisited(this@Expression),
-//            state = state,
-        ).block()
+            context: Context,
+        ): R = context.block()
     }
 
     fun buildDiagnosedAnalysisComputation(
         block: Computation.Context.() -> DiagnosedAnalysis?,
-    ): Computation<DiagnosedAnalysis?> = Computation(
-        handleCycle = {
+    ): Computation<DiagnosedAnalysis?> = Computation {
+        if (isAnalyzed(this@Expression)) {
             DiagnosedAnalysis(
                 analysis = null,
+                // TODO: A specific error?
                 directErrors = emptySet(),
             )
-        },
-        block = block,
-    )
+        } else {
+            this.withAnalyzed(this@Expression).block()
+        }
+    }
 
-    data class Analysis(
-        val inferredType: MembershipType,
-    )
+    abstract class Analysis {
+        abstract val inferredType: MembershipType
+    }
+
+    fun Analysis(
+        inferredType: MembershipType,
+    ): Analysis = object : Analysis() {
+        override val inferredType: MembershipType = inferredType
+    }
 
     data class DiagnosedAnalysis(
         val analysis: Analysis?,
         val directErrors: Set<SemanticError>,
     ) {
         companion object {
-            fun fromInferredType(
-                inferredType: MembershipType,
-            ): DiagnosedAnalysis = DiagnosedAnalysis(
-                analysis = Analysis(
-                    inferredType = inferredType,
-                ),
-                directErrors = emptySet(),
-            )
-
             fun fromError(
                 error: SemanticError,
             ): DiagnosedAnalysis = DiagnosedAnalysis(
@@ -136,6 +145,12 @@ abstract class Expression {
     }
 
     companion object {
+        fun Analysis(
+            inferredType: MembershipType,
+        ): Analysis = object : Analysis() {
+            override val inferredType: MembershipType = inferredType
+        }
+
         fun build(
             outerScope: StaticScope,
             term: ExpressionTerm,
@@ -256,20 +271,13 @@ abstract class Expression {
 
     protected abstract val term: ExpressionTerm?
 
+    // Thought: Does `null` analysis really make sense?
     protected abstract val computedDiagnosedAnalysis: Expression.Computation<DiagnosedAnalysis?>
 
-    val computedAnalysis: Expression.Computation<Analysis?> by lazy {
+    override val computedAnalysis: Expression.Computation<Analysis?> by lazy {
         computedDiagnosedAnalysis.transform {
             it?.analysis
         }
-    }
-
-    private val inferredTypeOrNull: Expression.Computation<MembershipType?> by lazy {
-        computedAnalysis.transform { it?.inferredType }
-    }
-
-    val inferredTypeOrIllType: Computation<MembershipType> by lazy {
-        inferredTypeOrNull.transform { it ?: IllType }
     }
 
     abstract val subExpressions: Set<Expression>
@@ -295,6 +303,7 @@ abstract class Expression {
         dynamicScope: DynamicScope,
     ): Value? = bind(dynamicScope = dynamicScope).evaluateValueHacky(context = context)
 
+    // TODO: Nuke?
     abstract fun bind(
         dynamicScope: DynamicScope,
     ): Thunk<Value>

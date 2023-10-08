@@ -8,13 +8,15 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.QuasiExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.AnyType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SymbolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
@@ -24,7 +26,7 @@ class ClassDefinition(
     private val outerScope: StaticScope,
     private val qualifiedPath: QualifiedPath,
     private val term: ClassDefinitionTerm,
-) : ConstantDefinition() {
+) : ConstantDefinition(), UserDefinition {
     object Is : StrictBuiltinOrderedFunction() {
         override val argTypes: List<MembershipType> = listOf(
             AnyInstanceType,
@@ -83,7 +85,7 @@ class ClassDefinition(
 
     private val tagType = SymbolType(value = tag)
 
-    private val body by lazy {
+    private val classBody by lazy {
         TypeExpression.build(
             outerScope = outerScope,
             term = term.body,
@@ -91,7 +93,7 @@ class ClassDefinition(
     }
 
     private val bodyType: UnorderedTupleType by lazy {
-        body.typeOrIllType as UnorderedTupleType
+        classBody.typeOrIllType as UnorderedTupleType
     }
 
     private val instanceType: UnorderedTupleType by lazy {
@@ -100,8 +102,23 @@ class ClassDefinition(
         )
     }
 
-    override val valueThunk: Thunk<Value> by lazy {
-        Thunk.pure(
+    override val body: QuasiExpression = object : QuasiExpression() {
+        override val computedAnalysis: Expression.Computation<Expression.Analysis?> = Expression.Computation.pure(
+            Expression.Analysis(
+                inferredType = UnorderedTupleType(
+                    valueTypeByName = mapOf(
+                        classTagKey to tagType,
+                        classTypeKey to TypeType,
+                        Symbol.of("new") to UniversalFunctionType(
+                            argumentType = bodyType,
+                            imageType = instanceType,
+                        ),
+                    ),
+                ),
+            )
+        )
+
+        override val classifiedValue: ClassificationContext<Value> = ConstClassificationContext.pure(
             DictValue(
                 entries = mapOf(
                     classTagKey to tag,
@@ -117,21 +134,6 @@ class ClassDefinition(
                             )
                         }
                     },
-                ),
-            ),
-        )
-    }
-
-    override val computedEffectiveType: Expression.Computation<MembershipType> by lazy {
-        Expression.Computation.pure(
-            UnorderedTupleType(
-                valueTypeByName = mapOf(
-                    classTagKey to tagType,
-                    classTypeKey to TypeType,
-                    Symbol.of("new") to UniversalFunctionType(
-                        argumentType = bodyType,
-                        imageType = instanceType,
-                    ),
                 ),
             ),
         )

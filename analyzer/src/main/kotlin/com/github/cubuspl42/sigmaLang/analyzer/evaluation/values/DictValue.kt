@@ -3,6 +3,10 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 data class DictValue(
     val entries: Map<PrimitiveValue, Value>,
 ) : FunctionValue() {
+    data class Entry(
+        val key: PrimitiveValue,
+        val value: Value,
+    )
 
     companion object {
         fun fromList(
@@ -11,6 +15,12 @@ data class DictValue(
             entries = list.withIndex().associate { (index, element) ->
                 IntValue(value = index.toLong()) to element
             },
+        )
+
+        fun fromEntries(
+            entries: Iterable<Entry>,
+        ): DictValue = DictValue(
+            entries = entries.associate { it.key to it.value },
         )
 
         val Empty = DictValue(

@@ -26,10 +26,10 @@ class Program internal constructor(
     val errors: Set<SemanticError> by lazy { module.errors }
 
     fun evaluateResult(): EvaluationOutcome<Value> {
-        val result = module.rootNamespaceDefinition.getDefinition(
+        val mainDefinition = module.rootNamespaceDefinition.getDefinition(
             name = Symbol.of("main")
         )!!
 
-        return result.valueThunk.evaluateInitial()
+        return mainDefinition.getValueThunk().evaluateInitial()
     }
 }

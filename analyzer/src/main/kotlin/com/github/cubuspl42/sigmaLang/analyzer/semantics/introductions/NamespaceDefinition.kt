@@ -1,17 +1,25 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableFunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.QuasiExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 
 class NamespaceDefinition(
@@ -34,7 +42,7 @@ class NamespaceDefinition(
     inner class NamespaceStaticBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
-        ): ClassifiedIntroduction? = getDefinition(name = name)
+        ): Introduction? = getDefinition(name = name)
 
         override fun getLocalNames(): Set<Symbol> = definitions.map { it.name }.toSet()
     }
@@ -76,21 +84,21 @@ class NamespaceDefinition(
         errors.forEach { println(it.dump()) }
     }
 
-    override val valueThunk: Thunk<Value> by lazy {
-        Thunk.pure(
-            DictValue(
-                entries = definitions.associate {
-                    it.name to it.valueThunk.value!!
-                },
+    override val body: QuasiExpression = object : QuasiExpression() {
+        override val computedAnalysis: Expression.Computation<Expression.Analysis?> = Expression.Computation.pure(
+            Expression.Analysis(
+                inferredType = UnorderedTupleType(
+                    valueTypeByName = definitions.associate {
+                        it.name to it.computedEffectiveType.getOrCompute()
+                    },
+                )
             )
         )
-    }
 
-    override val computedEffectiveType: Expression.Computation<MembershipType> by lazy {
-        Expression.Computation.pure(
-            UnorderedTupleType(
-                valueTypeByName = definitions.associate {
-                    it.name to it.computedEffectiveType.getOrCompute()
+        override val classifiedValue: ClassificationContext<Value> = ConstClassificationContext.pure(
+            DictValue(
+                entries = definitions.associate {
+                    it.name to it.getValueThunk().value!!
                 },
             ),
         )

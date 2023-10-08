@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
@@ -36,4 +37,9 @@ class ArrayTypeConstructor(
     ).thenJust {
         ArrayType(elementType = it.asType!!).asValue
     }
+
+    override val classifiedValue: ClassificationContext<Value> =
+        elementType.classifiedValue.transform { elementAnalysis ->
+            ArrayType(elementType = elementAnalysis.asType!!).asValue
+        }
 }

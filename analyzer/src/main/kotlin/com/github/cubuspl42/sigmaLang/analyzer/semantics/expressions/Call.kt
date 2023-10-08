@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.*
@@ -92,7 +93,7 @@ class Call(
         override val location: SourceLocation?,
         val calleeGenericType: FunctionType,
         val nonInferredTypeVariables: Set<TypeVariable>,
-    ) :  SemanticError
+    ) : SemanticError
 
     data class NonFunctionCallError(
         override val location: SourceLocation?,
@@ -176,6 +177,20 @@ class Call(
                 )
             )
         }
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.transform2(
+            context1 = subject.classifiedValue,
+            context2 = argument.classifiedValue,
+            combine = { subjectValue, argumentValue ->
+                if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
+
+                subjectValue.apply(
+                    argument = argumentValue,
+                )
+            },
+        )
     }
 
     override val subExpressions: Set<Expression> = setOf(subject, argument)

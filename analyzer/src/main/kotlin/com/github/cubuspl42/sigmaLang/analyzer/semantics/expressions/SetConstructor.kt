@@ -4,11 +4,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorTerm
 
@@ -35,11 +34,11 @@ class SetConstructor(
 
     data class InconsistentElementTypeError(
         override val location: SourceLocation,
-    ) :  SemanticError
+    ) : SemanticError
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val elementsAnalyses = elements.map {
-           compute(it.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+            compute(it.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         }
 
         val distinctiveElementTypes = elementsAnalyses.map { it.inferredType }.toSet()
@@ -61,6 +60,14 @@ class SetConstructor(
                     location = term.location,
                 )
             )
+        }
+    }
+
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        ClassificationContext.traverseList(elements.toList()) {
+            it.classifiedValue
+        }.transform { elements ->
+            SetValue(elements = elements.toSet())
         }
     }
 

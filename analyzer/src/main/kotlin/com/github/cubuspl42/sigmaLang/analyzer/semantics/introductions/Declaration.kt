@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Member
 interface Declaration : VariableIntroduction, AnnotatableIntroduction {
     override val annotatedType: MembershipType
 
+    // Thought? Nuke?
     override val computedEffectiveType: Expression.Computation<MembershipType>
         get() = Expression.Computation.pure(annotatedType)
 }

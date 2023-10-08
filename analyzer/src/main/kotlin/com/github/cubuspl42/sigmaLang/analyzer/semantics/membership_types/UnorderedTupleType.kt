@@ -22,6 +22,11 @@ abstract class UnorderedTupleType : TupleType() {
     val keys: Set<Symbol>
         get() = valueTypeThunkByName.keys
 
+    data class Entry(
+        val name: Symbol,
+        val typeThunk: Thunk<MembershipType>,
+    )
+
     data class UnorderedTupleMatch(
         val valuesMatches: Map<Symbol, ValueMatchResult>,
     ) : MembershipType.PartialMatch() {
@@ -58,9 +63,15 @@ abstract class UnorderedTupleType : TupleType() {
     }
 
     companion object {
-        val Empty = UnorderedTupleType(
-            valueTypeByName = emptyMap(),
-        )
+        val Empty = object : UnorderedTupleType() {
+            override val valueTypeThunkByName: Map<Symbol, Thunk<MembershipType>> = emptyMap()
+        }
+
+        fun fromEntries(
+            entries: Iterable<Entry>,
+        ): UnorderedTupleType = object : UnorderedTupleType() {
+            override val valueTypeThunkByName = entries.associate { it.name to it.typeThunk }
+        }
     }
 
     override fun dumpDirectly(depth: Int): String {
@@ -135,7 +146,7 @@ abstract class UnorderedTupleType : TupleType() {
                     name = name,
                     annotatedType = type,
                 )
-            },
+            }.toSet(),
         )
 
     override fun substituteTypeVariables(

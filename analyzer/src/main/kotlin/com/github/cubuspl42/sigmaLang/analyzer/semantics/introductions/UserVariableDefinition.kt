@@ -10,7 +10,7 @@ class UserVariableDefinition private constructor(
         outerScope = outerScope,
         term = term,
     ),
-) : VariableIntroduction, EmbodiedUserDefinition by userDefinition {
+) : VariableIntroduction, AssignmentDefinition by userDefinition {
     companion object {
         fun build(
             declarationScope: StaticScope,
