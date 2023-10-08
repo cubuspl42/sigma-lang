@@ -1,4 +1,4 @@
-package utils
+package com.github.cubuspl42.sigmaLang.applications
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import kotlin.test.assertTrue

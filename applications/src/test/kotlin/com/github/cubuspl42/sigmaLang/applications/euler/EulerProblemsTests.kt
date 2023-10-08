@@ -1,8 +1,12 @@
-package tests.euler
+package com.github.cubuspl42.sigmaLang.applications.euler
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResourceProjectStore
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -101,40 +105,3 @@ class EulerProblemsTests {
         )
     }
 }
-
-private fun solveProblem(n: Int): EvaluationOutcome<Value> {
-    val store = ResourceProjectStore(javaClass = EulerProblemsTests::class.java)
-    val loader = Project.Loader.create()
-    val project = loader.load(
-        projectStore = store,
-        mainModuleName = "problem$n",
-    )
-
-    val errors = project.errors
-
-    println()
-    println("[Problem $n]")
-    println()
-
-    if (errors.isNotEmpty()) {
-        println("Semantic errors:")
-        errors.forEach {
-            println(it.dump())
-        }
-    }
-
-    val evaluationResult = project.entryPoint.evaluateResult()
-
-    when (evaluationResult) {
-        EvaluationStackExhaustionError -> println("Error: call stack exhausted!")
-        is EvaluationResult -> println("Result: ${evaluationResult.value.dump()}")
-    }
-
-    println()
-
-    return evaluationResult
-}
-
-private fun getResourceAsText(
-    path: String,
-): String? = object {}.javaClass.getResource(path)?.readText()

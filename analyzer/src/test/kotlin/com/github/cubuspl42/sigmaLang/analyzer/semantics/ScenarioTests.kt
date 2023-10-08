@@ -1,13 +1,10 @@
-package tests
+package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
