@@ -28,7 +28,7 @@ fun solveProblem(n: Int): EvaluationOutcome<Value> {
         }
     }
 
-    val evaluationResult = project.entryPoint.getValueThunk().evaluateInitial()
+    val evaluationResult = project.entryPoint.valueThunk.evaluateInitial()
 
     when (evaluationResult) {
         EvaluationStackExhaustionError -> println("Error: call stack exhausted!")

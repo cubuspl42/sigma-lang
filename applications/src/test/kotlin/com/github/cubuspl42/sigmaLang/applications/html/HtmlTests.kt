@@ -13,6 +13,6 @@ class HtmlTests {
             actual = project.errors,
         )
 
-        println(project.entryPoint.getValueThunk().value)
+        println(project.entryPoint.valueThunk.value)
     }
 }
