@@ -4,11 +4,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.cutOffHead
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 
 sealed class ClassificationContext<out A> {
-    abstract val referredDeclarations: Set<Declaration>
+    abstract val referredDeclarations: Set<Introduction>
 
     abstract fun bind(dynamicScope: DynamicScope): Thunk<A>
 
@@ -38,7 +37,7 @@ sealed class ClassificationContext<out A> {
 
             else -> {
                 object : VariableClassificationContext<C>() {
-                    override val referredDeclarations: Set<Declaration> =
+                    override val referredDeclarations: Set<Introduction> =
                         context1.referredDeclarations + context2.referredDeclarations
 
                     override fun bind(dynamicScope: DynamicScope): Thunk<C> = combine(
@@ -82,7 +81,7 @@ sealed class ClassificationContext<out A> {
 
             else -> {
                 object : VariableClassificationContext<Value>() {
-                    override val referredDeclarations: Set<Declaration> =
+                    override val referredDeclarations: Set<Introduction> =
                         context1.referredDeclarations + context2.referredDeclarations + context3.referredDeclarations
 
                     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = combine(
@@ -113,7 +112,7 @@ sealed class ClassificationContext<out A> {
 
             else -> {
                 object : VariableClassificationContext<D>() {
-                    override val referredDeclarations: Set<Declaration> =
+                    override val referredDeclarations: Set<Introduction> =
                         context1.referredDeclarations + context2.referredDeclarations + context3.referredDeclarations
 
                     override fun bind(dynamicScope: DynamicScope): Thunk<D> = Thunk.combine3(
@@ -170,12 +169,12 @@ fun <A, B> ClassificationContext<Thunk<A>>.transformNested(
 
 abstract class ConstClassificationContext<A> : ClassificationContext<A>() {
     companion object {
-        fun <A> pure(value: A): ConstClassificationContext<A> = object : ConstClassificationContext<A>() {
+        fun <A> pure(value: A): ClassificationContext<A> = object : ConstClassificationContext<A>() {
             override val valueThunk: Thunk<A> = Thunk.pure(value)
         }
     }
 
-    final override val referredDeclarations: Set<Declaration> = emptySet()
+    final override val referredDeclarations: Set<Introduction> = emptySet()
 
     final override fun <B> transformThunk(transform: (Thunk<A>) -> Thunk<B>): ConstClassificationContext<B> =
         object : ConstClassificationContext<B>() {
@@ -190,7 +189,7 @@ abstract class ConstClassificationContext<A> : ClassificationContext<A>() {
 abstract class VariableClassificationContext<A> : ClassificationContext<A>() {
     final override fun <B> transformThunk(transform: (Thunk<A>) -> Thunk<B>): VariableClassificationContext<B> =
         object : VariableClassificationContext<B>() {
-            override val referredDeclarations: Set<Declaration>
+            override val referredDeclarations: Set<Introduction>
                 get() = this@VariableClassificationContext.referredDeclarations
 
             override fun bind(dynamicScope: DynamicScope): Thunk<B> =
@@ -198,7 +197,7 @@ abstract class VariableClassificationContext<A> : ClassificationContext<A>() {
         }
 
     fun withResolvedDeclarations(
-        declarations: Set<Declaration>,
+        declarations: Set<Introduction>,
         buildConst: () -> Thunk<Value>,
         buildVariable: (dynamicScope: DynamicScope) -> Thunk<Value>,
     ): ClassificationContext<Value> {
@@ -210,7 +209,7 @@ abstract class VariableClassificationContext<A> : ClassificationContext<A>() {
             }
         } else {
             object : VariableClassificationContext<Value>() {
-                override val referredDeclarations: Set<Declaration> = remainingReferredDeclarations
+                override val referredDeclarations: Set<Introduction> = remainingReferredDeclarations
 
                 override fun bind(dynamicScope: DynamicScope): Thunk<Value> = buildVariable(dynamicScope)
             }

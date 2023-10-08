@@ -48,7 +48,6 @@ class TypeExpression(
     }
 
     private val diagnosedAnalysis by lazy {
-        // TODO: Switch to static analysis
         val valueThunk by lazy {
             body.bind(
                 dynamicScope = TranslationDynamicScope(

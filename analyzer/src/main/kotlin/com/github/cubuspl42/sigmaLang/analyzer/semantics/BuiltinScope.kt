@@ -9,17 +9,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.QuasiExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.StringType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UndefinedType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
@@ -36,13 +35,9 @@ private class BuiltinDefinition(
     val value: Value,
     val type: MembershipType,
 ) : ConstantDefinition() {
-    override val body: QuasiExpression = object : QuasiExpression() {
-        override val computedAnalysis: Expression.Computation<Expression.Analysis?> = Expression.Computation.pure(
-            Expression.Analysis(inferredType = type),
-        )
+    override val valueThunk: Thunk<Value> = value.toThunk()
 
-        override val classifiedValue: ClassificationContext<Value> = ConstClassificationContext.pure(value)
-    }
+    override val computedEffectiveType = Expression.Computation.pure(type)
 }
 
 object BuiltinScope : DynamicScope, StaticScope {
@@ -265,7 +260,7 @@ object BuiltinScope : DynamicScope, StaticScope {
 
     override fun resolveName(
         name: Symbol,
-    ): Introduction? = builtinDeclarations[name]
+    ): ClassifiedIntroduction? = builtinDeclarations[name]
 
     override fun getAllNames(): Set<Symbol> = builtinDeclarations.keys
 }

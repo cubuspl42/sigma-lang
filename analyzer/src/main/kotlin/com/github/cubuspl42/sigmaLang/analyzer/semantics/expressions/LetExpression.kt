@@ -53,15 +53,39 @@ data class LetExpression(
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val resultAnalysis = compute(result.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+        val inferredResultType = resultAnalysis.inferredType
 
         DiagnosedAnalysis(
-            analysis = resultAnalysis,
+            analysis = Analysis(
+                inferredType = inferredResultType,
+            ),
             directErrors = emptySet(),
         )
     }
 
-    override val classifiedValue: ClassificationContext<Value>
-        get() = result.classifiedValue
+    override val classifiedValue: ClassificationContext<Value> by lazy {
+        when (val classifiedResult = result.classifiedValue) {
+            is ConstClassificationContext -> classifiedResult
+            is VariableClassificationContext -> classifiedResult.withResolvedDeclarations(
+                declarations = definitionBlock.declarations, // FIXME
+                buildConst = {
+                    classifiedResult.bind(
+                        dynamicScope = definitionBlock.evaluate(
+                            outerScope = DynamicScope.Empty,
+                        ),
+                    )
+                },
+                buildVariable = {
+                    classifiedResult.bind(
+                        dynamicScope = definitionBlock.evaluate(
+                            outerScope = it,
+                        ),
+                    )
+                },
+            )
+        }
+    }
+
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = result.bind(
         dynamicScope = definitionBlock.evaluate(

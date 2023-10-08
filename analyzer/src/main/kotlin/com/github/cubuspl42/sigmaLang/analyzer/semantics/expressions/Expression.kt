@@ -13,22 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
-// Thought: Switch to composition -> ClassifiedType ?
-abstract class QuasiExpression {
-    abstract val computedAnalysis: Expression.Computation<Expression.Analysis?>
-
-    abstract val classifiedValue: ClassificationContext<Value>
-
-    private val inferredTypeOrNull: Expression.Computation<MembershipType?> by lazy {
-        computedAnalysis.transform { it?.inferredType }
-    }
-
-    val inferredTypeOrIllType: Expression.Computation<MembershipType> by lazy {
-        inferredTypeOrNull.transform { it ?: IllType }
-    }
-}
-
-abstract class Expression : QuasiExpression() {
+abstract class Expression {
     abstract class Computation<out R> {
         data class Context(
             private val visitedExpressions: Set<Expression>,
@@ -145,12 +130,6 @@ abstract class Expression : QuasiExpression() {
     }
 
     companion object {
-        fun Analysis(
-            inferredType: MembershipType,
-        ): Analysis = object : Analysis() {
-            override val inferredType: MembershipType = inferredType
-        }
-
         fun build(
             outerScope: StaticScope,
             term: ExpressionTerm,
@@ -271,13 +250,22 @@ abstract class Expression : QuasiExpression() {
 
     protected abstract val term: ExpressionTerm?
 
-    // Thought: Does `null` analysis really make sense?
     protected abstract val computedDiagnosedAnalysis: Expression.Computation<DiagnosedAnalysis?>
 
-    override val computedAnalysis: Expression.Computation<Analysis?> by lazy {
+    abstract val classifiedValue: ClassificationContext<Value>
+
+    val computedAnalysis: Expression.Computation<Analysis?> by lazy {
         computedDiagnosedAnalysis.transform {
             it?.analysis
         }
+    }
+
+    private val inferredTypeOrNull: Expression.Computation<MembershipType?> by lazy {
+        computedAnalysis.transform { it?.inferredType }
+    }
+
+    val inferredTypeOrIllType: Computation<MembershipType> by lazy {
+        inferredTypeOrNull.transform { it ?: IllType }
     }
 
     abstract val subExpressions: Set<Expression>

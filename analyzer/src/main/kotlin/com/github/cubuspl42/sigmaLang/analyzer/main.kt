@@ -13,7 +13,7 @@ fun main() {
         mainModuleName = "problem",
     )
 
-    when (val outcome = project.entryPoint.getValueThunk().evaluateInitial()) {
+    when (val outcome = project.entryPoint.evaluateResult()) {
         is EvaluationError -> println("Error: $outcome")
         is EvaluationResult -> println("Result: ${outcome.value.dump()}")
     }
