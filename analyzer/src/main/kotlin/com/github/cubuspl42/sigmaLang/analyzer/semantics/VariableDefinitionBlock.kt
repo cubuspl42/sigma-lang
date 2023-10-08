@@ -3,8 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.LoopedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
@@ -37,11 +36,11 @@ class VariableDefinitionBlock(
 
     override fun resolveNameLocally(
         name: Symbol,
-    ): Introduction? = getValueDefinition(name = name)
+    ): ClassifiedIntroduction? = getValueDefinition(name = name)
 
     override fun getLocalNames(): Set<Symbol> = definitionByName.keys
 
-    val subExpressions: Set<Expression> by lazy { definitionByName.values.map { it.assignedBody }.toSet() }
+    val subExpressions by lazy { definitionByName.values.map { it.body }.toSet() }
 
     val errors: Set<SemanticError> by lazy {
         definitionByName.values.fold(emptySet()) { acc, it -> acc + it.errors }
@@ -52,7 +51,7 @@ class VariableDefinitionBlock(
     ): DynamicScope = LoopedDynamicScope(
         outerDynamicScope = outerScope,
         expressionByName = definitionByName.mapValues { (_, definition) ->
-            definition.assignedBody
+            definition.body
         },
     )
 }

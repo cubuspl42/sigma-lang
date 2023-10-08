@@ -1,5 +1,8 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ReverseTranslationScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
@@ -11,7 +14,7 @@ class UserConstantDefinition private constructor(
         outerScope = outerScope,
         term = term,
     ),
-) : ConstantDefinition(), AssignmentDefinition by userDefinition {
+) : ConstantDefinition(), EmbodiedUserDefinition by userDefinition {
     companion object {
         fun build(
             outerScope: StaticScope,
@@ -22,6 +25,14 @@ class UserConstantDefinition private constructor(
         )
     }
 
+    override val valueThunk: Thunk<Value> by lazy {
+        userDefinition.body.bind(
+            dynamicScope = ReverseTranslationScope(
+                staticScope = outerScope,
+            ),
+        )
+    }
+
     override val errors: Set<SemanticError>
-        get() = userDefinition.assignedBody.directErrors
+        get() = userDefinition.body.directErrors
 }

@@ -2,10 +2,11 @@ package utils
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
 
 data class FakeUserDeclaration(
@@ -34,7 +35,7 @@ class FakeStaticBlock(
 
     override fun resolveNameLocally(
         name: Symbol,
-    ): Introduction? = declarationByName[name]
+    ): ClassifiedIntroduction? = declarationByName[name]
 
     override fun getLocalNames(): Set<Symbol> = declarationByName.keys
 }
