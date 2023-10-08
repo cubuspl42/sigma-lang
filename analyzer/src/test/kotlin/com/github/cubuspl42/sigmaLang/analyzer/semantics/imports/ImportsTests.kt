@@ -1,6 +1,8 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics
+package com.github.cubuspl42.sigmaLang.analyzer.semantics.imports
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResourceProjectStore
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,7 +34,7 @@ class ImportsTests {
         )
 
         assertEquals(
-            expected = mainDefinition.getValueThunk().value,
+            expected = mainDefinition.valueThunk.value,
             actual = IntValue(value = 42L),
         )
     }

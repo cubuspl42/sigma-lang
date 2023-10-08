@@ -85,7 +85,7 @@ class ScenarioTests {
 
         // Construct `Entry[Bool]` and validate it
 
-        val entryTypeConstructorValue = entryTypeConstructorDefinition.getValueThunk().value
+        val entryTypeConstructorValue = entryTypeConstructorDefinition.valueThunk.value
 
         assertIs<FunctionValue>(entryTypeConstructorValue)
 

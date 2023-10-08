@@ -61,7 +61,7 @@ class BuiltinsTests {
                     IntValue(value = 3L),
                 ),
             ),
-            actual = mySet1Definition.getValueThunk().value,
+            actual = mySet1Definition.valueThunk.value,
         )
 
         // Validate `contains2`
@@ -72,7 +72,7 @@ class BuiltinsTests {
 
         assertEquals(
             expected = BoolValue(value = true),
-            actual = contains2Definition.getValueThunk().value,
+            actual = contains2Definition.valueThunk.value,
         )
 
         // Validate `contains5`
@@ -83,7 +83,7 @@ class BuiltinsTests {
 
         assertEquals(
             expected = BoolValue(value = false),
-            actual = contains5Definition.getValueThunk().value,
+            actual = contains5Definition.valueThunk.value,
         )
 
         // Validate `mySet2`
@@ -101,7 +101,7 @@ class BuiltinsTests {
                     IntValue(value = 4L),
                 ),
             ),
-            actual = mySet2Definition.getValueThunk().value,
+            actual = mySet2Definition.valueThunk.value,
         )
     }
 }
