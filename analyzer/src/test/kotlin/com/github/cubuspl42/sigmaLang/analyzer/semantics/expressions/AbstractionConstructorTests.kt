@@ -373,6 +373,89 @@ class AbstractionConstructorTests {
                 constValue.valueThunk.value
             )
         }
+
+        @Test
+        @Ignore
+        fun testReferringConst() {
+            val term = ExpressionSourceTerm.parse(
+                source = """
+                    %let {
+                        a = 2,
+                        f = ^[b: Int] => a * b,
+                    } %in f
+                """.trimIndent(),
+            ) as LetExpressionSourceTerm
+
+            val letExpression = LetExpression.build(
+                outerScope = BuiltinScope,
+                term = term,
+            )
+
+            val fDefinition = assertNotNull(
+                actual = letExpression.definitionBlock.getValueDefinition(
+                    name = Symbol.of("f"),
+                ),
+            )
+
+            val classifiedValue = fDefinition.body.classifiedValue
+
+            val constValue = assertIs<ConstClassificationContext<Value>>(
+                classifiedValue,
+            )
+
+            val fValue = assertIs<ComputableAbstraction>(
+                constValue.valueThunk.value
+            )
+
+            assertEquals(
+                expected = IntValue(10L),
+                actual = fValue.applyOrdered(IntValue(5L)).value,
+            )
+        }
+
+        @Test
+        @Ignore
+        fun testSelfRecursive() {
+            val term = ExpressionSourceTerm.parse(
+                source = """
+                    %let {
+                        fib = ^[n: Int] => %if n == 0 (
+                            %then 0,
+                            %else %if n == 1 (
+                                %then 1,
+                                %else fib[n - 1] + fib[n - 2],
+                            ),
+                        ),
+                    } %in fib
+                """.trimIndent(),
+            ) as LetExpressionSourceTerm
+
+            val letExpression = LetExpression.build(
+                outerScope = BuiltinScope,
+                term = term,
+            )
+
+            val fibDefinition = assertNotNull(
+                actual = letExpression.definitionBlock.getValueDefinition(
+                    name = Symbol.of("fib"),
+                ),
+            )
+
+            val classifiedValue = fibDefinition.body.classifiedValue
+
+            val constValue = assertIs<ConstClassificationContext<Value>>(
+                classifiedValue,
+            )
+
+            val fValue = assertIs<ComputableAbstraction>(
+                constValue.valueThunk.value
+            )
+
+            assertEquals(
+                expected = IntValue(3L), // 3 is a 4th Fibonacci number
+                actual = fValue.applyOrdered(IntValue(4L)).value,
+            )
+        }
     }
 
     class EvaluationTests {

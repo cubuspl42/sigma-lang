@@ -291,7 +291,7 @@ abstract class Expression {
         dynamicScope: DynamicScope,
     ): Value? = bind(dynamicScope = dynamicScope).evaluateValueHacky(context = context)
 
-    // TODO: Nuke?
+    // TODO: Nuke
     abstract fun bind(
         dynamicScope: DynamicScope,
     ): Thunk<Value>
