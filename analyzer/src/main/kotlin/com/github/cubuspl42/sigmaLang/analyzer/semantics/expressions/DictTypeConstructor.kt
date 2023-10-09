@@ -19,17 +19,17 @@ class DictTypeConstructor(
 ) : TypeConstructor() {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: DictTypeConstructorTerm,
         ): DictTypeConstructor = DictTypeConstructor(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             keyType = Expression.build(
-                outerScope = outerScope,
+                context = context,
                 term = term.keyType,
             ),
             valueType = Expression.build(
-                outerScope = outerScope,
+                context = context,
                 term = term.valueType,
             ),
         )

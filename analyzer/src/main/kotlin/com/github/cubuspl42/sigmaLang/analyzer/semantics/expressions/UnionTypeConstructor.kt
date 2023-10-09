@@ -25,20 +25,20 @@ class UnionTypeConstructor(
 
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: UnionTypeConstructorTerm,
         ): UnionTypeConstructor = UnionTypeConstructor(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             types = buildTypes(
-                outerScope = outerScope,
+                context = context,
                 accumulatedTypes = emptySet(),
                 term = term,
             ),
         )
 
         private fun buildTypes(
-            outerScope: StaticScope,
+            context: BuildContext,
             accumulatedTypes: Set<Expression>,
             term: UnionTypeConstructorTerm,
         ): Set<Expression> {
@@ -50,7 +50,7 @@ class UnionTypeConstructor(
             }
 
             val rightType = Expression.build(
-                outerScope = outerScope,
+                context = context,
                 term = rightTypeTerm,
             )
 
@@ -58,13 +58,13 @@ class UnionTypeConstructor(
 
             return if (leftTypeTerm is UnionTypeConstructorTerm) {
                 buildTypes(
-                    outerScope = outerScope,
+                    context = context,
                     accumulatedTypes = extendedTypes,
                     term = leftTypeTerm,
                 )
             } else {
                 val leftType = Expression.build(
-                    outerScope = outerScope,
+                    context = context,
                     term = leftTypeTerm,
                 )
 

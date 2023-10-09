@@ -18,10 +18,10 @@ data class StringLiteral(
 ) : Expression() {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: StringLiteralTerm,
         ): StringLiteral = StringLiteral(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
         )
     }

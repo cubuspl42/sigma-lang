@@ -24,7 +24,7 @@ class UnorderedTupleConstructorTests {
             ) as UnorderedTupleConstructorSourceTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 term = term,
             )
 
@@ -48,14 +48,17 @@ class UnorderedTupleConstructorTests {
             ) as UnorderedTupleConstructorSourceTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                outerScope = FakeStaticBlock.of(
-                    FakeUserDeclaration(
-                        name = Symbol.of("value1"),
-                        type = BoolType,
-                    ),
-                    FakeUserDeclaration(
-                        name = Symbol.of("value2"),
-                        type = IntCollectiveType,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Symbol.of("value1"),
+                            type = BoolType,
+                        ),
+                        FakeUserDeclaration(
+                            name = Symbol.of("value2"),
+                            type = IntCollectiveType,
+                        ),
                     ),
                 ),
                 term = term,
@@ -84,14 +87,17 @@ class UnorderedTupleConstructorTests {
             ) as UnorderedTupleConstructorSourceTerm
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
-                outerScope = FakeStaticBlock.of(
-                    FakeUserDeclaration(
-                        name = Symbol.of("value1"),
-                        type = BoolType,
-                    ),
-                    FakeUserDeclaration(
-                        name = Symbol.of("value2"),
-                        type = IntCollectiveType,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Symbol.of("value1"),
+                            type = BoolType,
+                        ),
+                        FakeUserDeclaration(
+                            name = Symbol.of("value2"),
+                            type = IntCollectiveType,
+                        ),
                     ),
                 ),
                 term = term,

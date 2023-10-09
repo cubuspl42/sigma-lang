@@ -16,7 +16,7 @@ class IntLiteralTests {
         @Test
         fun test() {
             val intLiteral = IntLiteral.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse(source = "123") as IntLiteralSourceTerm,
             )
 

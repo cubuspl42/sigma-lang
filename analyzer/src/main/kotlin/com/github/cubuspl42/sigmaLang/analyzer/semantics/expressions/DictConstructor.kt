@@ -53,15 +53,15 @@ class DictConstructor(
 
         companion object {
             fun build(
-                declarationScope: StaticScope,
+                context: BuildContext,
                 term: DictConstructorTerm.Association,
             ): Association = Association(
                 key = Expression.build(
-                    outerScope = declarationScope,
+                    context = context,
                     term = term.key,
                 ),
                 value = Expression.build(
-                    outerScope = declarationScope,
+                    context = context,
                     term = term.value,
                 ),
             )
@@ -70,14 +70,14 @@ class DictConstructor(
 
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: DictConstructorTerm,
         ): DictConstructor = DictConstructor(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             associations = term.associations.map {
                 Association.build(
-                    declarationScope = outerScope,
+                    context = context,
                     term = it,
                 )
             },

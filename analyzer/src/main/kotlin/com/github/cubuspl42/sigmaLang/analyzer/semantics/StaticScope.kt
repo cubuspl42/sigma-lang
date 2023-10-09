@@ -20,6 +20,10 @@ interface StaticScope {
         }.result
     }
 
+    enum class Level {
+        Primary, Meta,
+    }
+
     object Empty : StaticScope {
         override fun resolveName(name: Symbol): ClassifiedIntroduction? = null
         override fun getAllNames(): Set<Symbol> = emptySet()

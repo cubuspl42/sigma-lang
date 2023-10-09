@@ -1,25 +1,22 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDefinition.UnmatchedInferredTypeError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
 
 class UserDefinitionMixin(
-    private val outerScope: StaticScope,
+    private val context: Expression.BuildContext,
     private val term: DefinitionTerm,
 ) : EmbodiedUserDefinition {
     private val annotatedTypeBody: TypeExpression? by lazy {
         term.declaredTypeBody?.let {
             TypeExpression.build(
-                outerScope = outerScope,
+                outerMetaScope = context.outerMetaScope,
                 term = it,
             )
         }
@@ -29,7 +26,7 @@ class UserDefinitionMixin(
 
     override val body: Expression by lazy {
         Expression.build(
-            outerScope = outerScope,
+            context = context,
             term = term.body,
         )
     }

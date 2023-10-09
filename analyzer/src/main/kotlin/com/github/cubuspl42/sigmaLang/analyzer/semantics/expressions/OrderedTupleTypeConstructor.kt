@@ -36,16 +36,16 @@ class OrderedTupleTypeConstructor(
 
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: OrderedTupleTypeConstructorTerm,
         ): OrderedTupleTypeConstructor = OrderedTupleTypeConstructor(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             elements = term.elements.map {
                 Element(
                     name = it.name,
                     type = Expression.build(
-                        outerScope = outerScope,
+                        context = context,
                         term = it.type,
                     ),
                 )

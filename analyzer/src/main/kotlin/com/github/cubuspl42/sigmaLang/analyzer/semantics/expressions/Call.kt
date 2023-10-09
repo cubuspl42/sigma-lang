@@ -21,58 +21,66 @@ class Call(
 ) : Expression() {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: CallTerm,
         ): Call {
             return when (term) {
-                is InfixCallTerm -> buildInfix(outerScope, term)
-                is PostfixCallTerm -> buildPostfix(outerScope, term)
+                is InfixCallTerm -> buildInfix(
+                    context = context,
+                    term = term,
+                )
+
+                is PostfixCallTerm -> buildPostfix(
+                    context = context,
+                    term = term,
+                )
+
                 else -> throw UnsupportedOperationException("Unsupported call term: $term")
             }
         }
 
         private fun buildPostfix(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: PostfixCallTerm,
         ): Call = Call(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             subject = build(
-                outerScope = outerScope,
+                context = context,
                 term = term.subject,
             ),
             argument = build(
-                outerScope = outerScope,
+                context = context,
                 term = term.argument,
             ),
         )
 
         private fun buildInfix(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: InfixCallTerm,
         ): Call {
             val prototype = BinaryOperationPrototype.build(term.operator)
 
             val leftArgument = Expression.build(
-                outerScope = outerScope,
+                context = context,
                 term = term.leftArgument,
             )
 
             val rightArgument = Expression.build(
-                outerScope = outerScope,
+                context = context,
                 term = term.rightArgument,
             )
 
             return Call(
-                outerScope = outerScope,
+                outerScope = context.outerScope,
                 term = term,
                 subject = Reference(
-                    outerScope = outerScope,
+                    outerScope = context.outerScope,
                     referredName = Symbol.of(prototype.functionName),
                     term = null,
                 ),
                 argument = UnorderedTupleConstructor(
-                    outerScope = outerScope,
+                    outerScope = context.outerScope,
                     term = null,
                     entries = setOf(
                         UnorderedTupleConstructor.Entry(

@@ -16,14 +16,14 @@ class OrderedTupleConstructor(
 ) : TupleConstructor() {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: OrderedTupleConstructorTerm,
         ): OrderedTupleConstructor = OrderedTupleConstructor(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             elements = term.elements.map {
                 Expression.build(
-                    outerScope = outerScope,
+                    context = context,
                     term = it,
                 )
             },

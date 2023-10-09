@@ -25,7 +25,7 @@ class FieldReadTests {
             )
 
             val fieldRead = FieldRead.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse("foo.bar") as FieldReadSourceTerm,
             )
 

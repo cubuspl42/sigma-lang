@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
@@ -14,7 +13,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationCont
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.VariableIntroduction
 
@@ -35,21 +33,22 @@ class Reference(
 
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: ReferenceTerm,
         ): Reference = Reference(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             referredName = term.referredName,
         )
     }
 
-    private val resolved: ClassifiedIntroduction? by lazy {
+
+    private val resolvedIntroduction: ClassifiedIntroduction? by lazy {
         outerScope.resolveName(name = referredName)
     }
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val resolvedIntroduction = resolved
+        val resolvedIntroduction = resolvedIntroduction
 
         if (resolvedIntroduction != null) {
             val inferredTargetType = compute(resolvedIntroduction.computedEffectiveType)
@@ -72,7 +71,8 @@ class Reference(
 
     override val classifiedValue: ClassificationContext<Value> by lazy {
         val resolvedIntroduction =
-            this.resolved ?: throw IllegalStateException("Unresolved reference at classification time: $referredName")
+            this.resolvedIntroduction
+                ?: throw IllegalStateException("Unresolved reference at classification time: $referredName")
 
         when (resolvedIntroduction) {
             is ConstantDefinition -> object : ConstClassificationContext<Value>() {

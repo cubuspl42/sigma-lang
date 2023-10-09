@@ -5,6 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.evaluateValueHacky
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
@@ -129,94 +130,110 @@ abstract class Expression {
         }
     }
 
+    data class BuildContext(
+        val outerMetaScope: StaticScope,
+        val outerScope: StaticScope,
+    ) {
+        companion object {
+            val Empty = Expression.BuildContext(
+                outerMetaScope = StaticScope.Empty,
+                outerScope = StaticScope.Empty,
+            )
+
+            val Builtin = Expression.BuildContext(
+                outerMetaScope = BuiltinScope,
+                outerScope = BuiltinScope,
+            )
+        }
+    }
+
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: ExpressionTerm,
         ): Expression = when (term) {
             is AbstractionConstructorTerm -> AbstractionConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is CallTerm -> Call.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is FieldReadTerm -> FieldRead.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is IntLiteralTerm -> IntLiteral.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
-
             is StringLiteralTerm -> StringLiteral.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is IsUndefinedCheckTerm -> IsUndefinedCheck.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is LetExpressionTerm -> LetExpression.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is ReferenceTerm -> Reference.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is TupleConstructorTerm -> TupleConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is DictConstructorTerm -> DictConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is SetConstructorTerm -> SetConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is IfExpressionTerm -> IfExpression.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is TupleTypeConstructorTerm -> TupleTypeConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is ArrayTypeConstructorTerm -> ArrayTypeConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is DictTypeConstructorTerm -> DictTypeConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is FunctionTypeConstructorTerm -> FunctionTypeConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is UnionTypeConstructorTerm -> UnionTypeConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
@@ -229,7 +246,10 @@ abstract class Expression {
             val term = ExpressionSourceTerm.parse(source = source)
 
             return Expression.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = StaticScope.Empty,
+                ),
                 term = term,
             )
         }

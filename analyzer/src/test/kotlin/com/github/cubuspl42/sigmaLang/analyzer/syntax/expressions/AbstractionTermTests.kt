@@ -153,7 +153,7 @@ class AbstractionTermTests {
             )
 
             val expression = Expression.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -182,7 +182,7 @@ class AbstractionTermTests {
             )
 
             val expression = Expression.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 

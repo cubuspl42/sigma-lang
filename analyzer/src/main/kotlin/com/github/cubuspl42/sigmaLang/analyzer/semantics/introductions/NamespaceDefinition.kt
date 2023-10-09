@@ -13,6 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionM
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntrySourceTerm
 
 class NamespaceDefinition(
     private val outerScope: StaticScope,
@@ -50,8 +51,11 @@ class NamespaceDefinition(
 
     val definitions: Set<ConstantDefinition> by lazy {
         term.namespaceEntries.map {
-            build(
-                outerScope = innerStaticScope,
+            ConstantDefinition.build(
+                context = Expression.BuildContext(
+                    outerMetaScope = innerStaticScope,
+                    outerScope = innerStaticScope,
+                ),
                 qualifiedPath = qualifiedPath,
                 term = it,
             )

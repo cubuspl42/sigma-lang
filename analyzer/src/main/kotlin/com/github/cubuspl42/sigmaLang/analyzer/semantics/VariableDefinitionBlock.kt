@@ -3,27 +3,28 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.LoopedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
 class VariableDefinitionBlock(
-    private val declarationScope: StaticScope,
+    private val context: Expression.BuildContext,
     private val declarationTerms: List<LocalDefinitionTerm>,
 ) : StaticBlock() {
     companion object {
         fun build(
-            outerDeclarationScope: StaticScope,
+            context: Expression.BuildContext,
             definitions: List<LocalDefinitionTerm>,
         ): VariableDefinitionBlock = VariableDefinitionBlock(
-            declarationScope = outerDeclarationScope,
+            context = context,
             declarationTerms = definitions,
         )
     }
 
     val declarations = declarationTerms.map {
         UserVariableDefinition.build(
-            declarationScope = declarationScope,
+            context = context,
             term = it,
         )
     }.toSet()

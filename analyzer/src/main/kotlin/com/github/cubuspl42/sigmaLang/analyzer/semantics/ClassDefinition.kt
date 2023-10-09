@@ -66,11 +66,11 @@ class ClassDefinition(
         )
 
         fun build(
-            outerScope: StaticScope,
+            context: Expression.BuildContext,
             qualifiedPath: QualifiedPath,
             term: ClassDefinitionTerm,
         ): ClassDefinition = ClassDefinition(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             qualifiedPath = qualifiedPath,
             term = term,
         )
@@ -85,7 +85,7 @@ class ClassDefinition(
 
     private val body by lazy {
         TypeExpression.build(
-            outerScope = outerScope,
+            outerMetaScope = outerScope,
             term = term.body,
         )
     }
