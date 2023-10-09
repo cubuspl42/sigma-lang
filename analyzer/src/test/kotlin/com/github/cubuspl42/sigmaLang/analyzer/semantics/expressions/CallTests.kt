@@ -64,7 +64,7 @@ class CallTests {
                     ),
                 ),
                 term = term,
-            )
+            ).resolved
 
             assertEquals(
                 expected = emptySet(),
@@ -103,7 +103,7 @@ class CallTests {
                     ),
                 ),
                 term = term,
-            )
+            ).resolved
 
             assertEquals(
                 expected = setOf(
@@ -148,7 +148,7 @@ class CallTests {
                     ),
                 ),
                 term = term,
-            )
+            ).resolved
 
             assertIs<IllType>(
                 value = call.inferredTypeOrIllType.getOrCompute(),
@@ -205,7 +205,7 @@ class CallTests {
                     ).chainWith(BuiltinScope),
                 ),
                 term = term,
-            )
+            ).resolved
 
             assertEquals(
                 expected = emptySet(),
@@ -253,7 +253,7 @@ class CallTests {
                     ),
                 ),
                 term = term,
-            )
+            ).resolved
 
             assertEquals(
                 expected = setOf(
@@ -340,7 +340,7 @@ class CallTests {
                 ),
 
                 term = term,
-            )
+            ).resolved
 
             assertEquals(
                 expected = emptySet(),
@@ -394,7 +394,7 @@ class CallTests {
             val call = Call.build(
                 context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse("sq(3)") as PostfixCallSourceTerm,
-            )
+            ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 call.bind(
@@ -416,7 +416,7 @@ class CallTests {
             val call = Call.build(
                 context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse("dict(2)") as PostfixCallSourceTerm,
-            )
+            ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 call.bind(

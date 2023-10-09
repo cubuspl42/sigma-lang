@@ -27,15 +27,19 @@ class UnionTypeConstructor(
         fun build(
             context: BuildContext,
             term: UnionTypeConstructorTerm,
-        ): UnionTypeConstructor = UnionTypeConstructor(
-            outerScope = context.outerScope,
-            term = term,
-            types = buildTypes(
-                context = context,
-                accumulatedTypes = emptySet(),
-                term = term,
-            ),
-        )
+        ): Stub<UnionTypeConstructor> = object : Stub<UnionTypeConstructor> {
+            override val resolved: UnionTypeConstructor by lazy {
+                UnionTypeConstructor(
+                    outerScope = context.outerScope,
+                    term = term,
+                    types = buildTypes(
+                        context = context,
+                        accumulatedTypes = emptySet(),
+                        term = term,
+                    ),
+                )
+            }
+        }
 
         private fun buildTypes(
             context: BuildContext,
@@ -52,7 +56,7 @@ class UnionTypeConstructor(
             val rightType = Expression.build(
                 context = context,
                 term = rightTypeTerm,
-            )
+            ).resolved
 
             val extendedTypes = accumulatedTypes + rightType
 
@@ -66,7 +70,7 @@ class UnionTypeConstructor(
                 val leftType = Expression.build(
                     context = context,
                     term = leftTypeTerm,
-                )
+                ).resolved
 
                 extendedTypes + leftType
             }

@@ -1,16 +1,18 @@
 package com.github.cubuspl42.sigmaLang.intellijPlugin
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
-import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaReferenceExpression
-import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.patterns.PlatformPatterns
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Module
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ModulePath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ModuleResolver
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Project
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaFile
-import com.intellij.codeInsight.completion.*
+import com.github.cubuspl42.sigmaLang.intellijPlugin.psi.SigmaReferenceExpression
+import com.intellij.codeInsight.completion.CompletionContributor
+import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.completion.CompletionProvider
+import com.intellij.codeInsight.completion.CompletionResultSet
+import com.intellij.codeInsight.completion.CompletionType
+import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.patterns.PlatformPatterns
 
 class SigmaCompletionContributor : CompletionContributor() {
     init {

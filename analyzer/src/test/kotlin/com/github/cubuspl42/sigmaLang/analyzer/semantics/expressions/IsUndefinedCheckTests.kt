@@ -37,7 +37,7 @@ class IsUndefinedCheckTests {
                     ),
                 ),
                 term = term,
-            )
+            ).resolved
 
             assertEquals(
                 expected = BoolType,
@@ -54,7 +54,7 @@ class IsUndefinedCheckTests {
                 term = ExpressionSourceTerm.parse(
                     source = "%isUndefined 0",
                 ) as IsUndefinedCheckSourceTerm,
-            )
+            ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 isUndefinedCheck.bind(
@@ -77,7 +77,7 @@ class IsUndefinedCheckTests {
                 term = ExpressionSourceTerm.parse(
                     source = "%isUndefined d(0)",
                 ) as IsUndefinedCheckSourceTerm,
-            )
+            ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 isUndefinedCheck.bind(

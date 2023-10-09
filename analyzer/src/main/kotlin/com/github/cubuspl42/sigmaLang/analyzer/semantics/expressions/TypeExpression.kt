@@ -35,20 +35,24 @@ class TypeExpression(
         fun build(
             outerMetaScope: StaticScope,
             term: ExpressionTerm,
-        ): TypeExpression = TypeExpression(
-            context = Expression.BuildContext(
-                outerMetaScope = BuiltinScope,
-                outerScope = outerMetaScope,
-            ),
-            bodyTerm = term,
-        )
+        ): Expression.Stub<TypeExpression> = object : Expression.Stub<TypeExpression> {
+            override val resolved: TypeExpression by lazy {
+                TypeExpression(
+                    context = Expression.BuildContext(
+                        outerMetaScope = BuiltinScope,
+                        outerScope = outerMetaScope,
+                    ),
+                    bodyTerm = term,
+                )
+            }
+        }
     }
 
     val body by lazy {
         Expression.build(
             context = context,
             term = bodyTerm,
-        )
+        ).resolved
     }
 
     private val diagnosedAnalysis by lazy {

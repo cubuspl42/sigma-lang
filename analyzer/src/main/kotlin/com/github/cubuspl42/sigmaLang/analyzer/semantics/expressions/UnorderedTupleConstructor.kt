@@ -41,13 +41,17 @@ class UnorderedTupleConstructor(
             fun build(
                 context: BuildContext,
                 entry: UnorderedTupleConstructorTerm.Entry,
-            ): Entry = Entry(
-                name = entry.name,
-                value = Expression.build(
-                    context = context,
-                    term = entry.value,
-                ),
-            )
+            ): Stub<Entry> = object : Stub<Entry> {
+                override val resolved: Entry by lazy {
+                    Entry(
+                        name = entry.name,
+                        value = Expression.build(
+                            context = context,
+                            term = entry.value,
+                        ).resolved,
+                    )
+                }
+            }
         }
     }
 
@@ -60,16 +64,20 @@ class UnorderedTupleConstructor(
         fun build(
             context: BuildContext,
             term: UnorderedTupleConstructorTerm,
-        ): UnorderedTupleConstructor = UnorderedTupleConstructor(
-            outerScope = context.outerScope,
-            term = term,
-            entries = term.entries.map {
-                Entry.build(
-                    context = context,
-                    entry = it,
+        ): Stub<UnorderedTupleConstructor> = object : Stub<UnorderedTupleConstructor> {
+            override val resolved: UnorderedTupleConstructor by lazy {
+                UnorderedTupleConstructor(
+                    outerScope = context.outerScope,
+                    term = term,
+                    entries = term.entries.map {
+                        Entry.build(
+                            context = context,
+                            entry = it,
+                        ).resolved
+                    }.toSet(),
                 )
-            }.toSet(),
-        )
+            }
+        }
     }
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {

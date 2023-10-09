@@ -40,7 +40,7 @@ class DictConstructorTests {
                         }
                     """.trimIndent(),
                 ) as DictConstructorSourceTerm,
-            )
+            ).resolved
 
             assertEquals(
                 expected = DictType(
@@ -83,7 +83,7 @@ class DictConstructorTests {
                         }
                     """.trimIndent(),
                 ) as DictConstructorSourceTerm,
-            )
+            ).resolved
 
             assertEquals(
                 expected = DictType(
@@ -126,7 +126,7 @@ class DictConstructorTests {
                         }
                     """.trimIndent(),
                 ) as DictConstructorSourceTerm,
-            )
+            ).resolved
 
             assertEquals(
                 expected = setOf(
@@ -178,7 +178,7 @@ class DictConstructorTests {
                         }
                     """.trimIndent(),
                 ) as DictConstructorSourceTerm,
-            )
+            ).resolved
 
             assertEquals(
                 expected = setOf(
@@ -223,7 +223,7 @@ class DictConstructorTests {
                         }
                     """.trimIndent(),
                 ) as DictConstructorSourceTerm,
-            )
+            ).resolved
 
             assertEquals(
                 expected = setOf(

@@ -30,7 +30,7 @@ class OrderedTupleConstructorTests {
             val tupleLiteral = OrderedTupleConstructor.build(
                 context = Expression.BuildContext.Empty,
                 term = term,
-            )
+            ).resolved
 
             val type = assertIs<OrderedTupleType>(
                 value = tupleLiteral.inferredTypeOrIllType.getOrCompute(),
@@ -65,7 +65,7 @@ class OrderedTupleConstructorTests {
                     ),
                 ),
                 term = term,
-            )
+            ).resolved
 
             val type = assertIs<OrderedTupleType>(
                 value = tupleLiteral.inferredTypeOrIllType.getOrCompute(),
@@ -91,7 +91,7 @@ class OrderedTupleConstructorTests {
                 term = ExpressionSourceTerm.parse(
                     source = "[]",
                 ) as OrderedTupleConstructorSourceTerm,
-            )
+            ).resolved
 
             val value = tupleConstructor.evaluateValue(
                 context = EvaluationContext.Initial,
@@ -115,7 +115,7 @@ class OrderedTupleConstructorTests {
                 term = ExpressionSourceTerm.parse(
                     source = "[a, b]",
                 ) as OrderedTupleConstructorSourceTerm,
-            )
+            ).resolved
 
             val value = tupleConstructor.evaluateValue(
                 context = EvaluationContext.Initial,

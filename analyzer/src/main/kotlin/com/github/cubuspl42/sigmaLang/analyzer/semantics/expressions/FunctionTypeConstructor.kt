@@ -25,25 +25,29 @@ class FunctionTypeConstructor(
         fun build(
             context: BuildContext,
             term: FunctionTypeConstructorTerm,
-        ): FunctionTypeConstructor = FunctionTypeConstructor(
-            outerScope = context.outerScope,
-            term = term,
-            metaArgumentType = term.metaArgumentType?.let {
-                TypeExpression.build(
-                    outerMetaScope = context.outerMetaScope,
-                    term = it,
+        ): Stub<FunctionTypeConstructor> = object : Stub<FunctionTypeConstructor> {
+            override val resolved: FunctionTypeConstructor by lazy {
+                FunctionTypeConstructor(
+                    outerScope = context.outerScope,
+                    term = term,
+                    metaArgumentType = term.metaArgumentType?.let {
+                        TypeExpression.build(
+                            outerMetaScope = context.outerMetaScope,
+                            term = it,
+                        ).resolved
+                    },
+                    // TODO: Use the scope of the meta-argument type
+                    argumentType = TupleTypeConstructor.build(
+                        context = context,
+                        term = term.argumentType,
+                    ).resolved,
+                    imageType = Expression.build(
+                        context = context,
+                        term = term.imageType,
+                    ).resolved,
                 )
-            },
-            // TODO: Use the scope of the meta-argument type
-            argumentType = TupleTypeConstructor.build(
-                context = context,
-                term = term.argumentType,
-            ),
-            imageType = Expression.build(
-                context = context,
-                term = term.imageType,
-            ),
-        )
+            }
+        }
     }
 
     override val classifiedValue: ClassificationContext<Value> by lazy {

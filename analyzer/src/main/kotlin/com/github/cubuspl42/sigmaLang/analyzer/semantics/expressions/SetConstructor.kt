@@ -20,16 +20,20 @@ class SetConstructor(
         fun build(
             context: BuildContext,
             term: SetConstructorTerm,
-        ): SetConstructor = SetConstructor(
-            outerScope = context.outerScope,
-            term = term,
-            elements = term.elements.map {
-                Expression.build(
-                    context = context,
-                    term = it,
+        ): Stub<SetConstructor> = object : Stub<SetConstructor> {
+            override val resolved: SetConstructor by lazy {
+                SetConstructor(
+                    outerScope = context.outerScope,
+                    term = term,
+                    elements = term.elements.map {
+                        Expression.build(
+                            context = context,
+                            term = it,
+                        ).resolved
+                    }.toSet(),
                 )
-            }.toSet(),
-        )
+            }
+        }
     }
 
     data class InconsistentElementTypeError(

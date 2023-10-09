@@ -19,14 +19,18 @@ data class IsUndefinedCheck(
         fun build(
             context: BuildContext,
             term: IsUndefinedCheckTerm,
-        ): IsUndefinedCheck = IsUndefinedCheck(
-            outerScope = context.outerScope,
-            term = term,
-            argument = Expression.build(
-                context = context,
-                term = term.argument,
-            ),
-        )
+        ): Stub<IsUndefinedCheck> = object : Stub<IsUndefinedCheck> {
+            override val resolved: IsUndefinedCheck by lazy {
+                IsUndefinedCheck(
+                    outerScope = context.outerScope,
+                    term = term,
+                    argument = Expression.build(
+                        context = context,
+                        term = term.argument,
+                    ).resolved,
+                )
+            }
+        }
     }
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {

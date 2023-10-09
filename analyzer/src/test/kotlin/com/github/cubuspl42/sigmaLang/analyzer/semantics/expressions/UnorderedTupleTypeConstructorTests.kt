@@ -31,7 +31,7 @@ class UnorderedTupleTypeConstructorTests {
         val unorderedTupleTypeConstructor = UnorderedTupleTypeConstructor.build(
             context = Expression.BuildContext.Empty,
             term = term,
-        )
+        ).resolved
 
         assertEquals(
             expected = TypeType,
@@ -59,7 +59,7 @@ class UnorderedTupleTypeConstructorTests {
         val unorderedTupleTypeConstructor = UnorderedTupleTypeConstructor.build(
             context = Expression.BuildContext.Builtin,
             term = term,
-        )
+        ).resolved
 
         assertEquals(
             expected = emptySet(),
@@ -113,7 +113,7 @@ class UnorderedTupleTypeConstructorTests {
         val letExpression = LetExpression.build(
             context = Expression.BuildContext.Builtin,
             term = term,
-        )
+        ).resolved
 
         assertEquals(
             expected = TypeType,

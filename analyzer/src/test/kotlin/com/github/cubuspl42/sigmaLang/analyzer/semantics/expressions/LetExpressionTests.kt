@@ -44,7 +44,7 @@ class LetExpressionTests {
             val let = LetExpression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val aDefinition = assertNotNull(
                 actual = let.definitionBlock.getValueDefinition(
@@ -118,7 +118,7 @@ class LetExpressionTests {
             val let = LetExpression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             assertIs<EvaluationStackExhaustionError>(
                 let.bind(dynamicScope = DynamicScope.Empty).outcome,

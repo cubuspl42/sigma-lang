@@ -43,7 +43,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             assertEquals(
                 expected = IntCollectiveType,
@@ -63,7 +63,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val inferredType = assertIs<FunctionType>(
                 value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
@@ -84,7 +84,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val inferredType = assertIs<FunctionType>(
                 value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
@@ -128,7 +128,7 @@ class AbstractionConstructorTests {
             val abstraction = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             assertEquals(
                 expected = emptySet(),
@@ -197,7 +197,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val inferredType = assertIs<FunctionType>(
                 value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
@@ -218,7 +218,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val inferredType = assertIs<FunctionType>(
                 value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
@@ -242,7 +242,7 @@ class AbstractionConstructorTests {
             val expression = Expression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val type = expression.inferredTypeOrIllType.getOrCompute()
 
@@ -277,7 +277,7 @@ class AbstractionConstructorTests {
             val let = LetExpression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val fDefinition = assertNotNull(
                 actual = let.definitionBlock.getValueDefinition(
@@ -319,7 +319,7 @@ class AbstractionConstructorTests {
             val letExpression = LetExpression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val fDefinition = assertNotNull(
                 actual = letExpression.definitionBlock.getValueDefinition(
@@ -361,7 +361,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val classifiedValue = abstractionConstructor.classifiedValue
 
@@ -389,7 +389,7 @@ class AbstractionConstructorTests {
             val letExpression = LetExpression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val fDefinition = assertNotNull(
                 actual = letExpression.definitionBlock.getValueDefinition(
@@ -433,7 +433,7 @@ class AbstractionConstructorTests {
             val letExpression = LetExpression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val fibDefinition = assertNotNull(
                 actual = letExpression.definitionBlock.getValueDefinition(
@@ -465,7 +465,7 @@ class AbstractionConstructorTests {
                 context = Expression.BuildContext.Builtin, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionConstructorSourceTerm
-            )
+            ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 abstractionConstructor.bind(
