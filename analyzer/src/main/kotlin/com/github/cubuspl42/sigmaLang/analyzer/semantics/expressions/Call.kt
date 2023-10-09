@@ -23,77 +23,85 @@ class Call(
         fun build(
             context: BuildContext,
             term: CallTerm,
-        ): Call {
-            return when (term) {
-                is InfixCallTerm -> buildInfix(
-                    context = context,
-                    term = term,
-                )
+        ): Stub<Call> = object : Stub<Call> {
+            override val resolved: Call by lazy {
+                when (term) {
+                    is InfixCallTerm -> buildInfix(
+                        context = context,
+                        term = term,
+                    ).resolved
 
-                is PostfixCallTerm -> buildPostfix(
-                    context = context,
-                    term = term,
-                )
+                    is PostfixCallTerm -> buildPostfix(
+                        context = context,
+                        term = term,
+                    ).resolved
 
-                else -> throw UnsupportedOperationException("Unsupported call term: $term")
+                    else -> throw UnsupportedOperationException("Unsupported call term: $term")
+                }
             }
         }
 
         private fun buildPostfix(
             context: BuildContext,
             term: PostfixCallTerm,
-        ): Call = Call(
-            outerScope = context.outerScope,
-            term = term,
-            subject = build(
-                context = context,
-                term = term.subject,
-            ),
-            argument = build(
-                context = context,
-                term = term.argument,
-            ),
-        )
+        ): Stub<Call> = object : Stub<Call> {
+            override val resolved: Call by lazy {
+                Call(
+                    outerScope = context.outerScope,
+                    term = term,
+                    subject = build(
+                        context = context,
+                        term = term.subject,
+                    ).resolved,
+                    argument = build(
+                        context = context,
+                        term = term.argument,
+                    ).resolved,
+                )
+            }
+        }
 
         private fun buildInfix(
             context: BuildContext,
             term: InfixCallTerm,
-        ): Call {
-            val prototype = BinaryOperationPrototype.build(term.operator)
+        ): Stub<Call> = object : Stub<Call> {
+            override val resolved: Call by lazy {
+                val prototype = BinaryOperationPrototype.build(term.operator)
 
-            val leftArgument = Expression.build(
-                context = context,
-                term = term.leftArgument,
-            )
+                val leftArgument = Expression.build(
+                    context = context,
+                    term = term.leftArgument,
+                ).resolved
 
-            val rightArgument = Expression.build(
-                context = context,
-                term = term.rightArgument,
-            )
+                val rightArgument = Expression.build(
+                    context = context,
+                    term = term.rightArgument,
+                ).resolved
 
-            return Call(
-                outerScope = context.outerScope,
-                term = term,
-                subject = Reference(
+                Call(
                     outerScope = context.outerScope,
-                    referredName = Symbol.of(prototype.functionName),
-                    term = null,
-                ),
-                argument = UnorderedTupleConstructor(
-                    outerScope = context.outerScope,
-                    term = null,
-                    entries = setOf(
-                        UnorderedTupleConstructor.Entry(
-                            name = prototype.leftArgument,
-                            value = leftArgument,
-                        ),
-                        UnorderedTupleConstructor.Entry(
-                            name = prototype.rightArgument,
-                            value = rightArgument,
+                    term = term,
+                    subject = Reference(
+                        outerScope = context.outerScope,
+                        referredName = Symbol.of(prototype.functionName),
+                        term = null,
+                    ),
+                    argument = UnorderedTupleConstructor(
+                        outerScope = context.outerScope,
+                        term = null,
+                        entries = setOf(
+                            UnorderedTupleConstructor.Entry(
+                                name = prototype.leftArgument,
+                                value = leftArgument,
+                            ),
+                            UnorderedTupleConstructor.Entry(
+                                name = prototype.rightArgument,
+                                value = rightArgument,
+                            ),
                         ),
                     ),
-                ),
-            )
+                )
+            }
         }
     }
 

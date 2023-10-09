@@ -30,13 +30,17 @@ class UnorderedTupleTypeConstructor(
             fun build(
                 context: BuildContext,
                 entry: UnorderedTupleTypeConstructorTerm.Entry,
-            ): Entry = Entry(
-                name = entry.name,
-                type = Expression.build(
-                    context = context,
-                    term = entry.type,
-                ),
-            )
+            ): Stub<Entry> = object : Stub<Entry> {
+                override val resolved: Entry by lazy {
+                    Entry(
+                        name = entry.name,
+                        type = Expression.build(
+                            context = context,
+                            term = entry.type,
+                        ).resolved,
+                    )
+                }
+            }
         }
 
         val classifiedEntry: ClassificationContext<UnorderedTupleType.Entry>
@@ -54,16 +58,20 @@ class UnorderedTupleTypeConstructor(
         fun build(
             context: BuildContext,
             term: UnorderedTupleTypeConstructorTerm,
-        ): UnorderedTupleTypeConstructor = UnorderedTupleTypeConstructor(
-            outerScope = context.outerScope,
-            term = term,
-            entries = term.entries.map {
-                Entry.build(
-                    context = context,
-                    entry = it,
+        ): Stub<UnorderedTupleTypeConstructor> = object : Stub<UnorderedTupleTypeConstructor> {
+            override val resolved: UnorderedTupleTypeConstructor by lazy {
+                UnorderedTupleTypeConstructor(
+                    outerScope = context.outerScope,
+                    term = term,
+                    entries = term.entries.map {
+                        Entry.build(
+                            context = context,
+                            entry = it,
+                        ).resolved
+                    }.toSet(),
                 )
-            }.toSet(),
-        )
+            }
+        }
     }
 
     override val classifiedValue: ClassificationContext<Value> by lazy {

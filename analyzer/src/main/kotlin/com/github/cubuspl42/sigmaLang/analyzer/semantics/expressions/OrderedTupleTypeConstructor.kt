@@ -38,19 +38,23 @@ class OrderedTupleTypeConstructor(
         fun build(
             context: BuildContext,
             term: OrderedTupleTypeConstructorTerm,
-        ): OrderedTupleTypeConstructor = OrderedTupleTypeConstructor(
-            outerScope = context.outerScope,
-            term = term,
-            elements = term.elements.map {
-                Element(
-                    name = it.name,
-                    type = Expression.build(
-                        context = context,
-                        term = it.type,
-                    ),
+        ): Stub<OrderedTupleTypeConstructor> = object : Stub<OrderedTupleTypeConstructor> {
+            override val resolved: OrderedTupleTypeConstructor by lazy {
+                OrderedTupleTypeConstructor(
+                    outerScope = context.outerScope,
+                    term = term,
+                    elements = term.elements.map {
+                        Element(
+                            name = it.name,
+                            type = Expression.build(
+                                context = context,
+                                term = it.type,
+                            ).resolved,
+                        )
+                    },
                 )
-            },
-        )
+            }
+        }
     }
 
     override val classifiedValue: ClassificationContext<Value> by lazy {

@@ -20,10 +20,14 @@ data class StringLiteral(
         fun build(
             context: BuildContext,
             term: StringLiteralTerm,
-        ): StringLiteral = StringLiteral(
-            outerScope = context.outerScope,
-            term = term,
-        )
+        ): Stub<StringLiteral> = object : Stub<StringLiteral> {
+            override val resolved: StringLiteral by lazy {
+                StringLiteral(
+                    outerScope = context.outerScope,
+                    term = term,
+                )
+            }
+        }
     }
 
     val value: StringValue

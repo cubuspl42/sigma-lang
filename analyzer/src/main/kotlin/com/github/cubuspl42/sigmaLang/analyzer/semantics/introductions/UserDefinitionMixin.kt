@@ -18,7 +18,7 @@ class UserDefinitionMixin(
             TypeExpression.build(
                 outerMetaScope = context.outerMetaScope,
                 term = it,
-            )
+            ).resolved
         }
     }
 
@@ -28,7 +28,7 @@ class UserDefinitionMixin(
         Expression.build(
             context = context,
             term = term.body,
-        )
+        ).resolved
     }
 
     private val unmatchedInferredTypeError: UnmatchedInferredTypeError? by lazy {

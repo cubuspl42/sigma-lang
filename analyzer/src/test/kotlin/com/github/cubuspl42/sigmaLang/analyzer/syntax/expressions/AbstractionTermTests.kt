@@ -155,7 +155,7 @@ class AbstractionTermTests {
             val expression = Expression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val type = expression.inferredTypeOrIllType.getOrCompute()
 
@@ -184,7 +184,7 @@ class AbstractionTermTests {
             val expression = Expression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val type = expression.inferredTypeOrIllType.getOrCompute()
 

@@ -10,7 +10,7 @@ abstract class TupleConstructor : Expression() {
         fun build(
             context: BuildContext,
             term: TupleConstructorTerm,
-        ): TupleConstructor = when (term) {
+        ): Stub<TupleConstructor> = when (term) {
             is OrderedTupleConstructorTerm -> OrderedTupleConstructor.build(
                 context = context,
                 term = term,

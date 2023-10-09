@@ -11,26 +11,32 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValu
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
-class ArrayTypeConstructor(
-    override val outerScope: StaticScope,
-    override val term: ExpressionTerm,
-    val elementType: Expression,
-) : TypeConstructor() {
+abstract class ArrayTypeConstructor : TypeConstructor() {
     companion object {
         fun build(
             context: BuildContext,
             term: ArrayTypeConstructorTerm,
-        ): ArrayTypeConstructor = ArrayTypeConstructor(
-            outerScope = context.outerScope,
-            term = term,
-            elementType = Expression.build(
-                context = context,
-                term = term.elementType,
-            ),
-        )
+        ): Stub<ArrayTypeConstructor> = object : Stub<ArrayTypeConstructor> {
+            override val resolved: ArrayTypeConstructor by lazy {
+                object : ArrayTypeConstructor() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: ExpressionTerm = term
+
+                    override val elementType: Expression by lazy {
+                        Expression.build(
+                            context = context,
+                            term = term.elementType,
+                        ).resolved
+                    }
+                }
+            }
+        }
     }
 
-    override val subExpressions: Set<Expression> = setOf(elementType)
+    abstract val elementType: Expression
+
+    override val subExpressions: Set<Expression> by lazy { setOf(elementType) }
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = elementType.bind(
         dynamicScope = dynamicScope,
@@ -38,8 +44,9 @@ class ArrayTypeConstructor(
         ArrayType(elementType = it.asType!!).asValue
     }
 
-    override val classifiedValue: ClassificationContext<Value> =
+    override val classifiedValue: ClassificationContext<Value> by lazy {
         elementType.classifiedValue.transform { elementAnalysis ->
             ArrayType(elementType = elementAnalysis.asType!!).asValue
         }
+    }
 }

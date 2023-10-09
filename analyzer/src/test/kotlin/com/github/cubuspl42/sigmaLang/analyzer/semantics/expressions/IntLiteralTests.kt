@@ -18,7 +18,7 @@ class IntLiteralTests {
             val intLiteral = IntLiteral.build(
                 context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse(source = "123") as IntLiteralSourceTerm,
-            )
+            ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 intLiteral.bind(

@@ -22,36 +22,38 @@ data class LetExpression(
         fun build(
             context: BuildContext,
             term: LetExpressionTerm,
-        ): LetExpression {
-            val (definitionBlock, innerDeclarationScope) = StaticScope.looped { innerDeclarationScopeLooped ->
-                val definitionBlock = VariableDefinitionBlock.build(
-                    context = context.copy(
-                        outerScope = innerDeclarationScopeLooped,
-                    ),
-                    definitions = term.definitions,
-                )
+        ): Stub<LetExpression> = object : Stub<LetExpression> {
+            override val resolved: LetExpression by lazy {
+                val (definitionBlock, innerDeclarationScope) = StaticScope.looped { innerDeclarationScopeLooped ->
+                    val definitionBlock = VariableDefinitionBlock.build(
+                        context = context.copy(
+                            outerScope = innerDeclarationScopeLooped,
+                        ),
+                        definitions = term.definitions,
+                    )
 
-                val innerDeclarationScope = definitionBlock.chainWith(
+                    val innerDeclarationScope = definitionBlock.chainWith(
+                        outerScope = context.outerScope,
+                    )
+
+                    return@looped Pair(
+                        definitionBlock,
+                        innerDeclarationScope,
+                    )
+                }
+
+                LetExpression(
                     outerScope = context.outerScope,
-                )
-
-                return@looped Pair(
-                    definitionBlock,
-                    innerDeclarationScope,
+                    term = term,
+                    definitionBlock = definitionBlock,
+                    result = Expression.build(
+                        context = context.copy(
+                            outerScope = innerDeclarationScope,
+                        ),
+                        term = term.result,
+                    ).resolved,
                 )
             }
-
-            return LetExpression(
-                outerScope = context.outerScope,
-                term = term,
-                definitionBlock = definitionBlock,
-                result = Expression.build(
-                    context = context.copy(
-                        outerScope = innerDeclarationScope,
-                    ),
-                    term = term.result,
-                ),
-            )
         }
     }
 

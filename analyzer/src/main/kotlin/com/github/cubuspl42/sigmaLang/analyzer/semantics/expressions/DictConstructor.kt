@@ -55,16 +55,20 @@ class DictConstructor(
             fun build(
                 context: BuildContext,
                 term: DictConstructorTerm.Association,
-            ): Association = Association(
-                key = Expression.build(
-                    context = context,
-                    term = term.key,
-                ),
-                value = Expression.build(
-                    context = context,
-                    term = term.value,
-                ),
-            )
+            ): Stub<Association> = object : Stub<Association> {
+                override val resolved: Association by lazy {
+                    Association(
+                        key = Expression.build(
+                            context = context,
+                            term = term.key,
+                        ).resolved,
+                        value = Expression.build(
+                            context = context,
+                            term = term.value,
+                        ).resolved,
+                    )
+                }
+            }
         }
     }
 
@@ -72,16 +76,20 @@ class DictConstructor(
         fun build(
             context: BuildContext,
             term: DictConstructorTerm,
-        ): DictConstructor = DictConstructor(
-            outerScope = context.outerScope,
-            term = term,
-            associations = term.associations.map {
-                Association.build(
-                    context = context,
-                    term = it,
+        ): Stub<DictConstructor> = object : Stub<DictConstructor> {
+            override val resolved: DictConstructor by lazy {
+                DictConstructor(
+                    outerScope = context.outerScope,
+                    term = term,
+                    associations = term.associations.map {
+                        Association.build(
+                            context = context,
+                            term = it,
+                        ).resolved
+                    },
                 )
-            },
-        )
+            }
+        }
     }
 
     sealed interface InferredKeyTypeError : SemanticError

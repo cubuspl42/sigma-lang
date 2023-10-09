@@ -30,7 +30,7 @@ class IfExpressionTests {
             val call = IfExpression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             assertEquals(
                 expected = emptySet(),
@@ -56,7 +56,7 @@ class IfExpressionTests {
             val call = IfExpression.build(
                 context = Expression.BuildContext.Empty,
                 term = term,
-            )
+            ).resolved
 
             assertEquals(
                 expected = setOf(
@@ -91,7 +91,7 @@ class IfExpressionTests {
             val ifExpression = IfExpression.build(
                 context = Expression.BuildContext.Empty,
                 term = term,
-            )
+            ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 ifExpression.bind(
@@ -119,7 +119,7 @@ class IfExpressionTests {
             val ifExpression = IfExpression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 ifExpression.bind(

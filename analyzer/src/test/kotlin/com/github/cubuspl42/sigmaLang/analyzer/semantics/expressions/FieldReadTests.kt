@@ -27,7 +27,7 @@ class FieldReadTests {
             val fieldRead = FieldRead.build(
                 context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse("foo.bar") as FieldReadSourceTerm,
-            )
+            ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 fieldRead.bind(

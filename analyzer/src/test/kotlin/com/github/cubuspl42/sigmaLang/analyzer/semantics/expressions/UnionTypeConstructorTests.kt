@@ -81,7 +81,7 @@ class UnionTypeConstructorTests {
         val unionTypeConstructor = UnionTypeConstructor.build(
             context = Expression.BuildContext.Empty,
             term = term,
-        )
+        ).resolved
 
         val types = unionTypeConstructor.types
 
@@ -124,7 +124,7 @@ class UnionTypeConstructorTests {
         val unionTypeConstructor = UnionTypeConstructor.build(
             context = Expression.BuildContext.Empty,
             term = term,
-        )
+        ).resolved
 
         val types = unionTypeConstructor.types
 
@@ -177,9 +177,9 @@ class UnionTypeConstructorTests {
             val unionTypeConstructor = UnionTypeConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            )
+            ).resolved
 
-            val evaluatedTypeValue = assertIs<TypeValue<*>>(
+            val evaluatedTypeValue = assertIs<TypeValue<*>> (
                 unionTypeConstructor.evaluateValue(
                     context = EvaluationContext.Initial,
                     dynamicScope = BuiltinScope,
@@ -213,7 +213,7 @@ class UnionTypeConstructorTests {
                                         type = BoolType,
                                     ),
                                 ),
-                            ),
+                            )
                         )
                     },
                 ),

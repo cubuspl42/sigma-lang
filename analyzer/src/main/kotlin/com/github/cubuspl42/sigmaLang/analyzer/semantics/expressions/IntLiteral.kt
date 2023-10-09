@@ -20,10 +20,14 @@ data class IntLiteral(
         fun build(
             context: BuildContext,
             term: IntLiteralTerm,
-        ): IntLiteral = IntLiteral(
-            outerScope = context.outerScope,
-            term = term,
-        )
+        ): Stub<IntLiteral> = object : Stub<IntLiteral> {
+            override val resolved: IntLiteral by lazy {
+                IntLiteral(
+                    outerScope = context.outerScope,
+                    term = term,
+                )
+            }
+        }
     }
 
     val value: IntValue

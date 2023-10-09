@@ -35,11 +35,15 @@ class Reference(
         fun build(
             context: BuildContext,
             term: ReferenceTerm,
-        ): Reference = Reference(
-            outerScope = context.outerScope,
-            term = term,
-            referredName = term.referredName,
-        )
+        ): Stub<Reference> = object : Stub<Reference> {
+            override val resolved: Reference by lazy {
+                Reference(
+                    outerScope = context.outerScope,
+                    term = term,
+                    referredName = term.referredName,
+                )
+            }
+        }
     }
 
 

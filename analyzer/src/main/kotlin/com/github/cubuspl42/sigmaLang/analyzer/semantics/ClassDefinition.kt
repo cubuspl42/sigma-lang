@@ -87,7 +87,7 @@ class ClassDefinition(
         TypeExpression.build(
             outerMetaScope = outerScope,
             term = term.body,
-        )
+        ).resolved
     }
 
     private val bodyType: UnorderedTupleType by lazy {

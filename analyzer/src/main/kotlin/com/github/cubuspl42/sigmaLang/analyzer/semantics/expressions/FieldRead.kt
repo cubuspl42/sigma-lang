@@ -41,14 +41,18 @@ class FieldRead(
         fun build(
             context: BuildContext,
             term: FieldReadTerm,
-        ): FieldRead = FieldRead(
-            outerScope = context.outerScope,
-            term = term,
-            subject = Expression.build(
-                context = context,
-                term = term.subject,
-            ),
-        )
+        ): Stub<FieldRead> = object : Stub<FieldRead> {
+            override val resolved: FieldRead by lazy {
+                FieldRead(
+                    outerScope = context.outerScope,
+                    term = term,
+                    subject = Expression.build(
+                        context = context,
+                        term = term.subject,
+                    ).resolved,
+                )
+            }
+        }
     }
 
     private val fieldName: Symbol

@@ -18,16 +18,20 @@ class OrderedTupleConstructor(
         fun build(
             context: BuildContext,
             term: OrderedTupleConstructorTerm,
-        ): OrderedTupleConstructor = OrderedTupleConstructor(
-            outerScope = context.outerScope,
-            term = term,
-            elements = term.elements.map {
-                Expression.build(
-                    context = context,
-                    term = it,
+        ): Stub<OrderedTupleConstructor> = object : Stub<OrderedTupleConstructor> {
+            override val resolved: OrderedTupleConstructor by lazy {
+                OrderedTupleConstructor(
+                    outerScope = context.outerScope,
+                    term = term,
+                    elements = term.elements.map {
+                        Expression.build(
+                            context = context,
+                            term = it,
+                        ).resolved
+                    },
                 )
-            },
-        )
+            }
+        }
     }
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {

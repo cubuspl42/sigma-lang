@@ -37,7 +37,7 @@ class SetConstructorTests {
                 term = ExpressionSourceTerm.parse(
                     source = "{value1}",
                 ) as SetConstructorSourceTerm,
-            )
+            ).resolved
 
             assertEquals(
                 expected = SetType(
@@ -71,7 +71,7 @@ class SetConstructorTests {
                         }
                     """.trimIndent(),
                 ) as SetConstructorSourceTerm,
-            )
+            ).resolved
 
             assertEquals(
                 expected = SetType(
@@ -105,7 +105,7 @@ class SetConstructorTests {
                         }
                     """.trimIndent(),
                 ) as SetConstructorSourceTerm,
-            )
+            ).resolved
 
             assertEquals(
                 expected = setOf(
@@ -129,7 +129,7 @@ class SetConstructorTests {
             val setConstructor = SetConstructor.build(
                 context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse("{foo, bar, baz}") as SetConstructorSourceTerm,
-            )
+            ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 setConstructor.bind(

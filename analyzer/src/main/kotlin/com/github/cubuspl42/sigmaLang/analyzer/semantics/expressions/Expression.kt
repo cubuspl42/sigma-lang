@@ -92,6 +92,10 @@ abstract class Expression {
         ): R = context.block()
     }
 
+    interface Stub<out T> {
+        val resolved: T
+    }
+
     fun buildDiagnosedAnalysisComputation(
         block: Computation.Context.() -> DiagnosedAnalysis?,
     ): Computation<DiagnosedAnalysis?> = Computation {
@@ -151,8 +155,13 @@ abstract class Expression {
         fun build(
             context: BuildContext,
             term: ExpressionTerm,
-        ): Expression = when (term) {
+        ): Expression.Stub<Expression> = when (term) {
             is AbstractionConstructorTerm -> AbstractionConstructor.build(
+                context = context,
+                term = term,
+            )
+
+            is ArrayTypeConstructorTerm -> ArrayTypeConstructor.build(
                 context = context,
                 term = term,
             )
@@ -171,6 +180,7 @@ abstract class Expression {
                 context = context,
                 term = term,
             )
+
 
             is StringLiteralTerm -> StringLiteral.build(
                 context = context,
@@ -217,11 +227,6 @@ abstract class Expression {
                 term = term,
             )
 
-            is ArrayTypeConstructorTerm -> ArrayTypeConstructor.build(
-                context = context,
-                term = term,
-            )
-
             is DictTypeConstructorTerm -> DictTypeConstructor.build(
                 context = context,
                 term = term,
@@ -238,6 +243,8 @@ abstract class Expression {
             )
 
             is ParenTerm -> TODO()
+
+            else -> throw NotImplementedError()
         }
 
         fun parse(
@@ -251,7 +258,7 @@ abstract class Expression {
                     outerScope = StaticScope.Empty,
                 ),
                 term = term,
-            )
+            ).resolved
         }
     }
 

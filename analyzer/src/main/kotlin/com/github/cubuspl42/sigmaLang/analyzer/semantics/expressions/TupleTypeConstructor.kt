@@ -8,7 +8,7 @@ sealed class TupleTypeConstructor : TypeConstructor() {
         fun build(
             context: BuildContext,
             term: TupleTypeConstructorTerm,
-        ): TupleTypeConstructor = when (term) {
+        ): Stub<TupleTypeConstructor> = when (term) {
             is OrderedTupleTypeConstructorTerm -> OrderedTupleTypeConstructor.build(
                 context = context,
                 term = term,

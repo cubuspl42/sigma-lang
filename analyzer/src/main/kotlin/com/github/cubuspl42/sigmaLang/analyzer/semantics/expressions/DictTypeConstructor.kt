@@ -21,18 +21,22 @@ class DictTypeConstructor(
         fun build(
             context: BuildContext,
             term: DictTypeConstructorTerm,
-        ): DictTypeConstructor = DictTypeConstructor(
-            outerScope = context.outerScope,
-            term = term,
-            keyType = Expression.build(
-                context = context,
-                term = term.keyType,
-            ),
-            valueType = Expression.build(
-                context = context,
-                term = term.valueType,
-            ),
-        )
+        ): Stub<DictTypeConstructor> = object : Stub<DictTypeConstructor> {
+            override val resolved: DictTypeConstructor by lazy {
+                DictTypeConstructor(
+                    outerScope = context.outerScope,
+                    term = term,
+                    keyType = Expression.build(
+                        context = context,
+                        term = term.keyType,
+                    ).resolved,
+                    valueType = Expression.build(
+                        context = context,
+                        term = term.valueType,
+                    ).resolved,
+                )
+            }
+        }
     }
 
     override val classifiedValue: ClassificationContext<Value> by lazy {

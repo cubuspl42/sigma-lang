@@ -23,22 +23,26 @@ class IfExpression(
         fun build(
             context: BuildContext,
             term: IfExpressionTerm,
-        ): IfExpression = IfExpression(
-            outerScope = context.outerScope,
-            term = term,
-            guard = build(
-                context = context,
-                term = term.guard,
-            ),
-            trueBranch = build(
-                context = context,
-                term = term.trueBranch,
-            ),
-            falseBranch = build(
-                context = context,
-                term = term.falseBranch,
-            ),
-        )
+        ): Stub<IfExpression> = object : Stub<IfExpression> {
+            override val resolved: IfExpression by lazy {
+                IfExpression(
+                    outerScope = context.outerScope,
+                    term = term,
+                    guard = build(
+                        context = context,
+                        term = term.guard,
+                    ).resolved,
+                    trueBranch = build(
+                        context = context,
+                        term = term.trueBranch,
+                    ).resolved,
+                    falseBranch = build(
+                        context = context,
+                        term = term.falseBranch,
+                    ).resolved,
+                )
+            }
+        }
     }
 
     data class InvalidGuardError(
