@@ -19,3 +19,18 @@ abstract class StaticBlock : StaticScope {
         staticBlock = this,
     )
 }
+
+fun StaticBlock?.chainWithIfNotNull(
+    outerScope: StaticScope,
+): StaticScope = when {
+    this != null -> {
+        StaticScope.Chained(
+            outerScope = outerScope,
+            staticBlock = this,
+        )
+    }
+
+    else -> {
+        outerScope
+    }
+}

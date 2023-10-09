@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationError
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
@@ -12,7 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 class TypeExpression(
-    private val outerScope: StaticScope,
+    private val context: Expression.BuildContext,
     private val bodyTerm: ExpressionTerm,
 ) {
     private data class DiagnosedAnalysis(
@@ -32,17 +33,20 @@ class TypeExpression(
 
     companion object {
         fun build(
-            outerScope: StaticScope,
+            outerMetaScope: StaticScope,
             term: ExpressionTerm,
         ): TypeExpression = TypeExpression(
-            outerScope = outerScope,
+            context = Expression.BuildContext(
+                outerMetaScope = BuiltinScope,
+                outerScope = outerMetaScope,
+            ),
             bodyTerm = term,
         )
     }
 
     val body by lazy {
         Expression.build(
-            outerScope = outerScope,
+            context = context,
             term = bodyTerm,
         )
     }
@@ -51,7 +55,7 @@ class TypeExpression(
         val valueThunk by lazy {
             body.bind(
                 dynamicScope = TranslationDynamicScope(
-                    staticScope = outerScope,
+                    staticScope = context.outerScope,
                 ),
             )
         }

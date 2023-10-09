@@ -21,21 +21,21 @@ class IfExpression(
 ) : Expression() {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: IfExpressionTerm,
         ): IfExpression = IfExpression(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             guard = build(
-                outerScope = outerScope,
+                context = context,
                 term = term.guard,
             ),
             trueBranch = build(
-                outerScope = outerScope,
+                context = context,
                 term = term.trueBranch,
             ),
             falseBranch = build(
-                outerScope = outerScope,
+                context = context,
                 term = term.falseBranch,
             ),
         )

@@ -39,12 +39,12 @@ class UnorderedTupleConstructor(
 
         companion object {
             fun build(
-                declarationScope: StaticScope,
+                context: BuildContext,
                 entry: UnorderedTupleConstructorTerm.Entry,
             ): Entry = Entry(
                 name = entry.name,
                 value = Expression.build(
-                    outerScope = declarationScope,
+                    context = context,
                     term = entry.value,
                 ),
             )
@@ -58,14 +58,14 @@ class UnorderedTupleConstructor(
 
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: UnorderedTupleConstructorTerm,
         ): UnorderedTupleConstructor = UnorderedTupleConstructor(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             entries = term.entries.map {
                 Entry.build(
-                    declarationScope = outerScope,
+                    context = context,
                     entry = it,
                 )
             }.toSet(),

@@ -7,7 +7,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
@@ -24,24 +23,24 @@ class FunctionTypeConstructor(
 ) : TypeConstructor() {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: FunctionTypeConstructorTerm,
         ): FunctionTypeConstructor = FunctionTypeConstructor(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             metaArgumentType = term.metaArgumentType?.let {
                 TypeExpression.build(
-                    outerScope = outerScope,
+                    outerMetaScope = context.outerMetaScope,
                     term = it,
                 )
             },
             // TODO: Use the scope of the meta-argument type
             argumentType = TupleTypeConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term.argumentType,
             ),
             imageType = Expression.build(
-                outerScope = outerScope,
+                context = context,
                 term = term.imageType,
             ),
         )

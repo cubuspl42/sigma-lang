@@ -42,7 +42,7 @@ class LetExpressionTests {
             ) as LetExpressionSourceTerm
 
             val let = LetExpression.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -116,7 +116,7 @@ class LetExpressionTests {
             ) as LetExpressionSourceTerm
 
             val let = LetExpression.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 

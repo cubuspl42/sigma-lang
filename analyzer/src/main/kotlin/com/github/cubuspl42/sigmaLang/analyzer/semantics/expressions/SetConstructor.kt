@@ -18,14 +18,14 @@ class SetConstructor(
 ) : Expression() {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: SetConstructorTerm,
         ): SetConstructor = SetConstructor(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             elements = term.elements.map {
                 Expression.build(
-                    outerScope = outerScope,
+                    context = context,
                     term = it,
                 )
             }.toSet(),

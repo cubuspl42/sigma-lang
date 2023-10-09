@@ -41,7 +41,7 @@ class AbstractionConstructorTests {
             ) as AbstractionConstructorSourceTerm
 
             val abstractionConstructor = AbstractionConstructor.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -61,7 +61,7 @@ class AbstractionConstructorTests {
             ) as AbstractionConstructorSourceTerm
 
             val abstractionConstructor = AbstractionConstructor.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -82,7 +82,7 @@ class AbstractionConstructorTests {
             ) as AbstractionConstructorSourceTerm
 
             val abstractionConstructor = AbstractionConstructor.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -126,7 +126,7 @@ class AbstractionConstructorTests {
             ) as AbstractionConstructorSourceTerm
 
             val abstraction = AbstractionConstructor.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -195,7 +195,7 @@ class AbstractionConstructorTests {
             ) as AbstractionConstructorSourceTerm
 
             val abstractionConstructor = AbstractionConstructor.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -216,7 +216,7 @@ class AbstractionConstructorTests {
             ) as AbstractionConstructorSourceTerm
 
             val abstractionConstructor = AbstractionConstructor.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -240,7 +240,7 @@ class AbstractionConstructorTests {
             )
 
             val expression = Expression.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -275,7 +275,7 @@ class AbstractionConstructorTests {
             ) as LetExpressionSourceTerm
 
             val let = LetExpression.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -317,7 +317,7 @@ class AbstractionConstructorTests {
             ) as LetExpressionSourceTerm
 
             val letExpression = LetExpression.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -359,7 +359,7 @@ class AbstractionConstructorTests {
             ) as AbstractionConstructorSourceTerm
 
             val abstractionConstructor = AbstractionConstructor.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -387,7 +387,7 @@ class AbstractionConstructorTests {
             ) as LetExpressionSourceTerm
 
             val letExpression = LetExpression.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -431,7 +431,7 @@ class AbstractionConstructorTests {
             ) as LetExpressionSourceTerm
 
             val letExpression = LetExpression.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 
@@ -462,7 +462,7 @@ class AbstractionConstructorTests {
         @Test
         fun testUnorderedArgumentTuple() {
             val abstractionConstructor = AbstractionConstructor.build(
-                outerScope = BuiltinScope, term = ExpressionSourceTerm.parse(
+                context = Expression.BuildContext.Builtin, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionConstructorSourceTerm
             )

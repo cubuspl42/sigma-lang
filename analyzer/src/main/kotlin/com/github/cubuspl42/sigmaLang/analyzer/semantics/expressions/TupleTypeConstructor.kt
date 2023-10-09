@@ -6,16 +6,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 sealed class TupleTypeConstructor : TypeConstructor() {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: TupleTypeConstructorTerm,
         ): TupleTypeConstructor = when (term) {
             is OrderedTupleTypeConstructorTerm -> OrderedTupleTypeConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 
             is UnorderedTupleTypeConstructorTerm -> UnorderedTupleTypeConstructor.build(
-                outerScope = outerScope,
+                context = context,
                 term = term,
             )
 

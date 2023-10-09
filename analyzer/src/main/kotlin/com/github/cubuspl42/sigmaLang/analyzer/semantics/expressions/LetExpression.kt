@@ -20,17 +20,19 @@ data class LetExpression(
 ) : Expression() {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: LetExpressionTerm,
         ): LetExpression {
             val (definitionBlock, innerDeclarationScope) = StaticScope.looped { innerDeclarationScopeLooped ->
                 val definitionBlock = VariableDefinitionBlock.build(
-                    outerDeclarationScope = innerDeclarationScopeLooped,
+                    context = context.copy(
+                        outerScope = innerDeclarationScopeLooped,
+                    ),
                     definitions = term.definitions,
                 )
 
                 val innerDeclarationScope = definitionBlock.chainWith(
-                    outerScope = outerScope,
+                    outerScope = context.outerScope,
                 )
 
                 return@looped Pair(
@@ -40,11 +42,13 @@ data class LetExpression(
             }
 
             return LetExpression(
-                outerScope = outerScope,
+                outerScope = context.outerScope,
                 term = term,
                 definitionBlock = definitionBlock,
                 result = Expression.build(
-                    outerScope = innerDeclarationScope,
+                    context = context.copy(
+                        outerScope = innerDeclarationScope,
+                    ),
                     term = term.result,
                 ),
             )

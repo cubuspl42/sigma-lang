@@ -42,23 +42,26 @@ class CallTests {
             ) as PostfixCallSourceTerm
 
             val call = Call.build(
-                outerScope = FakeStaticBlock.of(
-                    FakeUserDeclaration(
-                        name = Symbol.of("f"),
-                        type = UniversalFunctionType(
-                            argumentType = OrderedTupleType(
-                                elements = listOf(
-                                    OrderedTupleType.Element(
-                                        name = null,
-                                        type = BoolType,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Symbol.of("f"),
+                            type = UniversalFunctionType(
+                                argumentType = OrderedTupleType(
+                                    elements = listOf(
+                                        OrderedTupleType.Element(
+                                            name = null,
+                                            type = BoolType,
+                                        ),
                                     ),
                                 ),
+                                imageType = IntCollectiveType,
                             ),
-                            imageType = IntCollectiveType,
                         ),
+                    ).chainWith(
+                        outerScope = BuiltinScope,
                     ),
-                ).chainWith(
-                    outerScope = BuiltinScope,
                 ),
                 term = term,
             )
@@ -80,19 +83,22 @@ class CallTests {
             ) as PostfixCallSourceTerm
 
             val call = Call.build(
-                outerScope = FakeStaticBlock.of(
-                    FakeUserDeclaration(
-                        name = Symbol.of("f"),
-                        type = UniversalFunctionType(
-                            argumentType = OrderedTupleType(
-                                elements = listOf(
-                                    OrderedTupleType.Element(
-                                        name = Symbol.of("a"),
-                                        type = BoolType,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Symbol.of("f"),
+                            type = UniversalFunctionType(
+                                argumentType = OrderedTupleType(
+                                    elements = listOf(
+                                        OrderedTupleType.Element(
+                                            name = Symbol.of("a"),
+                                            type = BoolType,
+                                        ),
                                     ),
                                 ),
+                                imageType = IntCollectiveType,
                             ),
-                            imageType = IntCollectiveType,
                         ),
                     ),
                 ),
@@ -132,10 +138,13 @@ class CallTests {
             ) as PostfixCallSourceTerm
 
             val call = Call.build(
-                outerScope = FakeStaticBlock.of(
-                    FakeUserDeclaration(
-                        name = Symbol.of("b"),
-                        type = BoolType,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Symbol.of("b"),
+                            type = BoolType,
+                        ),
                     ),
                 ),
                 term = term,
@@ -163,35 +172,38 @@ class CallTests {
             ) as PostfixCallSourceTerm
 
             val call = Call.build(
-                outerScope = FakeStaticBlock.of(
-                    FakeUserDeclaration(
-                        name = Symbol.of("f"),
-                        type = UniversalFunctionType(
-                            metaArgumentType = OrderedTupleType(
-                                elements = listOf(
-                                    OrderedTupleType.Element(
-                                        name = Symbol.of("type1"),
-                                        type = TypeType,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Symbol.of("f"),
+                            type = UniversalFunctionType(
+                                metaArgumentType = OrderedTupleType(
+                                    elements = listOf(
+                                        OrderedTupleType.Element(
+                                            name = Symbol.of("type1"),
+                                            type = TypeType,
+                                        ),
+                                        OrderedTupleType.Element(
+                                            name = Symbol.of("type2"),
+                                            type = TypeType,
+                                        ),
+                                    )
+                                ),
+                                argumentType = OrderedTupleType.of(
+                                    TypeVariable.of("type1"),
+                                    TypeVariable.of("type2"),
+                                ),
+                                imageType = UnorderedTupleType(
+                                    valueTypeByName = mapOf(
+                                        Symbol.of("key1") to TypeVariable.of("type1"),
+                                        Symbol.of("key2") to TypeVariable.of("type2"),
                                     ),
-                                    OrderedTupleType.Element(
-                                        name = Symbol.of("type2"),
-                                        type = TypeType,
-                                    ),
-                                )
-                            ),
-                            argumentType = OrderedTupleType.of(
-                                TypeVariable.of("type1"),
-                                TypeVariable.of("type2"),
-                            ),
-                            imageType = UnorderedTupleType(
-                                valueTypeByName = mapOf(
-                                    Symbol.of("key1") to TypeVariable.of("type1"),
-                                    Symbol.of("key2") to TypeVariable.of("type2"),
                                 ),
                             ),
                         ),
-                    ),
-                ).chainWith(BuiltinScope),
+                    ).chainWith(BuiltinScope),
+                ),
                 term = term,
             )
 
@@ -218,21 +230,24 @@ class CallTests {
             ) as PostfixCallSourceTerm
 
             val call = Call.build(
-                outerScope = FakeStaticBlock.of(
-                    FakeUserDeclaration(
-                        name = Symbol.of("f"),
-                        type = UniversalFunctionType(
-                            metaArgumentType = OrderedTupleType(
-                                elements = listOf(
-                                    OrderedTupleType.Element(
-                                        name = Symbol.of("type"),
-                                        type = TypeType,
-                                    ),
-                                )
-                            ),
-                            argumentType = OrderedTupleType.Empty,
-                            imageType = ArrayType(
-                                TypeVariable.of("type"),
+                Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Symbol.of("f"),
+                            type = UniversalFunctionType(
+                                metaArgumentType = OrderedTupleType(
+                                    elements = listOf(
+                                        OrderedTupleType.Element(
+                                            name = Symbol.of("type"),
+                                            type = TypeType,
+                                        ),
+                                    )
+                                ),
+                                argumentType = OrderedTupleType.Empty,
+                                imageType = ArrayType(
+                                    TypeVariable.of("type"),
+                                ),
                             ),
                         ),
                     ),
@@ -279,29 +294,18 @@ class CallTests {
             ) as PostfixCallSourceTerm
 
             val call = Call.build(
-                outerScope = FakeStaticBlock.of(
-                    FakeUserDeclaration(
-                        name = Symbol.of("f"),
-                        type = UniversalFunctionType(
-                            metaArgumentType = OrderedTupleType(
-                                elements = listOf(
-                                    OrderedTupleType.Element(
-                                        name = Symbol.of("type1"),
-                                        type = TypeType,
-                                    ),
-                                    OrderedTupleType.Element(
-                                        name = Symbol.of("type2"),
-                                        type = TypeType,
-                                    ),
-                                )
-                            ),
-                            argumentType = OrderedTupleType.of(
-                                TypeVariable.of("type1"),
-                                TypeVariable.of("type2"),
-                            ),
-                            imageType = UniversalFunctionType(
+                Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Symbol.of("f"),
+                            type = UniversalFunctionType(
                                 metaArgumentType = OrderedTupleType(
                                     elements = listOf(
+                                        OrderedTupleType.Element(
+                                            name = Symbol.of("type1"),
+                                            type = TypeType,
+                                        ),
                                         OrderedTupleType.Element(
                                             name = Symbol.of("type2"),
                                             type = TypeType,
@@ -312,14 +316,29 @@ class CallTests {
                                     TypeVariable.of("type1"),
                                     TypeVariable.of("type2"),
                                 ),
-                                imageType = OrderedTupleType.of(
-                                    TypeVariable.of("type1"),
-                                    TypeVariable.of("type2"),
+                                imageType = UniversalFunctionType(
+                                    metaArgumentType = OrderedTupleType(
+                                        elements = listOf(
+                                            OrderedTupleType.Element(
+                                                name = Symbol.of("type2"),
+                                                type = TypeType,
+                                            ),
+                                        )
+                                    ),
+                                    argumentType = OrderedTupleType.of(
+                                        TypeVariable.of("type1"),
+                                        TypeVariable.of("type2"),
+                                    ),
+                                    imageType = OrderedTupleType.of(
+                                        TypeVariable.of("type1"),
+                                        TypeVariable.of("type2"),
+                                    ),
                                 ),
                             ),
                         ),
-                    ),
-                ).chainWith(BuiltinScope),
+                    ).chainWith(BuiltinScope),
+                ),
+
                 term = term,
             )
 
@@ -373,7 +392,7 @@ class CallTests {
             }
 
             val call = Call.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse("sq(3)") as PostfixCallSourceTerm,
             )
 
@@ -395,7 +414,7 @@ class CallTests {
         @Test
         fun testDictSubject() {
             val call = Call.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse("dict(2)") as PostfixCallSourceTerm,
             )
 

@@ -18,13 +18,13 @@ class ArrayTypeConstructor(
 ) : TypeConstructor() {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: ArrayTypeConstructorTerm,
         ): ArrayTypeConstructor = ArrayTypeConstructor(
-            outerScope = outerScope,
+            outerScope = context.outerScope,
             term = term,
             elementType = Expression.build(
-                outerScope = outerScope,
+                context = context,
                 term = term.elementType,
             ),
         )

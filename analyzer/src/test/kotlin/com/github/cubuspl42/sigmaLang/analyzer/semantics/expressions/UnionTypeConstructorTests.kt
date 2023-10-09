@@ -79,7 +79,7 @@ class UnionTypeConstructorTests {
         ) as UnionTypeConstructorTerm
 
         val unionTypeConstructor = UnionTypeConstructor.build(
-            outerScope = StaticScope.Empty,
+            context = Expression.BuildContext.Empty,
             term = term,
         )
 
@@ -122,7 +122,7 @@ class UnionTypeConstructorTests {
         ) as UnionTypeConstructorTerm
 
         val unionTypeConstructor = UnionTypeConstructor.build(
-            outerScope = StaticScope.Empty,
+            context = Expression.BuildContext.Empty,
             term = term,
         )
 
@@ -175,7 +175,7 @@ class UnionTypeConstructorTests {
             ) as UnionTypeConstructorTerm
 
             val unionTypeConstructor = UnionTypeConstructor.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             )
 

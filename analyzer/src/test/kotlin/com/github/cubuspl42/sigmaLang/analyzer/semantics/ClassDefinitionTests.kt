@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
@@ -32,7 +33,7 @@ class ClassDefinitionTests {
             ) as ClassDefinitionTerm
 
             val classDefinition = ClassDefinition.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 qualifiedPath = QualifiedPath(
                     segments = listOf(
                         Symbol.of("Foo"),
@@ -86,7 +87,7 @@ class ClassDefinitionTests {
             ) as ClassDefinitionTerm
 
             val classDefinition = ClassDefinition.build(
-                outerScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 qualifiedPath = QualifiedPath(
                     segments = listOf(
                         Symbol.of("foo"),

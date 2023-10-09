@@ -28,7 +28,7 @@ class OrderedTupleConstructorTests {
             ) as OrderedTupleConstructorSourceTerm
 
             val tupleLiteral = OrderedTupleConstructor.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 term = term,
             )
 
@@ -51,14 +51,17 @@ class OrderedTupleConstructorTests {
             ) as OrderedTupleConstructorSourceTerm
 
             val tupleLiteral = OrderedTupleConstructor.build(
-                outerScope = FakeStaticBlock.of(
-                    FakeUserDeclaration(
-                        name = Symbol.of("a"),
-                        type = BoolType,
-                    ),
-                    FakeUserDeclaration(
-                        name = Symbol.of("b"),
-                        type = IntCollectiveType,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Symbol.of("a"),
+                            type = BoolType,
+                        ),
+                        FakeUserDeclaration(
+                            name = Symbol.of("b"),
+                            type = IntCollectiveType,
+                        ),
                     ),
                 ),
                 term = term,
@@ -84,7 +87,7 @@ class OrderedTupleConstructorTests {
         @Test
         fun testEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse(
                     source = "[]",
                 ) as OrderedTupleConstructorSourceTerm,
@@ -108,7 +111,7 @@ class OrderedTupleConstructorTests {
         @Test
         fun testNonEmpty() {
             val tupleConstructor = OrderedTupleConstructor.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse(
                     source = "[a, b]",
                 ) as OrderedTupleConstructorSourceTerm,

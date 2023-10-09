@@ -1,5 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+
 interface ModuleResolver {
     object Empty : ModuleResolver {
         override fun resolveModule(modulePath: ModulePath): Module? = null

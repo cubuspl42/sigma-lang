@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
@@ -29,7 +30,7 @@ class LocalDefinitionTests {
             val definitionTerm = letExpressionTerm.localScope.definitions.single()
 
             val definition = UserVariableDefinition.build(
-                declarationScope = BuiltinScope,
+                context = Expression.BuildContext.Builtin,
                 term = definitionTerm,
             )
 

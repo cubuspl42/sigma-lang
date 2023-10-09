@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Classifie
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.chainWithIfNotNull
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
@@ -46,12 +47,15 @@ class AbstractionConstructor(
 
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: BuildContext,
             term: AbstractionConstructorTerm,
         ): AbstractionConstructor {
+            val outerMetaScope = context.outerMetaScope
+            val outerScope = context.outerScope
+
             val metaArgumentTypeConstructor = term.metaArgumentType?.let {
                 TypeExpression.build(
-                    outerScope = outerScope,
+                    outerMetaScope = outerScope,
                     term = it,
                 )
             }
@@ -60,12 +64,12 @@ class AbstractionConstructor(
 
             val metaArgumentBlock = metaArgumentType?.toMetaArgumentDeclarationBlock()
 
-            val innerDeclarationScope1 = metaArgumentBlock?.chainWith(
-                outerScope = outerScope,
-            ) ?: outerScope
+            val innerMetaScope = metaArgumentBlock.chainWithIfNotNull(
+                outerScope = outerMetaScope,
+            )
 
             val argumentTypeBody = TypeExpression.build(
-                outerScope = innerDeclarationScope1,
+                outerMetaScope = innerMetaScope,
                 term = term.argumentType,
             )
 
@@ -73,25 +77,28 @@ class AbstractionConstructor(
 
             val argumentDeclarationBlock = argumentType.toArgumentDeclarationBlock()
 
-            val innerDeclarationScope2 = argumentDeclarationBlock.chainWith(
-                outerScope = innerDeclarationScope1,
+            val innerScope = argumentDeclarationBlock.chainWith(
+                outerScope = outerScope,
             )
 
             val declaredImageTypeBody = term.declaredImageType?.let {
                 TypeExpression.build(
-                    outerScope = innerDeclarationScope2,
+                    outerMetaScope = innerMetaScope,
                     term = it,
                 )
             }
 
             val image = build(
-                outerScope = innerDeclarationScope2,
+                context = BuildContext(
+                    outerMetaScope = innerMetaScope,
+                    outerScope = innerScope,
+                ),
                 term = term.image,
             )
 
             return AbstractionConstructor(
                 outerScope = outerScope,
-                innerScope = innerDeclarationScope2,
+                innerScope = innerScope,
                 term = term,
                 metaArgumentType = metaArgumentType,
                 argumentType = argumentType,

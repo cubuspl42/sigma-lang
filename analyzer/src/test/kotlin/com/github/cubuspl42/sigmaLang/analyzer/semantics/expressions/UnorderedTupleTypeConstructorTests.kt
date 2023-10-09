@@ -29,7 +29,7 @@ class UnorderedTupleTypeConstructorTests {
         ) as UnorderedTupleTypeConstructorSourceTerm
 
         val unorderedTupleTypeConstructor = UnorderedTupleTypeConstructor.build(
-            outerScope = StaticScope.Empty,
+            context = Expression.BuildContext.Empty,
             term = term,
         )
 
@@ -57,7 +57,7 @@ class UnorderedTupleTypeConstructorTests {
         ) as UnorderedTupleTypeConstructorSourceTerm
 
         val unorderedTupleTypeConstructor = UnorderedTupleTypeConstructor.build(
-            outerScope = BuiltinScope,
+            context = Expression.BuildContext.Builtin,
             term = term,
         )
 
@@ -111,7 +111,7 @@ class UnorderedTupleTypeConstructorTests {
         ) as LetExpressionTerm
 
         val letExpression = LetExpression.build(
-            outerScope = BuiltinScope,
+            context = Expression.BuildContext.Builtin,
             term = term,
         )
 

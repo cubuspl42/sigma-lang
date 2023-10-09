@@ -27,10 +27,13 @@ class IsUndefinedCheckTests {
             ) as IsUndefinedCheckSourceTerm
 
             val isUndefinedCheck = IsUndefinedCheck.build(
-                outerScope = FakeStaticBlock.of(
-                    FakeUserDeclaration(
-                        name = Symbol.of("foo"),
-                        type = IntCollectiveType,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Symbol.of("foo"),
+                            type = IntCollectiveType,
+                        ),
                     ),
                 ),
                 term = term,
@@ -47,7 +50,7 @@ class IsUndefinedCheckTests {
         @Test
         fun testNotUndefined() {
             val isUndefinedCheck = IsUndefinedCheck.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse(
                     source = "%isUndefined 0",
                 ) as IsUndefinedCheckSourceTerm,
@@ -70,7 +73,7 @@ class IsUndefinedCheckTests {
             val dictValue = DictValue.Empty
 
             val isUndefinedCheck = IsUndefinedCheck.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 term = ExpressionSourceTerm.parse(
                     source = "%isUndefined d(0)",
                 ) as IsUndefinedCheckSourceTerm,
