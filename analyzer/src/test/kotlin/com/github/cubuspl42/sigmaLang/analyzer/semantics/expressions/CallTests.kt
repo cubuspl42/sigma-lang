@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.chainWith
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableFunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
@@ -29,8 +30,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSour
 import utils.FakeStaticBlock
 import utils.FakeUserDeclaration
 import utils.assertTypeIsEquivalent
+import java.lang.ArithmeticException
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 
 class CallTests {
@@ -438,6 +441,34 @@ class CallTests {
                 expected = Identifier.of("two"),
                 actual = result.value,
             )
+        }
+
+        @Test
+        fun testStrictness() {
+            val term = ExpressionSourceTerm.parse("f{a: 42, b: 1 / 0}") as PostfixCallSourceTerm
+
+            val call = Call.build(
+                context = Expression.BuildContext.Empty,
+                term = term,
+            ).resolved
+
+            val resultThunk = call.bind(
+                dynamicScope = FixedDynamicScope(
+                    entries = mapOf(
+                        Identifier.of("f") to object : ComputableFunctionValue() {
+                            override fun apply(argument: Value): Thunk<Value> {
+                                val arguments = argument as DictValue
+                                val aValue = arguments.read(Identifier.of("a"))
+                                return Thunk.pure(aValue!!)
+                            }
+                        },
+                    ),
+                ).chainWith(BuiltinScope),
+            )
+
+            assertFailsWith<ArithmeticException> {
+                resultThunk.evaluateInitial()
+            }
         }
     }
 }
