@@ -17,12 +17,12 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
     abstract val entries: Set<Entry>
 
     abstract class Entry {
-        abstract val name: Identifier
+        abstract val name: Symbol
 
         abstract val value: Expression
 
         data class Analysis(
-            val name: Identifier,
+            val name: Symbol,
             val valueAnalysis: Expression.Analysis,
         ) {
             val inferredValueType: MembershipType
