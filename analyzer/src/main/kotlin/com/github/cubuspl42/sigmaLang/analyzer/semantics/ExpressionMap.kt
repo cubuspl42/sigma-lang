@@ -1,5 +1,6 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
+package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 data class ExpressionMap(
@@ -24,7 +25,7 @@ data class ExpressionMap(
             elements: Iterable<E>,
             extract: (E) -> ExpressionMap,
         ): ExpressionMap = elements.fold(
-            initial = ExpressionMap.Empty,
+            initial = Empty,
         ) { acc, e ->
             acc.unionWith(extract(e))
         }
