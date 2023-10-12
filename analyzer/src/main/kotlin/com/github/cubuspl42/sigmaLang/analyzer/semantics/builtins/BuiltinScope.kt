@@ -238,6 +238,7 @@ object BuiltinScope : DynamicScope, StaticScope {
         Identifier.of("length") to FunctionValue.LengthFunction,
         Identifier.of("concat") to FunctionValue.ConcatFunction,
         Identifier.of("is") to ClassDefinition.Is,
+        ArrayTypeConstructor.Name to ArrayTypeConstructor,
     )
 
     private val builtinValueDeclarations = builtinValues.map { (name, builtinValue) ->

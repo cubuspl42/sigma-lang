@@ -4,6 +4,8 @@ sealed class TableType : FunctionType() {
     final override val argumentType: MembershipType
         get() = keyType
 
+    abstract override fun substituteTypeVariables(resolution: TypeVariableResolution): TableType
+
     final override val imageType: MembershipType
         get() = valueType // TODO: | undefined
 

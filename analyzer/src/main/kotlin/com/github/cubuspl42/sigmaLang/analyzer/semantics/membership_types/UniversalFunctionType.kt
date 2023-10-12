@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeErrorExcept
 
 data class UniversalFunctionType(
     override val metaArgumentType: TupleType? = null,
-    override val argumentType: TupleType,
+    override val argumentType: TableType,
     override val imageType: MembershipType,
 ) : FunctionType() {
     data class UniversalFunctionMatch(
