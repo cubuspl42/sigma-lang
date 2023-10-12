@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 data class Identifier(
     val name: String,
-) : PrimitiveValue() {
+) : Symbol() {
     companion object {
         fun of(
             name: String,

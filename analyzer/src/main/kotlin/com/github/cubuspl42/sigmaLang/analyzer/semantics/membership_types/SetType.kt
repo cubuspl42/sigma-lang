@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope.SimpleBuiltinValue
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope.SimpleBuiltinValue
 
 // Type of sets
 data class SetType(

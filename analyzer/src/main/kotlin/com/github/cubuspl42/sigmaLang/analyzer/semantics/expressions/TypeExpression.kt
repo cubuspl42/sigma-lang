@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationError
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
