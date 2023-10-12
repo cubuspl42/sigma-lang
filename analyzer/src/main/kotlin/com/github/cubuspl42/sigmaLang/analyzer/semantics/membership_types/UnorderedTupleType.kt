@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
@@ -11,7 +12,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Abstraction
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
 abstract class UnorderedTupleType : TupleType() {
-    abstract val valueTypeThunkByName: Map<Identifier, Thunk<MembershipType>>
+    abstract val valueTypeThunkByName: Map<Symbol, Thunk<MembershipType>>
 
     val valueTypeByName by lazy {
         valueTypeThunkByName.mapValues { (_, thunk) ->
@@ -19,16 +20,16 @@ abstract class UnorderedTupleType : TupleType() {
         }
     }
 
-    val keys: Set<Identifier>
+    val keys: Set<Symbol>
         get() = valueTypeThunkByName.keys
 
     data class Entry(
-        val name: Identifier,
+        val name: Symbol,
         val typeThunk: Thunk<MembershipType>,
     )
 
     data class UnorderedTupleMatch(
-        val valuesMatches: Map<Identifier, ValueMatchResult>,
+        val valuesMatches: Map<Symbol, ValueMatchResult>,
     ) : MembershipType.PartialMatch() {
         sealed class ValueMatchResult {
             abstract fun isFull(): Boolean
@@ -64,7 +65,7 @@ abstract class UnorderedTupleType : TupleType() {
 
     companion object {
         val Empty = object : UnorderedTupleType() {
-            override val valueTypeThunkByName: Map<Identifier, Thunk<MembershipType>> = emptyMap()
+            override val valueTypeThunkByName: Map<Symbol, Thunk<MembershipType>> = emptyMap()
         }
 
         fun fromEntries(
@@ -82,7 +83,7 @@ abstract class UnorderedTupleType : TupleType() {
         return "{${dumpedEntries.joinToString()}}"
     }
 
-    fun getFieldType(key: Identifier): MembershipType? {
+    fun getFieldType(key: Symbol): MembershipType? {
         return valueTypeByName[key];
     }
 
@@ -117,19 +118,21 @@ abstract class UnorderedTupleType : TupleType() {
     override fun matchShape(
         assignedType: MembershipType,
     ): MembershipType.MatchResult = when (assignedType) {
-        is UnorderedTupleType -> UnorderedTupleMatch(valuesMatches = valueTypeByName.mapValues { (name, valueType) ->
-            val assignedValueType = assignedType.getFieldType(key = name)
+        is UnorderedTupleType -> UnorderedTupleMatch(
+            valuesMatches = valueTypeByName.mapValues { (name, valueType) ->
+                val assignedValueType = assignedType.getFieldType(key = name)
 
-            when {
-                assignedValueType != null -> UnorderedTupleMatch.PresentValueMatch(
-                    valueMatch = valueType.match(
-                        assignedType = assignedValueType,
+                when {
+                    assignedValueType != null -> UnorderedTupleMatch.PresentValueMatch(
+                        valueMatch = valueType.match(
+                            assignedType = assignedValueType,
+                        )
                     )
-                )
 
-                else -> UnorderedTupleMatch.AbsentValueMismatch
-            }
-        })
+                    else -> UnorderedTupleMatch.AbsentValueMismatch
+                }
+            },
+        )
 
         else -> MembershipType.TotalMismatch(
             expectedType = this,
@@ -161,7 +164,7 @@ abstract class UnorderedTupleType : TupleType() {
 
     override fun toArgumentScope(argument: DictValue): DynamicScope = object : DynamicScope {
         override fun getValue(
-            name: Identifier,
+            name: Symbol,
         ): Thunk<Value>? = argument.read(name)?.toThunk()
     }
 
@@ -195,7 +198,7 @@ abstract class UnorderedTupleType : TupleType() {
 }
 
 fun UnorderedTupleType(
-    valueTypeByName: Map<Identifier, MembershipType>
+    valueTypeByName: Map<Symbol, MembershipType>,
 ): UnorderedTupleType = object : UnorderedTupleType() {
     override val valueTypeThunkByName = valueTypeByName.mapValues { (_, type) ->
         Thunk.pure(type)

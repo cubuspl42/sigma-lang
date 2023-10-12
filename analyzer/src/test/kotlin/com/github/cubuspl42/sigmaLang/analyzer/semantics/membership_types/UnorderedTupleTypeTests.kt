@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import utils.assertTypeIsEquivalent
 import utils.assertTypeIsNonEquivalent
@@ -13,8 +14,8 @@ class UnorderedTupleTypeTests {
         fun testAssignedSameTupleType() {
             val unorderedTupleType = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("foo") to IntCollectiveType,
-                    Identifier.of("bar") to BoolType,
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to BoolType,
                 )
             )
 
@@ -23,8 +24,8 @@ class UnorderedTupleTypeTests {
                 actual = unorderedTupleType.match(
                     assignedType = UnorderedTupleType(
                         valueTypeByName = mapOf(
-                            Identifier.of("foo") to IntCollectiveType,
-                            Identifier.of("bar") to BoolType,
+                            Symbol.of("foo") to IntCollectiveType,
+                            Symbol.of("bar") to BoolType,
                         )
                     ),
                 ).isFull(),
@@ -35,24 +36,24 @@ class UnorderedTupleTypeTests {
         fun testAssignedUnionTypeOfOverlappingTupleTypes() {
             val unorderedTupleType = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("foo") to IntCollectiveType,
-                    Identifier.of("bar") to BoolType,
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to BoolType,
                 )
             )
 
             val overlappingType1 = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("ordered") to OrderedTupleType.of(StringType),
-                    Identifier.of("bar") to BoolType,
-                    Identifier.of("foo") to IntLiteralType.of(value = 2L),
+                    Symbol.of("ordered") to OrderedTupleType.of(StringType),
+                    Symbol.of("bar") to BoolType,
+                    Symbol.of("foo") to IntLiteralType.of(value = 2L),
                 )
             )
 
             val overlappingType2 = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("foo") to IntCollectiveType,
-                    Identifier.of("baz") to StringType,
-                    Identifier.of("bar") to BoolType,
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("baz") to StringType,
+                    Symbol.of("bar") to BoolType,
                 )
             )
 
@@ -75,23 +76,23 @@ class UnorderedTupleTypeTests {
         fun testAssignedUnionTypeOfPartiallyNonOverlappingTupleTypes() {
             val unorderedTupleType = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("foo") to IntCollectiveType,
-                    Identifier.of("bar") to BoolType,
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to BoolType,
                 )
             )
 
             val overlappingType = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("ordered") to OrderedTupleType.of(StringType),
-                    Identifier.of("bar") to BoolType,
-                    Identifier.of("foo") to IntLiteralType.of(value = 2L),
+                    Symbol.of("ordered") to OrderedTupleType.of(StringType),
+                    Symbol.of("bar") to BoolType,
+                    Symbol.of("foo") to IntLiteralType.of(value = 2L),
                 )
             )
 
             val nonOverlappingType = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("baz") to StringType,
-                    Identifier.of("bar") to BoolType,
+                    Symbol.of("baz") to StringType,
+                    Symbol.of("bar") to BoolType,
                 )
             )
 
@@ -117,15 +118,15 @@ class UnorderedTupleTypeTests {
         fun testAssignedUnionTypeOfNonTupleTypes() {
             val unorderedTupleType = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("foo") to IntCollectiveType,
-                    Identifier.of("bar") to BoolType,
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to BoolType,
                 )
             )
 
             val overlappingType = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("bar") to BoolType,
-                    Identifier.of("foo") to IntLiteralType.of(value = 2L),
+                    Symbol.of("bar") to BoolType,
+                    Symbol.of("foo") to IntLiteralType.of(value = 2L),
                 )
             )
 
@@ -155,16 +156,16 @@ class UnorderedTupleTypeTests {
         fun testAcyclicEquivalent() {
             val unorderedTupleType = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("foo") to IntCollectiveType,
-                    Identifier.of("bar") to BoolType,
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to BoolType,
                 )
             )
 
             assertTypeIsEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Identifier.of("foo") to IntCollectiveType,
-                        Identifier.of("bar") to BoolType,
+                        Symbol.of("foo") to IntCollectiveType,
+                        Symbol.of("bar") to BoolType,
                     )
                 ),
                 actual = unorderedTupleType,
@@ -175,16 +176,16 @@ class UnorderedTupleTypeTests {
         fun testAcyclicNonEquivalent() {
             val unorderedTupleType = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Identifier.of("foo") to IntCollectiveType,
-                    Identifier.of("bar") to BoolType,
+                    Symbol.of("foo") to IntCollectiveType,
+                    Symbol.of("bar") to BoolType,
                 )
             )
 
             assertTypeIsNonEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Identifier.of("foo") to IntCollectiveType,
-                        Identifier.of("bar") to StringType,
+                        Symbol.of("foo") to IntCollectiveType,
+                        Symbol.of("bar") to StringType,
                     )
                 ),
                 actual = unorderedTupleType,
@@ -195,16 +196,16 @@ class UnorderedTupleTypeTests {
         fun testCyclicSimpleEquivalent() {
             val unorderedTupleType = object : UnorderedTupleType() {
                 override val valueTypeThunkByName = mapOf(
-                    Identifier.of("foo") to Thunk.pure(IntCollectiveType),
-                    Identifier.of("bar") to Thunk.pure(this),
+                    Symbol.of("foo") to Thunk.pure(IntCollectiveType),
+                    Symbol.of("bar") to Thunk.pure(this),
                 )
             }
 
             assertTypeIsEquivalent(
                 expected = object : UnorderedTupleType() {
                     override val valueTypeThunkByName = mapOf(
-                        Identifier.of("foo") to Thunk.pure(IntCollectiveType),
-                        Identifier.of("bar") to Thunk.pure(this),
+                        Symbol.of("foo") to Thunk.pure(IntCollectiveType),
+                        Symbol.of("bar") to Thunk.pure(this),
                     )
                 },
                 actual = unorderedTupleType,
@@ -217,12 +218,12 @@ class UnorderedTupleTypeTests {
                 private val outer = this
 
                 override val valueTypeThunkByName = mapOf(
-                    Identifier.of("foo") to Thunk.pure(IntCollectiveType),
-                    Identifier.of("bar") to Thunk.pure(
+                    Symbol.of("foo") to Thunk.pure(IntCollectiveType),
+                    Symbol.of("bar") to Thunk.pure(
                         object : UnorderedTupleType() {
                             override val valueTypeThunkByName = mapOf(
-                                Identifier.of("foo") to Thunk.pure(IntCollectiveType),
-                                Identifier.of("bar") to Thunk.pure(outer),
+                                Symbol.of("foo") to Thunk.pure(IntCollectiveType),
+                                Symbol.of("bar") to Thunk.pure(outer),
                             )
                         },
                     ),
@@ -232,8 +233,8 @@ class UnorderedTupleTypeTests {
             assertTypeIsEquivalent(
                 expected = object : UnorderedTupleType() {
                     override val valueTypeThunkByName = mapOf(
-                        Identifier.of("foo") to Thunk.pure(IntCollectiveType),
-                        Identifier.of("bar") to Thunk.pure(this),
+                        Symbol.of("foo") to Thunk.pure(IntCollectiveType),
+                        Symbol.of("bar") to Thunk.pure(this),
                     )
                 },
                 actual = unorderedTupleType,
@@ -246,12 +247,12 @@ class UnorderedTupleTypeTests {
                 private val outer = this
 
                 override val valueTypeThunkByName = mapOf(
-                    Identifier.of("foo") to Thunk.pure(IntCollectiveType),
-                    Identifier.of("bar") to Thunk.pure(
+                    Symbol.of("foo") to Thunk.pure(IntCollectiveType),
+                    Symbol.of("bar") to Thunk.pure(
                         object : UnorderedTupleType() {
                             override val valueTypeThunkByName = mapOf(
-                                Identifier.of("foo") to Thunk.pure(BoolType),
-                                Identifier.of("bar") to Thunk.pure(outer),
+                                Symbol.of("foo") to Thunk.pure(BoolType),
+                                Symbol.of("bar") to Thunk.pure(outer),
                             )
                         },
                     ),
@@ -261,8 +262,8 @@ class UnorderedTupleTypeTests {
             assertTypeIsNonEquivalent(
                 expected = object : UnorderedTupleType() {
                     override val valueTypeThunkByName = mapOf(
-                        Identifier.of("foo") to Thunk.pure(IntCollectiveType),
-                        Identifier.of("bar") to Thunk.pure(this),
+                        Symbol.of("foo") to Thunk.pure(IntCollectiveType),
+                        Symbol.of("bar") to Thunk.pure(this),
                     )
                 },
                 actual = unorderedTupleType,

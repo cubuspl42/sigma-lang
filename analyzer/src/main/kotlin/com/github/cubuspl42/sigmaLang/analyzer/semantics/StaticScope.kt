@@ -1,7 +1,9 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 
 interface StaticScope {
     companion object {
@@ -13,10 +15,10 @@ interface StaticScope {
             val resultScope = result.second
 
             override fun resolveName(
-                name: Identifier,
+                name: Symbol,
             ): ClassifiedIntroduction? = resultScope.resolveName(name = name)
 
-            override fun getAllNames(): Set<Identifier> = resultScope.getAllNames()
+            override fun getAllNames(): Set<Symbol> = resultScope.getAllNames()
         }.result
     }
 
@@ -25,21 +27,21 @@ interface StaticScope {
     }
 
     object Empty : StaticScope {
-        override fun resolveName(name: Identifier): ClassifiedIntroduction? = null
-        override fun getAllNames(): Set<Identifier> = emptySet()
+        override fun resolveName(name: Symbol): ClassifiedIntroduction? = null
+        override fun getAllNames(): Set<Symbol> = emptySet()
     }
 
     class Chained(
         private val outerScope: StaticScope,
         private val staticBlock: StaticBlock,
     ) : StaticScope {
-        override fun resolveName(name: Identifier): ClassifiedIntroduction? =
+        override fun resolveName(name: Symbol): ClassifiedIntroduction? =
             staticBlock.resolveNameLocally(name = name) ?: outerScope.resolveName(name = name)
 
-        override fun getAllNames(): Set<Identifier> = staticBlock.getLocalNames() + outerScope.getAllNames()
+        override fun getAllNames(): Set<Symbol> = staticBlock.getLocalNames() + outerScope.getAllNames()
     }
 
-    fun resolveName(name: Identifier): ClassifiedIntroduction?
+    fun resolveName(name: Symbol): ClassifiedIntroduction?
 
-    fun getAllNames(): Set<Identifier>
+    fun getAllNames(): Set<Symbol>
 }
