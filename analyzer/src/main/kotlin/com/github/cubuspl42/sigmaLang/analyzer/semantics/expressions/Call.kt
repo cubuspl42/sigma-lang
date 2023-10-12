@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.BinaryOperationPrototype
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
@@ -89,7 +90,7 @@ abstract class Call : Expression() {
                         object : Reference() {
                             override val outerScope: StaticScope = context.outerScope
 
-                            override val referredName: Identifier = Identifier.of(prototype.functionName)
+                            override val referredName: Symbol = Symbol.of(prototype.functionName)
 
                             override val term: ReferenceTerm? = null
                         }

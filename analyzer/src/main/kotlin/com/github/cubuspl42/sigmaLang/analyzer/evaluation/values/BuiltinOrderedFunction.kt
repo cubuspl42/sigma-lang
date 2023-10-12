@@ -1,11 +1,10 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinValue
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TableType
 
-abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
+abstract class BuiltinOrderedFunction : BuiltinFunction() {
     final override fun dump(): String = "(builtin ordered function)"
 
     final override fun apply(
@@ -18,26 +17,18 @@ abstract class BuiltinOrderedFunction : FunctionValue(), BuiltinValue {
         )
     }
 
-    final override val type: MembershipType
-        get() = UniversalFunctionType(
-            argumentType = OrderedTupleType(
-                elements = argTypes.map {
-                    OrderedTupleType.Element(
-                        name = null,
-                        type = it,
-                    )
-                },
-            ),
-            imageType = imageType,
+    final override val argumentType: TableType
+        get() = OrderedTupleType(
+            elements = argTypes.map {
+                OrderedTupleType.Element(
+                    name = null,
+                    type = it,
+                )
+            },
         )
-
-    final override val value: Value
-        get() = this
 
     // Thought: allow for names
     abstract val argTypes: List<MembershipType>
-
-    abstract val imageType: MembershipType
 
     abstract fun computeThunk(
         args: List<Value>,
