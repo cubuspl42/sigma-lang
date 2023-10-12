@@ -53,7 +53,7 @@ class EulerProblemsTests {
                 Identifier.of("b") to IntValue(value = 1L),
                 Identifier.of("c") to IntValue(value = 8L),
             ),
-            actual = dictValue.entries,
+            actual = dictValue.valueEntries,
         )
     }
 

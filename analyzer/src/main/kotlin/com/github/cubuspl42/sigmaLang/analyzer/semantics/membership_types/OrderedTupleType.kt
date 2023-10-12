@@ -173,7 +173,7 @@ data class OrderedTupleType(
         override fun getValue(name: Symbol): Thunk<Value>? {
             val index = elements.indexOfOrNull { it.name == name } ?: return null
 
-            return argument.read(IntValue(value = index.toLong()))?.toThunk()
+            return argument.read(IntValue(value = index.toLong()))
         }
     }
 

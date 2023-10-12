@@ -102,9 +102,7 @@ class OrderedTupleConstructorTests {
             assertIs<DictValue>(value)
 
             assertEquals(
-                expected = ArrayTable(
-                    elements = emptyList(),
-                ).entries,
+                expected = emptyMap(),
                 actual = value.entries,
             )
         }
@@ -136,8 +134,8 @@ class OrderedTupleConstructorTests {
                         BoolValue(false),
                         IntValue(1),
                     ),
-                ).entries,
-                actual = value.entries,
+                ).valueEntries,
+                actual = value.valueEntries,
             )
         }
     }

@@ -110,13 +110,13 @@ class ClassDefinitionTests {
 
             assertEquals(
                 expected = Identifier.of("foo.Foo"),
-                actual = classValue.read(
+                actual = classValue.readValue(
                     key = ClassDefinition.classTagKey,
                 ),
             )
 
             val actualType = assertNotNull(
-                actual = classValue.read(
+                actual = classValue.readValue(
                     key = ClassDefinition.classTypeKey,
                 )?.asType,
             )
@@ -133,7 +133,7 @@ class ClassDefinitionTests {
             )
 
             assertIs<FunctionValue>(
-                classValue.read(
+                classValue.readValue(
                     key = Identifier.of("new"),
                 ),
             )

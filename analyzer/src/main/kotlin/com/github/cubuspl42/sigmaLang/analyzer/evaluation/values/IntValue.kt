@@ -16,12 +16,12 @@ data class IntValue(
             val left = argumentTuple.read(Identifier.of(prototype.leftArgumentName))!!
             val right = argumentTuple.read(Identifier.of(prototype.rightArgumentName))!!
 
-            left as IntValue
-            right as IntValue
+            val leftValue = left.value as IntValue
+            val rightValue = right.value as IntValue
 
             return calculate(
-                left = left.value,
-                right = right.value,
+                left = leftValue.value,
+                right = rightValue.value,
             ).toThunk()
         }
 
@@ -66,7 +66,7 @@ data class IntValue(
 
     object Sq : ComputableFunctionValue() {
         override fun apply(argument: Value): Thunk<Value> {
-            val arg = (argument as DictValue).read(Zero)!! as IntValue
+            val arg = (argument as DictValue).readValue(Zero)!! as IntValue
 
             return IntValue(arg.value * arg.value).toThunk()
         }

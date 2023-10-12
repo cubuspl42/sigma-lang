@@ -45,7 +45,7 @@ abstract class DictConstructor : Expression() {
                 Thunk.pure(
                     DictValue.Entry(
                         key = (key as PrimitiveValue),
-                        value = value,
+                        value = Thunk.pure(value),
                     ),
                 )
             }
@@ -214,7 +214,7 @@ abstract class DictConstructor : Expression() {
             (key as PrimitiveValue) to value
         }
     }.thenJust {
-        DictValue(
+        DictValue.fromMap(
             entries = it.toMap(),
         )
     }

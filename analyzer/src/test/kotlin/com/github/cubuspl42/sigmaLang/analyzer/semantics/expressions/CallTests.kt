@@ -425,7 +425,7 @@ class CallTests {
                 call.bind(
                     dynamicScope = FixedDynamicScope(
                         entries = mapOf(
-                            Identifier.of("dict") to DictValue(
+                            Identifier.of("dict") to DictValue.fromMap(
                                 entries = mapOf(
                                     IntValue(1) to Identifier.of("one"),
                                     IntValue(2) to Identifier.of("two"),
@@ -459,16 +459,17 @@ class CallTests {
                             override fun apply(argument: Value): Thunk<Value> {
                                 val arguments = argument as DictValue
                                 val aValue = arguments.read(Identifier.of("a"))
-                                return Thunk.pure(aValue!!)
+                                return aValue!!
                             }
                         },
                     ),
                 ).chainWith(BuiltinScope),
             )
 
-            assertFailsWith<ArithmeticException> {
-                resultThunk.evaluateInitial()
-            }
+            assertEquals(
+                expected = IntValue(value = 42L),
+                actual = resultThunk.value,
+            )
         }
     }
 }

@@ -82,7 +82,7 @@ class NamespaceDefinition(
 
     override val valueThunk: Thunk<Value> by lazy {
         Thunk.pure(
-            DictValue(
+            DictValue.fromMap(
                 entries = definitions.associate {
                     it.name to it.valueThunk.value!!
                 },

@@ -93,8 +93,8 @@ object DictTypeConstructor : TypeConstructor() {
     override fun applyType(argument: Value): MembershipType {
         val arguments = argument as DictValue
 
-        val keyType = arguments.read(key = KeyTypeName)!!.asType!!
-        val valueType = arguments.read(key = ValueTypeName)!!.asType!!
+        val keyType = arguments.readValue(key = KeyTypeName)!!.asType!!
+        val valueType = arguments.readValue(key = ValueTypeName)!!.asType!!
 
         return DictType(
             keyType = keyType,
