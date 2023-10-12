@@ -1,10 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourceTerm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -39,7 +36,7 @@ class OrderedTupleTypeConstructorTermTests {
                             name = null,
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 2),
-                                referredName = Symbol.of("A"),
+                                referredName = Identifier.of("A"),
                             ),
                         ),
                     ),
@@ -62,21 +59,21 @@ class OrderedTupleTypeConstructorTermTests {
                             name = null,
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 2),
-                                referredName = Symbol.of("A"),
+                                referredName = Identifier.of("A"),
                             ),
                         ),
                         OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 5),
-                                referredName = Symbol.of("B"),
+                                referredName = Identifier.of("B"),
                             ),
                         ),
                         OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 8),
-                                referredName = Symbol.of("C"),
+                                referredName = Identifier.of("C"),
                             ),
                         ),
                     ),
@@ -96,24 +93,24 @@ class OrderedTupleTypeConstructorTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     elements = listOf(
                         OrderedTupleTypeConstructorSourceTerm.Element(
-                            name = Symbol.of("a"),
+                            name = Identifier.of("a"),
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 5),
-                                referredName = Symbol.of("A"),
+                                referredName = Identifier.of("A"),
                             ),
                         ),
                         OrderedTupleTypeConstructorSourceTerm.Element(
                             name = null,
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 8),
-                                referredName = Symbol.of("B"),
+                                referredName = Identifier.of("B"),
                             ),
                         ),
                         OrderedTupleTypeConstructorSourceTerm.Element(
-                            name = Symbol.of("c"),
+                            name = Identifier.of("c"),
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 14),
-                                referredName = Symbol.of("C"),
+                                referredName = Identifier.of("C"),
                             ),
                         ),
                     ),

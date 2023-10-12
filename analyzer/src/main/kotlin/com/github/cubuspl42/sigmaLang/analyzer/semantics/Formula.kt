@@ -1,13 +1,13 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 
 data class Formula(
-    val name: Symbol,
+    val name: Identifier,
 ) {
     companion object {
         fun of(s: String): Formula = Formula(
-            name = Symbol.of(s)
+            name = Identifier.of(s)
         )
     }
 }

@@ -1,13 +1,12 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
@@ -77,8 +76,8 @@ class UnorderedTupleTypeConstructorTests {
 
         val expectedType = UnorderedTupleType(
             valueTypeByName = mapOf(
-                Symbol.of("k1") to IntCollectiveType,
-                Symbol.of("k2") to BoolType,
+                Identifier.of("k1") to IntCollectiveType,
+                Identifier.of("k2") to BoolType,
             ),
         )
 
@@ -132,8 +131,8 @@ class UnorderedTupleTypeConstructorTests {
         assertTypeIsEquivalent(
             expected = object : UnorderedTupleType() {
                 override val valueTypeThunkByName = mapOf(
-                    Symbol.of("k1") to Thunk.pure(IntCollectiveType),
-                    Symbol.of("k2") to Thunk.pure(this),
+                    Identifier.of("k1") to Thunk.pure(IntCollectiveType),
+                    Identifier.of("k2") to Thunk.pure(this),
                 )
             },
             actual = actualType,

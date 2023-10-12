@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -29,7 +29,7 @@ class SetConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("value1"),
+                            name = Identifier.of("value1"),
                             type = BoolType,
                         ),
                     ),
@@ -54,11 +54,11 @@ class SetConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("value1"),
+                            name = Identifier.of("value1"),
                             type = BoolType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value2"),
+                            name = Identifier.of("value2"),
                             type = BoolType,
                         ),
                     ),
@@ -88,11 +88,11 @@ class SetConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("value1"),
+                            name = Identifier.of("value1"),
                             type = BoolType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value2"),
+                            name = Identifier.of("value2"),
                             type = IntCollectiveType,
                         ),
                     ),
@@ -135,9 +135,9 @@ class SetConstructorTests {
                 setConstructor.bind(
                     dynamicScope = FixedDynamicScope(
                         entries = mapOf(
-                            Symbol.of("foo") to IntValue(value = 1L),
-                            Symbol.of("bar") to IntValue(value = 2L),
-                            Symbol.of("baz") to IntValue(value = 3L),
+                            Identifier.of("foo") to IntValue(value = 1L),
+                            Identifier.of("bar") to IntValue(value = 2L),
+                            Identifier.of("baz") to IntValue(value = 3L),
                         ),
                     ),
                 ).evaluateInitial(),

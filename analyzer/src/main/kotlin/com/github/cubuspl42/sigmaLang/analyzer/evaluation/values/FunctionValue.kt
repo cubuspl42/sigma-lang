@@ -19,9 +19,9 @@ abstract class FunctionValue : Value() {
 
             return Thunk.combine2(
                 argument.apply(
-                    argument = Symbol.of("primary"),
+                    argument = Identifier.of("primary"),
                 ), argument.apply(
-                    argument = Symbol.of("secondary"),
+                    argument = Identifier.of("secondary"),
                 )
             ) { primary, secondary ->
                 primary as FunctionValue

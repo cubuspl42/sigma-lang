@@ -1,14 +1,14 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 
 class FixedDynamicScope(
-    private val entries: Map<Symbol, Value>,
+    private val entries: Map<Identifier, Value>,
 ) : DynamicScope {
     override fun getValue(
-        name: Symbol,
+        name: Identifier,
     ): Thunk<Value>? = entries[name]?.toThunk()
 }

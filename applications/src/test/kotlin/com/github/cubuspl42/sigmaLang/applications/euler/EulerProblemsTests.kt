@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -49,9 +49,9 @@ class EulerProblemsTests {
 
         assertEquals<Map<PrimitiveValue, Value>>(
             expected = mapOf(
-                Symbol.of("a") to IntValue(value = 1L),
-                Symbol.of("b") to IntValue(value = 1L),
-                Symbol.of("c") to IntValue(value = 8L),
+                Identifier.of("a") to IntValue(value = 1L),
+                Identifier.of("b") to IntValue(value = 1L),
+                Identifier.of("c") to IntValue(value = 8L),
             ),
             actual = dictValue.entries,
         )

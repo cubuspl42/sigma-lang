@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
@@ -17,7 +17,7 @@ abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
     abstract val elements: List<Element>
 
     abstract class Element {
-        abstract val name: Symbol?
+        abstract val name: Identifier?
 
         abstract val type: Expression
 
@@ -34,7 +34,7 @@ abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
                 return object : Stub<Element> {
                     override val resolved: Element by lazy {
                         object : Element() {
-                            override val name: Symbol? = element.name
+                            override val name: Identifier? = element.name
 
                             override val type: Expression by lazy { typeStub.resolved }
                         }
@@ -44,7 +44,7 @@ abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
         }
 
         data class Analysis(
-            val name: Symbol?,
+            val name: Identifier?,
             val typeAnalysis: Expression.Analysis,
         )
 

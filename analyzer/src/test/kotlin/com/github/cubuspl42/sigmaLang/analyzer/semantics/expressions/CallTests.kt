@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScop
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableFunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
@@ -46,7 +46,7 @@ class CallTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("f"),
+                            name = Identifier.of("f"),
                             type = UniversalFunctionType(
                                 argumentType = OrderedTupleType(
                                     elements = listOf(
@@ -87,12 +87,12 @@ class CallTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("f"),
+                            name = Identifier.of("f"),
                             type = UniversalFunctionType(
                                 argumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(
-                                            name = Symbol.of("a"),
+                                            name = Identifier.of("a"),
                                             type = BoolType,
                                         ),
                                     ),
@@ -142,7 +142,7 @@ class CallTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("b"),
+                            name = Identifier.of("b"),
                             type = BoolType,
                         ),
                     ),
@@ -176,16 +176,16 @@ class CallTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("f"),
+                            name = Identifier.of("f"),
                             type = UniversalFunctionType(
                                 metaArgumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(
-                                            name = Symbol.of("type1"),
+                                            name = Identifier.of("type1"),
                                             type = TypeType,
                                         ),
                                         OrderedTupleType.Element(
-                                            name = Symbol.of("type2"),
+                                            name = Identifier.of("type2"),
                                             type = TypeType,
                                         ),
                                     )
@@ -196,8 +196,8 @@ class CallTests {
                                 ),
                                 imageType = UnorderedTupleType(
                                     valueTypeByName = mapOf(
-                                        Symbol.of("key1") to TypeVariable.of("type1"),
-                                        Symbol.of("key2") to TypeVariable.of("type2"),
+                                        Identifier.of("key1") to TypeVariable.of("type1"),
+                                        Identifier.of("key2") to TypeVariable.of("type2"),
                                     ),
                                 ),
                             ),
@@ -215,8 +215,8 @@ class CallTests {
             assertTypeIsEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Symbol.of("key1") to BoolType,
-                        Symbol.of("key2") to IntLiteralType.of(0L),
+                        Identifier.of("key1") to BoolType,
+                        Identifier.of("key2") to IntLiteralType.of(0L),
                     ),
                 ),
                 actual = call.inferredTypeOrIllType.getOrCompute(),
@@ -234,12 +234,12 @@ class CallTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("f"),
+                            name = Identifier.of("f"),
                             type = UniversalFunctionType(
                                 metaArgumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(
-                                            name = Symbol.of("type"),
+                                            name = Identifier.of("type"),
                                             type = TypeType,
                                         ),
                                     )
@@ -263,7 +263,7 @@ class CallTests {
                             metaArgumentType = OrderedTupleType(
                                 elements = listOf(
                                     OrderedTupleType.Element(
-                                        name = Symbol.of("type"),
+                                        name = Identifier.of("type"),
                                         type = TypeType,
                                     ),
                                 )
@@ -298,16 +298,16 @@ class CallTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("f"),
+                            name = Identifier.of("f"),
                             type = UniversalFunctionType(
                                 metaArgumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(
-                                            name = Symbol.of("type1"),
+                                            name = Identifier.of("type1"),
                                             type = TypeType,
                                         ),
                                         OrderedTupleType.Element(
-                                            name = Symbol.of("type2"),
+                                            name = Identifier.of("type2"),
                                             type = TypeType,
                                         ),
                                     )
@@ -320,7 +320,7 @@ class CallTests {
                                     metaArgumentType = OrderedTupleType(
                                         elements = listOf(
                                             OrderedTupleType.Element(
-                                                name = Symbol.of("type2"),
+                                                name = Identifier.of("type2"),
                                                 type = TypeType,
                                             ),
                                         )
@@ -352,7 +352,7 @@ class CallTests {
                     metaArgumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
-                                name = Symbol.of("type2"),
+                                name = Identifier.of("type2"),
                                 type = TypeType,
                             ),
                         )
@@ -400,7 +400,7 @@ class CallTests {
                 call.bind(
                     dynamicScope = FixedDynamicScope(
                         entries = mapOf(
-                            Symbol.of("sq") to sq,
+                            Identifier.of("sq") to sq,
                         )
                     ),
                 ).evaluateInitial(),
@@ -422,11 +422,11 @@ class CallTests {
                 call.bind(
                     dynamicScope = FixedDynamicScope(
                         entries = mapOf(
-                            Symbol.of("dict") to DictValue(
+                            Identifier.of("dict") to DictValue(
                                 entries = mapOf(
-                                    IntValue(1) to Symbol.of("one"),
-                                    IntValue(2) to Symbol.of("two"),
-                                    IntValue(3) to Symbol.of("three"),
+                                    IntValue(1) to Identifier.of("one"),
+                                    IntValue(2) to Identifier.of("two"),
+                                    IntValue(3) to Identifier.of("three"),
                                 ),
                             ),
                         ),
@@ -435,7 +435,7 @@ class CallTests {
             )
 
             assertEquals(
-                expected = Symbol.of("two"),
+                expected = Identifier.of("two"),
                 actual = result.value,
             )
         }

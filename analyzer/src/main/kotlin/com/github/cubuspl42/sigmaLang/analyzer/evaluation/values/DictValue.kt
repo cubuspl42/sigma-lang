@@ -67,7 +67,7 @@ data class DictValue(
     private fun dumpKey(
         key: Value,
     ): String = when (key) {
-        is Symbol -> key.dump()
+        is Identifier -> key.dump()
         else -> "[${key.dump()}]"
     }
 

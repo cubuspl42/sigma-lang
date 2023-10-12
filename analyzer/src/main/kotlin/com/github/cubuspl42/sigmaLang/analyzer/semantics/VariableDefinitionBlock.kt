@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.LoopedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
@@ -33,13 +33,13 @@ class VariableDefinitionBlock(
         declarations.associateBy { it.name }
     }
 
-    fun getValueDefinition(name: Symbol): UserVariableDefinition? = definitionByName[name]
+    fun getValueDefinition(name: Identifier): UserVariableDefinition? = definitionByName[name]
 
     override fun resolveNameLocally(
-        name: Symbol,
+        name: Identifier,
     ): ClassifiedIntroduction? = getValueDefinition(name = name)
 
-    override fun getLocalNames(): Set<Symbol> = definitionByName.keys
+    override fun getLocalNames(): Set<Identifier> = definitionByName.keys
 
     val subExpressions by lazy { definitionByName.values.map { it.body }.toSet() }
 

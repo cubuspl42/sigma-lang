@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
@@ -32,7 +32,7 @@ abstract class FieldRead : Expression() {
     data class MissingFieldError(
         override val location: SourceLocation?,
         val subjectType: UnorderedTupleType,
-        val missingFieldName: Symbol,
+        val missingFieldName: Identifier,
     ) : InferredFieldTypeOutcome, SemanticError
 
     data object InferredFieldTypeAbort : InferredFieldTypeOutcome
@@ -59,7 +59,7 @@ abstract class FieldRead : Expression() {
         }
     }
 
-    private val fieldName: Symbol
+    private val fieldName: Identifier
         get() = term.fieldName
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {

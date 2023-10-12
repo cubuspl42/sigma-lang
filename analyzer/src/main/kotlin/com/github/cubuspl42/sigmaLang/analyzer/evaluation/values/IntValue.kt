@@ -13,8 +13,8 @@ data class IntValue(
         override fun apply(argument: Value): Thunk<Value> {
             val argumentTuple = argument as DictValue
 
-            val left = argumentTuple.read(Symbol.of(prototype.leftArgumentName))!!
-            val right = argumentTuple.read(Symbol.of(prototype.rightArgumentName))!!
+            val left = argumentTuple.read(Identifier.of(prototype.leftArgumentName))!!
+            val right = argumentTuple.read(Identifier.of(prototype.rightArgumentName))!!
 
             left as IntValue
             right as IntValue

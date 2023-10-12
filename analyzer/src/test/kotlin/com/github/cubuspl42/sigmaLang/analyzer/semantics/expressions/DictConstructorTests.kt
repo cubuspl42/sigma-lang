@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.Arbitrary
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
@@ -24,11 +24,11 @@ class DictConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("key1"),
+                            name = Identifier.of("key1"),
                             type = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value1"),
+                            name = Identifier.of("value1"),
                             type = BoolType,
                         ),
                     ),
@@ -58,19 +58,19 @@ class DictConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("key1"),
+                            name = Identifier.of("key1"),
                             type = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value1"),
+                            name = Identifier.of("value1"),
                             type = BoolType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("key2"),
+                            name = Identifier.of("key2"),
                             type = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value2"),
+                            name = Identifier.of("value2"),
                             type = BoolType,
                         ),
                     ),
@@ -101,19 +101,19 @@ class DictConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("key1"),
+                            name = Identifier.of("key1"),
                             type = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value1"),
+                            name = Identifier.of("value1"),
                             type = BoolType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("key2"),
+                            name = Identifier.of("key2"),
                             type = BoolType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value2"),
+                            name = Identifier.of("value2"),
                             type = BoolType,
                         ),
                     ),
@@ -153,19 +153,19 @@ class DictConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("key1"),
+                            name = Identifier.of("key1"),
                             type = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value1"),
+                            name = Identifier.of("value1"),
                             type = BoolType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("key2"),
+                            name = Identifier.of("key2"),
                             type = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value2"),
+                            name = Identifier.of("value2"),
                             type = Arbitrary.unorderedTupleType,
                         ),
                     ),
@@ -207,11 +207,11 @@ class DictConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("key1"),
+                            name = Identifier.of("key1"),
                             type = keyType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value1"),
+                            name = Identifier.of("value1"),
                             type = BoolType,
                         ),
                     ),

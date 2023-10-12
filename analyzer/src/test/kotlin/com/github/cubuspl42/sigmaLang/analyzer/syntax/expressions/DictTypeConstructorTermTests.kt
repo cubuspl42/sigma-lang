@@ -1,10 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictTypeConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -21,11 +18,11 @@ class DictTypeConstructorTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     keyType = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 3),
-                        referredName = Symbol.of("K"),
+                        referredName = Identifier.of("K"),
                     ),
                     valueType = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 7),
-                        referredName = Symbol.of("V"),
+                        referredName = Identifier.of("V"),
                     ),
                 ),
                 actual = expression,

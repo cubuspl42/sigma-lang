@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScop
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.EvaluationContext
@@ -56,11 +56,11 @@ class OrderedTupleConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("a"),
+                            name = Identifier.of("a"),
                             type = BoolType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("b"),
+                            name = Identifier.of("b"),
                             type = IntCollectiveType,
                         ),
                     ),
@@ -122,8 +122,8 @@ class OrderedTupleConstructorTests {
                 context = EvaluationContext.Initial,
                 dynamicScope = FixedDynamicScope(
                     entries = mapOf(
-                        Symbol.of("a") to BoolValue(false),
-                        Symbol.of("b") to IntValue(1),
+                        Identifier.of("a") to BoolValue(false),
+                        Identifier.of("b") to IntValue(1),
                     ),
                 ),
             )

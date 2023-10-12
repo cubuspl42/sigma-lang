@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
@@ -55,17 +54,17 @@ class Module(
         it.modulePath
     }
 
-    private fun getImportedModuleByName(name: Symbol): Module? =
+    private fun getImportedModuleByName(name: Identifier): Module? =
         importedModulesPaths.firstOrNull { it.name == name.name }?.let { importedModulePath ->
             moduleResolver.resolveModule(modulePath = importedModulePath)
         }
 
     private val importBlock: StaticBlock = object : StaticBlock() {
-        override fun resolveNameLocally(name: Symbol): ClassifiedIntroduction? =
+        override fun resolveNameLocally(name: Identifier): ClassifiedIntroduction? =
             getImportedModuleByName(name = name)?.rootNamespaceDefinition
 
-        override fun getLocalNames(): Set<Symbol> = importedModulesPaths.map {
-            Symbol.of(it.name)
+        override fun getLocalNames(): Set<Identifier> = importedModulesPaths.map {
+            Identifier.of(it.name)
         }.toSet()
     }
 
@@ -73,7 +72,7 @@ class Module(
         outerScope = importBlock.chainWith(outerScope),
         qualifiedPath = modulePath.toQualifiedPath(),
         term = object : NamespaceDefinitionTerm {
-            override val name: Symbol = Symbol.of("__root__")
+            override val name: Identifier = Identifier.of("__root__")
 
             override val namespaceEntries: List<NamespaceEntryTerm>
                 get() = term.namespaceEntries

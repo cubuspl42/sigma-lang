@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableFunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StrictBuiltinOrderedFunction
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
@@ -37,8 +37,8 @@ class ClassDefinition(
             val instanceValue = args[0] as DictValue
             val classValue = args[1] as DictValue
 
-            val instanceTagValue = instanceValue.read(key = instanceTagKey) as Symbol
-            val classTagValue = classValue.read(key = classTagKey) as Symbol
+            val instanceTagValue = instanceValue.read(key = instanceTagKey) as Identifier
+            val classTagValue = classValue.read(key = classTagKey) as Identifier
 
             return BoolValue(
                 value = instanceTagValue == classTagValue,
@@ -47,10 +47,10 @@ class ClassDefinition(
     }
 
     companion object {
-        val classTagKey = Symbol.of("__classTag__")
-        val classTypeKey = Symbol.of("type")
+        val classTagKey = Identifier.of("__classTag__")
+        val classTypeKey = Identifier.of("type")
 
-        val instanceTagKey = Symbol.of("__instanceTag__")
+        val instanceTagKey = Identifier.of("__instanceTag__")
 
         val AnyClassType = UnorderedTupleType(
             valueTypeByName = mapOf(
@@ -76,7 +76,7 @@ class ClassDefinition(
         )
     }
 
-    override val name: Symbol
+    override val name: Identifier
         get() = term.name
 
     private val tag = qualifiedPath.toSymbol()
@@ -106,7 +106,7 @@ class ClassDefinition(
                 entries = mapOf(
                     classTagKey to tag,
                     classTypeKey to instanceType.asValue,
-                    Symbol.of("new") to object : ComputableFunctionValue() {
+                    Identifier.of("new") to object : ComputableFunctionValue() {
                         override fun apply(argument: Value): Thunk<Value> {
                             argument as DictValue
 
@@ -128,7 +128,7 @@ class ClassDefinition(
                 valueTypeByName = mapOf(
                     classTagKey to tagType,
                     classTypeKey to TypeType,
-                    Symbol.of("new") to UniversalFunctionType(
+                    Identifier.of("new") to UniversalFunctionType(
                         argumentType = bodyType,
                         imageType = instanceType,
                     ),

@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -31,7 +31,7 @@ class IsUndefinedCheckTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("foo"),
+                            name = Identifier.of("foo"),
                             type = IntCollectiveType,
                         ),
                     ),
@@ -83,7 +83,7 @@ class IsUndefinedCheckTests {
                 isUndefinedCheck.bind(
                     dynamicScope = FixedDynamicScope(
                         entries = mapOf(
-                            Symbol.of("d") to dictValue,
+                            Identifier.of("d") to dictValue,
                         ),
                     ),
                 ).evaluateInitial(),

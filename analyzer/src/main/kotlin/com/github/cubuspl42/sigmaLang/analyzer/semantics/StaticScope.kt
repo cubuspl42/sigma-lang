@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 
 interface StaticScope {
@@ -13,10 +13,10 @@ interface StaticScope {
             val resultScope = result.second
 
             override fun resolveName(
-                name: Symbol,
+                name: Identifier,
             ): ClassifiedIntroduction? = resultScope.resolveName(name = name)
 
-            override fun getAllNames(): Set<Symbol> = resultScope.getAllNames()
+            override fun getAllNames(): Set<Identifier> = resultScope.getAllNames()
         }.result
     }
 
@@ -25,21 +25,21 @@ interface StaticScope {
     }
 
     object Empty : StaticScope {
-        override fun resolveName(name: Symbol): ClassifiedIntroduction? = null
-        override fun getAllNames(): Set<Symbol> = emptySet()
+        override fun resolveName(name: Identifier): ClassifiedIntroduction? = null
+        override fun getAllNames(): Set<Identifier> = emptySet()
     }
 
     class Chained(
         private val outerScope: StaticScope,
         private val staticBlock: StaticBlock,
     ) : StaticScope {
-        override fun resolveName(name: Symbol): ClassifiedIntroduction? =
+        override fun resolveName(name: Identifier): ClassifiedIntroduction? =
             staticBlock.resolveNameLocally(name = name) ?: outerScope.resolveName(name = name)
 
-        override fun getAllNames(): Set<Symbol> = staticBlock.getLocalNames() + outerScope.getAllNames()
+        override fun getAllNames(): Set<Identifier> = staticBlock.getLocalNames() + outerScope.getAllNames()
     }
 
-    fun resolveName(name: Symbol): ClassifiedIntroduction?
+    fun resolveName(name: Identifier): ClassifiedIntroduction?
 
-    fun getAllNames(): Set<Symbol>
+    fun getAllNames(): Set<Identifier>
 }

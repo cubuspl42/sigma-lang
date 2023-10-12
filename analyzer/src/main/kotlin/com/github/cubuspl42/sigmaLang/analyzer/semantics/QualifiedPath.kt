@@ -1,9 +1,9 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 
 data class QualifiedPath(
-    val segments: List<Symbol>,
+    val segments: List<Identifier>,
 ) {
     companion object {
         val Root = QualifiedPath(
@@ -11,11 +11,11 @@ data class QualifiedPath(
         )
     }
 
-    fun toSymbol(): Symbol = Symbol.of(
+    fun toSymbol(): Identifier = Identifier.of(
         name = segments.joinToString(separator = ".") { it.name },
     )
 
-    fun extend(name: Symbol): QualifiedPath = QualifiedPath(
+    fun extend(name: Identifier): QualifiedPath = QualifiedPath(
         segments = segments + name,
     )
 }

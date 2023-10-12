@@ -1,12 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
 import kotlin.test.Test
@@ -28,16 +23,16 @@ class UnionTypeConstructorTermTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         leftType = ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                            referredName = Symbol.of("A"),
+                            referredName = Identifier.of("A"),
                         ),
                         rightType = ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 4),
-                            referredName = Symbol.of("B"),
+                            referredName = Identifier.of("B"),
                         ),
                     ),
                     rightType = ReferenceSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 8),
-                        referredName = Symbol.of("C"),
+                        referredName = Identifier.of("C"),
                     ),
                 ),
                 actual = typeExpression,

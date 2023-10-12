@@ -1,8 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.getResourceAsText
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import java.lang.IllegalArgumentException
 
@@ -19,7 +18,7 @@ data class ModulePath(
     }
 
     fun toQualifiedPath(): QualifiedPath = QualifiedPath(
-        segments = listOf(Symbol.of(name)),
+        segments = listOf(Identifier.of(name)),
     )
 }
 
@@ -78,6 +77,6 @@ class Project(
 
     val entryPoint: ConstantDefinition
         get() = mainModule.rootNamespaceDefinition.getDefinition(
-            name = Symbol.of("main"),
+            name = Identifier.of("main"),
         )!!
 }

@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,15 +15,15 @@ class SetConstructorTermTests {
                     elements = listOf(
                         ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                            referredName = Symbol.of("foo"),
+                            referredName = Identifier.of("foo"),
                         ),
                         ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 6),
-                            referredName = Symbol.of("bar"),
+                            referredName = Identifier.of("bar"),
                         ),
                         ReferenceSourceTerm(
                             location = SourceLocation(lineIndex = 1, columnIndex = 11),
-                            referredName = Symbol.of("baz"),
+                            referredName = Identifier.of("baz"),
                         ),
                     ),
                 ),

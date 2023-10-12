@@ -1,12 +1,12 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
-data class Symbol(
+data class Identifier(
     val name: String,
 ) : PrimitiveValue() {
     companion object {
         fun of(
             name: String,
-        ): Symbol = Symbol(
+        ): Identifier = Identifier(
             name = name,
         )
     }

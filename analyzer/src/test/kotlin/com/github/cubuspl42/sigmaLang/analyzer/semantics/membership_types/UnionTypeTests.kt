@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -80,13 +80,13 @@ class UnionTypeTests {
 
             val overlappingType2 = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Symbol.of("a") to IntCollectiveType,
+                    Identifier.of("a") to IntCollectiveType,
                 ),
             )
 
             val overlappingType2Subtype = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Symbol.of("a") to IntLiteralType.of(value = 1L),
+                    Identifier.of("a") to IntLiteralType.of(value = 1L),
                 ),
             )
 

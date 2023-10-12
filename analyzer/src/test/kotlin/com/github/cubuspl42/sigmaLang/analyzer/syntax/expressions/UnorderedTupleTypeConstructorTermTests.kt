@@ -1,10 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -36,24 +33,24 @@ class UnorderedTupleTypeConstructorTermTests {
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     entries = listOf(
                         UnorderedTupleTypeConstructorSourceTerm.Entry(
-                            name = Symbol.of("a"),
+                            name = Identifier.of("a"),
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 5),
-                                referredName = Symbol.of("A"),
+                                referredName = Identifier.of("A"),
                             ),
                         ),
                         UnorderedTupleTypeConstructorSourceTerm.Entry(
-                            name = Symbol.of("b"),
+                            name = Identifier.of("b"),
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 11),
-                                referredName = Symbol.of("B"),
+                                referredName = Identifier.of("B"),
                             ),
                         ),
                         UnorderedTupleTypeConstructorSourceTerm.Entry(
-                            name = Symbol.of("c"),
+                            name = Identifier.of("c"),
                             type = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 17),
-                                referredName = Symbol.of("C"),
+                                referredName = Identifier.of("C"),
                             ),
                         ),
                     ),

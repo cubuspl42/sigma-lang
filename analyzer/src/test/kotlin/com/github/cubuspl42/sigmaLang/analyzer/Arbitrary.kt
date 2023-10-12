@@ -4,13 +4,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolTy
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 
 object Arbitrary {
     val unorderedTupleType = UnorderedTupleType(
         valueTypeByName = mapOf(
-            Symbol.of("foo") to BoolType,
-            Symbol.of("bar") to IntCollectiveType,
+            Identifier.of("foo") to BoolType,
+            Identifier.of("bar") to IntCollectiveType,
         ),
     )
 

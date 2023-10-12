@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
 import kotlin.test.Test
@@ -24,23 +24,23 @@ class ClassDefinitionTermTests {
 
             assertEquals(
                 expected = ClassDefinitionSourceTerm(
-                    name = Symbol.of("Foo"),
+                    name = Identifier.of("Foo"),
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
                     body = UnorderedTupleTypeConstructorSourceTerm(
                         location = SourceLocation(lineIndex = 1, columnIndex = 11),
                         entries = listOf(
                             UnorderedTupleTypeConstructorSourceTerm.Entry(
-                                name = Symbol.of("foo"),
+                                name = Identifier.of("foo"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 2, columnIndex = 9),
-                                    referredName = Symbol.of("Foo"),
+                                    referredName = Identifier.of("Foo"),
                                 ),
                             ),
                             UnorderedTupleTypeConstructorSourceTerm.Entry(
-                                name = Symbol.of("bar"),
+                                name = Identifier.of("bar"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 9),
-                                    referredName = Symbol.of("Bar"),
+                                    referredName = Identifier.of("Bar"),
                                 ),
                             ),
                         ),

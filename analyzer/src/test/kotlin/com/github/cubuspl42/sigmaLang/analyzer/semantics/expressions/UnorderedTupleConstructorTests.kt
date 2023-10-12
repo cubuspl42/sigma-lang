@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
@@ -52,11 +52,11 @@ class UnorderedTupleConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("value1"),
+                            name = Identifier.of("value1"),
                             type = BoolType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value2"),
+                            name = Identifier.of("value2"),
                             type = IntCollectiveType,
                         ),
                     ),
@@ -67,8 +67,8 @@ class UnorderedTupleConstructorTests {
             assertTypeIsEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Symbol.of("key1") to BoolType,
-                        Symbol.of("key2") to IntCollectiveType,
+                        Identifier.of("key1") to BoolType,
+                        Identifier.of("key2") to IntCollectiveType,
                     ),
                 ),
                 actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute(),
@@ -91,11 +91,11 @@ class UnorderedTupleConstructorTests {
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
-                            name = Symbol.of("value1"),
+                            name = Identifier.of("value1"),
                             type = BoolType,
                         ),
                         FakeUserDeclaration(
-                            name = Symbol.of("value2"),
+                            name = Identifier.of("value2"),
                             type = IntCollectiveType,
                         ),
                     ),
@@ -107,7 +107,7 @@ class UnorderedTupleConstructorTests {
                 expected = setOf(
                     UnorderedTupleConstructor.DuplicatedKeyError(
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                        duplicatedKey = Symbol.of("key1"),
+                        duplicatedKey = Identifier.of("key1"),
                     ),
                 ),
                 actual = unorderedTupleConstructor.directErrors,
@@ -116,7 +116,7 @@ class UnorderedTupleConstructorTests {
             assertTypeIsEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Symbol.of("key1") to IllType,
+                        Identifier.of("key1") to IllType,
                     ),
                 ),
                 actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute(),

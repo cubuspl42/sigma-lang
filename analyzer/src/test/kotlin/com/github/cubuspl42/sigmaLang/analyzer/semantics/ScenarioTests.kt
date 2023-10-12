@@ -2,11 +2,10 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
@@ -66,7 +65,7 @@ class ScenarioTests {
         // Validate `Entry`
 
         val entryTypeConstructorDefinition = namespaceDefinition.getDefinition(
-            name = Symbol.of("Entry"),
+            name = Identifier.of("Entry"),
         )!!
 
         assertEquals(
@@ -74,7 +73,7 @@ class ScenarioTests {
                 argumentType = OrderedTupleType(
                     elements = listOf(
                         OrderedTupleType.Element(
-                            name = Symbol.of("valueType"),
+                            name = Identifier.of("valueType"),
                             type = TypeType,
                         ),
                     ),
@@ -103,8 +102,8 @@ class ScenarioTests {
         assertTypeIsEquivalent(
             expected = UnorderedTupleType(
                 valueTypeByName = mapOf(
-                    Symbol.of("key") to IntCollectiveType,
-                    Symbol.of("value") to BoolType,
+                    Identifier.of("key") to IntCollectiveType,
+                    Identifier.of("value") to BoolType,
                 ),
             ),
             actual = entryType,
@@ -113,7 +112,7 @@ class ScenarioTests {
         // Validate `entryOf`
 
         val entryOfAbstractionDefinition = namespaceDefinition.getDefinition(
-            name = Symbol.of("entryOf"),
+            name = Identifier.of("entryOf"),
         )!!
 
         assertTypeIsEquivalent(
@@ -121,21 +120,21 @@ class ScenarioTests {
                 metaArgumentType = OrderedTupleType(
                     elements = listOf(
                         OrderedTupleType.Element(
-                            name = Symbol.of("valueType"),
+                            name = Identifier.of("valueType"),
                             type = TypeType,
                         ),
                     ),
                 ),
                 argumentType = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Symbol.of("key") to IntCollectiveType,
-                        Symbol.of("value") to TypeVariable.of("valueType"),
+                        Identifier.of("key") to IntCollectiveType,
+                        Identifier.of("value") to TypeVariable.of("valueType"),
                     ),
                 ),
                 imageType = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Symbol.of("key") to IntCollectiveType,
-                        Symbol.of("value") to TypeVariable.of("valueType"),
+                        Identifier.of("key") to IntCollectiveType,
+                        Identifier.of("value") to TypeVariable.of("valueType"),
                     ),
                 ),
             ),
@@ -145,20 +144,20 @@ class ScenarioTests {
         // Validate `entryTrueOf`
 
         val entryTrueOfAbstractionDefinition = namespaceDefinition.getDefinition(
-            name = Symbol.of("entryTrueOf"),
+            name = Identifier.of("entryTrueOf"),
         )!!
 
         assertTypeIsEquivalent(
             expected = UniversalFunctionType(
                 argumentType = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Symbol.of("key") to IntCollectiveType,
+                        Identifier.of("key") to IntCollectiveType,
                     ),
                 ),
                 imageType = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Symbol.of("key") to IntCollectiveType,
-                        Symbol.of("value") to BoolType,
+                        Identifier.of("key") to IntCollectiveType,
+                        Identifier.of("value") to BoolType,
                     ),
                 ),
             ),
@@ -198,7 +197,7 @@ class ScenarioTests {
         )
 
         val aType = namespaceDefinition.getDefinition(
-            name = Symbol.of("a"),
+            name = Identifier.of("a"),
         )!!.computedEffectiveType.getOrCompute()
 
         assertEquals(

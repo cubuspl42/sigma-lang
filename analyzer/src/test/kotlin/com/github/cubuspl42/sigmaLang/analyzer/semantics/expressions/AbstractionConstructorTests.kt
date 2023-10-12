@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableAbstr
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
@@ -94,7 +94,7 @@ class AbstractionConstructorTests {
                 expected = OrderedTupleType(
                     elements = listOf(
                         OrderedTupleType.Element(
-                            name = Symbol.of("a"),
+                            name = Identifier.of("a"),
                             type = TypeVariable(
                                 formula = Formula.of("e"),
                             ),
@@ -143,13 +143,13 @@ class AbstractionConstructorTests {
                 argumentType = OrderedTupleType(
                     elements = listOf(
                         OrderedTupleType.Element(
-                            name = Symbol.of("l"),
+                            name = Identifier.of("l"),
                             type = ArrayType(
                                 elementType = TypeVariable.of("t.t1"), // FIXME
                             ),
                         ),
                         OrderedTupleType.Element(
-                            name = Symbol.of("f"),
+                            name = Identifier.of("f"),
                             type = UniversalFunctionType(
                                 argumentType = OrderedTupleType.of(
                                     TypeVariable.of("t.t1"), // FIXME
@@ -168,11 +168,11 @@ class AbstractionConstructorTests {
                 argumentType = OrderedTupleType(
                     elements = listOf(
                         OrderedTupleType.Element(
-                            name = Symbol.of("t"),
+                            name = Identifier.of("t"),
                             type = UnorderedTupleType(
                                 valueTypeByName = mapOf(
-                                    Symbol.of("t1") to TypeType,
-                                    Symbol.of("t2") to TypeType,
+                                    Identifier.of("t1") to TypeType,
+                                    Identifier.of("t2") to TypeType,
                                 ),
                             ),
                         ),
@@ -251,7 +251,7 @@ class AbstractionConstructorTests {
                     argumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
-                                name = Symbol.of("n"),
+                                name = Identifier.of("n"),
                                 type = IntCollectiveType,
                             ),
                         ),
@@ -281,7 +281,7 @@ class AbstractionConstructorTests {
 
             val fDefinition = assertNotNull(
                 actual = let.definitionBlock.getValueDefinition(
-                    name = Symbol.of("f"),
+                    name = Identifier.of("f"),
                 ),
             )
 
@@ -293,7 +293,7 @@ class AbstractionConstructorTests {
 
             val gDefinition = assertNotNull(
                 actual = let.definitionBlock.getValueDefinition(
-                    name = Symbol.of("g"),
+                    name = Identifier.of("g"),
                 ),
             )
 
@@ -323,7 +323,7 @@ class AbstractionConstructorTests {
 
             val fDefinition = assertNotNull(
                 actual = letExpression.definitionBlock.getValueDefinition(
-                    name = Symbol.of("f"),
+                    name = Identifier.of("f"),
                 ),
             )
 
@@ -337,7 +337,7 @@ class AbstractionConstructorTests {
 
             val gDefinition = assertNotNull(
                 actual = letExpression.definitionBlock.getValueDefinition(
-                    name = Symbol.of("g"),
+                    name = Identifier.of("g"),
                 ),
             )
 
@@ -393,7 +393,7 @@ class AbstractionConstructorTests {
 
             val fDefinition = assertNotNull(
                 actual = letExpression.definitionBlock.getValueDefinition(
-                    name = Symbol.of("f"),
+                    name = Identifier.of("f"),
                 ),
             )
 
@@ -437,7 +437,7 @@ class AbstractionConstructorTests {
 
             val fibDefinition = assertNotNull(
                 actual = letExpression.definitionBlock.getValueDefinition(
-                    name = Symbol.of("fib"),
+                    name = Identifier.of("fib"),
                 ),
             )
 

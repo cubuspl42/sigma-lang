@@ -17,12 +17,12 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
     abstract val entries: Set<Entry>
 
     abstract class Entry {
-        abstract val name: Symbol
+        abstract val name: Identifier
 
         abstract val value: Expression
 
         data class Analysis(
-            val name: Symbol,
+            val name: Identifier,
             val valueAnalysis: Expression.Analysis,
         ) {
             val inferredValueType: MembershipType
@@ -45,7 +45,7 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
             ): Stub<Entry> = object : Stub<Entry> {
                 override val resolved: Entry by lazy {
                     object : Entry() {
-                        override val name: Symbol = entry.name
+                        override val name: Identifier = entry.name
 
                         override val value: Expression by lazy {
                             Expression.build(
