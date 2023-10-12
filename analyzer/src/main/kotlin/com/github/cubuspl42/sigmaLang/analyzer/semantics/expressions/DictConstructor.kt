@@ -16,15 +16,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
-class DictConstructor(
-    override val outerScope: StaticScope,
-    override val term: DictConstructorTerm,
-    val associations: List<Association>,
-) : Expression() {
-    class Association(
-        val key: Expression,
-        val value: Expression,
-    ) {
+abstract class DictConstructor : Expression() {
+    abstract override val term: DictConstructorTerm
+
+    abstract val associations: List<Association>
+
+    abstract class Association {
+        abstract val key: Expression
+
+        abstract val value: Expression
+
         data class Analysis(
             val keyAnalysis: Expression.Analysis,
             val valueAnalysis: Expression.Analysis,
@@ -57,16 +58,21 @@ class DictConstructor(
                 term: DictConstructorTerm.Association,
             ): Stub<Association> = object : Stub<Association> {
                 override val resolved: Association by lazy {
-                    Association(
-                        key = Expression.build(
-                            context = context,
-                            term = term.key,
-                        ).resolved,
-                        value = Expression.build(
-                            context = context,
-                            term = term.value,
-                        ).resolved,
-                    )
+                    object : Association() {
+                        override val key: Expression by lazy {
+                            Expression.build(
+                                context = context,
+                                term = term.key,
+                            ).resolved
+                        }
+
+                        override val value: Expression by lazy {
+                            Expression.build(
+                                context = context,
+                                term = term.value,
+                            ).resolved
+                        }
+                    }
                 }
             }
         }
@@ -78,16 +84,20 @@ class DictConstructor(
             term: DictConstructorTerm,
         ): Stub<DictConstructor> = object : Stub<DictConstructor> {
             override val resolved: DictConstructor by lazy {
-                DictConstructor(
-                    outerScope = context.outerScope,
-                    term = term,
-                    associations = term.associations.map {
-                        Association.build(
-                            context = context,
-                            term = it,
-                        ).resolved
-                    },
-                )
+                object : DictConstructor() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: DictConstructorTerm = term
+
+                    override val associations: List<Association> by lazy {
+                        term.associations.map {
+                            Association.build(
+                                context = context,
+                                term = it,
+                            ).resolved
+                        }
+                    }
+                }
             }
         }
     }
@@ -189,7 +199,8 @@ class DictConstructor(
         }
     }
 
-    override val subExpressions: Set<Expression> = SetUtils.unionAllOf(associations) { setOf(it.key, it.value) }
+    override val subExpressions: Set<Expression>
+        get() = SetUtils.unionAllOf(associations) { setOf(it.key, it.value) }
 
     override fun bind(
         dynamicScope: DynamicScope,

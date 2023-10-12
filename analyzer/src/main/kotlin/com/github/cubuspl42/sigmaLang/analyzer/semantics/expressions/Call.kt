@@ -13,32 +13,27 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.*
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 
-class Call(
-    override val outerScope: StaticScope,
-    override val term: CallTerm,
-    val subject: Expression,
-    val argument: Expression,
-) : Expression() {
+abstract class Call : Expression() {
+    abstract val subject: Expression
+
+    abstract val argument: Expression
+
     companion object {
         fun build(
             context: BuildContext,
             term: CallTerm,
-        ): Stub<Call> = object : Stub<Call> {
-            override val resolved: Call by lazy {
-                when (term) {
-                    is InfixCallTerm -> buildInfix(
-                        context = context,
-                        term = term,
-                    ).resolved
+        ): Stub<Call> = when (term) {
+            is InfixCallTerm -> buildInfix(
+                context = context,
+                term = term,
+            )
 
-                    is PostfixCallTerm -> buildPostfix(
-                        context = context,
-                        term = term,
-                    ).resolved
+            is PostfixCallTerm -> buildPostfix(
+                context = context,
+                term = term,
+            )
 
-                    else -> throw UnsupportedOperationException("Unsupported call term: $term")
-                }
-            }
+            else -> throw UnsupportedOperationException("Unsupported call term: $term")
         }
 
         private fun buildPostfix(
@@ -46,18 +41,25 @@ class Call(
             term: PostfixCallTerm,
         ): Stub<Call> = object : Stub<Call> {
             override val resolved: Call by lazy {
-                Call(
-                    outerScope = context.outerScope,
-                    term = term,
-                    subject = build(
-                        context = context,
-                        term = term.subject,
-                    ).resolved,
-                    argument = build(
-                        context = context,
-                        term = term.argument,
-                    ).resolved,
-                )
+                object : Call() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: CallTerm = term
+
+                    override val subject: Expression by lazy {
+                        build(
+                            context = context,
+                            term = term.subject,
+                        ).resolved
+                    }
+
+                    override val argument: Expression by lazy {
+                        build(
+                            context = context,
+                            term = term.argument,
+                        ).resolved
+                    }
+                }
             }
         }
 
@@ -78,29 +80,42 @@ class Call(
                     term = term.rightArgument,
                 ).resolved
 
-                Call(
-                    outerScope = context.outerScope,
-                    term = term,
-                    subject = Reference(
-                        outerScope = context.outerScope,
-                        referredName = Symbol.of(prototype.functionName),
-                        term = null,
-                    ),
-                    argument = UnorderedTupleConstructor(
-                        outerScope = context.outerScope,
-                        term = null,
-                        entries = setOf(
-                            UnorderedTupleConstructor.Entry(
-                                name = prototype.leftArgument,
-                                value = leftArgument,
-                            ),
-                            UnorderedTupleConstructor.Entry(
-                                name = prototype.rightArgument,
-                                value = rightArgument,
-                            ),
-                        ),
-                    ),
-                )
+                object : Call() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: CallTerm = term
+
+                    override val subject: Expression by lazy {
+                        object : Reference() {
+                            override val outerScope: StaticScope = context.outerScope
+
+                            override val referredName: Symbol = Symbol.of(prototype.functionName)
+
+                            override val term: ReferenceTerm? = null
+                        }
+                    }
+
+                    override val argument: Expression by lazy {
+                        object : UnorderedTupleConstructor() {
+                            override val outerScope: StaticScope = context.outerScope
+
+                            override val term: UnorderedTupleConstructorTerm? = null
+
+                            override val entries: Set<Entry> = setOf(
+                                object : Entry() {
+                                    override val name: Symbol = prototype.leftArgument
+
+                                    override val value: Expression = leftArgument
+                                },
+                                object : Entry() {
+                                    override val name: Symbol = prototype.rightArgument
+
+                                    override val value: Expression = rightArgument
+                                },
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -144,8 +159,7 @@ class Call(
                     resolution = typeVariableResolution,
                 )
 
-                val remainingTypeVariables =
-                    subjectType.typeVariables - typeVariableResolution.resolvedTypeVariables
+                val remainingTypeVariables = subjectType.typeVariables - typeVariableResolution.resolvedTypeVariables
 
                 val nonInferredTypeVariables = subjectType.typeVariables.intersect(remainingTypeVariables)
 
@@ -209,7 +223,8 @@ class Call(
         )
     }
 
-    override val subExpressions: Set<Expression> = setOf(subject, argument)
+    override val subExpressions: Set<Expression>
+        get() = setOf(subject, argument)
 
     override fun bind(
         dynamicScope: DynamicScope,

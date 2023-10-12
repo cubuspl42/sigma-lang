@@ -12,40 +12,46 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Unorde
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
 
-class UnionTypeConstructor(
-    override val outerScope: StaticScope,
-    override val term: UnionTypeConstructorTerm,
-    val types: Set<Expression>,
-) : TypeConstructor() {
-    init {
-        if (types.isEmpty()) {
-            throw IllegalArgumentException("Union has to consist of at least one type")
-        }
-    }
+abstract class UnionTypeConstructor : TypeConstructor() {
+    abstract override val term: UnionTypeConstructorTerm
+
+    abstract val types: Set<Expression>
 
     companion object {
         fun build(
             context: BuildContext,
             term: UnionTypeConstructorTerm,
-        ): Stub<UnionTypeConstructor> = object : Stub<UnionTypeConstructor> {
-            override val resolved: UnionTypeConstructor by lazy {
-                UnionTypeConstructor(
-                    outerScope = context.outerScope,
-                    term = term,
-                    types = buildTypes(
-                        context = context,
-                        accumulatedTypes = emptySet(),
-                        term = term,
-                    ),
-                )
+        ): Stub<UnionTypeConstructor> {
+            val typeStubs = buildTypes(
+                context = context,
+                accumulatedTypes = emptySet(),
+                term = term,
+            )
+
+            if (typeStubs.isEmpty()) {
+                throw IllegalArgumentException("Union has to consist of at least one type")
+            }
+
+            return object : Stub<UnionTypeConstructor> {
+                override val resolved: UnionTypeConstructor by lazy {
+                    object : UnionTypeConstructor() {
+                        override val outerScope: StaticScope = context.outerScope
+
+                        override val term: UnionTypeConstructorTerm = term
+
+                        override val types: Set<Expression> by lazy {
+                            typeStubs.map { it.resolved }.toSet()
+                        }
+                    }
+                }
             }
         }
 
         private fun buildTypes(
             context: BuildContext,
-            accumulatedTypes: Set<Expression>,
+            accumulatedTypes: Set<Stub<Expression>>,
             term: UnionTypeConstructorTerm,
-        ): Set<Expression> {
+        ): Set<Stub<Expression>> {
             val leftTypeTerm = term.leftType
             val rightTypeTerm = term.rightType
 
@@ -56,7 +62,7 @@ class UnionTypeConstructor(
             val rightType = Expression.build(
                 context = context,
                 term = rightTypeTerm,
-            ).resolved
+            )
 
             val extendedTypes = accumulatedTypes + rightType
 
@@ -70,7 +76,7 @@ class UnionTypeConstructor(
                 val leftType = Expression.build(
                     context = context,
                     term = leftTypeTerm,
-                ).resolved
+                )
 
                 extendedTypes + leftType
             }
@@ -99,5 +105,6 @@ class UnionTypeConstructor(
         ).asValue
     }
 
-    override val subExpressions: Set<Expression> = types
+    override val subExpressions: Set<Expression>
+        get() = types
 }

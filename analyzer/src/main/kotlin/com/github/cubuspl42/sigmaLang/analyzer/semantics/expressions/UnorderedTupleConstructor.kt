@@ -11,15 +11,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Unorde
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
 
-class UnorderedTupleConstructor(
-    override val outerScope: StaticScope,
-    override val term: UnorderedTupleConstructorTerm?,
-    val entries: Set<Entry>,
-) : TupleConstructor() {
-    data class Entry(
-        val name: Symbol,
-        val value: Expression,
-    ) {
+abstract class UnorderedTupleConstructor : TupleConstructor() {
+    abstract override val term: UnorderedTupleConstructorTerm?
+
+    abstract val entries: Set<Entry>
+
+    abstract class Entry {
+        abstract val name: Symbol
+
+        abstract val value: Expression
+
         data class Analysis(
             val name: Symbol,
             val valueAnalysis: Expression.Analysis,
@@ -43,13 +44,16 @@ class UnorderedTupleConstructor(
                 entry: UnorderedTupleConstructorTerm.Entry,
             ): Stub<Entry> = object : Stub<Entry> {
                 override val resolved: Entry by lazy {
-                    Entry(
-                        name = entry.name,
-                        value = Expression.build(
-                            context = context,
-                            term = entry.value,
-                        ).resolved,
-                    )
+                    object : Entry() {
+                        override val name: Symbol = entry.name
+
+                        override val value: Expression by lazy {
+                            Expression.build(
+                                context = context,
+                                term = entry.value,
+                            ).resolved
+                        }
+                    }
                 }
             }
         }
@@ -66,16 +70,20 @@ class UnorderedTupleConstructor(
             term: UnorderedTupleConstructorTerm,
         ): Stub<UnorderedTupleConstructor> = object : Stub<UnorderedTupleConstructor> {
             override val resolved: UnorderedTupleConstructor by lazy {
-                UnorderedTupleConstructor(
-                    outerScope = context.outerScope,
-                    term = term,
-                    entries = term.entries.map {
-                        Entry.build(
-                            context = context,
-                            entry = it,
-                        ).resolved
-                    }.toSet(),
-                )
+                object : UnorderedTupleConstructor() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: UnorderedTupleConstructorTerm = term
+
+                    override val entries: Set<Entry> by lazy {
+                        term.entries.map {
+                            Entry.build(
+                                context = context,
+                                entry = it,
+                            ).resolved
+                        }.toSet()
+                    }
+                }
             }
         }
     }
@@ -135,5 +143,6 @@ class UnorderedTupleConstructor(
         )
     }
 
-    override val subExpressions: Set<Expression> = entries.map { it.value }.toSet()
+    override val subExpressions: Set<Expression>
+        get() = entries.map { it.value }.toSet()
 }

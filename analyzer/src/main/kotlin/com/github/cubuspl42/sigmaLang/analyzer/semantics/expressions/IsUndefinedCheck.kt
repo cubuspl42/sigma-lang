@@ -10,25 +10,29 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IsUndefinedCheckTerm
 
-data class IsUndefinedCheck(
-    override val outerScope: StaticScope,
-    override val term: IsUndefinedCheckTerm,
-    val argument: Expression,
-) : Expression() {
+abstract class IsUndefinedCheck : Expression() {
+    abstract override val term: IsUndefinedCheckTerm
+
+    abstract val argument: Expression
+
     companion object {
         fun build(
             context: BuildContext,
             term: IsUndefinedCheckTerm,
         ): Stub<IsUndefinedCheck> = object : Stub<IsUndefinedCheck> {
             override val resolved: IsUndefinedCheck by lazy {
-                IsUndefinedCheck(
-                    outerScope = context.outerScope,
-                    term = term,
-                    argument = Expression.build(
-                        context = context,
-                        term = term.argument,
-                    ).resolved,
-                )
+                object : IsUndefinedCheck() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: IsUndefinedCheckTerm = term
+
+                    override val argument: Expression by lazy {
+                        Expression.build(
+                            context = context,
+                            term = term.argument,
+                        ).resolved
+                    }
+                }
             }
         }
     }
@@ -58,5 +62,6 @@ data class IsUndefinedCheck(
         )
     }
 
-    override val subExpressions: Set<Expression> = setOf(argument)
+    override val subExpressions: Set<Expression>
+        get() = setOf(argument)
 }

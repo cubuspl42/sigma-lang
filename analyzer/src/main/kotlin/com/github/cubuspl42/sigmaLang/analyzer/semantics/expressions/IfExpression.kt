@@ -12,35 +12,47 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Member
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IfExpressionTerm
 
-class IfExpression(
-    override val outerScope: StaticScope,
-    override val term: IfExpressionTerm,
-    val guard: Expression,
-    val trueBranch: Expression,
-    val falseBranch: Expression,
-) : Expression() {
+abstract class IfExpression : Expression() {
+    abstract override val term: IfExpressionTerm
+
+    abstract val guard: Expression
+
+    abstract val trueBranch: Expression
+
+    abstract val falseBranch: Expression
+
     companion object {
         fun build(
             context: BuildContext,
             term: IfExpressionTerm,
         ): Stub<IfExpression> = object : Stub<IfExpression> {
             override val resolved: IfExpression by lazy {
-                IfExpression(
-                    outerScope = context.outerScope,
-                    term = term,
-                    guard = build(
-                        context = context,
-                        term = term.guard,
-                    ).resolved,
-                    trueBranch = build(
-                        context = context,
-                        term = term.trueBranch,
-                    ).resolved,
-                    falseBranch = build(
-                        context = context,
-                        term = term.falseBranch,
-                    ).resolved,
-                )
+                object : IfExpression() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: IfExpressionTerm = term
+
+                    override val guard: Expression by lazy {
+                        build(
+                            context = context,
+                            term = term.guard,
+                        ).resolved
+                    }
+
+                    override val trueBranch: Expression by lazy {
+                        build(
+                            context = context,
+                            term = term.trueBranch,
+                        ).resolved
+                    }
+
+                    override val falseBranch: Expression by lazy {
+                        build(
+                            context = context,
+                            term = term.falseBranch,
+                        ).resolved
+                    }
+                }
             }
         }
     }
@@ -107,5 +119,6 @@ class IfExpression(
         }
     }
 
-    override val subExpressions: Set<Expression> = setOf(guard, trueBranch, falseBranch)
+    override val subExpressions: Set<Expression>
+        get() = setOf(guard, trueBranch, falseBranch)
 }

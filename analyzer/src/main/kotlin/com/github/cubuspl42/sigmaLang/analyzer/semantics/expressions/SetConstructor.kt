@@ -11,27 +11,31 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetTyp
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorTerm
 
-class SetConstructor(
-    override val outerScope: StaticScope,
-    override val term: SetConstructorTerm,
-    val elements: Set<Expression>,
-) : Expression() {
+abstract class SetConstructor : Expression() {
+    abstract override val term: SetConstructorTerm
+
+    abstract val elements: Set<Expression>
+
     companion object {
         fun build(
             context: BuildContext,
             term: SetConstructorTerm,
         ): Stub<SetConstructor> = object : Stub<SetConstructor> {
             override val resolved: SetConstructor by lazy {
-                SetConstructor(
-                    outerScope = context.outerScope,
-                    term = term,
-                    elements = term.elements.map {
-                        Expression.build(
-                            context = context,
-                            term = it,
-                        ).resolved
-                    }.toSet(),
-                )
+                object : SetConstructor() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: SetConstructorTerm = term
+
+                    override val elements: Set<Expression> by lazy {
+                        term.elements.map {
+                            Expression.build(
+                                context = context,
+                                term = it,
+                            ).resolved
+                        }.toSet()
+                    }
+                }
             }
         }
     }
@@ -75,7 +79,8 @@ class SetConstructor(
         }
     }
 
-    override val subExpressions: Set<Expression> = elements
+    override val subExpressions: Set<Expression>
+        get() = elements
 
     override fun bind(
         dynamicScope: DynamicScope,

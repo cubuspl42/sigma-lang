@@ -13,11 +13,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Unorde
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadTerm
 
-class FieldRead(
-    override val outerScope: StaticScope,
-    override val term: FieldReadTerm,
-    val subject: Expression,
-) : Expression() {
+abstract class FieldRead : Expression() {
+    abstract override val term: FieldReadTerm
+
+    abstract val subject: Expression
+
     data class InvalidSubjectTypeError(
         override val location: SourceLocation?,
         val invalidSubjectType: MembershipType,
@@ -43,14 +43,18 @@ class FieldRead(
             term: FieldReadTerm,
         ): Stub<FieldRead> = object : Stub<FieldRead> {
             override val resolved: FieldRead by lazy {
-                FieldRead(
-                    outerScope = context.outerScope,
-                    term = term,
-                    subject = Expression.build(
-                        context = context,
-                        term = term.subject,
-                    ).resolved,
-                )
+                object : FieldRead() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: FieldReadTerm = term
+
+                    override val subject: Expression by lazy {
+                        Expression.build(
+                            context = context,
+                            term = term.subject,
+                        ).resolved
+                    }
+                }
             }
         }
     }
@@ -113,5 +117,6 @@ class FieldRead(
         )
     }
 
-    override val subExpressions: Set<Expression> = setOf(subject)
+    override val subExpressions: Set<Expression>
+        get() = setOf(subject)
 }

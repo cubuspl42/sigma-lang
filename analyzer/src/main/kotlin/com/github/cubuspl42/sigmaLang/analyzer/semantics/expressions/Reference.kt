@@ -16,11 +16,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantD
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.VariableIntroduction
 
-class Reference(
-    override val outerScope: StaticScope,
-    override val term: ReferenceTerm?,
-    val referredName: Symbol,
-) : Expression() {
+abstract class Reference : Expression() {
+    abstract override val term: ReferenceTerm?
+
+    abstract val referredName: Symbol
+
     data class UnresolvedNameError(
         override val location: SourceLocation?,
         val name: Symbol,
@@ -37,15 +37,16 @@ class Reference(
             term: ReferenceTerm,
         ): Stub<Reference> = object : Stub<Reference> {
             override val resolved: Reference by lazy {
-                Reference(
-                    outerScope = context.outerScope,
-                    term = term,
-                    referredName = term.referredName,
-                )
+                object : Reference() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: ReferenceTerm = term
+
+                    override val referredName: Symbol = term.referredName
+                }
             }
         }
     }
-
 
     private val resolvedIntroduction: ClassifiedIntroduction? by lazy {
         outerScope.resolveName(name = referredName)
@@ -74,9 +75,8 @@ class Reference(
     }
 
     override val classifiedValue: ClassificationContext<Value> by lazy {
-        val resolvedIntroduction =
-            this.resolvedIntroduction
-                ?: throw IllegalStateException("Unresolved reference at classification time: $referredName")
+        val resolvedIntroduction = this.resolvedIntroduction
+            ?: throw IllegalStateException("Unresolved reference at classification time: $referredName")
 
         when (resolvedIntroduction) {
             is ConstantDefinition -> object : ConstClassificationContext<Value>() {
