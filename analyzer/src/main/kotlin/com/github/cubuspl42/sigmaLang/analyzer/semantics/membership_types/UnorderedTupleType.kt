@@ -165,7 +165,7 @@ abstract class UnorderedTupleType : TupleType() {
     override fun toArgumentScope(argument: DictValue): DynamicScope = object : DynamicScope {
         override fun getValue(
             name: Symbol,
-        ): Thunk<Value>? = argument.read(name)?.toThunk()
+        ): Thunk<Value>? = argument.read(name)
     }
 
     override fun isNonEquivalentToDirectly(

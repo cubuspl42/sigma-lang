@@ -17,7 +17,7 @@ class FieldReadTests {
     class EvaluationTests {
         @Test
         fun testSimple() {
-            val foo = DictValue(
+            val foo = DictValue.fromMap(
                 entries = mapOf(
                     Identifier.of("bar") to IntValue(value = 123L),
                 ),

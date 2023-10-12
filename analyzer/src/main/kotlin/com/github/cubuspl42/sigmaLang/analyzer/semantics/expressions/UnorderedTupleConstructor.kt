@@ -33,7 +33,7 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
             value.classifiedValue.transform { value ->
                 DictValue.Entry(
                     key = name,
-                    value = value,
+                    value = Thunk.pure(value),
                 )
             }
         }
@@ -133,15 +133,16 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
 
     override fun bind(
         dynamicScope: DynamicScope,
-    ): Thunk<Value> = Thunk.traverseList(entries.toList()) { entry ->
-        entry.value.bind(dynamicScope = dynamicScope).thenJust { entryValue ->
-            entry.name to entryValue
-        }
-    }.thenJust { entries ->
-        DictValue(
-            entries.toMap(),
+    ): Thunk<Value> = Thunk.pure(
+        DictValue.fromEntries(
+            entries = entries.map { entry ->
+                DictValue.Entry(
+                    key = entry.name,
+                    value = entry.value.bind(dynamicScope = dynamicScope),
+                )
+            },
         )
-    }
+    )
 
     override val subExpressions: Set<Expression>
         get() = entries.map { it.value }.toSet()

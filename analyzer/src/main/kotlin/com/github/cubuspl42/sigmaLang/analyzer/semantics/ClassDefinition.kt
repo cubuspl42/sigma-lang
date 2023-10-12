@@ -37,8 +37,8 @@ class ClassDefinition(
             val instanceValue = args[0] as DictValue
             val classValue = args[1] as DictValue
 
-            val instanceTagValue = instanceValue.read(key = instanceTagKey) as Identifier
-            val classTagValue = classValue.read(key = classTagKey) as Identifier
+            val instanceTagValue = instanceValue.readValue(key = instanceTagKey) as Identifier
+            val classTagValue = classValue.readValue(key = classTagKey) as Identifier
 
             return BoolValue(
                 value = instanceTagValue == classTagValue,
@@ -102,7 +102,7 @@ class ClassDefinition(
 
     override val valueThunk: Thunk<Value> by lazy {
         Thunk.pure(
-            DictValue(
+            DictValue.fromMap(
                 entries = mapOf(
                     classTagKey to tag,
                     classTypeKey to instanceType.asValue,
@@ -111,8 +111,8 @@ class ClassDefinition(
                             argument as DictValue
 
                             return Thunk.pure(
-                                DictValue(
-                                    entries = argument.entries + (instanceTagKey to tag)
+                                DictValue.fromMap(
+                                    entries = argument.valueEntries + (instanceTagKey to tag)
                                 ),
                             )
                         }
