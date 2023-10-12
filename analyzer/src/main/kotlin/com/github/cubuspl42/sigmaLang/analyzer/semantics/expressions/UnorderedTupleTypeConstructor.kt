@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
@@ -17,7 +18,7 @@ abstract class UnorderedTupleTypeConstructor : TupleTypeConstructor() {
     abstract val entries: Set<Entry>
 
     abstract class Entry {
-        abstract val name: Identifier
+        abstract val name: Symbol
 
         abstract val type: Expression
 

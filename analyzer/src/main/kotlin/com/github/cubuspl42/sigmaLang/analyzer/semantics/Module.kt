@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
@@ -60,10 +61,12 @@ class Module(
         }
 
     private val importBlock: StaticBlock = object : StaticBlock() {
-        override fun resolveNameLocally(name: Identifier): ClassifiedIntroduction? =
-            getImportedModuleByName(name = name)?.rootNamespaceDefinition
+        override fun resolveNameLocally(name: Symbol): ClassifiedIntroduction? {
+            if (name !is Identifier) return null
+            return getImportedModuleByName(name = name)?.rootNamespaceDefinition
+        }
 
-        override fun getLocalNames(): Set<Identifier> = importedModulesPaths.map {
+        override fun getLocalNames(): Set<Symbol> = importedModulesPaths.map {
             Identifier.of(it.name)
         }.toSet()
     }

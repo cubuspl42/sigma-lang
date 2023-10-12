@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
@@ -169,7 +170,7 @@ data class OrderedTupleType(
     }
 
     override fun toArgumentScope(argument: DictValue): DynamicScope = object : DynamicScope {
-        override fun getValue(name: Identifier): Thunk<Value>? {
+        override fun getValue(name: Symbol): Thunk<Value>? {
             val index = elements.indexOfOrNull { it.name == name } ?: return null
 
             return argument.read(IntValue(value = index.toLong()))?.toThunk()

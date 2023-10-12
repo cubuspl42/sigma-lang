@@ -41,7 +41,7 @@ class SigmaCompletionContributor : CompletionContributor() {
 
                 reference?.outerScope?.getAllNames()?.forEach {
                     resultSet.addElement(
-                        LookupElementBuilder.create(it.name),
+                        LookupElementBuilder.create(it.dump()),
                     )
                 }
             }

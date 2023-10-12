@@ -5,6 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
@@ -14,6 +15,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
@@ -34,7 +36,7 @@ interface BuiltinValue {
 }
 
 private class BuiltinDefinition(
-    override val name: Identifier,
+    override val name: Symbol,
     val value: Value,
     val type: MembershipType,
 ) : ConstantDefinition() {
@@ -49,7 +51,7 @@ object BuiltinScope : DynamicScope, StaticScope {
         override val value: Value,
     ) : BuiltinValue
 
-    private val builtinValues: Map<Identifier, BuiltinValue> = mapOf(
+    private val builtinValues: Map<Symbol, BuiltinValue> = mapOf(
         Identifier.of("Bool") to SimpleBuiltinValue(
             type = TypeType,
             value = BoolType.asValue,
@@ -246,24 +248,24 @@ object BuiltinScope : DynamicScope, StaticScope {
         )
     }.toSet()
 
-    private val builtinDeclarations: Map<Identifier, BuiltinDefinition> = builtinValueDeclarations.associateBy { it.name }
+    private val builtinDeclarations: Map<Symbol, BuiltinDefinition> = builtinValueDeclarations.associateBy { it.name }
 
-    val names: Set<Identifier>
+    val names: Set<Symbol>
         get() = builtinDeclarations.keys
 
     override fun getValue(
-        name: Identifier,
+        name: Symbol,
     ): Thunk<Value>? = getBuiltin(
         name = name,
     )?.value?.toThunk()
 
     private fun getBuiltin(
-        name: Identifier,
+        name: Symbol,
     ): BuiltinValue? = builtinValues[name]
 
     override fun resolveName(
-        name: Identifier,
+        name: Symbol,
     ): ClassifiedIntroduction? = builtinDeclarations[name]
 
-    override fun getAllNames(): Set<Identifier> = builtinDeclarations.keys
+    override fun getAllNames(): Set<Symbol> = builtinDeclarations.keys
 }
