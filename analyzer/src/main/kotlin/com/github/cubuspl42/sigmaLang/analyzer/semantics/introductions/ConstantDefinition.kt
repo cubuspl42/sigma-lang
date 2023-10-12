@@ -8,9 +8,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionClassification
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ExpressionMap
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm

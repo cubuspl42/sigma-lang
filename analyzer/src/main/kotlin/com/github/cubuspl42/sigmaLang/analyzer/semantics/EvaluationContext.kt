@@ -1,4 +1,4 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
+package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 data class EvaluationContext(
     val evaluationDepth: Int,
