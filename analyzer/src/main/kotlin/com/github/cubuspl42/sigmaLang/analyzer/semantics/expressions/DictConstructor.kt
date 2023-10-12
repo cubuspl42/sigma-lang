@@ -30,8 +30,6 @@ abstract class DictConstructor : Expression() {
             val keyAnalysis: Expression.Analysis,
             val valueAnalysis: Expression.Analysis,
         ) {
-
-
             val inferredKeyType: MembershipType?
                 get() = keyAnalysis.inferredType
 

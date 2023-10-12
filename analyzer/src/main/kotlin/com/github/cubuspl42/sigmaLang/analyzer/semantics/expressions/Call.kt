@@ -104,12 +104,12 @@ abstract class Call : Expression() {
 
                             override val entries: Set<Entry> = setOf(
                                 object : Entry() {
-                                    override val name: Identifier = prototype.leftArgument
+                                    override val name: Symbol = prototype.leftArgument
 
                                     override val value: Expression = leftArgument
                                 },
                                 object : Entry() {
-                                    override val name: Identifier = prototype.rightArgument
+                                    override val name: Symbol = prototype.rightArgument
 
                                     override val value: Expression = rightArgument
                                 },
