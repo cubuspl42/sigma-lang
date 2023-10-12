@@ -13,39 +13,50 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Univer
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorTerm
 
-// I think that this class
-class FunctionTypeConstructor(
-    override val outerScope: StaticScope,
-    override val term: FunctionTypeConstructorTerm,
-    val metaArgumentType: TypeExpression?,
-    val argumentType: TupleTypeConstructor,
-    val imageType: Expression,
-) : TypeConstructor() {
+abstract class FunctionTypeConstructor: TypeConstructor() {
+    abstract override val term: FunctionTypeConstructorTerm
+
+    abstract val metaArgumentType: TypeExpression?
+
+    abstract val argumentType: TupleTypeConstructor
+
+    abstract val imageType: Expression
+
     companion object {
         fun build(
             context: BuildContext,
             term: FunctionTypeConstructorTerm,
         ): Stub<FunctionTypeConstructor> = object : Stub<FunctionTypeConstructor> {
             override val resolved: FunctionTypeConstructor by lazy {
-                FunctionTypeConstructor(
-                    outerScope = context.outerScope,
-                    term = term,
-                    metaArgumentType = term.metaArgumentType?.let {
-                        TypeExpression.build(
-                            outerMetaScope = context.outerMetaScope,
-                            term = it,
-                        ).resolved
-                    },
+                object : FunctionTypeConstructor() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: FunctionTypeConstructorTerm = term
+
+                    override val metaArgumentType: TypeExpression? by lazy {
+                        term.metaArgumentType?.let {
+                            TypeExpression.build(
+                                outerMetaScope = context.outerMetaScope,
+                                term = it,
+                            ).resolved
+                        }
+                    }
+
                     // TODO: Use the scope of the meta-argument type
-                    argumentType = TupleTypeConstructor.build(
-                        context = context,
-                        term = term.argumentType,
-                    ).resolved,
-                    imageType = Expression.build(
-                        context = context,
-                        term = term.imageType,
-                    ).resolved,
-                )
+                    override val argumentType: TupleTypeConstructor by lazy {
+                        TupleTypeConstructor.build(
+                            context = context,
+                            term = term.argumentType,
+                        ).resolved
+                    }
+
+                    override val imageType: Expression by lazy {
+                        Expression.build(
+                            context = context,
+                            term = term.imageType,
+                        ).resolved
+                    }
+                }
             }
         }
     }
@@ -84,5 +95,6 @@ class FunctionTypeConstructor(
         ).asValue
     }
 
-    override val subExpressions: Set<Expression> = setOf(argumentType, imageType)
+    override val subExpressions: Set<Expression>
+        get() = setOf(argumentType, imageType)
 }

@@ -12,12 +12,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionTerm
 
-data class LetExpression(
-    override val outerScope: StaticScope,
-    override val term: LetExpressionTerm,
-    val definitionBlock: VariableDefinitionBlock,
-    val result: Expression,
-) : Expression() {
+abstract class LetExpression : Expression() {
+    abstract override val term: LetExpressionTerm
+
+    abstract val definitionBlock: VariableDefinitionBlock
+
+    abstract val result: Expression
+
     companion object {
         fun build(
             context: BuildContext,
@@ -42,17 +43,22 @@ data class LetExpression(
                     )
                 }
 
-                LetExpression(
-                    outerScope = context.outerScope,
-                    term = term,
-                    definitionBlock = definitionBlock,
-                    result = Expression.build(
-                        context = context.copy(
-                            outerScope = innerDeclarationScope,
-                        ),
-                        term = term.result,
-                    ).resolved,
-                )
+                object : LetExpression() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: LetExpressionTerm = term
+
+                    override val definitionBlock: VariableDefinitionBlock = definitionBlock
+
+                    override val result: Expression by lazy {
+                        Expression.build(
+                            context = context.copy(
+                                outerScope = innerDeclarationScope,
+                            ),
+                            term = term.result,
+                        ).resolved
+                    }
+                }
             }
         }
     }

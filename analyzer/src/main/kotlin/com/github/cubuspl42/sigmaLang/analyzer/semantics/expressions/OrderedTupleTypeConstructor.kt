@@ -11,15 +11,38 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Ordere
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorTerm
 
-class OrderedTupleTypeConstructor(
-    override val outerScope: StaticScope,
-    override val term: OrderedTupleTypeConstructorTerm,
-    val elements: List<Element>,
-) : TupleTypeConstructor() {
-    data class Element(
-        val name: Symbol?,
-        val type: Expression,
-    ) {
+abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
+    abstract override val term: OrderedTupleTypeConstructorTerm
+
+    abstract val elements: List<Element>
+
+    abstract class Element {
+        abstract val name: Symbol?
+
+        abstract val type: Expression
+
+        companion object {
+            fun build(
+                context: BuildContext,
+                element: OrderedTupleTypeConstructorTerm.Element,
+            ): Stub<Element> {
+                val typeStub = Expression.build(
+                    context = context,
+                    term = element.type,
+                )
+
+                return object : Stub<Element> {
+                    override val resolved: Element by lazy {
+                        object : Element() {
+                            override val name: Symbol? = element.name
+
+                            override val type: Expression by lazy { typeStub.resolved }
+                        }
+                    }
+                }
+            }
+        }
+
         data class Analysis(
             val name: Symbol?,
             val typeAnalysis: Expression.Analysis,
@@ -38,21 +61,27 @@ class OrderedTupleTypeConstructor(
         fun build(
             context: BuildContext,
             term: OrderedTupleTypeConstructorTerm,
-        ): Stub<OrderedTupleTypeConstructor> = object : Stub<OrderedTupleTypeConstructor> {
-            override val resolved: OrderedTupleTypeConstructor by lazy {
-                OrderedTupleTypeConstructor(
-                    outerScope = context.outerScope,
-                    term = term,
-                    elements = term.elements.map {
-                        Element(
-                            name = it.name,
-                            type = Expression.build(
-                                context = context,
-                                term = it.type,
-                            ).resolved,
-                        )
-                    },
+        ): Stub<OrderedTupleTypeConstructor> {
+            val elementStubs = term.elements.map {
+                Element.build(
+                    context,
+                    element = it,
                 )
+            }
+
+            return object : Stub<OrderedTupleTypeConstructor> {
+
+                override val resolved: OrderedTupleTypeConstructor by lazy {
+                    object : OrderedTupleTypeConstructor() {
+                        override val outerScope: StaticScope = context.outerScope
+
+                        override val term: OrderedTupleTypeConstructorTerm = term
+
+                        override val elements: List<Element> by lazy {
+                            elementStubs.map { it.resolved }
+                        }
+                    }
+                }
             }
         }
     }
@@ -79,5 +108,6 @@ class OrderedTupleTypeConstructor(
         OrderedTupleType(elements = elements).asValue
     }
 
-    override val subExpressions: Set<Expression> = elements.map { it.type }.toSet()
+    override val subExpressions: Set<Expression>
+        get() = elements.map { it.type }.toSet()
 }

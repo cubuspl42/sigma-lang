@@ -9,27 +9,31 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleConstructorTerm
 
-class OrderedTupleConstructor(
-    override val outerScope: StaticScope,
-    override val term: OrderedTupleConstructorTerm,
-    val elements: List<Expression>,
-) : TupleConstructor() {
+abstract class OrderedTupleConstructor : TupleConstructor() {
+    abstract override val term: OrderedTupleConstructorTerm
+
+    abstract val elements: List<Expression>
+
     companion object {
         fun build(
             context: BuildContext,
             term: OrderedTupleConstructorTerm,
         ): Stub<OrderedTupleConstructor> = object : Stub<OrderedTupleConstructor> {
             override val resolved: OrderedTupleConstructor by lazy {
-                OrderedTupleConstructor(
-                    outerScope = context.outerScope,
-                    term = term,
-                    elements = term.elements.map {
-                        Expression.build(
-                            context = context,
-                            term = it,
-                        ).resolved
-                    },
-                )
+                object : OrderedTupleConstructor() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: OrderedTupleConstructorTerm = term
+
+                    override val elements: List<Expression> by lazy {
+                        term.elements.map {
+                            Expression.build(
+                                context = context,
+                                term = it,
+                            ).resolved
+                        }
+                    }
+                }
             }
         }
     }
@@ -62,7 +66,8 @@ class OrderedTupleConstructor(
         }
     }
 
-    override val subExpressions: Set<Expression> = elements.toSet()
+    override val subExpressions: Set<Expression>
+        get() = elements.toSet()
 
     override fun bind(
         dynamicScope: DynamicScope,

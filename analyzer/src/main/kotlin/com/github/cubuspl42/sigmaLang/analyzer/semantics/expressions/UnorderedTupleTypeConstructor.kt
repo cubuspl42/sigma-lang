@@ -7,20 +7,20 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorTerm
 
-class UnorderedTupleTypeConstructor(
-    override val outerScope: StaticScope,
-    override val term: UnorderedTupleTypeConstructorTerm,
-    val entries: Set<Entry>,
-) : TupleTypeConstructor() {
-    data class Entry(
-        val name: Symbol,
-        val type: Expression,
-    ) {
+abstract class UnorderedTupleTypeConstructor : TupleTypeConstructor() {
+    abstract override val term: UnorderedTupleTypeConstructorTerm
+
+    abstract val entries: Set<Entry>
+
+    abstract class Entry {
+        abstract val name: Symbol
+
+        abstract val type: Expression
+
         data class Analysis(
             val name: Symbol,
             val typeAnalysis: Expression.Analysis,
@@ -30,15 +30,20 @@ class UnorderedTupleTypeConstructor(
             fun build(
                 context: BuildContext,
                 entry: UnorderedTupleTypeConstructorTerm.Entry,
-            ): Stub<Entry> = object : Stub<Entry> {
-                override val resolved: Entry by lazy {
-                    Entry(
-                        name = entry.name,
-                        type = Expression.build(
-                            context = context,
-                            term = entry.type,
-                        ).resolved,
-                    )
+            ): Stub<Entry> {
+                val typeStub = Expression.build(
+                    context = context,
+                    term = entry.type,
+                )
+
+                return object : Stub<Entry> {
+                    override val resolved: Entry by lazy {
+                        object : Entry() {
+                            override val name: Symbol = entry.name
+
+                            override val type: Expression by lazy { typeStub.resolved }
+                        }
+                    }
                 }
             }
         }
@@ -58,18 +63,24 @@ class UnorderedTupleTypeConstructor(
         fun build(
             context: BuildContext,
             term: UnorderedTupleTypeConstructorTerm,
-        ): Stub<UnorderedTupleTypeConstructor> = object : Stub<UnorderedTupleTypeConstructor> {
-            override val resolved: UnorderedTupleTypeConstructor by lazy {
-                UnorderedTupleTypeConstructor(
-                    outerScope = context.outerScope,
-                    term = term,
-                    entries = term.entries.map {
-                        Entry.build(
-                            context = context,
-                            entry = it,
-                        ).resolved
-                    }.toSet(),
-                )
+        ): Stub<UnorderedTupleTypeConstructor> {
+            val entryStubs = term.entries.map {
+                Entry.build(
+                    context = context,
+                    entry = it,
+                ).resolved
+            }
+
+            return object : Stub<UnorderedTupleTypeConstructor> {
+                override val resolved: UnorderedTupleTypeConstructor by lazy {
+                    object : UnorderedTupleTypeConstructor() {
+                        override val outerScope: StaticScope = context.outerScope
+
+                        override val term: UnorderedTupleTypeConstructorTerm = term
+
+                        override val entries: Set<Entry> by lazy { entryStubs.toSet() }
+                    }
+                }
             }
         }
     }
@@ -100,5 +111,6 @@ class UnorderedTupleTypeConstructor(
         }.asValue
     )
 
-    override val subExpressions: Set<Expression> = entries.map { it.type }.toSet()
+    override val subExpressions: Set<Expression>
+        get() = entries.map { it.type }.toSet()
 }

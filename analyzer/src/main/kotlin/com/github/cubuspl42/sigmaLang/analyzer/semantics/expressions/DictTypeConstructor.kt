@@ -11,30 +11,38 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValu
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
-class DictTypeConstructor(
-    override val outerScope: StaticScope,
-    override val term: ExpressionTerm,
-    val keyType: Expression,
-    val valueType: Expression,
+abstract class DictTypeConstructor(
 ) : TypeConstructor() {
+    abstract override val term: DictTypeConstructorTerm
+
+    abstract val keyType: Expression
+
+    abstract val valueType: Expression
+
     companion object {
         fun build(
             context: BuildContext,
             term: DictTypeConstructorTerm,
         ): Stub<DictTypeConstructor> = object : Stub<DictTypeConstructor> {
             override val resolved: DictTypeConstructor by lazy {
-                DictTypeConstructor(
-                    outerScope = context.outerScope,
-                    term = term,
-                    keyType = Expression.build(
-                        context = context,
-                        term = term.keyType,
-                    ).resolved,
-                    valueType = Expression.build(
-                        context = context,
-                        term = term.valueType,
-                    ).resolved,
-                )
+                object : DictTypeConstructor() {
+                    override val outerScope: StaticScope = context.outerScope
+
+                    override val term: DictTypeConstructorTerm = term
+
+                    override val keyType: Expression by lazy {
+                        Expression.build(
+                            context = context,
+                            term = term.keyType,
+                        ).resolved
+                    }
+                    override val valueType: Expression by lazy {
+                        Expression.build(
+                            context = context,
+                            term = term.valueType,
+                        ).resolved
+                    }
+                }
             }
         }
     }
@@ -68,5 +76,6 @@ class DictTypeConstructor(
         ).asValue
     }
 
-    override val subExpressions: Set<Expression> = setOf(keyType, valueType)
+    override val subExpressions: Set<Expression>
+        get() = setOf(keyType, valueType)
 }
