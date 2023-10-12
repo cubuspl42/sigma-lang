@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -34,7 +34,7 @@ class OrderedTupleConstructorTermTests {
                     elements = listOf(
                         ReferenceSourceTerm(
                             location = SourceLocation(1, 1),
-                            referredName = Symbol.of("a"),
+                            referredName = Identifier.of("a"),
                         ),
                     ),
                 ),
@@ -54,17 +54,17 @@ class OrderedTupleConstructorTermTests {
                     elements = listOf(
                         ReferenceSourceTerm(
                             location = SourceLocation(1, 1),
-                            referredName = Symbol.of("a"),
+                            referredName = Identifier.of("a"),
                         ),
 
                         ReferenceSourceTerm(
                             location = SourceLocation(1, 4),
-                            referredName = Symbol.of("b"),
+                            referredName = Identifier.of("b"),
                         ),
 
                         ReferenceSourceTerm(
                             location = SourceLocation(1, 7),
-                            referredName = Symbol.of("c"),
+                            referredName = Identifier.of("c"),
                         ),
                     ),
                 ),

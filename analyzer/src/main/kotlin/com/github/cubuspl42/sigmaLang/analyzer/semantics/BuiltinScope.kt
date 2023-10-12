@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
@@ -31,7 +31,7 @@ interface BuiltinValue {
 }
 
 private class BuiltinDefinition(
-    override val name: Symbol,
+    override val name: Identifier,
     val value: Value,
     val type: MembershipType,
 ) : ConstantDefinition() {
@@ -46,49 +46,49 @@ object BuiltinScope : DynamicScope, StaticScope {
         override val value: Value,
     ) : BuiltinValue
 
-    private val builtinValues: Map<Symbol, BuiltinValue> = mapOf(
-        Symbol.of("Bool") to SimpleBuiltinValue(
+    private val builtinValues: Map<Identifier, BuiltinValue> = mapOf(
+        Identifier.of("Bool") to SimpleBuiltinValue(
             type = TypeType,
             value = BoolType.asValue,
         ),
-        Symbol.of("Int") to SimpleBuiltinValue(
+        Identifier.of("Int") to SimpleBuiltinValue(
             type = TypeType,
             value = IntCollectiveType.asValue,
         ),
-        Symbol.of("String") to SimpleBuiltinValue(
+        Identifier.of("String") to SimpleBuiltinValue(
             type = TypeType,
             value = StringType.asValue,
         ),
-        Symbol.of("Type") to SimpleBuiltinValue(
+        Identifier.of("Type") to SimpleBuiltinValue(
             type = TypeType,
             value = TypeType.asValue,
         ),
-        Symbol.of("Undefined") to SimpleBuiltinValue(
+        Identifier.of("Undefined") to SimpleBuiltinValue(
             type = TypeType,
             value = UndefinedType.asValue,
         ),
-        Symbol.of("Set") to SetType.constructor,
-        Symbol.of("setOf") to SetType.setOf,
-        Symbol.of("setContains") to SetType.setContains,
-        Symbol.of("setUnion") to SetType.setUnion,
-        Symbol.of("emptySet") to SetType.emptySet,
-        Symbol.of("setSum") to SetType.SetSum,
-        Symbol.of("false") to SimpleBuiltinValue(
+        Identifier.of("Set") to SetType.constructor,
+        Identifier.of("setOf") to SetType.setOf,
+        Identifier.of("setContains") to SetType.setContains,
+        Identifier.of("setUnion") to SetType.setUnion,
+        Identifier.of("emptySet") to SetType.emptySet,
+        Identifier.of("setSum") to SetType.SetSum,
+        Identifier.of("false") to SimpleBuiltinValue(
             type = BoolType,
             value = BoolValue(false),
         ),
-        Symbol.of("true") to SimpleBuiltinValue(
+        Identifier.of("true") to SimpleBuiltinValue(
             type = BoolType,
             value = BoolValue(true),
         ),
 
-        Symbol.of("not") to BoolValue.Not,
-        Symbol.of("if") to SimpleBuiltinValue(
+        Identifier.of("not") to BoolValue.Not,
+        Identifier.of("if") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = OrderedTupleType(
                     elements = listOf(
                         OrderedTupleType.Element(
-                            name = Symbol.of("guard"),
+                            name = Identifier.of("guard"),
                             type = BoolType,
                         ),
                     ),
@@ -96,10 +96,10 @@ object BuiltinScope : DynamicScope, StaticScope {
                 imageType = UniversalFunctionType(
                     argumentType = UnorderedTupleType(
                         valueTypeByName = mapOf(
-                            Symbol.of("then") to TypeVariable(
+                            Identifier.of("then") to TypeVariable(
                                 formula = Formula.of("r"),
                             ),
-                            Symbol.of("else") to TypeVariable(
+                            Identifier.of("else") to TypeVariable(
                                 formula = Formula.of("r"),
                             ),
                         )
@@ -111,35 +111,35 @@ object BuiltinScope : DynamicScope, StaticScope {
             ),
             value = BoolValue.If,
         ),
-        Symbol.of("mul") to SimpleBuiltinValue(
+        Identifier.of("mul") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Mul,
         ),
-        Symbol.of("div") to SimpleBuiltinValue(
+        Identifier.of("div") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Div,
         ),
-        Symbol.of("add") to SimpleBuiltinValue(
+        Identifier.of("add") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Add,
         ),
-        Symbol.of("sub") to SimpleBuiltinValue(
+        Identifier.of("sub") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = IntCollectiveType,
             ),
             value = IntValue.Sub,
         ),
-        Symbol.of("sq") to SimpleBuiltinValue(
+        Identifier.of("sq") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = OrderedTupleType(
                     elements = listOf(
@@ -153,14 +153,14 @@ object BuiltinScope : DynamicScope, StaticScope {
             ),
             value = IntValue.Sq,
         ),
-        Symbol.of("eq") to SimpleBuiltinValue(
+        Identifier.of("eq") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Eq,
         ),
-        Symbol.of("lt") to SimpleBuiltinValue(
+        Identifier.of("lt") to SimpleBuiltinValue(
             type = UniversalFunctionType(
 
                 argumentType = UnorderedTupleType.Empty,
@@ -168,32 +168,32 @@ object BuiltinScope : DynamicScope, StaticScope {
             ),
             value = IntValue.Lt,
         ),
-        Symbol.of("lte") to SimpleBuiltinValue(
+        Identifier.of("lte") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Lte,
         ),
-        Symbol.of("gt") to SimpleBuiltinValue(
+        Identifier.of("gt") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Gt,
         ),
-        Symbol.of("gte") to SimpleBuiltinValue(
+        Identifier.of("gte") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
                 imageType = BoolType,
             ),
             value = IntValue.Gte,
         ),
-        Symbol.of("link") to SimpleBuiltinValue(
+        Identifier.of("link") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        Symbol.of("primary") to DictType(
+                        Identifier.of("primary") to DictType(
                             keyType = TypeVariable(
                                 formula = Formula.of("K"),
                             ),
@@ -201,7 +201,7 @@ object BuiltinScope : DynamicScope, StaticScope {
                                 formula = Formula.of("V"),
                             ),
                         ),
-                        Symbol.of("secondary") to DictType(
+                        Identifier.of("secondary") to DictType(
                             keyType = TypeVariable(
                                 formula = Formula.of("K"),
                             ),
@@ -222,17 +222,17 @@ object BuiltinScope : DynamicScope, StaticScope {
             ),
             value = FunctionValue.Link,
         ),
-        Symbol.of("chunked4") to FunctionValue.Chunked4,
-        Symbol.of("dropFirst") to FunctionValue.DropFirst,
-        Symbol.of("windows") to FunctionValue.Windows,
-        Symbol.of("take") to FunctionValue.Take,
-        Symbol.of("map") to FunctionValue.MapFn,
-        Symbol.of("sum") to FunctionValue.Sum,
-        Symbol.of("product") to FunctionValue.Product,
-        Symbol.of("max") to FunctionValue.Max,
-        Symbol.of("length") to FunctionValue.LengthFunction,
-        Symbol.of("concat") to FunctionValue.ConcatFunction,
-        Symbol.of("is") to ClassDefinition.Is,
+        Identifier.of("chunked4") to FunctionValue.Chunked4,
+        Identifier.of("dropFirst") to FunctionValue.DropFirst,
+        Identifier.of("windows") to FunctionValue.Windows,
+        Identifier.of("take") to FunctionValue.Take,
+        Identifier.of("map") to FunctionValue.MapFn,
+        Identifier.of("sum") to FunctionValue.Sum,
+        Identifier.of("product") to FunctionValue.Product,
+        Identifier.of("max") to FunctionValue.Max,
+        Identifier.of("length") to FunctionValue.LengthFunction,
+        Identifier.of("concat") to FunctionValue.ConcatFunction,
+        Identifier.of("is") to ClassDefinition.Is,
     )
 
     private val builtinValueDeclarations = builtinValues.map { (name, builtinValue) ->
@@ -243,24 +243,24 @@ object BuiltinScope : DynamicScope, StaticScope {
         )
     }.toSet()
 
-    private val builtinDeclarations: Map<Symbol, BuiltinDefinition> = builtinValueDeclarations.associateBy { it.name }
+    private val builtinDeclarations: Map<Identifier, BuiltinDefinition> = builtinValueDeclarations.associateBy { it.name }
 
-    val names: Set<Symbol>
+    val names: Set<Identifier>
         get() = builtinDeclarations.keys
 
     override fun getValue(
-        name: Symbol,
+        name: Identifier,
     ): Thunk<Value>? = getBuiltin(
         name = name,
     )?.value?.toThunk()
 
     private fun getBuiltin(
-        name: Symbol,
+        name: Identifier,
     ): BuiltinValue? = builtinValues[name]
 
     override fun resolveName(
-        name: Symbol,
+        name: Identifier,
     ): ClassifiedIntroduction? = builtinDeclarations[name]
 
-    override fun getAllNames(): Set<Symbol> = builtinDeclarations.keys
+    override fun getAllNames(): Set<Identifier> = builtinDeclarations.keys
 }

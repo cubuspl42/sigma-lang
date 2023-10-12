@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
@@ -36,7 +36,7 @@ class ClassDefinitionTests {
                 context = Expression.BuildContext.Builtin,
                 qualifiedPath = QualifiedPath(
                     segments = listOf(
-                        Symbol.of("Foo"),
+                        Identifier.of("Foo"),
                     ),
                 ),
                 term = term,
@@ -51,18 +51,18 @@ class ClassDefinitionTests {
                     valueTypeByName = mapOf(
                         ClassDefinition.classTagKey to tagType,
                         ClassDefinition.classTypeKey to TypeType,
-                        Symbol.of("new") to UniversalFunctionType(
+                        Identifier.of("new") to UniversalFunctionType(
                             argumentType = UnorderedTupleType(
                                 valueTypeByName = mapOf(
-                                    Symbol.of("foo") to IntCollectiveType,
-                                    Symbol.of("bar") to BoolType,
+                                    Identifier.of("foo") to IntCollectiveType,
+                                    Identifier.of("bar") to BoolType,
                                 )
                             ),
                             imageType = UnorderedTupleType(
                                 valueTypeByName = mapOf(
                                     ClassDefinition.instanceTagKey to tagType,
-                                    Symbol.of("foo") to IntCollectiveType,
-                                    Symbol.of("bar") to BoolType,
+                                    Identifier.of("foo") to IntCollectiveType,
+                                    Identifier.of("bar") to BoolType,
                                 )
                             ),
                         )
@@ -90,8 +90,8 @@ class ClassDefinitionTests {
                 context = Expression.BuildContext.Builtin,
                 qualifiedPath = QualifiedPath(
                     segments = listOf(
-                        Symbol.of("foo"),
-                        Symbol.of("Foo"),
+                        Identifier.of("foo"),
+                        Identifier.of("Foo"),
                     ),
                 ),
                 term = term,
@@ -109,7 +109,7 @@ class ClassDefinitionTests {
             )
 
             assertEquals(
-                expected = Symbol.of("foo.Foo"),
+                expected = Identifier.of("foo.Foo"),
                 actual = classValue.read(
                     key = ClassDefinition.classTagKey,
                 ),
@@ -125,8 +125,8 @@ class ClassDefinitionTests {
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         ClassDefinition.instanceTagKey to SymbolType.of("foo.Foo"),
-                        Symbol.of("foo") to IntCollectiveType,
-                        Symbol.of("bar") to BoolType,
+                        Identifier.of("foo") to IntCollectiveType,
+                        Identifier.of("bar") to BoolType,
                     )
                 ),
                 actual = actualType,
@@ -134,7 +134,7 @@ class ClassDefinitionTests {
 
             assertIs<FunctionValue>(
                 classValue.read(
-                    key = Symbol.of("new"),
+                    key = Identifier.of("new"),
                 ),
             )
         }

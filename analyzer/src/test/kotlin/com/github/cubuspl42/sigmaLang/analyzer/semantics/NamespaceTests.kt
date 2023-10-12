@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
@@ -36,7 +35,7 @@ class NamespaceTests {
             )
 
             val isUserIdValidDefinition = namespaceDefinition.getDefinition(
-                name = Symbol.of("isUserIdValid"),
+                name = Identifier.of("isUserIdValid"),
             )
 
             assertNotNull(isUserIdValidDefinition)
@@ -46,7 +45,7 @@ class NamespaceTests {
                     argumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
-                                name = Symbol.of("userId"),
+                                name = Identifier.of("userId"),
                                 type = IntCollectiveType,
                             ),
                         ),

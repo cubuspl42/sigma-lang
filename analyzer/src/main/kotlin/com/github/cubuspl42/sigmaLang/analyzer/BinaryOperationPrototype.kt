@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.InfixOperator
 
 data class BinaryOperationPrototype(
@@ -65,9 +65,9 @@ data class BinaryOperationPrototype(
         }
     }
 
-    val leftArgument: Symbol
-        get() = Symbol.of(leftArgumentName)
+    val leftArgument: Identifier
+        get() = Identifier.of(leftArgumentName)
 
-    val rightArgument: Symbol
-        get() = Symbol.of(rightArgumentName)
+    val rightArgument: Identifier
+        get() = Identifier.of(rightArgumentName)
 }

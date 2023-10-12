@@ -2,14 +2,14 @@ package com.github.cubuspl42.sigmaLang.analyzer.syntax
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.NamespaceDefinitionContext
 
 data class NamespaceDefinitionSourceTerm(
     override val location: SourceLocation,
-    override val name: Symbol,
+    override val name: Identifier,
     override val namespaceEntries: List<NamespaceEntrySourceTerm>,
 ) : NamespaceEntrySourceTerm(), NamespaceDefinitionTerm {
     companion object {
@@ -29,7 +29,7 @@ data class NamespaceDefinitionSourceTerm(
             ctx: NamespaceDefinitionContext,
         ): NamespaceDefinitionSourceTerm = NamespaceDefinitionSourceTerm(
             location = SourceLocation.build(ctx),
-            name = Symbol.of(ctx.name.text),
+            name = Identifier.of(ctx.name.text),
             namespaceEntries = ctx.namespaceBody().namespaceEntry().map {
                 NamespaceEntrySourceTerm.build(it)
             },

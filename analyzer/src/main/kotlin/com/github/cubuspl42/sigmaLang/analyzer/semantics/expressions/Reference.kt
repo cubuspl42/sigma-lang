@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
@@ -19,16 +19,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.VariableI
 abstract class Reference : Expression() {
     abstract override val term: ReferenceTerm?
 
-    abstract val referredName: Symbol
+    abstract val referredName: Identifier
 
     data class UnresolvedNameError(
         override val location: SourceLocation?,
-        val name: Symbol,
+        val name: Identifier,
     ) : SemanticError
 
     data class NonValueDeclarationError(
         override val location: SourceLocation?,
-        val name: Symbol,
+        val name: Identifier,
     ) : SemanticError
 
     companion object {
@@ -42,7 +42,7 @@ abstract class Reference : Expression() {
 
                     override val term: ReferenceTerm = term
 
-                    override val referredName: Symbol = term.referredName
+                    override val referredName: Identifier = term.referredName
                 }
             }
         }

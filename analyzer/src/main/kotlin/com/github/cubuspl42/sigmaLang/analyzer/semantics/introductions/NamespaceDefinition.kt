@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
@@ -33,13 +33,13 @@ class NamespaceDefinition(
 
     inner class NamespaceStaticBlock : StaticBlock() {
         override fun resolveNameLocally(
-            name: Symbol,
+            name: Identifier,
         ): ClassifiedIntroduction? = getDefinition(name = name)
 
-        override fun getLocalNames(): Set<Symbol> = definitions.map { it.name }.toSet()
+        override fun getLocalNames(): Set<Identifier> = definitions.map { it.name }.toSet()
     }
 
-    override val name: Symbol
+    override val name: Identifier
         get() = term.name
 
     private val asDeclarationBlock = NamespaceStaticBlock()
@@ -62,7 +62,7 @@ class NamespaceDefinition(
     }
 
     fun getDefinition(
-        name: Symbol,
+        name: Identifier,
     ): ConstantDefinition? = definitions.singleOrNull {
         it.name == name
     }

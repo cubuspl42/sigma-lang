@@ -29,7 +29,7 @@ abstract class AbstractionConstructor : Expression() {
     abstract val image: Expression
 
     class ArgumentDeclaration(
-        override val name: Symbol,
+        override val name: Identifier,
         override val annotatedType: MembershipType,
     ) : UserDeclaration {
         override val errors: Set<SemanticError> = emptySet()
@@ -41,10 +41,10 @@ abstract class AbstractionConstructor : Expression() {
         private val declarationByName = argumentDeclarations.associateBy { it.name }
 
         override fun resolveNameLocally(
-            name: Symbol,
+            name: Identifier,
         ): ClassifiedIntroduction? = declarationByName[name]
 
-        override fun getLocalNames(): Set<Symbol> = declarationByName.keys
+        override fun getLocalNames(): Set<Identifier> = declarationByName.keys
     }
 
     companion object {

@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.EvaluationContext
@@ -93,7 +93,7 @@ class UnionTypeConstructorTests {
 
                     assertEquals(
                         actual = reference.referredName,
-                        expected = Symbol.of("A"),
+                        expected = Identifier.of("A"),
                     )
                 },
                 "^[B]" to { expression ->
@@ -106,7 +106,7 @@ class UnionTypeConstructorTests {
 
                             assertEquals(
                                 actual = reference.referredName,
-                                expected = Symbol.of("B"),
+                                expected = Identifier.of("B"),
                             )
                         },
                     )
@@ -136,7 +136,7 @@ class UnionTypeConstructorTests {
 
                     assertEquals(
                         actual = reference.referredName,
-                        expected = Symbol.of("A"),
+                        expected = Identifier.of("A"),
                     )
                 },
                 "B" to { expression ->
@@ -144,7 +144,7 @@ class UnionTypeConstructorTests {
 
                     assertEquals(
                         actual = reference.referredName,
-                        expected = Symbol.of("B"),
+                        expected = Identifier.of("B"),
                     )
                 },
                 "C" to { expression ->
@@ -152,7 +152,7 @@ class UnionTypeConstructorTests {
 
                     assertEquals(
                         actual = reference.referredName,
-                        expected = Symbol.of("C"),
+                        expected = Identifier.of("C"),
                     )
                 },
                 "D" to { expression ->
@@ -160,7 +160,7 @@ class UnionTypeConstructorTests {
 
                     assertEquals(
                         actual = reference.referredName,
-                        expected = Symbol.of("D"),
+                        expected = Identifier.of("D"),
                     )
                 },
             ),

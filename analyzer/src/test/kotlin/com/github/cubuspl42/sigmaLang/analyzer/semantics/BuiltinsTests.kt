@@ -3,8 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
@@ -44,7 +43,7 @@ class BuiltinsTests {
         // Validate `mySet1`
 
         val mySet1Definition = namespaceDefinition.getDefinition(
-            name = Symbol.of("mySet1"),
+            name = Identifier.of("mySet1"),
         )!!
 
         assertEquals(
@@ -68,7 +67,7 @@ class BuiltinsTests {
         // Validate `contains2`
 
         val contains2Definition = namespaceDefinition.getDefinition(
-            name = Symbol.of("contains2"),
+            name = Identifier.of("contains2"),
         )!!
 
         assertEquals(
@@ -79,7 +78,7 @@ class BuiltinsTests {
         // Validate `contains5`
 
         val contains5Definition = namespaceDefinition.getDefinition(
-            name = Symbol.of("contains5"),
+            name = Identifier.of("contains5"),
         )!!
 
         assertEquals(
@@ -90,7 +89,7 @@ class BuiltinsTests {
         // Validate `mySet2`
 
         val mySet2Definition = namespaceDefinition.getDefinition(
-            name = Symbol.of("mySet2"),
+            name = Identifier.of("mySet2"),
         )!!
 
         assertEquals(

@@ -1,6 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
@@ -8,10 +7,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVa
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.OrderedTupleTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -31,10 +29,10 @@ class AbstractionTermTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         elements = listOf(
                             OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Symbol.of("n"),
+                                name = Identifier.of("n"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 5),
-                                    referredName = Symbol.of("Int"),
+                                    referredName = Identifier.of("Int"),
                                 ),
                             ),
                         ),
@@ -61,17 +59,17 @@ class AbstractionTermTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         elements = listOf(
                             OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Symbol.of("a"),
+                                name = Identifier.of("a"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 6),
-                                    referredName = Symbol.of("Type"),
+                                    referredName = Identifier.of("Type"),
                                 ),
                             ),
                             OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Symbol.of("b"),
+                                name = Identifier.of("b"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 15),
-                                    referredName = Symbol.of("Type"),
+                                    referredName = Identifier.of("Type"),
                                 ),
                             ),
                         ),
@@ -80,17 +78,17 @@ class AbstractionTermTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 21),
                         elements = listOf(
                             OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Symbol.of("a"),
+                                name = Identifier.of("a"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 26),
-                                    referredName = Symbol.of("a"),
+                                    referredName = Identifier.of("a"),
                                 ),
                             ),
                             OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Symbol.of("b"),
+                                name = Identifier.of("b"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 32),
-                                    referredName = Symbol.of("b"),
+                                    referredName = Identifier.of("b"),
                                 ),
                             ),
                         ),
@@ -113,10 +111,10 @@ class AbstractionTermTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         elements = listOf(
                             OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Symbol.of("t"),
+                                name = Identifier.of("t"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 6),
-                                    referredName = Symbol.of("Type"),
+                                    referredName = Identifier.of("Type"),
                                 ),
                             ),
                         ),
@@ -125,10 +123,10 @@ class AbstractionTermTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 12),
                         elements = listOf(
                             OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Symbol.of("n"),
+                                name = Identifier.of("n"),
                                 type = ReferenceSourceTerm(
                                     location = SourceLocation(lineIndex = 1, columnIndex = 17),
-                                    referredName = Symbol.of("Int"),
+                                    referredName = Identifier.of("Int"),
                                 ),
                             ),
                         ),
@@ -164,7 +162,7 @@ class AbstractionTermTests {
                     argumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
-                                name = Symbol.of("n"),
+                                name = Identifier.of("n"),
                                 type = IntCollectiveType,
                             ),
                         ),
@@ -193,7 +191,7 @@ class AbstractionTermTests {
                     metaArgumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
-                                name = Symbol.of("t"),
+                                name = Identifier.of("t"),
                                 type = TypeType,
                             ),
                         ),
@@ -201,7 +199,7 @@ class AbstractionTermTests {
                     argumentType = OrderedTupleType(
                         elements = listOf(
                             OrderedTupleType.Element(
-                                name = Symbol.of("t"),
+                                name = Identifier.of("t"),
                                 type = TypeVariable(
                                     formula = Formula.of("t"),
                                 ),

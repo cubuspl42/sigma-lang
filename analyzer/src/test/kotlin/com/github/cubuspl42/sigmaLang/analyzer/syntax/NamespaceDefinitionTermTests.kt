@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IntLiteralSour
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -34,19 +34,19 @@ class NamespaceDefinitionTermTests {
             assertEquals(
                 expected = NamespaceDefinitionSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    name = Symbol.of("Foo"),
+                    name = Identifier.of("Foo"),
                     namespaceEntries = listOf(
                         ConstantDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 2, columnIndex = 4),
-                            name = Symbol.of("UserId"),
+                            name = Identifier.of("UserId"),
                             body = ReferenceSourceTerm(
                                 location = SourceLocation(lineIndex = 2, columnIndex = 20),
-                                referredName = Symbol.of("Int"),
+                                referredName = Identifier.of("Int"),
                             )
                         ),
                         ConstantDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 4, columnIndex = 4),
-                            name = Symbol.of("name1"),
+                            name = Identifier.of("name1"),
                             declaredTypeBody = null,
                             body = IntLiteralSourceTerm(
                                 location = SourceLocation(lineIndex = 4, columnIndex = 19),
@@ -55,17 +55,17 @@ class NamespaceDefinitionTermTests {
                         ),
                         ConstantDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 6, columnIndex = 4),
-                            name = Symbol.of("name2"), declaredTypeBody = null,
+                            name = Identifier.of("name2"), declaredTypeBody = null,
                             body = AbstractionConstructorSourceTerm(
                                 location = SourceLocation(lineIndex = 6, columnIndex = 19),
                                 argumentType = OrderedTupleTypeConstructorSourceTerm(
                                     location = SourceLocation(lineIndex = 6, columnIndex = 19),
                                     elements = listOf(
                                         OrderedTupleTypeConstructorSourceTerm.Element(
-                                            name = Symbol.of("a"),
+                                            name = Identifier.of("a"),
                                             type = ReferenceSourceTerm(
                                                 location = SourceLocation(lineIndex = 6, columnIndex = 24),
-                                                referredName = Symbol.of("Int"),
+                                                referredName = Identifier.of("Int"),
                                             ),
                                         ),
                                     ),
@@ -78,18 +78,18 @@ class NamespaceDefinitionTermTests {
                         ),
                         ConstantDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 8, columnIndex = 4),
-                            name = Symbol.of("name3"), body = UnorderedTupleConstructorSourceTerm(
+                            name = Identifier.of("name3"), body = UnorderedTupleConstructorSourceTerm(
                                 location = SourceLocation(lineIndex = 8, columnIndex = 19),
                                 entries = listOf(
                                     UnorderedTupleConstructorSourceTerm.Entry(
-                                        name = Symbol.of("a"),
+                                        name = Identifier.of("a"),
                                         value = IntLiteralSourceTerm(
                                             location = SourceLocation(lineIndex = 9, columnIndex = 11),
                                             value = IntValue(value = 1L),
                                         ),
                                     ),
                                     UnorderedTupleConstructorSourceTerm.Entry(
-                                        name = Symbol.of("b"),
+                                        name = Identifier.of("b"),
                                         value = IntLiteralSourceTerm(
                                             location = SourceLocation(lineIndex = 10, columnIndex = 11),
                                             value = IntValue(value = 2L),
@@ -119,15 +119,15 @@ class NamespaceDefinitionTermTests {
             assertEquals(
                 expected = NamespaceDefinitionSourceTerm(
                     location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    name = Symbol.of("Foo"),
+                    name = Identifier.of("Foo"),
                     namespaceEntries = listOf(
                         NamespaceDefinitionSourceTerm(
                             location = SourceLocation(lineIndex = 2, columnIndex = 4),
-                            name = Symbol.of("Bar"),
+                            name = Identifier.of("Bar"),
                             namespaceEntries = listOf(
                                 ConstantDefinitionSourceTerm(
                                     location = SourceLocation(lineIndex = 3, columnIndex = 8),
-                                    name = Symbol.of("foo"),
+                                    name = Identifier.of("foo"),
                                     declaredTypeBody = null,
                                     body = IntLiteralSourceTerm(
                                         location = SourceLocation(lineIndex = 3, columnIndex = 21),

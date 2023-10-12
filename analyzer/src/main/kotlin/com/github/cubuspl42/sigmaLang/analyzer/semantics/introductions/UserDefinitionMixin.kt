@@ -1,8 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDefinition.UnmatchedInferredTypeError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
@@ -55,7 +54,7 @@ class UserDefinitionMixin(
         ) + annotatedTypeErrors + body.directErrors
     }
 
-    override val name: Symbol
+    override val name: Identifier
         get() = term.name
 
     override val computedEffectiveType: Expression.Computation<MembershipType> by lazy {

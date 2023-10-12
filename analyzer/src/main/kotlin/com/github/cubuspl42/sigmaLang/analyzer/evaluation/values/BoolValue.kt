@@ -21,8 +21,8 @@ data class BoolValue(
                     val branches = argument as FunctionValue
 
                     return when {
-                        test.value -> branches.apply(Symbol.of("then"))
-                        else -> branches.apply(Symbol.of("else"))
+                        test.value -> branches.apply(Identifier.of("then"))
+                        else -> branches.apply(Identifier.of("else"))
                     }
                 }
 
