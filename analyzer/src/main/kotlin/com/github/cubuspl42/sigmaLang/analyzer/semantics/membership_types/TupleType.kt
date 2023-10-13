@@ -5,8 +5,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
@@ -28,8 +26,7 @@ abstract class TupleType : TableType() {
                         get() = TODO("Not yet implemented")
                     override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?>
                         get() = TODO("Not yet implemented")
-                    override val classifiedValue: ClassificationContext<Value>
-                        get() = TODO("Not yet implemented")
+
                     override val subExpressions: Set<Expression>
                         get() = TODO("Not yet implemented")
 
@@ -40,7 +37,7 @@ abstract class TupleType : TableType() {
             )
     }
 
-    inner class MetArgumentTupleBlock : StaticBlock() {
+    inner class MetaArgumentTupleBlock : StaticBlock() {
         override fun resolveNameLocally(
             name: Symbol,
         ): Introduction? = typeVariableDefinitions.find { it.name == name }
@@ -48,7 +45,7 @@ abstract class TupleType : TableType() {
         override fun getLocalNames(): Set<Symbol> = typeVariableDefinitions.map { it.name }.toSet()
     }
 
-    fun toMetaArgumentDeclarationBlock() = MetArgumentTupleBlock()
+    fun toMetaArgumentDeclarationBlock() = MetaArgumentTupleBlock()
 
     abstract fun toArgumentDeclarationBlock(): AbstractionConstructor.ArgumentStaticBlock
 

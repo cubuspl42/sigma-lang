@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -88,13 +89,13 @@ class IfExpressionTests {
             ) as IfExpressionSourceTerm
 
             val ifExpression = IfExpression.build(
-                context = Expression.BuildContext.Empty,
+                context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 ifExpression.bind(
-                    dynamicScope = BuiltinScope,
+                    dynamicScope = DynamicScope.Empty,
                 ).evaluateInitial(),
             )
 
@@ -122,7 +123,7 @@ class IfExpressionTests {
 
             val result = assertIs<EvaluationResult<Value>>(
                 ifExpression.bind(
-                    dynamicScope = BuiltinScope,
+                    dynamicScope = DynamicScope.Empty,
                 ).evaluateInitial(),
             )
 

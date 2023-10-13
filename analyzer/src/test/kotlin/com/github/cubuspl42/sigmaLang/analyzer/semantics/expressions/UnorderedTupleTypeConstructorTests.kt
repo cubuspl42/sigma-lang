@@ -7,7 +7,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
@@ -71,9 +70,9 @@ class UnorderedTupleTypeConstructorTests {
             actual = unorderedTupleTypeConstructor.inferredTypeOrIllType.getOrCompute(),
         )
 
-        val valueClassification = assertIs<ConstClassificationContext<Value>>(
-            unorderedTupleTypeConstructor.classifiedValue
-        )
+//        val valueClassification = assertIs<ConstClassificationContext<Value>>(
+//            unorderedTupleTypeConstructor.classifiedValue
+//        )
 
         val expectedType = UnorderedTupleType(
             valueTypeByName = mapOf(
@@ -82,14 +81,18 @@ class UnorderedTupleTypeConstructorTests {
             ),
         )
 
-        val classifiedType = assertNotNull(valueClassification.valueThunk.value?.asType)
+//        val classifiedType = assertNotNull(valueClassification.valueThunk.value?.asType)
 
-        assertTypeIsEquivalent(
-            expected = expectedType,
-            actual = classifiedType,
+//        assertTypeIsEquivalent(
+//            expected = expectedType,
+//            actual = classifiedType,
+//        )
+
+        val evaluatedType = assertNotNull(
+            unorderedTupleTypeConstructor.bind(
+                dynamicScope = DynamicScope.Empty,
+            ).value?.asType,
         )
-
-        val evaluatedType = assertNotNull(unorderedTupleTypeConstructor.bind(dynamicScope = BuiltinScope).value?.asType)
 
         assertTypeIsEquivalent(
             expected = expectedType,
@@ -113,20 +116,24 @@ class UnorderedTupleTypeConstructorTests {
         val letExpression = LetExpression.build(
             context = Expression.BuildContext.Builtin,
             term = term,
-        ).resolved
+        )
+
+        val result = letExpression.resultStub.resolved
 
         assertEquals(
             expected = TypeType,
-            actual = letExpression.inferredTypeOrIllType.getOrCompute(),
+            actual = result.inferredTypeOrIllType.getOrCompute(),
         )
 
         assertEquals(
             expected = emptySet(),
-            actual = letExpression.errors,
+            actual = result.errors,
         )
 
         val actualType = assertNotNull(
-            actual = letExpression.bind(dynamicScope = BuiltinScope).value?.asType,
+            actual = result.bind(
+                dynamicScope = DynamicScope.Empty,
+            ).value?.asType,
         )
 
         assertTypeIsEquivalent(

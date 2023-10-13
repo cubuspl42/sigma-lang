@@ -4,7 +4,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
@@ -87,20 +86,6 @@ abstract class IfExpression : Expression() {
             ),
             directErrors = setOfNotNull(guardError),
         )
-    }
-
-    override val classifiedValue: ClassificationContext<Value> by lazy {
-        ClassificationContext.transform3(
-            guard.classifiedValue,
-            trueBranch.classifiedValue,
-            falseBranch.classifiedValue,
-        ) { guardValue, trueValue, falseValue ->
-            if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")
-
-            Thunk.pure(
-                if (guardValue.value) trueValue else falseValue
-            )
-        }
     }
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = guard.bind(

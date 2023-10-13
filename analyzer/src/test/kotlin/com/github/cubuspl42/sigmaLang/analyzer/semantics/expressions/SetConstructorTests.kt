@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
@@ -10,10 +11,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorSourceTerm
+import utils.FakeDefinition
 import utils.FakeStaticBlock
 import utils.FakeUserDeclaration
 import kotlin.test.Test
@@ -126,20 +129,35 @@ class SetConstructorTests {
     class EvaluationTests {
         @Test
         fun testSimple() {
+            val term = ExpressionSourceTerm.parse("{foo, bar, baz}") as SetConstructorSourceTerm
+
             val setConstructor = SetConstructor.build(
-                context = Expression.BuildContext.Empty,
-                term = ExpressionSourceTerm.parse("{foo, bar, baz}") as SetConstructorSourceTerm,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeDefinition(
+                            name = Identifier.of("foo"),
+                            type = NeverType,
+                            value = IntValue(value = 1L),
+                        ),
+                        FakeDefinition(
+                            name = Identifier.of("bar"),
+                            type = NeverType,
+                            value = IntValue(value = 2L),
+                        ),
+                        FakeDefinition(
+                            name = Identifier.of("baz"),
+                            type = NeverType,
+                            value = IntValue(value = 3L),
+                        ),
+                    ),
+                ),
+                term = term,
             ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 setConstructor.bind(
-                    dynamicScope = FixedDynamicScope(
-                        entries = mapOf(
-                            Identifier.of("foo") to IntValue(value = 1L),
-                            Identifier.of("bar") to IntValue(value = 2L),
-                            Identifier.of("baz") to IntValue(value = 3L),
-                        ),
-                    ),
+                    dynamicScope = DynamicScope.Empty,
                 ).evaluateInitial(),
             )
 

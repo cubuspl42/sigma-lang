@@ -4,7 +4,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
@@ -71,13 +70,7 @@ abstract class SetConstructor : Expression() {
         }
     }
 
-    override val classifiedValue: ClassificationContext<Value> by lazy {
-        ClassificationContext.traverseList(elements.toList()) {
-            it.classifiedValue
-        }.transform { elements ->
-            SetValue(elements = elements.toSet())
-        }
-    }
+
 
     override val subExpressions: Set<Expression>
         get() = elements

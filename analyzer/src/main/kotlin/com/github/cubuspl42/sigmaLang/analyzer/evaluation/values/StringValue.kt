@@ -4,6 +4,8 @@ data class StringValue(
     val value: String,
 ) : PrimitiveValue() {
     companion object {
+        fun of(string: String): StringValue = StringValue(string)
+
         val Empty = StringValue("")
     }
 

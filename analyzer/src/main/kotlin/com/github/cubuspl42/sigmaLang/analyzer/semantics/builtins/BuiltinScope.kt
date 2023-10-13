@@ -3,15 +3,12 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
@@ -21,10 +18,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolTy
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.StringType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UndefinedType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
@@ -40,7 +37,7 @@ interface BuiltinValue {
 
 class Builtin(
     type: MembershipType,
-    value: Value,
+    private val value: Value,
 ) : Expression() {
     override val outerScope: StaticScope = StaticScope.Empty
 
@@ -55,14 +52,10 @@ class Builtin(
         )
     )
 
-    override val classifiedValue: ClassificationContext<Value> = ConstClassificationContext.pure(value)
-
     override val subExpressions: Set<Expression>
         get() = emptySet()
 
-    override fun bind(dynamicScope: DynamicScope): Thunk<Value> {
-        TODO("Not yet implemented")
-    }
+    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.pure(value)
 }
 
 private class BuiltinDefinition(
@@ -82,7 +75,7 @@ private class BuiltinDefinition(
     )
 }
 
-object BuiltinScope : DynamicScope, StaticScope {
+object BuiltinScope : StaticScope {
     data class SimpleBuiltinValue(
         override val type: MembershipType,
         override val value: Value,
@@ -288,15 +281,6 @@ object BuiltinScope : DynamicScope, StaticScope {
     }.toSet()
 
     private val builtinDeclarations: Map<Symbol, BuiltinDefinition> = builtinValueDeclarations.associateBy { it.name }
-
-    val names: Set<Symbol>
-        get() = builtinDeclarations.keys
-
-    override fun getValue(
-        name: Symbol,
-    ): Thunk<Value>? = getBuiltin(
-        name = name,
-    )?.value?.toThunk()
 
     private fun getBuiltin(
         name: Symbol,

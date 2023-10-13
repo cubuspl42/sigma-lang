@@ -5,7 +5,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
@@ -47,14 +46,6 @@ abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
             val name: Identifier?,
             val typeAnalysis: Expression.Analysis,
         )
-
-        val classifiedElement: ClassificationContext<OrderedTupleType.Element>
-            get() = type.classifiedValue.transform { typeValue ->
-                OrderedTupleType.Element(
-                    name = name,
-                    type = typeValue.asType!!,
-                )
-            }
     }
 
     companion object {
@@ -86,15 +77,6 @@ abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
         }
     }
 
-    override val classifiedValue: ClassificationContext<Value> by lazy {
-        ClassificationContext.traverseList(elements) { element ->
-            element.classifiedElement
-        }.transform { elements ->
-            OrderedTupleType(
-                elements = elements,
-            ).asValue
-        }
-    }
 
     override fun bind(
         dynamicScope: DynamicScope,
