@@ -17,26 +17,28 @@ object ArrayTypeConstructor : WrapperTypeConstructor() {
     fun build(
         context: Expression.BuildContext,
         term: ArrayTypeConstructorTerm,
-    ): Expression.Stub<Call> = object : Expression.Stub<Call> {
-        override val resolved: Call = object : Call() {
-            override val term: ExpressionTerm? = null
+    ): Expression.Stub<Call> {
+        val subjectStub = Reference.build(
+            context,
+            term = null,
+            referredName = Name,
+        )
 
-            override val subject: Expression = object : Reference() {
-                override val term: ReferenceTerm? = null
+        return object : Expression.Stub<Call> {
+            override val resolved: Call = object : Call() {
+                override val term: ExpressionTerm? = null
 
-                override val referredName: Symbol = Name
+                override val subject: Expression by lazy { subjectStub.resolved }
+
+                override val argument: Expression by lazy {
+                    Expression.build(
+                        context = context,
+                        term = term.elementType,
+                    ).resolved
+                }
 
                 override val outerScope: StaticScope = context.outerScope
             }
-
-            override val argument: Expression by lazy {
-                Expression.build(
-                    context = context,
-                    term = term.elementType,
-                ).resolved
-            }
-
-            override val outerScope: StaticScope = context.outerScope
         }
     }
 

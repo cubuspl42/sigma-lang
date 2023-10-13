@@ -24,50 +24,52 @@ object DictTypeConstructor : TypeConstructor() {
     fun build(
         context: Expression.BuildContext,
         term: DictTypeConstructorTerm,
-    ): Expression.Stub<Call> = object : Expression.Stub<Call> {
-        override val resolved: Call = object : Call() {
-            override val term: ExpressionTerm? = null
+    ): Expression.Stub<Call> {
+        val subjectStub = Reference.build(
+            context,
+            term = null,
+            referredName = Name,
+        )
 
-            override val subject: Expression = object : Reference() {
-                override val term: ReferenceTerm? = null
+        return object : Expression.Stub<Call> {
+            override val resolved: Call = object : Call() {
+                override val term: ExpressionTerm? = null
 
-                override val referredName: Symbol = Name
+                override val subject: Expression by lazy { subjectStub.resolved }
+
+                override val argument: Expression by lazy {
+                    object : UnorderedTupleConstructor() {
+                        override val term: UnorderedTupleConstructorTerm? = null
+
+                        override val entries: Set<Entry> = setOf(
+                            object : Entry() {
+                                override val name: Symbol = KeyTypeName
+
+                                override val value: Expression by lazy {
+                                    Expression.build(
+                                        context = context,
+                                        term = term.keyType,
+                                    ).resolved
+                                }
+                            },
+                            object : Entry() {
+                                override val name: Symbol = ValueTypeName
+
+                                override val value: Expression by lazy {
+                                    Expression.build(
+                                        context = context,
+                                        term = term.valueType,
+                                    ).resolved
+                                }
+                            },
+                        )
+
+                        override val outerScope: StaticScope = context.outerScope
+                    }
+                }
 
                 override val outerScope: StaticScope = context.outerScope
             }
-
-            override val argument: Expression by lazy {
-                object : UnorderedTupleConstructor() {
-                    override val term: UnorderedTupleConstructorTerm? = null
-
-                    override val entries: Set<Entry> = setOf(
-                        object : Entry() {
-                            override val name: Symbol = KeyTypeName
-
-                            override val value: Expression by lazy {
-                                Expression.build(
-                                    context = context,
-                                    term = term.keyType,
-                                ).resolved
-                            }
-                        },
-                        object : Entry() {
-                            override val name: Symbol = ValueTypeName
-
-                            override val value: Expression by lazy {
-                                Expression.build(
-                                    context = context,
-                                    term = term.valueType,
-                                ).resolved
-                            }
-                        },
-                    )
-
-                    override val outerScope: StaticScope = context.outerScope
-                }
-            }
-
-            override val outerScope: StaticScope = context.outerScope
         }
     }
 

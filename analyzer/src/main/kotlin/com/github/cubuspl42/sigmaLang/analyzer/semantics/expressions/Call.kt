@@ -10,6 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.*
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
@@ -81,20 +82,18 @@ abstract class Call : Expression() {
                     term = term.rightArgument,
                 ).resolved
 
+                val subjectStub = Reference.build(
+                    context,
+                    term = null,
+                    referredName = Symbol.of(prototype.functionName),
+                )
+
                 object : Call() {
                     override val outerScope: StaticScope = context.outerScope
 
                     override val term: CallTerm = term
 
-                    override val subject: Expression by lazy {
-                        object : Reference() {
-                            override val outerScope: StaticScope = context.outerScope
-
-                            override val referredName: Symbol = Symbol.of(prototype.functionName)
-
-                            override val term: ReferenceTerm? = null
-                        }
-                    }
+                    override val subject: Expression by lazy { subjectStub.resolved }
 
                     override val argument: Expression by lazy {
                         object : UnorderedTupleConstructor() {
