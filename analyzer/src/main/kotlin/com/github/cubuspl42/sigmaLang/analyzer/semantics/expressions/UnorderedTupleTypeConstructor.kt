@@ -6,7 +6,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
@@ -48,16 +47,6 @@ abstract class UnorderedTupleTypeConstructor : TupleTypeConstructor() {
                 }
             }
         }
-
-        val classifiedEntry: ClassificationContext<UnorderedTupleType.Entry>
-            get() = type.classifiedValue.transformThunk { typeValueThunk ->
-                Thunk.pure(
-                    UnorderedTupleType.Entry(
-                        name = name,
-                        typeThunk = typeValueThunk.thenJust { it.asType!! },
-                    )
-                )
-            }
     }
 
     companion object {
@@ -86,28 +75,20 @@ abstract class UnorderedTupleTypeConstructor : TupleTypeConstructor() {
         }
     }
 
-    override val classifiedValue: ClassificationContext<Value> by lazy {
-        ClassificationContext.traverseList(entries.toList()) { entry ->
-            entry.classifiedEntry
-        }.transform { entries ->
-            UnorderedTupleType.fromEntries(
-                entries = entries,
-            ).asValue
-        }
-    }
-
     override fun bind(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.pure(
         object : UnorderedTupleType() {
-            override val valueTypeThunkByName = entries.associate {
-                val entryType = it.type.bind(
-                    dynamicScope = dynamicScope,
-                ).thenJust { entryType ->
-                    entryType.asType!!
-                }
+            override val valueTypeThunkByName by lazy {
+                entries.associate {
+                    val entryType = it.type.bind(
+                        dynamicScope = dynamicScope,
+                    ).thenJust { entryType ->
+                        entryType.asType!!
+                    }
 
-                it.name to entryType
+                    it.name to entryType
+                }
             }
         }.asValue
     )

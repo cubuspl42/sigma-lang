@@ -1,15 +1,23 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.EvaluationContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
+import utils.FakeDefinition
+import utils.FakeStaticBlock
+import utils.FakeUserDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -78,8 +86,24 @@ class UnionTypeConstructorTests {
             source = "A | ^[B]",
         ) as UnionTypeConstructorTerm
 
+        val aDeclaration = FakeUserDeclaration(
+            name = Identifier.of("A"),
+            type = TypeType,
+        )
+
+        val bDeclaration = FakeUserDeclaration(
+            name = Identifier.of("B"),
+            type = TypeType,
+        )
+
         val unionTypeConstructor = UnionTypeConstructor.build(
-            context = Expression.BuildContext.Empty,
+            context = Expression.BuildContext(
+                outerMetaScope = StaticScope.Empty,
+                outerScope = FakeStaticBlock.of(
+                    aDeclaration,
+                    bDeclaration,
+                ),
+            ),
             term = term,
         ).resolved
 
@@ -92,8 +116,8 @@ class UnionTypeConstructorTests {
                     val reference = assertIs<Reference>(expression)
 
                     assertEquals(
-                        actual = reference.referredName,
-                        expected = Identifier.of("A"),
+                        actual = reference.referredDeclaration,
+                        expected = aDeclaration,
                     )
                 },
                 "^[B]" to { expression ->
@@ -105,8 +129,8 @@ class UnionTypeConstructorTests {
                             val reference = assertIs<Reference>(it.type)
 
                             assertEquals(
-                                actual = reference.referredName,
-                                expected = Identifier.of("B"),
+                                actual = reference.referredDeclaration,
+                                expected = bDeclaration,
                             )
                         },
                     )
@@ -121,8 +145,36 @@ class UnionTypeConstructorTests {
             source = "A | B | D | C",
         ) as UnionTypeConstructorTerm
 
+        val aDeclaration = FakeUserDeclaration(
+            name = Identifier.of("A"),
+            type = TypeType,
+        )
+
+        val bDeclaration = FakeUserDeclaration(
+            name = Identifier.of("B"),
+            type = TypeType,
+        )
+
+        val cDeclaration = FakeUserDeclaration(
+            name = Identifier.of("C"),
+            type = TypeType,
+        )
+
+        val dDeclaration = FakeUserDeclaration(
+            name = Identifier.of("D"),
+            type = TypeType,
+        )
+
         val unionTypeConstructor = UnionTypeConstructor.build(
-            context = Expression.BuildContext.Empty,
+            context = Expression.BuildContext(
+                outerMetaScope = StaticScope.Empty,
+                outerScope = FakeStaticBlock.of(
+                    aDeclaration,
+                    bDeclaration,
+                    cDeclaration,
+                    dDeclaration,
+                ),
+            ),
             term = term,
         ).resolved
 
@@ -135,32 +187,32 @@ class UnionTypeConstructorTests {
                     val reference = assertIs<Reference>(expression)
 
                     assertEquals(
-                        actual = reference.referredName,
-                        expected = Identifier.of("A"),
+                        actual = reference.referredDeclaration,
+                        expected = aDeclaration,
                     )
                 },
                 "B" to { expression ->
                     val reference = assertIs<Reference>(expression)
 
                     assertEquals(
-                        actual = reference.referredName,
-                        expected = Identifier.of("B"),
+                        actual = reference.referredDeclaration,
+                        expected = bDeclaration,
                     )
                 },
                 "C" to { expression ->
                     val reference = assertIs<Reference>(expression)
 
                     assertEquals(
-                        actual = reference.referredName,
-                        expected = Identifier.of("C"),
+                        actual = reference.referredDeclaration,
+                        expected = cDeclaration,
                     )
                 },
                 "D" to { expression ->
                     val reference = assertIs<Reference>(expression)
 
                     assertEquals(
-                        actual = reference.referredName,
-                        expected = Identifier.of("D"),
+                        actual = reference.referredDeclaration,
+                        expected = dDeclaration,
                     )
                 },
             ),
@@ -179,10 +231,10 @@ class UnionTypeConstructorTests {
                 term = term,
             ).resolved
 
-            val evaluatedTypeValue = assertIs<TypeValue<*>> (
+            val evaluatedTypeValue = assertIs<TypeValue<*>>(
                 unionTypeConstructor.evaluateValue(
                     context = EvaluationContext.Initial,
-                    dynamicScope = BuiltinScope,
+                    dynamicScope = DynamicScope.Empty,
                 )
             )
 

@@ -1,13 +1,12 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
@@ -164,8 +163,8 @@ abstract class UnorderedTupleType : TupleType() {
 
     override fun toArgumentScope(argument: DictValue): DynamicScope = object : DynamicScope {
         override fun getValue(
-            name: Symbol,
-        ): Thunk<Value>? = argument.read(name)
+            name: Declaration,
+        ): Thunk<Value>? = argument.read(name.name)
     }
 
     override fun isNonEquivalentToDirectly(

@@ -4,18 +4,16 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationStackExhaustionError
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -38,7 +36,7 @@ class LetExpressionTests {
             val let = LetExpression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            ).resolved
+            )
 
             val aDefinition = assertNotNull(
                 actual = let.definitionBlock.getValueDefinition(
@@ -86,14 +84,16 @@ class LetExpressionTests {
 
             val letExpression = bDefinition.body as LetExpression
 
-            val classifiedValue = assertIs<ConstClassificationContext<Value>>(
-                letExpression.computedAnalysis.getOrCompute()
-            )
 
-            assertEquals(
-                expected = IntValue(value = 42L),
-                actual = classifiedValue.valueThunk.value,
-            )
+            TODO()
+//            val classifiedValue = assertIs<ConstClassificationContext<Value>>(
+//                letExpression.computedAnalysis.getOrCompute()
+//            )
+//
+//            assertEquals(
+//                expected = IntValue(value = 42L),
+//                actual = classifiedValue.valueThunk.value,
+//            )
         }
     }
 
@@ -112,10 +112,10 @@ class LetExpressionTests {
             val let = LetExpression.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            ).resolved
+            )
 
             assertIs<EvaluationStackExhaustionError>(
-                let.bind(dynamicScope = DynamicScope.Empty).outcome,
+                let.resultStub.resolved.bind(dynamicScope = DynamicScope.Empty).outcome,
             )
         }
     }

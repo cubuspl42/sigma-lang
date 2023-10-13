@@ -9,9 +9,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResul
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IsUndefinedCheckSourceTerm
+import utils.FakeDefinition
 import utils.FakeStaticBlock
 import utils.FakeUserDeclaration
 import kotlin.test.Test
@@ -72,20 +75,27 @@ class IsUndefinedCheckTests {
         fun testUndefined() {
             val dictValue = DictValue.Empty
 
+            val term = ExpressionSourceTerm.parse(
+                source = "%isUndefined d(0)",
+            ) as IsUndefinedCheckSourceTerm
+
             val isUndefinedCheck = IsUndefinedCheck.build(
-                context = Expression.BuildContext.Empty,
-                term = ExpressionSourceTerm.parse(
-                    source = "%isUndefined d(0)",
-                ) as IsUndefinedCheckSourceTerm,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeDefinition(
+                            name = Identifier.of("d"),
+                            type = NeverType,
+                            value = dictValue,
+                        ),
+                    ),
+                ),
+                term = term,
             ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 isUndefinedCheck.bind(
-                    dynamicScope = FixedDynamicScope(
-                        entries = mapOf(
-                            Identifier.of("d") to dictValue,
-                        ),
-                    ),
+                    dynamicScope = DynamicScope.Empty,
                 ).evaluateInitial(),
             )
 

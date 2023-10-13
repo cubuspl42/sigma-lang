@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.chainWith
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableFunctionValue
@@ -9,17 +10,22 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StringValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntLiteralType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.NeverType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.StringType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
@@ -27,6 +33,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Unorde
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import utils.FakeDefinition
 import utils.FakeStaticBlock
 import utils.FakeUserDeclaration
 import utils.assertTypeIsEquivalent
@@ -395,19 +402,25 @@ class CallTests {
             }
 
             val call = Call.build(
-                context = Expression.BuildContext.Empty,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeDefinition(
+                            name = Identifier.of("sq"),
+                            type = NeverType,
+                            value = sq,
+                        ),
+                    ),
+                ),
                 term = ExpressionSourceTerm.parse("sq(3)") as PostfixCallSourceTerm,
             ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 call.bind(
-                    dynamicScope = FixedDynamicScope(
-                        entries = mapOf(
-                            Identifier.of("sq") to sq,
-                        )
-                    ),
+                    dynamicScope = DynamicScope.Empty,
                 ).evaluateInitial(),
             )
+
             assertEquals(
                 expected = IntValue(9),
                 actual = result.value,
@@ -417,28 +430,33 @@ class CallTests {
         @Test
         fun testDictSubject() {
             val call = Call.build(
-                context = Expression.BuildContext.Empty,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeDefinition(
+                            name = Identifier.of("dict"),
+                            type = NeverType,
+                            value = DictValue.fromMap(
+                                entries = mapOf(
+                                    IntValue(1) to StringValue.of("one"),
+                                    IntValue(2) to StringValue.of("two"),
+                                    IntValue(3) to StringValue.of("three"),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
                 term = ExpressionSourceTerm.parse("dict(2)") as PostfixCallSourceTerm,
             ).resolved
 
             val result = assertIs<EvaluationResult<Value>>(
                 call.bind(
-                    dynamicScope = FixedDynamicScope(
-                        entries = mapOf(
-                            Identifier.of("dict") to DictValue.fromMap(
-                                entries = mapOf(
-                                    IntValue(1) to Identifier.of("one"),
-                                    IntValue(2) to Identifier.of("two"),
-                                    IntValue(3) to Identifier.of("three"),
-                                ),
-                            ),
-                        ),
-                    ),
+                    dynamicScope = DynamicScope.Empty
                 ).evaluateInitial(),
             )
 
             assertEquals(
-                expected = Identifier.of("two"),
+                expected = StringValue.of("two"),
                 actual = result.value,
             )
         }
@@ -447,23 +465,33 @@ class CallTests {
         fun testStrictness() {
             val term = ExpressionSourceTerm.parse("f{a: 42, b: 1 / 0}") as PostfixCallSourceTerm
 
+            val fValue = object : ComputableFunctionValue() {
+                override fun apply(argument: Value): Thunk<Value> {
+                    val arguments = argument as DictValue
+                    val aValue = arguments.read(Identifier.of("a"))
+                    return aValue!!
+                }
+            }
+
             val call = Call.build(
-                context = Expression.BuildContext.Empty,
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeDefinition(
+                            name = Identifier.of("f"),
+                            type = NeverType,
+                            value = fValue,
+                        ),
+                    ).chainWith(
+                        outerScope = BuiltinScope, // For arithmetic division
+                    ),
+                ),
                 term = term,
             ).resolved
 
+
             val resultThunk = call.bind(
-                dynamicScope = FixedDynamicScope(
-                    entries = mapOf(
-                        Identifier.of("f") to object : ComputableFunctionValue() {
-                            override fun apply(argument: Value): Thunk<Value> {
-                                val arguments = argument as DictValue
-                                val aValue = arguments.read(Identifier.of("a"))
-                                return aValue!!
-                            }
-                        },
-                    ),
-                ).chainWith(BuiltinScope),
+                dynamicScope = DynamicScope.Empty,
             )
 
             assertEquals(

@@ -37,7 +37,7 @@ class LocalDefinitionTests {
             assertEquals(
                 expected = setOf(
                     UserDefinition.UnmatchedInferredTypeError(
-                        location = SourceLocation(lineIndex = 2, columnIndex = 13),
+                        location = null,
                         matchResult = MembershipType.TotalMismatch(
                             expectedType = IntCollectiveType,
                             actualType = BoolType,

@@ -1,6 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationError
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
@@ -8,18 +7,42 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.evaluateValueHacky
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassifiedExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.CyclicComputation
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.CyclicComputationClass
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.EvaluationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionMap
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ReachableDeclarationSet
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.TranslationDynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.ArrayTypeConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.DictTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.CallTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictTypeConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IfExpressionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IntLiteralTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IsUndefinedCheckTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ParenTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.StringLiteralTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
 abstract class Expression {
@@ -90,6 +113,14 @@ abstract class Expression {
         fun getOrCompute(): R = compute(
             context = Context.Empty,
         )
+    }
+
+    object ReachableDeclarationsComputationClass : CyclicComputationClass<ReachableDeclarationSet>() {
+        override fun process(expression: Expression): CyclicComputation<ReachableDeclarationSet> =
+            expression.computedReachableDeclarations
+
+        override fun mergeResults(results: Iterable<ReachableDeclarationSet>): ReachableDeclarationSet =
+            ReachableDeclarationSet.unionAll(sets = results)
     }
 
     fun <R> Computation(
@@ -197,7 +228,6 @@ abstract class Expression {
                 term = term,
             )
 
-
             is StringLiteralTerm -> StringLiteral.build(
                 context = context,
                 term = term,
@@ -211,7 +241,7 @@ abstract class Expression {
             is LetExpressionTerm -> LetExpression.build(
                 context = context,
                 term = term,
-            )
+            ).resultStub
 
             is ReferenceTerm -> Reference.build(
                 context = context,
@@ -294,7 +324,25 @@ abstract class Expression {
 
     protected abstract val computedDiagnosedAnalysis: Expression.Computation<DiagnosedAnalysis?>
 
-    abstract val classifiedValue: ClassificationContext<Value>
+    open val computedReachableDeclarations: CyclicComputation<ReachableDeclarationSet> by lazy {
+        ReachableDeclarationsComputationClass.visiting(expression = this)
+    }
+
+    val classified: ClassifiedExpression by lazy {
+        val reachableDeclarations = computedReachableDeclarations.getOrCompute().reachableDeclarations
+
+        if (reachableDeclarations.isEmpty()) {
+            ConstExpression(
+                expression = this,
+                valueThunk = bind(dynamicScope = DynamicScope.Empty),
+            )
+        } else {
+            VariableExpression(
+                expression = this,
+                reachableDeclarations = reachableDeclarations,
+            )
+        }
+    }
 
     val computedAnalysis: Expression.Computation<Analysis?> by lazy {
         computedDiagnosedAnalysis.transform {
@@ -344,9 +392,7 @@ abstract class Expression {
     ): TypeExpression.DiagnosedAnalysis {
         val valueThunk by lazy {
             bind(
-                dynamicScope = TranslationDynamicScope(
-                    staticScope = outerScope,
-                ),
+                dynamicScope = DynamicScope.Empty,
             )
         }
 

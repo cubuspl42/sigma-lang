@@ -5,7 +5,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
@@ -93,16 +92,6 @@ abstract class FieldRead : Expression() {
                     location = subject.location,
                     invalidSubjectType = inferredSubjectType,
                 )
-            )
-        }
-    }
-
-    override val classifiedValue: ClassificationContext<Value> by lazy {
-        subject.classifiedValue.transformThen {
-            if (it !is DictValue) throw IllegalStateException("Subject $it is not a dict")
-
-            it.apply(
-                argument = fieldName,
             )
         }
     }

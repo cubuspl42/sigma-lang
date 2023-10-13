@@ -1,7 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.LoopedDynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
@@ -46,13 +44,4 @@ class VariableDefinitionBlock(
     val errors: Set<SemanticError> by lazy {
         definitionByName.values.fold(emptySet()) { acc, it -> acc + it.errors }
     }
-
-    fun evaluate(
-        outerScope: DynamicScope,
-    ): DynamicScope = LoopedDynamicScope(
-        outerDynamicScope = outerScope,
-        expressionByName = definitionByName.mapValues { (_, definition) ->
-            definition.body
-        },
-    )
 }

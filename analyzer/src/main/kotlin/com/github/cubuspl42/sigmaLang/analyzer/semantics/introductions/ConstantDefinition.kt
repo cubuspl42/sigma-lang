@@ -1,20 +1,16 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ConstantDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 abstract class ConstantDefinition : Definition {
     companion object {
@@ -44,9 +40,7 @@ abstract class ConstantDefinition : Definition {
         }
     }
 
-    //    fun evaluateResult(): EvaluationOutcome<Value> = valueThunk.evaluateInitial()
-    private val classifiedBody: ConstClassificationContext<Value>
-        get() = bodyStub.resolved.classifiedValue as ConstClassificationContext<Value>
+    private val classifiedBody by lazy { bodyStub.resolved.classified as ConstExpression }
 
     val valueThunk: Thunk<Value>
         get() = classifiedBody.valueThunk

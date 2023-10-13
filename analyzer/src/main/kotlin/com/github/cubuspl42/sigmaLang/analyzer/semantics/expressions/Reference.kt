@@ -5,20 +5,22 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassifiedExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ReachableDeclarationSet
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.CyclicComputation
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassificationContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 
 abstract class Reference : Expression() {
     abstract override val term: ReferenceTerm?
 
-    abstract val referredName: Symbol
+    abstract val referredDeclaration: Declaration
 
     data class UnresolvedNameError(
         override val location: SourceLocation?,
@@ -34,7 +36,7 @@ abstract class Reference : Expression() {
         fun build(
             context: BuildContext,
             term: ReferenceTerm,
-        ): Stub<Reference> = build(
+        ): Stub<Expression> = build(
             context = context,
             term = term,
             referredName = term.referredName,
@@ -44,76 +46,50 @@ abstract class Reference : Expression() {
             context: BuildContext,
             term: ReferenceTerm?,
             referredName: Symbol,
-        ): Stub<Reference> = object : Stub<Reference> {
-            override val resolved: Reference by lazy {
+        ): Stub<Expression> = object : Stub<Expression> {
+            override val resolved: Expression by lazy {
                 val outerScope = context.outerScope
 
-                val resolvedIntroduction: Introduction? = outerScope.resolveName(name = referredName)
+                when (val resolvedIntroduction = outerScope.resolveName(name = referredName)!!) {
+                    is Declaration -> object : Reference() {
+                        override val outerScope: StaticScope = outerScope
 
-                object : Reference() {
-                    override val outerScope: StaticScope = outerScope
+                        override val term: ReferenceTerm? = term
 
-                    override val term: ReferenceTerm? = term
+                        override val referredDeclaration: Declaration = resolvedIntroduction
+                    }
 
-                    override val referredName: Symbol = referredName
+                    is Definition -> resolvedIntroduction.bodyStub.resolved
 
-                    override val resolvedIntroduction: Introduction? = resolvedIntroduction
+                    else -> throw UnsupportedOperationException()
                 }
             }
         }
     }
 
-    abstract val resolvedIntroduction: Introduction?
-
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val resolvedIntroduction = resolvedIntroduction
+        val inferredTargetType = compute(referredDeclaration.computedEffectiveType)
 
-        if (resolvedIntroduction != null) {
-            val inferredTargetType = compute(resolvedIntroduction.computedEffectiveType)
-
-            DiagnosedAnalysis(
-                analysis = Analysis(
-                    inferredType = inferredTargetType,
-                ),
-                directErrors = emptySet(),
-            )
-        } else {
-            DiagnosedAnalysis.fromError(
-                UnresolvedNameError(
-                    location = term?.location,
-                    name = referredName,
-                )
-            )
-        }
+        DiagnosedAnalysis(
+            analysis = Analysis(
+                inferredType = inferredTargetType,
+            ),
+            directErrors = emptySet(),
+        )
     }
 
-    override val classifiedValue: ClassificationContext<Value> by lazy {
-        val resolvedIntroduction = this.resolvedIntroduction
-            ?: throw IllegalStateException("Unresolved reference at classification time: $referredName")
-
-        when (resolvedIntroduction) {
-            is Definition -> resolvedIntroduction.bodyStub.resolved.classifiedValue
-
-            is Declaration -> object : VariableClassificationContext<Value>() {
-                override val referredDeclarations: Set<Introduction>
-                    get() = setOf(resolvedIntroduction)
-
-                override fun bind(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(
-                    name = referredName,
-                ) ?: throw IllegalStateException(
-                    "Unresolved dynamic reference at run-time: $referredName",
-                )
-            }
-
-            else -> throw UnsupportedOperationException()
+    override val computedReachableDeclarations: CyclicComputation<ReachableDeclarationSet> =
+        object : CyclicComputation<ReachableDeclarationSet>() {
+            override fun compute(context: Context) = ReachableDeclarationSet(
+                reachableDeclarations = setOf(referredDeclaration),
+            )
         }
-    }
 
     override val subExpressions: Set<Expression> = emptySet()
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(
-        name = referredName,
+        name = referredDeclaration,
     ) ?: throw RuntimeException(
-        "Unresolved reference at run-time: $referredName",
+        "Unresolved reference at run-time: $referredDeclaration",
     )
 }
