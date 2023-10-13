@@ -77,7 +77,7 @@ class LetExpressionTests {
             )
 
             val namespaceDefinition = NamespaceDefinition.build(
-                outerScope = StaticScope.Empty,
+                context = Expression.BuildContext.Empty,
                 qualifiedPath = QualifiedPath.Root,
                 term = term,
             )

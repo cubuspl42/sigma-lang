@@ -5,7 +5,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.VariableIntroduction
 
 class TranslationDynamicScope(
     private val staticScope: StaticScope,
@@ -18,9 +17,7 @@ class TranslationDynamicScope(
         when (resolvedIntroduction) {
             is ConstantDefinition -> resolvedIntroduction.valueThunk
 
-            is VariableIntroduction -> when (resolvedIntroduction.computedEffectiveType.getOrCompute()) {
-                else -> null
-            }
+            else -> null
         }
     }
 }

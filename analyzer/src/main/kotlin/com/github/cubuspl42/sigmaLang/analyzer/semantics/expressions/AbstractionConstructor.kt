@@ -4,11 +4,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationCont
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.chainWithIfNotNull
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
@@ -22,9 +23,12 @@ abstract class AbstractionConstructor : Expression() {
 
     abstract val argumentType: TupleType
 
-    abstract val argumentDeclarationBlock: ArgumentStaticBlock
+    // TODO: This is a terrible hack
+    open val argumentDeclarationBlock by lazy { argumentType.toArgumentDeclarationBlock() }
 
-    abstract val declaredImageTypeBody: TypeExpression?
+//    abstract val argumentDeclarationBlock: ArgumentStaticBlock
+
+    abstract val declaredImageType: MembershipType?
 
     abstract val image: Expression
 
@@ -42,7 +46,7 @@ abstract class AbstractionConstructor : Expression() {
 
         override fun resolveNameLocally(
             name: Symbol,
-        ): ClassifiedIntroduction? = declarationByName[name]
+        ): Introduction? = declarationByName[name]
 
         override fun getLocalNames(): Set<Symbol> = declarationByName.keys
     }
@@ -51,68 +55,117 @@ abstract class AbstractionConstructor : Expression() {
         fun build(
             context: BuildContext,
             term: AbstractionConstructorTerm,
+        ): Stub<AbstractionConstructor> {
+            val outerMetaScope = context.outerMetaScope
+
+            val outerScope = context.outerScope
+
+            val metaArgumentTypeConstructorStub = term.metaArgumentType?.let {
+                TypeExpression.build(
+                    outerMetaScope = outerScope,
+                    term = it,
+                )
+            }
+
+            val argumentTypeConstructorStub = term.argumentType.let {
+                Expression.build(
+                    context = context,
+                    term = it,
+                )
+            }
+
+            return object : Stub<AbstractionConstructor> {
+                override val resolved: AbstractionConstructor by lazy {
+                    val metaArgumentTypeConstructor = metaArgumentTypeConstructorStub?.resolved
+                    val argumentTypeConstructor = argumentTypeConstructorStub.resolved
+
+                    // These scopes might be messed up
+                    val metaArgumentTypeConstructorAnalysis = metaArgumentTypeConstructor?.analyzeAsType(
+                        outerScope = outerScope,
+                    )
+
+                    val metaArgumentType = metaArgumentTypeConstructorAnalysis?.typeOrIllType?.let { it as TupleType }
+
+
+                    val metaArgumentBlock = metaArgumentType?.toMetaArgumentDeclarationBlock()
+
+                    val innerMetaScope = metaArgumentBlock.chainWithIfNotNull(
+                        outerScope = outerMetaScope,
+                    )
+
+                    val argumentTypeBodyAnalysis = argumentTypeConstructor.analyzeAsType(
+                        outerScope = outerScope,
+                    )
+
+                    val argumentType = argumentTypeBodyAnalysis.typeOrIllType as TupleType
+
+                    val argumentDeclarationBlock = argumentType.toArgumentDeclarationBlock()
+
+                    val innerScope = argumentDeclarationBlock.chainWith(
+                        outerScope = outerScope,
+                    )
+
+                    val declaredImageTypeBody = term.declaredImageType?.let {
+                        TypeExpression.build(
+                            outerMetaScope = innerMetaScope,
+                            term = it,
+                        ).resolved
+                    }
+
+                    val declaredImageTypeAnalysis = declaredImageTypeBody?.analyzeAsType(
+                        outerScope = outerScope,
+                    )
+
+                    val image = build(
+                        context = BuildContext(
+                            outerMetaScope = innerMetaScope,
+                            outerScope = innerScope,
+                        ),
+                        term = term.image,
+                    )
+
+                    return@lazy object : AbstractionConstructor() {
+                        override val outerScope: StaticScope = context.outerScope
+
+                        override val term: ExpressionTerm = term
+
+                        override val metaArgumentType = metaArgumentType
+
+                        override val argumentType = argumentType
+
+                        override val argumentDeclarationBlock = argumentDeclarationBlock
+
+                        override val declaredImageType: MembershipType? = declaredImageTypeAnalysis?.typeOrIllType
+
+                        override val image by lazy { image.resolved }
+                    }
+                }
+            }
+        }
+
+        fun build2(
+            outerScope: StaticScope,
+            term: ExpressionTerm?,
+            metaArgumentType: TupleType?,
+            argumentType: TupleType,
+            declaredImageType: MembershipType?,
+            imageConstructor: Expression,
         ): Stub<AbstractionConstructor> = object : Stub<AbstractionConstructor> {
             override val resolved: AbstractionConstructor by lazy {
-                val outerMetaScope = context.outerMetaScope
-                val outerScope = context.outerScope
-
-                val metaArgumentTypeConstructor = term.metaArgumentType?.let {
-                    TypeExpression.build(
-                        outerMetaScope = outerScope,
-                        term = it,
-                    ).resolved
-                }
-
-                val metaArgumentType = metaArgumentTypeConstructor?.typeOrIllType?.let { it as TupleType }
-
-                val metaArgumentBlock = metaArgumentType?.toMetaArgumentDeclarationBlock()
-
-                val innerMetaScope = metaArgumentBlock.chainWithIfNotNull(
-                    outerScope = outerMetaScope,
-                )
-
-                val argumentTypeBody = TypeExpression.build(
-                    outerMetaScope = innerMetaScope,
-                    term = term.argumentType,
-                ).resolved
-
-                val argumentType = argumentTypeBody.typeOrIllType as TupleType
-
-                val argumentDeclarationBlock = argumentType.toArgumentDeclarationBlock()
-
-                val innerScope = argumentDeclarationBlock.chainWith(
-                    outerScope = outerScope,
-                )
-
-                val declaredImageTypeBody = term.declaredImageType?.let {
-                    TypeExpression.build(
-                        outerMetaScope = innerMetaScope,
-                        term = it,
-                    ).resolved
-                }
-
-                val image = build(
-                    context = BuildContext(
-                        outerMetaScope = innerMetaScope,
-                        outerScope = innerScope,
-                    ),
-                    term = term.image,
-                )
-
                 return@lazy object : AbstractionConstructor() {
-                    override val outerScope: StaticScope = context.outerScope
+                    override val term: ExpressionTerm? = term
 
-                    override val term: ExpressionTerm = term
+                    override val outerScope: StaticScope = outerScope
 
                     override val metaArgumentType = metaArgumentType
 
                     override val argumentType = argumentType
 
-                    override val argumentDeclarationBlock = argumentDeclarationBlock
+//                    override val argumentDeclarationBlock = argumentDeclarationBlock
 
-                    override val declaredImageTypeBody = declaredImageTypeBody
+                    override val declaredImageType: MembershipType? = declaredImageType
 
-                    override val image by lazy { image.resolved }
+                    override val image = imageConstructor
                 }
             }
         }
@@ -123,9 +176,6 @@ abstract class AbstractionConstructor : Expression() {
         argumentType = argumentType,
         image = image,
     ).toThunk()
-
-    val declaredImageType: MembershipType?
-        get() = declaredImageTypeBody?.typeOrIllType
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         DiagnosedAnalysis(
@@ -146,7 +196,7 @@ abstract class AbstractionConstructor : Expression() {
                     )
                 }
             },
-            directErrors = declaredImageTypeBody?.errors ?: emptySet(),
+            directErrors = emptySet(),
         )
     }
 

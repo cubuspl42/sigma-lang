@@ -1,102 +1,102 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionMap
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
+
+class NamespaceStaticBlock(
+    private val definitionByName: Map<Identifier, ConstantDefinition>,
+) : StaticBlock() {
+    override fun resolveNameLocally(
+        name: Symbol,
+    ): ConstantDefinition? = definitionByName[name]
+
+    override fun getLocalNames(): Set<Symbol> = definitionByName.keys
+}
+
 
 class NamespaceDefinition(
-    private val outerScope: StaticScope,
-    private val qualifiedPath: QualifiedPath,
-    private val term: NamespaceDefinitionTerm,
+    override val name: Symbol,
+    private val entryBodyByName: Map<Identifier, Definition>,
+    private val staticBlock: NamespaceStaticBlock,
+    private val body: UnorderedTupleConstructor,
 ) : ConstantDefinition(), UserDefinition {
     companion object {
         fun build(
-            outerScope: StaticScope,
+            context: Expression.BuildContext,
             qualifiedPath: QualifiedPath,
             term: NamespaceDefinitionTerm,
-        ): NamespaceDefinition = NamespaceDefinition(
-            outerScope = outerScope,
-            qualifiedPath = qualifiedPath,
-            term = term,
-        )
-    }
+        ): NamespaceDefinition {
+            val (namespaceDefinition, _) = StaticScope.looped { innerDeclarationScopeLooped ->
+                val definitionByName = term.namespaceEntries.associate { entryTerm ->
+                    entryTerm.name to ConstantDefinition.build(
+                        context = context.copy(
+                            outerScope = innerDeclarationScopeLooped,
+                        ),
+                        qualifiedPath = qualifiedPath,
+                        term = entryTerm,
+                    )
+                }
 
-    inner class NamespaceStaticBlock : StaticBlock() {
-        override fun resolveNameLocally(
-            name: Symbol,
-        ): ClassifiedIntroduction? = getDefinition(name = name)
+                val staticBlock = NamespaceStaticBlock(
+                    definitionByName = definitionByName,
+                )
 
-        override fun getLocalNames(): Set<Symbol> = definitions.map { it.name }.toSet()
-    }
+                val innerDeclarationScope = staticBlock.chainWith(
+                    outerScope = context.outerScope,
+                )
 
-    override val name: Identifier
-        get() = term.name
+                val namespaceBody = object : UnorderedTupleConstructor() {
+                    override val term: UnorderedTupleConstructorTerm? = null
 
-    private val asDeclarationBlock = NamespaceStaticBlock()
+                    override val entries: Set<Entry> = definitionByName.entries.map { (name, definition) ->
+                        object : Entry() {
+                            override val name: Symbol = name
 
-    val innerStaticScope: StaticScope = asDeclarationBlock.chainWith(
-        outerScope = outerScope,
-    )
+                            override val value: Expression by lazy { definition.bodyStub.resolved }
+                        }
+                    }.toSet()
 
-    val definitions: Set<ConstantDefinition> by lazy {
-        term.namespaceEntries.map {
-            ConstantDefinition.build(
-                context = Expression.BuildContext(
-                    outerMetaScope = innerStaticScope,
-                    outerScope = innerStaticScope,
-                ),
-                qualifiedPath = qualifiedPath,
-                term = it,
-            )
-        }.toSet()
+                    override val outerScope: StaticScope = context.outerScope
+                }
+
+                val namespaceDefinition = NamespaceDefinition(
+                    name = term.name,
+                    entryBodyByName = definitionByName,
+                    staticBlock = staticBlock,
+                    body = namespaceBody,
+                )
+
+                return@looped Pair(namespaceDefinition, innerDeclarationScope)
+            }
+
+            return namespaceDefinition
+        }
     }
 
     fun getDefinition(
         name: Symbol,
-    ): ConstantDefinition? = definitions.singleOrNull {
-        it.name == name
-    }
+    ): ConstantDefinition? = staticBlock.resolveNameLocally(name = name)
 
-    override val expressionMap: ExpressionMap = ExpressionMap.unionAllOf(definitions) {
-        it.expressionMap
-    }
+//    override val name: Identifier
+//        get() = TODO()
+
+    override val bodyStub: Expression.Stub<Expression> = Expression.Stub.of(body)
 
     override val errors: Set<SemanticError> by lazy {
-        definitions.fold(emptySet()) { acc, it -> acc + it.errors }
+        entryBodyByName.values.fold(emptySet()) { acc, it -> acc + it.errors }
     }
 
     fun printErrors() {
         errors.forEach { println(it.dump()) }
-    }
-
-    override val valueThunk: Thunk<Value> by lazy {
-        Thunk.pure(
-            DictValue.fromMap(
-                entries = definitions.associate {
-                    it.name to it.valueThunk.value!!
-                },
-            )
-        )
-    }
-
-    override val computedEffectiveType: Expression.Computation<MembershipType> by lazy {
-        Expression.Computation.pure(
-            UnorderedTupleType(
-                valueTypeByName = definitions.associate {
-                    it.name to it.computedEffectiveType.getOrCompute()
-                },
-            ),
-        )
     }
 }

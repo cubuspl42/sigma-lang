@@ -10,10 +10,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
@@ -29,10 +30,39 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Undefi
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 interface BuiltinValue {
     val type: MembershipType
     val value: Value
+}
+
+
+class Builtin(
+    type: MembershipType,
+    value: Value,
+) : Expression() {
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val term: ExpressionTerm? = null
+
+    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = Computation.pure(
+        DiagnosedAnalysis(
+            analysis = Analysis(
+                inferredType = type,
+            ),
+            directErrors = emptySet(),
+        )
+    )
+
+    override val classifiedValue: ClassificationContext<Value> = ConstClassificationContext.pure(value)
+
+    override val subExpressions: Set<Expression>
+        get() = emptySet()
+
+    override fun bind(dynamicScope: DynamicScope): Thunk<Value> {
+        TODO("Not yet implemented")
+    }
 }
 
 private class BuiltinDefinition(
@@ -40,9 +70,16 @@ private class BuiltinDefinition(
     val value: Value,
     val type: MembershipType,
 ) : ConstantDefinition() {
-    override val valueThunk: Thunk<Value> = value.toThunk()
+//    override val valueThunk: Thunk<Value> = value.toThunk()
 
     override val computedEffectiveType = Expression.Computation.pure(type)
+
+    override val bodyStub: Expression.Stub<Expression> = Expression.Stub.of(
+        Builtin(
+            type = type,
+            value = value,
+        )
+    )
 }
 
 object BuiltinScope : DynamicScope, StaticScope {
@@ -267,7 +304,7 @@ object BuiltinScope : DynamicScope, StaticScope {
 
     override fun resolveName(
         name: Symbol,
-    ): ClassifiedIntroduction? = builtinDeclarations[name]
+    ): Introduction? = builtinDeclarations[name]
 
     override fun getAllNames(): Set<Symbol> = builtinDeclarations.keys
 }

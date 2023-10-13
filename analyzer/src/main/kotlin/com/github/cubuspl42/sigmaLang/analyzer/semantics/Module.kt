@@ -2,7 +2,9 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleTerm
@@ -61,7 +63,7 @@ class Module(
         }
 
     private val importBlock: StaticBlock = object : StaticBlock() {
-        override fun resolveNameLocally(name: Symbol): ClassifiedIntroduction? {
+        override fun resolveNameLocally(name: Symbol): Introduction? {
             if (name !is Identifier) return null
             return getImportedModuleByName(name = name)?.rootNamespaceDefinition
         }
@@ -72,7 +74,10 @@ class Module(
     }
 
     val rootNamespaceDefinition = NamespaceDefinition.build(
-        outerScope = importBlock.chainWith(outerScope),
+        context = Expression.BuildContext(
+            outerMetaScope = BuiltinScope,
+            outerScope = importBlock.chainWith(outerScope),
+        ),
         qualifiedPath = modulePath.toQualifiedPath(),
         term = object : NamespaceDefinitionTerm {
             override val name: Identifier = Identifier.of("__root__")
@@ -83,10 +88,10 @@ class Module(
     )
 
     val innerStaticScope: StaticScope
-        get() = rootNamespaceDefinition.innerStaticScope
+        get() = rootNamespaceDefinition.bodyStub.resolved.outerScope
 
     val expressionMap
-        get() = rootNamespaceDefinition.expressionMap
+        get() = rootNamespaceDefinition.bodyStub.resolved.expressionMap
 
     val errors: Set<SemanticError>
         get() = rootNamespaceDefinition.errors

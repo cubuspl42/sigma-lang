@@ -1,9 +1,10 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 
 data class SymbolType(
-    override val value: Identifier,
+    override val value: Symbol,
 ) : PrimitiveType(), PrimitiveLiteralType {
     companion object {
         fun of(

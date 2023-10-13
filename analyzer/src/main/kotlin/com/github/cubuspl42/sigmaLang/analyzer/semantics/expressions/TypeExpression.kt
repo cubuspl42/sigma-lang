@@ -13,97 +13,31 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Member
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
-class TypeExpression(
-    private val context: Expression.BuildContext,
-    private val bodyTerm: ExpressionTerm,
-) {
-    private data class DiagnosedAnalysis(
+object TypeExpression {
+    data class DiagnosedAnalysis(
         val type: MembershipType?,
         val errors: Set<SemanticError>,
-    )
+    ) {
+        val typeOrIllType: MembershipType
+            get() = type ?: IllType
+    }
 
     data class TypeEvaluationError(
-        override val location: SourceLocation,
         val evaluationError: EvaluationError,
     ) : SemanticError
 
     data class NonTypeValueError(
-        override val location: SourceLocation,
         val value: Value,
     ) : SemanticError
 
-    companion object {
-        fun build(
-            outerMetaScope: StaticScope,
-            term: ExpressionTerm,
-        ): Expression.Stub<TypeExpression> = object : Expression.Stub<TypeExpression> {
-            override val resolved: TypeExpression by lazy {
-                TypeExpression(
-                    context = Expression.BuildContext(
-                        outerMetaScope = BuiltinScope,
-                        outerScope = outerMetaScope,
-                    ),
-                    bodyTerm = term,
-                )
-            }
-        }
-    }
-
-    val body by lazy {
-        Expression.build(
-            context = context,
-            term = bodyTerm,
-        ).resolved
-    }
-
-    private val diagnosedAnalysis by lazy {
-        val valueThunk by lazy {
-            body.bind(
-                dynamicScope = TranslationDynamicScope(
-                    staticScope = context.outerScope,
-                ),
-            )
-        }
-
-        when (val outcome = valueThunk.outcome) {
-            is EvaluationError -> DiagnosedAnalysis(
-                type = null,
-                errors = setOf(
-                    TypeEvaluationError(
-                        location = bodyTerm.location,
-                        evaluationError = outcome,
-                    ),
-                ),
-            )
-
-            is EvaluationResult -> {
-                val value = outcome.value
-
-                when (val type = value.asType) {
-                    null -> DiagnosedAnalysis(
-                        type = null,
-                        errors = setOf(
-                            NonTypeValueError(
-                                location = bodyTerm.location,
-                                value = value,
-                            ),
-                        ),
-                    )
-
-                    else -> DiagnosedAnalysis(
-                        type = type,
-                        errors = emptySet(),
-                    )
-                }
-            }
-        }
-    }
-
-    val typeOrIllType: MembershipType by lazy {
-        diagnosedAnalysis.type ?: IllType
-    }
-
-    val errors: Set<SemanticError> by lazy {
-        diagnosedAnalysis.errors
-    }
+    fun build(
+        outerMetaScope: StaticScope,
+        term: ExpressionTerm,
+    ): Expression.Stub<Expression> = Expression.build(
+        context = Expression.BuildContext(
+            outerMetaScope = BuiltinScope,
+            outerScope = outerMetaScope,
+        ),
+        term = term,
+    )
 }

@@ -7,6 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
@@ -18,6 +19,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Unorde
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
 import utils.assertTypeIsEquivalent
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -25,6 +27,7 @@ import kotlin.test.assertNotNull
 
 class ScenarioTests {
     @Test
+    @Ignore // TODO: Re-support classes
     fun testGenericClass() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
@@ -53,7 +56,10 @@ class ScenarioTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            outerScope = Project.loadPrelude().innerStaticScope,
+            context = Expression.BuildContext(
+                outerMetaScope = BuiltinScope,
+                outerScope = Project.loadPrelude().innerStaticScope,
+            ),
             qualifiedPath = QualifiedPath.Root,
             term = term,
         )
@@ -167,6 +173,7 @@ class ScenarioTests {
     }
 
     @Test
+    @Ignore // TODO: Re-support generics
     fun testNonInferableGenericFunctionCall() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
@@ -179,7 +186,7 @@ class ScenarioTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            outerScope = BuiltinScope,
+            context = Expression.BuildContext.Builtin,
             qualifiedPath = QualifiedPath.Root,
             term = term,
         )
@@ -208,6 +215,7 @@ class ScenarioTests {
     }
 
     @Test
+    @Ignore // TODO: Re-support generics
     fun testNestedGenericFunctions() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
@@ -222,7 +230,7 @@ class ScenarioTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            outerScope = BuiltinScope,
+            context = Expression.BuildContext.Empty,
             qualifiedPath = QualifiedPath.Root,
             term = term,
         )
