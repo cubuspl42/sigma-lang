@@ -36,22 +36,36 @@ abstract class Reference : Expression() {
         fun build(
             context: BuildContext,
             term: ReferenceTerm,
+        ): Stub<Reference> = build(
+            context = context,
+            term = term,
+            referredName = term.referredName,
+        )
+
+        fun build(
+            context: BuildContext,
+            term: ReferenceTerm?,
+            referredName: Symbol,
         ): Stub<Reference> = object : Stub<Reference> {
             override val resolved: Reference by lazy {
+                val outerScope = context.outerScope
+
+                val resolvedIntroduction: ClassifiedIntroduction? = outerScope.resolveName(name = referredName)
+
                 object : Reference() {
-                    override val outerScope: StaticScope = context.outerScope
+                    override val outerScope: StaticScope = outerScope
 
-                    override val term: ReferenceTerm = term
+                    override val term: ReferenceTerm? = term
 
-                    override val referredName: Identifier = term.referredName
+                    override val referredName: Symbol = referredName
+
+                    override val resolvedIntroduction: ClassifiedIntroduction? = resolvedIntroduction
                 }
             }
         }
     }
 
-    private val resolvedIntroduction: ClassifiedIntroduction? by lazy {
-        outerScope.resolveName(name = referredName)
-    }
+    abstract val resolvedIntroduction: ClassifiedIntroduction?
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val resolvedIntroduction = resolvedIntroduction
