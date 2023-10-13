@@ -6,4 +6,5 @@ interface SemanticError {
     fun dump(): String = toString()
 
     val location: SourceLocation?
+        get() = null
 }

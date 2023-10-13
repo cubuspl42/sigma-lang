@@ -1,21 +1,19 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstClassificationContext
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableClassificationContext
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ClassifiedIntroduction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.VariableIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 
 abstract class Reference : Expression() {
     abstract override val term: ReferenceTerm?
@@ -50,7 +48,7 @@ abstract class Reference : Expression() {
             override val resolved: Reference by lazy {
                 val outerScope = context.outerScope
 
-                val resolvedIntroduction: ClassifiedIntroduction? = outerScope.resolveName(name = referredName)
+                val resolvedIntroduction: Introduction? = outerScope.resolveName(name = referredName)
 
                 object : Reference() {
                     override val outerScope: StaticScope = outerScope
@@ -59,13 +57,13 @@ abstract class Reference : Expression() {
 
                     override val referredName: Symbol = referredName
 
-                    override val resolvedIntroduction: ClassifiedIntroduction? = resolvedIntroduction
+                    override val resolvedIntroduction: Introduction? = resolvedIntroduction
                 }
             }
         }
     }
 
-    abstract val resolvedIntroduction: ClassifiedIntroduction?
+    abstract val resolvedIntroduction: Introduction?
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val resolvedIntroduction = resolvedIntroduction
@@ -94,12 +92,9 @@ abstract class Reference : Expression() {
             ?: throw IllegalStateException("Unresolved reference at classification time: $referredName")
 
         when (resolvedIntroduction) {
-            is ConstantDefinition -> object : ConstClassificationContext<Value>() {
-                override val valueThunk: Thunk<Value>
-                    get() = resolvedIntroduction.valueThunk
-            }
+            is Definition -> resolvedIntroduction.bodyStub.resolved.classifiedValue
 
-            is VariableIntroduction -> object : VariableClassificationContext<Value>() {
+            is Declaration -> object : VariableClassificationContext<Value>() {
                 override val referredDeclarations: Set<Introduction>
                     get() = setOf(resolvedIntroduction)
 
@@ -109,6 +104,8 @@ abstract class Reference : Expression() {
                     "Unresolved dynamic reference at run-time: $referredName",
                 )
             }
+
+            else -> throw UnsupportedOperationException()
         }
     }
 

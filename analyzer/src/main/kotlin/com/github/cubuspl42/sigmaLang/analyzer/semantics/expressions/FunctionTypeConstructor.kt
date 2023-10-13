@@ -16,7 +16,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeCo
 abstract class FunctionTypeConstructor: TypeConstructor() {
     abstract override val term: FunctionTypeConstructorTerm
 
-    abstract val metaArgumentType: TypeExpression?
+    abstract val metaArgumentType: Expression?
 
     abstract val argumentType: TupleTypeConstructor
 
@@ -33,7 +33,7 @@ abstract class FunctionTypeConstructor: TypeConstructor() {
 
                     override val term: FunctionTypeConstructorTerm = term
 
-                    override val metaArgumentType: TypeExpression? by lazy {
+                    override val metaArgumentType: Expression? by lazy {
                         term.metaArgumentType?.let {
                             TypeExpression.build(
                                 outerMetaScope = context.outerMetaScope,
@@ -63,7 +63,7 @@ abstract class FunctionTypeConstructor: TypeConstructor() {
 
     override val classifiedValue: ClassificationContext<Value> by lazy {
         ClassificationContext.transform3(
-            metaArgumentType?.body?.classifiedValue ?: ConstClassificationContext.pure(null),
+            metaArgumentType?.classifiedValue ?: ConstClassificationContext.pure(null),
             argumentType.classifiedValue,
             imageType.classifiedValue,
         ) { metaArgumentTypeValue, argumentTypeValue, imageTypeValue ->
@@ -78,7 +78,7 @@ abstract class FunctionTypeConstructor: TypeConstructor() {
     }
 
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine3(
-        metaArgumentType?.body?.bind(
+        metaArgumentType?.bind(
             dynamicScope = dynamicScope,
         ) ?: Thunk.pure(null),
         argumentType.bind(

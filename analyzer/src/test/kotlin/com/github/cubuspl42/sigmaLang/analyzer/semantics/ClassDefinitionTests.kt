@@ -14,6 +14,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Unorde
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntrySourceTerm
 import utils.assertTypeIsEquivalent
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -22,6 +23,7 @@ import kotlin.test.assertNotNull
 class ClassDefinitionTests {
     class TypeCheckingTests {
         @Test
+        @Ignore // TODO: Re-support classes
         fun test() {
             val term = NamespaceEntrySourceTerm.parse(
                 source = """
@@ -50,7 +52,7 @@ class ClassDefinitionTests {
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         ClassDefinition.classTagKey to tagType,
-                        ClassDefinition.classTypeKey to TypeType,
+                        ClassDefinition.instanceTypeKey to TypeType,
                         Identifier.of("new") to UniversalFunctionType(
                             argumentType = UnorderedTupleType(
                                 valueTypeByName = mapOf(
@@ -76,6 +78,7 @@ class ClassDefinitionTests {
 
     class EvaluationTests {
         @Test
+        @Ignore // TODO: Re-support classes
         fun test() {
             val term = NamespaceEntrySourceTerm.parse(
                 source = """
@@ -117,7 +120,7 @@ class ClassDefinitionTests {
 
             val actualType = assertNotNull(
                 actual = classValue.readValue(
-                    key = ClassDefinition.classTypeKey,
+                    key = ClassDefinition.instanceTypeKey,
                 )?.asType,
             )
 

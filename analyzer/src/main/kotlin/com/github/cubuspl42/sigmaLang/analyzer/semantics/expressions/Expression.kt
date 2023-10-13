@@ -2,14 +2,18 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassificationContext
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationError
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.evaluateValueHacky
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.EvaluationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.TranslationDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.ArrayTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.DictTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
@@ -97,6 +101,14 @@ abstract class Expression {
     }
 
     interface Stub<out T> {
+        companion object {
+            fun <T> of(
+                value: T,
+            ): Stub<T> = object : Stub<T> {
+                override val resolved: T = value
+            }
+        }
+
         val resolved: T
     }
 
@@ -267,6 +279,7 @@ abstract class Expression {
     val location: SourceLocation?
         get() = term?.location
 
+    // TODO: Probably nuke
     abstract val outerScope: StaticScope
 
     val directErrors: Set<SemanticError> by lazy {
@@ -324,4 +337,48 @@ abstract class Expression {
     abstract fun bind(
         dynamicScope: DynamicScope,
     ): Thunk<Value>
+
+    // TODO: Refactor!
+    fun analyzeAsType(
+        outerScope: StaticScope,
+    ): TypeExpression.DiagnosedAnalysis {
+        val valueThunk by lazy {
+            bind(
+                dynamicScope = TranslationDynamicScope(
+                    staticScope = outerScope,
+                ),
+            )
+        }
+
+        return when (val outcome = valueThunk.outcome) {
+            is EvaluationError -> TypeExpression.DiagnosedAnalysis(
+                type = null,
+                errors = setOf(
+                    TypeExpression.TypeEvaluationError(
+                        evaluationError = outcome,
+                    ),
+                ),
+            )
+
+            is EvaluationResult -> {
+                val value = outcome.value
+
+                when (val type = value.asType) {
+                    null -> TypeExpression.DiagnosedAnalysis(
+                        type = null,
+                        errors = setOf(
+                            TypeExpression.NonTypeValueError(
+                                value = value,
+                            ),
+                        ),
+                    )
+
+                    else -> TypeExpression.DiagnosedAnalysis(
+                        type = type,
+                        errors = emptySet(),
+                    )
+                }
+            }
+        }
+    }
 }

@@ -8,11 +8,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpress
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
 
+
 class UserDefinitionMixin(
     private val context: Expression.BuildContext,
     private val term: DefinitionTerm,
 ) : EmbodiedUserDefinition {
-    private val annotatedTypeBody: TypeExpression? by lazy {
+    private val annotatedTypeBody: Expression? by lazy {
         term.declaredTypeBody?.let {
             TypeExpression.build(
                 outerMetaScope = context.outerMetaScope,
@@ -21,13 +22,20 @@ class UserDefinitionMixin(
         }
     }
 
-    override val annotatedType by lazy { annotatedTypeBody?.typeOrIllType }
+    override val annotatedType by lazy {
+        annotatedTypeBody?.analyzeAsType(outerScope = context.outerScope)?.typeOrIllType
+    }
 
     override val body: Expression by lazy {
         Expression.build(
             context = context,
             term = term.body,
         ).resolved
+    }
+
+    override val bodyStub: Expression.Stub<Expression> = object : Expression.Stub<Expression> {
+        override val resolved: Expression
+            get() = body
     }
 
     private val unmatchedInferredTypeError: UnmatchedInferredTypeError? by lazy {

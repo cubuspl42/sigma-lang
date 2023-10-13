@@ -10,7 +10,7 @@ class UserVariableDefinition private constructor(
         context = context,
         term = term,
     ),
-) : VariableIntroduction, EmbodiedUserDefinition by userDefinition {
+) : EmbodiedUserDefinition by userDefinition {
     companion object {
         fun build(
             context: Expression.BuildContext,
