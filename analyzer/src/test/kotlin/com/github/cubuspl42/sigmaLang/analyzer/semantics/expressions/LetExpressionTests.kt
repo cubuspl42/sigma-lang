@@ -23,7 +23,7 @@ import kotlin.test.assertNotNull
 class LetExpressionTests {
     class TypeCheckingTests {
         @Test
-        @Ignore // TODO
+        @Ignore // TODO: Directly cyclic references
         fun testCyclicRecursiveDefinitions() {
             val term = ExpressionSourceTerm.parse(
                 source = """
@@ -97,7 +97,7 @@ class LetExpressionTests {
 
     class EvaluationTests {
         @Test
-        @Ignore // TODO
+        @Ignore // TODO: Directly cyclic references
         fun testCyclicRecursiveDefinitions() {
             val term = ExpressionSourceTerm.parse(
                 source = """

@@ -27,7 +27,7 @@ import kotlin.test.assertNotNull
 
 class ScenarioTests {
     @Test
-    @Ignore // TODO: Re-support classes
+    @Ignore // TODO: Re-support type aliases
     fun testGenericClass() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
@@ -173,7 +173,6 @@ class ScenarioTests {
     }
 
     @Test
-    @Ignore // TODO: Re-support generics
     fun testNonInferableGenericFunctionCall() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
@@ -213,7 +212,6 @@ class ScenarioTests {
     }
 
     @Test
-    @Ignore // TODO: Re-support generics
     fun testNestedGenericFunctions() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
@@ -228,7 +226,10 @@ class ScenarioTests {
         )
 
         val namespaceDefinition = NamespaceDefinition.build(
-            context = Expression.BuildContext.Empty,
+            context = Expression.BuildContext(
+                outerMetaScope = BuiltinScope,
+                outerScope = StaticScope.Empty,
+            ),
             qualifiedPath = QualifiedPath.Root,
             term = term,
         )

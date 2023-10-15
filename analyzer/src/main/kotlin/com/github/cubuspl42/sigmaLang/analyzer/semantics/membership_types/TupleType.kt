@@ -5,6 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
@@ -17,24 +18,28 @@ abstract class TupleType : TableType() {
     class TypeVariableDefinition(
         override val name: Symbol,
     ) : Definition {
-        override val bodyStub: Expression.Stub<Expression>
-            get() = Expression.Stub.of(
-                object : Expression() {
-                    override val outerScope: StaticScope
-                        get() = TODO("Not yet implemented")
-                    override val term: ExpressionTerm?
-                        get() = TODO("Not yet implemented")
-                    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?>
-                        get() = TODO("Not yet implemented")
+        override val bodyStub: Expression.Stub<Expression> = Expression.Stub.of(
+            object : Expression() {
+                override val outerScope: StaticScope = StaticScope.Empty
 
-                    override val subExpressions: Set<Expression>
-                        get() = TODO("Not yet implemented")
+                override val term: ExpressionTerm? = null
 
-                    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> {
-                        TODO("Not yet implemented")
-                    }
-                }
-            )
+                override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = Computation.pure(
+                    DiagnosedAnalysis(
+                        analysis = Analysis(inferredType = TypeType),
+                        directErrors = emptySet(),
+                    ),
+                )
+
+                override val subExpressions: Set<Expression> = emptySet()
+
+                override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = Thunk.pure(
+                    TypeVariable(
+                        formula = Formula(name = name),
+                    ).asValue
+                )
+            },
+        )
     }
 
     inner class MetaArgumentTupleBlock : StaticBlock() {

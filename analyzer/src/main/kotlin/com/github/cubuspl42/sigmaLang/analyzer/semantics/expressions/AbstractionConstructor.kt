@@ -54,41 +54,39 @@ abstract class AbstractionConstructor : Expression() {
             term: AbstractionConstructorTerm,
         ): Stub<AbstractionConstructor> {
             val outerMetaScope = context.outerMetaScope
-
             val outerScope = context.outerScope
-
-            val metaArgumentTypeConstructorStub = term.metaArgumentType?.let {
-                TypeExpression.build(
-                    outerMetaScope = outerScope,
-                    term = it,
-                )
-            }
-
-            val argumentTypeConstructorStub = term.argumentType.let {
-                Expression.build(
-                    context = context,
-                    term = it,
-                )
-            }
 
             return object : Stub<AbstractionConstructor> {
                 override val resolved: AbstractionConstructor by lazy {
-                    val metaArgumentTypeConstructor = metaArgumentTypeConstructorStub?.resolved
-                    val argumentTypeConstructor = argumentTypeConstructorStub.resolved
+                    val metaArgumentTypeConstructorStub = term.metaArgumentType?.let {
+                        TypeExpression.build(
+                            outerMetaScope = outerMetaScope,
+                            term = it,
+                        )
+                    }
 
-                    // These scopes might be messed up
+                    val metaArgumentTypeConstructor = metaArgumentTypeConstructorStub?.resolved
+
                     val metaArgumentTypeConstructorAnalysis = metaArgumentTypeConstructor?.analyzeAsType(
                         outerScope = outerScope,
                     )
 
                     val metaArgumentType = metaArgumentTypeConstructorAnalysis?.typeOrIllType?.let { it as TupleType }
 
-
                     val metaArgumentBlock = metaArgumentType?.toMetaArgumentDeclarationBlock()
 
                     val innerMetaScope = metaArgumentBlock.chainWithIfNotNull(
                         outerScope = outerMetaScope,
                     )
+
+                    val argumentTypeConstructorStub = term.argumentType.let {
+                        TypeExpression.build(
+                            outerMetaScope = innerMetaScope,
+                            term = it,
+                        )
+                    }
+
+                    val argumentTypeConstructor = argumentTypeConstructorStub.resolved
 
                     val argumentTypeBodyAnalysis = argumentTypeConstructor.analyzeAsType(
                         outerScope = outerScope,

@@ -175,7 +175,6 @@ class AbstractionTermTests {
         }
 
         @Test
-        @Ignore // TODO: Re-support generic functions
         fun testGenericSingleParameter() {
             val term = ExpressionSourceTerm.parse(
                 source = "!^[t: Type] ^[t: t] => false",
