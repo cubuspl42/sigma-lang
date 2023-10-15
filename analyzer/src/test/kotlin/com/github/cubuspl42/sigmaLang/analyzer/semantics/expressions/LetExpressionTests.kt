@@ -5,18 +5,15 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationStackExhaustionError
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import kotlin.test.Ignore
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
@@ -45,7 +42,7 @@ class LetExpressionTests {
             )
 
             assertIs<IntCollectiveType>(
-                value = aDefinition.computedEffectiveType.getOrCompute(),
+                value = aDefinition.computedBodyType.getOrCompute(),
             )
 
             val bDefinition = assertNotNull(
@@ -55,7 +52,7 @@ class LetExpressionTests {
             )
 
             assertIs<IntCollectiveType>(
-                value = bDefinition.computedEffectiveType.getOrCompute(),
+                value = bDefinition.computedBodyType.getOrCompute(),
             )
         }
 
@@ -80,7 +77,7 @@ class LetExpressionTests {
                 term = term,
             )
 
-            val bDefinition = namespaceDefinition.getDefinition(name = Identifier.of("b")) as UserConstantDefinition
+            val bDefinition = namespaceDefinition.getDefinition(name = Identifier.of("b")) as Definition
 
             val letExpression = bDefinition.body as LetExpression
 

@@ -1,8 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.chainWith
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableFunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
@@ -16,7 +14,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntLiteralType
@@ -24,8 +21,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntTyp
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.NeverType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.StringType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
@@ -37,10 +32,8 @@ import utils.FakeDefinition
 import utils.FakeStaticBlock
 import utils.FakeUserDeclaration
 import utils.assertTypeIsEquivalent
-import java.lang.ArithmeticException
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 
 class CallTests {
@@ -57,7 +50,7 @@ class CallTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            type = UniversalFunctionType(
+                            annotatedType = UniversalFunctionType(
                                 argumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(
@@ -98,7 +91,7 @@ class CallTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            type = UniversalFunctionType(
+                            annotatedType = UniversalFunctionType(
                                 argumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(
@@ -153,7 +146,7 @@ class CallTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("b"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                     ),
                 ),
@@ -187,7 +180,7 @@ class CallTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            type = UniversalFunctionType(
+                            annotatedType = UniversalFunctionType(
                                 metaArgumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(
@@ -245,7 +238,7 @@ class CallTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            type = UniversalFunctionType(
+                            annotatedType = UniversalFunctionType(
                                 metaArgumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(
@@ -309,7 +302,7 @@ class CallTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            type = UniversalFunctionType(
+                            annotatedType = UniversalFunctionType(
                                 metaArgumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(

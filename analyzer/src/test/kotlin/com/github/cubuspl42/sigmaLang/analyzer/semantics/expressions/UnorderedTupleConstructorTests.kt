@@ -53,11 +53,11 @@ class UnorderedTupleConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                     ),
                 ),
@@ -92,11 +92,11 @@ class UnorderedTupleConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                     ),
                 ),

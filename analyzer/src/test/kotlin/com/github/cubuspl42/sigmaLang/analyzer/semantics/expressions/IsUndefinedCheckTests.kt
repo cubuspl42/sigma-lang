@@ -1,6 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
@@ -9,7 +8,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResul
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
@@ -35,7 +33,7 @@ class IsUndefinedCheckTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("foo"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                     ),
                 ),

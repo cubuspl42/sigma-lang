@@ -1,6 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
@@ -59,11 +58,11 @@ class OrderedTupleConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("a"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("b"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                     ),
                 ),

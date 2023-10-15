@@ -94,5 +94,5 @@ class Module(
         get() = rootNamespaceDefinition.bodyStub.resolved.expressionMap
 
     val errors: Set<SemanticError>
-        get() = rootNamespaceDefinition.errors
+        get() = rootNamespaceDefinition.body.errors
 }

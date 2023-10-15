@@ -29,7 +29,7 @@ class ImportsTests {
         )
 
         assertEquals(
-            expected = mainDefinition.computedEffectiveType.getOrCompute(),
+            expected = mainDefinition.computedBodyType.getOrCompute(),
             actual = IntCollectiveType,
         )
 

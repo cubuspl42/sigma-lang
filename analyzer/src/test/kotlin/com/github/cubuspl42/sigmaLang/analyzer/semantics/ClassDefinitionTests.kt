@@ -44,7 +44,7 @@ class ClassDefinitionTests {
                 term = term,
             )
 
-            val classType = classDefinition.computedEffectiveType.getOrCompute()
+            val classType = classDefinition.computedBodyType.getOrCompute()
 
             val tagType = SymbolType.of("Foo")
 

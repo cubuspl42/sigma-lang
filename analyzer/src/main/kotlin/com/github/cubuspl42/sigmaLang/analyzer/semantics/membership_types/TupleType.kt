@@ -9,14 +9,14 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 abstract class TupleType : TableType() {
     class TypeVariableDefinition(
         override val name: Symbol,
-    ) : ConstantDefinition() {
+    ) : Definition {
         override val bodyStub: Expression.Stub<Expression>
             get() = Expression.Stub.of(
                 object : Expression() {

@@ -1,21 +1,17 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeValue
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.EvaluationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
-import utils.FakeDefinition
 import utils.FakeStaticBlock
 import utils.FakeUserDeclaration
 import kotlin.test.Test
@@ -88,12 +84,12 @@ class UnionTypeConstructorTests {
 
         val aDeclaration = FakeUserDeclaration(
             name = Identifier.of("A"),
-            type = TypeType,
+            annotatedType = TypeType,
         )
 
         val bDeclaration = FakeUserDeclaration(
             name = Identifier.of("B"),
-            type = TypeType,
+            annotatedType = TypeType,
         )
 
         val unionTypeConstructor = UnionTypeConstructor.build(
@@ -147,22 +143,22 @@ class UnionTypeConstructorTests {
 
         val aDeclaration = FakeUserDeclaration(
             name = Identifier.of("A"),
-            type = TypeType,
+            annotatedType = TypeType,
         )
 
         val bDeclaration = FakeUserDeclaration(
             name = Identifier.of("B"),
-            type = TypeType,
+            annotatedType = TypeType,
         )
 
         val cDeclaration = FakeUserDeclaration(
             name = Identifier.of("C"),
-            type = TypeType,
+            annotatedType = TypeType,
         )
 
         val dDeclaration = FakeUserDeclaration(
             name = Identifier.of("D"),
-            type = TypeType,
+            annotatedType = TypeType,
         )
 
         val unionTypeConstructor = UnionTypeConstructor.build(

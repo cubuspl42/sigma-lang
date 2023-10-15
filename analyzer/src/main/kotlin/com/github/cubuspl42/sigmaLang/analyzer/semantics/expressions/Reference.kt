@@ -67,14 +67,14 @@ abstract class Reference : Expression() {
         }
     }
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val inferredTargetType = compute(referredDeclaration.computedEffectiveType)
-
-        DiagnosedAnalysis(
-            analysis = Analysis(
-                inferredType = inferredTargetType,
-            ),
-            directErrors = emptySet(),
+    override val computedDiagnosedAnalysis by lazy {
+        Computation.pure(
+            DiagnosedAnalysis(
+                analysis = Analysis(
+                    inferredType = referredDeclaration.annotatedType,
+                ),
+                directErrors = emptySet(),
+            )
         )
     }
 

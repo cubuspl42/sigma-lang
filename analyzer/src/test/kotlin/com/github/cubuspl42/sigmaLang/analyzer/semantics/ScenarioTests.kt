@@ -87,7 +87,7 @@ class ScenarioTests {
                 ),
                 imageType = TypeType,
             ),
-            actual = entryTypeConstructorDefinition.computedEffectiveType.getOrCompute(),
+            actual = entryTypeConstructorDefinition.computedBodyType.getOrCompute(),
         )
 
         // Construct `Entry[Bool]` and validate it
@@ -145,7 +145,7 @@ class ScenarioTests {
                     ),
                 ),
             ),
-            actual = entryOfAbstractionDefinition.computedEffectiveType.getOrCompute(),
+            actual = entryOfAbstractionDefinition.computedBodyType.getOrCompute(),
         )
 
         // Validate `entryTrueOf`
@@ -168,7 +168,7 @@ class ScenarioTests {
                     ),
                 ),
             ),
-            actual = entryTrueOfAbstractionDefinition.computedEffectiveType.getOrCompute(),
+            actual = entryTrueOfAbstractionDefinition.computedBodyType.getOrCompute(),
         )
     }
 
@@ -191,8 +191,6 @@ class ScenarioTests {
             term = term,
         )
 
-        namespaceDefinition.printErrors()
-
         val error = assertIs<Call.NonFullyInferredCalleeTypeError>(
             namespaceDefinition.errors.singleOrNull(),
         )
@@ -206,7 +204,7 @@ class ScenarioTests {
 
         val aType = namespaceDefinition.getDefinition(
             name = Identifier.of("a"),
-        )!!.computedEffectiveType.getOrCompute()
+        )!!.computedBodyType.getOrCompute()
 
         assertEquals(
             expected = IllType,
