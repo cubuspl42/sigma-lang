@@ -88,7 +88,7 @@ abstract class IfExpression : Expression() {
         )
     }
 
-    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = guard.bind(
+    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = guard.bind(
         dynamicScope = dynamicScope,
     ).thenDo { guardValue ->
         if (guardValue !is BoolValue) throw IllegalArgumentException("Guard value $guardValue is not a boolean")

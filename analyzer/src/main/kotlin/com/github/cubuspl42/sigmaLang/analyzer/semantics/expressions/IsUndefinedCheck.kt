@@ -45,7 +45,7 @@ abstract class IsUndefinedCheck : Expression() {
         )
     }
 
-    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = argument.bind(
+    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = argument.bind(
         dynamicScope = dynamicScope,
     ).thenJust { argumentValue ->
         BoolValue(

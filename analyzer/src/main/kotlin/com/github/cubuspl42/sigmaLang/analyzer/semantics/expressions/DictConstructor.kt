@@ -178,7 +178,7 @@ abstract class DictConstructor : Expression() {
     override val subExpressions: Set<Expression>
         get() = SetUtils.unionAllOf(associations) { setOf(it.key, it.value) }
 
-    override fun bind(
+    override fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(associations) { association ->
         Thunk.combine2(

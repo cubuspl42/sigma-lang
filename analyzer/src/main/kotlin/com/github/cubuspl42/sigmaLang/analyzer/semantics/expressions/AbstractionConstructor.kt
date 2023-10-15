@@ -2,6 +2,9 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassifiedExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.CyclicComputation
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ReachableDeclarationSet
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.chainWithIfNotNull
@@ -165,11 +168,13 @@ abstract class AbstractionConstructor : Expression() {
         }
     }
 
-    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = ComputableAbstraction(
-        outerDynamicScope = dynamicScope,
-        argumentType = argumentType,
-        image = image,
-    ).toThunk()
+    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = Thunk.pure(
+        ComputableAbstraction(
+            outerDynamicScope = dynamicScope,
+            argumentType = argumentType,
+            image = image,
+        ),
+    )
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         DiagnosedAnalysis(
@@ -192,6 +197,14 @@ abstract class AbstractionConstructor : Expression() {
             },
             directErrors = emptySet(),
         )
+    }
+
+    override val computedReachableDeclarations: CyclicComputation<ReachableDeclarationSet> by lazy {
+        image.computedReachableDeclarations.transform {
+            it.copy(
+                reachableDeclarations = it.reachableDeclarations - argumentDeclarationBlock.argumentDeclarations,
+            )
+        }
     }
 
     override val subExpressions: Set<Expression> by lazy { setOfNotNull(image) }

@@ -114,7 +114,7 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
         )
     }
 
-    override fun bind(
+    override fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.pure(
         DictValue.fromEntries(

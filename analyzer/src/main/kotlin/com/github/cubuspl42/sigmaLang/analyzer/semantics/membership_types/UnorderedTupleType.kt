@@ -13,6 +13,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declarati
 abstract class UnorderedTupleType : TupleType() {
     abstract val valueTypeThunkByName: Map<Symbol, Thunk<MembershipType>>
 
+    fun getValueType(name: Symbol): MembershipType? = valueTypeThunkByName[name]?.let {
+        it.value ?: throw IllegalStateException("Unable to evaluate the value type thunk")
+    }
+
     val valueTypeByName by lazy {
         valueTypeThunkByName.mapValues { (_, thunk) ->
             thunk.value ?: throw IllegalStateException("Unable to evaluate the thunk")
@@ -82,9 +86,7 @@ abstract class UnorderedTupleType : TupleType() {
         return "{${dumpedEntries.joinToString()}}"
     }
 
-    fun getFieldType(key: Symbol): MembershipType? {
-        return valueTypeByName[key];
-    }
+    fun getFieldType(key: Symbol): MembershipType? = getValueType(name = key)
 
     override val keyType: PrimitiveType
         get() = TODO("key1 | key2 | ...")
@@ -102,7 +104,7 @@ abstract class UnorderedTupleType : TupleType() {
         return valueTypeByName.entries.fold(
             initial = TypeVariableResolution.Empty,
         ) { accumulatedResolution, (key, valueType) ->
-            val assignedValueType = assignedType.valueTypeByName[key] ?: throw TypeVariableResolutionError(
+            val assignedValueType = assignedType.getValueType(name = key) ?: throw TypeVariableResolutionError(
                 message = "Cannot resolve type variables, assigned tuple lacks key $key",
             )
 
@@ -176,8 +178,8 @@ abstract class UnorderedTupleType : TupleType() {
         if (keys != otherType.keys) return true
 
         return keys.any { key ->
-            val thisValueType = valueTypeByName[key] ?: return true
-            val otherValueType = otherType.valueTypeByName[key] ?: return true
+            val thisValueType = getValueType(name = key) ?: return true
+            val otherValueType = otherType.getValueType(name = key) ?: return true
 
             thisValueType.isNonEquivalentToRecursively(
                 outerContext = innerContext,

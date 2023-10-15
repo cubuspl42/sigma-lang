@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 
 abstract class CyclicComputationClass<Result> {
     fun visiting(
@@ -45,6 +46,13 @@ abstract class CyclicComputation<Result> {
         fun withVisited(expression: Expression): Context = copy(
             visitedExpressions = visitedExpressions + expression,
         )
+    }
+
+    fun transform(
+        transform: (Result) -> Result,
+    ): CyclicComputation<Result> = object : CyclicComputation<Result>() {
+        override fun compute(context: Context): Result? =
+            this@CyclicComputation.compute(context = context)?.let(transform)
     }
 
     fun getOrCompute(): Result = compute(

@@ -27,7 +27,7 @@ data class VariableExpression(
 ) : ClassifiedExpression() {
     override fun bind(
         dynamicScope: DynamicScope,
-    ): Thunk<Value> = expression.bind(
+    ): Thunk<Value> = expression.bindDirectly(
         dynamicScope = dynamicScope,
     )
 }

@@ -98,7 +98,7 @@ class TypeAnnotatedBody(
 
     override val subExpressions: Set<Expression> = setOf(body)
 
-    override fun bind(
+    override fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = body.bind(
         dynamicScope = dynamicScope,

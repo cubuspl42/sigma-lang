@@ -80,7 +80,7 @@ abstract class UnionTypeConstructor : TypeConstructor() {
         }
     }
 
-    override fun bind(
+    override fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(types.toList()) { typeExpression ->
         typeExpression.bind(dynamicScope = dynamicScope).thenJust { type ->

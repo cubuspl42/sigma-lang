@@ -55,7 +55,7 @@ class Builtin(
     override val subExpressions: Set<Expression>
         get() = emptySet()
 
-    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.pure(value)
+    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = Thunk.pure(value)
 }
 
 private class BuiltinDefinition(
