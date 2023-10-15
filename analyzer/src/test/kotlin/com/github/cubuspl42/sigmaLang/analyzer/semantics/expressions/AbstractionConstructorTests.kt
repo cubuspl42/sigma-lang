@@ -354,7 +354,6 @@ class AbstractionConstructorTests {
 
     class ClassificationTests {
         @Test
-        @Ignore
         fun testBound() {
             val term = ExpressionSourceTerm.parse(
                 source = "^[a: Int] => a * 2",
@@ -365,20 +364,18 @@ class AbstractionConstructorTests {
                 term = term,
             ).resolved
 
-            TODO()
-//            val classifiedValue = abstractionConstructor.classifiedValue
-//
-//            val constValue = assertIs<ConstClassificationContext<Value>>(
-//                classifiedValue,
-//            )
-//
-//            assertIs<ComputableAbstraction>(
-//                constValue.valueThunk.value
-//            )
+            val classifiedValue = abstractionConstructor.classified
+
+            val constValue = assertIs<ConstExpression>(
+                classifiedValue,
+            )
+
+            assertIs<ComputableAbstraction>(
+                constValue.valueThunk.value
+            )
         }
 
         @Test
-        @Ignore
         fun testReferringConst() {
             val term = ExpressionSourceTerm.parse(
                 source = """
@@ -400,25 +397,24 @@ class AbstractionConstructorTests {
                 ),
             )
 
-//            val classifiedValue = fDefinition.body.classifiedValue
+            val classifiedValue = fDefinition.body.classified
 
-            TODO()
+            val constValue = assertIs<ConstExpression>(
+                classifiedValue,
+            )
 
-//            val constValue = assertIs<ConstClassificationContext<Value>>(
-//                classifiedValue,
-//            )
-//
-//            val fValue = assertIs<ComputableAbstraction>(
-//                constValue.valueThunk.value
-//            )
-//
-//            assertEquals(
-//                expected = IntValue(10L),
-//                actual = fValue.applyOrdered(IntValue(5L)).value,
-//            )
+            val fValue = assertIs<ComputableAbstraction>(
+                constValue.valueThunk.value
+            )
+
+            assertEquals(
+                expected = IntValue(10L),
+                actual = fValue.applyOrdered(IntValue(5L)).value,
+            )
         }
 
         @Test
+        @Ignore // TODO
         fun testSelfRecursive() {
             val term = ExpressionSourceTerm.parse(
                 source = """

@@ -59,7 +59,7 @@ abstract class FunctionTypeConstructor: TypeConstructor() {
         }
     }
 
-    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine3(
+    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine3(
         metaArgumentType?.bind(
             dynamicScope = dynamicScope,
         ) ?: Thunk.pure(null),

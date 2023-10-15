@@ -62,7 +62,7 @@ abstract class OrderedTupleConstructor : TupleConstructor() {
     override val subExpressions: Set<Expression>
         get() = elements.toSet()
 
-    override fun bind(
+    override fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(elements) {
         it.bind(dynamicScope = dynamicScope)

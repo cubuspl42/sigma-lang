@@ -66,7 +66,7 @@ class NamespaceDefinition(
                         }
                     }.toSet()
 
-                    override val outerScope: StaticScope = context.outerScope
+                    override val outerScope: StaticScope = innerDeclarationScopeLooped
                 }
 
                 val namespaceDefinition = NamespaceDefinition(

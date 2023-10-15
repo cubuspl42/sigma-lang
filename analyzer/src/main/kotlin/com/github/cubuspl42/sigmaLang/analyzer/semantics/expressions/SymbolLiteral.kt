@@ -28,7 +28,7 @@ class SymbolLiteral(
 
     override val subExpressions: Set<Expression> = emptySet()
 
-    override fun bind(
+    override fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = value.toThunk()
 }

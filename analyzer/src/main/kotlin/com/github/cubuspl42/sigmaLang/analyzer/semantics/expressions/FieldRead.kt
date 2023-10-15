@@ -96,7 +96,7 @@ abstract class FieldRead : Expression() {
         }
     }
 
-    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = subject.bind(
+    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = subject.bind(
         dynamicScope = dynamicScope,
     ).thenDo { subjectValue ->
         if (subjectValue !is DictValue) throw IllegalStateException("Subject $subjectValue is not a dict")

@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
@@ -70,9 +71,9 @@ class UnorderedTupleTypeConstructorTests {
             actual = unorderedTupleTypeConstructor.inferredTypeOrIllType.getOrCompute(),
         )
 
-//        val valueClassification = assertIs<ConstClassificationContext<Value>>(
-//            unorderedTupleTypeConstructor.classifiedValue
-//        )
+        val valueClassification = assertIs<ConstExpression>(
+            unorderedTupleTypeConstructor.classified
+        )
 
         val expectedType = UnorderedTupleType(
             valueTypeByName = mapOf(
@@ -81,12 +82,12 @@ class UnorderedTupleTypeConstructorTests {
             ),
         )
 
-//        val classifiedType = assertNotNull(valueClassification.valueThunk.value?.asType)
+        val classifiedType = assertNotNull(valueClassification.valueThunk.value?.asType)
 
-//        assertTypeIsEquivalent(
-//            expected = expectedType,
-//            actual = classifiedType,
-//        )
+        assertTypeIsEquivalent(
+            expected = expectedType,
+            actual = classifiedType,
+        )
 
         val evaluatedType = assertNotNull(
             unorderedTupleTypeConstructor.bind(

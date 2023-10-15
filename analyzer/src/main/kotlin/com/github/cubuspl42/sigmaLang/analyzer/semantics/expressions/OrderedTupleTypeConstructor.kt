@@ -78,7 +78,7 @@ abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
     }
 
 
-    override fun bind(
+    override fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(elements) { element ->
         element.type.bind(dynamicScope = dynamicScope).thenJust { elementType ->

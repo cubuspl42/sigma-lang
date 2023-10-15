@@ -30,7 +30,7 @@ abstract class TupleType : TableType() {
                     override val subExpressions: Set<Expression>
                         get() = TODO("Not yet implemented")
 
-                    override fun bind(dynamicScope: DynamicScope): Thunk<Value> {
+                    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> {
                         TODO("Not yet implemented")
                     }
                 }

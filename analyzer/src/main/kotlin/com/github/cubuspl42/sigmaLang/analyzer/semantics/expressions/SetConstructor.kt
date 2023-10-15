@@ -75,7 +75,7 @@ abstract class SetConstructor : Expression() {
     override val subExpressions: Set<Expression>
         get() = elements
 
-    override fun bind(
+    override fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.traverseList(elements.toList()) {
         it.bind(dynamicScope = dynamicScope)

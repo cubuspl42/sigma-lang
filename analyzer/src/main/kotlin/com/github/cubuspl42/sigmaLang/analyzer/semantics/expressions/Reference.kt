@@ -50,7 +50,11 @@ abstract class Reference : Expression() {
             override val resolved: Expression by lazy {
                 val outerScope = context.outerScope
 
-                when (val resolvedIntroduction = outerScope.resolveName(name = referredName)!!) {
+                val resolvedIntroduction = outerScope.resolveName(name = referredName) ?: run {
+                    throw IllegalStateException()
+                }
+
+                when (resolvedIntroduction) {
                     is Declaration -> object : Reference() {
                         override val outerScope: StaticScope = outerScope
 
@@ -87,7 +91,7 @@ abstract class Reference : Expression() {
 
     override val subExpressions: Set<Expression> = emptySet()
 
-    override fun bind(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(
+    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(
         name = referredDeclaration,
     ) ?: throw RuntimeException(
         "Unresolved reference at run-time: $referredDeclaration",

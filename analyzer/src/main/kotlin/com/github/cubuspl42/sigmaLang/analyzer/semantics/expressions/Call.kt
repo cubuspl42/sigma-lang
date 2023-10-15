@@ -209,14 +209,15 @@ abstract class Call : Expression() {
     override val subExpressions: Set<Expression>
         get() = setOf(subject, argument)
 
-    override fun bind(
+    override fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.combine2(
         subject.bind(
             dynamicScope = dynamicScope,
-        ), argument.bind(
+        ),
+        argument.bind(
             dynamicScope = dynamicScope,
-        )
+        ),
     ) { subjectValue, argumentValue ->
         if (subjectValue !is FunctionValue) throw IllegalStateException("Subject $subjectValue is not a function")
 

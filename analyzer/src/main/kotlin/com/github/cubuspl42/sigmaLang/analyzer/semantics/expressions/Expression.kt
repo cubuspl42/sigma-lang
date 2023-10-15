@@ -334,7 +334,7 @@ abstract class Expression {
         if (reachableDeclarations.isEmpty()) {
             ConstExpression(
                 expression = this,
-                valueThunk = bind(dynamicScope = DynamicScope.Empty),
+                valueThunk = bindDirectly(dynamicScope = DynamicScope.Empty),
             )
         } else {
             VariableExpression(
@@ -382,9 +382,13 @@ abstract class Expression {
     ): Value? = bind(dynamicScope = dynamicScope).evaluateValueHacky(context = context)
 
     // TODO: Nuke
-    abstract fun bind(
+    abstract fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value>
+
+    fun bind(
+        dynamicScope: DynamicScope,
+    ): Thunk<Value> = classified.bind(dynamicScope = dynamicScope)
 
     // TODO: Refactor!
     fun analyzeAsType(

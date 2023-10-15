@@ -75,7 +75,7 @@ abstract class UnorderedTupleTypeConstructor : TupleTypeConstructor() {
         }
     }
 
-    override fun bind(
+    override fun bindDirectly(
         dynamicScope: DynamicScope,
     ): Thunk<Value> = Thunk.pure(
         object : UnorderedTupleType() {
