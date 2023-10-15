@@ -75,7 +75,6 @@ class AbstractionConstructorTests {
         }
 
         @Test
-        @Ignore // TODO: Re-support generic functions
         fun testWithDeclaredImageType_fromMetaArgument() {
             val term = ExpressionSourceTerm.parse(
                 // The declared image type is an introduced meta-argument
@@ -112,7 +111,7 @@ class AbstractionConstructorTests {
 
 
         @Test
-        @Ignore // TODO: Const analysis of arbitrary expression
+        @Ignore // TODO: Expression types & expression type variables
         fun testWithDeclaredImageType_fromMetaArgumentComplex() {
             val term = ExpressionSourceTerm.parse(
                 // The declared image type is a complex expression based on a meta-argument
@@ -414,7 +413,6 @@ class AbstractionConstructorTests {
         }
 
         @Test
-        @Ignore // TODO
         fun testSelfRecursive() {
             val term = ExpressionSourceTerm.parse(
                 source = """

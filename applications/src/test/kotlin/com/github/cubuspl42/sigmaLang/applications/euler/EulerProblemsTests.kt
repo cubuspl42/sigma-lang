@@ -31,7 +31,6 @@ class EulerProblemsTests {
     }
 
     @Test
-    @Ignore // TODO
     fun testProblem8() {
         val result = solveProblem(8)
 
@@ -42,7 +41,6 @@ class EulerProblemsTests {
     }
 
     @Test
-    @Ignore // TODO
     fun testProblem9() {
         val result = solveProblem(9)
 
@@ -69,7 +67,6 @@ class EulerProblemsTests {
     }
 
     @Test
-    @Ignore // TODO
     fun testProblem11() {
         assertEquals(
             expected = EvaluationResult(IntValue(value = 70600674L)),
