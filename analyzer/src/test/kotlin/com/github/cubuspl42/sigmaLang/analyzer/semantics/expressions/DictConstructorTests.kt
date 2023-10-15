@@ -25,11 +25,11 @@ class DictConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                     ),
                 ),
@@ -59,19 +59,19 @@ class DictConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("key2"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                     ),
                 ),
@@ -102,19 +102,19 @@ class DictConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("key2"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                     ),
                 ),
@@ -154,19 +154,19 @@ class DictConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("key2"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            type = Arbitrary.unorderedTupleType,
+                            annotatedType = Arbitrary.unorderedTupleType,
                         ),
                     ),
                 ),
@@ -208,11 +208,11 @@ class DictConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
-                            type = keyType,
+                            annotatedType = keyType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                     ),
                 ),

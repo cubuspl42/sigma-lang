@@ -287,7 +287,7 @@ class AbstractionConstructorTests {
             )
 
             val fType = assertIs<FunctionType>(
-                value = fDefinition.computedEffectiveType.getOrCompute(),
+                value = fDefinition.computedBodyType.getOrCompute(),
             )
 
             assertIs<IntType>(value = fType.imageType)
@@ -299,7 +299,7 @@ class AbstractionConstructorTests {
             )
 
             val gType = assertIs<FunctionType>(
-                value = gDefinition.computedEffectiveType.getOrCompute(),
+                value = gDefinition.computedBodyType.getOrCompute(),
             )
 
             assertIs<IntType>(value = gType.imageType)
@@ -333,7 +333,7 @@ class AbstractionConstructorTests {
                     argumentType = OrderedTupleType.Empty,
                     imageType = IllType,
                 ),
-                actual = fDefinition.computedEffectiveType.getOrCompute(),
+                actual = fDefinition.computedBodyType.getOrCompute(),
             )
 
             val gDefinition = assertNotNull(
@@ -347,7 +347,7 @@ class AbstractionConstructorTests {
                     argumentType = OrderedTupleType.Empty,
                     imageType = IllType,
                 ),
-                actual = gDefinition.computedEffectiveType.getOrCompute(),
+                actual = gDefinition.computedBodyType.getOrCompute(),
             )
         }
     }

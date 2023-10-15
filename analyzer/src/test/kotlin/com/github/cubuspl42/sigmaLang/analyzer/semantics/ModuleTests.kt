@@ -3,7 +3,6 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntLiteralType
@@ -55,7 +54,7 @@ class ModuleTests {
                     ),
                     imageType = BoolType,
                 ),
-                actual = isUserIdValid.computedEffectiveType.getOrCompute(),
+                actual = isUserIdValid.computedBodyType.getOrCompute(),
             )
         }
 
@@ -104,18 +103,14 @@ class ModuleTests {
 
             assertNotNull(bazDefinition)
 
-            assertIs<ConstantDefinition>(bazDefinition)
-
-
-            // TODO: Support declared body type again
-//            assertEquals(
-//                expected = IntCollectiveType,
-//                actual = bazDefinition.computedEffectiveType.getOrCompute(),
-//            )
+            assertEquals(
+                expected = IntCollectiveType,
+                actual = bazDefinition.body.inferredTypeOrIllType.getOrCompute(),
+            )
 
             assertEquals(
-                expected = IntLiteralType.of(value = 123L),
-                actual = bazDefinition.computedEffectiveType.getOrCompute(),
+                expected = IntCollectiveType,
+                actual = bazDefinition.computedBodyType.getOrCompute(),
             )
 
             assertEquals(

@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.FixedDynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
@@ -33,7 +32,7 @@ class SetConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                     ),
                 ),
@@ -58,11 +57,11 @@ class SetConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                     ),
                 ),
@@ -92,11 +91,11 @@ class SetConstructorTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            type = BoolType,
+                            annotatedType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            type = IntCollectiveType,
+                            annotatedType = IntCollectiveType,
                         ),
                     ),
                 ),

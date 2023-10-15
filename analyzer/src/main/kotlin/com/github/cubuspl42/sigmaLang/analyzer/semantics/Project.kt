@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.getResourceAsText
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import java.lang.IllegalArgumentException
 
 data class ModulePath(
@@ -76,7 +76,7 @@ class Project(
     val errors: Set<SemanticError>
         get() = mainModule.errors
 
-    val entryPoint: ConstantDefinition
+    val entryPoint: Definition
         get() = mainModule.rootNamespaceDefinition.getDefinition(
             name = Identifier.of("main"),
         )!!

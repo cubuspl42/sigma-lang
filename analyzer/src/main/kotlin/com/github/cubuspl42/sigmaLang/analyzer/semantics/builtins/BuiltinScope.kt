@@ -12,7 +12,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.ConstantDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
@@ -62,10 +62,10 @@ private class BuiltinDefinition(
     override val name: Symbol,
     val value: Value,
     val type: MembershipType,
-) : ConstantDefinition() {
+) : Definition {
 //    override val valueThunk: Thunk<Value> = value.toThunk()
 
-    override val computedEffectiveType = Expression.Computation.pure(type)
+    override val computedBodyType = Expression.Computation.pure(type)
 
     override val bodyStub: Expression.Stub<Expression> = Expression.Stub.of(
         Builtin(

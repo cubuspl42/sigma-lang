@@ -6,6 +6,4 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Member
 
 interface Introduction {
     val name: Symbol
-
-    val computedEffectiveType: Expression.Computation<MembershipType>
 }

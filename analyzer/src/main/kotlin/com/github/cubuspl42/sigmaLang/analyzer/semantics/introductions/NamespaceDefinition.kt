@@ -14,11 +14,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
 
 class NamespaceStaticBlock(
-    private val definitionByName: Map<Identifier, ConstantDefinition>,
+    private val definitionByName: Map<Identifier, Definition>,
 ) : StaticBlock() {
     override fun resolveNameLocally(
         name: Symbol,
-    ): ConstantDefinition? = definitionByName[name]
+    ): Definition? = definitionByName[name]
 
     override fun getLocalNames(): Set<Symbol> = definitionByName.keys
 }
@@ -28,8 +28,8 @@ class NamespaceDefinition(
     override val name: Symbol,
     private val entryBodyByName: Map<Identifier, Definition>,
     private val staticBlock: NamespaceStaticBlock,
-    private val body: UnorderedTupleConstructor,
-) : ConstantDefinition(), UserDefinition {
+    override val body: UnorderedTupleConstructor,
+) : Definition {
     companion object {
         fun build(
             context: Expression.BuildContext,
@@ -85,18 +85,10 @@ class NamespaceDefinition(
 
     fun getDefinition(
         name: Symbol,
-    ): ConstantDefinition? = staticBlock.resolveNameLocally(name = name)
+    ): Definition? = staticBlock.resolveNameLocally(name = name)
 
 //    override val name: Identifier
 //        get() = TODO()
 
     override val bodyStub: Expression.Stub<Expression> = Expression.Stub.of(body)
-
-    override val errors: Set<SemanticError> by lazy {
-        entryBodyByName.values.fold(emptySet()) { acc, it -> acc + it.errors }
-    }
-
-    fun printErrors() {
-        errors.forEach { println(it.dump()) }
-    }
 }
