@@ -68,7 +68,7 @@ abstract class IfExpression : Expression() {
         val trueBranchAnalysis = compute(trueBranch.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         val falseBranchAnalysis = compute(falseBranch.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
 
-        val guardError = when (val inferredGuardType = guardAnalysis.inferredType) {
+        val guardError = when (val inferredGuardType = guardAnalysis.inferredType as MembershipType) {
             is BoolType -> null
             else -> InvalidGuardError(
                 location = guard.location,
@@ -76,8 +76,8 @@ abstract class IfExpression : Expression() {
             )
         }
 
-        val inferredTrueType = trueBranchAnalysis.inferredType
-        val inferredFalseType = falseBranchAnalysis.inferredType
+        val inferredTrueType = trueBranchAnalysis.inferredType as MembershipType
+        val inferredFalseType = falseBranchAnalysis.inferredType as MembershipType
         val inferredResultType = inferredTrueType.findLowestCommonSupertype(inferredFalseType)
 
         DiagnosedAnalysis(

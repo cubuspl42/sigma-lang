@@ -14,66 +14,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSour
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
 import utils.FakeStaticBlock
 import utils.FakeUserDeclaration
+import utils.assertMatchesEachInOrder
+import utils.assertMatchesEachOnce
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
-
-fun <T> assertMatchesEachOnce(
-    actual: Collection<T>,
-    /**
-     * Assertion blocks keyed by labels
-     */
-    blocks: Map<String, (T) -> Unit>,
-) {
-    val actualSize = actual.size
-    val expectedSize = blocks.size
-
-    if (actualSize != expectedSize) {
-        throw AssertionError("Unexpected collection size. Actual: ${actualSize}, expected: $expectedSize")
-    }
-
-    blocks.forEach { (name, block) ->
-        val matchingElements = actual.filter {
-            try {
-                block(it)
-                true
-            } catch (e: AssertionError) {
-                false
-            }
-        }
-
-        if (matchingElements.isEmpty()) {
-            throw AssertionError("No elements matched block '$name'")
-        }
-
-        if (matchingElements.size > 1) {
-            throw AssertionError("More than one element matched block '$name': $matchingElements")
-        }
-    }
-}
-
-fun <T> assertMatchesEachInOrder(
-    actual: Collection<T>,
-    /**
-     * Assertion blocks keyed by labels
-     */
-    blocks: List<(T) -> Unit>,
-) {
-    val actualSize = actual.size
-    val expectedSize = blocks.size
-
-    if (actualSize != expectedSize) {
-        throw AssertionError("Unexpected collection size. Actual: ${actualSize}, expected: $expectedSize")
-    }
-
-    actual.zip(blocks).forEachIndexed { index, (element, block) ->
-        try {
-            block(element)
-        } catch (e: AssertionError) {
-            throw AssertionError("At index $index: ${e.message}")
-        }
-    }
-}
 
 class UnionTypeConstructorTests {
     @Test

@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
 data class UnionType(
-    val memberTypes: Set<MembershipType>,
+    val memberTypes: Set<TypeAlike>,
 ) : MembershipType() {
     data class UnionMatch(
         val expectedType: UnionType,
@@ -23,7 +23,8 @@ data class UnionType(
             "union members ${nonMatchingTypes.joinToString { it.dump() }} didn't match type ${expectedType.dump()}"
     }
 
-    override fun dumpDirectly(depth: Int): String = memberTypes.joinToString(separator = " | ") { it.dumpRecursively(depth = depth + 1) }
+    override fun dumpDirectly(depth: Int): String =
+        memberTypes.joinToString(separator = " | ") { it.dumpRecursively(depth = depth + 1) }
 
     override fun findLowestCommonSupertype(
         other: MembershipType,
@@ -31,19 +32,21 @@ data class UnionType(
         memberTypes + other, // This can actually work for any type; `findLowestCommonSupertype` should be re-thought
     )
 
-    override fun resolveTypeVariables(
+    override fun resolveTypePlaceholders(
         assignedType: MembershipType,
-    ): TypeVariableResolution = TypeVariableResolution.Empty
+    ): TypePlaceholderResolution = TypePlaceholderResolution.Empty
 
-    override fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): UnionType = UnionType(
-        memberTypes = memberTypes.map {
-            it.substituteTypeVariables(
-                resolution = resolution,
-            )
-        }.toSet()
-    )
+    override fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution.traverseIterable(memberTypes) {
+        it.substituteTypePlaceholders(
+            resolution = resolution,
+        )
+    }.transform { substitutedMemberTypes ->
+        UnionType(
+            memberTypes = substitutedMemberTypes.toSet(),
+        )
+    }
 
     override fun match(
         assignedType: MembershipType,
@@ -54,8 +57,8 @@ data class UnionType(
             setOf(assignedType)
         }
 
-        val unmatchedTypes = assignedMemberTypes.filterNot { assignedMemberType ->
-            isAssignable(assignedType = assignedMemberType)
+        val unmatchedTypes = assignedMemberTypes.mapNotNull { assignedMemberType ->
+            (assignedMemberType as MembershipType).takeIf { !isAssignable(assignedType = it) }
         }.toSet()
 
         return if (unmatchedTypes.isNotEmpty()) {
@@ -78,6 +81,6 @@ data class UnionType(
     }
 
     override fun walkRecursive(): Sequence<MembershipType> = memberTypes.asSequence().flatMap {
-        it.walk()
+        (it as MembershipType).walk()
     }
 }

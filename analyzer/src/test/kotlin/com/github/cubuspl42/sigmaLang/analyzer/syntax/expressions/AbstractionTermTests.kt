@@ -1,19 +1,21 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
+import UniversalFunctionTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
-import kotlin.test.Ignore
+import utils.Matcher
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleTypeMatcher
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypePlaceholder
+import utils.assertMatches
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class AbstractionTermTests {
     class ParsingTests {
@@ -185,29 +187,25 @@ class AbstractionTermTests {
                 term = term,
             ).resolved
 
-            val type = expression.inferredTypeOrIllType.getOrCompute()
+            val type = assertIs<UniversalFunctionType>(
+                expression.inferredTypeOrIllType.getOrCompute()
+            )
 
-            assertEquals(
-                expected = UniversalFunctionType(
-                    metaArgumentType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Identifier.of("t"),
-                                type = TypeType,
-                            ),
-                        ),
-                    ),
-                    argumentType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Identifier.of("t"),
-                                type = TypeVariable(
-                                    formula = Formula.of("t"),
+            assertMatches(
+                matcher = UniversalFunctionTypeMatcher(
+                    argumentType = Matcher.Is<OrderedTupleType>(
+                        OrderedTupleTypeMatcher(
+                            elements = listOf(
+                                OrderedTupleTypeMatcher.ElementMatcher(
+                                    name = Matcher.Equals(
+                                        expected = Identifier.of("t"),
+                                    ),
+                                    type = Matcher.Is<TypePlaceholder>(),
                                 ),
                             ),
                         ),
                     ),
-                    imageType = BoolType,
+                    imageType = Matcher.Equals(BoolType),
                 ),
                 actual = type,
             )

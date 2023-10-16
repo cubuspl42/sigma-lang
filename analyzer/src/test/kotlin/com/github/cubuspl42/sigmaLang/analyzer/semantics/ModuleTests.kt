@@ -5,7 +5,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntLiteralType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
@@ -14,7 +13,6 @@ import org.junit.runner.RunWith
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
 @RunWith(Enclosed::class)

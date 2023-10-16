@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 import com.github.cubuspl42.sigmaLang.analyzer.cutOffFront
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
@@ -48,19 +49,19 @@ abstract class FunctionValue : Value() {
     }
 
     object Chunked4 : StrictBuiltinOrderedFunction() {
+        private val elementTypeDefinition = TypeVariableDefinition(
+            name = Identifier.of("elementType"),
+        )
+
         override val argTypes: List<MembershipType> = listOf(
             ArrayType(
-                elementType = TypeVariable(
-                    formula = Formula.of("e"),
-                ),
+                elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
         override val imageType: MembershipType = ArrayType(
             elementType = ArrayType(
-                elementType = TypeVariable(
-                    formula = Formula.of("e"),
-                ),
+                elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
@@ -76,18 +77,18 @@ abstract class FunctionValue : Value() {
     }
 
     object DropFirst : StrictBuiltinOrderedFunction() {
+        private val elementTypeDefinition = TypeVariableDefinition(
+            name = Identifier.of("elementType"),
+        )
+
         override val argTypes: List<MembershipType> = listOf(
             ArrayType(
-                elementType = TypeVariable(
-                    formula = Formula.of("e"),
-                ),
+                elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
         override val imageType: MembershipType = ArrayType(
-            elementType = TypeVariable(
-                formula = Formula.of("e"),
-            ),
+            elementType = elementTypeDefinition.typePlaceholder,
         )
 
         override fun compute(args: List<Value>): Value {
@@ -100,18 +101,18 @@ abstract class FunctionValue : Value() {
     }
 
     object Take : StrictBuiltinOrderedFunction() {
+        private val elementTypeDefinition = TypeVariableDefinition(
+            name = Identifier.of("elementType"),
+        )
+
         override val argTypes: List<MembershipType> = listOf(
             ArrayType(
-                elementType = TypeVariable(
-                    formula = Formula.of("e"),
-                ),
+                elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
         override val imageType: MembershipType = ArrayType(
-            elementType = TypeVariable(
-                formula = Formula.of("e"),
-            ),
+            elementType = elementTypeDefinition.typePlaceholder,
         )
 
         override fun compute(args: List<Value>): Value {
@@ -125,19 +126,19 @@ abstract class FunctionValue : Value() {
     }
 
     object Windows : StrictBuiltinOrderedFunction() {
+        private val elementTypeDefinition = TypeVariableDefinition(
+            name = Identifier.of("elementType"),
+        )
+
         override val argTypes: List<MembershipType> = listOf(
             ArrayType(
-                elementType = TypeVariable(
-                    formula = Formula.of("e"),
-                ),
+                elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
         override val imageType: MembershipType = ArrayType(
             elementType = ArrayType(
-                elementType = TypeVariable(
-                    formula = Formula.of("e"),
-                ),
+                elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
@@ -163,36 +164,35 @@ abstract class FunctionValue : Value() {
     }
 
     object MapFn : BuiltinOrderedFunction() {
+        private val elementTypeDefinition = TypeVariableDefinition(
+            name = Identifier.of("elementType"),
+        )
+
+        private val resultTypeDefinition = TypeVariableDefinition(
+            name = Identifier.of("elementType"),
+        )
+
         private val transformType = UniversalFunctionType(
             argumentType = OrderedTupleType(
                 elements = listOf(
                     OrderedTupleType.Element(
                         name = null,
-                        type = TypeVariable(
-                            formula = Formula.of("e"),
-                        ),
+                        type = elementTypeDefinition.typePlaceholder,
                     ),
                 )
             ),
-            // TODO: Improve this typing, as it makes no sense
-            imageType = TypeVariable(
-                formula = Formula.of("r"),
-            ),
+            imageType = resultTypeDefinition.typePlaceholder,
         )
 
         override val argTypes = listOf(
             ArrayType(
-                elementType = TypeVariable(
-                    formula = Formula.of("e"),
-                ),
+                elementType = elementTypeDefinition.typePlaceholder,
             ),
             transformType,
         )
 
         override val imageType = ArrayType(
-            elementType = TypeVariable(
-                formula = Formula.of("r"),
-            ),
+            elementType = resultTypeDefinition.typePlaceholder,
         )
 
         override fun computeThunk(args: List<Value>): Thunk<Value> {
@@ -208,11 +208,13 @@ abstract class FunctionValue : Value() {
     }
 
     object LengthFunction : StrictBuiltinOrderedFunction() {
+        private val elementTypeDefinition = TypeVariableDefinition(
+            name = Identifier.of("elementType"),
+        )
+
         override val argTypes = listOf(
             ArrayType(
-                elementType = TypeVariable(
-                    formula = Formula.of("e"),
-                ),
+                elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
@@ -226,23 +228,21 @@ abstract class FunctionValue : Value() {
     }
 
     object ConcatFunction : StrictBuiltinOrderedFunction() {
+        private val elementTypeDefinition = TypeVariableDefinition(
+            name = Identifier.of("elementType"),
+        )
+
         override val argTypes = listOf(
             ArrayType(
-                elementType = TypeVariable(
-                    formula = Formula.of("e"),
-                ),
+                elementType = elementTypeDefinition.typePlaceholder,
             ),
             ArrayType(
-                elementType = TypeVariable(
-                    formula = Formula.of("e"),
-                ),
+                elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
         override val imageType = ArrayType(
-            elementType = TypeVariable(
-                formula = Formula.of("e"),
-            ),
+            elementType = elementTypeDefinition.typePlaceholder,
         )
 
         override fun compute(args: List<Value>): Value {

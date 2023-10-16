@@ -2,12 +2,14 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
 sealed class PrimitiveType : ShapeType() {
     override fun resolveTypeVariablesShape(
-        assignedType: MembershipType,
-    ): TypeVariableResolution = TypeVariableResolution.Empty
+        assignedType: TypeAlike,
+    ): TypePlaceholderResolution = TypePlaceholderResolution.Empty
 
-    override fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): PrimitiveType = this
+    override fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution(
+        result = this,
+    )
 
     override fun matchShape(
         assignedType: MembershipType,

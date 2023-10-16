@@ -11,7 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.Univer
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorTerm
 
-abstract class FunctionTypeConstructor: TypeConstructor() {
+abstract class FunctionTypeConstructor : TypeConstructor() {
     abstract override val term: FunctionTypeConstructorTerm
 
     abstract val metaArgumentType: Expression?
@@ -59,21 +59,17 @@ abstract class FunctionTypeConstructor: TypeConstructor() {
         }
     }
 
-    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine3(
-        metaArgumentType?.bind(
-            dynamicScope = dynamicScope,
-        ) ?: Thunk.pure(null),
+    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = Thunk.combine2(
         argumentType.bind(
             dynamicScope = dynamicScope,
         ),
         imageType.bind(
             dynamicScope = dynamicScope,
         ),
-    ) { metaArgumentType, argumentType, imageType ->
+    ) { argumentType, imageType ->
         UniversalFunctionType(
-            metaArgumentType = metaArgumentType?.asType as TupleType?,
             argumentType = argumentType.asType as TupleType,
-            imageType = imageType.asType as MembershipType,
+            imageType = imageType.asType!!,
         ).asValue
     }
 

@@ -1,36 +1,28 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
-data class TypeVariable(
-    // TODO
-    val formula: Formula,
+class TypeVariable(
+    private val definition: TypeVariableDefinition,
 ) : MembershipType() {
-    companion object {
-        fun of(name: String) = TypeVariable(
-            formula = Formula.of(name),
-        )
-
-        fun of(name: Identifier) = TypeVariable(
-            formula = Formula(name = name),
-        )
-    }
+    fun toPlaceholder(): TypePlaceholder = TypePlaceholder(
+        typeVariable = this,
+    )
 
     override fun findLowestCommonSupertype(
         other: MembershipType,
     ): MembershipType = AnyType
 
-    override fun resolveTypeVariables(
+    override fun resolveTypePlaceholders(
         assignedType: MembershipType,
-    ): TypeVariableResolution = TypeVariableResolution(
-        resolvedTypeByVariable = mapOf(this to assignedType),
-    )
+    ): TypePlaceholderResolution = TypePlaceholderResolution.Empty
 
-    // Thought: Return an error if resolution misses this variable?
-    override fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): MembershipType = resolution.resolvedTypeByVariable[this] ?: this
+    // TODO: Extract a class for "simple" types?
+    override fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution(
+        result = this,
+    )
 
     override fun match(assignedType: MembershipType): MembershipType.MatchResult = when (assignedType) {
         this -> MembershipType.TotalMatch
@@ -40,39 +32,87 @@ data class TypeVariable(
         )
     }
 
+    override fun isNonEquivalentToDirectly(
+        innerContext: NonEquivalenceContext,
+        otherType: MembershipType,
+    ): Boolean {
+        if (otherType !is TypeVariable) return true
+        return definition != otherType.definition
+    }
+
     override fun walkRecursive(): Sequence<MembershipType> = emptySequence()
 
-    override fun dumpDirectly(depth: Int): String = "#${formula.name.dump()}"
+    override fun dumpDirectly(depth: Int): String = "#${definition.name.dump()}"
 }
 
-data class TypeVariableResolution(
-    val resolvedTypeByVariable: Map<TypeVariable, MembershipType>,
+data class TypePlaceholderResolution(
+    val resolvedTypeByPlaceholder: Map<TypePlaceholder, MembershipType>,
 ) {
-    val resolvedTypeVariables: Set<TypeVariable>
-        get() = resolvedTypeByVariable.keys
+    val resolvedTypeVariables: Set<TypePlaceholder>
+        get() = resolvedTypeByPlaceholder.keys
 
     fun mergeWith(
-        other: TypeVariableResolution,
-    ): TypeVariableResolution {
+        other: TypePlaceholderResolution,
+    ): TypePlaceholderResolution {
         // TODO: Check for resolution incompatibilities
-        return TypeVariableResolution(
-            resolvedTypeByVariable = resolvedTypeByVariable + other.resolvedTypeByVariable,
+        return TypePlaceholderResolution(
+            resolvedTypeByPlaceholder = resolvedTypeByPlaceholder + other.resolvedTypeByPlaceholder,
         )
     }
-
-    fun withoutTypeVariables(
-        typeVariables: Set<TypeVariable>,
-    ) = TypeVariableResolution(
-        resolvedTypeByVariable = resolvedTypeByVariable.filterKeys {
-            !typeVariables.contains(it)
-        },
-    )
 
     companion object {
-        val Empty = TypeVariableResolution(
-            resolvedTypeByVariable = emptyMap(),
+        val Empty = TypePlaceholderResolution(
+            resolvedTypeByPlaceholder = emptyMap(),
         )
     }
+}
+
+data class TypePlaceholderSubstitution<ResultType>(
+    val result: ResultType,
+    val unresolvedPlaceholders: Set<TypePlaceholder> = emptySet(),
+) {
+    companion object {
+        fun <A, B, Result> combine2(
+            substitutionA: TypePlaceholderSubstitution<A>,
+            substitutionB: TypePlaceholderSubstitution<B>,
+            combine: (A, B) -> Result,
+        ): TypePlaceholderSubstitution<Result> {
+            val resolvedType = combine(substitutionA.result, substitutionB.result)
+
+            val unresolvedPlaceholders = substitutionA.unresolvedPlaceholders + substitutionB.unresolvedPlaceholders
+
+            return TypePlaceholderSubstitution(
+                result = resolvedType,
+                unresolvedPlaceholders = unresolvedPlaceholders,
+            )
+        }
+
+        // traverseIterable
+        fun <ElementType, ResultType> traverseIterable(
+            substitutions: Iterable<ElementType>,
+            extract: (ElementType) -> TypePlaceholderSubstitution<ResultType>,
+        ): TypePlaceholderSubstitution<List<ResultType>> {
+            val unresolvedPlaceholders = mutableSetOf<TypePlaceholder>()
+
+            val results = substitutions.map { substitution ->
+                val extracted = extract(substitution)
+                unresolvedPlaceholders.addAll(extracted.unresolvedPlaceholders)
+                extracted.result
+            }
+
+            return TypePlaceholderSubstitution(
+                result = results,
+                unresolvedPlaceholders = unresolvedPlaceholders,
+            )
+        }
+    }
+
+    fun <ResultBType> transform(
+        transform: (ResultType) -> ResultBType,
+    ): TypePlaceholderSubstitution<ResultBType> = TypePlaceholderSubstitution(
+        result = transform(result),
+        unresolvedPlaceholders = unresolvedPlaceholders,
+    )
 }
 
 data class TypeVariableResolutionError(

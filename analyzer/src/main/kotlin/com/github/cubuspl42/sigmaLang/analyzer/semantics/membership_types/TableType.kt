@@ -1,20 +1,20 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
 sealed class TableType : FunctionType() {
-    final override val argumentType: MembershipType
+    final override val argumentType: TypeAlike
         get() = keyType
 
-    abstract override fun substituteTypeVariables(resolution: TypeVariableResolution): TableType
+    abstract override fun substituteTypePlaceholders(resolution: TypePlaceholderResolution): TypePlaceholderSubstitution<TypeAlike>
 
-    final override val imageType: MembershipType
+    final override val imageType: TypeAlike
         get() = valueType // TODO: | undefined
 
-    abstract val keyType: MembershipType
+    abstract val keyType: TypeAlike
 
     /**
      * Any type but [UndefinedType]
      */
-    abstract val valueType: MembershipType
+    abstract val valueType: TypeAlike
 
     abstract fun isDefinitelyEmpty(): Boolean
 }

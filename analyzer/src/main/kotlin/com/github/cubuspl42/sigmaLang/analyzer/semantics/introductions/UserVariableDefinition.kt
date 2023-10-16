@@ -10,7 +10,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
@@ -39,9 +38,7 @@ object UserVariableDefinition {
                     val body = bodyStub.resolved
 
                     if (declaredTypeStub != null) {
-                        val declaredTypeAnalysis = declaredTypeStub.resolved.analyzeAsType(
-                            outerScope = context.outerScope,
-                        )
+                        val declaredTypeAnalysis = declaredTypeStub.resolved.evaluateAsType()
 
                         TypeAnnotatedBody(
                             outerScope = context.outerScope,
@@ -77,7 +74,7 @@ class TypeAnnotatedBody(
         val inferredType = bodyAnalysis.inferredType
 
         val unmatchedInferredTypeError = if (declaredType != null) {
-            val matchResult = declaredType.match(inferredType)
+            val matchResult = declaredType.match(inferredType as MembershipType)
 
             if (matchResult.isFull()) null
             else UnmatchedInferredTypeError(

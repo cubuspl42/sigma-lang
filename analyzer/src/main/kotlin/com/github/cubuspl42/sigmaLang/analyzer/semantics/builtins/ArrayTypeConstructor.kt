@@ -8,10 +8,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TableType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 
 object ArrayTypeConstructor : WrapperTypeConstructor() {
     fun build(
@@ -48,7 +48,7 @@ object ArrayTypeConstructor : WrapperTypeConstructor() {
 
     override val argumentType: TableType = ArrayType(elementType = TypeType)
 
-    override fun wrapType(wrappedType: MembershipType): MembershipType {
+    override fun wrapType(wrappedType: TypeAlike): MembershipType {
         return ArrayType(
             elementType = wrappedType,
         )

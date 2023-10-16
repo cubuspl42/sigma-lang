@@ -5,13 +5,15 @@ object AnyType : MembershipType() {
         other: MembershipType,
     ): MembershipType = AnyType
 
-    override fun resolveTypeVariables(
+    override fun resolveTypePlaceholders(
         assignedType: MembershipType,
-    ): TypeVariableResolution = TypeVariableResolution.Empty
+    ): TypePlaceholderResolution = TypePlaceholderResolution.Empty
 
-    override fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): AnyType = this
+    override fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution(
+        result = this,
+    )
 
     override fun match(
         assignedType: MembershipType,

@@ -9,10 +9,31 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
 data class OrderedTupleType(
     val elements: List<Element>,
 ) : TupleType() {
+    data class Element(
+        val name: Identifier?,
+        val type: TypeAlike,
+    ) {
+        fun substituteTypeVariables(
+            resolution: TypePlaceholderResolution,
+        ): TypePlaceholderSubstitution<Element> = type.substituteTypePlaceholders(
+            resolution = resolution,
+        ).transform {
+            copy(type = it)
+        }
+
+        fun toArgumentDeclaration(): AbstractionConstructor.ArgumentDeclaration? = name?.let {
+            AbstractionConstructor.ArgumentDeclaration(
+                name = it,
+                annotatedType = type as MembershipType,
+            )
+        }
+    }
+
     data class OrderedTupleMatch(
         val elementsMatches: List<MembershipType.MatchResult>,
         val sizeMatch: SizeMatchResult,
@@ -43,30 +64,9 @@ data class OrderedTupleType(
         }
     }
 
-    data class Element(
-        // Idea: "label"?
-        val name: Identifier?,
-        val type: MembershipType,
-    ) {
-        fun substituteTypeVariables(
-            resolution: TypeVariableResolution,
-        ): Element = copy(
-            type = type.substituteTypeVariables(
-                resolution = resolution,
-            )
-        )
-
-        fun toArgumentDeclaration(): AbstractionConstructor.ArgumentDeclaration? = name?.let {
-            AbstractionConstructor.ArgumentDeclaration(
-                name = it,
-                annotatedType = type,
-            )
-        }
-    }
-
     companion object {
         fun of(
-            vararg elements: MembershipType,
+            vararg elements: TypeAlike,
         ): OrderedTupleType = OrderedTupleType(
             elements = elements.map {
                 Element(name = null, type = it)
@@ -98,21 +98,21 @@ data class OrderedTupleType(
     override fun isDefinitelyEmpty(): Boolean = elements.isEmpty()
 
     override fun resolveTypeVariablesShape(
-        assignedType: MembershipType,
-    ): TypeVariableResolution {
+        assignedType: TypeAlike,
+    ): TypePlaceholderResolution {
         if (assignedType !is OrderedTupleType) throw TypeVariableResolutionError(
             message = "Cannot resolve type variables, non-(ordered tuple) is assigned",
         )
 
         return elements.withIndex().fold(
-            initial = TypeVariableResolution.Empty,
+            initial = TypePlaceholderResolution.Empty,
         ) { accumulatedResolution, (index, element) ->
             val assignedElement = assignedType.elements.getOrNull(index) ?: throw TypeVariableResolutionError(
                 message = "Cannot resolve type variables, assigned tuple is shorter",
             )
 
-            val elementResolution = element.type.resolveTypeVariables(
-                assignedType = assignedElement.type,
+            val elementResolution = element.type.resolveTypePlaceholders(
+                assignedType = assignedElement.type as MembershipType,
             )
 
             accumulatedResolution.mergeWith(elementResolution)
@@ -121,23 +121,23 @@ data class OrderedTupleType(
 
     override fun matchShape(
         assignedType: MembershipType,
-    ): MembershipType.MatchResult = when (val sealedAssignedType = assignedType) {
+    ): MembershipType.MatchResult = when (assignedType) {
         is OrderedTupleType -> OrderedTupleMatch(
-            elementsMatches = elements.zip(sealedAssignedType.elements) { element, assignedElement ->
-                element.type.match(assignedType = assignedElement.type)
+            elementsMatches = elements.zip(assignedType.elements) { element, assignedElement ->
+                element.type.match(assignedType = assignedElement.type as MembershipType)
             },
             sizeMatch = when {
-                sealedAssignedType.elements.size >= elements.size -> OrderedTupleMatch.SizeMatch
+                assignedType.elements.size >= elements.size -> OrderedTupleMatch.SizeMatch
                 else -> OrderedTupleMatch.WrongSizeMismatch(
                     size = elements.size,
-                    assignedSize = sealedAssignedType.elements.size,
+                    assignedSize = assignedType.elements.size,
                 )
             },
         )
 
         else -> MembershipType.TotalMismatch(
             expectedType = this,
-            actualType = sealedAssignedType,
+            actualType = assignedType,
         )
     }
 
@@ -148,19 +148,19 @@ data class OrderedTupleType(
             }.toSet(),
         )
 
-    override fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): OrderedTupleType = OrderedTupleType(
-        elements = elements.map {
-            it.substituteTypeVariables(resolution = resolution)
-        },
-    )
+    override fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution.traverseIterable(elements) {
+        it.substituteTypeVariables(resolution = resolution)
+    }.transform { elements ->
+        OrderedTupleType(elements = elements)
+    }
 
     override val asArray: ArrayType by lazy {
         val elementType = elements.map { it.type }.fold(
             initial = NeverType as MembershipType,
         ) { accType, elementType ->
-            accType.findLowestCommonSupertype(elementType)
+            accType.findLowestCommonSupertype(elementType as MembershipType)
         }
 
         ArrayType(
@@ -176,19 +176,19 @@ data class OrderedTupleType(
         }
     }
 
-    override val typeVariableDefinitions: Set<TypeVariableDefinition>
-        get() = elements.mapNotNull {
-            val name = it.name
-            val type = it.type
+    override fun buildTypeVariableDefinitions(): Set<TypeVariableDefinition> = elements.mapNotNull {
+        val name = it.name
+        val type = it.type
 
-            if (name != null && type is TypeType) {
-                TypeVariableDefinition(
-                    name = name,
-                )
-            } else null
-        }.toSet()
+        // TODO: What with non-types??
+        if (name != null && type is TypeType) {
+            TypeVariableDefinition(
+                name = name,
+            )
+        } else null
+    }.toSet()
 
     override fun walkRecursive(): Sequence<MembershipType> = elements.asSequence().flatMap {
-        it.type.walk()
+        (it.type as MembershipType).walk()
     }
 }

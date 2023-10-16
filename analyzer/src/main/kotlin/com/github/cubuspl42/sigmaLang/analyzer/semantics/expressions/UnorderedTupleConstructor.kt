@@ -25,7 +25,7 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
             val valueAnalysis: Expression.Analysis,
         ) {
             val inferredValueType: MembershipType
-                get() = valueAnalysis.inferredType
+                get() = valueAnalysis.inferredType as MembershipType
         }
 
 

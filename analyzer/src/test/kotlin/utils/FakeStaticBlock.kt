@@ -13,6 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declarati
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 data class FakeUserDeclaration(
@@ -25,7 +26,7 @@ data class FakeDefinition(
     val type: MembershipType,
     val value: Value,
 ) : Definition {
-    override val computedBodyType: Expression.Computation<MembershipType> = Expression.Computation.pure(type)
+    override val computedBodyType: Expression.Computation<TypeAlike> = Expression.Computation.pure(type)
 
     override val bodyStub: Expression.Stub<Expression> = object : Expression.Stub<Expression> {
         override val resolved: Expression = object : Expression() {

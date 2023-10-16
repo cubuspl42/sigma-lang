@@ -10,6 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
@@ -40,7 +41,7 @@ class UnorderedTupleTypeConstructorTests {
 
         val actualType = assertNotNull(
             actual = unorderedTupleTypeConstructor.bind(dynamicScope = DynamicScope.Empty).value?.asType,
-        )
+        ) as MembershipType
 
         assertTypeIsEquivalent(
             expected = UnorderedTupleType(
@@ -82,7 +83,7 @@ class UnorderedTupleTypeConstructorTests {
             ),
         )
 
-        val classifiedType = assertNotNull(valueClassification.valueThunk.value?.asType)
+        val classifiedType = assertNotNull(valueClassification.valueThunk.value?.asType) as MembershipType
 
         assertTypeIsEquivalent(
             expected = expectedType,
@@ -93,7 +94,7 @@ class UnorderedTupleTypeConstructorTests {
             unorderedTupleTypeConstructor.bind(
                 dynamicScope = DynamicScope.Empty,
             ).value?.asType,
-        )
+        ) as MembershipType
 
         assertTypeIsEquivalent(
             expected = expectedType,
@@ -135,7 +136,7 @@ class UnorderedTupleTypeConstructorTests {
             actual = result.bind(
                 dynamicScope = DynamicScope.Empty,
             ).value?.asType,
-        )
+        ) as MembershipType
 
         assertTypeIsEquivalent(
             expected = object : UnorderedTupleType() {

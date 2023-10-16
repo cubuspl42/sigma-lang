@@ -1,9 +1,21 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
 abstract class StaticBlock : StaticScope {
+    class Fixed(
+        private val definitions: Set<Definition>,
+    ) : StaticBlock() {
+        override fun resolveNameLocally(
+            name: Symbol,
+        ): Definition? = definitions.find { it.name == name }
+
+        override fun getLocalNames(): Set<Symbol> = definitions.map { it.name }.toSet()
+    }
+
     abstract fun resolveNameLocally(name: Symbol): Introduction?
 
     abstract fun getLocalNames(): Set<Symbol>

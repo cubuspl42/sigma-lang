@@ -10,14 +10,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TableType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
 
 object DictTypeConstructor : TypeConstructor() {
@@ -92,7 +90,7 @@ object DictTypeConstructor : TypeConstructor() {
         ),
     )
 
-    override fun applyType(argument: Value): MembershipType {
+    override fun applyType(argument: Value): TypeAlike {
         val arguments = argument as DictValue
 
         val keyType = arguments.readValue(key = KeyTypeName)!!.asType!!
