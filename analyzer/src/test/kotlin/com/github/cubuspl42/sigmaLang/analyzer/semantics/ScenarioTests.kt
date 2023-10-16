@@ -7,17 +7,23 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.CallMatchers
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypePlaceholder
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import utils.CollectionMatchers
+import utils.Matcher
+import utils.assertMatches
 import utils.assertTypeIsEquivalent
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -103,8 +109,8 @@ class ScenarioTests {
                         BoolType.asValue,
                     ),
                 ),
-            ).value?.asType,
-        )
+            ).value?.asType
+        ) as MembershipType
 
         assertTypeIsEquivalent(
             expected = UnorderedTupleType(
@@ -122,30 +128,26 @@ class ScenarioTests {
             name = Identifier.of("entryOf"),
         )!!
 
+        val valueTypeDefinition = TypeVariableDefinition(
+            name = Identifier.of("valueType"),
+        )
+
         assertTypeIsEquivalent(
             expected = UniversalFunctionType(
-                metaArgumentType = OrderedTupleType(
-                    elements = listOf(
-                        OrderedTupleType.Element(
-                            name = Identifier.of("valueType"),
-                            type = TypeType,
-                        ),
-                    ),
-                ),
                 argumentType = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         Identifier.of("key") to IntCollectiveType,
-                        Identifier.of("value") to TypeVariable.of("valueType"),
+                        Identifier.of("value") to valueTypeDefinition.typePlaceholder,
                     ),
                 ),
                 imageType = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         Identifier.of("key") to IntCollectiveType,
-                        Identifier.of("value") to TypeVariable.of("valueType"),
+                        Identifier.of("value") to valueTypeDefinition.typePlaceholder,
                     ),
                 ),
             ),
-            actual = entryOfAbstractionDefinition.computedBodyType.getOrCompute(),
+            actual = entryOfAbstractionDefinition.computedBodyType.getOrCompute() as MembershipType,
         )
 
         // Validate `entryTrueOf`
@@ -168,7 +170,7 @@ class ScenarioTests {
                     ),
                 ),
             ),
-            actual = entryTrueOfAbstractionDefinition.computedBodyType.getOrCompute(),
+            actual = entryTrueOfAbstractionDefinition.computedBodyType.getOrCompute() as MembershipType,
         )
     }
 
@@ -194,11 +196,16 @@ class ScenarioTests {
             namespaceDefinition.errors.singleOrNull(),
         )
 
-        assertEquals(
-            expected = setOf(
-                TypeVariable.of("type")
+        assertMatches(
+            matcher = CallMatchers.NonFullyInferredCalleeTypeErrorMatcher(
+                calleeGenericType = Matcher.Is<UniversalFunctionType>(),
+                unresolvedPlaceholders = CollectionMatchers.eachOnce(
+                    elements = setOf(
+                        Matcher.Is<TypePlaceholder>(),
+                    ),
+                ),
             ),
-            actual = error.nonInferredTypeVariables,
+            actual = error,
         )
 
         val aType = namespaceDefinition.getDefinition(

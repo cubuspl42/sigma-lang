@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 
 data class ArrayType(
-    val elementType: MembershipType,
+    val elementType: TypeAlike,
 ) : TableType() {
     data class ArrayMatch(
         val elementMatch: MembershipType.MatchResult,
@@ -46,39 +46,41 @@ data class ArrayType(
 
     override val keyType = IntCollectiveType
 
-    override val valueType: MembershipType = elementType
+    override val valueType: TypeAlike = elementType
 
     override fun isDefinitelyEmpty(): Boolean = false
 
-    override fun resolveTypeVariablesShape(assignedType: MembershipType): TypeVariableResolution {
+    override fun resolveTypeVariablesShape(assignedType: TypeAlike): TypePlaceholderResolution {
         val assignedArrayType = assignedType.asArray ?: throw TypeVariableResolutionError(
             message = "Cannot resolve type variables, non-array is assigned (${assignedType.dump()})",
         )
 
-        return elementType.resolveTypeVariables(
-            assignedType = assignedArrayType.elementType,
+        return elementType.resolveTypePlaceholders(
+            assignedType = assignedArrayType.elementType as MembershipType,
         )
     }
 
-    override fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): ArrayType = ArrayType(
-        elementType = elementType.substituteTypeVariables(
-            resolution = resolution,
-        ),
-    )
+    override fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike> = elementType.substituteTypePlaceholders(
+        resolution = resolution,
+    ).transform {
+        ArrayType(
+            elementType = it,
+        )
+    }
 
     override fun matchShape(assignedType: MembershipType): MembershipType.MatchResult =
         when (assignedType) {
             is ArrayType -> ArrayMatch(
                 elementMatch = elementType.match(
-                    assignedType = assignedType.elementType,
+                    assignedType = assignedType.elementType as MembershipType,
                 ),
             )
 
             is OrderedTupleType -> OrderedTupleMatch(
                 elementsMatches = assignedType.elements.map {
-                    elementType.match(assignedType = it.type)
+                    elementType.match(assignedType = it.type as MembershipType)
                 },
             )
 
@@ -90,5 +92,5 @@ data class ArrayType(
 
     override fun dumpDirectly(depth: Int): String = "[${elementType.dumpRecursively(depth = depth + 1)}*]"
 
-    override fun walkRecursive(): Sequence<MembershipType> = elementType.walk()
+    override fun walkRecursive(): Sequence<MembershipType> = (elementType as MembershipType).walk()
 }

@@ -5,8 +5,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeErrorExcept
 // Type of tables with keys of a single primitive type and values of a single
 // specific type
 data class DictType(
-    override val keyType: MembershipType,
-    override val valueType: MembershipType,
+    override val keyType: TypeAlike,
+    override val valueType: TypeAlike,
 ) : TableType() {
     data class DictMatch(
         val keyMatch: MembershipType.MatchResult,
@@ -20,48 +20,54 @@ data class DictType(
         }
     }
 
-    override fun dumpDirectly(depth: Int): String = "{${keyType.dump()} ~> ${valueType.dumpRecursively(depth = depth + 1)}}"
+    override fun dumpDirectly(depth: Int): String =
+        "{${keyType.dump()} ~> ${valueType.dumpRecursively(depth = depth + 1)}}"
 
     override fun isDefinitelyEmpty(): Boolean = false
 
     override fun resolveTypeVariablesShape(
-        assignedType: MembershipType,
-    ): TypeVariableResolution {
+        assignedType: TypeAlike,
+    ): TypePlaceholderResolution {
         if (assignedType !is DictType) throw TypeErrorException(
             message = "Cannot resolve type variables, non-dict is assigned",
         )
 
-        val keyResolution = keyType.resolveTypeVariables(
-            assignedType = assignedType.keyType,
+        val keyResolution = keyType.resolveTypePlaceholders(
+            assignedType = assignedType.keyType as MembershipType,
         )
 
-        val valueResolution = valueType.resolveTypeVariables(
-            assignedType = assignedType.valueType,
+        val valueResolution = valueType.resolveTypePlaceholders(
+            assignedType = assignedType.valueType as MembershipType,
         )
 
         return keyResolution.mergeWith(valueResolution)
     }
 
-    override fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): DictType = DictType(
-        keyType = keyType.substituteTypeVariables(
+    override fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution.combine2(
+        substitutionA = keyType.substituteTypePlaceholders(
             resolution = resolution,
         ),
-        valueType = valueType.substituteTypeVariables(
+        substitutionB = valueType.substituteTypePlaceholders(
             resolution = resolution,
         ),
-    )
+    ) { keyType, valueType ->
+        DictType(
+            keyType = keyType as TypeAlike,
+            valueType = valueType as TypeAlike,
+        )
+    }
 
     override fun matchShape(
         assignedType: MembershipType,
     ): MembershipType.MatchResult = when (val sealedAssignedType = assignedType) {
         is DictType -> DictMatch(
             keyMatch = sealedAssignedType.keyType.match(
-                assignedType = keyType,
+                assignedType = keyType as MembershipType,
             ),
             valueMatch = valueType.match(
-                assignedType = sealedAssignedType.valueType,
+                assignedType = sealedAssignedType.valueType as MembershipType,
             ),
         )
 
@@ -80,7 +86,7 @@ data class DictType(
     }
 
     override fun walkRecursive(): Sequence<MembershipType> = sequence {
-        yieldAll(keyType.walk())
-        yieldAll(valueType.walk())
+        yieldAll((keyType as MembershipType).walk())
+        yieldAll((valueType as MembershipType).walk())
     }
 }

@@ -7,22 +7,25 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableAbstraction
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntType
+import utils.Matcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleTypeMatcher
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypePlaceholder
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
+import utils.assertMatches
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
@@ -78,7 +81,11 @@ class AbstractionConstructorTests {
         fun testWithDeclaredImageType_fromMetaArgument() {
             val term = ExpressionSourceTerm.parse(
                 // The declared image type is an introduced meta-argument
-                source = "!^[e: Type] ^[a: e] -> e => a",
+                source = """
+                    !^[e: Type] ^[a: e] -> e => %let {
+                        result: e = a,
+                    } %in result
+                """.trimIndent(),
             ) as AbstractionConstructorSourceTerm
 
             val abstractionConstructor = AbstractionConstructor.build(
@@ -90,22 +97,23 @@ class AbstractionConstructorTests {
                 value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
             )
 
-            assertEquals(
-                expected = OrderedTupleType(
+            val argumentType = assertIs<OrderedTupleType>(inferredType.argumentType)
+
+            assertMatches(
+                matcher = OrderedTupleTypeMatcher(
                     elements = listOf(
-                        OrderedTupleType.Element(
-                            name = Identifier.of("a"),
-                            type = TypeVariable(
-                                formula = Formula.of("e"),
-                            ),
+                        OrderedTupleTypeMatcher.ElementMatcher(
+                            name = Matcher.Equals(Identifier.of("a")),
+                            type = Matcher.Is<TypePlaceholder>(),
                         ),
                     ),
                 ),
-                actual = inferredType.argumentType,
+                actual = argumentType,
             )
 
-            assertIs<TypeVariable>(
-                value = inferredType.imageType,
+            assertEquals(
+                expected = argumentType.elements.first().type,
+                actual = assertIs<TypePlaceholder>(inferredType.imageType),
             )
         }
 
@@ -121,7 +129,9 @@ class AbstractionConstructorTests {
                         ] ^[
                             l: ^[t.t1...],
                             f: ^[t.t1] -> t.t2,
-                        ] -> ^[t.t2...] => map[l, f]
+                        ] -> ^[t.t2...] => %let {
+                            result: ^[t.t2...] = map[l, f]
+                        } in result
                     """.trimIndent(),
             ) as AbstractionConstructorSourceTerm
 
@@ -139,28 +149,36 @@ class AbstractionConstructorTests {
                 value = abstraction.inferredTypeOrIllType.getOrCompute(),
             )
 
+            val typeVariableDefinition1 = TypeVariableDefinition(
+                name = Identifier.of("t.t1"),
+            )
+
+            val typeVariableDefinition2 = TypeVariableDefinition(
+                name = Identifier.of("t.t2"),
+            )
+
             val innerAbstractionType = UniversalFunctionType(
                 argumentType = OrderedTupleType(
                     elements = listOf(
                         OrderedTupleType.Element(
                             name = Identifier.of("l"),
                             type = ArrayType(
-                                elementType = TypeVariable.of("t.t1"), // FIXME
+                                elementType = typeVariableDefinition1.typePlaceholder, // FIXME
                             ),
                         ),
                         OrderedTupleType.Element(
                             name = Identifier.of("f"),
                             type = UniversalFunctionType(
                                 argumentType = OrderedTupleType.of(
-                                    TypeVariable.of("t.t1"), // FIXME
+                                    typeVariableDefinition1.typePlaceholder, // FIXME
                                 ),
-                                imageType = TypeVariable.of("t.t2"), // FIXME
+                                imageType = typeVariableDefinition2.typePlaceholder, // FIXME
                             ),
                         ),
                     ),
                 ),
                 imageType = ArrayType(
-                    elementType = TypeVariable.of("t.t2"), // FIXME
+                    elementType = typeVariableDefinition2.typePlaceholder, // FIXME
                 ),
             )
 

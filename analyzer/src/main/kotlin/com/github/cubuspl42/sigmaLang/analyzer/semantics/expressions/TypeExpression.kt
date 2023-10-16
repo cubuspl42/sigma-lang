@@ -7,14 +7,15 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 object TypeExpression {
     data class DiagnosedAnalysis(
-        val type: MembershipType?,
+        val type: TypeAlike?,
         val errors: Set<SemanticError>,
     ) {
-        val typeOrIllType: MembershipType
+        val typeOrIllType: TypeAlike
             get() = type ?: IllType
     }
 

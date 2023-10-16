@@ -3,9 +3,8 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeErrorException
 
 data class UniversalFunctionType(
-    override val metaArgumentType: TupleType? = null,
-    override val argumentType: TableType,
-    override val imageType: MembershipType,
+    override val argumentType: TypeAlike,
+    override val imageType: TypeAlike,
 ) : FunctionType() {
     data class UniversalFunctionMatch(
         val argumentMatch: MembershipType.MatchResult,
@@ -21,40 +20,36 @@ data class UniversalFunctionType(
     }
 
     override fun resolveTypeVariablesShape(
-        assignedType: MembershipType,
-    ): TypeVariableResolution {
+        assignedType: TypeAlike,
+    ): TypePlaceholderResolution {
         if (assignedType !is UniversalFunctionType) throw TypeErrorException(
             message = "Cannot resolve type variables, non-abstraction is assigned",
         )
 
-        val argumentResolution = argumentType.resolveTypeVariables(
-            assignedType = assignedType.argumentType,
+        val argumentResolution = argumentType.resolveTypePlaceholders(
+            assignedType = assignedType.argumentType as MembershipType,
         )
 
-        val imageResolution = imageType.resolveTypeVariables(
-            assignedType = assignedType.imageType,
+        val imageResolution = imageType.resolveTypePlaceholders(
+            assignedType = assignedType.imageType as MembershipType,
         )
 
-        return argumentResolution.mergeWith(imageResolution).withoutTypeVariables(
-            typeVariables = typeVariables,
-        )
+        return argumentResolution.mergeWith(imageResolution)
     }
 
-    override fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): UniversalFunctionType {
-        val innerResolution = resolution.withoutTypeVariables(
-            typeVariables = typeVariables,
-        )
-
-        return UniversalFunctionType(
-            metaArgumentType = metaArgumentType,
-            argumentType = argumentType.substituteTypeVariables(
-                resolution = innerResolution,
-            ),
-            imageType = imageType.substituteTypeVariables(
-                resolution = innerResolution,
-            ),
+    override fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution.combine2(
+        substitutionA = argumentType.substituteTypePlaceholders(
+            resolution = resolution,
+        ),
+        substitutionB = imageType.substituteTypePlaceholders(
+            resolution = resolution,
+        ),
+    ) { substitutedArgumentType, substitutedImageType ->
+        UniversalFunctionType(
+            argumentType = substitutedArgumentType,
+            imageType = substitutedImageType,
         )
     }
 
@@ -63,10 +58,10 @@ data class UniversalFunctionType(
     ): MembershipType.MatchResult = when (assignedType) {
         is UniversalFunctionType -> UniversalFunctionMatch(
             argumentMatch = assignedType.argumentType.match(
-                assignedType = argumentType,
+                assignedType = argumentType as MembershipType,
             ),
             imageMatch = imageType.match(
-                assignedType = assignedType.imageType,
+                assignedType = assignedType.imageType as MembershipType,
             ),
         )
 
@@ -76,22 +71,22 @@ data class UniversalFunctionType(
         )
     }
 
-    override fun walkRecursive(): Sequence<MembershipType> = argumentType.walk() + imageType.walk()
+    override fun walkRecursive(): Sequence<MembershipType> =
+        (argumentType as MembershipType).walk() + (imageType as MembershipType).walk()
 
     override fun dumpDirectly(depth: Int): String = listOfNotNull(
-        metaArgumentType?.dumpRecursively(depth = depth + 1),
         "${argumentType.dumpRecursively(depth = depth + 1)} -> ${imageType.dumpRecursively(depth = depth + 1)}",
     ).joinToString(separator = " ")
 
     override fun isNonEquivalentToDirectly(innerContext: NonEquivalenceContext, otherType: MembershipType): Boolean {
         if (otherType !is UniversalFunctionType) return true
 
-        return argumentType.isNonEquivalentToRecursively(
+        return (argumentType as MembershipType).isNonEquivalentToRecursively(
             outerContext = innerContext,
-            otherType = otherType.argumentType,
-        ) || imageType.isNonEquivalentToRecursively(
+            otherType = otherType.argumentType as MembershipType,
+        ) || (imageType as MembershipType).isNonEquivalentToRecursively(
             outerContext = innerContext,
-            otherType = otherType.imageType,
+            otherType = otherType.imageType as MembershipType,
         )
     }
 }

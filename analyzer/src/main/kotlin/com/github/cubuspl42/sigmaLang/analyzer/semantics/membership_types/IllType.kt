@@ -6,12 +6,17 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 data object IllType : MembershipType() {
     override fun findLowestCommonSupertype(other: MembershipType): MembershipType = IllType
 
-    override fun resolveTypeVariables(assignedType: MembershipType): TypeVariableResolution {
+    override fun resolveTypePlaceholders(assignedType: MembershipType): TypePlaceholderResolution {
         // Note: This might need an improvement
-        return TypeVariableResolution.Empty
+        return TypePlaceholderResolution.Empty
     }
 
-    override fun substituteTypeVariables(resolution: TypeVariableResolution): MembershipType = IllType
+    override fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution(
+        result = IllType,
+    )
+
     override fun match(assignedType: MembershipType): MembershipType.MatchResult = MembershipType.TotalMatch
 
     override fun dumpDirectly(depth: Int): String = "IllType"

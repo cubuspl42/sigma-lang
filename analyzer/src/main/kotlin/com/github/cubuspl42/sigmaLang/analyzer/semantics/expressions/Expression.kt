@@ -22,6 +22,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.DictTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
@@ -44,6 +47,63 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleConstruct
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
+
+class AtomicExpression(
+    private val type: MembershipType,
+    private val valueThunk: Thunk<Value>,
+) : Expression() {
+    companion object {
+        fun forType(
+            type: TypeAlike,
+        ): AtomicExpression = AtomicExpression(
+            type = TypeType,
+            value = type.asValue,
+        )
+    }
+
+    constructor(
+        type: MembershipType,
+        value: Value,
+    ) : this(
+        type = type,
+        valueThunk = Thunk.pure(value),
+    )
+
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val term: ExpressionTerm? = null
+
+    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = Computation.pure(
+        DiagnosedAnalysis(
+            analysis = Analysis(inferredType = type),
+            directErrors = emptySet(),
+        ),
+    )
+
+    override val subExpressions: Set<Expression> = emptySet()
+
+    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = valueThunk
+}
+
+class AtomicTypeExpression(
+    private val type: MembershipType,
+    private val valueThunk: Thunk<Value>,
+) : Expression() {
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val term: ExpressionTerm? = null
+
+    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = Computation.pure(
+        DiagnosedAnalysis(
+            analysis = Analysis(inferredType = type),
+            directErrors = emptySet(),
+        ),
+    )
+
+    override val subExpressions: Set<Expression> = emptySet()
+
+    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = valueThunk
+}
 
 abstract class Expression {
     abstract class Computation<out R> {
@@ -158,13 +218,13 @@ abstract class Expression {
     }
 
     abstract class Analysis {
-        abstract val inferredType: MembershipType
+        abstract val inferredType: TypeAlike
     }
 
     fun Analysis(
-        inferredType: MembershipType,
+        inferredType: TypeAlike,
     ): Analysis = object : Analysis() {
-        override val inferredType: MembershipType = inferredType
+        override val inferredType: TypeAlike = inferredType
     }
 
     data class DiagnosedAnalysis(
@@ -350,11 +410,11 @@ abstract class Expression {
         }
     }
 
-    private val inferredTypeOrNull: Expression.Computation<MembershipType?> by lazy {
+    private val inferredTypeOrNull: Expression.Computation<TypeAlike?> by lazy {
         computedAnalysis.transform { it?.inferredType }
     }
 
-    val inferredTypeOrIllType: Computation<MembershipType> by lazy {
+    val inferredTypeOrIllType: Computation<TypeAlike> by lazy {
         inferredTypeOrNull.transform { it ?: IllType }
     }
 
@@ -390,10 +450,8 @@ abstract class Expression {
         dynamicScope: DynamicScope,
     ): Thunk<Value> = classified.bind(dynamicScope = dynamicScope)
 
-    // TODO: Refactor!
-    fun analyzeAsType(
-        outerScope: StaticScope,
-    ): TypeExpression.DiagnosedAnalysis {
+    // TODO: Refactor! (make static?)
+    fun evaluateAsType(): TypeExpression.DiagnosedAnalysis {
         val valueThunk by lazy {
             bind(
                 dynamicScope = DynamicScope.Empty,

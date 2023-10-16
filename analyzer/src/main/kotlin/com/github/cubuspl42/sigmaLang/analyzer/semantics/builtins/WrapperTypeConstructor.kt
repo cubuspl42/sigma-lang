@@ -5,6 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TableType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 
 abstract class WrapperTypeConstructor : TypeConstructor() {
@@ -12,9 +13,9 @@ abstract class WrapperTypeConstructor : TypeConstructor() {
 
     override fun applyType(
         argument: Value,
-    ): MembershipType = wrapType(
+    ): TypeAlike = wrapType(
         wrappedType = (argument as TypeValue<*>).asType,
     )
 
-    abstract fun wrapType(wrappedType: MembershipType): MembershipType
+    abstract fun wrapType(wrappedType: TypeAlike): MembershipType
 }

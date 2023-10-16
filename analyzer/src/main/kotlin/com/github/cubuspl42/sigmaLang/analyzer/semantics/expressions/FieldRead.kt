@@ -64,7 +64,7 @@ abstract class FieldRead : Expression() {
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
 
-        val inferredSubjectType = subjectAnalysis.inferredType
+        val inferredSubjectType = subjectAnalysis.inferredType as MembershipType
         val validSubjectType = inferredSubjectType as? UnorderedTupleType
 
         if (validSubjectType != null) {
@@ -73,7 +73,7 @@ abstract class FieldRead : Expression() {
             if (fieldType != null) {
                 DiagnosedAnalysis(
                     analysis = Analysis(
-                        inferredType = fieldType,
+                        inferredType = fieldType as MembershipType,
                     ),
                     directErrors = emptySet(),
                 )

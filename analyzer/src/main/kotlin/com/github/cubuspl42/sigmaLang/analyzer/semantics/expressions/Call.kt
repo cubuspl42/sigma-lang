@@ -120,7 +120,7 @@ abstract class Call : Expression() {
     data class NonFullyInferredCalleeTypeError(
         override val location: SourceLocation?,
         val calleeGenericType: FunctionType,
-        val nonInferredTypeVariables: Set<TypeVariable>,
+        val unresolvedPlaceholders: Set<TypePlaceholder>,
     ) : SemanticError
 
     data class NonFunctionCallError(
@@ -139,49 +139,50 @@ abstract class Call : Expression() {
         val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         val argumentAnalysis = compute(argument.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
 
-        val subjectType = subjectAnalysis.inferredType
-        val argumentType = argumentAnalysis.inferredType
+        val subjectType = subjectAnalysis.inferredType as MembershipType
+        val argumentType = argumentAnalysis.inferredType as MembershipType
 
         when (subjectType) {
             is FunctionType -> {
-                val typeVariableResolution = subjectType.argumentType.resolveTypeVariables(
+                val typeVariableResolution = subjectType.argumentType.resolveTypePlaceholders(
                     assignedType = argumentType,
                 )
 
-                val effectiveArgumentType = subjectType.argumentType.substituteTypeVariables(
+
+                val argumentSubstitution = subjectType.argumentType.substituteTypePlaceholders(
                     resolution = typeVariableResolution,
                 )
 
-                val effectiveImageType = subjectType.imageType.substituteTypeVariables(
+                val effectiveArgumentType = argumentSubstitution.result
+
+                val imageSubstitution = subjectType.imageType.substituteTypePlaceholders(
                     resolution = typeVariableResolution,
                 )
 
-                val remainingTypeVariables = subjectType.typeVariables - typeVariableResolution.resolvedTypeVariables
-
-                val nonInferredTypeVariables = subjectType.typeVariables.intersect(remainingTypeVariables)
+                val effectiveImageType = imageSubstitution.result
+                
+                val unresolvedPlaceholders = imageSubstitution.unresolvedPlaceholders
 
                 when {
-                    nonInferredTypeVariables.isEmpty() -> {
+                    unresolvedPlaceholders.isEmpty() -> {
+                        val matchResult = effectiveArgumentType.match(
+                            assignedType = argumentType,
+                        )
+
+                        val directError = if (!matchResult.isFull()) {
+                            InvalidArgumentError(
+                                location = argument.location,
+                                matchResult = matchResult,
+                            )
+                        } else {
+                            null
+                        }
+
                         DiagnosedAnalysis(
                             analysis = Analysis(
                                 inferredType = effectiveImageType,
                             ),
-                            directErrors = setOfNotNull(
-                                run {
-                                    val matchResult = effectiveArgumentType.match(
-                                        assignedType = argumentType,
-                                    )
-
-                                    if (!matchResult.isFull()) {
-                                        InvalidArgumentError(
-                                            location = argument.location,
-                                            matchResult = matchResult,
-                                        )
-                                    } else {
-                                        null
-                                    }
-                                },
-                            ),
+                            directErrors = setOfNotNull(directError),
                         )
                     }
 
@@ -190,7 +191,7 @@ abstract class Call : Expression() {
                             NonFullyInferredCalleeTypeError(
                                 location = subject.location,
                                 calleeGenericType = subjectType,
-                                nonInferredTypeVariables = nonInferredTypeVariables,
+                                unresolvedPlaceholders = unresolvedPlaceholders,
                             ),
                         )
                     }

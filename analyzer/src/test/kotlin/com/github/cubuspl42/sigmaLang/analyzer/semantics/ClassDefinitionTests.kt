@@ -7,6 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
@@ -44,7 +45,7 @@ class ClassDefinitionTests {
                 term = term,
             )
 
-            val classType = classDefinition.computedBodyType.getOrCompute()
+            val classType = classDefinition.computedBodyType.getOrCompute() as MembershipType
 
             val tagType = SymbolType.of("Foo")
 
@@ -122,7 +123,7 @@ class ClassDefinitionTests {
                 actual = classValue.readValue(
                     key = ClassDefinition.instanceTypeKey,
                 )?.asType,
-            )
+            ) as MembershipType
 
             assertTypeIsEquivalent(
                 expected = UnorderedTupleType(

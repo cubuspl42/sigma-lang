@@ -3,9 +3,39 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeValue
 import com.github.cubuspl42.sigmaLang.analyzer.utils.UnorderedPair
 
-sealed class MembershipType {
+abstract class TypeAlike {
+    abstract fun resolveTypePlaceholders(
+        assignedType: MembershipType,
+    ): TypePlaceholderResolution
+
+    abstract fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike>
+
+    open fun match(
+        assignedType: MembershipType,
+    ): MembershipType.MatchResult {
+        throw UnsupportedOperationException() // TODO: Only membership types should be able to match
+    }
+
+    fun dump(): String = dumpRecursively(depth = 0)
+
+    fun dumpRecursively(depth: Int): String {
+        if (depth > MembershipType.maxDumpDepth) return "(...)"
+
+        return dumpDirectly(depth = depth)
+    }
+
+    open val asLiteral: PrimitiveLiteralType? = null
+
+    open val asArray: ArrayType? = null
+
+    abstract fun dumpDirectly(depth: Int): String
+}
+
+sealed class MembershipType : TypeAlike() {
     data class NonEquivalenceContext(
-        val visitedPairs: Set<UnorderedPair<MembershipType>>
+        val visitedPairs: Set<UnorderedPair<MembershipType>>,
     ) {
         fun withVisited(pair: UnorderedPair<MembershipType>): NonEquivalenceContext = NonEquivalenceContext(
             visitedPairs = visitedPairs + pair,
@@ -40,7 +70,7 @@ sealed class MembershipType {
 
     data class TotalMismatch(
         val expectedType: MembershipType,
-        val actualType: MembershipType,
+        val actualType: TypeAlike,
     ) : Mismatch() {
         override fun dump(): String = "expected ${expectedType.dump()}, actual: ${actualType.dump()}"
     }
@@ -49,35 +79,9 @@ sealed class MembershipType {
         const val maxDumpDepth = 16
     }
 
-    open val asLiteral: PrimitiveLiteralType? = null
-
-    open val asArray: ArrayType? = null
-
-    fun dump(): String = dumpRecursively(depth = 0)
-
-    fun dumpRecursively(depth: Int): String {
-        if (depth > maxDumpDepth) return "(...)"
-
-        return dumpDirectly(depth = depth)
-    }
-
-    abstract fun dumpDirectly(depth: Int): String
-
     abstract fun findLowestCommonSupertype(
         other: MembershipType,
     ): MembershipType
-
-    abstract fun resolveTypeVariables(
-        assignedType: MembershipType,
-    ): TypeVariableResolution
-
-    abstract fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): MembershipType
-
-    abstract fun match(
-        assignedType: MembershipType,
-    ): MembershipType.MatchResult
 
     // Thought: Wrong name? `walkChildren`?
     abstract fun walkRecursive(): Sequence<MembershipType>
@@ -117,5 +121,5 @@ sealed class MembershipType {
 
 fun MembershipType.walk(): Sequence<MembershipType> = sequenceOf(this) + walkRecursive()
 
-val <TypeType : MembershipType> TypeType.asValue: TypeValue<TypeType>
+val <TypeType : TypeAlike> TypeType.asValue: TypeValue<TypeType>
     get() = TypeValue(this)

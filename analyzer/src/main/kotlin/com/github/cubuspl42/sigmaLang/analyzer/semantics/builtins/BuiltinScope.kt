@@ -9,20 +9,18 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.StringType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UndefinedType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
@@ -65,7 +63,7 @@ private class BuiltinDefinition(
 ) : Definition {
 //    override val valueThunk: Thunk<Value> = value.toThunk()
 
-    override val computedBodyType = Expression.Computation.pure(type)
+    override val computedBodyType: Expression.Computation<TypeAlike> = Expression.Computation.pure(type)
 
     override val bodyStub: Expression.Stub<Expression> = Expression.Stub.of(
         Builtin(
@@ -118,34 +116,7 @@ object BuiltinScope : StaticScope {
         ),
 
         Identifier.of("not") to BoolValue.Not,
-        Identifier.of("if") to SimpleBuiltinValue(
-            type = UniversalFunctionType(
-                argumentType = OrderedTupleType(
-                    elements = listOf(
-                        OrderedTupleType.Element(
-                            name = Identifier.of("guard"),
-                            type = BoolType,
-                        ),
-                    ),
-                ),
-                imageType = UniversalFunctionType(
-                    argumentType = UnorderedTupleType(
-                        valueTypeByName = mapOf(
-                            Identifier.of("then") to TypeVariable(
-                                formula = Formula.of("r"),
-                            ),
-                            Identifier.of("else") to TypeVariable(
-                                formula = Formula.of("r"),
-                            ),
-                        )
-                    ),
-                    imageType = TypeVariable(
-                        formula = Formula.of("r"),
-                    ),
-                ),
-            ),
-            value = BoolValue.If,
-        ),
+        Identifier.of("if") to IfFunction,
         Identifier.of("mul") to SimpleBuiltinValue(
             type = UniversalFunctionType(
                 argumentType = UnorderedTupleType.Empty,
@@ -224,39 +195,7 @@ object BuiltinScope : StaticScope {
             ),
             value = IntValue.Gte,
         ),
-        Identifier.of("link") to SimpleBuiltinValue(
-            type = UniversalFunctionType(
-                argumentType = UnorderedTupleType(
-                    valueTypeByName = mapOf(
-                        Identifier.of("primary") to DictType(
-                            keyType = TypeVariable(
-                                formula = Formula.of("K"),
-                            ),
-                            valueType = TypeVariable(
-                                formula = Formula.of("V"),
-                            ),
-                        ),
-                        Identifier.of("secondary") to DictType(
-                            keyType = TypeVariable(
-                                formula = Formula.of("K"),
-                            ),
-                            valueType = TypeVariable(
-                                formula = Formula.of("V"),
-                            ),
-                        ),
-                    )
-                ),
-                imageType = DictType(
-                    keyType = TypeVariable(
-                        formula = Formula.of("K"),
-                    ),
-                    valueType = TypeVariable(
-                        formula = Formula.of("V"),
-                    ),
-                ),
-            ),
-            value = FunctionValue.Link,
-        ),
+        Identifier.of("link") to LinkFunction,
         Identifier.of("chunked4") to FunctionValue.Chunked4,
         Identifier.of("dropFirst") to FunctionValue.DropFirst,
         Identifier.of("windows") to FunctionValue.Windows,

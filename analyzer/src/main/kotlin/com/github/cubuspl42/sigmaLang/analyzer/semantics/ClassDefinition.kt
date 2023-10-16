@@ -18,6 +18,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeTy
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
@@ -84,7 +85,7 @@ class ClassDefinition(
                 override val resolved: UnorderedTupleConstructor by lazy {
                     val bodyTypeConstructor = userInstanceTypeStub.resolved
 
-                    val bodyTypeConstructorAnalysis = bodyTypeConstructor.analyzeAsType(outerScope = outerScope)
+                    val bodyTypeConstructorAnalysis = bodyTypeConstructor.evaluateAsType()
 
                     val bodyType = bodyTypeConstructorAnalysis.type as UnorderedTupleType
 
@@ -123,7 +124,7 @@ class ClassDefinition(
 
                                     override val argumentType: TupleType = bodyType
 
-                                    override val declaredImageType: MembershipType = instanceType
+                                    override val declaredImageType: TypeAlike? = instanceType
 
                                     override val image: Expression
                                         get() = TODO() // {tag: tag, ...argument}

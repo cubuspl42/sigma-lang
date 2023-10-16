@@ -7,13 +7,14 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
 abstract class UnorderedTupleType : TupleType() {
-    abstract val valueTypeThunkByName: Map<Symbol, Thunk<MembershipType>>
+    abstract val valueTypeThunkByName: Map<Symbol, Thunk<TypeAlike>>
 
-    fun getValueType(name: Symbol): MembershipType? = valueTypeThunkByName[name]?.let {
+    fun getValueType(name: Symbol): TypeAlike? = valueTypeThunkByName[name]?.let {
         it.value ?: throw IllegalStateException("Unable to evaluate the value type thunk")
     }
 
@@ -86,7 +87,7 @@ abstract class UnorderedTupleType : TupleType() {
         return "{${dumpedEntries.joinToString()}}"
     }
 
-    fun getFieldType(key: Symbol): MembershipType? = getValueType(name = key)
+    fun getFieldType(key: Symbol): TypeAlike? = getValueType(name = key)
 
     override val keyType: PrimitiveType
         get() = TODO("key1 | key2 | ...")
@@ -96,20 +97,20 @@ abstract class UnorderedTupleType : TupleType() {
 
     override fun isDefinitelyEmpty(): Boolean = valueTypeThunkByName.isEmpty()
 
-    override fun resolveTypeVariablesShape(assignedType: MembershipType): TypeVariableResolution {
+    override fun resolveTypeVariablesShape(assignedType: TypeAlike): TypePlaceholderResolution {
         if (assignedType !is UnorderedTupleType) throw TypeVariableResolutionError(
             message = "Cannot resolve type variables, non-(unordered tuple) is assigned",
         )
 
         return valueTypeByName.entries.fold(
-            initial = TypeVariableResolution.Empty,
+            initial = TypePlaceholderResolution.Empty,
         ) { accumulatedResolution, (key, valueType) ->
             val assignedValueType = assignedType.getValueType(name = key) ?: throw TypeVariableResolutionError(
                 message = "Cannot resolve type variables, assigned tuple lacks key $key",
             )
 
-            val valueResolution = valueType.resolveTypeVariables(
-                assignedType = assignedValueType,
+            val valueResolution = valueType.resolveTypePlaceholders(
+                assignedType = assignedValueType as MembershipType,
             )
 
             accumulatedResolution.mergeWith(valueResolution)
@@ -126,7 +127,7 @@ abstract class UnorderedTupleType : TupleType() {
                 when {
                     assignedValueType != null -> UnorderedTupleMatch.PresentValueMatch(
                         valueMatch = valueType.match(
-                            assignedType = assignedValueType,
+                            assignedType = assignedValueType as MembershipType,
                         )
                     )
 
@@ -141,27 +142,33 @@ abstract class UnorderedTupleType : TupleType() {
         )
     }
 
-    override fun walkRecursive(): Sequence<MembershipType> = valueTypeByName.values.asSequence().flatMap { it.walk() }
+    override fun walkRecursive(): Sequence<MembershipType> =
+        valueTypeByName.values.asSequence().flatMap { (it as MembershipType).walk() }
 
     override fun toArgumentDeclarationBlock(): AbstractionConstructor.ArgumentStaticBlock =
         AbstractionConstructor.ArgumentStaticBlock(
             argumentDeclarations = valueTypeByName.map { (name, type) ->
                 AbstractionConstructor.ArgumentDeclaration(
                     name = name,
-                    annotatedType = type,
+                    annotatedType = type as MembershipType,
                 )
             }.toSet(),
         )
 
-    override fun substituteTypeVariables(
-        resolution: TypeVariableResolution,
-    ): UnorderedTupleType = UnorderedTupleType(
-        valueTypeByName = valueTypeByName.mapValues { (_, valueType) ->
-            valueType.substituteTypeVariables(
+    override fun substituteTypePlaceholders(
+        resolution: TypePlaceholderResolution,
+    ): TypePlaceholderSubstitution<TypeAlike> =
+        TypePlaceholderSubstitution.traverseIterable(valueTypeByName.entries) { (name, type) ->
+            type.substituteTypePlaceholders(
                 resolution = resolution,
+            ).transform { substitutedType ->
+                name to substitutedType
+            }
+        }.transform { substitutedEntries ->
+            UnorderedTupleType(
+                valueTypeByName = substitutedEntries.toMap(),
             )
-        },
-    )
+        }
 
     override fun toArgumentScope(argument: DictValue): DynamicScope = object : DynamicScope {
         override fun getValue(
@@ -181,15 +188,15 @@ abstract class UnorderedTupleType : TupleType() {
             val thisValueType = getValueType(name = key) ?: return true
             val otherValueType = otherType.getValueType(name = key) ?: return true
 
-            thisValueType.isNonEquivalentToRecursively(
+            (thisValueType as MembershipType).isNonEquivalentToRecursively(
                 outerContext = innerContext,
-                otherType = otherValueType,
+                otherType = otherValueType as MembershipType,
             )
         }
     }
 
-    override val typeVariableDefinitions: Set<TypeVariableDefinition>
-        get() = valueTypeByName.mapNotNull { (name, type) ->
+    override fun buildTypeVariableDefinitions(): Set<TypeVariableDefinition> =
+        valueTypeByName.mapNotNull { (name, type) ->
             if (type is TypeType) {
                 TypeVariableDefinition(
                     name = name,
@@ -199,7 +206,7 @@ abstract class UnorderedTupleType : TupleType() {
 }
 
 fun UnorderedTupleType(
-    valueTypeByName: Map<Symbol, MembershipType>,
+    valueTypeByName: Map<Symbol, TypeAlike>,
 ): UnorderedTupleType = object : UnorderedTupleType() {
     override val valueTypeThunkByName = valueTypeByName.mapValues { (_, type) ->
         Thunk.pure(type)
