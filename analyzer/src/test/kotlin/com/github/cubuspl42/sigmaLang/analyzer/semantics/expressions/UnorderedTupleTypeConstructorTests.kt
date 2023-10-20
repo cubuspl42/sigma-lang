@@ -8,11 +8,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm

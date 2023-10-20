@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm

@@ -12,19 +12,19 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.FunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntType
 import utils.Matcher
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleTypeMatcher
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypePlaceholder
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import utils.assertMatches
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
@@ -119,7 +119,7 @@ class AbstractionConstructorTests {
 
 
         @Test
-        @Ignore // TODO: Expression types & expression type variables
+        @Ignore // TODO: Type constructor kinds
         fun testWithDeclaredImageType_fromMetaArgumentComplex() {
             val term = ExpressionSourceTerm.parse(
                 // The declared image type is a complex expression based on a meta-argument

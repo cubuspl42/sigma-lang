@@ -12,8 +12,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 data class FakeUserDeclaration(

@@ -1,9 +1,9 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinValue
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TableType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TableType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 
 abstract class BuiltinFunction : FunctionValue(), BuiltinValue {
     final override val type: MembershipType

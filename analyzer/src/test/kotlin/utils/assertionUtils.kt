@@ -1,6 +1,6 @@
 package utils
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
 import kotlin.test.assertTrue
 
 fun assertTypeIsEquivalent(

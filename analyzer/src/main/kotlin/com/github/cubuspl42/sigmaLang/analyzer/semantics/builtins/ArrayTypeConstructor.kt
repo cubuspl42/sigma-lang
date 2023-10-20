@@ -5,11 +5,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TableType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TableType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 

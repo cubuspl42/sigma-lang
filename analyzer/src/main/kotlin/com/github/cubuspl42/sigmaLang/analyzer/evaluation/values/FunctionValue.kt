@@ -3,12 +3,12 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 import com.github.cubuspl42.sigmaLang.analyzer.cutOffFront
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 
 abstract class FunctionValue : Value() {
 

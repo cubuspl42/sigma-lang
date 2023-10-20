@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntLiteralType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntLiteralType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IntLiteralTerm
 
 data class IntLiteral(

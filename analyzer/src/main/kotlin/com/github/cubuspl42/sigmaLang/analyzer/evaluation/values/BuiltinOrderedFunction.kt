@@ -1,8 +1,8 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TableType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TableType
 
 abstract class BuiltinOrderedFunction : BuiltinFunction() {
     final override fun dump(): String = "(builtin ordered function)"

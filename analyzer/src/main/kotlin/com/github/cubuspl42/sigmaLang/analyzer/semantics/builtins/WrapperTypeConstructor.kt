@@ -2,11 +2,11 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.ArrayType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TableType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TableType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 
 abstract class WrapperTypeConstructor : TypeConstructor() {
     override val argumentType: TableType = ArrayType(elementType = TypeType)

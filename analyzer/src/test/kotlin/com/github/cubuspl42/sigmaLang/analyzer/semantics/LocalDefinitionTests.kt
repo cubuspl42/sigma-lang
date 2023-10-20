@@ -3,9 +3,9 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeAnnotatedBody
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import org.junit.experimental.runners.Enclosed

@@ -4,10 +4,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.DictType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.DictType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 
 object LinkFunction : BuiltinValue {
     private val kDefinition = TypeVariableDefinition(name = Identifier.of("K"))
