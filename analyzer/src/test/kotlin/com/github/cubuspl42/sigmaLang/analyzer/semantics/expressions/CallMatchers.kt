@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.membership_types.TypeAlike
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import utils.Matcher
 
 class CallMatchers {
