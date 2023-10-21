@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.SymbolLiteral
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleTypeConstructor
@@ -16,7 +17,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.AnyType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SymbolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
@@ -26,15 +27,15 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTuple
 
 class ClassDefinition(
     override val name: Symbol,
-    override val bodyStub: Expression.Stub<Expression>,
+    override val bodyStub: Stub<Expression>,
 ) : Definition {
     object Is : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<MembershipType> = listOf(
+        override val argTypes: List<SpecificType> = listOf(
             AnyInstanceType,
             AnyClassType,
         )
 
-        override val imageType: MembershipType = BoolType
+        override val imageType: SpecificType = BoolType
 
         override fun compute(args: List<Value>): Value {
             val instanceValue = args[0] as DictValue
@@ -81,7 +82,7 @@ class ClassDefinition(
                 term = term.body,
             )
 
-            val classBodyStub = object : Expression.Stub<UnorderedTupleConstructor> {
+            val classBodyStub = object : Stub<UnorderedTupleConstructor> {
                 override val resolved: UnorderedTupleConstructor by lazy {
                     val bodyTypeConstructor = userInstanceTypeStub.resolved
 
@@ -120,11 +121,9 @@ class ClassDefinition(
                                 override val value: Expression = object : AbstractionConstructor() {
                                     override val term: ExpressionTerm? = null
 
-                                    override val metaArgumentType: TupleType? = null
-
                                     override val argumentType: TupleType = bodyType
 
-                                    override val declaredImageType: TypeAlike? = instanceType
+                                    override val declaredImageType: TypeAlike = instanceType
 
                                     override val image: Expression
                                         get() = TODO() // {tag: tag, ...argument}

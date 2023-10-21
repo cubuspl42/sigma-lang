@@ -14,8 +14,8 @@ data class IntLiteralType(
     }
 
     override fun findLowestCommonSupertype(
-        other: MembershipType,
-    ): MembershipType = when (other) {
+        other: SpecificType,
+    ): SpecificType = when (other) {
         this -> this
         is IntType -> IntCollectiveType
         else -> AnyType

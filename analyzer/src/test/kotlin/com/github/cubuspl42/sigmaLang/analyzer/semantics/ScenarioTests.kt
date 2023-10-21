@@ -13,7 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVaria
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
@@ -110,7 +110,7 @@ class ScenarioTests {
                     ),
                 ),
             ).value?.asType
-        ) as MembershipType
+        ) as SpecificType
 
         assertTypeIsEquivalent(
             expected = UnorderedTupleType(
@@ -147,7 +147,7 @@ class ScenarioTests {
                     ),
                 ),
             ),
-            actual = entryOfAbstractionDefinition.computedBodyType.getOrCompute() as MembershipType,
+            actual = entryOfAbstractionDefinition.computedBodyType.getOrCompute() as SpecificType,
         )
 
         // Validate `entryTrueOf`
@@ -170,7 +170,7 @@ class ScenarioTests {
                     ),
                 ),
             ),
-            actual = entryTrueOfAbstractionDefinition.computedBodyType.getOrCompute() as MembershipType,
+            actual = entryTrueOfAbstractionDefinition.computedBodyType.getOrCompute() as SpecificType,
         )
     }
 

@@ -29,15 +29,15 @@ data class OrderedTupleType(
         fun toArgumentDeclaration(): AbstractionConstructor.ArgumentDeclaration? = name?.let {
             AbstractionConstructor.ArgumentDeclaration(
                 name = it,
-                annotatedType = type as MembershipType,
+                annotatedType = type as SpecificType,
             )
         }
     }
 
     data class OrderedTupleMatch(
-        val elementsMatches: List<MembershipType.MatchResult>,
+        val elementsMatches: List<SpecificType.MatchResult>,
         val sizeMatch: SizeMatchResult,
-    ) : MembershipType.PartialMatch() {
+    ) : SpecificType.PartialMatch() {
         sealed class SizeMatchResult
 
         object SizeMatch : SizeMatchResult() {
@@ -92,7 +92,7 @@ data class OrderedTupleType(
 
     override val keyType: PrimitiveType = IntCollectiveType
 
-    override val valueType: MembershipType
+    override val valueType: SpecificType
         get() = TODO("value1 | value2 | ...")
 
     override fun isDefinitelyEmpty(): Boolean = elements.isEmpty()
@@ -112,7 +112,7 @@ data class OrderedTupleType(
             )
 
             val elementResolution = element.type.resolveTypePlaceholders(
-                assignedType = assignedElement.type as MembershipType,
+                assignedType = assignedElement.type as SpecificType,
             )
 
             accumulatedResolution.mergeWith(elementResolution)
@@ -120,11 +120,11 @@ data class OrderedTupleType(
     }
 
     override fun matchShape(
-        assignedType: MembershipType,
-    ): MembershipType.MatchResult = when (assignedType) {
+        assignedType: SpecificType,
+    ): SpecificType.MatchResult = when (assignedType) {
         is OrderedTupleType -> OrderedTupleMatch(
             elementsMatches = elements.zip(assignedType.elements) { element, assignedElement ->
-                element.type.match(assignedType = assignedElement.type as MembershipType)
+                element.type.match(assignedType = assignedElement.type as SpecificType)
             },
             sizeMatch = when {
                 assignedType.elements.size >= elements.size -> OrderedTupleMatch.SizeMatch
@@ -135,7 +135,7 @@ data class OrderedTupleType(
             },
         )
 
-        else -> MembershipType.TotalMismatch(
+        else -> SpecificType.TotalMismatch(
             expectedType = this,
             actualType = assignedType,
         )
@@ -158,9 +158,9 @@ data class OrderedTupleType(
 
     override val asArray: ArrayType by lazy {
         val elementType = elements.map { it.type }.fold(
-            initial = NeverType as MembershipType,
+            initial = NeverType as SpecificType,
         ) { accType, elementType ->
-            accType.findLowestCommonSupertype(elementType as MembershipType)
+            accType.findLowestCommonSupertype(elementType as SpecificType)
         }
 
         ArrayType(
@@ -188,7 +188,7 @@ data class OrderedTupleType(
         } else null
     }.toSet()
 
-    override fun walkRecursive(): Sequence<MembershipType> = elements.asSequence().flatMap {
-        (it.type as MembershipType).walk()
+    override fun walkRecursive(): Sequence<SpecificType> = elements.asSequence().flatMap {
+        (it.type as SpecificType).walk()
     }
 }

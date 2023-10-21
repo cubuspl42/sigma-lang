@@ -1,16 +1,16 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-object NeverType : MembershipType() {
-    data object AssignmentMismatch : MembershipType.Mismatch() {
+object NeverType : SpecificType() {
+    data object AssignmentMismatch : SpecificType.Mismatch() {
         override fun dump(): String = "nothing can be assigned to Never"
     }
 
     override fun findLowestCommonSupertype(
-        other: MembershipType,
-    ): MembershipType = other
+        other: SpecificType,
+    ): SpecificType = other
 
     override fun resolveTypePlaceholders(
-        assignedType: MembershipType,
+        assignedType: SpecificType,
     ): TypePlaceholderResolution = TypePlaceholderResolution.Empty
 
     override fun substituteTypePlaceholders(
@@ -20,10 +20,10 @@ object NeverType : MembershipType() {
     )
 
     override fun match(
-        assignedType: MembershipType,
-    ): MembershipType.MatchResult = AssignmentMismatch
+        assignedType: SpecificType,
+    ): SpecificType.MatchResult = AssignmentMismatch
 
     override fun dumpDirectly(depth: Int): String = "Never"
 
-    override fun walkRecursive(): Sequence<MembershipType> = emptySequence()
+    override fun walkRecursive(): Sequence<SpecificType> = emptySequence()
 }

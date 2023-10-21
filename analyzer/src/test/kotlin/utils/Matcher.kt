@@ -24,10 +24,12 @@ abstract class Matcher<in T> {
         //        @Suppress("TestFunctionName")
         inline fun <reified T> Is(
             matcher: Matcher<T>? = null,
-        ): Matcher<Any> = object : Matcher<Any>() {
-            override fun match(actual: Any) {
+        ): Matcher<Any?> = object : Matcher<Any?>() {
+            override fun match(actual: Any?) {
                 if (actual !is T) {
-                    throw AssertionError("Expected ${T::class.simpleName}, but got ${actual::class.simpleName}")
+                    val actualName = actual?.let { it::class.simpleName } ?: "null"
+
+                    throw AssertionError("Expected ${T::class.simpleName}, but got $actualName")
                 }
 
                 matcher?.match(actual = actual)

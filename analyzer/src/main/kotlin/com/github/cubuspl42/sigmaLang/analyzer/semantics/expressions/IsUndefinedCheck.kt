@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IsUndefinedCheckTerm
 
-abstract class IsUndefinedCheck : Expression() {
+abstract class IsUndefinedCheck : FirstOrderExpression() {
     abstract override val term: IsUndefinedCheckTerm
 
     abstract val argument: Expression

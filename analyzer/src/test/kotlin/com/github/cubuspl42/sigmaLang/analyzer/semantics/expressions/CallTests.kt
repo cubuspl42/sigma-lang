@@ -20,10 +20,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntLiteralType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
@@ -120,7 +122,7 @@ class CallTests {
                         location = SourceLocation(lineIndex = 1, columnIndex = 1),
                         matchResult = OrderedTupleType.OrderedTupleMatch(
                             elementsMatches = listOf(
-                                MembershipType.TotalMismatch(
+                                SpecificType.TotalMismatch(
                                     expectedType = BoolType,
                                     actualType = IntLiteralType(
                                         value = IntValue(value = 1L),
@@ -224,7 +226,7 @@ class CallTests {
                         Identifier.of("key2") to IntLiteralType.of(0L),
                     ),
                 ),
-                actual = call.inferredTypeOrIllType.getOrCompute() as MembershipType,
+                actual = call.inferredTypeOrIllType.getOrCompute() as SpecificType,
             )
         }
 
@@ -346,6 +348,50 @@ class CallTests {
                                 expectedSize = 2,
                             )
                         ).checked(),
+                    ),
+                ),
+                actual = call.directErrors,
+            )
+
+            assertMatches(
+                matcher = Matcher.Equals(IllType),
+                actual = call.inferredTypeOrIllType.getOrCompute(),
+            )
+        }
+
+        @Test
+        fun testKindConstructorCall() {
+            val term = ExpressionSourceTerm.parse(
+                source = "f[false, 1]",
+            ) as PostfixCallSourceTerm
+
+
+            val fKind = GenericType(
+                metaArgumentType = OrderedTupleType.of(TypeType, TypeType),
+            )
+
+            val call = Call.build(
+                Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Identifier.of("f"),
+                            annotatedType = fKind,
+                        ),
+                    ).chainWith(BuiltinScope),
+                ),
+                term = term,
+            ).resolved
+
+            assertMatches(
+                matcher = CollectionMatchers.eachOnce(
+                    elements = setOf(
+                        Matcher.Equals(
+                            Call.NonFunctionCallError(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                                illegalSubjectType = fKind,
+                            ),
+                        ),
                     ),
                 ),
                 actual = call.directErrors,

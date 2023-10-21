@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
@@ -33,7 +33,7 @@ class UnorderedTupleConstructorTests {
                 expected = UnorderedTupleType(
                     valueTypeByName = emptyMap(),
                 ),
-                actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute() as MembershipType,
+                actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute() as SpecificType,
             )
         }
 
@@ -72,7 +72,7 @@ class UnorderedTupleConstructorTests {
                         Identifier.of("key2") to IntCollectiveType,
                     ),
                 ),
-                actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute() as MembershipType,
+                actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute() as SpecificType,
             )
         }
 
@@ -120,7 +120,7 @@ class UnorderedTupleConstructorTests {
                         Identifier.of("key1") to IllType,
                     ),
                 ),
-                actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute() as MembershipType,
+                actual = unorderedTupleConstructor.inferredTypeOrIllType.getOrCompute() as SpecificType,
             )
         }
     }

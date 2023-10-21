@@ -21,6 +21,7 @@ fun solveProblem(n: Int): EvaluationOutcome<Value> {
     println("[Problem $n]")
     println()
 
+    // TODO: Make the test fail?
     if (errors.isNotEmpty()) {
         println("Semantic errors:")
         errors.forEach {

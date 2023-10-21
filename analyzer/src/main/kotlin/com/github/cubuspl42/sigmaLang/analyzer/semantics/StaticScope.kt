@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 
@@ -13,7 +14,7 @@ data class ResolvedDeclaration(
 ) : ResolvedName
 
 data class ResolvedDefinition(
-    val bodyStub: Expression.Stub<Expression>,
+    val bodyStub: Stub<Expression>,
 ) : ResolvedName
 
 interface StaticScope {

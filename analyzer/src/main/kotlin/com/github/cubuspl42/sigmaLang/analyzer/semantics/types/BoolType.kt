@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 object BoolType : PrimitiveType() {
     override fun findLowestCommonSupertype(
-        other: MembershipType,
+        other: SpecificType,
     ) = when (other) {
         is BoolType -> BoolType
         else -> AnyType

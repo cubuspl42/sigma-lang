@@ -12,7 +12,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.*
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 
-abstract class Call : Expression() {
+abstract class Call : FirstOrderExpression() {
     abstract val subject: Expression
 
     abstract val argument: Expression
@@ -125,12 +125,12 @@ abstract class Call : Expression() {
 
     data class NonFunctionCallError(
         override val location: SourceLocation?,
-        val illegalSubjectType: MembershipType,
+        val illegalSubjectType: Type,
     ) : SemanticError
 
     data class InvalidArgumentError(
         override val location: SourceLocation?,
-        val matchResult: MembershipType.MatchResult,
+        val matchResult: SpecificType.MatchResult,
     ) : SemanticError {
         override fun dump(): String = "$location: Invalid argument: ${matchResult.dump()}"
     }
@@ -139,8 +139,8 @@ abstract class Call : Expression() {
         val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         val argumentAnalysis = compute(argument.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
 
-        val subjectType = subjectAnalysis.inferredType as MembershipType
-        val argumentType = argumentAnalysis.inferredType as MembershipType
+        val subjectType = subjectAnalysis.inferredType as Type
+        val argumentType = argumentAnalysis.inferredType as SpecificType
 
         when (subjectType) {
             is FunctionType -> {

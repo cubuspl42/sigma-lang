@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
@@ -15,7 +15,7 @@ object IfFunction : BuiltinValue {
         name = Identifier.of("R"),
     )
 
-    override val type: MembershipType = UniversalFunctionType(
+    override val type: SpecificType = UniversalFunctionType(
         argumentType = OrderedTupleType(
             elements = listOf(
                 OrderedTupleType.Element(

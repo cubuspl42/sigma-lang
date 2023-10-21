@@ -5,19 +5,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassifiedExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ReachableDeclarationSet
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.CyclicComputation
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 
-abstract class Reference : Expression() {
+abstract class Reference : FirstOrderExpression() {
     abstract override val term: ReferenceTerm?
 
     abstract val referredDeclaration: Declaration
@@ -51,7 +48,7 @@ abstract class Reference : Expression() {
                 val outerScope = context.outerScope
 
                 val resolvedIntroduction = outerScope.resolveName(name = referredName) ?: run {
-                    throw IllegalStateException()
+                    throw IllegalStateException("Unresolved name at compile-time: $referredName")
                 }
 
                 when (resolvedIntroduction) {

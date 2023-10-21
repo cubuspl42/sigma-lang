@@ -3,14 +3,12 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
 
 class NamespaceStaticBlock(
@@ -90,5 +88,5 @@ class NamespaceDefinition(
 //    override val name: Identifier
 //        get() = TODO()
 
-    override val bodyStub: Expression.Stub<Expression> = Expression.Stub.of(body)
+    override val bodyStub: Stub<Expression> = Stub.of(body)
 }

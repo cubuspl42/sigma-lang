@@ -7,8 +7,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.FirstOrderExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
@@ -33,7 +35,7 @@ object UserVariableDefinition {
         return object : Definition {
             override val name: Symbol = term.name
 
-            override val bodyStub: Expression.Stub<Expression> = object : Expression.Stub<Expression> {
+            override val bodyStub: Stub<Expression> = object : Stub<Expression> {
                 override val resolved: Expression by lazy {
                     val body = bodyStub.resolved
 
@@ -58,30 +60,29 @@ class TypeAnnotatedBody(
     override val outerScope: StaticScope,
     private val declaredTypeAnalysis: TypeExpression.DiagnosedAnalysis,
     private val body: Expression,
-) : Expression() {
+) : FirstOrderExpression() {
     data class UnmatchedInferredTypeError(
         override val location: SourceLocation?,
-        val matchResult: MembershipType.MatchResult,
+        val matchResult: SpecificType.MatchResult,
     ) : SemanticError
 
-    private val declaredType = declaredTypeAnalysis?.typeOrIllType
+    private val declaredType = declaredTypeAnalysis.typeOrIllType
 
     override val term: ExpressionTerm? = null
 
     override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = buildDiagnosedAnalysisComputation {
-
         val bodyAnalysis = compute(body.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         val inferredType = bodyAnalysis.inferredType
 
-        val unmatchedInferredTypeError = if (declaredType != null) {
-            val matchResult = declaredType.match(inferredType as MembershipType)
+        val unmatchedInferredTypeError = run {
+            val matchResult = declaredType.match(inferredType as SpecificType)
 
             if (matchResult.isFull()) null
             else UnmatchedInferredTypeError(
                 location = body.location,
                 matchResult = matchResult,
             )
-        } else null
+        }
 
         DiagnosedAnalysis(
             analysis = Analysis(

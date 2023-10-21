@@ -1,6 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import utils.assertTypeIsEquivalent
@@ -65,7 +64,7 @@ class UnorderedTupleTypeTests {
             )
 
             assertEquals(
-                expected = MembershipType.TotalMatch,
+                expected = SpecificType.TotalMatch,
                 actual = unorderedTupleType.match(
                     assignedType = unionType,
                 ),

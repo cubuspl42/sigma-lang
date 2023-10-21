@@ -19,8 +19,8 @@ data class SymbolType(
     override val asLiteral = this
 
     override fun findLowestCommonSupertype(
-        other: MembershipType,
-    ): MembershipType = when (other) {
+        other: SpecificType,
+    ): SpecificType = when (other) {
         this -> this
         else -> AnyType
     }

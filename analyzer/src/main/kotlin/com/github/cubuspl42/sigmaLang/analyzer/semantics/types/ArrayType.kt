@@ -4,18 +4,18 @@ data class ArrayType(
     val elementType: TypeAlike,
 ) : TableType() {
     data class ArrayMatch(
-        val elementMatch: MembershipType.MatchResult,
-    ) : MembershipType.PartialMatch() {
+        val elementMatch: SpecificType.MatchResult,
+    ) : SpecificType.PartialMatch() {
         override fun isFull(): Boolean = elementMatch.isFull()
         override fun dump(): String = "Array element type:\n" + elementMatch.dump()
     }
 
     data class OrderedTupleMatch(
-        val elementsMatches: List<MembershipType.MatchResult>,
-    ) : MembershipType.PartialMatch() {
+        val elementsMatches: List<SpecificType.MatchResult>,
+    ) : SpecificType.PartialMatch() {
         companion object {
             fun dumpElementsMatches(
-                elementsMatches: List<MembershipType.MatchResult>,
+                elementsMatches: List<SpecificType.MatchResult>,
             ): String {
                 val firstMismatchIndexed = elementsMatches.withIndex().firstOrNull { !it.value.isFull() }
 
@@ -56,7 +56,7 @@ data class ArrayType(
         )
 
         return elementType.resolveTypePlaceholders(
-            assignedType = assignedArrayType.elementType as MembershipType,
+            assignedType = assignedArrayType.elementType as SpecificType,
         )
     }
 
@@ -70,21 +70,21 @@ data class ArrayType(
         )
     }
 
-    override fun matchShape(assignedType: MembershipType): MembershipType.MatchResult =
+    override fun matchShape(assignedType: SpecificType): SpecificType.MatchResult =
         when (assignedType) {
             is ArrayType -> ArrayMatch(
                 elementMatch = elementType.match(
-                    assignedType = assignedType.elementType as MembershipType,
+                    assignedType = assignedType.elementType as SpecificType,
                 ),
             )
 
             is OrderedTupleType -> OrderedTupleMatch(
                 elementsMatches = assignedType.elements.map {
-                    elementType.match(assignedType = it.type as MembershipType)
+                    elementType.match(assignedType = it.type as SpecificType)
                 },
             )
 
-            else -> MembershipType.TotalMismatch(
+            else -> SpecificType.TotalMismatch(
                 expectedType = this,
                 actualType = assignedType,
             )
@@ -92,5 +92,5 @@ data class ArrayType(
 
     override fun dumpDirectly(depth: Int): String = "[${elementType.dumpRecursively(depth = depth + 1)}*]"
 
-    override fun walkRecursive(): Sequence<MembershipType> = (elementType as MembershipType).walk()
+    override fun walkRecursive(): Sequence<SpecificType> = (elementType as SpecificType).walk()
 }

@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
@@ -24,8 +24,8 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
             val name: Symbol,
             val valueAnalysis: Expression.Analysis,
         ) {
-            val inferredValueType: MembershipType
-                get() = valueAnalysis.inferredType as MembershipType
+            val inferredValueType: SpecificType
+                get() = valueAnalysis.inferredType as SpecificType
         }
 
 

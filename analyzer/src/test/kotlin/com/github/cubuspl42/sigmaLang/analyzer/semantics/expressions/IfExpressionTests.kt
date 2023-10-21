@@ -4,7 +4,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResult
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntLiteralType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation

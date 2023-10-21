@@ -6,7 +6,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
@@ -30,7 +29,7 @@ object TypeExpression {
     fun build(
         outerMetaScope: StaticScope,
         term: ExpressionTerm,
-    ): Expression.Stub<Expression> = Expression.build(
+    ): Stub<Expression> = Expression.build(
         context = Expression.BuildContext(
             outerMetaScope = BuiltinScope,
             outerScope = outerMetaScope,

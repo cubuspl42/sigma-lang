@@ -21,10 +21,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.ArrayTypeConst
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.DictTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
@@ -47,63 +44,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleConstruct
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
-
-class AtomicExpression(
-    private val type: MembershipType,
-    private val valueThunk: Thunk<Value>,
-) : Expression() {
-    companion object {
-        fun forType(
-            type: TypeAlike,
-        ): AtomicExpression = AtomicExpression(
-            type = TypeType,
-            value = type.asValue,
-        )
-    }
-
-    constructor(
-        type: MembershipType,
-        value: Value,
-    ) : this(
-        type = type,
-        valueThunk = Thunk.pure(value),
-    )
-
-    override val outerScope: StaticScope = StaticScope.Empty
-
-    override val term: ExpressionTerm? = null
-
-    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = Computation.pure(
-        DiagnosedAnalysis(
-            analysis = Analysis(inferredType = type),
-            directErrors = emptySet(),
-        ),
-    )
-
-    override val subExpressions: Set<Expression> = emptySet()
-
-    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = valueThunk
-}
-
-class AtomicTypeExpression(
-    private val type: MembershipType,
-    private val valueThunk: Thunk<Value>,
-) : Expression() {
-    override val outerScope: StaticScope = StaticScope.Empty
-
-    override val term: ExpressionTerm? = null
-
-    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = Computation.pure(
-        DiagnosedAnalysis(
-            analysis = Analysis(inferredType = type),
-            directErrors = emptySet(),
-        ),
-    )
-
-    override val subExpressions: Set<Expression> = emptySet()
-
-    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = valueThunk
-}
 
 abstract class Expression {
     abstract class Computation<out R> {
@@ -191,18 +131,6 @@ abstract class Expression {
         ): R = context.block()
     }
 
-    interface Stub<out T> {
-        companion object {
-            fun <T> of(
-                value: T,
-            ): Stub<T> = object : Stub<T> {
-                override val resolved: T = value
-            }
-        }
-
-        val resolved: T
-    }
-
     fun buildDiagnosedAnalysisComputation(
         block: Computation.Context.() -> DiagnosedAnalysis?,
     ): Computation<DiagnosedAnalysis?> = Computation {
@@ -221,16 +149,12 @@ abstract class Expression {
         abstract val inferredType: TypeAlike
     }
 
-    fun Analysis(
-        inferredType: TypeAlike,
-    ): Analysis = object : Analysis() {
-        override val inferredType: TypeAlike = inferredType
-    }
 
     data class DiagnosedAnalysis(
         val analysis: Analysis?,
         val directErrors: Set<SemanticError>,
     ) {
+
         companion object {
             fun fromError(
                 error: SemanticError,
@@ -239,6 +163,9 @@ abstract class Expression {
                 directErrors = setOf(error),
             )
         }
+
+        val inferredType: TypeAlike?
+            get() = analysis?.inferredType
     }
 
     data class BuildContext(
@@ -259,14 +186,20 @@ abstract class Expression {
     }
 
     companion object {
+        fun Analysis(
+            inferredType: TypeAlike,
+        ): Analysis = object : Analysis() {
+            override val inferredType: TypeAlike = inferredType
+        }
+
         fun build(
             context: BuildContext,
             term: ExpressionTerm,
-        ): Expression.Stub<Expression> = when (term) {
+        ): Stub<Expression> = when (term) {
             is AbstractionConstructorTerm -> AbstractionConstructor.build(
                 context = context,
                 term = term,
-            )
+            ).asStub()
 
             is ArrayTypeConstructorTerm -> ArrayTypeConstructor.build(
                 context = context,
@@ -365,6 +298,9 @@ abstract class Expression {
             ).resolved
         }
     }
+
+    val constClassified: ConstExpression?
+        get() = classified as? ConstExpression
 
     val location: SourceLocation?
         get() = term?.location

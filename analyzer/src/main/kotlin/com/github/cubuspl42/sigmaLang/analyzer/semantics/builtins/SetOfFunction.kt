@@ -8,16 +8,15 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 
 object SetOfFunction : BuiltinValue {
     private val elementTypeDefinition = TypeVariableDefinition(name = Identifier.of("elementType"))
 
-    override val type: MembershipType = UniversalFunctionType(
+    override val type: SpecificType = UniversalFunctionType(
         argumentType = OrderedTupleType.of(
             ArrayType(elementType = elementTypeDefinition.typePlaceholder),
         ),

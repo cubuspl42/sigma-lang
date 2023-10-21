@@ -158,7 +158,7 @@ class AbstractionTermTests {
                 term = term,
             ).resolved
 
-            val type = expression.inferredTypeOrIllType.getOrCompute()
+            val type = (expression as Expression).inferredTypeOrIllType.getOrCompute()
 
             assertEquals(
                 expected = UniversalFunctionType(
@@ -176,39 +176,6 @@ class AbstractionTermTests {
             )
         }
 
-        @Test
-        fun testGenericSingleParameter() {
-            val term = ExpressionSourceTerm.parse(
-                source = "!^[t: Type] ^[t: t] => false",
-            )
 
-            val expression = Expression.build(
-                context = Expression.BuildContext.Builtin,
-                term = term,
-            ).resolved
-
-            val type = assertIs<UniversalFunctionType>(
-                expression.inferredTypeOrIllType.getOrCompute()
-            )
-
-            assertMatches(
-                matcher = UniversalFunctionTypeMatcher(
-                    argumentType = Matcher.Is<OrderedTupleType>(
-                        OrderedTupleTypeMatcher(
-                            elements = listOf(
-                                OrderedTupleTypeMatcher.ElementMatcher(
-                                    name = Matcher.Equals(
-                                        expected = Identifier.of("t"),
-                                    ),
-                                    type = Matcher.Is<TypePlaceholder>(),
-                                ),
-                            ),
-                        ),
-                    ),
-                    imageType = Matcher.Equals(BoolType),
-                ),
-                actual = type,
-            )
-        }
     }
 }

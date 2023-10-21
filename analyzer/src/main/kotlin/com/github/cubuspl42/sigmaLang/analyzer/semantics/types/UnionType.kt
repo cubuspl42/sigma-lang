@@ -2,11 +2,11 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 data class UnionType(
     val memberTypes: Set<TypeAlike>,
-) : MembershipType() {
+) : SpecificType() {
     data class UnionMatch(
         val expectedType: UnionType,
-        val unmatchedTypes: Set<MembershipType>,
-    ) : MembershipType.PartialMatch() {
+        val unmatchedTypes: Set<SpecificType>,
+    ) : SpecificType.PartialMatch() {
         override fun isFull(): Boolean = false
 
         override fun dump(): String =
@@ -15,8 +15,8 @@ data class UnionType(
 
     data class AssignedUnionMatch(
         val expectedType: ShapeType,
-        val nonMatchingTypes: Set<MembershipType>,
-    ) : MembershipType.PartialMatch() {
+        val nonMatchingTypes: Set<SpecificType>,
+    ) : SpecificType.PartialMatch() {
         override fun isFull(): Boolean = false
 
         override fun dump(): String =
@@ -27,13 +27,13 @@ data class UnionType(
         memberTypes.joinToString(separator = " | ") { it.dumpRecursively(depth = depth + 1) }
 
     override fun findLowestCommonSupertype(
-        other: MembershipType,
-    ): MembershipType = UnionType(
+        other: SpecificType,
+    ): SpecificType = UnionType(
         memberTypes + other, // This can actually work for any type; `findLowestCommonSupertype` should be re-thought
     )
 
     override fun resolveTypePlaceholders(
-        assignedType: MembershipType,
+        assignedType: SpecificType,
     ): TypePlaceholderResolution = TypePlaceholderResolution.Empty
 
     override fun substituteTypePlaceholders(
@@ -49,8 +49,8 @@ data class UnionType(
     }
 
     override fun match(
-        assignedType: MembershipType,
-    ): MembershipType.MatchResult {
+        assignedType: SpecificType,
+    ): SpecificType.MatchResult {
         val assignedMemberTypes = if (assignedType is UnionType) {
             assignedType.memberTypes
         } else {
@@ -58,7 +58,7 @@ data class UnionType(
         }
 
         val unmatchedTypes = assignedMemberTypes.mapNotNull { assignedMemberType ->
-            (assignedMemberType as MembershipType).takeIf { !isAssignable(assignedType = it) }
+            (assignedMemberType as SpecificType).takeIf { !isAssignable(assignedType = it) }
         }.toSet()
 
         return if (unmatchedTypes.isNotEmpty()) {
@@ -67,7 +67,7 @@ data class UnionType(
                 unmatchedTypes = unmatchedTypes,
             )
         } else {
-            MembershipType.TotalMatch
+            SpecificType.TotalMatch
         }
     }
 
@@ -75,12 +75,12 @@ data class UnionType(
         /**
          * Non-union type
          */
-        assignedType: MembershipType,
+        assignedType: SpecificType,
     ): Boolean = memberTypes.any { memberType ->
         memberType.match(assignedType = assignedType).isFull()
     }
 
-    override fun walkRecursive(): Sequence<MembershipType> = memberTypes.asSequence().flatMap {
-        (it as MembershipType).walk()
+    override fun walkRecursive(): Sequence<SpecificType> = memberTypes.asSequence().flatMap {
+        (it as SpecificType).walk()
     }
 }
