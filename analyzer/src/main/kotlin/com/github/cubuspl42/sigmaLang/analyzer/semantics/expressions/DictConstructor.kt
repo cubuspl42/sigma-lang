@@ -9,13 +9,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.PrimitiveType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
-abstract class DictConstructor : Expression() {
+abstract class DictConstructor : FirstOrderExpression() {
     abstract override val term: DictConstructorTerm
 
     abstract val associations: List<Association>
@@ -29,11 +29,11 @@ abstract class DictConstructor : Expression() {
             val keyAnalysis: Expression.Analysis,
             val valueAnalysis: Expression.Analysis,
         ) {
-            val inferredKeyType: MembershipType
-                get() = keyAnalysis.inferredType as MembershipType
+            val inferredKeyType: SpecificType
+                get() = keyAnalysis.inferredType as SpecificType
 
-            val inferredValueType: MembershipType
-                get() = valueAnalysis.inferredType as MembershipType
+            val inferredValueType: SpecificType
+                get() = valueAnalysis.inferredType as SpecificType
         }
 
         companion object {
@@ -94,11 +94,11 @@ abstract class DictConstructor : Expression() {
 
     data class NonPrimitiveKeyTypeError(
         override val location: SourceLocation,
-        val keyType: MembershipType,
+        val keyType: SpecificType,
     ) : InferredKeyTypeError, SemanticError
 
     data class InferredValueTypeResult(
-        val valueType: MembershipType,
+        val valueType: SpecificType,
     )
 
     data class InconsistentValueTypeError(
@@ -116,7 +116,7 @@ abstract class DictConstructor : Expression() {
         val distinctiveKeyTypes = associationsAnalyses.map { it.inferredKeyType }.toSet()
         val distinctiveValueTypes = associationsAnalyses.map { it.inferredValueType }.toSet()
 
-        fun analyzeKeys(): Pair<MembershipType, SemanticError?> {
+        fun analyzeKeys(): Pair<SpecificType, SemanticError?> {
             val keyType = distinctiveKeyTypes.singleOrNull()
 
             return if (keyType != null) {
@@ -143,7 +143,7 @@ abstract class DictConstructor : Expression() {
             }
         }
 
-        fun analyzeValues(): Pair<MembershipType, SemanticError?> {
+        fun analyzeValues(): Pair<SpecificType, SemanticError?> {
             val valueType = distinctiveValueTypes.singleOrNull()
 
             return if (valueType != null) {

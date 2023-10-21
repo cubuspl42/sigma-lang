@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
@@ -17,7 +17,7 @@ object EmptySetFunction : BuiltinValue {
         name = Identifier.of("elementType"),
     )
 
-    override val type: MembershipType = UniversalFunctionType(
+    override val type: SpecificType = UniversalFunctionType(
         argumentType = OrderedTupleType.Empty,
         imageType = SetType(
             elementType = elementTypeDefinition.typePlaceholder,

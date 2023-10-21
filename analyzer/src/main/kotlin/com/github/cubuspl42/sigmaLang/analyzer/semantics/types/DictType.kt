@@ -9,9 +9,9 @@ data class DictType(
     override val valueType: TypeAlike,
 ) : TableType() {
     data class DictMatch(
-        val keyMatch: MembershipType.MatchResult,
-        val valueMatch: MembershipType.MatchResult,
-    ) : MembershipType.PartialMatch() {
+        val keyMatch: SpecificType.MatchResult,
+        val valueMatch: SpecificType.MatchResult,
+    ) : SpecificType.PartialMatch() {
         override fun isFull(): Boolean = keyMatch.isFull() && valueMatch.isFull()
         override fun dump(): String = when {
             !keyMatch.isFull() -> "key: " + keyMatch.dump()
@@ -33,11 +33,11 @@ data class DictType(
         )
 
         val keyResolution = keyType.resolveTypePlaceholders(
-            assignedType = assignedType.keyType as MembershipType,
+            assignedType = assignedType.keyType as SpecificType,
         )
 
         val valueResolution = valueType.resolveTypePlaceholders(
-            assignedType = assignedType.valueType as MembershipType,
+            assignedType = assignedType.valueType as SpecificType,
         )
 
         return keyResolution.mergeWith(valueResolution)
@@ -60,33 +60,33 @@ data class DictType(
     }
 
     override fun matchShape(
-        assignedType: MembershipType,
-    ): MembershipType.MatchResult = when (val sealedAssignedType = assignedType) {
+        assignedType: SpecificType,
+    ): SpecificType.MatchResult = when (val sealedAssignedType = assignedType) {
         is DictType -> DictMatch(
             keyMatch = sealedAssignedType.keyType.match(
-                assignedType = keyType as MembershipType,
+                assignedType = keyType as SpecificType,
             ),
             valueMatch = valueType.match(
-                assignedType = sealedAssignedType.valueType as MembershipType,
+                assignedType = sealedAssignedType.valueType as SpecificType,
             ),
         )
 
         is UnorderedTupleType -> when {
-            sealedAssignedType.isDefinitelyEmpty() -> MembershipType.TotalMatch
-            else -> MembershipType.TotalMismatch(
+            sealedAssignedType.isDefinitelyEmpty() -> SpecificType.TotalMatch
+            else -> SpecificType.TotalMismatch(
                 expectedType = this,
                 actualType = sealedAssignedType,
             )
         }
 
-        else -> MembershipType.TotalMismatch(
+        else -> SpecificType.TotalMismatch(
             expectedType = this,
             actualType = sealedAssignedType,
         )
     }
 
-    override fun walkRecursive(): Sequence<MembershipType> = sequence {
-        yieldAll((keyType as MembershipType).walk())
-        yieldAll((valueType as MembershipType).walk())
+    override fun walkRecursive(): Sequence<SpecificType> = sequence {
+        yieldAll((keyType as SpecificType).walk())
+        yieldAll((valueType as SpecificType).walk())
     }
 }

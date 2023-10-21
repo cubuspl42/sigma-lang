@@ -13,7 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.StringLiteralT
 data class StringLiteral(
     override val term: StringLiteralTerm,
     override val outerScope: StaticScope,
-) : Expression() {
+) : FirstOrderExpression() {
     companion object {
         fun build(
             context: BuildContext,

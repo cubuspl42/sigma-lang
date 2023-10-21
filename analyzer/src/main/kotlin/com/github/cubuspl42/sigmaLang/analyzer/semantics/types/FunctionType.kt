@@ -3,8 +3,8 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 sealed class FunctionType : ShapeType() {
     // This can be improved
     override fun findLowestCommonSupertype(
-        other: MembershipType,
-    ): MembershipType = AnyType
+        other: SpecificType,
+    ): SpecificType = AnyType
 
     abstract override fun substituteTypePlaceholders(resolution: TypePlaceholderResolution): TypePlaceholderSubstitution<TypeAlike>
 

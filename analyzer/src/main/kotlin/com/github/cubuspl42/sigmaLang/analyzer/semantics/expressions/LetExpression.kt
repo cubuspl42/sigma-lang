@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionT
 
 data class LetExpression(
     val definitionBlock: VariableDefinitionBlock,
-    val resultStub: Expression.Stub<Expression>,
+    val resultStub: Stub<Expression>,
 ) {
     companion object {
         fun build(

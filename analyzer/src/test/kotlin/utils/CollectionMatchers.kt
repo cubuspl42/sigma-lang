@@ -1,5 +1,7 @@
 package utils
 
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
+
 object CollectionMatchers {
     fun <E> eachOnce(
         elements: Set<Matcher<E>>,
@@ -49,6 +51,14 @@ object CollectionMatchers {
         override fun match(actual: Collection<Any?>) {
             if (actual.size != expectedSize) {
                 throw AssertionError("Unexpected collection size. Actual: ${actual.size}, expected: $expectedSize")
+            }
+        }
+    }
+
+    fun isEmpty(): Matcher<Collection<Any?>> = object : Matcher<Collection<Any?>>() {
+        override fun match(actual: Collection<Any?>) {
+            if (actual.isNotEmpty()) {
+                throw AssertionError("Expected empty collection, but got $actual")
             }
         }
     }

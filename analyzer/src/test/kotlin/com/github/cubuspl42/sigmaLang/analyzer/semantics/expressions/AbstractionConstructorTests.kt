@@ -21,7 +21,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntType
 import utils.Matcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
@@ -29,6 +28,7 @@ import utils.assertMatches
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
+import utils.checked
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -43,7 +43,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] -> Int => a + 3",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructor.buildDirectly(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -63,7 +63,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] -> Bool => 3 + 4",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructor.buildDirectly(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -88,35 +88,42 @@ class AbstractionConstructorTests {
                 """.trimIndent(),
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor by AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            ).resolved
-
-            val inferredType = assertIs<FunctionType>(
-                value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
             )
-
-            val argumentType = assertIs<OrderedTupleType>(inferredType.argumentType)
 
             assertMatches(
-                matcher = OrderedTupleTypeMatcher(
-                    elements = listOf(
-                        OrderedTupleTypeMatcher.ElementMatcher(
-                            name = Matcher.Equals(Identifier.of("a")),
-                            type = Matcher.Is<TypePlaceholder>(),
+                matcher = KindConstructorMatcher(
+                    metaArgumentType = OrderedTupleTypeMatcher(
+                        elements = listOf(
+                            OrderedTupleTypeMatcher.ElementMatcher(
+                                name = Matcher.Equals(Identifier.of("e")),
+                                type = Matcher.Is<TypeType>(),
+                            ),
                         ),
-                    ),
-                ),
-                actual = argumentType,
+                    ).checked()
+                ).checked(),
+                actual = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
             )
 
-            assertEquals(
-                expected = argumentType.elements.first().type,
-                actual = assertIs<TypePlaceholder>(inferredType.imageType),
-            )
+//            assertMatches(
+//                matcher = OrderedTupleTypeMatcher(
+//                    elements = listOf(
+//                        OrderedTupleTypeMatcher.ElementMatcher(
+//                            name = Matcher.Equals(Identifier.of("a")),
+//                            type = Matcher.Is<TypePlaceholder>(),
+//                        ),
+//                    ),
+//                ),
+//                actual = argumentType,
+//            )
+//
+//            assertEquals(
+//                expected = argumentType.elements.first().type,
+//                actual = assertIs<TypePlaceholder>(inferredType.imageType),
+//            )
         }
-
 
         @Test
         @Ignore // TODO: Type constructor kinds
@@ -135,7 +142,7 @@ class AbstractionConstructorTests {
                     """.trimIndent(),
             ) as AbstractionConstructorSourceTerm
 
-            val abstraction = AbstractionConstructor.build(
+            val abstraction = AbstractionConstructor.buildDirectly(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -212,7 +219,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => 2 + 3",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructor.buildDirectly(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -233,7 +240,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => a",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructor.buildDirectly(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -262,7 +269,7 @@ class AbstractionConstructorTests {
                 term = term,
             ).resolved
 
-            val type = expression.inferredTypeOrIllType.getOrCompute()
+            val type = (expression as Expression).inferredTypeOrIllType.getOrCompute()
 
             assertEquals(
                 expected = UniversalFunctionType(
@@ -376,7 +383,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => a * 2",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructor.buildDirectly(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -477,7 +484,7 @@ class AbstractionConstructorTests {
     class EvaluationTests {
         @Test
         fun testUnorderedArgumentTuple() {
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructor.buildDirectly(
                 context = Expression.BuildContext.Builtin, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionConstructorSourceTerm

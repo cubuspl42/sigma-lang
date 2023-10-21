@@ -12,10 +12,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
-import utils.CollectionMatchers
 import utils.FakeStaticBlock
 import utils.FakeUserDeclaration
-import utils.assertMatches
 import utils.assertMatchesEachInOrder
 import utils.assertMatchesEachOnce
 import kotlin.test.Test

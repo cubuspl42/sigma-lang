@@ -7,25 +7,25 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadTerm
 
-abstract class FieldRead : Expression() {
+abstract class FieldRead : FirstOrderExpression() {
     abstract override val term: FieldReadTerm
 
     abstract val subject: Expression
 
     data class InvalidSubjectTypeError(
         override val location: SourceLocation?,
-        val invalidSubjectType: MembershipType,
+        val invalidSubjectType: SpecificType,
     ) : SemanticError
 
     sealed interface InferredFieldTypeOutcome
 
     data class InferredFieldTypeResult(
-        val fieldType: MembershipType,
+        val fieldType: SpecificType,
     ) : InferredFieldTypeOutcome
 
     data class MissingFieldError(
@@ -64,7 +64,7 @@ abstract class FieldRead : Expression() {
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
 
-        val inferredSubjectType = subjectAnalysis.inferredType as MembershipType
+        val inferredSubjectType = subjectAnalysis.inferredType as SpecificType
         val validSubjectType = inferredSubjectType as? UnorderedTupleType
 
         if (validSubjectType != null) {
@@ -73,7 +73,7 @@ abstract class FieldRead : Expression() {
             if (fieldType != null) {
                 DiagnosedAnalysis(
                     analysis = Analysis(
-                        inferredType = fieldType as MembershipType,
+                        inferredType = fieldType as SpecificType,
                     ),
                     directErrors = emptySet(),
                 )

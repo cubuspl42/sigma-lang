@@ -29,12 +29,12 @@ abstract class UnorderedTupleType : TupleType() {
 
     data class Entry(
         val name: Symbol,
-        val typeThunk: Thunk<MembershipType>,
+        val typeThunk: Thunk<SpecificType>,
     )
 
     data class UnorderedTupleMatch(
         val valuesMatches: Map<Symbol, ValueMatchResult>,
-    ) : MembershipType.PartialMatch() {
+    ) : SpecificType.PartialMatch() {
         sealed class ValueMatchResult {
             abstract fun isFull(): Boolean
 
@@ -42,7 +42,7 @@ abstract class UnorderedTupleType : TupleType() {
         }
 
         data class PresentValueMatch(
-            val valueMatch: MembershipType.MatchResult,
+            val valueMatch: SpecificType.MatchResult,
         ) : ValueMatchResult() {
             override fun isFull(): Boolean = valueMatch.isFull()
 
@@ -69,7 +69,7 @@ abstract class UnorderedTupleType : TupleType() {
 
     companion object {
         val Empty = object : UnorderedTupleType() {
-            override val valueTypeThunkByName: Map<Symbol, Thunk<MembershipType>> = emptyMap()
+            override val valueTypeThunkByName: Map<Symbol, Thunk<SpecificType>> = emptyMap()
         }
 
         fun fromEntries(
@@ -92,7 +92,7 @@ abstract class UnorderedTupleType : TupleType() {
     override val keyType: PrimitiveType
         get() = TODO("key1 | key2 | ...")
 
-    override val valueType: MembershipType
+    override val valueType: SpecificType
         get() = TODO("value1 | value2 | ...")
 
     override fun isDefinitelyEmpty(): Boolean = valueTypeThunkByName.isEmpty()
@@ -110,7 +110,7 @@ abstract class UnorderedTupleType : TupleType() {
             )
 
             val valueResolution = valueType.resolveTypePlaceholders(
-                assignedType = assignedValueType as MembershipType,
+                assignedType = assignedValueType as SpecificType,
             )
 
             accumulatedResolution.mergeWith(valueResolution)
@@ -118,8 +118,8 @@ abstract class UnorderedTupleType : TupleType() {
     }
 
     override fun matchShape(
-        assignedType: MembershipType,
-    ): MembershipType.MatchResult = when (assignedType) {
+        assignedType: SpecificType,
+    ): SpecificType.MatchResult = when (assignedType) {
         is UnorderedTupleType -> UnorderedTupleMatch(
             valuesMatches = valueTypeByName.mapValues { (name, valueType) ->
                 val assignedValueType = assignedType.getFieldType(key = name)
@@ -127,7 +127,7 @@ abstract class UnorderedTupleType : TupleType() {
                 when {
                     assignedValueType != null -> UnorderedTupleMatch.PresentValueMatch(
                         valueMatch = valueType.match(
-                            assignedType = assignedValueType as MembershipType,
+                            assignedType = assignedValueType as SpecificType,
                         )
                     )
 
@@ -136,21 +136,21 @@ abstract class UnorderedTupleType : TupleType() {
             },
         )
 
-        else -> MembershipType.TotalMismatch(
+        else -> SpecificType.TotalMismatch(
             expectedType = this,
             actualType = assignedType,
         )
     }
 
-    override fun walkRecursive(): Sequence<MembershipType> =
-        valueTypeByName.values.asSequence().flatMap { (it as MembershipType).walk() }
+    override fun walkRecursive(): Sequence<SpecificType> =
+        valueTypeByName.values.asSequence().flatMap { (it as SpecificType).walk() }
 
     override fun toArgumentDeclarationBlock(): AbstractionConstructor.ArgumentStaticBlock =
         AbstractionConstructor.ArgumentStaticBlock(
             argumentDeclarations = valueTypeByName.map { (name, type) ->
                 AbstractionConstructor.ArgumentDeclaration(
                     name = name,
-                    annotatedType = type as MembershipType,
+                    annotatedType = type as SpecificType,
                 )
             }.toSet(),
         )
@@ -178,7 +178,7 @@ abstract class UnorderedTupleType : TupleType() {
 
     override fun isNonEquivalentToDirectly(
         innerContext: NonEquivalenceContext,
-        otherType: MembershipType,
+        otherType: SpecificType,
     ): Boolean {
         if (otherType !is UnorderedTupleType) return true
 
@@ -188,9 +188,9 @@ abstract class UnorderedTupleType : TupleType() {
             val thisValueType = getValueType(name = key) ?: return true
             val otherValueType = otherType.getValueType(name = key) ?: return true
 
-            (thisValueType as MembershipType).isNonEquivalentToRecursively(
+            (thisValueType as SpecificType).isNonEquivalentToRecursively(
                 outerContext = innerContext,
-                otherType = otherValueType as MembershipType,
+                otherType = otherValueType as SpecificType,
             )
         }
     }

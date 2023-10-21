@@ -17,7 +17,7 @@ class UnionTypeTests {
             )
 
             assertEquals(
-                expected = MembershipType.TotalMatch,
+                expected = SpecificType.TotalMatch,
                 actual = unionType.match(
                     assignedType = IntCollectiveType,
                 ),
@@ -63,7 +63,7 @@ class UnionTypeTests {
             )
 
             assertEquals(
-                expected = MembershipType.TotalMatch,
+                expected = SpecificType.TotalMatch,
                 actual = unionType.match(
                     assignedType = IntLiteralType(
                         value = IntValue.Zero,

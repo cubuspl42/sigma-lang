@@ -5,8 +5,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TableType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
@@ -17,14 +18,14 @@ object ArrayTypeConstructor : WrapperTypeConstructor() {
     fun build(
         context: Expression.BuildContext,
         term: ArrayTypeConstructorTerm,
-    ): Expression.Stub<Call> {
+    ): Stub<Call> {
         val subjectStub = Reference.build(
             context,
             term = null,
             referredName = Name,
         )
 
-        return object : Expression.Stub<Call> {
+        return object : Stub<Call> {
             override val resolved: Call = object : Call() {
                 override val term: ExpressionTerm? = null
 
@@ -48,7 +49,7 @@ object ArrayTypeConstructor : WrapperTypeConstructor() {
 
     override val argumentType: TableType = ArrayType(elementType = TypeType)
 
-    override fun wrapType(wrappedType: TypeAlike): MembershipType {
+    override fun wrapType(wrappedType: TypeAlike): SpecificType {
         return ArrayType(
             elementType = wrappedType,
         )

@@ -105,11 +105,6 @@ class ModuleTests {
 
             assertEquals(
                 expected = IntCollectiveType,
-                actual = bazDefinition.body.inferredTypeOrIllType.getOrCompute(),
-            )
-
-            assertEquals(
-                expected = IntCollectiveType,
                 actual = bazDefinition.computedBodyType.getOrCompute(),
             )
 

@@ -4,13 +4,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
@@ -41,7 +39,7 @@ class UnorderedTupleTypeConstructorTests {
 
         val actualType = assertNotNull(
             actual = unorderedTupleTypeConstructor.bind(dynamicScope = DynamicScope.Empty).value?.asType,
-        ) as MembershipType
+        ) as SpecificType
 
         assertTypeIsEquivalent(
             expected = UnorderedTupleType(
@@ -83,7 +81,7 @@ class UnorderedTupleTypeConstructorTests {
             ),
         )
 
-        val classifiedType = assertNotNull(valueClassification.valueThunk.value?.asType) as MembershipType
+        val classifiedType = assertNotNull(valueClassification.valueThunk.value?.asType) as SpecificType
 
         assertTypeIsEquivalent(
             expected = expectedType,
@@ -94,7 +92,7 @@ class UnorderedTupleTypeConstructorTests {
             unorderedTupleTypeConstructor.bind(
                 dynamicScope = DynamicScope.Empty,
             ).value?.asType,
-        ) as MembershipType
+        ) as SpecificType
 
         assertTypeIsEquivalent(
             expected = expectedType,
@@ -124,7 +122,7 @@ class UnorderedTupleTypeConstructorTests {
 
         assertEquals(
             expected = TypeType,
-            actual = result.inferredTypeOrIllType.getOrCompute(),
+            actual = (result as Expression).inferredTypeOrIllType.getOrCompute(),
         )
 
         assertEquals(
@@ -136,7 +134,7 @@ class UnorderedTupleTypeConstructorTests {
             actual = result.bind(
                 dynamicScope = DynamicScope.Empty,
             ).value?.asType,
-        ) as MembershipType
+        ) as SpecificType
 
         assertTypeIsEquivalent(
             expected = object : UnorderedTupleType() {

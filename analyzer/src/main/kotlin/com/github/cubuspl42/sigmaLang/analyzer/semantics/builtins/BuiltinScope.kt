@@ -11,11 +11,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.FirstOrderExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.StringType
@@ -28,15 +30,14 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 interface BuiltinValue {
-    val type: MembershipType
+    val type: SpecificType
     val value: Value
 }
 
-
 class Builtin(
-    type: MembershipType,
+    type: SpecificType,
     private val value: Value,
-) : Expression() {
+) : FirstOrderExpression() {
     override val outerScope: StaticScope = StaticScope.Empty
 
     override val term: ExpressionTerm? = null
@@ -59,13 +60,13 @@ class Builtin(
 private class BuiltinDefinition(
     override val name: Symbol,
     val value: Value,
-    val type: MembershipType,
+    val type: SpecificType,
 ) : Definition {
 //    override val valueThunk: Thunk<Value> = value.toThunk()
 
     override val computedBodyType: Expression.Computation<TypeAlike> = Expression.Computation.pure(type)
 
-    override val bodyStub: Expression.Stub<Expression> = Expression.Stub.of(
+    override val bodyStub: Stub<Expression> = Stub.of(
         Builtin(
             type = type,
             value = value,
@@ -75,7 +76,7 @@ private class BuiltinDefinition(
 
 object BuiltinScope : StaticScope {
     data class SimpleBuiltinValue(
-        override val type: MembershipType,
+        override val type: SpecificType,
         override val value: Value,
     ) : BuiltinValue
 

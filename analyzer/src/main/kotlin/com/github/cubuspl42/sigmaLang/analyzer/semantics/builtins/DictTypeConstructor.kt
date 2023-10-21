@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.DictType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TableType
@@ -22,14 +23,14 @@ object DictTypeConstructor : TypeConstructor() {
     fun build(
         context: Expression.BuildContext,
         term: DictTypeConstructorTerm,
-    ): Expression.Stub<Call> {
+    ): Stub<Call> {
         val subjectStub = Reference.build(
             context,
             term = null,
             referredName = Name,
         )
 
-        return object : Expression.Stub<Call> {
+        return object : Stub<Call> {
             override val resolved: Call = object : Call() {
                 override val term: ExpressionTerm? = null
 

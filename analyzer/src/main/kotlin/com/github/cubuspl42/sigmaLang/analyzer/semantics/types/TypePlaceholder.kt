@@ -4,7 +4,7 @@ data class TypePlaceholder(
     val typeVariable: TypeVariable,
 ) : TypeAlike() {
     override fun resolveTypePlaceholders(
-        assignedType: MembershipType,
+        assignedType: SpecificType,
     ): TypePlaceholderResolution = TypePlaceholderResolution(
         resolvedTypeByPlaceholder = mapOf(this to assignedType),
     )

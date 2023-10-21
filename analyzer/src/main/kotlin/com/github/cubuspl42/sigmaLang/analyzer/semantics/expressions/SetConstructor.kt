@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorTerm
 
-abstract class SetConstructor : Expression() {
+abstract class SetConstructor : FirstOrderExpression() {
     abstract override val term: SetConstructorTerm
 
     abstract val elements: Set<Expression>

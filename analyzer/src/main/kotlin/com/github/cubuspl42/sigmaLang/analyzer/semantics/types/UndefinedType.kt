@@ -2,8 +2,8 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 object UndefinedType : PrimitiveType() {
     override fun findLowestCommonSupertype(
-        other: MembershipType,
-    ): MembershipType = when (other) {
+        other: SpecificType,
+    ): SpecificType = when (other) {
         is UndefinedType -> UndefinedType
         else -> AnyType
     }

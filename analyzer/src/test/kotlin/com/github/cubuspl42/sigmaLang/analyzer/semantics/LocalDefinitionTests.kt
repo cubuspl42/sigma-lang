@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeAnnot
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import org.junit.experimental.runners.Enclosed
@@ -37,7 +37,7 @@ class LocalDefinitionTests {
                 expected = setOf(
                     TypeAnnotatedBody.UnmatchedInferredTypeError(
                         location = null,
-                        matchResult = MembershipType.TotalMismatch(
+                        matchResult = SpecificType.TotalMismatch(
                             expectedType = IntCollectiveType,
                             actualType = BoolType,
                         ),

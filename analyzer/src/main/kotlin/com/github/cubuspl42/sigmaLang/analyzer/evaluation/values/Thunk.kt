@@ -169,6 +169,13 @@ abstract class Thunk<out ResultType> {
     val value: ResultType? by kotlin.lazy {
         (outcome as? EvaluationResult<ResultType>)?.value
     }
+
+    fun asLazy(): Lazy<ResultType> = object : Lazy<ResultType> {
+        override val value: ResultType
+            get() = this@Thunk.value!!
+
+        override fun isInitialized(): Boolean = true
+    }
 }
 
 // Nuke?

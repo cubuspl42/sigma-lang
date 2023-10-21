@@ -12,14 +12,14 @@ sealed class PrimitiveType : ShapeType() {
     )
 
     override fun matchShape(
-        assignedType: MembershipType,
-    ): MembershipType.MatchResult = when (this.findLowestCommonSupertype(assignedType)) {
-        this -> MembershipType.TotalMatch
-        else -> MembershipType.TotalMismatch(
+        assignedType: SpecificType,
+    ): SpecificType.MatchResult = when (this.findLowestCommonSupertype(assignedType)) {
+        this -> SpecificType.TotalMatch
+        else -> SpecificType.TotalMismatch(
             expectedType = this,
             actualType = assignedType,
         )
     }
 
-    final override fun walkRecursive(): Sequence<MembershipType> = emptySequence()
+    final override fun walkRecursive(): Sequence<SpecificType> = emptySequence()
 }

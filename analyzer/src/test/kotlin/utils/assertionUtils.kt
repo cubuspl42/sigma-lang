@@ -1,11 +1,11 @@
 package utils
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import kotlin.test.assertTrue
 
 fun assertTypeIsEquivalent(
-    expected: MembershipType,
-    actual: MembershipType,
+    expected: SpecificType,
+    actual: SpecificType,
 ) {
     assertTrue(
         actual = expected.isEquivalentTo(otherType = actual),
@@ -14,8 +14,8 @@ fun assertTypeIsEquivalent(
 }
 
 fun assertTypeIsNonEquivalent(
-    expected: MembershipType,
-    actual: MembershipType,
+    expected: SpecificType,
+    actual: SpecificType,
 ) {
     assertTrue(
         actual = expected.isNonEquivalentTo(otherType = actual),

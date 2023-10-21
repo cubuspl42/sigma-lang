@@ -9,27 +9,30 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.FirstOrderExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 data class FakeUserDeclaration(
     override val name: Identifier,
-    override val annotatedType: MembershipType,
+    override val annotatedType: Type,
 ) : Declaration
 
 data class FakeDefinition(
     override val name: Identifier,
-    val type: MembershipType,
+    val type: SpecificType,
     val value: Value,
 ) : Definition {
     override val computedBodyType: Expression.Computation<TypeAlike> = Expression.Computation.pure(type)
 
-    override val bodyStub: Expression.Stub<Expression> = object : Expression.Stub<Expression> {
-        override val resolved: Expression = object : Expression() {
+    override val bodyStub: Stub<Expression> = object : Stub<Expression> {
+        override val resolved: Expression = object : FirstOrderExpression() {
             override val outerScope: StaticScope
                 get() = StaticScope.Empty
 

@@ -1,14 +1,12 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 import com.github.cubuspl42.sigmaLang.analyzer.cutOffFront
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.Formula
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 
 abstract class FunctionValue : Value() {
 
@@ -53,13 +51,13 @@ abstract class FunctionValue : Value() {
             name = Identifier.of("elementType"),
         )
 
-        override val argTypes: List<MembershipType> = listOf(
+        override val argTypes: List<SpecificType> = listOf(
             ArrayType(
                 elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
-        override val imageType: MembershipType = ArrayType(
+        override val imageType: SpecificType = ArrayType(
             elementType = ArrayType(
                 elementType = elementTypeDefinition.typePlaceholder,
             ),
@@ -81,13 +79,13 @@ abstract class FunctionValue : Value() {
             name = Identifier.of("elementType"),
         )
 
-        override val argTypes: List<MembershipType> = listOf(
+        override val argTypes: List<SpecificType> = listOf(
             ArrayType(
                 elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
-        override val imageType: MembershipType = ArrayType(
+        override val imageType: SpecificType = ArrayType(
             elementType = elementTypeDefinition.typePlaceholder,
         )
 
@@ -105,13 +103,13 @@ abstract class FunctionValue : Value() {
             name = Identifier.of("elementType"),
         )
 
-        override val argTypes: List<MembershipType> = listOf(
+        override val argTypes: List<SpecificType> = listOf(
             ArrayType(
                 elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
-        override val imageType: MembershipType = ArrayType(
+        override val imageType: SpecificType = ArrayType(
             elementType = elementTypeDefinition.typePlaceholder,
         )
 
@@ -130,13 +128,13 @@ abstract class FunctionValue : Value() {
             name = Identifier.of("elementType"),
         )
 
-        override val argTypes: List<MembershipType> = listOf(
+        override val argTypes: List<SpecificType> = listOf(
             ArrayType(
                 elementType = elementTypeDefinition.typePlaceholder,
             ),
         )
 
-        override val imageType: MembershipType = ArrayType(
+        override val imageType: SpecificType = ArrayType(
             elementType = ArrayType(
                 elementType = elementTypeDefinition.typePlaceholder,
             ),

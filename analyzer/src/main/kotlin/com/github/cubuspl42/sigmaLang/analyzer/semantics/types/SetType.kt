@@ -44,13 +44,13 @@ data class SetType(
     }
 
     object SetSum : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<MembershipType> = listOf(
+        override val argTypes: List<SpecificType> = listOf(
             SetType(
                 elementType = IntCollectiveType,
             ),
         )
 
-        override val imageType: MembershipType = IntCollectiveType
+        override val imageType: SpecificType = IntCollectiveType
 
         override fun compute(args: List<Value>): Value {
             val arg = args[0] as SetValue
@@ -59,8 +59,8 @@ data class SetType(
     }
 
     data class SetMatch(
-        val elementMatch: MembershipType.MatchResult,
-    ) : MembershipType.PartialMatch() {
+        val elementMatch: SpecificType.MatchResult,
+    ) : SpecificType.PartialMatch() {
         override fun isFull(): Boolean = elementMatch.isFull()
         override fun dump(): String = when {
             !elementMatch.isFull() -> "set element type: " + elementMatch.dump()
@@ -71,10 +71,10 @@ data class SetType(
     override fun dumpDirectly(depth: Int): String = "{${elementType.dumpRecursively(depth = depth + 1)}*}"
 
     override fun findLowestCommonSupertype(
-        other: MembershipType,
-    ): MembershipType = when (other) {
+        other: SpecificType,
+    ): SpecificType = when (other) {
         is SetType -> SetType(
-            elementType = (elementType as MembershipType).findLowestCommonSupertype(other.elementType as MembershipType),
+            elementType = (elementType as SpecificType).findLowestCommonSupertype(other.elementType as SpecificType),
         )
 
         else -> AnyType
@@ -88,7 +88,7 @@ data class SetType(
         )
 
         val elementResolution = elementType.resolveTypePlaceholders(
-            assignedType = assignedType.elementType as MembershipType,
+            assignedType = assignedType.elementType as SpecificType,
         )
 
         return elementResolution
@@ -106,19 +106,19 @@ data class SetType(
         }
 
     override fun matchShape(
-        assignedType: MembershipType,
-    ): MembershipType.MatchResult = when (assignedType) {
+        assignedType: SpecificType,
+    ): SpecificType.MatchResult = when (assignedType) {
         is SetType -> SetMatch(
             elementMatch = elementType.match(
-                assignedType = assignedType.elementType as MembershipType,
+                assignedType = assignedType.elementType as SpecificType,
             ),
         )
 
-        else -> MembershipType.TotalMismatch(
+        else -> SpecificType.TotalMismatch(
             expectedType = this,
             actualType = assignedType,
         )
     }
 
-    override fun walkRecursive(): Sequence<MembershipType> = (elementType as MembershipType).walk()
+    override fun walkRecursive(): Sequence<SpecificType> = (elementType as SpecificType).walk()
 }

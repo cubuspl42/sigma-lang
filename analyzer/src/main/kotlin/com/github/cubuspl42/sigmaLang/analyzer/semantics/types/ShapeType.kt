@@ -1,10 +1,10 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-sealed class ShapeType : MembershipType() {
-    override fun match(assignedType: MembershipType): MatchResult {
+sealed class ShapeType : SpecificType() {
+    override fun match(assignedType: SpecificType): MatchResult {
         if (assignedType is UnionType) {
             val nonMatchingTypes = assignedType.memberTypes.mapNotNull { memberType ->
-                (memberType as MembershipType).takeIf { !matchShape(assignedType = it).isFull() }
+                (memberType as SpecificType).takeIf { !matchShape(assignedType = it).isFull() }
             }.toSet()
 
             return if (nonMatchingTypes.isNotEmpty()) {
@@ -21,11 +21,11 @@ sealed class ShapeType : MembershipType() {
     }
 
     abstract fun matchShape(
-        assignedType: MembershipType,
+        assignedType: SpecificType,
     ): MatchResult
 
     override fun resolveTypePlaceholders(
-        assignedType: MembershipType,
+        assignedType: SpecificType,
     ): TypePlaceholderResolution = if (assignedType is UnionType) {
         TypePlaceholderResolution.Empty // TODO
     } else {

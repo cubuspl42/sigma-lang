@@ -7,11 +7,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IfExpressionTerm
 
-abstract class IfExpression : Expression() {
+abstract class IfExpression : FirstOrderExpression() {
     abstract override val term: IfExpressionTerm
 
     abstract val guard: Expression
@@ -58,7 +58,7 @@ abstract class IfExpression : Expression() {
 
     data class InvalidGuardError(
         override val location: SourceLocation?,
-        val actualType: MembershipType,
+        val actualType: SpecificType,
     ) : SemanticError {
         override fun dump(): String = "$location: Invalid guard type: ${actualType.dump()} (should be: Bool)"
     }
@@ -68,7 +68,7 @@ abstract class IfExpression : Expression() {
         val trueBranchAnalysis = compute(trueBranch.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         val falseBranchAnalysis = compute(falseBranch.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
 
-        val guardError = when (val inferredGuardType = guardAnalysis.inferredType as MembershipType) {
+        val guardError = when (val inferredGuardType = guardAnalysis.inferredType as SpecificType) {
             is BoolType -> null
             else -> InvalidGuardError(
                 location = guard.location,
@@ -76,8 +76,8 @@ abstract class IfExpression : Expression() {
             )
         }
 
-        val inferredTrueType = trueBranchAnalysis.inferredType as MembershipType
-        val inferredFalseType = falseBranchAnalysis.inferredType as MembershipType
+        val inferredTrueType = trueBranchAnalysis.inferredType as SpecificType
+        val inferredFalseType = falseBranchAnalysis.inferredType as SpecificType
         val inferredResultType = inferredTrueType.findLowestCommonSupertype(inferredFalseType)
 
         DiagnosedAnalysis(

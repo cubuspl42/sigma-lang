@@ -6,20 +6,17 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.CyclicComputation
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ReachableDeclarationSet
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.chainWithIfNotNull
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
-abstract class AbstractionConstructor : Expression() {
-    abstract val metaArgumentType: TupleType?
-
+abstract class AbstractionConstructor : FirstOrderExpression() {
     abstract val argumentType: TupleType
 
     // TODO: This is a terrible hack
@@ -33,7 +30,7 @@ abstract class AbstractionConstructor : Expression() {
 
     class ArgumentDeclaration(
         override val name: Symbol,
-        override val annotatedType: MembershipType,
+        override val annotatedType: Type,
     ) : Declaration
 
     class ArgumentStaticBlock(
@@ -52,53 +49,46 @@ abstract class AbstractionConstructor : Expression() {
         fun build(
             context: BuildContext,
             term: AbstractionConstructorTerm,
+        ): Lazy<Expression> {
+            val metaArgumentTypeTerm = term.metaArgumentType
+
+            return if (metaArgumentTypeTerm != null) {
+                MetaAbstractionConstructor.build(
+                    context = context,
+                    metaArgumentTypeTerm = metaArgumentTypeTerm,
+                    term = term,
+                )
+            } else {
+                buildDirectly(
+                    context = context,
+                    term = term,
+                ).asLazy()
+            }
+        }
+
+        fun buildDirectly(
+            context: BuildContext,
+            term: AbstractionConstructorTerm,
         ): Stub<AbstractionConstructor> {
             val outerMetaScope = context.outerMetaScope
             val outerScope = context.outerScope
 
+            val argumentTypeConstructorStub = term.argumentType.let {
+                TypeExpression.build(
+                    outerMetaScope = outerMetaScope,
+                    term = it,
+                )
+            }
+
             return object : Stub<AbstractionConstructor> {
                 override val resolved: AbstractionConstructor by lazy {
-                    val metaArgumentTypeConstructorStub = term.metaArgumentType?.let {
-                        TypeExpression.build(
-                            outerMetaScope = outerMetaScope,
-                            term = it,
-                        )
-                    }
-
-                    val metaArgumentTypeConstructor = metaArgumentTypeConstructorStub?.resolved
-
-                    val metaArgumentTypeConstructorAnalysis = metaArgumentTypeConstructor?.evaluateAsType()
-
-                    val metaArgumentType = metaArgumentTypeConstructorAnalysis?.typeOrIllType?.let { it as TupleType }
-
-                    val typeVariableBlock = metaArgumentType?.buildTypeVariableBlock()
-
-                    val typePlaceholderBlock = typeVariableBlock?.let {
-                        TupleType.TypePlaceholderBlock(
-                            typeVariableBlock = it,
-                        )
-                    }
-
-                    val innerTypePlaceholderMetaScope = typePlaceholderBlock.chainWithIfNotNull(
-                        outerScope = outerMetaScope,
-                    )
-
-                    val argumentTypeConstructor = term.argumentType.let {
-                        TypeExpression.build(
-                            outerMetaScope = innerTypePlaceholderMetaScope,
-                            term = it,
-                        )
-                    }.resolved
+                    val argumentTypeConstructor = argumentTypeConstructorStub.resolved
 
                     val argumentType = argumentTypeConstructor.evaluateAsType().typeOrIllType as TupleType
 
-                    val innerTypeVariableMetaScope = typeVariableBlock.chainWithIfNotNull(
-                        outerScope = outerMetaScope,
-                    )
-
                     val internalArgumentTypeConstructor = term.argumentType.let {
                         TypeExpression.build(
-                            outerMetaScope = innerTypeVariableMetaScope,
+                            outerMetaScope = outerMetaScope,
                             term = it,
                         )
                     }.resolved
@@ -113,7 +103,7 @@ abstract class AbstractionConstructor : Expression() {
 
                     val declaredImageTypeBody = term.declaredImageType?.let {
                         TypeExpression.build(
-                            outerMetaScope = innerTypePlaceholderMetaScope,
+                            outerMetaScope = outerMetaScope,
                             term = it,
                         ).resolved
                     }
@@ -122,7 +112,7 @@ abstract class AbstractionConstructor : Expression() {
 
                     val image = build(
                         context = BuildContext(
-                            outerMetaScope = innerTypeVariableMetaScope,
+                            outerMetaScope = outerMetaScope,
                             outerScope = innerScope,
                         ),
                         term = term.image,
@@ -132,8 +122,6 @@ abstract class AbstractionConstructor : Expression() {
                         override val outerScope: StaticScope = context.outerScope
 
                         override val term: ExpressionTerm = term
-
-                        override val metaArgumentType = metaArgumentType
 
                         override val argumentType = argumentType
 

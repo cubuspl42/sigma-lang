@@ -3,41 +3,11 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeValue
 import com.github.cubuspl42.sigmaLang.analyzer.utils.UnorderedPair
 
-abstract class TypeAlike {
-    abstract fun resolveTypePlaceholders(
-        assignedType: MembershipType,
-    ): TypePlaceholderResolution
-
-    abstract fun substituteTypePlaceholders(
-        resolution: TypePlaceholderResolution,
-    ): TypePlaceholderSubstitution<TypeAlike>
-
-    open fun match(
-        assignedType: MembershipType,
-    ): MembershipType.MatchResult {
-        throw UnsupportedOperationException() // TODO: Only membership types should be able to match
-    }
-
-    fun dump(): String = dumpRecursively(depth = 0)
-
-    fun dumpRecursively(depth: Int): String {
-        if (depth > MembershipType.maxDumpDepth) return "(...)"
-
-        return dumpDirectly(depth = depth)
-    }
-
-    open val asLiteral: PrimitiveLiteralType? = null
-
-    open val asArray: ArrayType? = null
-
-    abstract fun dumpDirectly(depth: Int): String
-}
-
-sealed class MembershipType : TypeAlike() {
+sealed class SpecificType : Type() {
     data class NonEquivalenceContext(
-        val visitedPairs: Set<UnorderedPair<MembershipType>>,
+        val visitedPairs: Set<UnorderedPair<SpecificType>>,
     ) {
-        fun withVisited(pair: UnorderedPair<MembershipType>): NonEquivalenceContext = NonEquivalenceContext(
+        fun withVisited(pair: UnorderedPair<SpecificType>): NonEquivalenceContext = NonEquivalenceContext(
             visitedPairs = visitedPairs + pair,
         )
 
@@ -69,7 +39,7 @@ sealed class MembershipType : TypeAlike() {
     }
 
     data class TotalMismatch(
-        val expectedType: MembershipType,
+        val expectedType: SpecificType,
         val actualType: TypeAlike,
     ) : Mismatch() {
         override fun dump(): String = "expected ${expectedType.dump()}, actual: ${actualType.dump()}"
@@ -80,20 +50,20 @@ sealed class MembershipType : TypeAlike() {
     }
 
     abstract fun findLowestCommonSupertype(
-        other: MembershipType,
-    ): MembershipType
+        other: SpecificType,
+    ): SpecificType
 
     // Thought: Wrong name? `walkChildren`?
-    abstract fun walkRecursive(): Sequence<MembershipType>
+    abstract fun walkRecursive(): Sequence<SpecificType>
 
-    fun isNonEquivalentTo(otherType: MembershipType): Boolean = isNonEquivalentToRecursively(
+    fun isNonEquivalentTo(otherType: SpecificType): Boolean = isNonEquivalentToRecursively(
         outerContext = NonEquivalenceContext.Empty,
         otherType = otherType,
     )
 
     fun isNonEquivalentToRecursively(
         outerContext: NonEquivalenceContext,
-        otherType: MembershipType,
+        otherType: SpecificType,
     ): Boolean {
         val pair = UnorderedPair(this, otherType)
 
@@ -107,19 +77,19 @@ sealed class MembershipType : TypeAlike() {
 
     open fun isNonEquivalentToDirectly(
         innerContext: NonEquivalenceContext,
-        otherType: MembershipType,
+        otherType: SpecificType,
     ): Boolean {
         // This implementation doesn't support cycles and should be removed eventually
         return this != otherType
     }
 
-    fun isEquivalentTo(otherType: MembershipType): Boolean =
+    fun isEquivalentTo(otherType: SpecificType): Boolean =
         !isNonEquivalentTo(otherType = otherType)
 
     final override fun toString(): String = dump()
 }
 
-fun MembershipType.walk(): Sequence<MembershipType> = sequenceOf(this) + walkRecursive()
+fun SpecificType.walk(): Sequence<SpecificType> = sequenceOf(this) + walkRecursive()
 
 val <TypeType : TypeAlike> TypeType.asValue: TypeValue<TypeType>
     get() = TypeValue(this)

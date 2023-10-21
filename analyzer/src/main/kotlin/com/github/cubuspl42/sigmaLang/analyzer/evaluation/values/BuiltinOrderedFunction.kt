@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.MembershipType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TableType
 
@@ -28,7 +28,7 @@ abstract class BuiltinOrderedFunction : BuiltinFunction() {
         )
 
     // Thought: allow for names
-    abstract val argTypes: List<MembershipType>
+    abstract val argTypes: List<SpecificType>
 
     abstract fun computeThunk(
         args: List<Value>,

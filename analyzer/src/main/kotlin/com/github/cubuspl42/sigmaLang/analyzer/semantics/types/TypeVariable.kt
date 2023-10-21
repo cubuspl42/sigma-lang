@@ -4,17 +4,17 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVaria
 
 class TypeVariable(
     private val definition: TypeVariableDefinition,
-) : MembershipType() {
+) : SpecificType() {
     fun toPlaceholder(): TypePlaceholder = TypePlaceholder(
         typeVariable = this,
     )
 
     override fun findLowestCommonSupertype(
-        other: MembershipType,
-    ): MembershipType = AnyType
+        other: SpecificType,
+    ): SpecificType = AnyType
 
     override fun resolveTypePlaceholders(
-        assignedType: MembershipType,
+        assignedType: SpecificType,
     ): TypePlaceholderResolution = TypePlaceholderResolution.Empty
 
     // TODO: Extract a class for "simple" types?
@@ -24,9 +24,9 @@ class TypeVariable(
         result = this,
     )
 
-    override fun match(assignedType: MembershipType): MembershipType.MatchResult = when (assignedType) {
-        this -> MembershipType.TotalMatch
-        else -> MembershipType.TotalMismatch(
+    override fun match(assignedType: SpecificType): SpecificType.MatchResult = when (assignedType) {
+        this -> SpecificType.TotalMatch
+        else -> SpecificType.TotalMismatch(
             expectedType = this,
             actualType = assignedType,
         )
@@ -34,19 +34,19 @@ class TypeVariable(
 
     override fun isNonEquivalentToDirectly(
         innerContext: NonEquivalenceContext,
-        otherType: MembershipType,
+        otherType: SpecificType,
     ): Boolean {
         if (otherType !is TypeVariable) return true
         return definition != otherType.definition
     }
 
-    override fun walkRecursive(): Sequence<MembershipType> = emptySequence()
+    override fun walkRecursive(): Sequence<SpecificType> = emptySequence()
 
     override fun dumpDirectly(depth: Int): String = "#${definition.name.dump()}"
 }
 
 data class TypePlaceholderResolution(
-    val resolvedTypeByPlaceholder: Map<TypePlaceholder, MembershipType>,
+    val resolvedTypeByPlaceholder: Map<TypePlaceholder, SpecificType>,
 ) {
     val resolvedTypeVariables: Set<TypePlaceholder>
         get() = resolvedTypeByPlaceholder.keys

@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 
 abstract class CyclicComputationClass<Result> {
     fun visiting(
