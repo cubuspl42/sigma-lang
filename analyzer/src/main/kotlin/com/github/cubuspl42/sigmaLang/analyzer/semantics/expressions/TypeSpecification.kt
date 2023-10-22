@@ -1,9 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.BinaryOperationPrototype
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -15,20 +13,28 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
 class TypeSpecification(
     override val term: TypeSpecificationTerm,
     private val subjectLazy: Lazy<Expression>,
-    private val metaArgumentLazy: Lazy<TupleType>,
+    private val metaArgumentThunk: Thunk<DictValue>,
 ) : FirstOrderExpression() {
     companion object {
         fun build(
             context: BuildContext,
             term: TypeSpecificationTerm,
         ): Lazy<TypeSpecification> {
-            TODO()
-//            return lazy {
-//                TypeSpecification(
-//                    term = term,
-//
-//                )
-//            }
+            val subjectLazy = Expression.build(context = context, term = term.subject).asLazy()
+
+            val metaArgumentConstructor by TupleConstructor.build(context, term.argument).asLazy()
+
+            val metaArgumentThunk = Thunk.lazy {
+                metaArgumentConstructor.constClassified!!.valueThunk.thenJust { it as DictValue }
+            }
+
+            return lazy {
+                TypeSpecification(
+                    term = term,
+                    subjectLazy = subjectLazy,
+                    metaArgumentThunk = metaArgumentThunk,
+                )
+            }
         }
     }
 
@@ -39,7 +45,8 @@ class TypeSpecification(
 
     val subject: Expression by subjectLazy
 
-    val metaArgument: TupleType by metaArgumentLazy
+    val metaArgument: DictValue by lazy { metaArgumentThunk.value!! }
+
     override val outerScope: StaticScope
         get() = StaticScope.Empty
 
