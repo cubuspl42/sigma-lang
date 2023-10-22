@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import utils.Matcher
 
-class MetaAbstractionConstructorMatcher(
+class GenericConstructorMatcher(
     private val metaArgumentTypeConstructor: Matcher<TupleType>,
     private val body: Matcher<Expression>,
 ) : Matcher<GenericConstructor>() {

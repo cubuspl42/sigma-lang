@@ -49,26 +49,6 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
         fun build(
             context: BuildContext,
             term: AbstractionConstructorTerm,
-        ): Lazy<Expression> {
-            val metaArgumentTypeTerm = term.metaArgumentType
-
-            return if (metaArgumentTypeTerm != null) {
-                GenericConstructor.build(
-                    context = context,
-                    metaArgumentTypeTerm = metaArgumentTypeTerm,
-                    term = term,
-                )
-            } else {
-                buildDirectly(
-                    context = context,
-                    term = term,
-                ).asLazy()
-            }
-        }
-
-        fun buildDirectly(
-            context: BuildContext,
-            term: AbstractionConstructorTerm,
         ): Stub<AbstractionConstructor> {
             val outerMetaScope = context.outerMetaScope
             val outerScope = context.outerScope

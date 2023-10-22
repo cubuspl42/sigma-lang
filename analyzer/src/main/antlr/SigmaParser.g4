@@ -61,6 +61,7 @@ expression
     | parenExpression # parenExpressionAlt
     | reference # referenceAlt
     | abstractionConstructor # abstractionAlt
+    | genericConstructor # genericConstructorAlt
     | tupleConstructor # tupleConstructorAlt
     | dictConstructor # dictConstructorAlt
     | setConstructor # setConstructorAlt
@@ -115,8 +116,7 @@ ifExpression
     ;
 
 abstractionConstructor
-    :   metaArgumentType? argumentType=tupleTypeConstructor
-        (ThinArrow imageType=expression)? FatArrow image=expression
+    : argumentType=tupleTypeConstructor (ThinArrow imageType=expression)? FatArrow image=expression
     ;
 
 // Unordered tuple constructor
@@ -218,6 +218,10 @@ arrayTypeConstructor
 
 dictTypeConstructor
     : Dash LeftBrace LeftBracket keyType=expression RightBracket Colon valueType=expression RightBrace
+    ;
+
+genericConstructor
+    : metaArgument=tupleTypeConstructor BangFatArrow body=expression
     ;
 
 // Other

@@ -44,6 +44,7 @@ Pipe : '|' ;
 
 ThinArrow : '->' ;
 FatArrow : '=>' ;
+BangFatArrow : '!=>' ;
 Identifier : [a-zA-Z] [a-zA-Z0-9]* ;
 
 IntLiteral : [0-9]+ ;

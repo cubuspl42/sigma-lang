@@ -32,6 +32,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSour
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.GenericConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IfExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IntLiteralTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IsUndefinedCheckTerm
@@ -208,7 +209,7 @@ abstract class Expression {
             is AbstractionConstructorTerm -> AbstractionConstructor.build(
                 context = context,
                 term = term,
-            ).asStub()
+            )
 
             is ArrayTypeConstructorTerm -> ArrayTypeConstructor.build(
                 context = context,
@@ -291,6 +292,11 @@ abstract class Expression {
             )
 
             is TypeSpecificationTerm -> TypeSpecification.build(
+                context = context,
+                term = term,
+            ).asStub()
+
+            is GenericConstructorSourceTerm -> GenericConstructor.build(
                 context = context,
                 term = term,
             ).asStub()

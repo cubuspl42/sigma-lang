@@ -1,11 +1,11 @@
 %const main = %let {
-    concatAllOf = !^[e: Type, te: Type] ^[
+    concatAllOf = ^[e: Type, te: Type] !=> ^[
         list: ^[e...],
         transform: ^[e] -> ^[te...],
     ] -> ^[te...] =>
         concatAll[map[list, transform]],
 
-    concatAll = !^[e: Type] ^[
+    concatAll = ^[e: Type] !=> ^[
         lists: ^[^[e...]...],
     ] -> ^[e...] => %let {
         recurse = ^{
@@ -38,7 +38,7 @@
             ]
         ],
 
-    extractHead = !^[e: Type, r: Type] ^[
+    extractHead = ^[e: Type, r: Type] !=> ^[
         list: ^[e...],
         branches: ^{
             ifExtracted: ^[
