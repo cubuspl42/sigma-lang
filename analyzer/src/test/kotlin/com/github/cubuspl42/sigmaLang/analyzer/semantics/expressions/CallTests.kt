@@ -176,8 +176,53 @@ class CallTests {
             )
         }
 
+
         @Test
-        fun testInferableGenericCall() {
+        fun testGenericCall() {
+            val term = ExpressionSourceTerm.parse(
+                source = "f[false, 1]",
+            ) as PostfixCallSourceTerm
+
+            val fKind = GenericType(
+                metaArgumentType = OrderedTupleType.of(TypeType, TypeType),
+            )
+
+            val call = Call.build(
+                Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeStaticBlock.of(
+                        FakeUserDeclaration(
+                            name = Identifier.of("f"),
+                            annotatedType = fKind,
+                        ),
+                    ).chainWith(BuiltinScope),
+                ),
+                term = term,
+            ).resolved
+
+            // TODO: Placeholder generation
+            assertMatches(
+                matcher = CollectionMatchers.eachOnce(
+                    elements = setOf(
+                        Matcher.Equals(
+                            Call.NonFunctionCallError(
+                                location = SourceLocation(lineIndex = 1, columnIndex = 0),
+                                illegalSubjectType = fKind,
+                            ),
+                        ),
+                    ),
+                ),
+                actual = call.directErrors,
+            )
+
+            assertMatches(
+                matcher = Matcher.Equals(IllType),
+                actual = call.inferredTypeOrIllType.getOrCompute(),
+            )
+        }
+
+        @Test
+        fun testInferableTemplateCall() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[false, 0]",
             ) as PostfixCallSourceTerm
@@ -231,7 +276,7 @@ class CallTests {
         }
 
         @Test
-        fun testNonInferableGenericCall() {
+        fun testNonInferableTemplateCall() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[]",
             ) as PostfixCallSourceTerm
@@ -283,7 +328,7 @@ class CallTests {
         }
 
         @Test
-        fun testNonInferableGenericCall_nested() {
+        fun testNonInferableTemplateCall_nested() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[false, 1]",
             ) as PostfixCallSourceTerm
@@ -359,49 +404,6 @@ class CallTests {
             )
         }
 
-        @Test
-        fun testKindConstructorCall() {
-            val term = ExpressionSourceTerm.parse(
-                source = "f[false, 1]",
-            ) as PostfixCallSourceTerm
-
-
-            val fKind = GenericType(
-                metaArgumentType = OrderedTupleType.of(TypeType, TypeType),
-            )
-
-            val call = Call.build(
-                Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
-                        FakeUserDeclaration(
-                            name = Identifier.of("f"),
-                            annotatedType = fKind,
-                        ),
-                    ).chainWith(BuiltinScope),
-                ),
-                term = term,
-            ).resolved
-
-            assertMatches(
-                matcher = CollectionMatchers.eachOnce(
-                    elements = setOf(
-                        Matcher.Equals(
-                            Call.NonFunctionCallError(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                                illegalSubjectType = fKind,
-                            ),
-                        ),
-                    ),
-                ),
-                actual = call.directErrors,
-            )
-
-            assertMatches(
-                matcher = Matcher.Equals(IllType),
-                actual = call.inferredTypeOrIllType.getOrCompute(),
-            )
-        }
 
         @Test
         fun testExcessiveOrderedArguments() {

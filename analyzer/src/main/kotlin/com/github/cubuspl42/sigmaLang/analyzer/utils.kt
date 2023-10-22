@@ -59,3 +59,13 @@ fun <E> List<E>.cutOffFront(n: Int): CutList<E>? {
         tail = this.drop(n),
     )
 }
+
+fun <T> lazier(
+    block: () -> Lazy<T>,
+): Lazy<T> = object : Lazy<T> {
+    val valueLazy = lazy { block() }
+    override val value: T
+        get() = valueLazy.value.value
+
+    override fun isInitialized(): Boolean = valueLazy.isInitialized() && valueLazy.value.isInitialized()
+}

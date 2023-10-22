@@ -5,7 +5,6 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
@@ -14,7 +13,6 @@ import utils.Matcher
 import utils.assertMatches
 import utils.checked
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class MetaAbstractionConstructorTests {
     class BuildingTests {
@@ -24,7 +22,7 @@ class MetaAbstractionConstructorTests {
                 source = "!^[t: Type] ^[a: t] -> Int => 11",
             ) as AbstractionConstructorSourceTerm
 
-            val metaAbstractionConstructor = MetaAbstractionConstructor.build(
+            val metaAbstractionConstructor = GenericConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 metaArgumentTypeTerm = term.metaArgumentType!!,
                 term = term,
@@ -67,7 +65,7 @@ class MetaAbstractionConstructorTests {
                 source = "!^[t: Type] ^[a: t] -> Int => 11",
             ) as AbstractionConstructorSourceTerm
 
-            val metaAbstractionConstructor = MetaAbstractionConstructor.build(
+            val metaAbstractionConstructor = GenericConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 metaArgumentTypeTerm = term.metaArgumentType!!,
                 term = term,
