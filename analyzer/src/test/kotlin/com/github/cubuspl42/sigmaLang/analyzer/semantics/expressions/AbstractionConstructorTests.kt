@@ -43,7 +43,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] -> Int => a + 3",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.buildDirectly(
+            val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -63,7 +63,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] -> Bool => 3 + 4",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.buildDirectly(
+            val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -78,148 +78,13 @@ class AbstractionConstructorTests {
         }
 
         @Test
-        fun testWithDeclaredImageType_fromMetaArgument() {
-            val term = ExpressionSourceTerm.parse(
-                // The declared image type is an introduced meta-argument
-                source = """
-                    !^[e: Type] ^[a: e] -> e => %let {
-                        result: e = a,
-                    } %in result
-                """.trimIndent(),
-            ) as AbstractionConstructorSourceTerm
-
-            val abstractionConstructor by AbstractionConstructor.build(
-                context = Expression.BuildContext.Builtin,
-                term = term,
-            )
-
-            assertMatches(
-                matcher = KindConstructorMatcher(
-                    metaArgumentType = OrderedTupleTypeMatcher(
-                        elements = listOf(
-                            OrderedTupleTypeMatcher.ElementMatcher(
-                                name = Matcher.Equals(Identifier.of("e")),
-                                type = Matcher.Is<TypeType>(),
-                            ),
-                        ),
-                    ).checked()
-                ).checked(),
-                actual = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
-            )
-
-//            assertMatches(
-//                matcher = OrderedTupleTypeMatcher(
-//                    elements = listOf(
-//                        OrderedTupleTypeMatcher.ElementMatcher(
-//                            name = Matcher.Equals(Identifier.of("a")),
-//                            type = Matcher.Is<TypePlaceholder>(),
-//                        ),
-//                    ),
-//                ),
-//                actual = argumentType,
-//            )
-//
-//            assertEquals(
-//                expected = argumentType.elements.first().type,
-//                actual = assertIs<TypePlaceholder>(inferredType.imageType),
-//            )
-        }
-
-        @Test
-        @Ignore // TODO: Type constructor kinds
-        fun testWithDeclaredImageType_fromMetaArgumentComplex() {
-            val term = ExpressionSourceTerm.parse(
-                // The declared image type is a complex expression based on a meta-argument
-                source = """
-                        !^[
-                            t: ^{t1: Type, t2: Type},
-                        ] ^[
-                            l: ^[t.t1...],
-                            f: ^[t.t1] -> t.t2,
-                        ] -> ^[t.t2...] => %let {
-                            result: ^[t.t2...] = map[l, f]
-                        } in result
-                    """.trimIndent(),
-            ) as AbstractionConstructorSourceTerm
-
-            val abstraction = AbstractionConstructor.buildDirectly(
-                context = Expression.BuildContext.Builtin,
-                term = term,
-            ).resolved
-
-            assertEquals(
-                expected = emptySet(),
-                abstraction.errors,
-            )
-
-            val inferredType = assertIs<FunctionType>(
-                value = abstraction.inferredTypeOrIllType.getOrCompute(),
-            )
-
-            val typeVariableDefinition1 = TypeVariableDefinition(
-                name = Identifier.of("t.t1"),
-            )
-
-            val typeVariableDefinition2 = TypeVariableDefinition(
-                name = Identifier.of("t.t2"),
-            )
-
-            val innerAbstractionType = UniversalFunctionType(
-                argumentType = OrderedTupleType(
-                    elements = listOf(
-                        OrderedTupleType.Element(
-                            name = Identifier.of("l"),
-                            type = ArrayType(
-                                elementType = typeVariableDefinition1.typePlaceholder, // FIXME
-                            ),
-                        ),
-                        OrderedTupleType.Element(
-                            name = Identifier.of("f"),
-                            type = UniversalFunctionType(
-                                argumentType = OrderedTupleType.of(
-                                    typeVariableDefinition1.typePlaceholder, // FIXME
-                                ),
-                                imageType = typeVariableDefinition2.typePlaceholder, // FIXME
-                            ),
-                        ),
-                    ),
-                ),
-                imageType = ArrayType(
-                    elementType = typeVariableDefinition2.typePlaceholder, // FIXME
-                ),
-            )
-
-            val metaAbstractionType = UniversalFunctionType(
-                argumentType = OrderedTupleType(
-                    elements = listOf(
-                        OrderedTupleType.Element(
-                            name = Identifier.of("t"),
-                            type = UnorderedTupleType(
-                                valueTypeByName = mapOf(
-                                    Identifier.of("t1") to TypeType,
-                                    Identifier.of("t2") to TypeType,
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                imageType = innerAbstractionType,
-            )
-
-            assertEquals(
-                expected = metaAbstractionType,
-                actual = inferredType,
-            )
-        }
-
-        @Test
         fun testWithoutDeclaredImageType_fromBodyOnly() {
             val term = ExpressionSourceTerm.parse(
                 // Image type has to be inferred from the body only
                 source = "^[a: Int] => 2 + 3",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.buildDirectly(
+            val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -240,7 +105,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => a",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.buildDirectly(
+            val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -383,7 +248,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => a * 2",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.buildDirectly(
+            val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).resolved
@@ -484,7 +349,7 @@ class AbstractionConstructorTests {
     class EvaluationTests {
         @Test
         fun testUnorderedArgumentTuple() {
-            val abstractionConstructor = AbstractionConstructor.buildDirectly(
+            val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionConstructorSourceTerm

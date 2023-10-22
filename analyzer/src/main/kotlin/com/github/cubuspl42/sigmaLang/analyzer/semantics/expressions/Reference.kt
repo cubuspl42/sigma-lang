@@ -47,6 +47,7 @@ abstract class Reference : FirstOrderExpression() {
             override val resolved: Expression by lazy {
                 val outerScope = context.outerScope
 
+                // TODO: Clean error
                 val resolvedIntroduction = outerScope.resolveName(name = referredName) ?: run {
                     throw IllegalStateException("Unresolved name at compile-time: $referredName")
                 }

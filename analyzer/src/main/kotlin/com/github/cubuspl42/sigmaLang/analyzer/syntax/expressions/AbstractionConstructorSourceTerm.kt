@@ -5,7 +5,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 data class AbstractionConstructorSourceTerm(
     override val location: SourceLocation,
-    override val metaArgumentType: TupleTypeConstructorTerm? = null,
     override val argumentType: TupleTypeConstructorTerm,
     override val declaredImageType: ExpressionTerm? = null,
     override val image: ExpressionTerm,
@@ -15,9 +14,6 @@ data class AbstractionConstructorSourceTerm(
             ctx: AbstractionConstructorContext,
         ): AbstractionConstructorSourceTerm = AbstractionConstructorSourceTerm(
             location = SourceLocation.build(ctx),
-            metaArgumentType = ctx.metaArgumentType()?.let {
-                TupleTypeConstructorSourceTerm.build(it.tupleTypeConstructor())
-            },
             argumentType = ctx.argumentType.let {
                 TupleTypeConstructorSourceTerm.build(it)
             },

@@ -29,7 +29,6 @@ import kotlin.test.Test
 
 class TypeSpecificationTests {
     companion object {
-
         /**
          * ```
          * !^[t1: Type, t2: Type] ^{x: t1, y: t2}

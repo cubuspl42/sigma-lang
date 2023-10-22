@@ -48,102 +48,6 @@ class AbstractionTermTests {
                 actual = term,
             )
         }
-
-        @Test
-        fun testGenericWithMultipleParameters() {
-            val term = ExpressionSourceTerm.parse(
-                source = "!^[a: Type, b: Type] ^[a: a, b: b] => 0",
-            )
-
-            assertEquals(
-                expected = AbstractionConstructorSourceTerm(
-                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    metaArgumentType = OrderedTupleTypeConstructorSourceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                        elements = listOf(
-                            OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Identifier.of("a"),
-                                type = ReferenceSourceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 6),
-                                    referredName = Identifier.of("Type"),
-                                ),
-                            ),
-                            OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Identifier.of("b"),
-                                type = ReferenceSourceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 15),
-                                    referredName = Identifier.of("Type"),
-                                ),
-                            ),
-                        ),
-                    ),
-                    argumentType = OrderedTupleTypeConstructorSourceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 21),
-                        elements = listOf(
-                            OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Identifier.of("a"),
-                                type = ReferenceSourceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 26),
-                                    referredName = Identifier.of("a"),
-                                ),
-                            ),
-                            OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Identifier.of("b"),
-                                type = ReferenceSourceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 32),
-                                    referredName = Identifier.of("b"),
-                                ),
-                            ),
-                        ),
-                    ),
-                    image = IntLiteralSourceTerm(
-                        SourceLocation(lineIndex = 1, columnIndex = 38),
-                        value = IntValue(0),
-                    ),
-                ),
-                actual = term,
-            )
-        }
-
-        @Test
-        fun testGenericWithSingleParameter() {
-            assertEquals(
-                expected = AbstractionConstructorSourceTerm(
-                    location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                    metaArgumentType = OrderedTupleTypeConstructorSourceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 1),
-                        elements = listOf(
-                            OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Identifier.of("t"),
-                                type = ReferenceSourceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 6),
-                                    referredName = Identifier.of("Type"),
-                                ),
-                            ),
-                        ),
-                    ),
-                    argumentType = OrderedTupleTypeConstructorSourceTerm(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 12),
-                        elements = listOf(
-                            OrderedTupleTypeConstructorSourceTerm.Element(
-                                name = Identifier.of("n"),
-                                type = ReferenceSourceTerm(
-                                    location = SourceLocation(lineIndex = 1, columnIndex = 17),
-                                    referredName = Identifier.of("Int"),
-                                ),
-                            ),
-                        ),
-                    ),
-                    image = IntLiteralSourceTerm(
-                        SourceLocation(lineIndex = 1, columnIndex = 25),
-                        value = IntValue(0),
-                    ),
-                ),
-                actual = ExpressionSourceTerm.parse(
-                    source = "!^[t: Type] ^[n: Int] => 0",
-                ),
-            )
-        }
     }
 
     class TypeCheckingTests {
@@ -158,7 +62,7 @@ class AbstractionTermTests {
                 term = term,
             ).resolved
 
-            val type = (expression as Expression).inferredTypeOrIllType.getOrCompute()
+            val type = expression.inferredTypeOrIllType.getOrCompute()
 
             assertEquals(
                 expected = UniversalFunctionType(

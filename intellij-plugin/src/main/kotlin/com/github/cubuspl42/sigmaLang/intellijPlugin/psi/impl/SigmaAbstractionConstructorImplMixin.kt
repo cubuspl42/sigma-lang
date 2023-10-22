@@ -12,9 +12,6 @@ abstract class SigmaAbstractionConstructorImplMixin(
     node: ASTNode,
 ) : ASTWrapperPsiElement(node), SigmaAbstractionConstructor {
     override val asTerm: ExpressionTerm = object : PsiExpressionTerm(), AbstractionConstructorTerm {
-        override val metaArgumentType: TupleTypeConstructorTerm?
-            get() = null
-
         override val argumentType: TupleTypeConstructorTerm
             get() = (this@SigmaAbstractionConstructorImplMixin.argumentType as SigmaTupleTypeConstructor).asTerm
 
