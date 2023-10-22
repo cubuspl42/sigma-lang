@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.CallMatchers
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.CallMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
@@ -198,7 +198,7 @@ class ScenarioTests {
         )
 
         assertMatches(
-            matcher = CallMatchers.NonFullyInferredCalleeTypeErrorMatcher(
+            matcher = CallMatcher.NonFullyInferredCalleeTypeErrorMatcher(
                 calleeGenericType = Matcher.Is<UniversalFunctionType>(),
                 unresolvedPlaceholders = CollectionMatchers.eachOnce(
                     elements = setOf(

@@ -390,7 +390,7 @@ class CallTests {
             assertMatches(
                 matcher = CollectionMatchers.eachOnce(
                     elements = setOf(
-                        CallMatchers.NonFullyInferredCalleeTypeErrorMatcher(
+                        CallMatcher.NonFullyInferredCalleeTypeErrorMatcher(
                             calleeGenericType = Matcher.Is<UniversalFunctionType>(),
                             unresolvedPlaceholders = CollectionMatchers.whereEvery(
                                 element = Matcher.Is<TypePlaceholder>(),
