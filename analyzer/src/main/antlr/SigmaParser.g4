@@ -81,6 +81,7 @@ expression
 callableExpression
     : callee=callableExpression LeftParen argument=expression RightParen # callExpressionAlt
     | callee=callableExpression argument=tupleConstructor # callExpressionTupleConstructorAlt
+    | callee=callableExpression Bang argument=tupleConstructor # typeSpecificationAlt
     | subject=callableExpression Dot fieldName=Identifier # fieldReadAlt
     | parenExpression # callableParenAlt
     | reference # callableReferenceAlt

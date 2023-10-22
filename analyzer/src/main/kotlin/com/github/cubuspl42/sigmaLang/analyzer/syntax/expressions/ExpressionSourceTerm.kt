@@ -138,6 +138,10 @@ sealed class ExpressionSourceTerm : SourceTerm() {
             override fun visitDictTypeConstructorAlt(
                 ctx: SigmaParser.DictTypeConstructorAltContext,
             ): ExpressionTerm = DictTypeConstructorSourceTerm.build(ctx.dictTypeConstructor())
+
+            override fun visitTypeSpecificationAlt(
+                ctx: SigmaParser.TypeSpecificationAltContext,
+            ): ExpressionTerm = TypeSpecificationSourceTerm.build(ctx)
         }.visit(ctx) ?: throw IllegalArgumentException("Can't match expression ${ctx::class.java}")
     }
 }
