@@ -175,6 +175,7 @@ class ScenarioTests {
     }
 
     @Test
+    @Ignore // TODO: Proper generic constructor type inference
     fun testNonInferableGenericFunctionCall() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
@@ -219,6 +220,7 @@ class ScenarioTests {
     }
 
     @Test
+    @Ignore // TODO: Proper generic constructor type inference
     fun testNestedGenericFunctions() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """

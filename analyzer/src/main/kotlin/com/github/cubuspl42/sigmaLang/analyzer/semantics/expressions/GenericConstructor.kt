@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.lazier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.chainWithIfNotNull
@@ -12,17 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
 
-fun <T> lazier(
-    block: () -> Lazy<T>,
-): Lazy<T> = object : Lazy<T> {
-    val valueLazy = lazy { block() }
-    override val value: T
-        get() = valueLazy.value.value
-
-    override fun isInitialized(): Boolean = valueLazy.isInitialized() && valueLazy.value.isInitialized()
-}
-
-class MetaAbstractionConstructor(
+class GenericConstructor(
     override val term: AbstractionConstructorTerm?,
     private val metaArgumentTypeLazy: Lazy<TupleType>,
     private val bodyLazy: Lazy<Expression>,
@@ -32,7 +23,7 @@ class MetaAbstractionConstructor(
             context: Expression.BuildContext,
             metaArgumentTypeTerm: TupleTypeConstructorTerm,
             term: AbstractionConstructorTerm,
-        ): Lazy<MetaAbstractionConstructor> {
+        ): Lazy<GenericConstructor> {
             val outerMetaScope = context.outerMetaScope
 
             val metaArgumentTypeConstructor by TupleTypeConstructor.build(
@@ -65,7 +56,7 @@ class MetaAbstractionConstructor(
             }
 
             return lazy {
-                MetaAbstractionConstructor(
+                GenericConstructor(
                     term = term,
                     metaArgumentTypeLazy = metaArgumentTypeThunk.asLazy(),
                     bodyLazy = bodyLazy,

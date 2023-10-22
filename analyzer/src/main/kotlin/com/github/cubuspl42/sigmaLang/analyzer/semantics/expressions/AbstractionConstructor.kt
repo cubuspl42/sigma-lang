@@ -53,7 +53,7 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
             val metaArgumentTypeTerm = term.metaArgumentType
 
             return if (metaArgumentTypeTerm != null) {
-                MetaAbstractionConstructor.build(
+                GenericConstructor.build(
                     context = context,
                     metaArgumentTypeTerm = metaArgumentTypeTerm,
                     term = term,
@@ -93,7 +93,8 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
                         )
                     }.resolved
 
-                    val internalArgumentType = internalArgumentTypeConstructor.evaluateAsType().typeOrIllType as TupleType
+                    val internalArgumentType =
+                        internalArgumentTypeConstructor.evaluateAsType().typeOrIllType as TupleType
 
                     val argumentDeclarationBlock = internalArgumentType.toArgumentDeclarationBlock()
 

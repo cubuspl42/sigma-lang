@@ -42,6 +42,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.StringLiteralTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TypeSpecificationSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TypeSpecificationTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
@@ -280,6 +282,11 @@ abstract class Expression {
                 context = context,
                 term = term,
             )
+
+            is TypeSpecificationTerm -> TypeSpecification.build(
+                context = context,
+                term = term,
+            ).asStub()
 
             is ParenTerm -> TODO()
         }
