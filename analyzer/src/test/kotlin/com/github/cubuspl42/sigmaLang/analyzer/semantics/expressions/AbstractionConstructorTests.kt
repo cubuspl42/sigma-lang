@@ -11,32 +11,30 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.Builtin
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntType
-import utils.Matcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
-import utils.assertMatches
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
+import utils.CollectionMatchers
+import utils.ListMatchers
+import utils.Matcher
+import utils.assertMatches
 import utils.checked
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
 class AbstractionConstructorTests {
-    class BuildingTests {
+    class ConstructionTests {
         @Test
         fun testDeclaredImageType() {
             val term = ExpressionSourceTerm.parse(
@@ -48,9 +46,46 @@ class AbstractionConstructorTests {
                 term = term,
             ).resolved
 
-            assertEquals(
-                expected = IntCollectiveType,
-                actual = abstractionConstructor.declaredImageType,
+            val aDeclaration = assertIs<AbstractionConstructor.ArgumentDeclaration>(
+                abstractionConstructor.argumentDeclarationBlock.resolveNameLocally(
+                    name = Identifier.of("a")
+                )
+            )
+
+            assertMatches(
+                matcher = AbstractionConstructorMatcher(
+                    argumentType = OrderedTupleTypeMatcher(
+                        elements = listOf(
+                            OrderedTupleTypeMatcher.ElementMatcher(
+                                name = Matcher.Equals(Identifier.of("a")),
+                                type = Matcher.Is<IntCollectiveType>(),
+                            ),
+                        ),
+                    ).checked(),
+                    declaredImageType = Matcher.Is<IntCollectiveType>(),
+                    image = CallMatcher(
+                        subject = Matcher.Is<Builtin>(),
+                        argument = UnorderedTupleConstructorMatcher(
+                            entries = CollectionMatchers.eachOnce(
+                                elements = setOf(
+                                    UnorderedTupleConstructorMatcher.EntryMatcher(
+                                        name = Matcher.Irrelevant(),
+                                        value = IntLiteralMatcher(
+                                            value = Matcher.Equals(3L),
+                                        ).checked(),
+                                    ),
+                                    UnorderedTupleConstructorMatcher.EntryMatcher(
+                                        name = Matcher.Irrelevant(),
+                                        value = ReferenceMatcher(
+                                            referredDeclaration = Matcher.Equals(aDeclaration),
+                                        ).checked(),
+                                    ),
+                                ),
+                            ),
+                        ).checked(),
+                    ).checked(),
+                ),
+                actual = abstractionConstructor,
             )
         }
     }
