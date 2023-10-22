@@ -1,21 +1,29 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 data class DictValue(
-    val entries: Map<PrimitiveValue, Thunk<Value>>,
+    val thunkByKey: Map<PrimitiveValue, Thunk<Value>>,
 ) : FunctionValue() {
-    val valueEntries: Map<PrimitiveValue, Value>
-        get() = entries.mapValues { (_, thunk) -> thunk.value!! }
+    val thunkByValue: Map<PrimitiveValue, Value>
+        get() = thunkByKey.mapValues { (_, thunk) -> thunk.value!! }
+
+    val entries: Collection<Entry>
+        get() = thunkByKey.entries.map { (key, valueThunk) ->
+            Entry(
+                key = key,
+                valueThunk = valueThunk,
+            )
+        }
 
     data class Entry(
         val key: PrimitiveValue,
-        val value: Thunk<Value>,
+        val valueThunk: Thunk<Value>,
     )
 
     companion object {
         fun fromMap(
             entries: Map<PrimitiveValue, Value>,
         ): DictValue = DictValue(
-            entries = entries.mapValues { (_, value) ->
+            thunkByKey = entries.mapValues { (_, value) ->
                 Thunk.pure(value)
             },
         )
@@ -23,7 +31,7 @@ data class DictValue(
         fun fromList(
             list: List<Thunk<Value>>,
         ): DictValue = DictValue(
-            entries = list.withIndex().associate { (index, element) ->
+            thunkByKey = list.withIndex().associate { (index, element) ->
                 IntValue(value = index.toLong()) to element
             },
         )
@@ -38,11 +46,11 @@ data class DictValue(
         fun fromEntries(
             entries: Iterable<Entry>,
         ): DictValue = DictValue(
-            entries = entries.associate { it.key to it.value },
+            thunkByKey = entries.associate { it.key to it.valueThunk },
         )
 
         val Empty = DictValue(
-            entries = emptyMap(),
+            thunkByKey = emptyMap(),
         )
     }
 
@@ -67,7 +75,7 @@ data class DictValue(
 
     fun read(
         key: Value,
-    ): Thunk<Value>? = entries[key as PrimitiveValue]
+    ): Thunk<Value>? = thunkByKey[key as PrimitiveValue]
 
     fun readValue(
         key: Value,
@@ -76,7 +84,7 @@ data class DictValue(
     }
 
     private fun dumpContent(): String? {
-        val entries = entries.mapValues { (_, image) ->
+        val entries = thunkByKey.mapValues { (_, image) ->
             image
         }.entries
 
@@ -97,7 +105,7 @@ data class DictValue(
         else -> "[${key.dump()}]"
     }
 
-    private fun toMapDebug(): Map<Long, Value> = entries.map { (key, value) ->
+    private fun toMapDebug(): Map<Long, Value> = thunkByKey.map { (key, value) ->
         (key as IntValue).value to value.value!!
     }.toMap()
 
@@ -116,7 +124,7 @@ data class DictValue(
 fun ArrayTable(
     elements: List<Thunk<Value>>,
 ): DictValue = DictValue(
-    entries = elements.withIndex().associate { (index, value) ->
+    thunkByKey = elements.withIndex().associate { (index, value) ->
         IntValue(value = index.toLong()) to value
     },
 )

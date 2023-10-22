@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 
-data class GenericType(
+abstract class GenericType(
     val metaArgumentType: TupleType,
 ) : Type() {
     val metaType: UniversalFunctionType
@@ -23,9 +23,8 @@ data class GenericType(
 
     override fun dumpDirectly(depth: Int): String = "${metaArgumentType.dumpRecursively(depth)} !-> Type"
 
-    fun specify(
-        argument: DictValue,
-    ): Type {
-        TODO()
-    }
+    // Thought: Return a thunk?
+    abstract fun specify(
+        metaArgument: DictValue,
+    ): Type
 }

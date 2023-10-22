@@ -7,7 +7,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -54,7 +53,7 @@ class EulerProblemsTests {
                 Identifier.of("b") to IntValue(value = 1L),
                 Identifier.of("c") to IntValue(value = 8L),
             ),
-            actual = dictValue.valueEntries,
+            actual = dictValue.thunkByValue,
         )
     }
 

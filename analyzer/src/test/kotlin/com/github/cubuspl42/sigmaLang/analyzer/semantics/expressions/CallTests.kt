@@ -24,6 +24,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
@@ -183,9 +184,13 @@ class CallTests {
                 source = "f[false, 1]",
             ) as PostfixCallSourceTerm
 
-            val fKind = GenericType(
+            val fType = object : GenericType(
                 metaArgumentType = OrderedTupleType.of(TypeType, TypeType),
-            )
+            ) {
+                override fun specify(metaArgument: DictValue): Type {
+                    throw NotImplementedError()
+                }
+            }
 
             val call = Call.build(
                 Expression.BuildContext(
@@ -193,7 +198,7 @@ class CallTests {
                     outerScope = FakeStaticBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            annotatedType = fKind,
+                            annotatedType = fType,
                         ),
                     ).chainWith(BuiltinScope),
                 ),
@@ -207,7 +212,7 @@ class CallTests {
                         Matcher.Equals(
                             Call.NonFunctionCallError(
                                 location = SourceLocation(lineIndex = 1, columnIndex = 0),
-                                illegalSubjectType = fKind,
+                                illegalSubjectType = fType,
                             ),
                         ),
                     ),

@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
@@ -10,6 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.chainWithIfNotNull
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
 
@@ -76,9 +78,13 @@ class GenericConstructor(
     override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = Expression.Computation.pure(
         DiagnosedAnalysis(
             analysis = Analysis(
-                inferredType = GenericType(
+                inferredType = object : GenericType(
                     metaArgumentType = metaArgumentType,
-                ),
+                ) {
+                    override fun specify(metaArgument: DictValue): Type {
+                        TODO("Not yet implemented")
+                    }
+                },
             ),
             directErrors = emptySet(), // TODO
         )
@@ -87,6 +93,7 @@ class GenericConstructor(
     override val subExpressions: Set<Expression>
         get() = setOf(body)
 
-    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> =
-        body.bindDirectly(dynamicScope = dynamicScope)
+    override fun bindDirectly(
+        dynamicScope: DynamicScope,
+    ): Thunk<Value> = body.bindDirectly(dynamicScope = dynamicScope)
 }

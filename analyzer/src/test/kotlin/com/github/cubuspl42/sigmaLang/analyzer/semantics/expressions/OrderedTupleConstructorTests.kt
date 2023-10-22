@@ -104,7 +104,7 @@ class OrderedTupleConstructorTests {
 
             assertEquals(
                 expected = emptyMap(),
-                actual = value.entries,
+                actual = value.thunkByKey,
             )
         }
 
@@ -144,8 +144,8 @@ class OrderedTupleConstructorTests {
                         BoolValue(false),
                         IntValue(1),
                     ),
-                ).valueEntries,
-                actual = value.valueEntries,
+                ).thunkByValue,
+                actual = value.thunkByValue,
             )
         }
     }
