@@ -14,6 +14,14 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVaria
 abstract class UnorderedTupleType : TupleType() {
     abstract val valueTypeThunkByName: Map<Symbol, Thunk<TypeAlike>>
 
+    val entries: Collection<Entry>
+        get() = valueTypeThunkByName.map { (name, typeThunk) ->
+            UnorderedTupleType.Entry(
+                name = name,
+                typeThunk = typeThunk,
+            )
+        }
+
     fun getValueType(name: Symbol): TypeAlike? = valueTypeThunkByName[name]?.let {
         it.value ?: throw IllegalStateException("Unable to evaluate the value type thunk")
     }
@@ -29,7 +37,7 @@ abstract class UnorderedTupleType : TupleType() {
 
     data class Entry(
         val name: Symbol,
-        val typeThunk: Thunk<SpecificType>,
+        val typeThunk: Thunk<TypeAlike>,
     )
 
     data class UnorderedTupleMatch(

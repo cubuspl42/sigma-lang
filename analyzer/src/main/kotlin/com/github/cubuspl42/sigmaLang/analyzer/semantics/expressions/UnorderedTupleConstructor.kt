@@ -121,7 +121,7 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
             entries = entries.map { entry ->
                 DictValue.Entry(
                     key = entry.name,
-                    value = entry.value.bind(dynamicScope = dynamicScope),
+                    valueThunk = entry.value.bind(dynamicScope = dynamicScope),
                 )
             },
         )

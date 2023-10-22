@@ -80,7 +80,7 @@ abstract class UnorderedTupleTypeConstructor : TupleTypeConstructor() {
     ): Thunk<Value> = Thunk.pure(
         object : UnorderedTupleType() {
             override val valueTypeThunkByName by lazy {
-                entries.associate {
+                this@UnorderedTupleTypeConstructor.entries.associate {
                     val entryType = it.type.bind(
                         dynamicScope = dynamicScope,
                     ).thenJust { entryType ->

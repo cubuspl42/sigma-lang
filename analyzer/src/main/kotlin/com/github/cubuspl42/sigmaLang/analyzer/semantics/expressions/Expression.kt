@@ -156,7 +156,6 @@ abstract class Expression {
         val analysis: Analysis?,
         val directErrors: Set<SemanticError>,
     ) {
-
         companion object {
             fun fromError(
                 error: SemanticError,
@@ -165,6 +164,14 @@ abstract class Expression {
                 directErrors = setOf(error),
             )
         }
+
+        constructor(
+            inferredType: TypeAlike,
+            directErrors: Set<SemanticError> = emptySet(),
+        ) : this(
+            analysis = Analysis(inferredType),
+            directErrors = directErrors,
+        )
 
         val inferredType: TypeAlike?
             get() = analysis?.inferredType

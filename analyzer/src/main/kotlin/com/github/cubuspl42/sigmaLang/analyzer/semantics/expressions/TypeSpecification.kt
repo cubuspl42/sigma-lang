@@ -20,9 +20,15 @@ class TypeSpecification(
             context: BuildContext,
             term: TypeSpecificationTerm,
         ): Lazy<TypeSpecification> {
-            val subjectLazy = Expression.build(context = context, term = term.subject).asLazy()
+            val subjectLazy = Expression.build(
+                context = context,
+                term = term.subject,
+            ).asLazy()
 
-            val metaArgumentConstructor by TupleConstructor.build(context, term.argument).asLazy()
+            val metaArgumentConstructor by TypeExpression.build(
+                outerMetaScope = context.outerMetaScope,
+                term = term.argument,
+            ).asLazy()
 
             val metaArgumentThunk = Thunk.lazy {
                 metaArgumentConstructor.constClassified!!.valueThunk.thenJust { it as DictValue }
@@ -62,7 +68,9 @@ class TypeSpecification(
             )
         }
 
-        TODO()
+        return@buildDiagnosedAnalysisComputation DiagnosedAnalysis(
+            inferredType = subjectType.specify(metaArgument),
+        )
     }
 
     override val subExpressions: Set<Expression>

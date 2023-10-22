@@ -109,7 +109,7 @@ class ClassDefinitionTests {
 
             assertEquals(
                 expected = 3,
-                actual = classValue.entries.size,
+                actual = classValue.thunkByKey.size,
             )
 
             assertEquals(
