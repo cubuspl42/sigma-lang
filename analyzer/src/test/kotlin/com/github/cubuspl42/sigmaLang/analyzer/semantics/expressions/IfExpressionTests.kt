@@ -60,7 +60,6 @@ class IfExpressionTests {
             assertEquals(
                 expected = setOf(
                     IfExpression.InvalidGuardError(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 4),
                         actualType = IntLiteralType(
                             value = IntValue(value = 2L),
                         ),

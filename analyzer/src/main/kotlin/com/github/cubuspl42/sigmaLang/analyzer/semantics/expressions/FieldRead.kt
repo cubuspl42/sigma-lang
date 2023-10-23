@@ -13,7 +13,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadTerm
 
 abstract class FieldRead : FirstOrderExpression() {
-    abstract override val term: FieldReadTerm
+    abstract override val term: FieldReadTerm?
+
+    abstract val fieldName: Identifier
 
     abstract val subject: Expression
 
@@ -47,6 +49,8 @@ abstract class FieldRead : FirstOrderExpression() {
 
                     override val term: FieldReadTerm = term
 
+                    override val fieldName: Identifier = term.fieldName
+
                     override val subject: Expression by lazy {
                         Expression.build(
                             context = context,
@@ -57,9 +61,6 @@ abstract class FieldRead : FirstOrderExpression() {
             }
         }
     }
-
-    private val fieldName: Identifier
-        get() = term.fieldName
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
@@ -73,14 +74,14 @@ abstract class FieldRead : FirstOrderExpression() {
             if (fieldType != null) {
                 DiagnosedAnalysis(
                     analysis = Analysis(
-                        inferredType = fieldType as SpecificType,
+                        inferredType = fieldType,
                     ),
                     directErrors = emptySet(),
                 )
             } else {
                 DiagnosedAnalysis.fromError(
                     MissingFieldError(
-                        location = term.location,
+                        location = term?.location,
                         subjectType = validSubjectType,
                         missingFieldName = fieldName,
                     )
@@ -108,4 +109,17 @@ abstract class FieldRead : FirstOrderExpression() {
 
     override val subExpressions: Set<Expression>
         get() = setOf(subject)
+}
+
+fun FieldRead(
+    subjectLazy: Lazy<Expression>,
+    fieldName: Identifier,
+): FieldRead = object : FieldRead() {
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val term = null
+
+    override val subject: Expression by subjectLazy
+
+    override val fieldName: Identifier = fieldName
 }

@@ -26,7 +26,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
 
 class ClassDefinition(
-    override val name: Symbol,
     override val bodyStub: Stub<Expression>,
 ) : Definition {
     object Is : StrictBuiltinOrderedFunction() {
@@ -120,8 +119,8 @@ class ClassDefinition(
 
                                 override val value: Expression = object : AbstractionConstructor() {
                                     override val term: ExpressionTerm? = null
-
-                                    override val argumentType: TupleType = bodyType
+                                    override val argumentDeclaration: ArgumentDeclaration
+                                        get() = TODO()
 
                                     override val declaredImageType: TypeAlike = instanceType
 
@@ -129,9 +128,6 @@ class ClassDefinition(
                                         get() = TODO() // {tag: tag, ...argument}
 
                                     override val outerScope: StaticScope = outerScope
-
-//                                    override val argumentDeclarationBlock: ArgumentStaticBlock
-//                                        get() = throw NotImplementedError()
                                 }
                             },
                         )
@@ -142,7 +138,6 @@ class ClassDefinition(
             }
 
             return ClassDefinition(
-                name = term.name,
                 bodyStub = classBodyStub,
             )
         }

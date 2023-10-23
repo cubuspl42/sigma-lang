@@ -1,22 +1,13 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
 abstract class StaticBlock : StaticScope {
     class Fixed(
-        private val definitions: Set<Definition>,
-    ) : StaticBlock() {
-        override fun resolveNameLocally(
-            name: Symbol,
-        ): Definition? = definitions.find { it.name == name }
+        override val resolvedNameByName: Map<Symbol, ResolvedName>,
+    ) : MappingStaticBlock()
 
-        override fun getLocalNames(): Set<Symbol> = definitions.map { it.name }.toSet()
-    }
-
-    abstract fun resolveNameLocally(name: Symbol): Introduction?
+    abstract fun resolveNameLocally(name: Symbol): ResolvedName?
 
     abstract fun getLocalNames(): Set<Symbol>
 
@@ -24,7 +15,7 @@ abstract class StaticBlock : StaticScope {
 
     final override fun resolveName(
         name: Symbol,
-    ): Introduction? = resolveNameLocally(name = name)
+    ): ResolvedName? = resolveNameLocally(name = name)
 
     fun chainWith(outerScope: StaticScope): StaticScope = StaticScope.Chained(
         outerScope = outerScope,

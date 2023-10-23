@@ -11,9 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 
 object IfFunction : BuiltinValue {
-    private val rDefinition = TypeVariableDefinition(
-        name = Identifier.of("R"),
-    )
+    private val rDefinition = TypeVariableDefinition()
 
     override val type: SpecificType = UniversalFunctionType(
         argumentType = OrderedTupleType(

@@ -11,7 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FieldReadSourceTerm
 import utils.FakeDefinition
-import utils.FakeStaticBlock
+import utils.FakeStaticScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -31,7 +31,7 @@ class FieldReadTests {
             val fieldRead = FieldRead.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeDefinition(
                             name = Identifier.of("foo"),
                             type = NeverType,

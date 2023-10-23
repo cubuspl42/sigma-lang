@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
@@ -16,15 +17,17 @@ class NamespaceStaticBlock(
 ) : StaticBlock() {
     override fun resolveNameLocally(
         name: Symbol,
-    ): Definition? = definitionByName[name]
+    ): ResolvedDefinition? = definitionByName[name]?.let {
+        ResolvedDefinition(
+            definition = it,
+        )
+    }
 
     override fun getLocalNames(): Set<Symbol> = definitionByName.keys
 }
 
 
 class NamespaceDefinition(
-    override val name: Symbol,
-    private val entryBodyByName: Map<Identifier, Definition>,
     private val staticBlock: NamespaceStaticBlock,
     override val body: UnorderedTupleConstructor,
 ) : Definition {
@@ -68,8 +71,6 @@ class NamespaceDefinition(
                 }
 
                 val namespaceDefinition = NamespaceDefinition(
-                    name = term.name,
-                    entryBodyByName = definitionByName,
                     staticBlock = staticBlock,
                     body = namespaceBody,
                 )
@@ -83,7 +84,7 @@ class NamespaceDefinition(
 
     fun getDefinition(
         name: Symbol,
-    ): Definition? = staticBlock.resolveNameLocally(name = name)
+    ): Definition? = staticBlock.resolveNameLocally(name = name)?.definition
 
 //    override val name: Identifier
 //        get() = TODO()

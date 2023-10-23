@@ -1,3 +1,5 @@
+@file:Suppress("JUnitMalformedDeclaration")
+
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
@@ -5,6 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.EvaluationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.buildReferenceMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
@@ -12,152 +15,133 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
-import utils.FakeStaticBlock
+import utils.CollectionMatchers
+import utils.FakeArgumentDeclarationBlock
+import utils.FakeStaticScope
 import utils.FakeUserDeclaration
-import utils.assertMatchesEachInOrder
+import utils.ListMatchers
+import utils.Matcher
+import utils.assertMatches
 import utils.assertMatchesEachOnce
+import utils.checked
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class UnionTypeConstructorTests {
-    @Test
-    fun testBuildFlat() {
-        val term = ExpressionSourceTerm.parse(
-            source = "A | ^[B]",
-        ) as UnionTypeConstructorTerm
+    class ConstructionTests {
+        @Test
+        fun testBuildFlat() {
+            val term = ExpressionSourceTerm.parse(
+                source = "A | ^[B]",
+            ) as UnionTypeConstructorTerm
 
-        val aDeclaration = FakeUserDeclaration(
-            name = Identifier.of("A"),
-            annotatedType = TypeType,
-        )
-
-        val bDeclaration = FakeUserDeclaration(
-            name = Identifier.of("B"),
-            annotatedType = TypeType,
-        )
-
-        val unionTypeConstructor = UnionTypeConstructor.build(
-            context = Expression.BuildContext(
-                outerMetaScope = StaticScope.Empty,
-                outerScope = FakeStaticBlock.of(
-                    aDeclaration,
-                    bDeclaration,
+            val staticBlock = FakeArgumentDeclarationBlock.of(
+                FakeUserDeclaration(
+                    name = Identifier.of("A"),
+                    declaredType = TypeType,
                 ),
-            ),
-            term = term,
-        ).resolved
-
-        val types = unionTypeConstructor.types
-
-        assertMatchesEachOnce(
-            actual = types,
-            blocks = mapOf(
-                "A" to { expression ->
-                    val reference = assertIs<Reference>(expression)
-
-                    assertEquals(
-                        actual = reference.referredDeclaration,
-                        expected = aDeclaration,
-                    )
-                },
-                "^[B]" to { expression ->
-                    assertIs<OrderedTupleTypeConstructor>(expression)
-
-                    assertMatchesEachInOrder(
-                        actual = expression.elements,
-                        blocks = listOf {
-                            val reference = assertIs<Reference>(it.type)
-
-                            assertEquals(
-                                actual = reference.referredDeclaration,
-                                expected = bDeclaration,
-                            )
-                        },
-                    )
-                },
-            ),
-        )
-    }
-
-    @Test
-    fun testBuildNested() {
-        val term = ExpressionSourceTerm.parse(
-            source = "A | B | D | C",
-        ) as UnionTypeConstructorTerm
-
-        val aDeclaration = FakeUserDeclaration(
-            name = Identifier.of("A"),
-            annotatedType = TypeType,
-        )
-
-        val bDeclaration = FakeUserDeclaration(
-            name = Identifier.of("B"),
-            annotatedType = TypeType,
-        )
-
-        val cDeclaration = FakeUserDeclaration(
-            name = Identifier.of("C"),
-            annotatedType = TypeType,
-        )
-
-        val dDeclaration = FakeUserDeclaration(
-            name = Identifier.of("D"),
-            annotatedType = TypeType,
-        )
-
-        val unionTypeConstructor = UnionTypeConstructor.build(
-            context = Expression.BuildContext(
-                outerMetaScope = StaticScope.Empty,
-                outerScope = FakeStaticBlock.of(
-                    aDeclaration,
-                    bDeclaration,
-                    cDeclaration,
-                    dDeclaration,
+                FakeUserDeclaration(
+                    name = Identifier.of("B"),
+                    declaredType = TypeType,
                 ),
-            ),
-            term = term,
-        ).resolved
+            )
 
-        val types = unionTypeConstructor.types
+            val aResolvedName = staticBlock.resolveNameLocally(
+                name = Identifier.of("A"),
+            )!!
 
-        assertMatchesEachOnce(
-            actual = types,
-            blocks = mapOf(
-                "A" to { expression ->
-                    val reference = assertIs<Reference>(expression)
+            val bResolvedName = staticBlock.resolveNameLocally(
+                name = Identifier.of("B"),
+            )!!
 
-                    assertEquals(
-                        actual = reference.referredDeclaration,
-                        expected = aDeclaration,
-                    )
-                },
-                "B" to { expression ->
-                    val reference = assertIs<Reference>(expression)
+            val unionTypeConstructor = UnionTypeConstructor.build(
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = staticBlock,
+                ),
+                term = term,
+            ).resolved
 
-                    assertEquals(
-                        actual = reference.referredDeclaration,
-                        expected = bDeclaration,
-                    )
-                },
-                "C" to { expression ->
-                    val reference = assertIs<Reference>(expression)
+            assertMatches(
+                matcher = UnionTypeConstructorMatcher(
+                    types = CollectionMatchers.eachOnce(
+                        aResolvedName.buildReferenceMatcher(),
+                        OrderedTupleTypeConstructorMatcher(
+                            elements = ListMatchers.inOrder(
+                                OrderedTupleTypeConstructorMatcher.ElementMatcher(
+                                    name = Matcher.IsNull(),
+                                    type = bResolvedName.buildReferenceMatcher(),
+                                ),
+                            ),
+                        ).checked(),
+                    ),
+                ),
+                actual = unionTypeConstructor,
+            )
+        }
 
-                    assertEquals(
-                        actual = reference.referredDeclaration,
-                        expected = cDeclaration,
-                    )
-                },
-                "D" to { expression ->
-                    val reference = assertIs<Reference>(expression)
+        @Test
+        fun testBuildNested() {
+            val term = ExpressionSourceTerm.parse(
+                source = "A | B | D | C",
+            ) as UnionTypeConstructorTerm
 
-                    assertEquals(
-                        actual = reference.referredDeclaration,
-                        expected = dDeclaration,
-                    )
-                },
-            ),
-        )
+            val staticBlock = FakeArgumentDeclarationBlock.of(
+                FakeUserDeclaration(
+                    name = Identifier.of("A"),
+                    declaredType = TypeType,
+                ),
+                FakeUserDeclaration(
+                    name = Identifier.of("B"),
+                    declaredType = TypeType,
+                ),
+                FakeUserDeclaration(
+                    name = Identifier.of("C"),
+                    declaredType = TypeType,
+                ),
+                FakeUserDeclaration(
+                    name = Identifier.of("D"),
+                    declaredType = TypeType,
+                ),
+            )
+
+            val aResolvedName = staticBlock.resolveNameLocally(
+                name = Identifier.of("A"),
+            )!!
+
+            val bResolvedName = staticBlock.resolveNameLocally(
+                name = Identifier.of("B"),
+            )!!
+
+            val cResolvedName = staticBlock.resolveNameLocally(
+                name = Identifier.of("C"),
+            )!!
+
+            val dResolvedName = staticBlock.resolveNameLocally(
+                name = Identifier.of("D"),
+            )!!
+
+            val unionTypeConstructor = UnionTypeConstructor.build(
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = staticBlock,
+                ),
+                term = term,
+            ).resolved
+
+            assertMatches(
+                matcher = UnionTypeConstructorMatcher(
+                    types = CollectionMatchers.eachOnce(
+                        aResolvedName.buildReferenceMatcher(),
+                        bResolvedName.buildReferenceMatcher(),
+                        cResolvedName.buildReferenceMatcher(),
+                        dResolvedName.buildReferenceMatcher(),
+                    ),
+                ),
+                actual = unionTypeConstructor,
+            )
+        }
     }
 
     class EvaluationTests {
@@ -198,8 +182,7 @@ class UnionTypeConstructorTests {
                     },
                     "^[Bool]" to { type ->
                         assertEquals(
-                            actual = type,
-                            expected = OrderedTupleType(
+                            actual = type, expected = OrderedTupleType(
                                 elements = listOf(
                                     OrderedTupleType.Element(
                                         name = null,

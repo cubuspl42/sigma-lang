@@ -33,8 +33,6 @@ object UserVariableDefinition {
         )
 
         return object : Definition {
-            override val name: Symbol = term.name
-
             override val bodyStub: Stub<Expression> = object : Stub<Expression> {
                 override val resolved: Expression by lazy {
                     val body = bodyStub.resolved

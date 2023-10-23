@@ -128,9 +128,7 @@ class ScenarioTests {
             name = Identifier.of("entryOf"),
         )!!
 
-        val valueTypeDefinition = TypeVariableDefinition(
-            name = Identifier.of("valueType"),
-        )
+        val valueTypeDefinition = TypeVariableDefinition()
 
         assertTypeIsEquivalent(
             expected = UniversalFunctionType(

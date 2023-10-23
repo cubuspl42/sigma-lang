@@ -47,9 +47,7 @@ abstract class FunctionValue : Value() {
     }
 
     object Chunked4 : StrictBuiltinOrderedFunction() {
-        private val elementTypeDefinition = TypeVariableDefinition(
-            name = Identifier.of("elementType"),
-        )
+        private val elementTypeDefinition = TypeVariableDefinition()
 
         override val argTypes: List<SpecificType> = listOf(
             ArrayType(
@@ -75,9 +73,7 @@ abstract class FunctionValue : Value() {
     }
 
     object DropFirst : StrictBuiltinOrderedFunction() {
-        private val elementTypeDefinition = TypeVariableDefinition(
-            name = Identifier.of("elementType"),
-        )
+        private val elementTypeDefinition = TypeVariableDefinition()
 
         override val argTypes: List<SpecificType> = listOf(
             ArrayType(
@@ -99,9 +95,7 @@ abstract class FunctionValue : Value() {
     }
 
     object Take : StrictBuiltinOrderedFunction() {
-        private val elementTypeDefinition = TypeVariableDefinition(
-            name = Identifier.of("elementType"),
-        )
+        private val elementTypeDefinition = TypeVariableDefinition()
 
         override val argTypes: List<SpecificType> = listOf(
             ArrayType(
@@ -124,9 +118,7 @@ abstract class FunctionValue : Value() {
     }
 
     object Windows : StrictBuiltinOrderedFunction() {
-        private val elementTypeDefinition = TypeVariableDefinition(
-            name = Identifier.of("elementType"),
-        )
+        private val elementTypeDefinition = TypeVariableDefinition()
 
         override val argTypes: List<SpecificType> = listOf(
             ArrayType(
@@ -162,13 +154,9 @@ abstract class FunctionValue : Value() {
     }
 
     object MapFn : BuiltinOrderedFunction() {
-        private val elementTypeDefinition = TypeVariableDefinition(
-            name = Identifier.of("elementType"),
-        )
+        private val elementTypeDefinition = TypeVariableDefinition()
 
-        private val resultTypeDefinition = TypeVariableDefinition(
-            name = Identifier.of("elementType"),
-        )
+        private val resultTypeDefinition = TypeVariableDefinition()
 
         private val transformType = UniversalFunctionType(
             argumentType = OrderedTupleType(
@@ -206,9 +194,7 @@ abstract class FunctionValue : Value() {
     }
 
     object LengthFunction : StrictBuiltinOrderedFunction() {
-        private val elementTypeDefinition = TypeVariableDefinition(
-            name = Identifier.of("elementType"),
-        )
+        private val elementTypeDefinition = TypeVariableDefinition()
 
         override val argTypes = listOf(
             ArrayType(
@@ -226,9 +212,7 @@ abstract class FunctionValue : Value() {
     }
 
     object ConcatFunction : StrictBuiltinOrderedFunction() {
-        private val elementTypeDefinition = TypeVariableDefinition(
-            name = Identifier.of("elementType"),
-        )
+        private val elementTypeDefinition = TypeVariableDefinition()
 
         override val argTypes = listOf(
             ArrayType(

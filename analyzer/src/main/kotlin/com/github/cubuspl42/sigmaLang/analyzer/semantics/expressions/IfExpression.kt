@@ -57,7 +57,7 @@ abstract class IfExpression : FirstOrderExpression() {
     }
 
     data class InvalidGuardError(
-        override val location: SourceLocation?,
+        override val location: SourceLocation? = null,
         val actualType: SpecificType,
     ) : SemanticError {
         override fun dump(): String = "$location: Invalid guard type: ${actualType.dump()} (should be: Bool)"

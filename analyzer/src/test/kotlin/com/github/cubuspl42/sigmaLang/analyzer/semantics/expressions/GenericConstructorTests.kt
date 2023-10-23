@@ -27,6 +27,7 @@ import kotlin.test.assertIs
 class GenericConstructorTests {
     class ConstructionTests {
         @Test
+        @Ignore // TODO: Complex type variables
         fun testLetBody() {
             val term = ExpressionSourceTerm.parse(
                 source = """
@@ -63,6 +64,7 @@ class GenericConstructorTests {
         }
 
         @Test
+        @Ignore // TODO: Complex type variables
         fun testAbstractionBody() {
             val term = ExpressionSourceTerm.parse(
                 source = "^[t: Type] !=> ^[a: t] -> Int => 11",

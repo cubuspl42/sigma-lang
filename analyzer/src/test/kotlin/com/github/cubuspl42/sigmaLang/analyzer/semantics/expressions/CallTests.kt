@@ -35,8 +35,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import utils.CollectionMatchers
+import utils.FakeArgumentDeclarationBlock
 import utils.FakeDefinition
-import utils.FakeStaticBlock
+import utils.FakeDefinitionBlock
+import utils.FakeStaticScope
 import utils.FakeUserDeclaration
 import utils.Matcher
 import utils.assertMatches
@@ -58,10 +60,10 @@ class CallTests {
             val call = Call.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeArgumentDeclarationBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            annotatedType = UniversalFunctionType(
+                            declaredType = UniversalFunctionType(
                                 argumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(
@@ -99,10 +101,10 @@ class CallTests {
             val call = Call.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            annotatedType = UniversalFunctionType(
+                            declaredType = UniversalFunctionType(
                                 argumentType = OrderedTupleType(
                                     elements = listOf(
                                         OrderedTupleType.Element(
@@ -154,10 +156,10 @@ class CallTests {
             val call = Call.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("b"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                     ),
                 ),
@@ -171,7 +173,6 @@ class CallTests {
             assertEquals(
                 expected = setOf(
                     Call.NonFunctionCallError(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         illegalSubjectType = BoolType,
                     ),
                 ),
@@ -197,10 +198,10 @@ class CallTests {
             val call = Call.build(
                 Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeArgumentDeclarationBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            annotatedType = fType,
+                            declaredType = fType,
                         ),
                     ).chainWith(BuiltinScope),
                 ),
@@ -213,7 +214,6 @@ class CallTests {
                     elements = setOf(
                         Matcher.Equals(
                             Call.NonFunctionCallError(
-                                location = SourceLocation(lineIndex = 1, columnIndex = 0),
                                 illegalSubjectType = fType,
                             ),
                         ),
@@ -234,21 +234,17 @@ class CallTests {
                 source = "f[false, 0]",
             ) as PostfixCallSourceTerm
 
-            val typeVariableDefinition1 = TypeVariableDefinition(
-                name = Identifier.of("type1"),
-            )
+            val typeVariableDefinition1 = TypeVariableDefinition()
 
-            val typeVariableDefinition2 = TypeVariableDefinition(
-                name = Identifier.of("type2"),
-            )
+            val typeVariableDefinition2 = TypeVariableDefinition()
 
             val call = Call.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeArgumentDeclarationBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            annotatedType = UniversalFunctionType(
+                            declaredType = UniversalFunctionType(
                                 argumentType = OrderedTupleType.of(
                                     typeVariableDefinition1.typePlaceholder,
                                     typeVariableDefinition2.typePlaceholder,
@@ -288,17 +284,15 @@ class CallTests {
                 source = "f[]",
             ) as PostfixCallSourceTerm
 
-            val typeVariableDefinition = TypeVariableDefinition(
-                name = Identifier.of("type"),
-            )
+            val typeVariableDefinition = TypeVariableDefinition()
 
             val call = Call.build(
                 Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            annotatedType = UniversalFunctionType(
+                            declaredType = UniversalFunctionType(
                                 argumentType = OrderedTupleType.Empty,
                                 imageType = ArrayType(
                                     typeVariableDefinition.typePlaceholder,
@@ -313,7 +307,6 @@ class CallTests {
             assertEquals(
                 expected = setOf(
                     NonFullyInferredCalleeTypeError(
-                        location = SourceLocation(lineIndex = 1, columnIndex = 0),
                         calleeGenericType = UniversalFunctionType(
                             argumentType = OrderedTupleType.Empty,
                             imageType = ArrayType(
@@ -340,13 +333,9 @@ class CallTests {
                 source = "f[false, 1]",
             ) as PostfixCallSourceTerm
 
-            val innerTypeDefinition1 = TypeVariableDefinition(
-                name = Identifier.of("type1"),
-            )
+            val innerTypeDefinition1 = TypeVariableDefinition()
 
-            val innerTypeDefinition2 = TypeVariableDefinition(
-                name = Identifier.of("type2"),
-            )
+            val innerTypeDefinition2 = TypeVariableDefinition()
 
             val innerFunctionType = UniversalFunctionType(
                 argumentType = OrderedTupleType.of(
@@ -359,13 +348,9 @@ class CallTests {
                 ),
             )
 
-            val outerTypeDefinition1 = TypeVariableDefinition(
-                name = Identifier.of("type1"),
-            )
+            val outerTypeDefinition1 = TypeVariableDefinition()
 
-            val outerTypeDefinition2 = TypeVariableDefinition(
-                name = Identifier.of("type2"),
-            )
+            val outerTypeDefinition2 = TypeVariableDefinition()
 
             val outerFunctionType = UniversalFunctionType(
                 argumentType = OrderedTupleType.of(
@@ -378,10 +363,10 @@ class CallTests {
             val call = Call.build(
                 Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeArgumentDeclarationBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            annotatedType = outerFunctionType,
+                            declaredType = outerFunctionType,
                         ),
                     ).chainWith(BuiltinScope),
                 ),
@@ -436,7 +421,7 @@ class CallTests {
             val call = Call.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeDefinition(
                             name = Identifier.of("sq"),
                             type = NeverType,
@@ -464,7 +449,7 @@ class CallTests {
             val call = Call.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeDefinition(
                             name = Identifier.of("dict"),
                             type = NeverType,
@@ -508,7 +493,7 @@ class CallTests {
             val call = Call.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeDefinitionBlock.of(
                         FakeDefinition(
                             name = Identifier.of("f"),
                             type = NeverType,

@@ -209,7 +209,7 @@ abstract class Expression {
             is AbstractionConstructorTerm -> AbstractionConstructor.build(
                 context = context,
                 term = term,
-            )
+            ).expressionLazy.asStub()
 
             is ArrayTypeConstructorTerm -> ArrayTypeConstructor.build(
                 context = context,

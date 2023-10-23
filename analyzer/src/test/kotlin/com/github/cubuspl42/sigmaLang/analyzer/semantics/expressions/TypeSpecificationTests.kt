@@ -20,7 +20,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSour
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TypeSpecificationTerm
 import utils.CollectionMatchers
 import utils.FakeDefinition
-import utils.FakeStaticBlock
+import utils.FakeStaticScope
 import utils.FakeUserDeclaration
 import utils.Matcher
 import utils.assertMatches
@@ -69,7 +69,7 @@ class TypeSpecificationTests {
 
             val typeSpecification = TypeSpecification.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = FakeStaticBlock(
+                    outerMetaScope = FakeStaticScope(
                         declarations = setOf(
                             FakeDefinition(
                                 name = Identifier.of("a"),
@@ -83,11 +83,11 @@ class TypeSpecificationTests {
                             ),
                         ),
                     ),
-                    outerScope = FakeStaticBlock(
+                    outerScope = FakeStaticScope(
                         declarations = setOf(
                             FakeUserDeclaration(
                                 name = Identifier.of("f"),
-                                annotatedType = genericType1,
+                                declaredType = genericType1,
                             ),
                         ),
                     ),
@@ -125,7 +125,7 @@ class TypeSpecificationTests {
 
             val typeSpecification = TypeSpecification.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = FakeStaticBlock(
+                    outerMetaScope = FakeStaticScope(
                         declarations = setOf(
                             FakeDefinition(
                                 name = Identifier.of("p"),
@@ -139,11 +139,11 @@ class TypeSpecificationTests {
                             ),
                         ),
                     ),
-                    outerScope = FakeStaticBlock(
+                    outerScope = FakeStaticScope(
                         declarations = setOf(
                             FakeUserDeclaration(
                                 name = Identifier.of("g"),
-                                annotatedType = genericType1,
+                                declaredType = genericType1,
                             ),
                         ),
                     ),

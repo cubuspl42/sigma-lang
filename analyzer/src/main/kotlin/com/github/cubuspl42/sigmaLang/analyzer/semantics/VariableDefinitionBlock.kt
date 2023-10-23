@@ -3,7 +3,6 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm
 
@@ -21,26 +20,24 @@ class VariableDefinitionBlock(
         )
     }
 
-    val declarations = declarationTerms.map {
-        UserVariableDefinition.build(
-            context = context,
-            term = it,
+    private val definitionByName = declarationTerms.associate {
+        it.name to ResolvedDefinition(
+            definition = UserVariableDefinition.build(
+                context = context,
+                term = it,
+            ),
         )
-    }.toSet()
-
-    private val definitionByName by lazy {
-        declarations.associateBy { it.name }
     }
 
-    fun getValueDefinition(name: Symbol): Definition? = definitionByName[name]
+    fun getValueDefinition(name: Symbol): Definition? = resolveNameLocally(name)?.definition
 
     override fun resolveNameLocally(
         name: Symbol,
-    ): Introduction? = getValueDefinition(name = name)
+    ): ResolvedDefinition? = definitionByName[name]
 
     override fun getLocalNames(): Set<Symbol> = definitionByName.keys
 
-    val subExpressions by lazy { definitionByName.values.map { it.body }.toSet() }
+//    val subExpressions by lazy { definitionByName.values.map { it. body }.toSet() }
 
     val errors: Set<SemanticError> by lazy {
         definitionByName.values.fold(emptySet()) { acc, it -> acc + it.body.errors }

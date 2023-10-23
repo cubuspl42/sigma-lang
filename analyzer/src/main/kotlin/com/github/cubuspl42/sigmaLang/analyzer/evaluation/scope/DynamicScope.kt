@@ -6,11 +6,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declarati
 
 interface DynamicScope {
     object Empty : DynamicScope {
-        override fun getValue(name: Declaration): Thunk<Value>? = null
+        override fun getValue(declaration: Declaration): Thunk<Value>? = null
     }
 
     fun getValue(
-        name: Declaration,
+        declaration: Declaration,
     ): Thunk<Value>?
 }
 

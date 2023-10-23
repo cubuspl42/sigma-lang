@@ -9,12 +9,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.FirstOrderExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
@@ -58,7 +59,6 @@ class Builtin(
 }
 
 private class BuiltinDefinition(
-    override val name: Symbol,
     val value: Value,
     val type: SpecificType,
 ) : Definition {
@@ -212,23 +212,20 @@ object BuiltinScope : StaticScope {
         DictTypeConstructor.Name to DictTypeConstructor,
     )
 
-    private val builtinValueDeclarations = builtinValues.map { (name, builtinValue) ->
+    private val builtinDeclarations: Map<Symbol, BuiltinDefinition> = builtinValues.mapValues { (_, builtinValue) ->
         BuiltinDefinition(
-            name = name,
             value = builtinValue.value,
             type = builtinValue.type,
         )
-    }.toSet()
-
-    private val builtinDeclarations: Map<Symbol, BuiltinDefinition> = builtinValueDeclarations.associateBy { it.name }
-
-    private fun getBuiltin(
-        name: Symbol,
-    ): BuiltinValue? = builtinValues[name]
+    }
 
     override fun resolveName(
         name: Symbol,
-    ): Introduction? = builtinDeclarations[name]
+    ): ResolvedName? = builtinDeclarations[name]?.let {
+        ResolvedDefinition(
+            definition = it,
+        )
+    }
 
     override fun getAllNames(): Set<Symbol> = builtinDeclarations.keys
 }

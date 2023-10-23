@@ -30,8 +30,6 @@ fun Definition(
     name: Symbol,
     bodyStub: Stub<Expression>,
 ): Definition = object : Definition {
-    override val name = name
-
     override val bodyStub = bodyStub
 }
 
@@ -39,7 +37,5 @@ fun Definition(
     name: Symbol,
     body: Expression,
 ): Definition = object : Definition {
-    override val name = name
-
     override val bodyStub = Stub.of(body)
 }

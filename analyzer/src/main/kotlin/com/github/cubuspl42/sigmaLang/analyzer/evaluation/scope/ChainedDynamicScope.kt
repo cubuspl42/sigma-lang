@@ -9,10 +9,10 @@ class ChainedDynamicScope(
     private val dynamicScope: DynamicScope,
 ) : DynamicScope {
     override fun getValue(
-        name: Declaration,
+        declaration: Declaration,
     ): Thunk<Value>? = dynamicScope.getValue(
-        name = name,
+        declaration = declaration,
     ) ?: outerDynamicScope.getValue(
-        name = name,
+        declaration = declaration,
     )
 }

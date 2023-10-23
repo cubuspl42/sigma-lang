@@ -4,7 +4,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleTerm
@@ -63,9 +62,12 @@ class Module(
         }
 
     private val importBlock: StaticBlock = object : StaticBlock() {
-        override fun resolveNameLocally(name: Symbol): Introduction? {
+        override fun resolveNameLocally(name: Symbol): ResolvedName? {
             if (name !is Identifier) return null
-            return getImportedModuleByName(name = name)?.rootNamespaceDefinition
+
+            return getImportedModuleByName(name = name)?.rootNamespaceDefinition?.let {
+                return ResolvedDefinition(definition = it)
+            }
         }
 
         override fun getLocalNames(): Set<Symbol> = importedModulesPaths.map {

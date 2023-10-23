@@ -1,7 +1,5 @@
 package utils
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
-
 abstract class Matcher<in T> {
     open val description: String? = null
 
@@ -21,7 +19,16 @@ abstract class Matcher<in T> {
     }
 
     companion object {
-        //        @Suppress("TestFunctionName")
+        @Suppress("TestFunctionName")
+        fun <T> IsNull(): Matcher<T?> = object : Matcher<Any?>() {
+            override fun match(actual: Any?) {
+                if (actual != null) {
+                    throw AssertionError("Expected null, but got $actual")
+                }
+            }
+        }
+
+        @Suppress("TestFunctionName")
         inline fun <reified T> Is(
             matcher: Matcher<T>? = null,
         ): Matcher<Any?> = object : Matcher<Any?>() {
@@ -48,7 +55,7 @@ fun <T> Matcher<T>.with(other: Matcher<T>): Matcher<T> = object : Matcher<T>() {
     }
 }
 
-inline fun <reified T, B : Any> Matcher<T>.checked(): Matcher<B> = object : Matcher<B>() {
+inline fun <B : Any, reified T : B> Matcher<T>.checked(): Matcher<B> = object : Matcher<B>() {
     override fun match(actual: B) {
         if (actual is T) {
             return this@checked.match(actual)

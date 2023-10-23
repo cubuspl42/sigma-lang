@@ -42,7 +42,7 @@ class TypeVariable(
 
     override fun walkRecursive(): Sequence<SpecificType> = emptySequence()
 
-    override fun dumpDirectly(depth: Int): String = "#${definition.name.dump()}"
+    override fun dumpDirectly(depth: Int): String = "#${definition}"
 }
 
 data class TypePlaceholderResolution(
