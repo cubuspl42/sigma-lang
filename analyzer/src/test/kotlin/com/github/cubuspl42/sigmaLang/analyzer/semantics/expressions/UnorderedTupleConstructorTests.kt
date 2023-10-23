@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTyp
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorSourceTerm
-import utils.FakeStaticBlock
+import utils.FakeStaticScope
 import utils.FakeUserDeclaration
 import utils.assertTypeIsEquivalent
 import kotlin.test.Test
@@ -51,14 +51,14 @@ class UnorderedTupleConstructorTests {
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            annotatedType = IntCollectiveType,
+                            declaredType = IntCollectiveType,
                         ),
                     ),
                 ),
@@ -90,14 +90,14 @@ class UnorderedTupleConstructorTests {
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            annotatedType = IntCollectiveType,
+                            declaredType = IntCollectiveType,
                         ),
                     ),
                 ),

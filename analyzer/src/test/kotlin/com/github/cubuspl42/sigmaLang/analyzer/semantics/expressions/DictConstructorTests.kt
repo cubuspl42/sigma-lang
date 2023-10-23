@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
-import utils.FakeStaticBlock
+import utils.FakeStaticScope
 import utils.FakeUserDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -22,14 +22,14 @@ class DictConstructorTests {
             val dictLiteral = DictConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
-                            annotatedType = IntCollectiveType,
+                            declaredType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                     ),
                 ),
@@ -56,22 +56,22 @@ class DictConstructorTests {
             val dictLiteral = DictConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
-                            annotatedType = IntCollectiveType,
+                            declaredType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("key2"),
-                            annotatedType = IntCollectiveType,
+                            declaredType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                     ),
                 ),
@@ -99,22 +99,22 @@ class DictConstructorTests {
             val dictLiteral = DictConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
-                            annotatedType = IntCollectiveType,
+                            declaredType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("key2"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                     ),
                 ),
@@ -151,22 +151,22 @@ class DictConstructorTests {
             val dictLiteral = DictConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
-                            annotatedType = IntCollectiveType,
+                            declaredType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("key2"),
-                            annotatedType = IntCollectiveType,
+                            declaredType = IntCollectiveType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            annotatedType = Arbitrary.unorderedTupleType,
+                            declaredType = Arbitrary.unorderedTupleType,
                         ),
                     ),
                 ),
@@ -205,14 +205,14 @@ class DictConstructorTests {
             val dictLiteral = DictConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
-                            annotatedType = keyType,
+                            declaredType = keyType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                     ),
                 ),

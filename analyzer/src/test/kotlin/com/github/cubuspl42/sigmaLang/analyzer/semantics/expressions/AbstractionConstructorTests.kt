@@ -12,9 +12,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.buildReferenceMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.Builtin
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor.ArgumentDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
@@ -30,7 +31,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionCon
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import utils.CollectionMatchers
-import utils.FakeStaticBlock
+import utils.FakeStaticScope
 import utils.FakeUserDeclaration
 import utils.ListMatchers
 import utils.Matcher
@@ -53,13 +54,9 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            ).resolved
+            ).expression
 
-            val aDeclaration = assertIs<ArgumentDeclaration>(
-                abstractionConstructor.argumentDeclarationBlock.resolveNameLocally(
-                    name = Identifier.of("a"),
-                ),
-            )
+            val argumentDeclaration = abstractionConstructor.argumentDeclaration
 
             assertMatches(
                 matcher = AbstractionConstructorMatcher(
@@ -85,8 +82,13 @@ class AbstractionConstructorTests {
                                     ),
                                     UnorderedTupleConstructorMatcher.EntryMatcher(
                                         name = Matcher.Irrelevant(),
-                                        value = ReferenceMatcher(
-                                            referredDeclaration = Matcher.Equals(aDeclaration),
+                                        value = CallMatcher(
+                                            subject = ReferenceMatcher(
+                                                referredDeclaration = Matcher.Equals(argumentDeclaration),
+                                            ).checked(),
+                                            argument = IntLiteralMatcher(
+                                                value = Matcher.Equals(0L),
+                                            ).checked(),
                                         ).checked(),
                                     ),
                                 ),
@@ -109,14 +111,14 @@ class AbstractionConstructorTests {
                 """.trimIndent(),
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructorBuildOutput = AbstractionConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = BuiltinScope,
-                    outerScope = FakeStaticBlock(
+                    outerScope = FakeStaticScope(
                         declarations = setOf(
                             FakeUserDeclaration(
                                 name = Identifier.of("f"),
-                                annotatedType = UniversalFunctionType(
+                                declaredType = UniversalFunctionType(
                                     argumentType = OrderedTupleType(
                                         elements = listOf(
                                             OrderedTupleType.Element(
@@ -134,7 +136,7 @@ class AbstractionConstructorTests {
                             ),
                             FakeUserDeclaration(
                                 name = Identifier.of("g"),
-                                annotatedType = UniversalFunctionType(
+                                declaredType = UniversalFunctionType(
                                     argumentType = UnorderedTupleType.fromEntries(
                                         UnorderedTupleType.Entry(
                                             name = Symbol.of("p"),
@@ -150,7 +152,7 @@ class AbstractionConstructorTests {
                             ),
                             FakeUserDeclaration(
                                 name = Identifier.of("h"),
-                                annotatedType = UniversalFunctionType(
+                                declaredType = UniversalFunctionType(
                                     argumentType = OrderedTupleType(
                                         elements = listOf(
                                             OrderedTupleType.Element(
@@ -170,30 +172,31 @@ class AbstractionConstructorTests {
                     ),
                 ),
                 term = term,
-            ).resolved
+            )
 
-            fun getArgumentDeclaration(name: String): ArgumentDeclaration = assertIs<ArgumentDeclaration>(
-                abstractionConstructor.argumentDeclarationBlock.resolveNameLocally(
+            val abstractionConstructor = abstractionConstructorBuildOutput.expression
+            val argumentDeclarationBlock = abstractionConstructorBuildOutput.argumentDeclarationBlock
+
+            fun getResolvedArgument(name: String) = assertIs<ResolvedUnorderedArgument>(
+                argumentDeclarationBlock.resolveNameLocally(
                     name = Identifier.of(name = name),
                 ),
             )
 
             fun buildReferenceMatcher(
-                argumentDeclaration: ArgumentDeclaration,
-            ): Matcher<Expression> = ReferenceMatcher(
-                referredDeclaration = Matcher.Equals(argumentDeclaration),
-            ).checked()
+                resolvedArgument: ResolvedUnorderedArgument,
+            ): Matcher<Expression> = resolvedArgument.buildReferenceMatcher()
 
-            val aDeclaration = getArgumentDeclaration(name = "a")
-            val bDeclaration = getArgumentDeclaration(name = "b")
-            val cDeclaration = getArgumentDeclaration(name = "c")
+            val aResolvedArgument = getResolvedArgument(name = "a")
+            val bResolvedArgument = getResolvedArgument(name = "b")
+            val cResolvedArgument = getResolvedArgument(name = "c")
 
             val fCall = CallMatcher(
                 subject = Matcher.Irrelevant(),
                 argument = OrderedTupleConstructorMatcher(
                     elements = ListMatchers.inOrder(
-                        buildReferenceMatcher(aDeclaration),
-                        buildReferenceMatcher(bDeclaration),
+                        buildReferenceMatcher(aResolvedArgument),
+                        buildReferenceMatcher(bResolvedArgument),
                     ),
                 ).checked(),
             )
@@ -202,8 +205,8 @@ class AbstractionConstructorTests {
                 subject = Matcher.Irrelevant(),
                 argument = OrderedTupleConstructorMatcher(
                     elements = ListMatchers.inOrder(
-                        buildReferenceMatcher(bDeclaration),
-                        buildReferenceMatcher(cDeclaration),
+                        buildReferenceMatcher(bResolvedArgument),
+                        buildReferenceMatcher(cResolvedArgument),
                     ),
                 ).checked(),
             )
@@ -261,7 +264,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            ).resolved
+            ).expression
 
             val inferredType = assertIs<FunctionType>(
                 value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
@@ -282,7 +285,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            ).resolved
+            ).expression
 
             val inferredType = assertIs<FunctionType>(
                 value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
@@ -303,7 +306,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            ).resolved
+            ).expression
 
             val inferredType = assertIs<FunctionType>(
                 value = abstractionConstructor.inferredTypeOrIllType.getOrCompute(),
@@ -446,7 +449,7 @@ class AbstractionConstructorTests {
             val abstractionConstructor = AbstractionConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            ).resolved
+            ).expression
 
             val classifiedValue = abstractionConstructor.classified
 
@@ -548,7 +551,7 @@ class AbstractionConstructorTests {
                 context = Expression.BuildContext.Builtin, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionConstructorSourceTerm
-            ).resolved
+            ).expression
 
             val result = assertIs<EvaluationResult<Value>>(
                 abstractionConstructor.bind(

@@ -10,7 +10,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.CyclicComputation
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 
@@ -35,36 +34,22 @@ abstract class Reference : FirstOrderExpression() {
             term: ReferenceTerm,
         ): Stub<Expression> = build(
             context = context,
-            term = term,
             referredName = term.referredName,
         )
 
         fun build(
             context: BuildContext,
-            term: ReferenceTerm?,
             referredName: Symbol,
         ): Stub<Expression> = object : Stub<Expression> {
             override val resolved: Expression by lazy {
                 val outerScope = context.outerScope
 
                 // TODO: Clean error
-                val resolvedIntroduction = outerScope.resolveName(name = referredName) ?: run {
+                val resolvedName = outerScope.resolveName(name = referredName) ?: run {
                     throw IllegalStateException("Unresolved name at compile-time: $referredName")
                 }
 
-                when (resolvedIntroduction) {
-                    is Declaration -> object : Reference() {
-                        override val outerScope: StaticScope = outerScope
-
-                        override val term: ReferenceTerm? = term
-
-                        override val referredDeclaration: Declaration = resolvedIntroduction
-                    }
-
-                    is Definition -> resolvedIntroduction.bodyStub.resolved
-
-                    else -> throw UnsupportedOperationException()
-                }
+                resolvedName.buildReference()
             }
         }
     }
@@ -73,7 +58,7 @@ abstract class Reference : FirstOrderExpression() {
         Computation.pure(
             DiagnosedAnalysis(
                 analysis = Analysis(
-                    inferredType = referredDeclaration.annotatedType,
+                    inferredType = referredDeclaration.declaredType,
                 ),
                 directErrors = emptySet(),
             )
@@ -90,8 +75,18 @@ abstract class Reference : FirstOrderExpression() {
     override val subExpressions: Set<Expression> = emptySet()
 
     override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = dynamicScope.getValue(
-        name = referredDeclaration,
+        declaration = referredDeclaration,
     ) ?: throw RuntimeException(
         "Unresolved reference at run-time: $referredDeclaration",
     )
+}
+
+fun Reference(
+    referredDeclaration: Declaration,
+): Reference = object : Reference() {
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val term: ReferenceTerm? = null
+
+    override val referredDeclaration: Declaration = referredDeclaration
 }

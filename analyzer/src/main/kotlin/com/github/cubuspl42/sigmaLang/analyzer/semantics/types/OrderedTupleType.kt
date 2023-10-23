@@ -1,14 +1,14 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.indexOfOrNull
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.indexOfOrNull
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.IntLiteral
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
 data class OrderedTupleType(
@@ -24,13 +24,6 @@ data class OrderedTupleType(
             resolution = resolution,
         ).transform {
             copy(type = it)
-        }
-
-        fun toArgumentDeclaration(): AbstractionConstructor.ArgumentDeclaration? = name?.let {
-            AbstractionConstructor.ArgumentDeclaration(
-                name = it,
-                annotatedType = type as SpecificType,
-            )
         }
     }
 
@@ -141,13 +134,6 @@ data class OrderedTupleType(
         )
     }
 
-    override fun toArgumentDeclarationBlock(): AbstractionConstructor.ArgumentStaticBlock =
-        AbstractionConstructor.ArgumentStaticBlock(
-            argumentDeclarations = elements.mapNotNull { element ->
-                element.toArgumentDeclaration()
-            }.toSet(),
-        )
-
     override fun substituteTypePlaceholders(
         resolution: TypePlaceholderResolution,
     ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution.traverseIterable(elements) {
@@ -168,25 +154,16 @@ data class OrderedTupleType(
         )
     }
 
-    override fun toArgumentScope(argument: DictValue): DynamicScope = object : DynamicScope {
-        override fun getValue(name: Declaration): Thunk<Value>? {
-            val index = elements.indexOfOrNull { it.name == name.name } ?: return null
-
-            return argument.read(IntValue(value = index.toLong()))
-        }
-    }
-
     override fun buildTypeVariableDefinitions(): Set<TypeVariableDefinition> = elements.mapNotNull {
         val name = it.name
         val type = it.type
 
         // TODO: What with non-types??
         if (name != null && type is TypeType) {
-            TypeVariableDefinition(
-                name = name,
-            )
+            TypeVariableDefinition()
         } else null
     }.toSet()
+
 
     override fun walkRecursive(): Sequence<SpecificType> = elements.asSequence().flatMap {
         (it.type as SpecificType).walk()

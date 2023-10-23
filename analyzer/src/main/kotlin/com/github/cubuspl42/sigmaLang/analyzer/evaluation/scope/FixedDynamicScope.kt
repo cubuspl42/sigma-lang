@@ -9,6 +9,6 @@ class FixedDynamicScope(
     private val entries: Map<Declaration, Value>,
 ) : DynamicScope {
     override fun getValue(
-        name: Declaration,
-    ): Thunk<Value>? = entries[name]?.toThunk()
+        declaration: Declaration,
+    ): Thunk<Value>? = entries[declaration]?.toThunk()
 }

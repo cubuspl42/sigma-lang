@@ -1,12 +1,8 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
@@ -165,16 +161,6 @@ abstract class UnorderedTupleType : TupleType() {
     override fun walkRecursive(): Sequence<SpecificType> =
         valueTypeByName.values.asSequence().flatMap { (it as SpecificType).walk() }
 
-    override fun toArgumentDeclarationBlock(): AbstractionConstructor.ArgumentStaticBlock =
-        AbstractionConstructor.ArgumentStaticBlock(
-            argumentDeclarations = valueTypeByName.map { (name, type) ->
-                AbstractionConstructor.ArgumentDeclaration(
-                    name = name,
-                    annotatedType = type as SpecificType,
-                )
-            }.toSet(),
-        )
-
     override fun substituteTypePlaceholders(
         resolution: TypePlaceholderResolution,
     ): TypePlaceholderSubstitution<TypeAlike> =
@@ -189,12 +175,6 @@ abstract class UnorderedTupleType : TupleType() {
                 valueTypeByName = substitutedEntries.toMap(),
             )
         }
-
-    override fun toArgumentScope(argument: DictValue): DynamicScope = object : DynamicScope {
-        override fun getValue(
-            name: Declaration,
-        ): Thunk<Value>? = argument.read(name.name)
-    }
 
     override fun isNonEquivalentToDirectly(
         innerContext: NonEquivalenceContext,
@@ -216,11 +196,9 @@ abstract class UnorderedTupleType : TupleType() {
     }
 
     override fun buildTypeVariableDefinitions(): Set<TypeVariableDefinition> =
-        valueTypeByName.mapNotNull { (name, type) ->
+        valueTypeByName.mapNotNull { (_, type) ->
             if (type is TypeType) {
-                TypeVariableDefinition(
-                    name = name,
-                )
+                TypeVariableDefinition()
             } else null
         }.toSet()
 }

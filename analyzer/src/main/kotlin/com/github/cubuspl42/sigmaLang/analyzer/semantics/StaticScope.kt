@@ -1,22 +1,8 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Introduction
 
-// TODO: Nuke again?
-sealed interface ResolvedName
-
-data class ResolvedDeclaration(
-    val declaration: Declaration,
-) : ResolvedName
-
-data class ResolvedDefinition(
-    val bodyStub: Stub<Expression>,
-) : ResolvedName
-
+// TODO: Move to `syntax`?
 interface StaticScope {
     companion object {
         fun <A> looped(
@@ -28,7 +14,7 @@ interface StaticScope {
 
             override fun resolveName(
                 name: Symbol,
-            ): Introduction? = resultScope.resolveName(name = name)
+            ): ResolvedName? = resultScope.resolveName(name = name)
 
             override fun getAllNames(): Set<Symbol> = resultScope.getAllNames()
         }.result
@@ -39,7 +25,7 @@ interface StaticScope {
     }
 
     object Empty : StaticScope {
-        override fun resolveName(name: Symbol): Introduction? = null
+        override fun resolveName(name: Symbol): ResolvedName? = null
 
         override fun getAllNames(): Set<Symbol> = emptySet()
     }
@@ -48,13 +34,13 @@ interface StaticScope {
         private val outerScope: StaticScope,
         private val staticBlock: StaticBlock,
     ) : StaticScope {
-        override fun resolveName(name: Symbol): Introduction? =
+        override fun resolveName(name: Symbol): ResolvedName? =
             staticBlock.resolveNameLocally(name = name) ?: outerScope.resolveName(name = name)
 
         override fun getAllNames(): Set<Symbol> = staticBlock.getLocalNames() + outerScope.getAllNames()
     }
 
-    fun resolveName(name: Symbol): Introduction?
+    fun resolveName(name: Symbol): ResolvedName?
 
     fun getAllNames(): Set<Symbol>
 }

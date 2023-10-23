@@ -21,7 +21,6 @@ object ArrayTypeConstructor : WrapperTypeConstructor() {
     ): Stub<Call> {
         val subjectStub = Reference.build(
             context,
-            term = null,
             referredName = Name,
         )
 

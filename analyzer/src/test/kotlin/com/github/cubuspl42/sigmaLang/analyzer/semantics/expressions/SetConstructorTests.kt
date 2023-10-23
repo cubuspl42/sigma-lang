@@ -16,7 +16,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructorSourceTerm
 import utils.FakeDefinition
-import utils.FakeStaticBlock
+import utils.FakeStaticScope
 import utils.FakeUserDeclaration
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,10 +29,10 @@ class SetConstructorTests {
             val setConstructor = SetConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                     ),
                 ),
@@ -54,14 +54,14 @@ class SetConstructorTests {
             val setConstructor = SetConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                     ),
                 ),
@@ -88,14 +88,14 @@ class SetConstructorTests {
             val setConstructor = SetConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
-                            annotatedType = BoolType,
+                            declaredType = BoolType,
                         ),
                         FakeUserDeclaration(
                             name = Identifier.of("value2"),
-                            annotatedType = IntCollectiveType,
+                            declaredType = IntCollectiveType,
                         ),
                     ),
                 ),
@@ -133,7 +133,7 @@ class SetConstructorTests {
             val setConstructor = SetConstructor.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeStaticBlock.of(
+                    outerScope = FakeStaticScope.of(
                         FakeDefinition(
                             name = Identifier.of("foo"),
                             type = NeverType,

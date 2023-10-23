@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -13,9 +12,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 
 object SetUnionFunction : BuiltinValue {
-    private val elementTypeDefinition = TypeVariableDefinition(
-        name = Identifier.of("elementType"),
-    )
+    private val elementTypeDefinition = TypeVariableDefinition()
 
     override val type: SpecificType = UniversalFunctionType(
         argumentType = OrderedTupleType.of(

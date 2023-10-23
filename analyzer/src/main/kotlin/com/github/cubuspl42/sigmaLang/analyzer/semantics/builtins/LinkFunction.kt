@@ -10,9 +10,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 
 object LinkFunction : BuiltinValue {
-    private val kDefinition = TypeVariableDefinition(name = Identifier.of("K"))
+    private val kDefinition = TypeVariableDefinition()
 
-    private val vDefinition = TypeVariableDefinition(name = Identifier.of("V"))
+    private val vDefinition = TypeVariableDefinition()
 
     override val type: SpecificType = UniversalFunctionType(
         argumentType = UnorderedTupleType(

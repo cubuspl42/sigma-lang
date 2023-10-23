@@ -81,7 +81,6 @@ abstract class Call : FirstOrderExpression() {
 
                 val subjectStub = Reference.build(
                     context,
-                    term = null,
                     referredName = Symbol.of(prototype.functionName),
                 )
 
@@ -118,13 +117,13 @@ abstract class Call : FirstOrderExpression() {
     }
 
     data class NonFullyInferredCalleeTypeError(
-        override val location: SourceLocation?,
+        override val location: SourceLocation? = null,
         val calleeGenericType: FunctionType,
         val unresolvedPlaceholders: Set<TypePlaceholder>,
     ) : SemanticError
 
     data class NonFunctionCallError(
-        override val location: SourceLocation?,
+        override val location: SourceLocation? = null,
         val illegalSubjectType: Type,
     ) : SemanticError
 
@@ -135,6 +134,13 @@ abstract class Call : FirstOrderExpression() {
         override fun dump(): String = "$location: Invalid argument: ${matchResult.dump()}"
     }
 
+    class OutOfRangeCallError(
+        val tupleType: OrderedTupleType,
+        val index: Long,
+    ) : SemanticError {
+        override fun dump(): String = "Index $index is out of range for tuple type ${tupleType.dump()}"
+    }
+
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         val argumentAnalysis = compute(argument.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
@@ -142,8 +148,28 @@ abstract class Call : FirstOrderExpression() {
         val subjectType = subjectAnalysis.inferredType as Type
         val argumentType = argumentAnalysis.inferredType as SpecificType
 
-        when (subjectType) {
-            is FunctionType -> {
+        when {
+            subjectType is OrderedTupleType && argumentType is IntLiteralType -> {
+                val index = argumentType.value.value
+
+                if (index >= subjectType.elements.size) {
+                    DiagnosedAnalysis.fromError(
+                        OutOfRangeCallError(
+                            tupleType = subjectType,
+                            index = index,
+                        )
+                    )
+                } else {
+                    DiagnosedAnalysis(
+                        analysis = Analysis(
+                            inferredType = subjectType.elements[index.toInt()].type,
+                        ),
+                        directErrors = emptySet(),
+                    )
+                }
+            }
+
+            subjectType is FunctionType -> {
                 val typeVariableResolution = subjectType.argumentType.resolveTypePlaceholders(
                     assignedType = argumentType,
                 )
@@ -226,4 +252,17 @@ abstract class Call : FirstOrderExpression() {
             argument = argumentValue,
         )
     }.thenDo { it }
+}
+
+fun Call(
+    subjectLazy: Lazy<Expression>,
+    argumentLazy: Lazy<Expression>,
+): Call = object : Call() {
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val term: CallTerm? = null
+
+    override val subject: Expression by subjectLazy
+
+    override val argument: Expression by argumentLazy
 }

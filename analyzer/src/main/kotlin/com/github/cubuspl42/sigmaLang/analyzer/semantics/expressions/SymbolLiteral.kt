@@ -11,7 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 class SymbolLiteral(
     val value: Symbol,
-    override val outerScope: StaticScope,
+    override val outerScope: StaticScope = StaticScope.Empty,
 ) : FirstOrderExpression() {
     override val term: ExpressionTerm? = null
 
