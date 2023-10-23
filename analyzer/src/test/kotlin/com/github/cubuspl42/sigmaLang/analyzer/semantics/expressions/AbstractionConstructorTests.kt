@@ -9,9 +9,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResul
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.Builtin
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor.ArgumentDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
@@ -19,11 +22,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.StringType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import utils.CollectionMatchers
+import utils.FakeStaticBlock
+import utils.FakeUserDeclaration
 import utils.ListMatchers
 import utils.Matcher
 import utils.assertMatches
@@ -33,6 +41,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
+@Suppress("unused")
 class AbstractionConstructorTests {
     class ConstructionTests {
         @Test
@@ -46,10 +55,10 @@ class AbstractionConstructorTests {
                 term = term,
             ).resolved
 
-            val aDeclaration = assertIs<AbstractionConstructor.ArgumentDeclaration>(
+            val aDeclaration = assertIs<ArgumentDeclaration>(
                 abstractionConstructor.argumentDeclarationBlock.resolveNameLocally(
-                    name = Identifier.of("a")
-                )
+                    name = Identifier.of("a"),
+                ),
             )
 
             assertMatches(
@@ -84,6 +93,157 @@ class AbstractionConstructorTests {
                             ),
                         ).checked(),
                     ).checked(),
+                ),
+                actual = abstractionConstructor,
+            )
+        }
+
+        @Test
+        fun testMultipleArguments() {
+            val term = ExpressionSourceTerm.parse(
+                source = """
+                    ^{a: Int, b: Bool, c: String} -> Int => %let {
+                        x = f[a, b],
+                        y = g{p: x, q: h[b, c]},
+                    } %in y
+                """.trimIndent(),
+            ) as AbstractionConstructorSourceTerm
+
+            val abstractionConstructor = AbstractionConstructor.build(
+                context = Expression.BuildContext(
+                    outerMetaScope = BuiltinScope,
+                    outerScope = FakeStaticBlock(
+                        declarations = setOf(
+                            FakeUserDeclaration(
+                                name = Identifier.of("f"),
+                                annotatedType = UniversalFunctionType(
+                                    argumentType = OrderedTupleType(
+                                        elements = listOf(
+                                            OrderedTupleType.Element(
+                                                name = null,
+                                                type = IntCollectiveType,
+                                            ),
+                                            OrderedTupleType.Element(
+                                                name = null,
+                                                type = BoolType,
+                                            ),
+                                        ),
+                                    ),
+                                    imageType = IntCollectiveType,
+                                ),
+                            ),
+                            FakeUserDeclaration(
+                                name = Identifier.of("g"),
+                                annotatedType = UniversalFunctionType(
+                                    argumentType = UnorderedTupleType.fromEntries(
+                                        UnorderedTupleType.Entry(
+                                            name = Symbol.of("p"),
+                                            type = IntCollectiveType,
+                                        ),
+                                        UnorderedTupleType.Entry(
+                                            name = Symbol.of("q"),
+                                            type = IntCollectiveType,
+                                        ),
+                                    ),
+                                    imageType = IntCollectiveType,
+                                ),
+                            ),
+                            FakeUserDeclaration(
+                                name = Identifier.of("h"),
+                                annotatedType = UniversalFunctionType(
+                                    argumentType = OrderedTupleType(
+                                        elements = listOf(
+                                            OrderedTupleType.Element(
+                                                name = null,
+                                                type = BoolType,
+                                            ),
+                                            OrderedTupleType.Element(
+                                                name = null,
+                                                type = StringType,
+                                            ),
+                                        ),
+                                    ),
+                                    imageType = IntCollectiveType,
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                term = term,
+            ).resolved
+
+            fun getArgumentDeclaration(name: String): ArgumentDeclaration = assertIs<ArgumentDeclaration>(
+                abstractionConstructor.argumentDeclarationBlock.resolveNameLocally(
+                    name = Identifier.of(name = name),
+                ),
+            )
+
+            fun buildReferenceMatcher(
+                argumentDeclaration: ArgumentDeclaration,
+            ): Matcher<Expression> = ReferenceMatcher(
+                referredDeclaration = Matcher.Equals(argumentDeclaration),
+            ).checked()
+
+            val aDeclaration = getArgumentDeclaration(name = "a")
+            val bDeclaration = getArgumentDeclaration(name = "b")
+            val cDeclaration = getArgumentDeclaration(name = "c")
+
+            val fCall = CallMatcher(
+                subject = Matcher.Irrelevant(),
+                argument = OrderedTupleConstructorMatcher(
+                    elements = ListMatchers.inOrder(
+                        buildReferenceMatcher(aDeclaration),
+                        buildReferenceMatcher(bDeclaration),
+                    ),
+                ).checked(),
+            )
+
+            val hCall = CallMatcher(
+                subject = Matcher.Irrelevant(),
+                argument = OrderedTupleConstructorMatcher(
+                    elements = ListMatchers.inOrder(
+                        buildReferenceMatcher(bDeclaration),
+                        buildReferenceMatcher(cDeclaration),
+                    ),
+                ).checked(),
+            )
+
+            val gCall = CallMatcher(
+                subject = Matcher.Irrelevant(),
+                argument = UnorderedTupleConstructorMatcher(
+                    entries = CollectionMatchers.eachOnce(
+                        UnorderedTupleConstructorMatcher.EntryMatcher(
+                            name = Matcher.Equals(Symbol.of("p")),
+                            value = fCall.checked(),
+                        ),
+                        UnorderedTupleConstructorMatcher.EntryMatcher(
+                            name = Matcher.Equals(Symbol.of("q")),
+                            value = hCall.checked(),
+                        ),
+                    ),
+                ).checked(),
+            )
+
+            assertMatches(
+                matcher = AbstractionConstructorMatcher(
+                    argumentType = UnorderedTupleTypeMatcher(
+                        entries = CollectionMatchers.eachOnce(
+                            UnorderedTupleTypeMatcher.EntryMatcher(
+                                name = Matcher.Equals(Identifier.of("a")),
+                                type = Matcher.Is<IntCollectiveType>(),
+                            ),
+                            UnorderedTupleTypeMatcher.EntryMatcher(
+                                name = Matcher.Equals(Identifier.of("b")),
+                                type = Matcher.Is<BoolType>(),
+                            ),
+                            UnorderedTupleTypeMatcher.EntryMatcher(
+                                name = Matcher.Equals(Identifier.of("c")),
+                                type = Matcher.Is<StringType>(),
+                            ),
+                        ),
+                    ).checked(),
+                    declaredImageType = Matcher.Is<IntCollectiveType>(),
+                    image = gCall.checked(),
                 ),
                 actual = abstractionConstructor,
             )

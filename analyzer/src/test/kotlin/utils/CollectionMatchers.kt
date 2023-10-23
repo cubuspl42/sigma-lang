@@ -37,6 +37,10 @@ object CollectionMatchers {
         }
     }
 
+    fun <E> eachOnce(
+        vararg elements: Matcher<E>,
+    ): Matcher<Collection<E>> = eachOnce(elements.toSet())
+
     fun <E> whereEvery(
         element: Matcher<E>,
     ): Matcher<Collection<E>> = object : Matcher<Collection<E>>() {

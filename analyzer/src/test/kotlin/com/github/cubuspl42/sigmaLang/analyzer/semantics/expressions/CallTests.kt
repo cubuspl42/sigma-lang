@@ -1,3 +1,5 @@
+@file:Suppress("JUnitMalformedDeclaration")
+
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope

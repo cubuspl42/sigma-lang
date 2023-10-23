@@ -38,7 +38,15 @@ abstract class UnorderedTupleType : TupleType() {
     data class Entry(
         val name: Symbol,
         val typeThunk: Thunk<TypeAlike>,
-    )
+    ) {
+        constructor(
+            name: Symbol,
+            type: TypeAlike,
+        ) : this(
+            name = name,
+            typeThunk = Thunk.pure(type),
+        )
+    }
 
     data class UnorderedTupleMatch(
         val valuesMatches: Map<Symbol, ValueMatchResult>,
@@ -85,6 +93,10 @@ abstract class UnorderedTupleType : TupleType() {
         ): UnorderedTupleType = object : UnorderedTupleType() {
             override val valueTypeThunkByName = entries.associate { it.name to it.typeThunk }
         }
+
+        fun fromEntries(
+            vararg entries: Entry,
+        ): UnorderedTupleType = fromEntries(entries = entries.asIterable())
     }
 
     override fun dumpDirectly(depth: Int): String {
