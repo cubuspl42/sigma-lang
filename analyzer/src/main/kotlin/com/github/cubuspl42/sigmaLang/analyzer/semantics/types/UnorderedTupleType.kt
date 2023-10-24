@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.OrderedTupleTypeConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
@@ -104,7 +105,7 @@ abstract class UnorderedTupleType : TupleType() {
             "(${name.dump()}): ${valueType.dumpRecursively(depth = depth + 1)}"
         }
 
-        return "{${dumpedEntries.joinToString()}}"
+        return "^{${dumpedEntries.joinToString()}}"
     }
 
     fun getFieldType(key: Symbol): TypeAlike? = getValueType(name = key)
@@ -198,21 +199,6 @@ abstract class UnorderedTupleType : TupleType() {
             )
         }
     }
-
-    override fun buildVariableExpressionDirectly(
-        context: VariableExpressionBuildingContext,
-    ): Expression = UnorderedTupleTypeConstructor(
-        entries = lazy {
-            entries.mapNotNull { entry ->
-                (entry.type as Type).buildVariableExpression(context = context)?.let { expression ->
-                    UnorderedTupleTypeConstructor.Entry(
-                        name = entry.name,
-                        typeLazy = lazy { expression },
-                    )
-                }
-            }.toSet()
-        }
-    )
 
     override fun buildTypeVariableDefinitions(): Set<TypeVariableDefinition> = valueTypeByName.mapNotNull { (_, type) ->
         if (type is TypeType) {

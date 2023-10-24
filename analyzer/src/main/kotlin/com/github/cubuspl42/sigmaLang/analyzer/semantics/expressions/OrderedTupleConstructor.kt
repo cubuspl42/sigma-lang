@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleConstructorTerm
 
 abstract class OrderedTupleConstructor : TupleConstructor() {
-    abstract override val term: OrderedTupleConstructorTerm
+    abstract override val term: OrderedTupleConstructorTerm?
 
     abstract val elements: List<Expression>
 
@@ -58,7 +58,6 @@ abstract class OrderedTupleConstructor : TupleConstructor() {
     }
 
 
-
     override val subExpressions: Set<Expression>
         get() = elements.toSet()
 
@@ -69,4 +68,14 @@ abstract class OrderedTupleConstructor : TupleConstructor() {
     }.thenJust { elements ->
         ArrayTable(elements = elements)
     }
+}
+
+fun OrderedTupleConstructor(
+    elementsLazy: Lazy<List<Expression>>,
+): OrderedTupleConstructor = object : OrderedTupleConstructor() {
+    override val term: OrderedTupleConstructorTerm? = null
+
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val elements: List<Expression> by elementsLazy
 }
