@@ -18,6 +18,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTyp
 import utils.assertMatches
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.GenericConstructorTerm
+import utils.ListMatchers
 import utils.checked
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -50,7 +51,7 @@ class GenericConstructorTests {
             assertMatches(
                 matcher = GenericConstructorMatcher(
                     metaArgumentTypeConstructor = OrderedTupleTypeMatcher(
-                        elements = listOf(
+                        elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
                                 name = Matcher.Equals(expected = Identifier.of("a")),
                                 type = Matcher.Is<TypeType>(),
@@ -78,7 +79,7 @@ class GenericConstructorTests {
             assertMatches(
                 matcher = GenericConstructorMatcher(
                     metaArgumentTypeConstructor = OrderedTupleTypeMatcher(
-                        elements = listOf(
+                        elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
                                 name = Matcher.Equals(expected = Identifier.of("t")),
                                 type = Matcher.Is<TypeType>(),
@@ -87,7 +88,7 @@ class GenericConstructorTests {
                     ).checked(),
                     body = AbstractionConstructorMatcher(
                         argumentType = OrderedTupleTypeMatcher(
-                            elements = listOf(
+                            elements = ListMatchers.inOrder(
                                 OrderedTupleTypeMatcher.ElementMatcher(
                                     name = Matcher.Equals(expected = Identifier.of("a")),
                                     type = Matcher.Is<TypeVariable>(),
@@ -120,7 +121,7 @@ class GenericConstructorTests {
             assertMatches(
                 matcher = GenericTypeMatcher(
                     metaArgumentType = OrderedTupleTypeMatcher(
-                        elements = listOf(
+                        elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
                                 name = Matcher.Equals(expected = Identifier.of("t")),
                                 type = Matcher.Is<TypeType>(),
@@ -151,7 +152,7 @@ class GenericConstructorTests {
             assertMatches(
                 matcher = GenericTypeMatcher(
                     metaArgumentType = OrderedTupleTypeMatcher(
-                        elements = listOf(
+                        elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
                                 name = Matcher.Equals(Identifier.of("e")),
                                 type = Matcher.Is<TypeType>(),

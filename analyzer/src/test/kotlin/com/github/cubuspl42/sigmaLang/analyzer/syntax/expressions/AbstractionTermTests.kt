@@ -12,7 +12,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import utils.Matcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
+import utils.ListMatchers
 import utils.assertMatches
+import utils.checked
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -64,22 +66,20 @@ class AbstractionTermTests {
 
             val type = expression.inferredTypeOrIllType.getOrCompute()
 
-            assertEquals(
-                expected = UniversalFunctionType(
-                    argumentType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Identifier.of("n"),
-                                type = IntCollectiveType,
+            assertMatches(
+                matcher = UniversalFunctionTypeMatcher(
+                    argumentType = OrderedTupleTypeMatcher(
+                        elements = ListMatchers.inOrder(
+                            OrderedTupleTypeMatcher.ElementMatcher(
+                                name = Matcher.Equals(expected = Identifier.of("n")),
+                                type = Matcher.Is<IntCollectiveType>(),
                             ),
                         ),
-                    ),
-                    imageType = IntCollectiveType,
-                ),
+                    ).checked(),
+                    imageType = Matcher.Is<IntCollectiveType>(),
+                ).checked(),
                 actual = type,
             )
         }
-
-
     }
 }

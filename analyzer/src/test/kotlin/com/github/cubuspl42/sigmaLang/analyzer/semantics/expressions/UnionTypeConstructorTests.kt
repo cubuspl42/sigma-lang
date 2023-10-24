@@ -11,8 +11,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.buildReferenceMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnionTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
 import utils.CollectionMatchers
@@ -165,34 +167,22 @@ class UnionTypeConstructorTests {
 
             val unionType = assertIs<UnionType>(evaluatedTypeValue.asType)
 
-            assertMatchesEachOnce(
-                actual = unionType.memberTypes,
-                blocks = mapOf(
-                    "Int" to { type ->
-                        assertEquals(
-                            actual = type,
-                            expected = IntCollectiveType,
-                        )
-                    },
-                    "Bool" to { type ->
-                        assertEquals(
-                            actual = type,
-                            expected = BoolType,
-                        )
-                    },
-                    "^[Bool]" to { type ->
-                        assertEquals(
-                            actual = type, expected = OrderedTupleType(
-                                elements = listOf(
-                                    OrderedTupleType.Element(
-                                        name = null,
-                                        type = BoolType,
-                                    ),
+            assertMatches(
+                matcher = UnionTypeMatcher(
+                    memberTypes = CollectionMatchers.eachOnce(
+                        Matcher.Is<IntCollectiveType>().checked(),
+                        Matcher.Is<BoolType>().checked(),
+                        OrderedTupleTypeMatcher(
+                            elements = ListMatchers.inOrder(
+                                OrderedTupleTypeMatcher.ElementMatcher(
+                                    name = Matcher.IsNull(),
+                                    type = Matcher.Is<BoolType>(),
                                 ),
                             )
-                        )
-                    },
+                        ).checked()
+                    ),
                 ),
+                actual = unionType,
             )
         }
     }

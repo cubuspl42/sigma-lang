@@ -1,6 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
@@ -9,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 
-// Thought: Make a data class?
+// Thought: Nuke? Same as expression now?
 interface Definition : Introduction {
     val bodyStub: Stub<Expression>
 
@@ -27,14 +26,12 @@ interface Definition : Introduction {
 }
 
 fun Definition(
-    name: Symbol,
     bodyStub: Stub<Expression>,
 ): Definition = object : Definition {
     override val bodyStub = bodyStub
 }
 
 fun Definition(
-    name: Symbol,
     body: Expression,
 ): Definition = object : Definition {
     override val bodyStub = Stub.of(body)

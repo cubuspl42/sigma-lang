@@ -11,7 +11,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorTerm
 
 abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
-    abstract override val term: OrderedTupleTypeConstructorTerm
+    abstract override val term: OrderedTupleTypeConstructorTerm?
 
     abstract val elements: List<Element>
 
@@ -49,6 +49,15 @@ abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
     }
 
     companion object {
+        fun Element(
+            name: Identifier?,
+            typeLazy: Lazy<Expression>,
+        ): Element = object : Element() {
+            override val name: Identifier? = name
+
+            override val type: Expression by typeLazy
+        }
+
         fun build(
             context: BuildContext,
             term: OrderedTupleTypeConstructorTerm,
@@ -92,4 +101,14 @@ abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
 
     override val subExpressions: Set<Expression>
         get() = elements.map { it.type }.toSet()
+}
+
+fun OrderedTupleTypeConstructor(
+    elements: Lazy<List<OrderedTupleTypeConstructor.Element>>,
+): OrderedTupleTypeConstructor = object : OrderedTupleTypeConstructor() {
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val term: OrderedTupleTypeConstructorTerm? = null
+
+    override val elements: List<Element> by elements
 }

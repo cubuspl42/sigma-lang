@@ -1,16 +1,14 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor.ArgumentDeclaration
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AtomicExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
 abstract class TupleType : TableType() {
-
     class TypeVariableBlock(
         private val typeVariableDefinitions: Set<TypeVariableDefinition>,
     ) : StaticBlock() {
@@ -21,6 +19,14 @@ abstract class TupleType : TableType() {
         override fun getLocalNames(): Set<Symbol> = TODO()
     }
 
+    abstract class Entry {
+        abstract val name: Symbol?
+
+        abstract val typeThunk: Thunk<TypeAlike>
+
+        val type: TypeAlike
+            get() = typeThunk.value ?: throw IllegalStateException("Unable to evaluate the type thunk")
+    }
 
     class TypePlaceholderBlock(
         private val typeVariableBlock: TypeVariableBlock,
@@ -42,9 +48,25 @@ abstract class TupleType : TableType() {
         override fun getLocalNames(): Set<Symbol> = typeVariableBlock.getLocalNames()
     }
 
-    fun buildTypeVariableBlock(): TypeVariableBlock = TypeVariableBlock(
-        typeVariableDefinitions = buildTypeVariableDefinitions(),
+    fun buildTypeVariableBlock(): StaticBlock = StaticBlock.Fixed(
+        resolvedNameByName = entries.mapNotNull {
+            it.name?.let { name ->
+                val type = it.type as Type
+
+                type.buildVariableExpression(
+                    context = VariableExpressionBuildingContext.Empty,
+                )?.let { expression ->
+                    name to ResolvedDefinition(
+                        definition = Definition(
+                            body = expression,
+                        )
+                    )
+                }
+            }
+        }.toMap()
     )
+
+    abstract val entries: Collection<Entry>
 
     abstract override fun substituteTypePlaceholders(
         resolution: TypePlaceholderResolution,

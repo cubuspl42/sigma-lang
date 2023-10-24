@@ -12,11 +12,15 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleConstructorSourceTerm
 import utils.FakeDefinition
 import utils.FakeStaticScope
 import utils.FakeUserDeclaration
+import utils.ListMatchers
+import utils.Matcher
+import utils.assertMatches
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -73,11 +77,17 @@ class OrderedTupleConstructorTests {
                 value = tupleLiteral.inferredTypeOrIllType.getOrCompute(),
             )
 
-            assertEquals(
-                expected = OrderedTupleType(
-                    elements = listOf(
-                        OrderedTupleType.Element(name = null, type = BoolType),
-                        OrderedTupleType.Element(name = null, type = IntCollectiveType),
+            assertMatches(
+                matcher = OrderedTupleTypeMatcher(
+                    elements = ListMatchers.inOrder(
+                        OrderedTupleTypeMatcher.ElementMatcher(
+                            name = Matcher.Equals(expected = null),
+                            type = Matcher.Is<BoolType>(),
+                        ),
+                        OrderedTupleTypeMatcher.ElementMatcher(
+                            name = Matcher.Equals(expected = null),
+                            type = Matcher.Is<IntCollectiveType>(),
+                        ),
                     ),
                 ),
                 actual = type,

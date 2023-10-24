@@ -2,21 +2,25 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.OrderedTupleTypeConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
 abstract class UnorderedTupleType : TupleType() {
+
     abstract val valueTypeThunkByName: Map<Symbol, Thunk<TypeAlike>>
 
-    val entries: Collection<Entry>
-        get() = valueTypeThunkByName.map { (name, typeThunk) ->
-            UnorderedTupleType.Entry(
+    override val entries: Collection<NamedEntry> by lazy {
+        valueTypeThunkByName.map { (name, typeThunk) ->
+            UnorderedTupleType.NamedEntry(
                 name = name,
                 typeThunk = typeThunk,
             )
         }
+    }
 
     fun getValueType(name: Symbol): TypeAlike? = valueTypeThunkByName[name]?.let {
         it.value ?: throw IllegalStateException("Unable to evaluate the value type thunk")
@@ -31,10 +35,10 @@ abstract class UnorderedTupleType : TupleType() {
     val keys: Set<Symbol>
         get() = valueTypeThunkByName.keys
 
-    data class Entry(
-        val name: Symbol,
-        val typeThunk: Thunk<TypeAlike>,
-    ) {
+    data class NamedEntry(
+        override val name: Symbol,
+        override val typeThunk: Thunk<TypeAlike>,
+    ) : Entry() {
         constructor(
             name: Symbol,
             type: TypeAlike,
@@ -85,13 +89,13 @@ abstract class UnorderedTupleType : TupleType() {
         }
 
         fun fromEntries(
-            entries: Iterable<Entry>,
+            entries: Iterable<NamedEntry>,
         ): UnorderedTupleType = object : UnorderedTupleType() {
             override val valueTypeThunkByName = entries.associate { it.name to it.typeThunk }
         }
 
         fun fromEntries(
-            vararg entries: Entry,
+            vararg entries: NamedEntry,
         ): UnorderedTupleType = fromEntries(entries = entries.asIterable())
     }
 
@@ -195,12 +199,26 @@ abstract class UnorderedTupleType : TupleType() {
         }
     }
 
-    override fun buildTypeVariableDefinitions(): Set<TypeVariableDefinition> =
-        valueTypeByName.mapNotNull { (_, type) ->
-            if (type is TypeType) {
-                TypeVariableDefinition()
-            } else null
-        }.toSet()
+    override fun buildVariableExpressionDirectly(
+        context: VariableExpressionBuildingContext,
+    ): Expression = UnorderedTupleTypeConstructor(
+        entries = lazy {
+            entries.mapNotNull { entry ->
+                (entry.type as Type).buildVariableExpression(context = context)?.let { expression ->
+                    UnorderedTupleTypeConstructor.Entry(
+                        name = entry.name,
+                        typeLazy = lazy { expression },
+                    )
+                }
+            }.toSet()
+        }
+    )
+
+    override fun buildTypeVariableDefinitions(): Set<TypeVariableDefinition> = valueTypeByName.mapNotNull { (_, type) ->
+        if (type is TypeType) {
+            TypeVariableDefinition()
+        } else null
+    }.toSet()
 }
 
 fun UnorderedTupleType(

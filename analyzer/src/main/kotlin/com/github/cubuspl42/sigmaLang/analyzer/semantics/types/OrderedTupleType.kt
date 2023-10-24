@@ -3,11 +3,13 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.indexOfOrNull
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.IntLiteral
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.OrderedTupleTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
@@ -15,15 +17,23 @@ data class OrderedTupleType(
     val elements: List<Element>,
 ) : TupleType() {
     data class Element(
-        val name: Identifier?,
-        val type: TypeAlike,
-    ) {
+        override val name: Identifier?,
+        override val typeThunk: Thunk<TypeAlike>,
+    ) : TupleType.Entry() {
+        constructor(
+            name: Identifier?,
+            type: TypeAlike,
+        ) : this(
+            name = name,
+            typeThunk = Thunk.pure(type),
+        )
+
         fun substituteTypeVariables(
             resolution: TypePlaceholderResolution,
         ): TypePlaceholderSubstitution<Element> = type.substituteTypePlaceholders(
             resolution = resolution,
         ).transform {
-            copy(type = it)
+            copy(typeThunk = Thunk.pure(it))
         }
     }
 
@@ -72,9 +82,9 @@ data class OrderedTupleType(
     }
 
     override fun dumpDirectly(depth: Int): String {
-        val dumpedEntries = elements.map { (name, type) ->
+        val dumpedEntries = elements.map { element ->
             listOfNotNull(
-                name?.let { "${it.name}:" }, type.dumpRecursively(depth = depth + 1)
+                element.name?.let { "${it.name}:" }, element.type.dumpRecursively(depth = depth + 1)
             ).joinToString(
                 separator = " ",
             )
@@ -134,6 +144,8 @@ data class OrderedTupleType(
         )
     }
 
+    override val entries: Collection<Entry> = elements
+
     override fun substituteTypePlaceholders(
         resolution: TypePlaceholderResolution,
     ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution.traverseIterable(elements) {
@@ -164,6 +176,21 @@ data class OrderedTupleType(
         } else null
     }.toSet()
 
+
+    override fun buildVariableExpressionDirectly(
+        context: VariableExpressionBuildingContext,
+    ): Expression = OrderedTupleTypeConstructor(
+        elements = lazy {
+            elements.mapNotNull { element ->
+                (element.type as Type).buildVariableExpression(context = context)?.let { expression ->
+                    OrderedTupleTypeConstructor.Element(
+                        name = element.name,
+                        typeLazy = lazy { expression },
+                    )
+                }
+            }
+        },
+    )
 
     override fun walkRecursive(): Sequence<SpecificType> = elements.asSequence().flatMap {
         (it.type as SpecificType).walk()

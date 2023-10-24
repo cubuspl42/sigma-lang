@@ -12,7 +12,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorTerm
 
 abstract class UnorderedTupleTypeConstructor : TupleTypeConstructor() {
-    abstract override val term: UnorderedTupleTypeConstructorTerm
+    abstract override val term: UnorderedTupleTypeConstructorTerm?
 
     abstract val entries: Set<Entry>
 
@@ -50,6 +50,15 @@ abstract class UnorderedTupleTypeConstructor : TupleTypeConstructor() {
     }
 
     companion object {
+        fun Entry(
+            name: Symbol,
+            typeLazy: Lazy<Expression>,
+        ): Entry = object : Entry() {
+            override val name: Symbol = name
+
+            override val type: Expression by typeLazy
+        }
+
         fun build(
             context: BuildContext,
             term: UnorderedTupleTypeConstructorTerm,
@@ -95,4 +104,14 @@ abstract class UnorderedTupleTypeConstructor : TupleTypeConstructor() {
 
     override val subExpressions: Set<Expression>
         get() = entries.map { it.type }.toSet()
+}
+
+fun UnorderedTupleTypeConstructor(
+    entries: Lazy<Set<UnorderedTupleTypeConstructor.Entry>>,
+): UnorderedTupleTypeConstructor = object : UnorderedTupleTypeConstructor() {
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val term: UnorderedTupleTypeConstructorTerm? = null
+
+    override val entries: Set<Entry> by entries
 }
