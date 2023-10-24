@@ -9,6 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.IntLiteral
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.OrderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.OrderedTupleTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
@@ -90,7 +91,7 @@ data class OrderedTupleType(
             )
         }
 
-        return "[${dumpedEntries.joinToString(separator = ", ")}]"
+        return "^[${dumpedEntries.joinToString(separator = ", ")}]"
     }
 
     override val keyType: PrimitiveType = IntCollectiveType
@@ -177,20 +178,20 @@ data class OrderedTupleType(
     }.toSet()
 
 
-    override fun buildVariableExpressionDirectly(
-        context: VariableExpressionBuildingContext,
-    ): Expression = OrderedTupleTypeConstructor(
-        elements = lazy {
-            elements.mapNotNull { element ->
-                (element.type as Type).buildVariableExpression(context = context)?.let { expression ->
-                    OrderedTupleTypeConstructor.Element(
-                        name = element.name,
-                        typeLazy = lazy { expression },
-                    )
-                }
-            }
-        },
-    )
+//    override fun buildVariableExpressionDirectly(
+//        context: VariableExpressionBuildingContext,
+//    ): Expression = OrderedTupleConstructor(
+//        elementsLazy = lazy {
+//            elements.mapNotNull { element ->
+//                (element.type as Type).buildVariableExpression(context = context)?.let { expression ->
+//                    OrderedTupleConstructor.Element(
+//                        name = element.name,
+//                        typeLazy = lazy { expression },
+//                    )
+//                }
+//            }
+//        },
+//    )
 
     override fun walkRecursive(): Sequence<SpecificType> = elements.asSequence().flatMap {
         (it.type as SpecificType).walk()

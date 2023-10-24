@@ -178,7 +178,7 @@ class ScenarioTests {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
                 %namespace EntryNamespace (
-                    %const f = !^[type: Type] ^[] -> ^[type...] => 0
+                    %const f = ^[type: Type] !=> ^[] -> ^[type...] => 0
                     
                     %const a = f[]
                 )
@@ -223,8 +223,8 @@ class ScenarioTests {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
                 %namespace EntryNamespace (
-                    %const f = !^[aType: Type] ^[a: aType] -> Int => %let {
-                        g = !^[bType: Type, cType: Type] ^[a: aType, b: bType, c: cType] -> Int => 0,
+                    %const f = ^[aType: Type] !=> ^[a: aType] -> Int => %let {
+                        g = ^[bType: Type, cType: Type] !=> ^[a: aType, b: bType, c: cType] -> Int => 0,
                     } %in g[a, false, {}]
                     
                     %const a = f[1]

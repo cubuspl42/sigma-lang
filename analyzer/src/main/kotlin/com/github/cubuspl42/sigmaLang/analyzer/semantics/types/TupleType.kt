@@ -5,6 +5,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
@@ -64,6 +66,25 @@ abstract class TupleType : TableType() {
                 }
             }
         }.toMap()
+    )
+
+    override fun buildVariableExpressionDirectly(
+        context: VariableExpressionBuildingContext,
+    ): Expression = UnorderedTupleConstructor(
+        entriesLazy = lazy {
+            entries.mapNotNull { entry ->
+                val name = entry.name ?: return@mapNotNull null
+
+                val expression = (entry.type as Type).buildVariableExpression(
+                    context = context,
+                ) ?: return@mapNotNull null
+
+                UnorderedTupleConstructor.Entry(
+                    name = name,
+                    value = expression,
+                )
+            }.toSet()
+        },
     )
 
     abstract val entries: Collection<Entry>

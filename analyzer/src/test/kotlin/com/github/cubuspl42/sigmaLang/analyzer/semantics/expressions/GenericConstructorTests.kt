@@ -15,9 +15,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
 import utils.assertMatches
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.GenericConstructorTerm
+import utils.CollectionMatchers
 import utils.ListMatchers
 import utils.checked
 import kotlin.test.Ignore
@@ -28,7 +30,6 @@ import kotlin.test.assertIs
 class GenericConstructorTests {
     class ConstructionTests {
         @Test
-        @Ignore // TODO: Complex type variables
         fun testLetBody() {
             val term = ExpressionSourceTerm.parse(
                 source = """
@@ -65,7 +66,6 @@ class GenericConstructorTests {
         }
 
         @Test
-        @Ignore // TODO: Complex type variables
         fun testAbstractionBody() {
             val term = ExpressionSourceTerm.parse(
                 source = "^[t: Type] !=> ^[a: t] -> Int => 11",
@@ -165,7 +165,6 @@ class GenericConstructorTests {
         }
 
         @Test
-        @Ignore // TODO: Complex type variables
         fun testWithDeclaredImageType_fromMetaArgumentComplex() {
             val term = ExpressionSourceTerm.parse(
                 // The declared image type is a complex expression based on a meta-argument
@@ -191,31 +190,30 @@ class GenericConstructorTests {
                 expression.errors,
             )
 
-            // TODO:
-//            assertMatches(
-//                matcher = GenericTypeMatcher(
-//                    metaArgumentType = OrderedTupleTypeMatcher(
-//                        elements = listOf(
-//                            OrderedTupleTypeMatcher.ElementMatcher(
-//                                name = Matcher.Equals(Identifier.of("t")),
-//                                type = OrderedTupleTypeMatcher(
-//                                    elements = listOf(
-//                                        OrderedTupleTypeMatcher.ElementMatcher(
-//                                            name = Matcher.Equals(Identifier.of("t1")),
-//                                            type = Matcher.Is<TypeType>(),
-//                                        ),
-//                                        OrderedTupleTypeMatcher.ElementMatcher(
-//                                            name = Matcher.Equals(Identifier.of("t2")),
-//                                            type = Matcher.Is<TypeType>(),
-//                                        ),
-//                                    ),
-//                                ).checked(),
-//                            ),
-//                        ),
-//                    ).checked(),
-//                ).checked(),
-//                actual = expression.inferredTypeOrIllType.getOrCompute(),
-//            )
+            assertMatches(
+                matcher = GenericTypeMatcher(
+                    metaArgumentType = OrderedTupleTypeMatcher(
+                        elements = ListMatchers.inOrder(
+                            OrderedTupleTypeMatcher.ElementMatcher(
+                                name = Matcher.Equals(Identifier.of("t")),
+                                type = UnorderedTupleTypeMatcher(
+                                    entries = CollectionMatchers.eachOnce(
+                                        UnorderedTupleTypeMatcher.EntryMatcher(
+                                            name = Matcher.Equals(Identifier.of("t1")),
+                                            type = Matcher.Is<TypeType>(),
+                                        ),
+                                        UnorderedTupleTypeMatcher.EntryMatcher(
+                                            name = Matcher.Equals(Identifier.of("t2")),
+                                            type = Matcher.Is<TypeType>(),
+                                        ),
+                                    ),
+                                ).checked(),
+                            ),
+                        ),
+                    ).checked(),
+                ).checked(),
+                actual = expression.inferredTypeOrIllType.getOrCompute(),
+            )
         }
     }
 

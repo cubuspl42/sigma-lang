@@ -56,6 +56,24 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
     ) : SemanticError
 
     companion object {
+        fun Entry(
+            name: Symbol,
+            value: Expression,
+        ): Entry = object : Entry() {
+            override val name: Symbol = name
+
+            override val value: Expression = value
+        }
+
+        fun Entry(
+            nameLazy: Lazy<Symbol>,
+            valueLazy: Lazy<Expression>,
+        ): Entry = object : Entry() {
+            override val name: Symbol by nameLazy
+
+            override val value: Expression by valueLazy
+        }
+
         fun build(
             context: BuildContext,
             term: UnorderedTupleConstructorTerm,
@@ -129,4 +147,14 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
 
     override val subExpressions: Set<Expression>
         get() = entries.map { it.value }.toSet()
+}
+
+fun UnorderedTupleConstructor(
+    entriesLazy: Lazy<Set<UnorderedTupleConstructor.Entry>>,
+): UnorderedTupleConstructor = object : UnorderedTupleConstructor() {
+    override val term: UnorderedTupleConstructorTerm? = null
+
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val entries: Set<UnorderedTupleConstructor.Entry> by entriesLazy
 }
