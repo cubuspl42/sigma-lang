@@ -7,9 +7,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 
 class TypeVariableDefinition : Definition {
-    val typeVariable = TypeVariable(
-        definition = this@TypeVariableDefinition,
-    )
+    val typeVariable = TypeVariable()
 
     val typePlaceholder: TypePlaceholder
         get() = typeVariable.toPlaceholder()

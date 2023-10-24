@@ -5,7 +5,7 @@ import utils.Matcher
 import utils.match
 
 class OrderedTupleTypeMatcher(
-    val elements: List<ElementMatcher>,
+    val elements: Matcher<List<OrderedTupleType.Element>>,
 ) : Matcher<OrderedTupleType>() {
     class ElementMatcher(
         val name: Matcher<Identifier?>,

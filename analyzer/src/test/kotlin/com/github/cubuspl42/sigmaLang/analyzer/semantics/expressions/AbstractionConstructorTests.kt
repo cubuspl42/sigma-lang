@@ -2,6 +2,7 @@
 
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
+import UniversalFunctionTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableAbstraction
@@ -61,12 +62,12 @@ class AbstractionConstructorTests {
             assertMatches(
                 matcher = AbstractionConstructorMatcher(
                     argumentType = OrderedTupleTypeMatcher(
-                        elements = listOf(
+                        elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
                                 name = Matcher.Equals(Identifier.of("a")),
                                 type = Matcher.Is<IntCollectiveType>(),
                             ),
-                        ),
+                        )
                     ).checked(),
                     declaredImageType = Matcher.Is<IntCollectiveType>(),
                     image = CallMatcher(
@@ -138,11 +139,11 @@ class AbstractionConstructorTests {
                                 name = Identifier.of("g"),
                                 declaredType = UniversalFunctionType(
                                     argumentType = UnorderedTupleType.fromEntries(
-                                        UnorderedTupleType.Entry(
+                                        UnorderedTupleType.NamedEntry(
                                             name = Symbol.of("p"),
                                             type = IntCollectiveType,
                                         ),
-                                        UnorderedTupleType.Entry(
+                                        UnorderedTupleType.NamedEntry(
                                             name = Symbol.of("q"),
                                             type = IntCollectiveType,
                                         ),
@@ -332,20 +333,20 @@ class AbstractionConstructorTests {
                 term = term,
             ).resolved
 
-            val type = (expression as Expression).inferredTypeOrIllType.getOrCompute()
+            val type = expression.inferredTypeOrIllType.getOrCompute()
 
-            assertEquals(
-                expected = UniversalFunctionType(
-                    argumentType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Identifier.of("n"),
-                                type = IntCollectiveType,
+            assertMatches(
+                matcher = UniversalFunctionTypeMatcher(
+                    argumentType = OrderedTupleTypeMatcher(
+                        elements = ListMatchers.inOrder(
+                            OrderedTupleTypeMatcher.ElementMatcher(
+                                name = Matcher.Equals(Identifier.of("n")),
+                                type = Matcher.Is<IntCollectiveType>(),
                             ),
                         ),
-                    ),
-                    imageType = BoolType,
-                ),
+                    ).checked(),
+                    imageType = Matcher.Is<BoolType>(),
+                ).checked(),
                 actual = type,
             )
         }

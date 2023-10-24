@@ -1,10 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
-
-class TypeVariable(
-    private val definition: TypeVariableDefinition,
-) : SpecificType() {
+class TypeVariable() : SpecificType() {
     fun toPlaceholder(): TypePlaceholder = TypePlaceholder(
         typeVariable = this,
     )
@@ -35,14 +31,19 @@ class TypeVariable(
     override fun isNonEquivalentToDirectly(
         innerContext: NonEquivalenceContext,
         otherType: SpecificType,
-    ): Boolean {
-        if (otherType !is TypeVariable) return true
-        return definition != otherType.definition
-    }
+    ): Boolean = this !== otherType
 
     override fun walkRecursive(): Sequence<SpecificType> = emptySequence()
 
-    override fun dumpDirectly(depth: Int): String = "#${definition}"
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+
+    override fun dumpDirectly(depth: Int): String = "TV#${System.identityHashCode(this).toString(16)}"
 }
 
 data class TypePlaceholderResolution(

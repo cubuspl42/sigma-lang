@@ -46,11 +46,11 @@ class TypeSpecificationTests {
 
                 return UnorderedTupleType.fromEntries(
                     entries = setOf(
-                        UnorderedTupleType.Entry(
+                        UnorderedTupleType.NamedEntry(
                             name = Identifier.of("x"),
                             typeThunk = t1,
                         ),
-                        UnorderedTupleType.Entry(
+                        UnorderedTupleType.NamedEntry(
                             name = Identifier.of("y"),
                             typeThunk = t2,
                         ),

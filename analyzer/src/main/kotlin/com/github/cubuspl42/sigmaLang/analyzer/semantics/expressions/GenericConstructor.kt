@@ -39,7 +39,7 @@ class GenericConstructor(
             }
 
             val bodyLazy = lazier {
-                val metaArgumentType = metaArgumentTypeThunk.value!! // TODO: Depend on tuple constructor term instead?
+                val metaArgumentType = metaArgumentTypeThunk.value!!
 
                 val typeVariableBlock = metaArgumentType.buildTypeVariableBlock()
 

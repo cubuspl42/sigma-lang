@@ -28,7 +28,6 @@ data class FakeDefinition(
     val value: Value,
 ) : FakeIntroduction() {
     val definition = Definition(
-        name = name,
         body = AtomicExpression(
             type = type,
             value = value,
