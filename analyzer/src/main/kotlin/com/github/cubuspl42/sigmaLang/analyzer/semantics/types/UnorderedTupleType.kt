@@ -1,12 +1,8 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.OrderedTupleTypeConstructor
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleTypeConstructor
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
 // Type of tables with fixed number of entries, with keys being symbols, and any
 // values
@@ -47,6 +43,9 @@ abstract class UnorderedTupleType : TupleType() {
             name = name,
             typeThunk = Thunk.pure(type),
         )
+
+        override val key: PrimitiveValue
+            get() = name
     }
 
     data class UnorderedTupleMatch(
@@ -200,17 +199,40 @@ abstract class UnorderedTupleType : TupleType() {
         }
     }
 
-    override fun buildTypeVariableDefinitions(): Set<TypeVariableDefinition> = valueTypeByName.mapNotNull { (_, type) ->
-        if (type is TypeType) {
-            TypeVariableDefinition()
-        } else null
-    }.toSet()
+    override fun getTypeByKey(key: PrimitiveValue): TypeAlike? = if (key is Symbol) {
+        getValueType(name = key)
+    } else {
+        null
+    }
+
+    override fun replaceTypeRecursively(
+        context: TypeReplacementContext,
+    ): TypeAlike = UnorderedTupleType.fromEntries(
+        entries = entries.map { entry ->
+            val valueType = entry.type as Type
+            val replacedValueType = valueType.replaceTypeDirectly(context = context)
+
+            entry.copy(
+                typeThunk = Thunk.pure(
+                    replacedValueType,
+                )
+            )
+        }
+    )
 }
 
+@JvmName("UnorderedTupleTypeFromValueTypeByName")
 fun UnorderedTupleType(
     valueTypeByName: Map<Symbol, TypeAlike>,
 ): UnorderedTupleType = object : UnorderedTupleType() {
     override val valueTypeThunkByName = valueTypeByName.mapValues { (_, type) ->
         Thunk.pure(type)
     }
+}
+
+@JvmName("UnorderedTupleTypeFromValueTypeThunkByName")
+fun UnorderedTupleType(
+    valueTypeThunkByName: Map<Symbol, Thunk<TypeAlike>>,
+): UnorderedTupleType = object : UnorderedTupleType() {
+    override val valueTypeThunkByName: Map<Symbol, Thunk<TypeAlike>> = valueTypeThunkByName
 }

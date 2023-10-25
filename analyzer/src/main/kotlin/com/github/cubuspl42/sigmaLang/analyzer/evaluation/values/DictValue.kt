@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 data class DictValue(
     val thunkByKey: Map<PrimitiveValue, Thunk<Value>>,
-) : FunctionValue() {
+) : TableValue() {
     val thunkByValue: Map<PrimitiveValue, Value>
         get() = thunkByKey.mapValues { (_, thunk) -> thunk.value!! }
 
@@ -54,16 +54,6 @@ data class DictValue(
         )
     }
 
-    override fun apply(
-        argument: Value,
-    ): Thunk<Value> = read(
-        key = argument,
-    ) ?: Thunk.pure(
-        UndefinedValue.withName(
-            name = argument,
-        )
-    )
-
     override fun dump(): String {
         val content = dumpContent()
 
@@ -73,13 +63,13 @@ data class DictValue(
         }
     }
 
-    fun read(
-        key: Value,
-    ): Thunk<Value>? = thunkByKey[key as PrimitiveValue]
+    override fun read(
+        key: PrimitiveValue,
+    ): Thunk<Value>? = thunkByKey[key]
 
     fun readValue(
         key: Value,
-    ): Value? = read(key = key)?.let {
+    ): Value? = read(key = key as PrimitiveValue)?.let {
         it.value!!
     }
 
@@ -120,6 +110,14 @@ data class DictValue(
     }
 }
 
+fun DictValue(
+    valueByKey: Map<PrimitiveValue, Value>,
+) = DictValue(
+    thunkByKey = valueByKey.mapValues { (_, value) ->
+        Thunk.pure(value)
+    },
+)
+
 @Suppress("FunctionName")
 fun ArrayTable(
     elements: List<Thunk<Value>>,
@@ -139,3 +137,12 @@ fun ArrayTable(
     },
 )
 
+@JvmName("ArrayTableVarargs")
+@Suppress("FunctionName")
+fun ArrayTable(
+    vararg elements: Value,
+): DictValue = ArrayTable(
+    elements = elements.map {
+        Thunk.pure(it)
+    },
+)

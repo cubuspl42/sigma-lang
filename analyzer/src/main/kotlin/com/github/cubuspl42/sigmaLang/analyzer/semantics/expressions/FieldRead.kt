@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TableValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
@@ -100,7 +101,7 @@ abstract class FieldRead : FirstOrderExpression() {
     override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = subject.bind(
         dynamicScope = dynamicScope,
     ).thenDo { subjectValue ->
-        if (subjectValue !is DictValue) throw IllegalStateException("Subject $subjectValue is not a dict")
+        if (subjectValue !is TableValue) throw IllegalStateException("Subject $subjectValue is not a table")
 
         subjectValue.apply(
             argument = fieldName,

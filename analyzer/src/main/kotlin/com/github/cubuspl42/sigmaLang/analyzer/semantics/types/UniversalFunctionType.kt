@@ -37,6 +37,13 @@ data class UniversalFunctionType(
         return argumentResolution.mergeWith(imageResolution)
     }
 
+    override fun replaceTypeRecursively(
+        context: TypeReplacementContext,
+    ): TypeAlike = UniversalFunctionType(
+        argumentType = argumentType.replaceTypeDirectly(context = context),
+        imageType = imageType.replaceTypeDirectly(context = context),
+    )
+
     override fun substituteTypePlaceholders(
         resolution: TypePlaceholderResolution,
     ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution.combine2(
@@ -89,4 +96,6 @@ data class UniversalFunctionType(
             otherType = otherType.imageType as SpecificType,
         )
     }
+
+
 }

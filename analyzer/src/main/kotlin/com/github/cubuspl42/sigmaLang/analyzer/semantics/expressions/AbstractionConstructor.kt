@@ -1,7 +1,9 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ComputableAbstraction
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.CyclicComputation
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ReachableDeclarationSet
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
@@ -12,8 +14,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
 
 abstract class AbstractionConstructor : FirstOrderExpression() {
     abstract val argumentDeclaration: ArgumentDeclaration
@@ -29,7 +31,45 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
 
     class ArgumentDeclaration(
         override val declaredType: TupleType,
-    ) : Declaration
+    ) : Declaration {
+        data class BuildOutput(
+            val argumentDeclarationLazy: Lazy<ArgumentDeclaration>,
+            val argumentDeclarationBlockLazy: Lazy<StaticBlock>,
+        )
+
+        companion object {
+            fun build(
+                outerMetaScope: StaticScope,
+                argumentTypeTerm: TupleTypeConstructorTerm,
+            ): BuildOutput {
+                val argumentDeclarationLazy = lazy {
+                    val argumentTypeConstructor = argumentTypeTerm.let {
+                        TypeExpression.build(
+                            outerMetaScope = outerMetaScope,
+                            term = it,
+                        )
+                    }.resolved
+
+                    val argumentType = argumentTypeConstructor.evaluateAsType().typeOrIllType as TupleType
+
+                    ArgumentDeclaration(
+                        declaredType = argumentType,
+                    )
+                }
+
+                val argumentDeclarationBlockLazy = lazy {
+                    argumentTypeTerm.toArgumentDeclarationBlock(
+                        argumentDeclaration = argumentDeclarationLazy.value,
+                    )
+                }
+
+                return BuildOutput(
+                    argumentDeclarationLazy = argumentDeclarationLazy,
+                    argumentDeclarationBlockLazy = argumentDeclarationBlockLazy,
+                )
+            }
+        }
+    }
 
     data class BuildOutput(
         val expressionLazy: Lazy<AbstractionConstructor>,
@@ -47,28 +87,13 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
             val outerMetaScope = context.outerMetaScope
             val outerScope = context.outerScope
 
-            val argumentDeclaration by lazy {
-                val argumentTypeConstructor = term.argumentType.let {
-                    TypeExpression.build(
-                        outerMetaScope = outerMetaScope,
-                        term = it,
-                    )
-                }.resolved
+            val argumentDeclarationBuildOutput = ArgumentDeclaration.build(
+                outerMetaScope = outerMetaScope,
+                argumentTypeTerm = term.argumentType,
+            )
 
-                val argumentType = argumentTypeConstructor.evaluateAsType().typeOrIllType as TupleType
-
-                ArgumentDeclaration(
-                    declaredType = argumentType,
-                )
-            }
-
-            val argumentDeclarationBlockLazy = lazy {
-                term.argumentType.toArgumentDeclarationBlock(
-                    argumentDeclaration = argumentDeclaration,
-                )
-            }
-
-            val argumentDeclarationBlock by argumentDeclarationBlockLazy
+            val argumentDeclaration by argumentDeclarationBuildOutput.argumentDeclarationLazy
+            val argumentDeclarationBlock by argumentDeclarationBuildOutput.argumentDeclarationBlockLazy
 
             val expressionStub = object : Stub<AbstractionConstructor> {
                 override val resolved: AbstractionConstructor by lazy {
@@ -109,7 +134,7 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
 
             return BuildOutput(
                 expressionLazy = expressionStub.asLazy(),
-                argumentDeclarationBlockLazy = argumentDeclarationBlockLazy,
+                argumentDeclarationBlockLazy = argumentDeclarationBuildOutput.argumentDeclarationBlockLazy,
             )
         }
     }

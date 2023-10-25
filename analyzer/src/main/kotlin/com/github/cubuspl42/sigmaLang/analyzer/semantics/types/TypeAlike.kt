@@ -29,4 +29,46 @@ abstract class TypeAlike {
     open val asArray: ArrayType? = null
 
     abstract fun dumpDirectly(depth: Int): String
+
+    fun replaceType(
+        typeReplacer: TypeReplacer,
+    ): TypeAlike = replaceTypeDirectly(
+        context = TypeReplacementContext(
+            typeReplacer = typeReplacer,
+        ),
+    )
+
+    fun replaceTypeDirectly(
+        context: TypeReplacementContext,
+    ): TypeAlike {
+        val typeAlike = context.typeReplacer.replace(this)
+        return typeAlike ?: run {
+            replaceTypeRecursively(context = context)
+        }
+    }
+
+    open fun replaceTypeRecursively(
+        context: TypeReplacementContext,
+    ): TypeAlike = this
+
+    class TypeReplacementContext(
+        val typeReplacer: TypeReplacer,
+    )
+
+    interface TypeReplacer {
+        companion object {
+            fun combineAll(
+                replacers: Collection<TypeReplacer>,
+            ): TypeReplacer = object : TypeReplacer {
+                override fun replace(type: TypeAlike): TypeAlike? = replacers.fold(
+                    initial = null,
+                    operation = { accType: TypeAlike?, replacer: TypeReplacer ->
+                        replacer.replace(type = accType ?: type) ?: accType
+                    },
+                )
+            }
+        }
+
+        fun replace(type: TypeAlike): TypeAlike?
+    }
 }

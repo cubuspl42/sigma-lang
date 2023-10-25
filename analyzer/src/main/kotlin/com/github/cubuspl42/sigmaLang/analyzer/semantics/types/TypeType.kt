@@ -1,14 +1,13 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AtomicExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-
 /// Type of types
 object TypeType : ShapeType() {
     override fun findLowestCommonSupertype(other: SpecificType): SpecificType = AnyType
 
     override fun resolveTypeVariablesShape(assignedType: TypeAlike): TypePlaceholderResolution =
         TypePlaceholderResolution.Empty
+
+    override fun replaceTypeRecursively(context: TypeReplacementContext): TypeAlike = this
 
     override fun substituteTypePlaceholders(
         resolution: TypePlaceholderResolution,
@@ -23,13 +22,6 @@ object TypeType : ShapeType() {
             actualType = assignedType,
         )
     }
-
-    override fun buildVariableExpressionDirectly(
-        context: VariableExpressionBuildingContext,
-    ): Expression = AtomicExpression(
-        type = TypeType,
-        value = TypeVariable().asValue,
-    )
 
     override fun walkRecursive(): Sequence<SpecificType> = emptySequence()
 

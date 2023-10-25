@@ -22,4 +22,6 @@ sealed class PrimitiveType : ShapeType() {
     }
 
     final override fun walkRecursive(): Sequence<SpecificType> = emptySequence()
+
+    override fun replaceTypeRecursively(context: TypeReplacementContext): TypeAlike = this
 }

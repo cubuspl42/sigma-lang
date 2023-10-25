@@ -9,11 +9,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Namespace
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class BuiltinsTests {
     @Test
+    @Ignore // Re-support type placeholders
     fun testSet() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """

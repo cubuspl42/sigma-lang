@@ -162,7 +162,7 @@ abstract class Call : FirstOrderExpression() {
                 } else {
                     DiagnosedAnalysis(
                         analysis = Analysis(
-                            inferredType = subjectType.elements[index.toInt()].type,
+                            inferredType = subjectType.indexedElements[index.toInt()].type,
                         ),
                         directErrors = emptySet(),
                     )

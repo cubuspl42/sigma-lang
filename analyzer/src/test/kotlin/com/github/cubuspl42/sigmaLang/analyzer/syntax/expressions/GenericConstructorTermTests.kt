@@ -4,13 +4,11 @@ package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import utils.ListMatchers
 import utils.Matcher
 import utils.assertMatches
 import utils.checked
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class GenericConstructorTermTests {
     class ParsingTests {
