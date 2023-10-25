@@ -1,26 +1,31 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
-import com.github.cubuspl42.sigmaLang.analyzer.indexOfOrNull
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.IntLiteral
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.OrderedTupleConstructor
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.OrderedTupleTypeConstructor
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 
 data class OrderedTupleType(
     val elements: List<Element>,
 ) : TupleType() {
+    val indexedElements = elements.mapIndexed { index, element ->
+        IndexedElement(
+            key = IntValue(index.toLong()),
+            name = element.name,
+            typeThunk = element.typeThunk,
+        )
+    }
+
+    constructor(
+        elementsLazy: Lazy<List<Element>>,
+    ) : this(
+        elements = elementsLazy.value,
+    )
+
     data class Element(
-        override val name: Identifier?,
-        override val typeThunk: Thunk<TypeAlike>,
-    ) : TupleType.Entry() {
+        val name: Identifier?,
+        val typeThunk: Thunk<TypeAlike>,
+    ) {
         constructor(
             name: Identifier?,
             type: TypeAlike,
@@ -28,13 +33,22 @@ data class OrderedTupleType(
             name = name,
             typeThunk = Thunk.pure(type),
         )
+    }
 
+    data class IndexedElement(
+        override val key: IntValue,
+        override val name: Identifier?,
+        override val typeThunk: Thunk<TypeAlike>,
+    ) : TupleType.Entry() {
         fun substituteTypeVariables(
             resolution: TypePlaceholderResolution,
         ): TypePlaceholderSubstitution<Element> = type.substituteTypePlaceholders(
             resolution = resolution,
         ).transform {
-            copy(typeThunk = Thunk.pure(it))
+            Element(
+                name = name,
+                typeThunk = Thunk.pure(it),
+            )
         }
     }
 
@@ -83,7 +97,7 @@ data class OrderedTupleType(
     }
 
     override fun dumpDirectly(depth: Int): String {
-        val dumpedEntries = elements.map { element ->
+        val dumpedEntries = indexedElements.map { element ->
             listOfNotNull(
                 element.name?.let { "${it.name}:" }, element.type.dumpRecursively(depth = depth + 1)
             ).joinToString(
@@ -108,10 +122,10 @@ data class OrderedTupleType(
             message = "Cannot resolve type variables, non-(ordered tuple) is assigned",
         )
 
-        return elements.withIndex().fold(
+        return indexedElements.withIndex().fold(
             initial = TypePlaceholderResolution.Empty,
         ) { accumulatedResolution, (index, element) ->
-            val assignedElement = assignedType.elements.getOrNull(index) ?: throw TypeVariableResolutionError(
+            val assignedElement = assignedType.indexedElements.getOrNull(index) ?: throw TypeVariableResolutionError(
                 message = "Cannot resolve type variables, assigned tuple is shorter",
             )
 
@@ -127,7 +141,7 @@ data class OrderedTupleType(
         assignedType: SpecificType,
     ): SpecificType.MatchResult = when (assignedType) {
         is OrderedTupleType -> OrderedTupleMatch(
-            elementsMatches = elements.zip(assignedType.elements) { element, assignedElement ->
+            elementsMatches = indexedElements.zip(assignedType.indexedElements) { element, assignedElement ->
                 element.type.match(assignedType = assignedElement.type as SpecificType)
             },
             sizeMatch = when {
@@ -145,18 +159,34 @@ data class OrderedTupleType(
         )
     }
 
-    override val entries: Collection<Entry> = elements
+    override val entries: Collection<Entry> = indexedElements
 
     override fun substituteTypePlaceholders(
         resolution: TypePlaceholderResolution,
-    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution.traverseIterable(elements) {
+    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution.traverseIterable(indexedElements) {
         it.substituteTypeVariables(resolution = resolution)
     }.transform { elements ->
         OrderedTupleType(elements = elements)
     }
 
+    override fun replaceTypeRecursively(
+        context: TypeReplacementContext,
+    ): TypeAlike = OrderedTupleType(
+        elementsLazy = lazy {
+            this.elements.map { element ->
+                element.copy(
+                    typeThunk = element.typeThunk.thenJust {
+                        val elementType = it as Type
+
+                        elementType.replaceTypeDirectly(context = context)
+                    }
+                )
+            }
+        }
+    )
+
     override val asArray: ArrayType by lazy {
-        val elementType = elements.map { it.type }.fold(
+        val elementType = indexedElements.map { it.type }.fold(
             initial = NeverType as SpecificType,
         ) { accType, elementType ->
             accType.findLowestCommonSupertype(elementType as SpecificType)
@@ -166,16 +196,6 @@ data class OrderedTupleType(
             elementType = elementType,
         )
     }
-
-    override fun buildTypeVariableDefinitions(): Set<TypeVariableDefinition> = elements.mapNotNull {
-        val name = it.name
-        val type = it.type
-
-        // TODO: What with non-types??
-        if (name != null && type is TypeType) {
-            TypeVariableDefinition()
-        } else null
-    }.toSet()
 
 
 //    override fun buildVariableExpressionDirectly(
@@ -193,7 +213,13 @@ data class OrderedTupleType(
 //        },
 //    )
 
-    override fun walkRecursive(): Sequence<SpecificType> = elements.asSequence().flatMap {
+    override fun getTypeByKey(key: PrimitiveValue): TypeAlike? = when (key) {
+        is IntValue -> indexedElements.getOrNull(key.value.toInt())?.type
+        is Identifier -> indexedElements.find { it.name == key }?.type
+        else -> null
+    }
+
+    override fun walkRecursive(): Sequence<SpecificType> = indexedElements.asSequence().flatMap {
         (it.type as SpecificType).walk()
     }
 }

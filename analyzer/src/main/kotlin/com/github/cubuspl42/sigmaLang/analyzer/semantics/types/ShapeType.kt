@@ -35,4 +35,6 @@ sealed class ShapeType : SpecificType() {
     abstract fun resolveTypeVariablesShape(
         assignedType: TypeAlike,
     ): TypePlaceholderResolution
+
+    abstract override fun replaceTypeRecursively(context: TypeReplacementContext): TypeAlike
 }

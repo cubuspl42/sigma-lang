@@ -94,6 +94,10 @@ data class SetType(
         return elementResolution
     }
 
+    override fun replaceTypeRecursively(context: TypeReplacementContext): TypeAlike = SetType(
+        elementType = elementType.replaceTypeDirectly(context = context),
+    )
+
     override fun substituteTypePlaceholders(
         resolution: TypePlaceholderResolution,
     ): TypePlaceholderSubstitution<TypeAlike> =

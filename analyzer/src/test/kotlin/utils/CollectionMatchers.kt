@@ -66,6 +66,14 @@ object CollectionMatchers {
             }
         }
     }
+
+    fun isNotEmpty(): Matcher<Set<SemanticError>> = object : Matcher<Set<SemanticError>>() {
+        override fun match(actual: Set<SemanticError>) {
+            if (actual.isEmpty()) {
+                throw AssertionError("Expected non-empty set, but got $actual")
+            }
+        }
+    }
 }
 
 fun <E> Matcher<Collection<E>>.whichHasSize(expectedSize: Int): Matcher<Collection<E>> = this.with(

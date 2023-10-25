@@ -5,19 +5,19 @@ import utils.Matcher
 import utils.match
 
 class OrderedTupleTypeMatcher(
-    val elements: Matcher<List<OrderedTupleType.Element>>,
+    val elements: Matcher<List<OrderedTupleType.IndexedElement>>,
 ) : Matcher<OrderedTupleType>() {
     class ElementMatcher(
         val name: Matcher<Identifier?>,
         val type: Matcher<TypeAlike>,
-    ) : Matcher<OrderedTupleType.Element>() {
-        override fun match(actual: OrderedTupleType.Element) {
+    ) : Matcher<OrderedTupleType.IndexedElement>() {
+        override fun match(actual: OrderedTupleType.IndexedElement) {
             name.match(actual = actual.name)
             type.match(actual = actual.type)
         }
     }
 
     override fun match(actual: OrderedTupleType) {
-        elements.match(actual = actual.elements)
+        elements.match(actual = actual.indexedElements)
     }
 }

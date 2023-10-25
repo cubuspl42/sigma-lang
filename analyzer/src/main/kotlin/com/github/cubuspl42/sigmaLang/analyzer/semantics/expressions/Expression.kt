@@ -16,6 +16,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ExpressionMap
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ReachableDeclarationSet
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.TraitTranslationScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.ArrayTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
@@ -43,7 +44,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.SetConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.StringLiteralTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TypeSpecificationSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TypeSpecificationTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
@@ -406,11 +406,10 @@ abstract class Expression {
         dynamicScope: DynamicScope,
     ): Thunk<Value> = classified.bind(dynamicScope = dynamicScope)
 
-    // TODO: Refactor! (make static?)
     fun evaluateAsType(): TypeExpression.DiagnosedAnalysis {
         val valueThunk by lazy {
             bind(
-                dynamicScope = DynamicScope.Empty,
+                dynamicScope = TraitTranslationScope,
             )
         }
 

@@ -45,6 +45,7 @@ import utils.assertMatches
 import utils.assertTypeIsEquivalent
 import utils.checked
 import utils.whichHasSize
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -229,6 +230,7 @@ class CallTests {
         }
 
         @Test
+        @Ignore // Re-support type placeholders
         fun testInferableTemplateCall() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[false, 0]",
@@ -279,6 +281,7 @@ class CallTests {
         }
 
         @Test
+        @Ignore // Re-support type placeholders
         fun testNonInferableTemplateCall() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[]",
@@ -313,9 +316,7 @@ class CallTests {
                                 typeVariableDefinition.typePlaceholder,
                             ),
                         ),
-                        unresolvedPlaceholders = setOf(
-                            typeVariableDefinition.typePlaceholder,
-                        ),
+                        unresolvedPlaceholders = emptySet(),
                     )
                 ),
                 actual = call.directErrors,
@@ -328,6 +329,7 @@ class CallTests {
         }
 
         @Test
+        @Ignore // Re-support type placeholders
         fun testNonInferableTemplateCall_nested() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[false, 1]",

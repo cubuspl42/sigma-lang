@@ -1,6 +1,48 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
-class TypeVariable() : SpecificType() {
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+
+class TypeVariable(
+    val traitDeclaration: Declaration,
+    val path: Path,
+) : SpecificType() {
+    data class Path(
+        val root: Segment?,
+    ) {
+        data class Segment(
+            val key: PrimitiveValue,
+            val tail: Segment?,
+        ) {
+            companion object {
+                fun of(key: PrimitiveValue): Segment = Segment(
+                    key = key, tail = null
+                )
+            }
+
+            fun extend(newKey: PrimitiveValue): Segment = Segment(
+                key = key, tail = tail?.extend(key) ?: Segment.of(newKey)
+            )
+
+            fun dump(): String = listOfNotNull(
+                key.dump(),
+                tail?.dump(),
+            ).joinToString(separator = ".")
+        }
+
+        companion object {
+            val Root = Path(root = null)
+        }
+
+        fun extend(
+            newKey: PrimitiveValue,
+        ): Path = Path(
+            root = root?.extend(newKey) ?: Segment.of(newKey),
+        )
+
+        fun dump(): String = root?.dump() ?: "∅"
+    }
+
     fun toPlaceholder(): TypePlaceholder = TypePlaceholder(
         typeVariable = this,
     )
@@ -31,19 +73,12 @@ class TypeVariable() : SpecificType() {
     override fun isNonEquivalentToDirectly(
         innerContext: NonEquivalenceContext,
         otherType: SpecificType,
-    ): Boolean = this !== otherType
+    ): Boolean = this != otherType
 
     override fun walkRecursive(): Sequence<SpecificType> = emptySequence()
 
-    override fun equals(other: Any?): Boolean {
-        return super.equals(other)
-    }
-
-    override fun hashCode(): Int {
-        return super.hashCode()
-    }
-
-    override fun dumpDirectly(depth: Int): String = "TV#${System.identityHashCode(this).toString(16)}"
+    override fun dumpDirectly(depth: Int): String =
+        "#${System.identityHashCode(traitDeclaration).toString(16)}.${path.dump()}"
 }
 
 data class TypePlaceholderResolution(

@@ -60,6 +60,10 @@ data class ArrayType(
         )
     }
 
+    override fun replaceTypeRecursively(context: TypeReplacementContext): TypeAlike = ArrayType(
+        elementType = elementType.replaceTypeDirectly(context = context),
+    )
+
     override fun substituteTypePlaceholders(
         resolution: TypePlaceholderResolution,
     ): TypePlaceholderSubstitution<TypeAlike> = elementType.substituteTypePlaceholders(
@@ -79,7 +83,7 @@ data class ArrayType(
             )
 
             is OrderedTupleType -> OrderedTupleMatch(
-                elementsMatches = assignedType.elements.map {
+                elementsMatches = assignedType.indexedElements.map {
                     elementType.match(assignedType = it.type as SpecificType)
                 },
             )

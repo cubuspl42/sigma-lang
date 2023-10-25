@@ -2,25 +2,32 @@
 
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
+import UniversalFunctionTypeMatcher
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeAnnotatedBody
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
-import utils.Matcher
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntLiteralTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.StringType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
-import utils.assertMatches
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.GenericConstructorTerm
 import utils.CollectionMatchers
+import utils.FakeDefinition
+import utils.FakeDefinitionBlock
 import utils.ListMatchers
+import utils.Matcher
+import utils.assertMatches
 import utils.checked
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -108,33 +115,56 @@ class GenericConstructorTests {
 
     class TypeInferenceTests {
         @Test
-        fun test() {
+        fun testSimple() {
             val term = ExpressionSourceTerm.parse(
                 source = "^[t: Type] !=> ^[a: t] -> Int => 11",
             ) as GenericConstructorTerm
 
-            val metaAbstractionConstructor = GenericConstructor.build(
+            val genericConstructor = GenericConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).value
 
             assertMatches(
-                matcher = GenericTypeMatcher(
-                    metaArgumentType = OrderedTupleTypeMatcher(
+                matcher = UniversalFunctionTypeMatcher(
+                    argumentType = OrderedTupleTypeMatcher(
                         elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
-                                name = Matcher.Equals(expected = Identifier.of("t")),
-                                type = Matcher.Is<TypeType>(),
+                                name = Matcher.Equals(expected = Identifier.of("a")),
+                                type = Matcher.Is<TypeVariable>(),
                             ),
                         ),
                     ).checked(),
+                    imageType = Matcher.Is<IntCollectiveType>(),
                 ).checked(),
-                actual = metaAbstractionConstructor.inferredTypeOrIllType.getOrCompute(),
+                actual = genericConstructor.body.inferredTypeOrIllType.getOrCompute(),
             )
         }
 
         @Test
-        fun testWithDeclaredImageType_fromMetaArgument() {
+        @Ignore // TODO: Trait meta-static analysis
+        fun testNonTrait() {
+            val term = ExpressionSourceTerm.parse(
+                source = "^{t: Type, n: Int} !=> 2",
+            ) as GenericConstructorTerm
+
+            val genericConstructor = GenericConstructor.build(
+                context = Expression.BuildContext.Builtin,
+                term = term,
+            ).value
+
+            // - ensure that meta arguments are "traits"
+            //   - trait is a TypeType or a tuple of traits
+
+            // TODO: Specify the error
+            assertMatches(
+                matcher = CollectionMatchers.isNotEmpty(),
+                actual = genericConstructor.errors,
+            )
+        }
+
+        @Test
+        fun testWithDeclaredImageType() {
             val term = ExpressionSourceTerm.parse(
                 // The declared image type is an introduced meta-argument
                 source = """
@@ -165,29 +195,71 @@ class GenericConstructorTests {
         }
 
         @Test
-        fun testWithDeclaredImageType_fromMetaArgumentComplex() {
-            val term = ExpressionSourceTerm.parse(
-                // The declared image type is a complex expression based on a meta-argument
-                source = """
-                        ^[
-                            t: ^{t1: Type, t2: Type},
-                        ] !=> ^[
-                            l: ^[t.t1...],
-                            f: ^[t.t1] -> t.t2,
-                        ] -> ^[t.t2...] => %let {
-                            result: ^[t.t2...] = map[l, f]
-                        } %in result
-                    """.trimIndent(),
-            )
+        fun testComplex() {
+            // TODO:
 
-            val expression = Expression.build(
+            // - make tuple type values a separate class and make them field-readable?
+            //   - ...a separate thing? They still have Type inside
+
+
+            // - bring back the dynamic translation scope?
+            // - TraitDynamicScope translate trait declarations to trait values (dicts/new tuple type values; TVs)
+            // - How to "evaluate" the type with TVs in `specify`?
+            //   - new algorithm?
+            //   - convert to expression?
+
+            val term = ExpressionSourceTerm.parse(
+                source = """
+                         ^[
+                             t: ^{
+                                t1: Type,
+                                t2: Type,
+                             },
+                         ] !=> ^{
+                            a: t.t1,
+                            b: t.t2,
+                         } => 1
+                    """.trimIndent(),
+            ) as GenericConstructorTerm
+
+            val genericConstructor = GenericConstructor.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
-            ).resolved
+            ).value
 
-            assertEquals(
-                expected = emptySet(),
-                expression.errors,
+            val bodyType: TypeAlike = genericConstructor.body.inferredTypeOrIllType.getOrCompute()
+
+            fun buildBodyTypeMatcher(
+                t1Matcher: Matcher<Type>,
+                t2Matcher: Matcher<Type>,
+            ) = UniversalFunctionTypeMatcher(
+                argumentType = UnorderedTupleTypeMatcher(
+                    entries = CollectionMatchers.eachOnce(
+                        UnorderedTupleTypeMatcher.EntryMatcher(
+                            name = Matcher.Equals(expected = Identifier.of("a")),
+                            type = t1Matcher.checked(),
+                        ),
+                        UnorderedTupleTypeMatcher.EntryMatcher(
+                            name = Matcher.Equals(expected = Identifier.of("b")),
+                            type = t2Matcher.checked(),
+                        ),
+                    ),
+                ).checked(),
+                imageType = IntLiteralTypeMatcher(
+                    value = Matcher.Equals(1L),
+                ).checked(),
+            )
+
+            assertMatches(
+                matcher = buildBodyTypeMatcher(
+                    t1Matcher = Matcher.Is<TypeVariable>(),
+                    t2Matcher = Matcher.Is<TypeVariable>(),
+                ).checked(),
+                actual = bodyType,
+            )
+
+            val genericType = assertIs<GenericType>(
+                genericConstructor.inferredTypeOrIllType.getOrCompute()
             )
 
             assertMatches(
@@ -211,8 +283,93 @@ class GenericConstructorTests {
                             ),
                         ),
                     ).checked(),
+                ),
+                actual = genericType,
+            )
+
+            val specifiedType = genericType.specify(
+                ArrayTable(
+                    DictValue(
+                        valueByKey = mapOf(
+                            Identifier.of("t1") to IntCollectiveType.asValue,
+                            Identifier.of("t2") to StringType.asValue,
+                        ),
+                    ),
+                ),
+            )
+
+            assertMatches(
+                matcher = buildBodyTypeMatcher(
+                    t1Matcher = Matcher.Is<IntCollectiveType>(),
+                    t2Matcher = Matcher.Is<StringType>(),
                 ).checked(),
-                actual = expression.inferredTypeOrIllType.getOrCompute(),
+                actual = specifiedType,
+            )
+        }
+
+        @Test
+        fun testWithTraitReference() {
+            val term = ExpressionSourceTerm.parse(
+                source = """
+                        ^[
+                            t: Trait1,
+                        ] !=> 0
+                    """.trimIndent(),
+            )
+
+            val expression = Expression.build(
+                context = Expression.BuildContext(
+                    outerMetaScope = FakeDefinitionBlock(
+                        definitions = setOf(
+                            FakeDefinition(
+                                name = Identifier.of("Trait1"),
+                                type = TypeType,
+                                value = UnorderedTupleType(
+                                    valueTypeByName = mapOf(
+                                        Identifier.of("t1") to TypeType,
+                                        Identifier.of("t2") to TypeType,
+                                    )
+                                ).asValue,
+                            ),
+                        ),
+                    ),
+                    outerScope = StaticScope.Empty,
+                ),
+                term = term,
+            ).resolved
+
+            assertEquals(
+                expected = emptySet(),
+                expression.errors,
+            )
+
+            val type = assertIs<GenericType>(
+                expression.inferredTypeOrIllType.getOrCompute()
+            )
+
+            assertMatches(
+                matcher = GenericTypeMatcher(
+                    metaArgumentType = OrderedTupleTypeMatcher(
+                        elements = ListMatchers.inOrder(
+                            OrderedTupleTypeMatcher.ElementMatcher(
+                                name = Matcher.Equals(Identifier.of("t")),
+                                type = UnorderedTupleTypeMatcher(
+                                    entries = CollectionMatchers.eachOnce(
+                                        UnorderedTupleTypeMatcher.EntryMatcher(
+                                            name = Matcher.Equals(Identifier.of("t1")),
+                                            type = Matcher.Is<TypeType>(),
+                                        ),
+                                        UnorderedTupleTypeMatcher.EntryMatcher(
+                                            name = Matcher.Equals(Identifier.of("t2")),
+                                            type = Matcher.Is<TypeType>(),
+                                        ),
+                                    ),
+                                ).checked(),
+                            ),
+                        ),
+                    ).checked(),
+                ),
+                actual = type,
             )
         }
     }

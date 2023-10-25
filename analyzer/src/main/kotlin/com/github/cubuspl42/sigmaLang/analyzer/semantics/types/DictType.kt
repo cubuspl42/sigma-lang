@@ -43,6 +43,11 @@ data class DictType(
         return keyResolution.mergeWith(valueResolution)
     }
 
+    override fun replaceTypeRecursively(context: TypeReplacementContext): TypeAlike = DictType(
+        keyType = keyType.replaceTypeDirectly(context = context),
+        valueType = valueType.replaceTypeDirectly(context = context),
+    )
+
     override fun substituteTypePlaceholders(
         resolution: TypePlaceholderResolution,
     ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution.combine2(

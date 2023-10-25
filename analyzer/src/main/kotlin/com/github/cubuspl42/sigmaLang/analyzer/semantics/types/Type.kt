@@ -36,30 +36,5 @@ sealed class Type : TypeAlike() {
         }
     }
 
-    fun buildVariableExpression(
-        context: VariableExpressionBuildingContext,
-    ): Expression? {
-        val mappedExpression = context.getMapped(this)
 
-        if (mappedExpression != null) {
-            return mappedExpression
-        }
-
-        return VariableExpressionBuildingContext.looped { innerContextLooped ->
-            val innerExpression = buildVariableExpressionDirectly(context = innerContextLooped)
-
-            val innerContext = innerExpression?.let {
-                context.extended(
-                    key = this@Type,
-                    innerExpression = it,
-                )
-            } ?: context
-
-            Pair(innerExpression, innerContext)
-        }.first
-    }
-
-    open fun buildVariableExpressionDirectly(
-        context: VariableExpressionBuildingContext,
-    ): Expression? = null
 }

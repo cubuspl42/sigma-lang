@@ -13,7 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.FunctionTypeCo
 abstract class FunctionTypeConstructor : TypeConstructor() {
     abstract override val term: FunctionTypeConstructorTerm
 
-    abstract val metaArgumentType: Expression? // TODO: Type?
+    abstract val metaArgumentType: Expression? // TODO: Nuke
 
     abstract val argumentType: TupleTypeConstructor
 
@@ -39,7 +39,6 @@ abstract class FunctionTypeConstructor : TypeConstructor() {
                         }
                     }
 
-                    // TODO: Use the scope of the meta-argument type
                     override val argumentType: TupleTypeConstructor by lazy {
                         TupleTypeConstructor.build(
                             context = context,
