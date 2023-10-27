@@ -287,7 +287,7 @@ class GenericConstructorTests {
                 actual = genericType,
             )
 
-            val specifiedType = genericType.specify(
+            val specifiedType = genericType.parametrize(
                 ArrayTable(
                     DictValue(
                         valueByKey = mapOf(
