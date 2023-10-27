@@ -8,6 +8,6 @@ data class GenericTypeMatcher(
     val metaArgumentType: Matcher<TupleType>,
 ) : Matcher<GenericType>() {
     override fun match(actual: GenericType) {
-        metaArgumentType.match(actual = actual.metaArgumentType)
+        metaArgumentType.match(actual = actual.parameterType)
     }
 }

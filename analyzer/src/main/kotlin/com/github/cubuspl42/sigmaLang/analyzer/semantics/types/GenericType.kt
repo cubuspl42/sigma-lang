@@ -1,30 +1,19 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TableValue
 
-abstract class GenericType(
-    val metaArgumentType: TupleType,
-) : Type() {
-    val metaType: UniversalFunctionType
-        get() = UniversalFunctionType(
-            argumentType = metaArgumentType,
-            imageType = TypeType,
-        )
+class GenericType(
+    override val parameterType: TupleType,
+    val typeAbstraction: TypeAbstraction,
+) : ParametrizedType() {
+    interface TypeAbstraction {
+        fun apply(parameterTable: TableValue): Type
+    }
 
-    override fun resolveTypePlaceholders(
-        assignedType: SpecificType,
-    ): TypePlaceholderResolution = TypePlaceholderResolution.Empty
-
-    override fun substituteTypePlaceholders(
-        resolution: TypePlaceholderResolution,
-    ): TypePlaceholderSubstitution<TypeAlike> = TypePlaceholderSubstitution(
-        result = this,
-    )
-
-    override fun dumpDirectly(depth: Int): String = "${metaArgumentType.dumpRecursively(depth)} !-> Type"
-
-    // Thought: Return a thunk?
-    abstract fun specify(
+    override fun parametrize(
         metaArgument: DictValue,
-    ): Type
+    ): Type {
+        return typeAbstraction.apply(parameterTable = metaArgument)
+    }
 }

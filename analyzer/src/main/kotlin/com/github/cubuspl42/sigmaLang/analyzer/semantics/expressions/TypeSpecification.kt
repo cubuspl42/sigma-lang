@@ -4,11 +4,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.*
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ParametrizedType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.*
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TypeSpecificationTerm
 
 class TypeSpecification(
     override val term: TypeSpecificationTerm,
@@ -59,7 +60,7 @@ class TypeSpecification(
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val subjectType = compute(subject.inferredTypeOrIllType) ?: return@buildDiagnosedAnalysisComputation null
 
-        if (subjectType !is GenericType) {
+        if (subjectType !is ParametrizedType) {
             return@buildDiagnosedAnalysisComputation DiagnosedAnalysis.fromError(
                 NonGenericCallError(
                     location = term.location,
@@ -69,7 +70,7 @@ class TypeSpecification(
         }
 
         return@buildDiagnosedAnalysisComputation DiagnosedAnalysis(
-            inferredType = subjectType.specify(metaArgument),
+            inferredType = subjectType.parametrize(metaArgument),
         )
     }
 

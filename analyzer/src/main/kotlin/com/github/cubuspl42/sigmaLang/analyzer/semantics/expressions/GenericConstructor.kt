@@ -78,24 +78,25 @@ class GenericConstructor(
 
         DiagnosedAnalysis(
             analysis = Analysis(
-                inferredType = object : GenericType(
-                    metaArgumentType = metaArgumentType,
-                ) {
-                    override fun specify(metaArgument: DictValue): Type {
-                        val typeVariableReplacer = buildTypeVariableReplacer(
-                            traitType = metaArgumentType,
-                            path = TypeVariable.Path.Root,
-                            specificationTable = metaArgument,
-                            traitDeclaration = metaArgumentDeclaration,
-                        )
+                inferredType = GenericType(
+                    parameterType = metaArgumentType,
+                    typeAbstraction = object : GenericType.TypeAbstraction {
+                        override fun apply(parameterTable: TableValue): Type {
+                            val typeVariableReplacer = buildTypeVariableReplacer(
+                                traitType = metaArgumentType,
+                                path = TypeVariable.Path.Root,
+                                specificationTable = parameterTable,
+                                traitDeclaration = metaArgumentDeclaration,
+                            )
 
-                        val specifiedType = inferredBodyType.replaceType(
-                            typeReplacer = typeVariableReplacer,
-                        ) as Type
+                            val specifiedType = inferredBodyType.replaceType(
+                                typeReplacer = typeVariableReplacer,
+                            ) as Type
 
-                        return specifiedType
+                            return specifiedType
+                        }
                     }
-                },
+                )
             ),
             directErrors = emptySet(), // TODO
         )
