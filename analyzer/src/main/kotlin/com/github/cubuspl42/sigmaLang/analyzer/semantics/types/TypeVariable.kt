@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 
-class TypeVariable(
+data class TypeVariable(
     val traitDeclaration: Declaration,
     val path: Path,
 ) : SpecificType() {

@@ -13,7 +13,7 @@ class GenericType(
      * Body type with [TypeVariable]s referring to the parameter declaration
      */
     private val bodyType: Type,
-) : ParametrizedType() {
+) : ParametricType() {
     companion object {
         private fun buildTypeVariableReplacer(
             traitDeclaration: Declaration,
@@ -23,7 +23,7 @@ class GenericType(
         ): TypeAlike.TypeReplacer = TypeAlike.TypeReplacer.combineAll(
             replacers = traitType.entries.map { entry ->
                 val entryKey = entry.key
-                val specificationValue = specificationTable.read(entryKey)!!.value!!
+                val specificationValue = specificationTable.read(entryKey)?.let { it.value!! }
 
                 buildTypeVariableReplacer(
                     traitDeclaration = traitDeclaration,
@@ -38,20 +38,24 @@ class GenericType(
             traitDeclaration: Declaration,
             entryPath: TypeVariable.Path,
             traitEntryType: TypeAlike,
-            specificationValue: Value,
+            specificationValue: Value?,
         ): TypeAlike.TypeReplacer = when (traitEntryType) {
             TypeType -> {
-                val specificationType = specificationValue.asType!!
+                val typeVariable = TypeVariable(
+                    traitDeclaration = traitDeclaration,
+                    path = entryPath,
+                )
+
+                val specificationType = if (specificationValue != null) {
+                    specificationValue.asType!!
+                } else {
+                    TypePlaceholder(typeVariable = typeVariable)
+                }
 
                 object : TypeAlike.TypeReplacer {
                     override fun replace(
                         type: TypeAlike,
-                    ): TypeAlike? =
-                        if (type is TypeVariable && type.traitDeclaration == traitDeclaration && type.path == entryPath) {
-                            specificationType
-                        } else {
-                            null
-                        }
+                    ): TypeAlike? = specificationType.takeIf { type == typeVariable }
                 }
             }
 
@@ -90,5 +94,6 @@ class GenericType(
         return specifiedType
     }
 
-    override fun dumpDirectly(depth: Int): String = "${parameterType.dumpRecursively(depth)} !-> ${bodyType.dumpRecursively(depth = depth)}"
+    override fun dumpDirectly(depth: Int): String =
+        "${parameterType.dumpRecursively(depth)} !-> ${bodyType.dumpRecursively(depth = depth)}"
 }

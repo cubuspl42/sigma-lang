@@ -10,8 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.evaluation.values.DictV
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ParametrizedType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ParametricType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
@@ -36,7 +35,7 @@ class TypeSpecificationTests {
          * !^[t1: Type, t2: Type] ^{x: t1, y: t2}
          * ```
          */
-        private val genericType1 = object : ParametrizedType() {
+        private val genericType1 = object : ParametricType() {
             override fun parametrize(metaArgument: DictValue): Type {
                 val t1 = metaArgument.read(IntValue(value = 0L))!!.thenJust { it.asType!! }
                 val t2 = metaArgument.read(IntValue(value = 1L))!!.thenJust { it.asType!! }

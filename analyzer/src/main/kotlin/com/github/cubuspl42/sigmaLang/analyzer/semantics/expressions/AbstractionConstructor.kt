@@ -179,3 +179,19 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
 
     override val subExpressions: Set<Expression> by lazy { setOfNotNull(image) }
 }
+
+fun AbstractionConstructor(
+    argumentDeclaration: AbstractionConstructor.ArgumentDeclaration,
+    declaredImageTypeLazy: Lazy<TypeAlike?>,
+    imageLazy: Lazy<Expression>,
+): AbstractionConstructor = object : AbstractionConstructor() {
+    override val outerScope: StaticScope = StaticScope.Empty
+
+    override val term: ExpressionTerm? = null
+
+    override val argumentDeclaration: ArgumentDeclaration = argumentDeclaration
+
+    override val declaredImageType: TypeAlike? by declaredImageTypeLazy
+
+    override val image: Expression by imageLazy
+}

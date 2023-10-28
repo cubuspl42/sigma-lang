@@ -25,8 +25,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ParametrizedType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ParametricType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
@@ -190,7 +189,7 @@ class CallTests {
                 source = "f[false, 1]",
             ) as PostfixCallSourceTerm
 
-            val fType = object : ParametrizedType() {
+            val fType = object : ParametricType() {
                 override val parameterType: TupleType = OrderedTupleType.of(TypeType, TypeType)
 
                 override fun parametrize(metaArgument: DictValue): Type {
