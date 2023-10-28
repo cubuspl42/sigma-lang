@@ -15,7 +15,7 @@ abstract class ParametrizedType : Type() {
         result = this,
     )
 
-    final override fun dumpDirectly(depth: Int): String = "${parameterType.dumpRecursively(depth)} !-> Type"
+    override fun dumpDirectly(depth: Int): String = "(parametrized type)"
 
     // Thought: Return a thunk?
     abstract fun parametrize(
