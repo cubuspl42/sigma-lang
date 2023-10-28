@@ -15,7 +15,7 @@ import kotlin.test.assertEquals
 
 class BuiltinsTests {
     @Test
-    @Ignore // Re-support type placeholders
+//    @Ignore // Re-support type placeholders
     fun testSet() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """

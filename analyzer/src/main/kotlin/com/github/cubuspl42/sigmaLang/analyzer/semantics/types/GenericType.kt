@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TableValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
@@ -15,6 +16,19 @@ class GenericType(
     private val bodyType: Type,
 ) : ParametricType() {
     companion object {
+        fun orderedTraitDeclaration(
+            vararg names: Identifier,
+        ) = ArgumentDeclaration(
+            declaredType = OrderedTupleType(
+                elements = names.map {
+                    OrderedTupleType.Element(
+                        name = it,
+                        type = TypeType,
+                    )
+                },
+            ),
+        )
+
         private fun buildTypeVariableReplacer(
             traitDeclaration: Declaration,
             path: TypeVariable.Path,

@@ -51,6 +51,8 @@ abstract class TypeAlike {
         context: TypeReplacementContext,
     ): TypeAlike = this
 
+    abstract fun specifyImplicitly(): Type
+
     class TypeReplacementContext(
         val typeReplacer: TypeReplacer,
     )

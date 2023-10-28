@@ -145,7 +145,7 @@ abstract class Call : FirstOrderExpression() {
         val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
         val argumentAnalysis = compute(argument.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
 
-        val subjectType = subjectAnalysis.inferredType as Type
+        val subjectType = subjectAnalysis.inferredType.specifyImplicitly()
         val argumentType = argumentAnalysis.inferredType as SpecificType
 
         when {
@@ -173,7 +173,6 @@ abstract class Call : FirstOrderExpression() {
                 val typeVariableResolution = subjectType.argumentType.resolveTypePlaceholders(
                     assignedType = argumentType,
                 )
-
 
                 val argumentSubstitution = subjectType.argumentType.substituteTypePlaceholders(
                     resolution = typeVariableResolution,

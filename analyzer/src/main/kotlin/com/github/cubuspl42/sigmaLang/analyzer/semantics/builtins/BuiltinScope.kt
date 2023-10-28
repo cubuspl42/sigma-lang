@@ -1,6 +1,5 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins
 
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
@@ -12,75 +11,30 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AtomicExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.FirstOrderExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.StringType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UndefinedType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
-
-interface BuiltinValue {
-    val type: SpecificType
-    val value: Value
-}
-
-class Builtin(
-    type: SpecificType,
-    private val value: Value,
-) : FirstOrderExpression() {
-    override val outerScope: StaticScope = StaticScope.Empty
-
-    override val term: ExpressionTerm? = null
-
-    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = Computation.pure(
-        DiagnosedAnalysis(
-            analysis = Analysis(
-                inferredType = type,
-            ),
-            directErrors = emptySet(),
-        )
-    )
-
-    override val subExpressions: Set<Expression>
-        get() = emptySet()
-
-    override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = Thunk.pure(value)
-}
-
-private class BuiltinDefinition(
-    val value: Value,
-    val type: SpecificType,
-) : Definition {
-//    override val valueThunk: Thunk<Value> = value.toThunk()
-
-    override val computedBodyType: Expression.Computation<TypeAlike> = Expression.Computation.pure(type)
-
-    override val bodyStub: Stub<Expression> = Stub.of(
-        Builtin(
-            type = type,
-            value = value,
-        )
-    )
-}
 
 object BuiltinScope : StaticScope {
     data class SimpleBuiltinValue(
-        override val type: SpecificType,
-        override val value: Value,
-    ) : BuiltinValue
+        override val type: Type,
+        val value: Value,
+    ) : AtomicExpression() {
+        override val valueThunk: Thunk<Value> by lazy { Thunk.pure(value) }
+    }
 
-    private val builtinValues: Map<Symbol, BuiltinValue> = mapOf(
+    private val builtinValues: Map<Symbol, Expression> = mapOf(
         Identifier.of("Bool") to SimpleBuiltinValue(
             type = TypeType,
             value = BoolType.asValue,
@@ -212,10 +166,9 @@ object BuiltinScope : StaticScope {
         DictTypeConstructor.Name to DictTypeConstructor,
     )
 
-    private val builtinDeclarations: Map<Symbol, BuiltinDefinition> = builtinValues.mapValues { (_, builtinValue) ->
-        BuiltinDefinition(
-            value = builtinValue.value,
-            type = builtinValue.type,
+    private val builtinDeclarations: Map<Symbol, Definition> = builtinValues.mapValues { (_, builtinValue) ->
+        Definition(
+            body = builtinValue,
         )
     }
 

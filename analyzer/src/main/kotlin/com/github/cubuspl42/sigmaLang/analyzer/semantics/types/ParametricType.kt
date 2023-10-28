@@ -21,4 +21,8 @@ abstract class ParametricType : Type() {
     abstract fun parametrize(
         metaArgument: DictValue,
     ): Type
+
+    override fun specifyImplicitly(): Type = parametrize(
+        metaArgument = DictValue.Empty,
+    )
 }

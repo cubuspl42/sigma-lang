@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 
 data class BoolValue(
@@ -33,8 +34,13 @@ data class BoolValue(
         override fun dump(): String = "(if)"
     }
 
-    object Not : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<SpecificType> = listOf(BoolType)
+    object Not : StrictBuiltinOrderedFunctionConstructor() {
+        override val argumentElements: List<OrderedTupleType.Element> = listOf(
+            OrderedTupleType.Element(
+                name = null,
+                type = BoolType,
+            ),
+        )
 
         override val imageType: SpecificType = BoolType
 

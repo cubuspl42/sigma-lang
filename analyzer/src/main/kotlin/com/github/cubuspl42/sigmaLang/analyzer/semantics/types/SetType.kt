@@ -43,10 +43,13 @@ data class SetType(
         val emptySet = EmptySetFunction
     }
 
-    object SetSum : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<SpecificType> = listOf(
-            SetType(
-                elementType = IntCollectiveType,
+    object SetSum : StrictBuiltinOrderedFunctionConstructor() {
+        override val argumentElements: List<OrderedTupleType.Element> = listOf(
+            OrderedTupleType.Element(
+                name = null,
+                type = SetType(
+                    elementType = IntCollectiveType,
+                ),
             ),
         )
 

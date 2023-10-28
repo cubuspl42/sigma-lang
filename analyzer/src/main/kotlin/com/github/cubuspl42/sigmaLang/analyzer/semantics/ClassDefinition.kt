@@ -1,10 +1,13 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinGenericFunctionConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinOrderedFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StrictBuiltinOrderedFunction
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
@@ -15,37 +18,122 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTu
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.AnyType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType.Companion.orderedTraitDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SymbolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
 
+//     object MapFn : BuiltinGenericFunctionExpression() {
+//        override val parameterDeclaration = orderedTraitDeclaration(
+//            Identifier.of("e"),
+//            Identifier.of("r"),
+//        )
+//
+//        private val eTypeVariable = TypeVariable(
+//            parameterDeclaration,
+//            path = TypeVariable.Path.of(IntValue(value = 0L)),
+//        )
+//
+//        private val rTypeVariable = TypeVariable(
+//            parameterDeclaration,
+//            path = TypeVariable.Path.of(IntValue(value = 1L)),
+//        )
+//
+//        override val body = object : BuiltinOrderedFunctionExpression() {
+//            private val transformType = UniversalFunctionType(
+//                argumentType = OrderedTupleType(
+//                    elements = listOf(
+//                        OrderedTupleType.Element(
+//                            name = null,
+//                            type = eTypeVariable,
+//                        ),
+//                    )
+//                ),
+//                imageType = rTypeVariable,
+//            )
+//
+//            override val argumentElements: List<OrderedTupleType.Element> = listOf(
+//                OrderedTupleType.Element(
+//                    name = Identifier.of("elements"),
+//                    type = ArrayType(
+//                        elementType = eTypeVariable,
+//                    ),
+//                ),
+//                OrderedTupleType.Element(
+//                    name = Identifier.of("transform"),
+//                    type = transformType,
+//                ),
+//            )
+//
+//            override val imageType = ArrayType(
+//                elementType = rTypeVariable,
+//            )
+//
+//            override fun computeThunk(args: List<Value>): Thunk<Value> {
+//                val elements = (args[0] as FunctionValue).toList()
+//                val transform = args[1] as FunctionValue
+//
+//                return Thunk.traverseList(elements) {
+//                    transform.applyOrdered(it)
+//                }.thenJust { values ->
+//                    DictValue.fromList(values)
+//                }
+//            }
+//        }
+//    }
+
 class ClassDefinition(
     override val bodyStub: Stub<Expression>,
 ) : Definition {
-    object Is : StrictBuiltinOrderedFunction() {
-        override val argTypes: List<SpecificType> = listOf(
-            AnyInstanceType,
-            AnyClassType,
+    object Is : BuiltinGenericFunctionConstructor() {
+        override val parameterDeclaration = orderedTraitDeclaration(
+            Identifier.of("e"),
+            Identifier.of("c"),
         )
 
-        override val imageType: SpecificType = BoolType
+        private val eTypeVariable = TypeVariable(
+            parameterDeclaration,
+            path = TypeVariable.Path.of(IntValue(value = 0L)),
+        )
 
-        override fun compute(args: List<Value>): Value {
-            val instanceValue = args[0] as DictValue
-            val classValue = args[1] as DictValue
+        private val cTypeVariable = TypeVariable(
+            parameterDeclaration,
+            path = TypeVariable.Path.of(IntValue(value = 1L)),
+        )
 
-            val instanceTagValue = instanceValue.readValue(key = instanceTagKey) as Identifier
-            val classTagValue = classValue.readValue(key = classTagKey) as Identifier
-
-            return BoolValue(
-                value = instanceTagValue == classTagValue,
+        override val body = object : BuiltinOrderedFunctionConstructor() {
+            override val argumentElements: List<OrderedTupleType.Element> = listOf(
+                OrderedTupleType.Element(
+                    name = Identifier.of("instance"),
+                    type = eTypeVariable,
+                ),
+                OrderedTupleType.Element(
+                    name = Identifier.of("class"),
+                    type = cTypeVariable,
+                ),
             )
+
+            override val imageType = BoolType
+
+            override fun computeThunk(args: List<Value>): Thunk<Value> {
+                val instance = args[0] as DictValue
+                val classValue = args[1] as DictValue
+
+                val instanceTagValue = instance.readValue(key = instanceTagKey) as Identifier
+                val classTagValue = classValue.readValue(key = classTagKey) as Identifier
+
+                return Thunk.pure(
+                    BoolValue(
+                        value = instanceTagValue == classTagValue,
+                    )
+                )
+            }
         }
     }
 

@@ -27,5 +27,9 @@ data class TypePlaceholder(
         }
     }
 
+    override fun specifyImplicitly(): Type {
+        throw UnsupportedOperationException()
+    }
+
     override fun dumpDirectly(depth: Int): String = "$${typeVariable.dump()}"
 }

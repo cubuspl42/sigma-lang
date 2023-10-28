@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TableType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 
-abstract class WrapperTypeConstructor : TypeConstructor() {
+abstract class WrapperTypeConstructor : TypeConstructorConstructor() {
     override val argumentType: TableType = ArrayType(elementType = TypeType)
 
     override fun applyType(
