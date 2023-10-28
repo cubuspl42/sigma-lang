@@ -19,7 +19,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictTypeConstr
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
 
-object DictTypeConstructor : TypeConstructor() {
+object DictTypeConstructor : TypeConstructorConstructor() {
     fun build(
         context: Expression.BuildContext,
         term: DictTypeConstructorTerm,

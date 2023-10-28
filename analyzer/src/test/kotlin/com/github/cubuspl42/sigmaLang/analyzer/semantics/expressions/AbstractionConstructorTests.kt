@@ -15,7 +15,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.buildReferenceMatcher
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.Builtin
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
@@ -71,7 +70,7 @@ class AbstractionConstructorTests {
                     ).checked(),
                     declaredImageType = Matcher.Is<IntCollectiveType>(),
                     image = CallMatcher(
-                        subject = Matcher.Is<Builtin>(),
+                        subject = Matcher.Irrelevant(),
                         argument = UnorderedTupleConstructorMatcher(
                             entries = CollectionMatchers.eachOnce(
                                 elements = setOf(

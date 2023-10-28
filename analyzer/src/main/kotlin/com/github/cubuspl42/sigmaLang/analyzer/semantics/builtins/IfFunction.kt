@@ -1,37 +1,50 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinGenericFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StrictBuiltinOrderedFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType.Companion.orderedTraitDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 
-object IfFunction : BuiltinValue {
-    private val rDefinition = TypeVariableDefinition()
-
-    override val type: SpecificType = UniversalFunctionType(
-        argumentType = OrderedTupleType(
-            elements = listOf(
-                OrderedTupleType.Element(
-                    name = Identifier.of("guard"),
-                    type = BoolType,
-                ),
-            ),
-        ), imageType = UniversalFunctionType(
-            argumentType = UnorderedTupleType(
-                valueTypeByName = mapOf(
-                    Identifier.of("then") to rDefinition.typePlaceholder,
-                    Identifier.of("else") to rDefinition.typePlaceholder,
-                )
-            ),
-            imageType = rDefinition.typePlaceholder,
-        )
+object IfFunction : BuiltinGenericFunctionConstructor() {
+    override val parameterDeclaration = orderedTraitDeclaration(
+        Identifier.of("e"),
     )
 
-    override val value: Value
-        get() = BoolValue.If
+    private val eTypeVariable = TypeVariable(
+        parameterDeclaration,
+        path = TypeVariable.Path.of(IntValue(value = 0L)),
+    )
+
+    override val body = object : StrictBuiltinOrderedFunctionConstructor() {
+        override val argumentElements: List<OrderedTupleType.Element> = listOf(
+            OrderedTupleType.Element(
+                name = Identifier.of("guard"),
+                type = BoolType,
+            ),
+            OrderedTupleType.Element(
+                name = Identifier.of("then"),
+                type = eTypeVariable,
+            ),
+            OrderedTupleType.Element(
+                name = Identifier.of("else"),
+                type = eTypeVariable,
+            ),
+        )
+
+        override val imageType = eTypeVariable
+
+        override fun compute(args: List<Value>): Value {
+            val guard = (args[0] as BoolValue).value
+            val then = args[1]
+            val `else` = args[2]
+
+            return if (guard) then else `else`
+        }
+    }
 }

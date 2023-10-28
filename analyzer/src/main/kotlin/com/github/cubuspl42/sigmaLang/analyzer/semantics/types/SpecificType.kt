@@ -86,6 +86,8 @@ sealed class SpecificType : Type() {
     fun isEquivalentTo(otherType: SpecificType): Boolean =
         !isNonEquivalentTo(otherType = otherType)
 
+    override fun specifyImplicitly(): Type = this
+
     final override fun toString(): String = dump()
 }
 

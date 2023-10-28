@@ -14,8 +14,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StringValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call.NonFullyInferredCalleeTypeError
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
@@ -24,14 +22,17 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.NeverType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ParametricType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
@@ -43,10 +44,7 @@ import utils.FakeStaticScope
 import utils.FakeUserDeclaration
 import utils.Matcher
 import utils.assertMatches
-import utils.assertTypeIsEquivalent
 import utils.checked
-import utils.whichHasSize
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -182,84 +180,52 @@ class CallTests {
             )
         }
 
-
         @Test
-        fun testGenericCall() {
-            val term = ExpressionSourceTerm.parse(
-                source = "f[false, 1]",
-            ) as PostfixCallSourceTerm
-
-            val fType = object : ParametricType() {
-                override val parameterType: TupleType = OrderedTupleType.of(TypeType, TypeType)
-
-                override fun parametrize(metaArgument: DictValue): Type {
-                    throw NotImplementedError()
-                }
-            }
-
-            val call = Call.build(
-                Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeArgumentDeclarationBlock.of(
-                        FakeUserDeclaration(
-                            name = Identifier.of("f"),
-                            declaredType = fType,
-                        ),
-                    ).chainWith(BuiltinScope),
-                ),
-                term = term,
-            ).resolved
-
-            // TODO: Placeholder generation
-            assertMatches(
-                matcher = CollectionMatchers.eachOnce(
-                    elements = setOf(
-                        Matcher.Equals(
-                            Call.NonFunctionCallError(
-                                illegalSubjectType = fType,
-                            ),
-                        ),
-                    ),
-                ),
-                actual = call.directErrors,
-            )
-
-            assertMatches(
-                matcher = Matcher.Equals(IllType),
-                actual = call.inferredTypeOrIllType.getOrCompute(),
-            )
-        }
-
-        @Test
-        @Ignore // Re-support type placeholders
-        fun testInferableTemplateCall() {
+        fun testInferableGenericCall() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[false, 0]",
             ) as PostfixCallSourceTerm
-
-            val typeVariableDefinition1 = TypeVariableDefinition()
-
-            val typeVariableDefinition2 = TypeVariableDefinition()
 
             val call = Call.build(
                 context = Expression.BuildContext(
                     outerMetaScope = StaticScope.Empty,
                     outerScope = FakeArgumentDeclarationBlock.of(
-                        FakeUserDeclaration(
-                            name = Identifier.of("f"),
-                            declaredType = UniversalFunctionType(
-                                argumentType = OrderedTupleType.of(
-                                    typeVariableDefinition1.typePlaceholder,
-                                    typeVariableDefinition2.typePlaceholder,
-                                ),
-                                imageType = UnorderedTupleType(
+                        FakeUserDeclaration(name = Identifier.of("f"), declaredType = run {
+                            val parameterDeclaration = AbstractionConstructor.ArgumentDeclaration(
+                                declaredType = UnorderedTupleType(
                                     valueTypeByName = mapOf(
-                                        Identifier.of("key1") to typeVariableDefinition1.typePlaceholder,
-                                        Identifier.of("key2") to typeVariableDefinition2.typePlaceholder,
+                                        Identifier.of("x") to TypeType,
+                                        Identifier.of("y") to TypeType,
                                     ),
                                 ),
-                            ),
-                        ),
+                            )
+
+                            val xTypeVariable = TypeVariable(
+                                traitDeclaration = parameterDeclaration,
+                                path = TypeVariable.Path.Root.extend(Identifier.of("x")),
+                            )
+
+                            val yTypeVariable = TypeVariable(
+                                traitDeclaration = parameterDeclaration,
+                                path = TypeVariable.Path.Root.extend(Identifier.of("y")),
+                            )
+
+                            GenericType(
+                                parameterDeclaration = parameterDeclaration,
+                                bodyType = UniversalFunctionType(
+                                    argumentType = OrderedTupleType.of(
+                                        xTypeVariable,
+                                        yTypeVariable,
+                                    ),
+                                    imageType = UnorderedTupleType(
+                                        valueTypeByName = mapOf(
+                                            Identifier.of("key1") to xTypeVariable,
+                                            Identifier.of("key2") to yTypeVariable,
+                                        ),
+                                    ),
+                                ),
+                            )
+                        }),
                     ).chainWith(BuiltinScope),
                 ),
                 term = term,
@@ -270,25 +236,49 @@ class CallTests {
                 actual = call.directErrors,
             )
 
-            assertTypeIsEquivalent(
-                expected = UnorderedTupleType(
-                    valueTypeByName = mapOf(
-                        Identifier.of("key1") to BoolType,
-                        Identifier.of("key2") to IntLiteralType.of(0L),
-                    ),
-                ),
+            assertMatches(
+                matcher = UnorderedTupleTypeMatcher(
+                    entries = CollectionMatchers.eachOnce(
+                        UnorderedTupleTypeMatcher.EntryMatcher(
+                            name = Matcher.Equals(Identifier.of("key1")),
+                            type = Matcher.Is<BoolType>(),
+                        ),
+                        UnorderedTupleTypeMatcher.EntryMatcher(
+                            name = Matcher.Equals(Identifier.of("key2")),
+                            type = Matcher.Is<IntType>(),
+                        ),
+                    )
+                ).checked(),
                 actual = call.inferredTypeOrIllType.getOrCompute() as SpecificType,
             )
         }
 
         @Test
-        @Ignore // Re-support type placeholders
-        fun testNonInferableTemplateCall() {
+        fun testNonInferableGenericCall() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[]",
             ) as PostfixCallSourceTerm
 
-            val typeVariableDefinition = TypeVariableDefinition()
+            val parameterDeclaration = AbstractionConstructor.ArgumentDeclaration(
+                declaredType = UnorderedTupleType(
+                    valueTypeByName = mapOf(
+                        Identifier.of("x") to TypeType,
+                    ),
+                ),
+            )
+
+            val xTypeVariable = TypeVariable(
+                traitDeclaration = parameterDeclaration,
+                path = TypeVariable.Path.Root.extend(Identifier.of("x")),
+            )
+
+            val fType = GenericType(
+                parameterDeclaration = parameterDeclaration,
+                bodyType = UniversalFunctionType(
+                    argumentType = OrderedTupleType.Empty,
+                    imageType = xTypeVariable,
+                ),
+            )
 
             val call = Call.build(
                 Expression.BuildContext(
@@ -296,29 +286,21 @@ class CallTests {
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
-                            declaredType = UniversalFunctionType(
-                                argumentType = OrderedTupleType.Empty,
-                                imageType = ArrayType(
-                                    typeVariableDefinition.typePlaceholder,
-                                ),
-                            ),
+                            declaredType = fType,
                         ),
                     ),
                 ),
                 term = term,
             ).resolved
 
-            assertEquals(
-                expected = setOf(
-                    NonFullyInferredCalleeTypeError(
-                        calleeGenericType = UniversalFunctionType(
-                            argumentType = OrderedTupleType.Empty,
-                            imageType = ArrayType(
-                                typeVariableDefinition.typePlaceholder,
-                            ),
-                        ),
-                        unresolvedPlaceholders = emptySet(),
-                    )
+            assertMatches(
+                matcher = CollectionMatchers.eachOnce(
+                    CallMatcher.NonFullyInferredCalleeTypeErrorMatcher(
+                        calleeGenericType = Matcher.Is<FunctionType>(),
+                        unresolvedPlaceholders = CollectionMatchers.eachOnce(
+                            Matcher.Equals(TypePlaceholder(typeVariable = xTypeVariable))
+                        )
+                    ).checked(),
                 ),
                 actual = call.directErrors,
             )
@@ -328,77 +310,6 @@ class CallTests {
                 actual = call.inferredTypeOrIllType.getOrCompute(),
             )
         }
-
-        @Test
-        @Ignore // Re-support type placeholders
-        fun testNonInferableTemplateCall_nested() {
-            val term = ExpressionSourceTerm.parse(
-                source = "f[false, 1]",
-            ) as PostfixCallSourceTerm
-
-            val innerTypeDefinition1 = TypeVariableDefinition()
-
-            val innerTypeDefinition2 = TypeVariableDefinition()
-
-            val innerFunctionType = UniversalFunctionType(
-                argumentType = OrderedTupleType.of(
-                    innerTypeDefinition1.typePlaceholder,
-                    innerTypeDefinition2.typePlaceholder,
-                ),
-                imageType = OrderedTupleType.of(
-                    innerTypeDefinition1.typePlaceholder,
-                    innerTypeDefinition2.typePlaceholder,
-                ),
-            )
-
-            val outerTypeDefinition1 = TypeVariableDefinition()
-
-            val outerTypeDefinition2 = TypeVariableDefinition()
-
-            val outerFunctionType = UniversalFunctionType(
-                argumentType = OrderedTupleType.of(
-                    outerTypeDefinition1.typePlaceholder,
-                    outerTypeDefinition2.typePlaceholder,
-                ),
-                imageType = innerFunctionType,
-            )
-
-            val call = Call.build(
-                Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
-                    outerScope = FakeArgumentDeclarationBlock.of(
-                        FakeUserDeclaration(
-                            name = Identifier.of("f"),
-                            declaredType = outerFunctionType,
-                        ),
-                    ).chainWith(BuiltinScope),
-                ),
-
-                term = term,
-            ).resolved
-
-            assertMatches(
-                matcher = CollectionMatchers.eachOnce(
-                    elements = setOf(
-                        CallMatcher.NonFullyInferredCalleeTypeErrorMatcher(
-                            calleeGenericType = Matcher.Is<UniversalFunctionType>(),
-                            unresolvedPlaceholders = CollectionMatchers.whereEvery(
-                                element = Matcher.Is<TypePlaceholder>(),
-                            ).whichHasSize(
-                                expectedSize = 2,
-                            )
-                        ).checked(),
-                    ),
-                ),
-                actual = call.directErrors,
-            )
-
-            assertMatches(
-                matcher = Matcher.Equals(IllType),
-                actual = call.inferredTypeOrIllType.getOrCompute(),
-            )
-        }
-
 
         @Test
         fun testExcessiveOrderedArguments() {

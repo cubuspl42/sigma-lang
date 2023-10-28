@@ -31,6 +31,15 @@ data class TypeVariable(
         }
 
         companion object {
+            fun of(
+                vararg keys: PrimitiveValue,
+            ): Path = keys.fold(
+                initial = Root,
+                operation = { path, key ->
+                    path.extend(key)
+                }
+            )
+
             val Root = Path(root = null)
         }
 

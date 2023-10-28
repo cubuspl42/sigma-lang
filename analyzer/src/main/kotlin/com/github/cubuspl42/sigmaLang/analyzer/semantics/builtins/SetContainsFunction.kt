@@ -1,43 +1,58 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinGenericFunctionConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StrictBuiltinOrderedFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor.ArgumentDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 
-object SetContainsFunction : BuiltinValue {
-    private val elementTypeDefinition = TypeVariableDefinition()
-
-    override val type: SpecificType = UniversalFunctionType(
-        argumentType = OrderedTupleType.of(
-            SetType(
-                elementType = elementTypeDefinition.typePlaceholder,
+object SetContainsFunction : BuiltinGenericFunctionConstructor() {
+    override val parameterDeclaration = ArgumentDeclaration(
+        declaredType = OrderedTupleType(
+            elements = listOf(
+                OrderedTupleType.Element(
+                    name = Identifier.of("e"),
+                    type = TypeType,
+                ),
             ),
-            elementTypeDefinition.typePlaceholder,
         ),
-        imageType = BoolType,
     )
 
-    override val value: Value = object : FunctionValue() {
-        override fun apply(argument: Value): Thunk<Value> {
-            val args = (argument as FunctionValue).toList()
+    private val eTypeVariable = TypeVariable(
+        parameterDeclaration,
+        path = TypeVariable.Path.of(Identifier.of("e")),
+    )
 
-            val set = args[0] as SetValue
+    override val body = object : StrictBuiltinOrderedFunctionConstructor() {
+        override val argumentElements = listOf(
+            OrderedTupleType.Element(
+                name = Identifier.of("set"),
+                type = SetType(
+                    elementType = eTypeVariable,
+                ),
+            ),
+            OrderedTupleType.Element(
+                name = Identifier.of("element"),
+                type = eTypeVariable,
+            ),
+        )
+
+        override val imageType = BoolType
+
+        override fun compute(args: List<Value>): Value {
+            val set = (args[0] as SetValue).elements
             val element = args[1]
 
             return BoolValue(
-                value = set.elements.contains(element),
-            ).toThunk()
+                value = set.contains(element),
+            )
         }
-
-        override fun dump(): String = "(setContains)"
     }
 }
