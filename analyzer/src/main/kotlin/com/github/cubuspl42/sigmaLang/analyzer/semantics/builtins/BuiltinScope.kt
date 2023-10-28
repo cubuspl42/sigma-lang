@@ -1,12 +1,21 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.Chunked4Function
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.ConcatFunction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.DropFirstFunction
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.LengthFunction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.MapFunction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.math.MaxFunction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.math.ProductFunction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.math.SumFunction
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.TakeFunction
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.WindowsFunction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
@@ -17,7 +26,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definitio
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.set.SetConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.set.SetContainsFunction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.set.SetOfFunction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.set.SetSum
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.set.SetUnionFunction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.StringType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
@@ -55,12 +68,12 @@ object BuiltinScope : StaticScope {
             type = TypeType,
             value = UndefinedType.asValue,
         ),
-        Identifier.of("Set") to SetType.constructor,
-        Identifier.of("setOf") to SetType.setOf,
-        Identifier.of("setContains") to SetType.setContains,
-        Identifier.of("setUnion") to SetType.setUnion,
-        Identifier.of("emptySet") to SetType.emptySet,
-        Identifier.of("setSum") to SetType.SetSum,
+        Identifier.of("Set") to SetConstructor,
+        Identifier.of("setOf") to SetOfFunction,
+        Identifier.of("setContains") to SetContainsFunction,
+        Identifier.of("setUnion") to SetUnionFunction,
+        Identifier.of("emptySet") to EmptySetFunction,
+        Identifier.of("setSum") to SetSum,
         Identifier.of("false") to SimpleBuiltinValue(
             type = BoolType,
             value = BoolValue(false),
@@ -151,16 +164,16 @@ object BuiltinScope : StaticScope {
             value = IntValue.Gte,
         ),
         Identifier.of("link") to LinkFunction,
-        Identifier.of("chunked4") to FunctionValue.Chunked4,
-        Identifier.of("dropFirst") to FunctionValue.DropFirst,
-        Identifier.of("windows") to FunctionValue.Windows,
-        Identifier.of("take") to FunctionValue.Take,
-        Identifier.of("map") to FunctionValue.MapFn,
-        Identifier.of("sum") to FunctionValue.Sum,
-        Identifier.of("product") to FunctionValue.Product,
-        Identifier.of("max") to FunctionValue.Max,
-        Identifier.of("length") to FunctionValue.LengthFunction,
-        Identifier.of("concat") to FunctionValue.ConcatFunction,
+        Identifier.of("chunked4") to Chunked4Function,
+        Identifier.of("dropFirst") to DropFirstFunction,
+        Identifier.of("windows") to WindowsFunction,
+        Identifier.of("take") to TakeFunction,
+        Identifier.of("map") to MapFunction,
+        Identifier.of("sum") to SumFunction,
+        Identifier.of("product") to ProductFunction,
+        Identifier.of("max") to MaxFunction,
+        Identifier.of("length") to LengthFunction,
+        Identifier.of("concat") to ConcatFunction,
         Identifier.of("is") to ClassDefinition.Is,
         ArrayTypeConstructor.Name to ArrayTypeConstructor,
         DictTypeConstructor.Name to DictTypeConstructor,

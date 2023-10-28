@@ -1,66 +1,11 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope.SimpleBuiltinValue
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.EmptySetFunction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.SetContainsFunction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.SetOfFunction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.SetUnionFunction
 
 // Type of sets
 data class SetType(
     val elementType: TypeAlike,
 ) : ShapeType() {
-    companion object {
-        val constructor = SimpleBuiltinValue(
-            type = UniversalFunctionType(
-                argumentType = OrderedTupleType.of(
-                    TypeType,
-                ),
-                imageType = TypeType,
-            ),
-            value = object : FunctionValue() {
-                override fun apply(argument: Value): Thunk<Value> {
-                    val args = (argument as FunctionValue).toList()
-
-                    val elementType = args[0].asType!!
-
-                    return SetType(
-                        elementType = elementType,
-                    ).asValue.toThunk()
-                }
-
-                override fun dump(): String = "(set type constructor)"
-            },
-        )
-
-        val setOf = SetOfFunction
-
-        val setUnion = SetUnionFunction
-
-        val setContains = SetContainsFunction
-
-        val emptySet = EmptySetFunction
-    }
-
-    object SetSum : StrictBuiltinOrderedFunctionConstructor() {
-        override val argumentElements: List<OrderedTupleType.Element> = listOf(
-            OrderedTupleType.Element(
-                name = null,
-                type = SetType(
-                    elementType = IntCollectiveType,
-                ),
-            ),
-        )
-
-        override val imageType: SpecificType = IntCollectiveType
-
-        override fun compute(args: List<Value>): Value {
-            val arg = args[0] as SetValue
-            return IntValue(value = arg.elements.sumOf { (it as IntValue).value })
-        }
-    }
-
     data class SetMatch(
         val elementMatch: SpecificType.MatchResult,
     ) : SpecificType.PartialMatch() {

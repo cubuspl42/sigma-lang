@@ -1,21 +1,21 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins
+package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections
 
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinGenericFunctionConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StrictBuiltinOrderedFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType.Companion.orderedTraitDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 
-
-object SetOfFunction : BuiltinGenericFunctionConstructor() {
-    override val parameterDeclaration = orderedTraitDeclaration(
+object Chunked4Function : BuiltinGenericFunctionConstructor() {
+    override val parameterDeclaration = GenericType.orderedTraitDeclaration(
         Identifier.of("e"),
     )
 
@@ -24,7 +24,8 @@ object SetOfFunction : BuiltinGenericFunctionConstructor() {
         path = TypeVariable.Path.of(IntValue(value = 0L)),
     )
 
-    override val body = object : StrictBuiltinOrderedFunctionConstructor() {
+    override val body: BuiltinFunctionConstructor = object : StrictBuiltinOrderedFunctionConstructor() {
+
         override val argumentElements: List<OrderedTupleType.Element> = listOf(
             OrderedTupleType.Element(
                 name = Identifier.of("elements"),
@@ -34,15 +35,19 @@ object SetOfFunction : BuiltinGenericFunctionConstructor() {
             ),
         )
 
-        override val imageType = SetType(
-            elementType = eTypeVariable,
+        override val imageType: SpecificType = ArrayType(
+            elementType = ArrayType(
+                elementType = eTypeVariable,
+            ),
         )
 
         override fun compute(args: List<Value>): Value {
             val elements = (args.first() as FunctionValue).toList()
 
-            return SetValue(
-                elements = elements.toSet(),
+            val result = elements.chunked(size = 4)
+
+            return DictValue.fromList(
+                result.map { DictValue.fromList(it) },
             )
         }
     }
