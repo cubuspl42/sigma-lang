@@ -80,6 +80,11 @@ abstract class Reference : FirstOrderExpression() {
     ) ?: throw RuntimeException(
         "Unresolved reference at run-time: $referredDeclaration",
     )
+
+    fun readField(fieldName: Identifier): FieldRead = FieldRead(
+        subjectLazy = lazy { this },
+        fieldName = fieldName,
+    )
 }
 
 fun Reference(
