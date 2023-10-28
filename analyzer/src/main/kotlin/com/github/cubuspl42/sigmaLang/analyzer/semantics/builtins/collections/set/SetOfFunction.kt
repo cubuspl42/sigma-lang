@@ -1,17 +1,20 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins
+package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.set
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinGenericFunctionConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StrictBuiltinOrderedFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType.Companion.orderedTraitDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 
-object SetUnionFunction : BuiltinGenericFunctionConstructor() {
+
+object SetOfFunction : BuiltinGenericFunctionConstructor() {
     override val parameterDeclaration = orderedTraitDeclaration(
         Identifier.of("e"),
     )
@@ -22,16 +25,10 @@ object SetUnionFunction : BuiltinGenericFunctionConstructor() {
     )
 
     override val body = object : StrictBuiltinOrderedFunctionConstructor() {
-        override val argumentElements = listOf(
+        override val argumentElements: List<OrderedTupleType.Element> = listOf(
             OrderedTupleType.Element(
-                name = Identifier.of("set0"),
-                type = SetType(
-                    elementType = eTypeVariable,
-                ),
-            ),
-            OrderedTupleType.Element(
-                name = Identifier.of("set1"),
-                type = SetType(
+                name = Identifier.of("elements"),
+                type = ArrayType(
                     elementType = eTypeVariable,
                 ),
             ),
@@ -42,11 +39,10 @@ object SetUnionFunction : BuiltinGenericFunctionConstructor() {
         )
 
         override fun compute(args: List<Value>): Value {
-            val set0 = (args[0] as SetValue).elements
-            val set1 = (args[1] as SetValue).elements
+            val elements = (args.first() as FunctionValue).toList()
 
             return SetValue(
-                elements = set0 + set1,
+                elements = elements.toSet(),
             )
         }
     }
