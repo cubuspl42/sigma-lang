@@ -2,6 +2,8 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.utils.MapUtils
+import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
 data class TypeVariable(
     val traitDeclaration: Declaration,
@@ -93,17 +95,16 @@ data class TypeVariable(
 data class TypePlaceholderResolution(
     val resolvedTypeByPlaceholder: Map<TypePlaceholder, SpecificType>,
 ) {
-    val resolvedTypeVariables: Set<TypePlaceholder>
-        get() = resolvedTypeByPlaceholder.keys
-
     fun mergeWith(
         other: TypePlaceholderResolution,
-    ): TypePlaceholderResolution {
-        // TODO: Check for resolution incompatibilities
-        return TypePlaceholderResolution(
-            resolvedTypeByPlaceholder = resolvedTypeByPlaceholder + other.resolvedTypeByPlaceholder,
-        )
-    }
+    ): TypePlaceholderResolution = TypePlaceholderResolution(
+        resolvedTypeByPlaceholder = MapUtils.merge(
+            this.resolvedTypeByPlaceholder,
+            other.resolvedTypeByPlaceholder,
+        ) { e1: SpecificType, e2: SpecificType ->
+            e1.findLowestCommonSupertype(e2)
+        }
+    )
 
     companion object {
         val Empty = TypePlaceholderResolution(

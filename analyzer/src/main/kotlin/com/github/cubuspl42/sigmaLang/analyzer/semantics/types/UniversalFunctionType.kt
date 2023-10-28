@@ -19,7 +19,7 @@ data class UniversalFunctionType(
         }
     }
 
-    override fun resolveTypeVariablesShape(
+    override fun resolveTypePlaceholdersShape(
         assignedType: TypeAlike,
     ): TypePlaceholderResolution {
         if (assignedType !is UniversalFunctionType) throw TypeErrorException(

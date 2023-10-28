@@ -15,7 +15,6 @@ import kotlin.test.assertEquals
 
 class BuiltinsTests {
     @Test
-//    @Ignore // Re-support type placeholders
     fun testSet() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
@@ -37,11 +36,10 @@ class BuiltinsTests {
             term = term,
         )
 
-        // FIXME: Fix incorrect type variable resolution
-//        assertEquals(
-//            expected = emptySet(),
-//            actual = namespace.errors,
-//        )
+        assertEquals(
+            expected = emptySet(),
+            actual = namespaceDefinition.errors,
+        )
 
         // Validate `mySet1`
 

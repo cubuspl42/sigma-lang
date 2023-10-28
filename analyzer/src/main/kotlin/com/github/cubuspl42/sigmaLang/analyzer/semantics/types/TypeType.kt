@@ -4,7 +4,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 object TypeType : ShapeType() {
     override fun findLowestCommonSupertype(other: SpecificType): SpecificType = AnyType
 
-    override fun resolveTypeVariablesShape(assignedType: TypeAlike): TypePlaceholderResolution =
+    override fun resolveTypePlaceholdersShape(assignedType: TypeAlike): TypePlaceholderResolution =
         TypePlaceholderResolution.Empty
 
     override fun replaceTypeRecursively(context: TypeReplacementContext): TypeAlike = this
