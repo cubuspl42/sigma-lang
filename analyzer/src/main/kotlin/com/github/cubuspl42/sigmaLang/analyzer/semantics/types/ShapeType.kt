@@ -29,10 +29,10 @@ sealed class ShapeType : SpecificType() {
     ): TypePlaceholderResolution = if (assignedType is UnionType) {
         TypePlaceholderResolution.Empty // TODO
     } else {
-        resolveTypeVariablesShape(assignedType = assignedType)
+        resolveTypePlaceholdersShape(assignedType = assignedType)
     }
 
-    abstract fun resolveTypeVariablesShape(
+    abstract fun resolveTypePlaceholdersShape(
         assignedType: TypeAlike,
     ): TypePlaceholderResolution
 

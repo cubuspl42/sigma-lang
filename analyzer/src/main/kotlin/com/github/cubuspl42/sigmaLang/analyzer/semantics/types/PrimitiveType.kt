@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 sealed class PrimitiveType : ShapeType() {
-    override fun resolveTypeVariablesShape(
+    override fun resolveTypePlaceholdersShape(
         assignedType: TypeAlike,
     ): TypePlaceholderResolution = TypePlaceholderResolution.Empty
 

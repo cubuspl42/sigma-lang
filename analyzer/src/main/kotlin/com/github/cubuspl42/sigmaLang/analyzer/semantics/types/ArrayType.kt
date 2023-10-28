@@ -50,7 +50,7 @@ data class ArrayType(
 
     override fun isDefinitelyEmpty(): Boolean = false
 
-    override fun resolveTypeVariablesShape(assignedType: TypeAlike): TypePlaceholderResolution {
+    override fun resolveTypePlaceholdersShape(assignedType: TypeAlike): TypePlaceholderResolution {
         val assignedArrayType = assignedType.asArray ?: throw TypeVariableResolutionError(
             message = "Cannot resolve type variables, non-array is assigned (${assignedType.dump()})",
         )

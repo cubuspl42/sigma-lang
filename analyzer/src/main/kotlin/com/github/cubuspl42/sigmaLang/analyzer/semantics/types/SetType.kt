@@ -28,7 +28,7 @@ data class SetType(
         else -> AnyType
     }
 
-    override fun resolveTypeVariablesShape(
+    override fun resolveTypePlaceholdersShape(
         assignedType: TypeAlike,
     ): TypePlaceholderResolution {
         if (assignedType !is SetType) throw TypeErrorException(

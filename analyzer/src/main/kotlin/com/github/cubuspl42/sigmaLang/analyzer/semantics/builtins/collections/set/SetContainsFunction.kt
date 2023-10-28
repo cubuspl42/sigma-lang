@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.s
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinGenericFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.SetValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StrictBuiltinOrderedFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -27,7 +28,7 @@ object SetContainsFunction : BuiltinGenericFunctionConstructor() {
 
     private val eTypeVariable = TypeVariable(
         parameterDeclaration,
-        path = TypeVariable.Path.of(Identifier.of("e")),
+        path = TypeVariable.Path.of(IntValue(value = 0L)),
     )
 
     override val body = object : StrictBuiltinOrderedFunctionConstructor() {

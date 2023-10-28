@@ -254,6 +254,64 @@ class CallTests {
         }
 
         @Test
+        fun testInferableGenericCall_commonSupertype() {
+            val term = ExpressionSourceTerm.parse(
+                source = "f[n, 0]",
+            ) as PostfixCallSourceTerm
+
+            val call = Call.build(
+                context = Expression.BuildContext(
+                    outerMetaScope = StaticScope.Empty,
+                    outerScope = FakeArgumentDeclarationBlock.of(
+                        FakeUserDeclaration(
+                            name = Identifier.of("n"),
+                            declaredType = IntCollectiveType,
+                        ),
+                        FakeUserDeclaration(
+                            name = Identifier.of("f"),
+                            declaredType = run {
+                                val parameterDeclaration = AbstractionConstructor.ArgumentDeclaration(
+                                    declaredType = UnorderedTupleType(
+                                        valueTypeByName = mapOf(
+                                            Identifier.of("a") to TypeType,
+                                        ),
+                                    ),
+                                )
+
+                                val aTypeVariable = TypeVariable(
+                                    traitDeclaration = parameterDeclaration,
+                                    path = TypeVariable.Path.Root.extend(Identifier.of("a")),
+                                )
+
+                                GenericType(
+                                    parameterDeclaration = parameterDeclaration,
+                                    bodyType = UniversalFunctionType(
+                                        argumentType = OrderedTupleType.of(
+                                            aTypeVariable,
+                                            aTypeVariable,
+                                        ),
+                                        imageType = BoolType,
+                                    ),
+                                )
+                            },
+                        ),
+                    ),
+                ),
+                term = term,
+            ).resolved
+
+            assertEquals(
+                expected = emptySet(),
+                actual = call.directErrors,
+            )
+
+            assertMatches(
+                matcher = Matcher.Is<BoolType>(),
+                actual = call.inferredTypeOrIllType.getOrCompute() as SpecificType,
+            )
+        }
+
+        @Test
         fun testNonInferableGenericCall() {
             val term = ExpressionSourceTerm.parse(
                 source = "f[]",
