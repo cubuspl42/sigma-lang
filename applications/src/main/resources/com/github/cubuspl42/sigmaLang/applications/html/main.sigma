@@ -7,7 +7,7 @@
     content: String,
 }
 
-%const Node = HtmlElement.type | TextNode.type
+%meta Node = HtmlElement.type | TextNode.type
 
 %const node: Node = HtmlElement.new{
     tagName: "div",

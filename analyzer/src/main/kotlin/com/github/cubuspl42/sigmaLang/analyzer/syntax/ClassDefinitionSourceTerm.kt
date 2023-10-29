@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.syntax
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.ClassDefinitionContext
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleTypeConstructorTerm
 
@@ -19,4 +20,6 @@ data class ClassDefinitionSourceTerm(
             body = UnorderedTupleTypeConstructorSourceTerm.build(ctx.body)
         )
     }
+
+    override val declaredTypeBody: ExpressionTerm? = null
 }

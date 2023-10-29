@@ -1,15 +1,16 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BoolValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinGenericFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinOrderedFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AtomicExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.SymbolLiteral
@@ -20,13 +21,14 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.AnyType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType.Companion.orderedTraitDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SymbolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TableType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
 
 //     object MapFn : BuiltinGenericFunctionExpression() {
@@ -144,18 +146,18 @@ class ClassDefinition(
 
         val instanceTagKey = Identifier.of("__instanceTag__")
 
-        val AnyClassType = UnorderedTupleType(
-            valueTypeByName = mapOf(
-                classTagKey to AnyType,
-                instanceTypeKey to TypeType,
-            ),
-        )
-
-        val AnyInstanceType = UnorderedTupleType(
-            valueTypeByName = mapOf(
-                instanceTagKey to AnyType,
-            ),
-        )
+//        val AnyClassType = UnorderedTupleType(
+//            valueTypeByName = mapOf(
+//                classTagKey to AnyType,
+//                instanceTypeKey to TypeType,
+//            ),
+//        )
+//
+//        val AnyInstanceType = UnorderedTupleType(
+//            valueTypeByName = mapOf(
+//                instanceTagKey to AnyType,
+//            ),
+//        )
 
         fun build(
             context: Expression.BuildContext,
@@ -175,49 +177,58 @@ class ClassDefinition(
 
                     val bodyTypeConstructorAnalysis = bodyTypeConstructor.evaluateAsType()
 
-                    val bodyType = bodyTypeConstructorAnalysis.type as UnorderedTupleType
+                    val fieldsType = bodyTypeConstructorAnalysis.type as UnorderedTupleType
 
                     val tag = qualifiedPath
 
                     val tagType = SymbolType(value = tag)
 
                     val instanceType = UnorderedTupleType(
-                        valueTypeByName = bodyType.valueTypeByName + (instanceTagKey to tagType)
+                        valueTypeByName = fieldsType.valueTypeByName + (instanceTagKey to tagType)
                     )
 
                     object : UnorderedTupleConstructor() {
                         override val term: UnorderedTupleConstructorTerm? = null
 
                         override val entries: Set<Entry> = setOf(
-                            object : Entry() {
-                                override val name: Symbol = classTagKey
-
-                                override val value: Expression = SymbolLiteral(
+                            Entry(
+                                name = classTagKey,
+                                value = SymbolLiteral(
                                     value = qualifiedPath,
                                     outerScope = outerScope,
-                                )
-                            },
-                            object : Entry() {
-                                override val name: Symbol = instanceTypeKey
+                                ),
+                            ),
+                            Entry(
+                                name = instanceTypeKey,
+                                value = AtomicExpression(
+                                    type = TypeType,
+                                    value = instanceType.asValue,
+                                ),
+                            ),
+                            Entry(
+                                name = Identifier.of("new"),
+                                value = object : BuiltinFunctionConstructor() {
+                                    override val argumentType: TableType = fieldsType
 
-                                override val value: Expression by lazy { userInstanceTypeStub.resolved }
-                            },
-                            object : Entry() {
-                                override val name: Symbol = Identifier.of("new")
+                                    override val imageType: SpecificType = instanceType
 
-                                override val value: Expression = object : AbstractionConstructor() {
-                                    override val term: ExpressionTerm? = null
-                                    override val argumentDeclaration: ArgumentDeclaration
-                                        get() = TODO()
+                                    override val function: FunctionValue = object : FunctionValue() {
+                                        override fun apply(argument: Value): Thunk<Value> {
+                                            val fields = argument as DictValue
 
-                                    override val declaredImageType: TypeAlike = instanceType
+                                            return Thunk.pure(
+                                                DictValue(
+                                                    valueByKey = mapOf(
+                                                        instanceTagKey to tag,
+                                                    ),
+                                                ).mergeWith(fields)
+                                            )
+                                        }
 
-                                    override val image: Expression
-                                        get() = TODO() // {tag: tag, ...argument}
-
-                                    override val outerScope: StaticScope = outerScope
-                                }
-                            },
+                                        override fun dump(): String = "${qualifiedPath.dump()}.new"
+                                    }
+                                },
+                            ),
                         )
 
                         override val outerScope: StaticScope = outerScope

@@ -108,6 +108,10 @@ data class DictValue(
 
         return map.entries.sortedBy { it.key }.map { it.value }
     }
+
+    fun mergeWith(other: DictValue): DictValue = DictValue(
+        thunkByKey = thunkByKey + other.thunkByKey,
+    )
 }
 
 fun DictValue(
