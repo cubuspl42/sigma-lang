@@ -7,6 +7,10 @@ data class QualifiedPath(
     val segments: List<Identifier>,
 ): Symbol() {
     companion object {
+        fun of(vararg segments: String): QualifiedPath = QualifiedPath(
+            segments = segments.map { Identifier.of(name = it) },
+        )
+
         val Root = QualifiedPath(
             segments = emptyList(),
         )

@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
+import UniversalFunctionTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
@@ -10,12 +11,15 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SymbolType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntrySourceTerm
+import utils.CollectionMatchers
+import utils.Matcher
+import utils.assertMatches
 import utils.assertTypeIsEquivalent
-import kotlin.test.Ignore
+import utils.checked
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -24,7 +28,6 @@ import kotlin.test.assertNotNull
 class ClassDefinitionTests {
     class TypeCheckingTests {
         @Test
-        @Ignore // TODO: Re-support classes
         fun test() {
             val term = NamespaceEntrySourceTerm.parse(
                 source = """
@@ -35,51 +38,95 @@ class ClassDefinitionTests {
                 """.trimIndent(),
             ) as ClassDefinitionTerm
 
+            val classTag = QualifiedPath.of("foo", "Foo")
+
             val classDefinition = ClassDefinition.build(
                 context = Expression.BuildContext.Builtin,
-                qualifiedPath = QualifiedPath(
-                    segments = listOf(
-                        Identifier.of("Foo"),
-                    ),
-                ),
+                qualifiedPath = classTag,
                 term = term,
             )
 
             val classType = classDefinition.computedBodyType.getOrCompute() as SpecificType
 
-            val tagType = SymbolType.of("Foo")
 
-            assertTypeIsEquivalent(
-                expected = UnorderedTupleType(
-                    valueTypeByName = mapOf(
-                        ClassDefinition.classTagKey to tagType,
-                        ClassDefinition.instanceTypeKey to TypeType,
-                        Identifier.of("new") to UniversalFunctionType(
-                            argumentType = UnorderedTupleType(
-                                valueTypeByName = mapOf(
-                                    Identifier.of("foo") to IntCollectiveType,
-                                    Identifier.of("bar") to BoolType,
-                                )
-                            ),
-                            imageType = UnorderedTupleType(
-                                valueTypeByName = mapOf(
-                                    ClassDefinition.instanceTagKey to tagType,
-                                    Identifier.of("foo") to IntCollectiveType,
-                                    Identifier.of("bar") to BoolType,
-                                )
-                            ),
-                        )
+//            assertTypeIsEquivalent(
+//                expected = UnorderedTupleType(
+//                    valueTypeByName = mapOf(
+//                        ClassDefinition.classTagKey to tagType,
+//                        ClassDefinition.instanceTypeKey to TypeType,
+//                        Identifier.of("new") to UniversalFunctionType(
+//                            argumentType = UnorderedTupleType(
+//                                valueTypeByName = mapOf(
+//                                    Identifier.of("foo") to IntCollectiveType,
+//                                    Identifier.of("bar") to BoolType,
+//                                )
+//                            ),
+//                            imageType = UnorderedTupleType(
+//                                valueTypeByName = mapOf(
+//                                    ClassDefinition.instanceTagKey to tagType,
+//                                    Identifier.of("foo") to IntCollectiveType,
+//                                    Identifier.of("bar") to BoolType,
+//                                )
+//                            ),
+//                        )
+//                    ),
+//                ),
+//                actual = classType,
+//            )
+
+            assertMatches(
+                matcher = UnorderedTupleTypeMatcher(
+                    entries = CollectionMatchers.eachOnce(
+                        UnorderedTupleTypeMatcher.EntryMatcher(
+                            name = Matcher.Equals(ClassDefinition.classTagKey),
+                            type = Matcher.Equals(SymbolType(value = classTag)),
+                        ),
+                        UnorderedTupleTypeMatcher.EntryMatcher(
+                            name = Matcher.Equals(Identifier.of("type")),
+                            type = Matcher.Is<TypeType>(),
+                        ),
+                        UnorderedTupleTypeMatcher.EntryMatcher(
+                            name = Matcher.Equals(Identifier.of("new")),
+                            type = UniversalFunctionTypeMatcher(
+                                argumentType = UnorderedTupleTypeMatcher(
+                                    entries = CollectionMatchers.eachOnce(
+                                        UnorderedTupleTypeMatcher.EntryMatcher(
+                                            name = Matcher.Equals(Identifier.of("foo")),
+                                            type = Matcher.Is<IntCollectiveType>(),
+                                        ),
+                                        UnorderedTupleTypeMatcher.EntryMatcher(
+                                            name = Matcher.Equals(Identifier.of("bar")),
+                                            type = Matcher.Is<BoolType>(),
+                                        ),
+                                    ),
+                                ).checked(),
+                                imageType = UnorderedTupleTypeMatcher(
+                                    entries = CollectionMatchers.eachOnce(
+                                        UnorderedTupleTypeMatcher.EntryMatcher(
+                                            name = Matcher.Equals(ClassDefinition.instanceTagKey),
+                                            type = Matcher.Equals(SymbolType(value = classTag)),
+                                        ),
+                                        UnorderedTupleTypeMatcher.EntryMatcher(
+                                            name = Matcher.Equals(Identifier.of("foo")),
+                                            type = Matcher.Is<IntCollectiveType>(),
+                                        ),
+                                        UnorderedTupleTypeMatcher.EntryMatcher(
+                                            name = Matcher.Equals(Identifier.of("bar")),
+                                            type = Matcher.Is<BoolType>(),
+                                        ),
+                                    ),
+                                ).checked(),
+                            ).checked(),
+                        ),
                     ),
-                ),
+                ).checked(),
                 actual = classType,
             )
-
         }
     }
 
     class EvaluationTests {
         @Test
-        @Ignore // TODO: Re-support classes
         fun test() {
             val term = NamespaceEntrySourceTerm.parse(
                 source = """
@@ -113,7 +160,7 @@ class ClassDefinitionTests {
             )
 
             assertEquals(
-                expected = Identifier.of("foo.Foo"),
+                expected = QualifiedPath.of("foo", "Foo"),
                 actual = classValue.readValue(
                     key = ClassDefinition.classTagKey,
                 ),
@@ -128,10 +175,12 @@ class ClassDefinitionTests {
             assertTypeIsEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        ClassDefinition.instanceTagKey to SymbolType.of("foo.Foo"),
+                        ClassDefinition.instanceTagKey to SymbolType(
+                            value = QualifiedPath.of("foo", "Foo"),
+                        ),
                         Identifier.of("foo") to IntCollectiveType,
                         Identifier.of("bar") to BoolType,
-                    )
+                    ),
                 ),
                 actual = actualType,
             )
