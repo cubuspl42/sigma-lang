@@ -22,10 +22,8 @@ class GenericConstructor(
             context: Expression.BuildContext,
             term: GenericConstructorTerm,
         ): Lazy<GenericConstructor> {
-            val outerMetaScope = context.outerMetaScope
-
             val metaArgumentDeclarationBuildOutput = AbstractionConstructor.ArgumentDeclaration.build(
-                outerMetaScope = outerMetaScope,
+                outerScope = context.outerScope,
                 argumentTypeTerm = term.metaArgumentType,
             )
 
@@ -33,13 +31,13 @@ class GenericConstructor(
             val metaArgumentDeclarationBlock by metaArgumentDeclarationBuildOutput.argumentDeclarationBlockLazy
 
             val bodyLazy = lazier {
-                val innerMetaScope = metaArgumentDeclarationBlock.chainWithIfNotNull(
-                    outerScope = outerMetaScope,
+                val innerScope = metaArgumentDeclarationBlock.chainWithIfNotNull(
+                    outerScope = context.outerScope,
                 )
 
                 Expression.build(
-                    context = context.copy(
-                        outerMetaScope = innerMetaScope,
+                    context = BuildContext(
+                        outerScope = innerScope,
                     ),
                     term = term.body,
                 ).asLazy()

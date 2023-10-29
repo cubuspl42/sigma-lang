@@ -9,12 +9,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.IntLiteral
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 
-sealed interface ResolvedName {
+sealed interface ResolvedIntroduction {
     fun buildReference(): Expression
+
+    val errors: Set<SemanticError>
 }
 
-sealed class ResolvedAbstractionArgument : ResolvedName {
+sealed class ResolvedAbstractionArgument : ResolvedIntroduction {
     abstract val argumentDeclaration: AbstractionConstructor.ArgumentDeclaration
+
+    final override val errors: Set<SemanticError> = emptySet()
 }
 
 class ResolvedOrderedArgument(
@@ -40,9 +44,12 @@ class ResolvedUnorderedArgument(
 
 class ResolvedDefinition(
     val definition: Definition,
-) : ResolvedName {
+) : ResolvedIntroduction {
     val body: Expression
         get() = definition.body
 
     override fun buildReference(): Expression = body
+
+    override val errors: Set<SemanticError>
+        get() = definition.errors
 }

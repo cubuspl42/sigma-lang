@@ -30,7 +30,6 @@ class FieldReadTests {
             val term = ExpressionSourceTerm.parse("foo.bar") as FieldReadSourceTerm
             val fieldRead = FieldRead.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeDefinition(
                             name = Identifier.of("foo"),

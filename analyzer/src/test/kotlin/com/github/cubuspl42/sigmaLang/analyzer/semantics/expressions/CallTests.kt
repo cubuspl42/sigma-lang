@@ -59,7 +59,6 @@ class CallTests {
 
             val call = Call.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeArgumentDeclarationBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
@@ -100,7 +99,6 @@ class CallTests {
 
             val call = Call.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
@@ -155,7 +153,6 @@ class CallTests {
 
             val call = Call.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("b"),
@@ -188,7 +185,6 @@ class CallTests {
 
             val call = Call.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeArgumentDeclarationBlock.of(
                         FakeUserDeclaration(name = Identifier.of("f"), declaredType = run {
                             val parameterDeclaration = AbstractionConstructor.ArgumentDeclaration(
@@ -261,7 +257,6 @@ class CallTests {
 
             val call = Call.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeArgumentDeclarationBlock.of(
                         FakeUserDeclaration(
                             name = Identifier.of("n"),
@@ -340,7 +335,6 @@ class CallTests {
 
             val call = Call.build(
                 Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
@@ -392,7 +386,6 @@ class CallTests {
 
             val call = Call.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeDefinition(
                             name = Identifier.of("sq"),
@@ -420,7 +413,6 @@ class CallTests {
         fun testDictSubject() {
             val call = Call.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeDefinition(
                             name = Identifier.of("dict"),
@@ -464,7 +456,6 @@ class CallTests {
 
             val call = Call.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeDefinitionBlock.of(
                         FakeDefinition(
                             name = Identifier.of("f"),

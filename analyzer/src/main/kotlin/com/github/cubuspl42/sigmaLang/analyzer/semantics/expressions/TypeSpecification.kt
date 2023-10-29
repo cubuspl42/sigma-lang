@@ -27,7 +27,7 @@ class TypeSpecification(
             ).asLazy()
 
             val metaArgumentConstructor by TypeExpression.build(
-                outerMetaScope = context.outerMetaScope,
+                outerScope = context.outerScope,
                 term = term.argument,
             ).asLazy()
 

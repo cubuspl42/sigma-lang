@@ -3,9 +3,9 @@ package utils
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.MappingStaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
@@ -37,12 +37,12 @@ data class FakeDefinition(
 
 @Suppress("TestFunctionName")
 fun FakeStaticScope(
-    declarations: Set<FakeIntroduction>,
+    introductions: Set<FakeIntroduction>,
 ): StaticScope = FakeDefinitionBlock(
-    definitions = declarations.filterIsInstance<FakeDefinition>().toSet(),
+    definitions = introductions.filterIsInstance<FakeDefinition>().toSet(),
 ).chainWith(
     FakeArgumentDeclarationBlock(
-        declarations = declarations.filterIsInstance<FakeUserDeclaration>().toSet(),
+        declarations = introductions.filterIsInstance<FakeUserDeclaration>().toSet(),
     ),
 )
 
@@ -58,21 +58,25 @@ class FakeArgumentDeclarationBlock(
         )
     }
 
-    val argumentDeclaration = AbstractionConstructor.ArgumentDeclaration(
+    private val argumentDeclaration = AbstractionConstructor.ArgumentDeclaration(
         declaredType = UnorderedTupleType(
             valueTypeByName = declarations.associate { it.name to it.declaredType },
         ),
     )
 
-    override val resolvedNameByName: Map<Symbol, ResolvedName> = declarations.associate { declaration ->
-        declaration.name to ResolvedUnorderedArgument(
-            argumentDeclaration = argumentDeclaration,
-            name = declaration.name,
+    override val resolvedNameByName: Map<Symbol, LeveledResolvedIntroduction> = declarations.associate { declaration ->
+        declaration.name to LeveledResolvedIntroduction(
+            level = StaticScope.Level.Primary,
+            resolvedIntroduction = ResolvedUnorderedArgument(
+                argumentDeclaration = argumentDeclaration,
+                name = declaration.name,
+            ),
         )
     }
 }
 
 class FakeDefinitionBlock(
+    level: StaticScope.Level = StaticScope.Level.Primary,
     definitions: Set<FakeDefinition>,
 ) : MappingStaticBlock() {
     companion object {
@@ -83,9 +87,12 @@ class FakeDefinitionBlock(
         )
     }
 
-    override val resolvedNameByName: Map<Symbol, ResolvedName> = definitions.associate { definition ->
-        definition.name to ResolvedDefinition(
-            definition = definition.definition,
+    override val resolvedNameByName: Map<Symbol, LeveledResolvedIntroduction> = definitions.associate { definition ->
+        definition.name to LeveledResolvedIntroduction(
+            level = level,
+            resolvedIntroduction = ResolvedDefinition(
+                definition = definition.definition,
+            ),
         )
     }
 }
@@ -94,6 +101,6 @@ object FakeStaticScope {
     fun of(
         vararg declarations: FakeIntroduction,
     ): StaticScope = FakeStaticScope(
-        declarations = declarations.toSet(),
+        introductions = declarations.toSet(),
     )
 }

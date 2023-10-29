@@ -67,7 +67,6 @@ class ScenarioTests {
 
         val namespaceDefinition = NamespaceDefinition.build(
             context = Expression.BuildContext(
-                outerMetaScope = BuiltinScope,
                 outerScope = Project.loadPrelude().innerStaticScope,
             ),
             qualifiedPath = QualifiedPath.Root,
@@ -81,7 +80,7 @@ class ScenarioTests {
 
         // Validate `Entry`
 
-        val entryTypeConstructorDefinition = namespaceDefinition.getMetaDefinition(
+        val entryTypeConstructorDefinition = namespaceDefinition.getDefinition(
             name = Identifier.of("Entry"),
         )!!
 
@@ -257,8 +256,7 @@ class ScenarioTests {
 
         val namespaceDefinition = NamespaceDefinition.build(
             context = Expression.BuildContext(
-                outerMetaScope = BuiltinScope,
-                outerScope = StaticScope.Empty,
+                outerScope = BuiltinScope,
             ),
             qualifiedPath = QualifiedPath.Root,
             term = term,

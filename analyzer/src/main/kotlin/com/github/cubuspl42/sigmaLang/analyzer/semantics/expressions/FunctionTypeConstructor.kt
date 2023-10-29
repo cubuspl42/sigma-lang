@@ -33,7 +33,7 @@ abstract class FunctionTypeConstructor : TypeConstructor() {
                     override val metaArgumentType: Expression? by lazy {
                         term.metaArgumentType?.let {
                             TypeExpression.build(
-                                outerMetaScope = context.outerMetaScope,
+                                outerScope = context.outerScope,
                                 term = it,
                             ).resolved
                         }

@@ -12,9 +12,9 @@ interface StaticScope {
 
             val resultScope = result.second
 
-            override fun resolveName(
+            override fun resolveNameLeveled(
                 name: Symbol,
-            ): ResolvedName? = resultScope.resolveName(name = name)
+            ): LeveledResolvedIntroduction? = resultScope.resolveNameLeveled(name = name)
 
             override fun getAllNames(): Set<Symbol> = resultScope.getAllNames()
         }.result
@@ -25,7 +25,7 @@ interface StaticScope {
     }
 
     object Empty : StaticScope {
-        override fun resolveName(name: Symbol): ResolvedName? = null
+        override fun resolveNameLeveled(name: Symbol): LeveledResolvedIntroduction? = null
 
         override fun getAllNames(): Set<Symbol> = emptySet()
     }
@@ -34,13 +34,24 @@ interface StaticScope {
         private val outerScope: StaticScope,
         private val staticBlock: StaticBlock,
     ) : StaticScope {
-        override fun resolveName(name: Symbol): ResolvedName? =
-            staticBlock.resolveNameLocally(name = name) ?: outerScope.resolveName(name = name)
+        override fun resolveNameLeveled(name: Symbol): LeveledResolvedIntroduction? =
+            staticBlock.resolveNameLocally(name = name) ?: outerScope.resolveNameLeveled(name = name)
 
         override fun getAllNames(): Set<Symbol> = staticBlock.getLocalNames() + outerScope.getAllNames()
     }
 
-    fun resolveName(name: Symbol): ResolvedName?
+    fun resolveNameLeveled(name: Symbol): LeveledResolvedIntroduction?
 
     fun getAllNames(): Set<Symbol>
 }
+
+fun StaticScope.resolveName(
+    name: Symbol,
+): ResolvedIntroduction? = resolveNameLeveled(
+    name = name,
+)?.resolvedIntroduction
+
+data class LeveledResolvedIntroduction(
+    val level: StaticScope.Level,
+    val resolvedIntroduction: ResolvedIntroduction,
+)

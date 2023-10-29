@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ReferenceMa
 import utils.Matcher
 import utils.checked
 
-fun ResolvedName.buildReferenceMatcher(): Matcher<Expression> = when (this) {
+fun ResolvedIntroduction.buildReferenceMatcher(): Matcher<Expression> = when (this) {
     is ResolvedDefinition -> Matcher.Equals(this.body)
     is ResolvedAbstractionArgument -> this.buildArgumentReferenceMatcher()
 }

@@ -163,7 +163,7 @@ class ClassDefinition(
             context: Expression.BuildContext,
             qualifiedPath: QualifiedPath,
             term: ClassDefinitionTerm,
-        ): ClassDefinition {
+        ): ResolvedDefinition {
             val outerScope = context.outerScope
 
             val userInstanceTypeStub = UnorderedTupleTypeConstructor.build(
@@ -236,8 +236,12 @@ class ClassDefinition(
                 }
             }
 
-            return ClassDefinition(
+            val classDefinition = ClassDefinition(
                 bodyStub = classBodyStub,
+            )
+
+            return ResolvedDefinition(
+                definition = classDefinition,
             )
         }
     }
