@@ -31,6 +31,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionCon
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import utils.CollectionMatchers
+import utils.FakeArgumentDeclarationBlock
 import utils.FakeStaticScope
 import utils.FakeUserDeclaration
 import utils.ListMatchers
@@ -113,8 +114,7 @@ class AbstractionConstructorTests {
 
             val abstractionConstructorBuildOutput = AbstractionConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = BuiltinScope,
-                    outerScope = FakeStaticScope(
+                    outerScope = FakeArgumentDeclarationBlock(
                         declarations = setOf(
                             FakeUserDeclaration(
                                 name = Identifier.of("f"),
@@ -169,6 +169,8 @@ class AbstractionConstructorTests {
                                 ),
                             ),
                         ),
+                    ).chainWith(
+                        outerScope = BuiltinScope,
                     ),
                 ),
                 term = term,
@@ -180,7 +182,7 @@ class AbstractionConstructorTests {
             fun getResolvedArgument(name: String) = assertIs<ResolvedUnorderedArgument>(
                 argumentDeclarationBlock.resolveNameLocally(
                     name = Identifier.of(name = name),
-                ),
+                )?.resolvedIntroduction,
             )
 
             fun buildReferenceMatcher(

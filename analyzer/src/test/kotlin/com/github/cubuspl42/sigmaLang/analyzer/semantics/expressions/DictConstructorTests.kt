@@ -21,7 +21,6 @@ class DictConstructorTests {
         fun testSingleEntry() {
             val dictLiteral = DictConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
@@ -55,7 +54,6 @@ class DictConstructorTests {
         fun testMultipleEntriesCompatibleEntries() {
             val dictLiteral = DictConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
@@ -98,7 +96,6 @@ class DictConstructorTests {
         fun testMultipleEntriesIncompatibleKeys() {
             val dictLiteral = DictConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
@@ -150,7 +147,6 @@ class DictConstructorTests {
         fun testMultipleEntriesIncompatibleValues() {
             val dictLiteral = DictConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),
@@ -204,7 +200,6 @@ class DictConstructorTests {
 
             val dictLiteral = DictConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("key1"),

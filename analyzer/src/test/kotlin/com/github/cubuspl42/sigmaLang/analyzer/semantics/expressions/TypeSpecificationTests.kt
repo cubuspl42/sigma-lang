@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.evaluation.values.DictValueMatchers
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
@@ -20,7 +21,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TypeSpecificationTerm
 import utils.CollectionMatchers
+import utils.FakeArgumentDeclarationBlock
 import utils.FakeDefinition
+import utils.FakeDefinitionBlock
 import utils.FakeStaticScope
 import utils.FakeUserDeclaration
 import utils.Matcher
@@ -70,27 +73,29 @@ class TypeSpecificationTests {
 
             val typeSpecification = TypeSpecification.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = FakeStaticScope(
-                        declarations = setOf(
-                            FakeDefinition(
-                                name = Identifier.of("a"),
-                                type = TypeType,
-                                value = IntCollectiveType.asValue,
-                            ),
-                            FakeDefinition(
-                                name = Identifier.of("b"),
-                                type = TypeType,
-                                value = BoolType.asValue,
-                            ),
-                        ),
-                    ),
-                    outerScope = FakeStaticScope(
+                    outerScope = FakeArgumentDeclarationBlock(
                         declarations = setOf(
                             FakeUserDeclaration(
                                 name = Identifier.of("f"),
                                 declaredType = genericType1,
                             ),
                         ),
+                    ).chainWith(
+                        FakeDefinitionBlock(
+                            level = StaticScope.Level.Meta,
+                            definitions = setOf(
+                                FakeDefinition(
+                                    name = Identifier.of("a"),
+                                    type = TypeType,
+                                    value = IntCollectiveType.asValue,
+                                ),
+                                FakeDefinition(
+                                    name = Identifier.of("b"),
+                                    type = TypeType,
+                                    value = BoolType.asValue,
+                                ),
+                            ),
+                        )
                     ),
                 ),
                 term = term,
@@ -126,25 +131,27 @@ class TypeSpecificationTests {
 
             val typeSpecification = TypeSpecification.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = FakeStaticScope(
-                        declarations = setOf(
-                            FakeDefinition(
-                                name = Identifier.of("p"),
-                                type = TypeType,
-                                value = IntCollectiveType.asValue,
-                            ),
-                            FakeDefinition(
-                                name = Identifier.of("q"),
-                                type = TypeType,
-                                value = BoolType.asValue,
-                            ),
-                        ),
-                    ),
-                    outerScope = FakeStaticScope(
+                    outerScope = FakeArgumentDeclarationBlock(
                         declarations = setOf(
                             FakeUserDeclaration(
                                 name = Identifier.of("g"),
                                 declaredType = genericType1,
+                            ),
+                        ),
+                    ).chainWith(
+                        FakeDefinitionBlock(
+                            level = StaticScope.Level.Meta,
+                            definitions = setOf(
+                                FakeDefinition(
+                                    name = Identifier.of("p"),
+                                    type = TypeType,
+                                    value = IntCollectiveType.asValue,
+                                ),
+                                FakeDefinition(
+                                    name = Identifier.of("q"),
+                                    type = TypeType,
+                                    value = BoolType.asValue,
+                                ),
                             ),
                         ),
                     ),

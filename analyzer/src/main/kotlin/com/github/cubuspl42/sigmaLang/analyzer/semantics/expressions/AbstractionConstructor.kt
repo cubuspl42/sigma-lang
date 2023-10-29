@@ -39,13 +39,13 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
 
         companion object {
             fun build(
-                outerMetaScope: StaticScope,
+                outerScope: StaticScope,
                 argumentTypeTerm: TupleTypeConstructorTerm,
             ): BuildOutput {
                 val argumentDeclarationLazy = lazy {
                     val argumentTypeConstructor = argumentTypeTerm.let {
                         TypeExpression.build(
-                            outerMetaScope = outerMetaScope,
+                            outerScope = outerScope,
                             term = it,
                         )
                     }.resolved
@@ -84,11 +84,10 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
             context: BuildContext,
             term: AbstractionConstructorTerm,
         ): BuildOutput {
-            val outerMetaScope = context.outerMetaScope
             val outerScope = context.outerScope
 
             val argumentDeclarationBuildOutput = ArgumentDeclaration.build(
-                outerMetaScope = outerMetaScope,
+                outerScope = outerScope,
                 argumentTypeTerm = term.argumentType,
             )
 
@@ -99,7 +98,7 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
                 override val resolved: AbstractionConstructor by lazy {
                     val declaredImageTypeBody = term.declaredImageType?.let {
                         TypeExpression.build(
-                            outerMetaScope = outerMetaScope,
+                            outerScope = context.outerScope,
                             term = it,
                         ).resolved
                     }
@@ -112,7 +111,6 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
 
                     val image = build(
                         context = BuildContext(
-                            outerMetaScope = outerMetaScope,
                             outerScope = innerScope,
                         ),
                         term = term.image,

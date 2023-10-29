@@ -1,9 +1,9 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
@@ -19,10 +19,10 @@ object UserVariableDefinition {
     fun build(
         context: Expression.BuildContext,
         term: DefinitionTerm,
-    ): Definition {
+    ): ResolvedDefinition {
         val declaredTypeStub = term.declaredTypeBody?.let {
             TypeExpression.build(
-                outerMetaScope = context.outerMetaScope,
+                outerScope = context.outerScope,
                 term = it,
             )
         }
@@ -32,7 +32,7 @@ object UserVariableDefinition {
             term = term.body,
         )
 
-        return object : Definition {
+        val definition = object : Definition {
             override val bodyStub: Stub<Expression> = object : Stub<Expression> {
                 override val resolved: Expression by lazy {
                     val body = bodyStub.resolved
@@ -51,6 +51,10 @@ object UserVariableDefinition {
                 }
             }
         }
+
+        return ResolvedDefinition(
+            definition = definition,
+        )
     }
 }
 

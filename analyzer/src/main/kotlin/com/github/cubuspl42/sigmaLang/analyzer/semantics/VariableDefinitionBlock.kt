@@ -21,25 +21,29 @@ class VariableDefinitionBlock(
     }
 
     private val definitionByName = declarationTerms.associate {
-        it.name to ResolvedDefinition(
-            definition = UserVariableDefinition.build(
+        it.name to LeveledResolvedIntroduction(
+            level = StaticScope.Level.Primary,
+            resolvedIntroduction = UserVariableDefinition.build(
                 context = context,
                 term = it,
             ),
         )
     }
 
-    fun getValueDefinition(name: Symbol): Definition? = resolveNameLocally(name)?.definition
+    fun getValueDefinition(name: Symbol): Definition? {
+        val resolvedDefinition = resolveNameLocally(name)?.resolvedIntroduction as ResolvedDefinition?
+        return resolvedDefinition?.definition
+    }
 
     override fun resolveNameLocally(
         name: Symbol,
-    ): ResolvedDefinition? = definitionByName[name]
+    ): LeveledResolvedIntroduction? = definitionByName[name]
 
     override fun getLocalNames(): Set<Symbol> = definitionByName.keys
 
 //    val subExpressions by lazy { definitionByName.values.map { it. body }.toSet() }
 
     val errors: Set<SemanticError> by lazy {
-        definitionByName.values.fold(emptySet()) { acc, it -> acc + it.body.errors }
+        definitionByName.values.fold(emptySet()) { acc, it -> acc + it.resolvedIntroduction.errors }
     }
 }

@@ -17,8 +17,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.WindowsFunction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AtomicExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
@@ -185,11 +185,12 @@ object BuiltinScope : StaticScope {
         )
     }
 
-    override fun resolveName(
+    override fun resolveNameLeveled(
         name: Symbol,
-    ): ResolvedName? = builtinDeclarations[name]?.let {
-        ResolvedDefinition(
-            definition = it,
+    ): LeveledResolvedIntroduction? = builtinDeclarations[name]?.let {
+        LeveledResolvedIntroduction(
+            level = StaticScope.Level.Meta,
+            resolvedIntroduction = ResolvedDefinition(definition = it),
         )
     }
 

@@ -62,11 +62,14 @@ class Module(
         }
 
     private val importBlock: StaticBlock = object : StaticBlock() {
-        override fun resolveNameLocally(name: Symbol): ResolvedName? {
+        override fun resolveNameLocally(name: Symbol): LeveledResolvedIntroduction? {
             if (name !is Identifier) return null
 
             return getImportedModuleByName(name = name)?.rootNamespaceDefinition?.let {
-                return ResolvedDefinition(definition = it)
+                LeveledResolvedIntroduction(
+                    level = StaticScope.Level.Meta,
+                    resolvedIntroduction = ResolvedDefinition(definition = it),
+                )
             }
         }
 
@@ -77,7 +80,6 @@ class Module(
 
     val rootNamespaceDefinition = NamespaceDefinition.build(
         context = Expression.BuildContext(
-            outerMetaScope = BuiltinScope,
             outerScope = importBlock.chainWith(outerScope),
         ),
         qualifiedPath = modulePath.toQualifiedPath(),

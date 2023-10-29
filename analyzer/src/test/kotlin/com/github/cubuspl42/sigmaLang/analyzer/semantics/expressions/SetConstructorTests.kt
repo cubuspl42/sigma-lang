@@ -28,7 +28,6 @@ class SetConstructorTests {
         fun testSingleElement() {
             val setConstructor = SetConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
@@ -53,7 +52,6 @@ class SetConstructorTests {
         fun testMultipleEntriesCompatibleElements() {
             val setConstructor = SetConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
@@ -87,7 +85,6 @@ class SetConstructorTests {
         fun testMultipleEntriesIncompatibleElements() {
             val setConstructor = SetConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
@@ -132,7 +129,6 @@ class SetConstructorTests {
 
             val setConstructor = SetConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeDefinition(
                             name = Identifier.of("foo"),

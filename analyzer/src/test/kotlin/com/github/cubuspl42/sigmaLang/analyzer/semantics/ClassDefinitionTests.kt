@@ -46,7 +46,7 @@ class ClassDefinitionTests {
                 term = term,
             )
 
-            val classType = classDefinition.computedBodyType.getOrCompute() as SpecificType
+            val classType = classDefinition.definition.computedBodyType.getOrCompute() as SpecificType
 
 
 //            assertTypeIsEquivalent(
@@ -146,7 +146,7 @@ class ClassDefinitionTests {
                     ),
                 ),
                 term = term,
-            )
+            ).definition
 
             val classValue = assertIs<DictValue>(
                 assertNotNull(

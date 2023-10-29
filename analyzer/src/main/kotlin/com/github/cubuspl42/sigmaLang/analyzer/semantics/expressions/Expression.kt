@@ -179,17 +179,14 @@ abstract class Expression {
     }
 
     data class BuildContext(
-        val outerMetaScope: StaticScope,
         val outerScope: StaticScope,
     ) {
         companion object {
             val Empty = Expression.BuildContext(
-                outerMetaScope = StaticScope.Empty,
                 outerScope = StaticScope.Empty,
             )
 
             val Builtin = Expression.BuildContext(
-                outerMetaScope = BuiltinScope,
                 outerScope = BuiltinScope,
             )
         }
@@ -311,7 +308,6 @@ abstract class Expression {
 
             return Expression.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = StaticScope.Empty,
                 ),
                 term = term,

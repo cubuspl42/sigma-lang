@@ -55,7 +55,6 @@ class UnionTypeConstructorTests {
 
             val unionTypeConstructor = UnionTypeConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = staticBlock,
                 ),
                 term = term,
@@ -64,12 +63,12 @@ class UnionTypeConstructorTests {
             assertMatches(
                 matcher = UnionTypeConstructorMatcher(
                     types = CollectionMatchers.eachOnce(
-                        aResolvedName.buildReferenceMatcher(),
+                        aResolvedName.resolvedIntroduction.buildReferenceMatcher(),
                         OrderedTupleTypeConstructorMatcher(
                             elements = ListMatchers.inOrder(
                                 OrderedTupleTypeConstructorMatcher.ElementMatcher(
                                     name = Matcher.IsNull(),
-                                    type = bResolvedName.buildReferenceMatcher(),
+                                    type = bResolvedName.resolvedIntroduction.buildReferenceMatcher(),
                                 ),
                             ),
                         ).checked(),
@@ -106,23 +105,22 @@ class UnionTypeConstructorTests {
 
             val aResolvedName = staticBlock.resolveNameLocally(
                 name = Identifier.of("A"),
-            )!!
+            )!!.resolvedIntroduction
 
             val bResolvedName = staticBlock.resolveNameLocally(
                 name = Identifier.of("B"),
-            )!!
+            )!!.resolvedIntroduction
 
             val cResolvedName = staticBlock.resolveNameLocally(
                 name = Identifier.of("C"),
-            )!!
+            )!!.resolvedIntroduction
 
             val dResolvedName = staticBlock.resolveNameLocally(
                 name = Identifier.of("D"),
-            )!!
+            )!!.resolvedIntroduction
 
             val unionTypeConstructor = UnionTypeConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = staticBlock,
                 ),
                 term = term,

@@ -10,7 +10,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.CyclicComputation
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 
@@ -46,11 +45,11 @@ abstract class Reference : FirstOrderExpression() {
                 val outerScope = context.outerScope
 
                 // TODO: Clean error
-                val resolvedName = outerScope.resolveName(name = referredName) ?: run {
+                val resolvedName = outerScope.resolveNameLeveled(name = referredName) ?: run {
                     throw IllegalStateException("Unresolved name at compile-time: $referredName")
                 }
 
-                resolvedName.buildReference()
+                resolvedName.resolvedIntroduction.buildReference()
             }
         }
     }

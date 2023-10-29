@@ -29,7 +29,6 @@ class IsUndefinedCheckTests {
 
             val isUndefinedCheck = IsUndefinedCheck.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("foo"),
@@ -79,7 +78,6 @@ class IsUndefinedCheckTests {
 
             val isUndefinedCheck = IsUndefinedCheck.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeDefinition(
                             name = Identifier.of("d"),

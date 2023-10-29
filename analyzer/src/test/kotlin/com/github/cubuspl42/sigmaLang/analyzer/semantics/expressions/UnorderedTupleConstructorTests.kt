@@ -50,7 +50,6 @@ class UnorderedTupleConstructorTests {
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),
@@ -89,7 +88,6 @@ class UnorderedTupleConstructorTests {
 
             val unorderedTupleConstructor = UnorderedTupleConstructor.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = StaticScope.Empty,
                     outerScope = FakeStaticScope.of(
                         FakeUserDeclaration(
                             name = Identifier.of("value1"),

@@ -12,22 +12,3 @@ interface NamespaceDefinitionTerm : NamespaceEntryTerm {
 
     val entries: List<NamespaceEntryTerm>
 }
-
-val NamespaceDefinitionTerm.segregatedEntries: NamespaceDefinitionTerm.SegregatedEntries
-    get() {
-        val primDefinitionTerms = mutableListOf<DefinitionTerm>()
-        val metaDefinitionTerms = mutableListOf<MetaDefinitionTerm>()
-
-        for (entry in entries) {
-            when (entry) {
-                is MetaDefinitionTerm -> metaDefinitionTerms.add(entry)
-                is DefinitionTerm -> primDefinitionTerms.add(entry)
-                else -> throw IllegalStateException("Unknown namespace entry type: ${entry::class.simpleName}")
-            }
-        }
-
-        return NamespaceDefinitionTerm.SegregatedEntries(
-            primDefinitionTerms = primDefinitionTerms,
-            metaDefinitionTerms = metaDefinitionTerms,
-        )
-    }

@@ -325,7 +325,8 @@ class GenericConstructorTests {
 
             val expression = Expression.build(
                 context = Expression.BuildContext(
-                    outerMetaScope = FakeDefinitionBlock(
+                    outerScope = FakeDefinitionBlock(
+                        level = StaticScope.Level.Meta, // TODO: Shouldn't this be meta-meta?
                         definitions = setOf(
                             FakeDefinition(
                                 name = Identifier.of("Trait1"),
@@ -339,7 +340,6 @@ class GenericConstructorTests {
                             ),
                         ),
                     ),
-                    outerScope = StaticScope.Empty,
                 ),
                 term = term,
             ).resolved
