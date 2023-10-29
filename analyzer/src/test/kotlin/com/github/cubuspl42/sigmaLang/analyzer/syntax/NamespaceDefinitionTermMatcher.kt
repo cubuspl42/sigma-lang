@@ -9,6 +9,6 @@ class NamespaceDefinitionTermMatcher(
 ) : Matcher<NamespaceDefinitionTerm>() {
     override fun match(actual: NamespaceDefinitionTerm) {
         name.match(actual = actual.name)
-        namespaceEntries.match(actual = actual.namespaceEntries)
+        namespaceEntries.match(actual = actual.entries)
     }
 }

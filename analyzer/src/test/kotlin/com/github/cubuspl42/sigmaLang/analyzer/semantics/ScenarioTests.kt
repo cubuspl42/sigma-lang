@@ -1,31 +1,36 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
+import UniversalFunctionTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.CallMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.TypeVariableDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.GenericTypeMatcher
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
 import utils.CollectionMatchers
+import utils.ListMatchers
 import utils.Matcher
 import utils.assertMatches
 import utils.assertTypeIsEquivalent
-import kotlin.test.Ignore
+import utils.checked
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -33,17 +38,16 @@ import kotlin.test.assertNotNull
 
 class ScenarioTests {
     @Test
-    @Ignore // TODO: Re-support type aliases
-    fun testGenericClass() {
+    fun testManualGenericClass() {
         val term = NamespaceDefinitionSourceTerm.parse(
             source = """
                 %namespace EntryNamespace (
-                    %const Entry = ^[valueType: Type] => ^{
+                    %meta Entry = ^[valueType: Type] => ^{
                         key: Int,
                         value: valueType,
                     }
                     
-                    %const entryOf = !^[valueType: Type] ^{
+                    %const entryOf = ^[valueType: Type] !=> ^{
                         key: Int,
                         value: valueType,
                     } -> Entry[valueType] => {
@@ -77,22 +81,22 @@ class ScenarioTests {
 
         // Validate `Entry`
 
-        val entryTypeConstructorDefinition = namespaceDefinition.getDefinition(
+        val entryTypeConstructorDefinition = namespaceDefinition.getMetaDefinition(
             name = Identifier.of("Entry"),
         )!!
 
-        assertEquals(
-            expected = UniversalFunctionType(
-                argumentType = OrderedTupleType(
-                    elements = listOf(
-                        OrderedTupleType.Element(
-                            name = Identifier.of("valueType"),
-                            type = TypeType,
+        assertMatches(
+            matcher = UniversalFunctionTypeMatcher(
+                argumentType = OrderedTupleTypeMatcher(
+                    elements = ListMatchers.inOrder(
+                        OrderedTupleTypeMatcher.ElementMatcher(
+                            name = Matcher.Equals(Identifier.of("valueType")),
+                            type = Matcher.Is<TypeType>(),
                         ),
                     ),
-                ),
-                imageType = TypeType,
-            ),
+                ).checked(),
+                imageType = Matcher.Is<TypeType>(),
+            ).checked(),
             actual = entryTypeConstructorDefinition.computedBodyType.getOrCompute(),
         )
 
@@ -128,25 +132,46 @@ class ScenarioTests {
             name = Identifier.of("entryOf"),
         )!!
 
-        val valueTypeDefinition = TypeVariableDefinition()
-
-        assertTypeIsEquivalent(
-            expected = UniversalFunctionType(
-                argumentType = UnorderedTupleType(
-                    valueTypeByName = mapOf(
-                        Identifier.of("key") to IntCollectiveType,
-                        Identifier.of("value") to valueTypeDefinition.typePlaceholder,
+        assertMatches(
+            matcher = GenericTypeMatcher(
+                parameterType = OrderedTupleTypeMatcher(
+                    elements = ListMatchers.inOrder(
+                        OrderedTupleTypeMatcher.ElementMatcher(
+                            name = Matcher.Equals(Identifier.of("valueType")),
+                            type = Matcher.Is<TypeType>(),
+                        ),
                     ),
-                ),
-                imageType = UnorderedTupleType(
-                    valueTypeByName = mapOf(
-                        Identifier.of("key") to IntCollectiveType,
-                        Identifier.of("value") to valueTypeDefinition.typePlaceholder,
-                    ),
-                ),
-            ),
-            actual = entryOfAbstractionDefinition.computedBodyType.getOrCompute() as SpecificType,
+                ).checked(),
+                bodyType = UniversalFunctionTypeMatcher(
+                    argumentType = UnorderedTupleTypeMatcher(
+                        entries = CollectionMatchers.eachOnce(
+                            UnorderedTupleTypeMatcher.EntryMatcher(
+                                name = Matcher.Equals(Identifier.of("key")),
+                                type = Matcher.Is<IntCollectiveType>(),
+                            ),
+                            UnorderedTupleTypeMatcher.EntryMatcher(
+                                name = Matcher.Equals(Identifier.of("value")),
+                                type = Matcher.Is<TypeVariable>(),
+                            ),
+                        ),
+                    ).checked(),
+                    imageType = UnorderedTupleTypeMatcher(
+                        entries = CollectionMatchers.eachOnce(
+                            UnorderedTupleTypeMatcher.EntryMatcher(
+                                name = Matcher.Equals(Identifier.of("key")),
+                                type = Matcher.Is<IntCollectiveType>(),
+                            ),
+                            UnorderedTupleTypeMatcher.EntryMatcher(
+                                name = Matcher.Equals(Identifier.of("value")),
+                                type = Matcher.Is<TypeVariable>(),
+                            ),
+                        ),
+                    ).checked(),
+                ).checked(),
+            ).checked(),
+            actual = entryOfAbstractionDefinition.computedBodyType.getOrCompute() as Type,
         )
+
 
         // Validate `entryTrueOf`
 

@@ -1,15 +1,21 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
+import UniversalFunctionTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
+import utils.ListMatchers
+import utils.Matcher
+import utils.assertMatches
+import utils.checked
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,11 +25,10 @@ import kotlin.test.assertNotNull
 class ModuleTests {
     class TypeCheckingTests {
         @Test
-        @Ignore // TODO: Re-support type aliases
         fun testTypeScope() {
             val term = ModuleSourceTerm.parse(
                 source = """
-                    %const UserId = Int
+                    %meta UserId = Int
                     
                     %const isUserIdValid = ^[userId: UserId] => true
                 """.trimIndent(),
@@ -42,18 +47,18 @@ class ModuleTests {
 
             assertNotNull(isUserIdValid)
 
-            assertEquals(
-                expected = UniversalFunctionType(
-                    argumentType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Identifier.of("userId"),
-                                type = IntCollectiveType,
+            assertMatches(
+                matcher = UniversalFunctionTypeMatcher(
+                    argumentType = OrderedTupleTypeMatcher(
+                        elements = ListMatchers.inOrder(
+                            OrderedTupleTypeMatcher.ElementMatcher(
+                                name = Matcher.Equals(Identifier.of("userId")),
+                                type = Matcher.Is<IntCollectiveType>(),
                             ),
                         ),
-                    ),
-                    imageType = BoolType,
-                ),
+                    ).checked(),
+                    imageType = Matcher.Is<BoolType>(),
+                ).checked(),
                 actual = isUserIdValid.computedBodyType.getOrCompute(),
             )
         }

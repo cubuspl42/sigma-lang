@@ -84,7 +84,7 @@ class Module(
         term = object : NamespaceDefinitionTerm {
             override val name: Identifier = Identifier.of("__root__")
 
-            override val namespaceEntries: List<NamespaceEntryTerm>
+            override val entries: List<NamespaceEntryTerm>
                 get() = term.namespaceEntries
         },
     )

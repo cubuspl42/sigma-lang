@@ -13,7 +13,7 @@ class GenericType(
     /**
      * Body type with [TypeVariable]s referring to the parameter declaration
      */
-    private val bodyType: Type,
+    val bodyType: Type,
 ) : ParametricType() {
     companion object {
         fun orderedTraitDeclaration(

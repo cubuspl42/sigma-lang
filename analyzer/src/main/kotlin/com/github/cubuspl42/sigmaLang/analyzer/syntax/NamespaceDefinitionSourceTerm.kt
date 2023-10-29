@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.Namespac
 data class NamespaceDefinitionSourceTerm(
     override val location: SourceLocation,
     override val name: Identifier,
-    override val namespaceEntries: List<NamespaceEntrySourceTerm>,
+    override val entries: List<NamespaceEntrySourceTerm>,
 ) : NamespaceEntrySourceTerm(), NamespaceDefinitionTerm {
     companion object {
         fun parse(
@@ -30,7 +30,7 @@ data class NamespaceDefinitionSourceTerm(
         ): NamespaceDefinitionSourceTerm = NamespaceDefinitionSourceTerm(
             location = SourceLocation.build(ctx),
             name = Identifier.of(ctx.name.text),
-            namespaceEntries = ctx.namespaceBody().namespaceEntry().map {
+            entries = ctx.namespaceBody().namespaceEntry().map {
                 NamespaceEntrySourceTerm.build(it)
             },
         )

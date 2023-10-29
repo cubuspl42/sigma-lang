@@ -17,6 +17,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
@@ -181,14 +182,25 @@ class GenericConstructorTests {
 
             assertMatches(
                 matcher = GenericTypeMatcher(
-                    metaArgumentType = OrderedTupleTypeMatcher(
+                    parameterType = OrderedTupleTypeMatcher(
                         elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
                                 name = Matcher.Equals(Identifier.of("e")),
                                 type = Matcher.Is<TypeType>(),
                             ),
                         ),
-                    ).checked()
+                    ).checked(),
+                    bodyType = UniversalFunctionTypeMatcher(
+                        argumentType = OrderedTupleTypeMatcher(
+                            elements = ListMatchers.inOrder(
+                                OrderedTupleTypeMatcher.ElementMatcher(
+                                    name = Matcher.Equals(Identifier.of("a")),
+                                    type = Matcher.Is<TypeVariable>(),
+                                ),
+                            ),
+                        ).checked(),
+                        imageType = Matcher.Is<TypeVariable>(),
+                    ).checked(),
                 ).checked(),
                 actual = expression.inferredTypeOrIllType.getOrCompute(),
             )
@@ -227,8 +239,6 @@ class GenericConstructorTests {
                 term = term,
             ).value
 
-            val bodyType: TypeAlike = genericConstructor.body.inferredTypeOrIllType.getOrCompute()
-
             fun buildBodyTypeMatcher(
                 t1Matcher: Matcher<Type>,
                 t2Matcher: Matcher<Type>,
@@ -250,21 +260,13 @@ class GenericConstructorTests {
                 ).checked(),
             )
 
-            assertMatches(
-                matcher = buildBodyTypeMatcher(
-                    t1Matcher = Matcher.Is<TypeVariable>(),
-                    t2Matcher = Matcher.Is<TypeVariable>(),
-                ).checked(),
-                actual = bodyType,
-            )
-
             val genericType = assertIs<GenericType>(
                 genericConstructor.inferredTypeOrIllType.getOrCompute()
             )
 
             assertMatches(
                 matcher = GenericTypeMatcher(
-                    metaArgumentType = OrderedTupleTypeMatcher(
+                    parameterType = OrderedTupleTypeMatcher(
                         elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
                                 name = Matcher.Equals(Identifier.of("t")),
@@ -282,6 +284,10 @@ class GenericConstructorTests {
                                 ).checked(),
                             ),
                         ),
+                    ).checked(),
+                    bodyType = buildBodyTypeMatcher(
+                        t1Matcher = Matcher.Is<TypeVariable>(),
+                        t2Matcher = Matcher.Is<TypeVariable>(),
                     ).checked(),
                 ),
                 actual = genericType,
@@ -349,7 +355,7 @@ class GenericConstructorTests {
 
             assertMatches(
                 matcher = GenericTypeMatcher(
-                    metaArgumentType = OrderedTupleTypeMatcher(
+                    parameterType = OrderedTupleTypeMatcher(
                         elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
                                 name = Matcher.Equals(Identifier.of("t")),
@@ -368,6 +374,7 @@ class GenericConstructorTests {
                             ),
                         ),
                     ).checked(),
+                    bodyType = Matcher.Irrelevant(),
                 ),
                 actual = type,
             )
