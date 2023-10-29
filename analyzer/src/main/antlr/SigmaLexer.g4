@@ -13,6 +13,7 @@ FieldsKeyword : '%fields' ;
 MethodKeyword : '%method' ;
 ThenKeyword : '%then' ;
 ElseKeyword : '%else' ;
+MetaKeyword : '%meta' ;
 UnrecognizedKeyword : '%' [a-zA-Z]+ ;
 
 LeftParen : '(' ;

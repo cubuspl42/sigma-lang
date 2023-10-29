@@ -20,12 +20,17 @@ importPath
 
 namespaceEntry
     : constantDefinition
+    | metaDefinition
     | classDefinition
     | namespaceDefinition
     ;
 
 constantDefinition
     : ConstKeyword name=Identifier (Colon type=expression)? Assign definer=expression
+    ;
+
+metaDefinition
+    : MetaKeyword name=Identifier (Colon type=expression)? Assign definer=expression
     ;
 
 namespaceDefinition

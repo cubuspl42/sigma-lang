@@ -7,10 +7,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.segregatedEntries
 
 class NamespaceStaticBlock(
     private val definitionByName: Map<Identifier, Definition>,
@@ -28,59 +31,97 @@ class NamespaceStaticBlock(
 
 
 class NamespaceDefinition(
+    private val metaStaticBlock: NamespaceStaticBlock,
     private val staticBlock: NamespaceStaticBlock,
     override val body: UnorderedTupleConstructor,
 ) : Definition {
+    data class InnerScopes(
+        val innerMetaScope: StaticScope,
+        val innerPrimScope: StaticScope,
+    )
+
     companion object {
         fun build(
             context: Expression.BuildContext,
             qualifiedPath: QualifiedPath,
             term: NamespaceDefinitionTerm,
         ): NamespaceDefinition {
-            val (namespaceDefinition, _) = StaticScope.looped { innerDeclarationScopeLooped ->
-                val definitionByName = term.namespaceEntries.associate { entryTerm ->
-                    entryTerm.name to ConstantDefinition.build(
-                        context = context.copy(
-                            outerScope = innerDeclarationScopeLooped,
-                        ),
-                        qualifiedPath = qualifiedPath,
-                        term = entryTerm,
+            val segregatedEntries = term.segregatedEntries
+
+            val namespaceDefinition = StaticScope.looped { innerMetaScopeLooped ->
+                StaticScope.looped { innerPrimScopeLooped ->
+                    val metaDefinitionByName = segregatedEntries.metaDefinitionTerms.associate { metaDefinitionTerm ->
+                        metaDefinitionTerm.name to DefinitionTerm.build(
+                            context = Expression.BuildContext(
+                                outerMetaScope = BuiltinScope,
+                                outerScope = innerMetaScopeLooped
+                            ),
+                            qualifiedPath = qualifiedPath,
+                            term = metaDefinitionTerm,
+                        )
+                    }
+
+                    val primDefinitionByName = segregatedEntries.primDefinitionTerms.associate { definitionTerm ->
+                        definitionTerm.name to DefinitionTerm.build(
+                            context = Expression.BuildContext(
+                                outerMetaScope = innerMetaScopeLooped,
+                                outerScope = innerPrimScopeLooped,
+                            ),
+                            qualifiedPath = qualifiedPath,
+                            term = definitionTerm,
+                        )
+                    }
+
+                    val metaStaticBlock = NamespaceStaticBlock(
+                        definitionByName = metaDefinitionByName,
                     )
-                }
 
-                val staticBlock = NamespaceStaticBlock(
-                    definitionByName = definitionByName,
-                )
+                    val innerMetaScope = metaStaticBlock.chainWith(
+                        outerScope = context.outerMetaScope,
+                    )
 
-                val innerDeclarationScope = staticBlock.chainWith(
-                    outerScope = context.outerScope,
-                )
+                    val primStaticBlock = NamespaceStaticBlock(
+                        definitionByName = primDefinitionByName,
+                    )
 
-                val namespaceBody = object : UnorderedTupleConstructor() {
-                    override val term: UnorderedTupleConstructorTerm? = null
+                    val innerPrimScope = primStaticBlock.chainWith(
+                        outerScope = context.outerScope,
+                    )
 
-                    override val entries: Set<Entry> = definitionByName.entries.map { (name, definition) ->
-                        object : Entry() {
-                            override val name: Symbol = name
+                    val namespaceBody = object : UnorderedTupleConstructor() {
+                        override val term: UnorderedTupleConstructorTerm? = null
 
-                            override val value: Expression by lazy { definition.bodyStub.resolved }
-                        }
-                    }.toSet()
+                        override val entries: Set<Entry> = primDefinitionByName.entries.map { (name, definition) ->
+                            object : Entry() {
+                                override val name: Symbol = name
 
-                    override val outerScope: StaticScope = innerDeclarationScopeLooped
-                }
+                                override val value: Expression by lazy { definition.bodyStub.resolved }
+                            }
+                        }.toSet()
 
-                val namespaceDefinition = NamespaceDefinition(
-                    staticBlock = staticBlock,
-                    body = namespaceBody,
-                )
+                        override val outerScope: StaticScope = innerPrimScopeLooped
+                    }
 
-                return@looped Pair(namespaceDefinition, innerDeclarationScope)
-            }
+                    val namespaceDefinition = NamespaceDefinition(
+                        metaStaticBlock = metaStaticBlock,
+                        staticBlock = primStaticBlock,
+                        body = namespaceBody,
+                    )
+
+                    Pair(
+                        Pair(namespaceDefinition, innerMetaScope),
+                        innerPrimScope,
+                    )
+                }.first
+            }.first
 
             return namespaceDefinition
         }
     }
+
+    fun getMetaDefinition(
+        name: Symbol,
+    ): Definition? = metaStaticBlock.resolveNameLocally(name = name)?.definition
 
     fun getDefinition(
         name: Symbol,
