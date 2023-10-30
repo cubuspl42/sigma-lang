@@ -5,7 +5,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.getResourceAsText
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import java.lang.IllegalArgumentException
 
 data class ModulePath(

@@ -13,7 +13,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.SymbolLiter
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleTypeConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.asLazy
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TableType
