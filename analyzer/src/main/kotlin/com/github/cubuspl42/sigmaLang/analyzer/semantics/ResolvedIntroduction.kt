@@ -51,6 +51,12 @@ class ResolvedDefinition(
         definition = Definition(body = body),
     )
 
+    constructor(
+        bodyLazy: Lazy<Expression>,
+    ) : this(
+        definition = Definition(bodyLazy = bodyLazy),
+    )
+
     val body: Expression
         get() = definition.body
 

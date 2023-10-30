@@ -16,7 +16,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.Ta
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.collections.WindowsFunction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
@@ -174,7 +173,7 @@ object BuiltinScope : StaticScope {
         Identifier.of("max") to MaxFunction,
         Identifier.of("length") to LengthFunction,
         Identifier.of("concat") to ConcatFunction,
-        Identifier.of("is") to ClassDefinition.Is,
+        Identifier.of("is") to IsFunction,
         ArrayTypeConstructor.Name to ArrayTypeConstructor,
         DictTypeConstructor.Name to DictTypeConstructor,
     )
