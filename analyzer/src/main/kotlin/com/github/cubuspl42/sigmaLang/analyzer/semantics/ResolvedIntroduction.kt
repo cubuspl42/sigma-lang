@@ -43,25 +43,18 @@ class ResolvedUnorderedArgument(
 }
 
 class ResolvedDefinition(
-    private val definition: Definition,
+    private val bodyLazy: Lazy<Expression>,
 ) : ResolvedIntroduction {
     constructor(
         body: Expression,
     ) : this(
-        definition = Definition(body = body),
+        bodyLazy = lazyOf(body),
     )
 
-    constructor(
-        bodyLazy: Lazy<Expression>,
-    ) : this(
-        definition = Definition(bodyLazy = bodyLazy),
-    )
-
-    val body: Expression
-        get() = definition.body
+    val body: Expression by bodyLazy
 
     override fun buildReference(): Expression = body
 
     override val errors: Set<SemanticError>
-        get() = definition.errors
+        get() = body.errors
 }
