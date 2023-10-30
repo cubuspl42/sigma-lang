@@ -15,6 +15,9 @@ data class ConstExpression(
     override val expression: Expression,
     val valueThunk: Thunk<Value>,
 ) : ClassifiedExpression() {
+    val value: Value?
+        get() = valueThunk.value
+
     override fun bind(dynamicScope: DynamicScope): Thunk<Value> = valueThunk
 }
 

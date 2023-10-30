@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TableValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
@@ -65,10 +65,10 @@ class Module(
         override fun resolveNameLocally(name: Symbol): LeveledResolvedIntroduction? {
             if (name !is Identifier) return null
 
-            return getImportedModuleByName(name = name)?.rootNamespaceDefinition?.let {
+            return getImportedModuleByName(name = name)?.rootNamespaceBody?.let {
                 LeveledResolvedIntroduction(
                     level = StaticScope.Level.Meta,
-                    resolvedIntroduction = ResolvedDefinition(definition = it),
+                    resolvedIntroduction = ResolvedDefinition(body = it),
                 )
             }
         }
@@ -78,7 +78,7 @@ class Module(
         }.toSet()
     }
 
-    val rootNamespaceDefinition = NamespaceDefinition.build(
+    private val rootNamespaceBodyLazy = NamespaceDefinition.build(
         context = Expression.BuildContext(
             outerScope = importBlock.chainWith(outerScope),
         ),
@@ -89,14 +89,18 @@ class Module(
             override val entries: List<NamespaceEntryTerm>
                 get() = term.namespaceEntries
         },
-    )
+    ).namespaceBodyLazy
+
+    val rootNamespaceBody: Expression by rootNamespaceBodyLazy
+
+    val rootNamespace: TableValue = rootNamespaceBody.constClassified!!.value as TableValue
 
     val innerStaticScope: StaticScope
-        get() = rootNamespaceDefinition.bodyStub.resolved.outerScope
+        get() = rootNamespaceBody.outerScope
 
     val expressionMap
-        get() = rootNamespaceDefinition.bodyStub.resolved.expressionMap
+        get() = rootNamespaceBody.expressionMap
 
     val errors: Set<SemanticError>
-        get() = rootNamespaceDefinition.body.errors
+        get() = rootNamespaceBody.errors
 }

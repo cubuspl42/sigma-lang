@@ -1,6 +1,8 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.getResourceAsText
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
@@ -76,8 +78,8 @@ class Project(
     val errors: Set<SemanticError>
         get() = mainModule.errors
 
-    val entryPoint: Definition
-        get() = mainModule.rootNamespaceDefinition.getDefinition(
-            name = Identifier.of("main"),
+    val entryPoint: Thunk<Value>
+        get() = mainModule.rootNamespace.read(
+            key = Identifier.of("main"),
         )!!
 }

@@ -45,6 +45,12 @@ class ResolvedUnorderedArgument(
 class ResolvedDefinition(
     val definition: Definition,
 ) : ResolvedIntroduction {
+    constructor(
+        body: Expression,
+    ) : this(
+        definition = Definition(body = body),
+    )
+
     val body: Expression
         get() = definition.body
 

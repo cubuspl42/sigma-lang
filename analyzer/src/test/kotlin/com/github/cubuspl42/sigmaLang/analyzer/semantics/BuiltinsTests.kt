@@ -30,28 +30,31 @@ class BuiltinsTests {
             """.trimIndent(),
         )
 
-        val namespaceDefinition = NamespaceDefinition.build(
+        val namespaceBuildOutput = NamespaceDefinition.build(
             context = Expression.BuildContext.Builtin,
             qualifiedPath = QualifiedPath.Root,
             term = term,
         )
 
+        val definitionBlock = namespaceBuildOutput.definitionBlock
+        val namespaceBody = namespaceBuildOutput.namespaceBody
+
         assertEquals(
             expected = emptySet(),
-            actual = namespaceDefinition.errors,
+            actual = namespaceBody.errors,
         )
 
         // Validate `mySet1`
 
-        val mySet1Definition = namespaceDefinition.getDefinition(
+        val mySet1Definition = definitionBlock.resolveName(
             name = Identifier.of("mySet1"),
-        )!!
+        ) as ResolvedDefinition
 
         assertEquals(
             expected = SetType(
                 elementType = IntCollectiveType,
             ),
-            actual = mySet1Definition.computedBodyType.getOrCompute(),
+            actual = mySet1Definition.body.inferredTypeOrIllType.getOrCompute(),
         )
 
         assertEquals(
@@ -62,36 +65,34 @@ class BuiltinsTests {
                     IntValue(value = 3L),
                 ),
             ),
-            actual = mySet1Definition.valueThunk.value,
+            actual = mySet1Definition.body.constClassified?.value,
         )
 
         // Validate `contains2`
 
-        val contains2Definition = namespaceDefinition.getDefinition(
+        val contains2Definition = definitionBlock.resolveName(
             name = Identifier.of("contains2"),
-        )!!
+        ) as ResolvedDefinition
 
         assertEquals(
             expected = BoolValue(value = true),
-            actual = contains2Definition.valueThunk.value,
+            actual = contains2Definition.body.constClassified?.value,
         )
 
         // Validate `contains5`
-
-        val contains5Definition = namespaceDefinition.getDefinition(
+        val contains5Definition = definitionBlock.resolveName(
             name = Identifier.of("contains5"),
-        )!!
+        ) as ResolvedDefinition
 
         assertEquals(
             expected = BoolValue(value = false),
-            actual = contains5Definition.valueThunk.value,
+            actual = contains5Definition.body.constClassified?.value,
         )
 
         // Validate `mySet2`
-
-        val mySet2Definition = namespaceDefinition.getDefinition(
+        val mySet2Definition = definitionBlock.resolveName(
             name = Identifier.of("mySet2"),
-        )!!
+        ) as ResolvedDefinition
 
         assertEquals(
             expected = SetValue(
@@ -102,7 +103,7 @@ class BuiltinsTests {
                     IntValue(value = 4L),
                 ),
             ),
-            actual = mySet2Definition.valueThunk.value,
+            actual = mySet2Definition.body.constClassified?.value,
         )
     }
 }

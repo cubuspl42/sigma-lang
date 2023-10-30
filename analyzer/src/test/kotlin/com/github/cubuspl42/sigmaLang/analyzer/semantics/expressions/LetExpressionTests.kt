@@ -8,8 +8,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.resolveName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
@@ -74,13 +76,17 @@ class LetExpressionTests {
                 """.trimIndent(),
             )
 
-            val namespaceDefinition = NamespaceDefinition.build(
+            val namespaceBuildOutput = NamespaceDefinition.build(
                 context = Expression.BuildContext.Empty,
                 qualifiedPath = QualifiedPath.Root,
                 term = term,
             )
 
-            val bDefinition = namespaceDefinition.getDefinition(name = Identifier.of("b")) as Definition
+            val definitionBlock = namespaceBuildOutput.definitionBlock
+
+            val bDefinition = definitionBlock.resolveName(
+                name = Identifier.of("b"),
+            ) as ResolvedDefinition
 
             val letExpression = bDefinition.body
 
