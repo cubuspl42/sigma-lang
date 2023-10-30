@@ -10,7 +10,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgume
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AtomicExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
@@ -26,14 +25,7 @@ data class FakeDefinition(
     val name: Identifier,
     val type: SpecificType,
     val value: Value,
-) : FakeIntroduction() {
-    val definition = Definition(
-        body = AtomicExpression(
-            type = type,
-            value = value,
-        ),
-    )
-}
+) : FakeIntroduction()
 
 @Suppress("TestFunctionName")
 fun FakeStaticScope(
@@ -45,7 +37,6 @@ fun FakeStaticScope(
         declarations = introductions.filterIsInstance<FakeUserDeclaration>().toSet(),
     ),
 )
-
 
 class FakeArgumentDeclarationBlock(
     declarations: Set<FakeUserDeclaration>,

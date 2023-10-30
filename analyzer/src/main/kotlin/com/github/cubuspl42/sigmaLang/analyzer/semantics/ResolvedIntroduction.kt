@@ -7,7 +7,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.FieldRead
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.IntLiteral
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 
 sealed interface ResolvedIntroduction {
     fun buildReference(): Expression
