@@ -48,7 +48,7 @@ class LetExpressionTests {
             )
 
             assertIs<IntCollectiveType>(
-                value = aDefinition.computedBodyType.getOrCompute(),
+                value = aDefinition.body.inferredTypeOrIllType.getOrCompute(),
             )
 
             val bDefinition = assertNotNull(
@@ -58,7 +58,7 @@ class LetExpressionTests {
             )
 
             assertIs<IntCollectiveType>(
-                value = bDefinition.computedBodyType.getOrCompute(),
+                value = bDefinition.body.inferredTypeOrIllType.getOrCompute(),
             )
         }
 

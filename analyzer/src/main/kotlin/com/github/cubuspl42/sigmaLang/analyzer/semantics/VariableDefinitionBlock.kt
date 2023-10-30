@@ -30,9 +30,8 @@ class VariableDefinitionBlock(
         )
     }
 
-    fun getValueDefinition(name: Symbol): Definition? {
-        val resolvedDefinition = resolveName(name) as ResolvedDefinition?
-        return resolvedDefinition?.definition
+    fun getValueDefinition(name: Symbol): ResolvedDefinition? {
+        return resolveName(name) as ResolvedDefinition?
     }
 
     override fun resolveNameLocally(

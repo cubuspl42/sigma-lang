@@ -10,6 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.FirstOrderExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.asLazy
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
@@ -27,33 +28,29 @@ object UserVariableDefinition {
             )
         }
 
-        val bodyStub = Expression.build(
+        val innerBodyLazy = Expression.build(
             context = context,
             term = term.body,
-        )
+        ).asLazy()
 
-        val definition = object : Definition {
-            override val bodyStub: Stub<Expression> = object : Stub<Expression> {
-                override val resolved: Expression by lazy {
-                    val body = bodyStub.resolved
+        val outerBodyLazy = lazy {
+            val body = innerBodyLazy.value
 
-                    if (declaredTypeStub != null) {
-                        val declaredTypeAnalysis = declaredTypeStub.resolved.evaluateAsType()
+            if (declaredTypeStub != null) {
+                val declaredTypeAnalysis = declaredTypeStub.resolved.evaluateAsType()
 
-                        TypeAnnotatedBody(
-                            outerScope = context.outerScope,
-                            declaredTypeAnalysis = declaredTypeAnalysis,
-                            body = body,
-                        )
-                    } else {
-                        body
-                    }
-                }
+                TypeAnnotatedBody(
+                    outerScope = context.outerScope,
+                    declaredTypeAnalysis = declaredTypeAnalysis,
+                    body = body,
+                )
+            } else {
+                body
             }
         }
 
         return ResolvedDefinition(
-            definition = definition,
+            bodyLazy = outerBodyLazy,
         )
     }
 }
