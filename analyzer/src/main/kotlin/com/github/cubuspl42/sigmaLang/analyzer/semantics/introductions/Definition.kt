@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.asStub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 
 // Thought: Nuke? Same as expression now?
@@ -35,4 +36,10 @@ fun Definition(
     body: Expression,
 ): Definition = object : Definition {
     override val bodyStub = Stub.of(body)
+}
+
+fun Definition(
+    bodyLazy: Lazy<Expression>,
+): Definition = object : Definition {
+    override val bodyStub = bodyLazy.asStub()
 }

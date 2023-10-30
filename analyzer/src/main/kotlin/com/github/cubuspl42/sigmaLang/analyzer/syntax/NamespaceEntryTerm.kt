@@ -4,8 +4,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.asStub
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Definition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.UserVariableDefinition
 
 sealed interface NamespaceEntryTerm {
@@ -38,10 +41,12 @@ sealed interface NamespaceEntryTerm {
 
                 is ClassDefinitionTerm -> LeveledResolvedIntroduction(
                     level = StaticScope.Level.Meta,
-                    resolvedIntroduction = ClassDefinition.build(
-                        context = context,
-                        qualifiedPath = extendedQualifiedPath,
-                        term = term,
+                    resolvedIntroduction = ResolvedDefinition(
+                        bodyLazy = ClassDefinition.build(
+                            context = context,
+                            qualifiedPath = extendedQualifiedPath,
+                            term = term,
+                        ).classBodyLazy,
                     )
                 )
 

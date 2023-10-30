@@ -40,39 +40,15 @@ class ClassDefinitionTests {
 
             val classTag = QualifiedPath.of("foo", "Foo")
 
-            val classDefinition = ClassDefinition.build(
+            val classBuildOutput = ClassDefinition.build(
                 context = Expression.BuildContext.Builtin,
                 qualifiedPath = classTag,
                 term = term,
             )
 
-            val classType = classDefinition.definition.computedBodyType.getOrCompute() as SpecificType
+            val classBody = classBuildOutput.classBody
 
-
-//            assertTypeIsEquivalent(
-//                expected = UnorderedTupleType(
-//                    valueTypeByName = mapOf(
-//                        ClassDefinition.classTagKey to tagType,
-//                        ClassDefinition.instanceTypeKey to TypeType,
-//                        Identifier.of("new") to UniversalFunctionType(
-//                            argumentType = UnorderedTupleType(
-//                                valueTypeByName = mapOf(
-//                                    Identifier.of("foo") to IntCollectiveType,
-//                                    Identifier.of("bar") to BoolType,
-//                                )
-//                            ),
-//                            imageType = UnorderedTupleType(
-//                                valueTypeByName = mapOf(
-//                                    ClassDefinition.instanceTagKey to tagType,
-//                                    Identifier.of("foo") to IntCollectiveType,
-//                                    Identifier.of("bar") to BoolType,
-//                                )
-//                            ),
-//                        )
-//                    ),
-//                ),
-//                actual = classType,
-//            )
+            val classType = classBody.inferredTypeOrIllType.getOrCompute() as SpecificType
 
             assertMatches(
                 matcher = UnorderedTupleTypeMatcher(
@@ -137,7 +113,7 @@ class ClassDefinitionTests {
                 """.trimIndent(),
             ) as ClassDefinitionTerm
 
-            val classDefinition = ClassDefinition.build(
+            val classBuildOutput = ClassDefinition.build(
                 context = Expression.BuildContext.Builtin,
                 qualifiedPath = QualifiedPath(
                     segments = listOf(
@@ -146,11 +122,13 @@ class ClassDefinitionTests {
                     ),
                 ),
                 term = term,
-            ).definition
+            )
+
+            val classBody = classBuildOutput.classBody
 
             val classValue = assertIs<DictValue>(
                 assertNotNull(
-                    classDefinition.valueThunk.value
+                    classBody.constClassified?.value
                 )
             )
 
