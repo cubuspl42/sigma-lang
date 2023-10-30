@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AtomicExpression
@@ -127,8 +128,8 @@ class ClassDefinition(
                 val instance = args[0] as DictValue
                 val classValue = args[1] as DictValue
 
-                val instanceTagValue = instance.readValue(key = instanceTagKey) as Identifier
-                val classTagValue = classValue.readValue(key = classTagKey) as Identifier
+                val instanceTagValue = instance.readValue(key = instanceTagKey) as Symbol
+                val classTagValue = classValue.readValue(key = classTagKey) as Symbol
 
                 return Thunk.pure(
                     BoolValue(

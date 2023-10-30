@@ -16,6 +16,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.buildReferenceMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.resolveName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
@@ -180,9 +181,9 @@ class AbstractionConstructorTests {
             val argumentDeclarationBlock = abstractionConstructorBuildOutput.argumentDeclarationBlock
 
             fun getResolvedArgument(name: String) = assertIs<ResolvedUnorderedArgument>(
-                argumentDeclarationBlock.resolveNameLocally(
+                argumentDeclarationBlock.resolveName(
                     name = Identifier.of(name = name),
-                )?.resolvedIntroduction,
+                ),
             )
 
             fun buildReferenceMatcher(

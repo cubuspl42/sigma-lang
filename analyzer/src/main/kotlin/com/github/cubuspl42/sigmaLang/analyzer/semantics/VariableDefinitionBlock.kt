@@ -31,7 +31,7 @@ class VariableDefinitionBlock(
     }
 
     fun getValueDefinition(name: Symbol): Definition? {
-        val resolvedDefinition = resolveNameLocally(name)?.resolvedIntroduction as ResolvedDefinition?
+        val resolvedDefinition = resolveName(name) as ResolvedDefinition?
         return resolvedDefinition?.definition
     }
 

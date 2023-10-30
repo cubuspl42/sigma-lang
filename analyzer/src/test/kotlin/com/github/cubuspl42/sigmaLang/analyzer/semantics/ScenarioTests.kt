@@ -65,7 +65,7 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespaceDefinition = NamespaceDefinition.build(
+        val namespaceBuildOutput = NamespaceDefinition.build(
             context = Expression.BuildContext(
                 outerScope = Project.loadPrelude().innerStaticScope,
             ),
@@ -73,16 +73,19 @@ class ScenarioTests {
             term = term,
         )
 
+        val definitionBlock = namespaceBuildOutput.definitionBlock
+        val namespaceBody = namespaceBuildOutput.namespaceBody
+
         assertEquals(
             expected = emptySet(),
-            actual = namespaceDefinition.errors,
+            actual = namespaceBody.errors,
         )
 
         // Validate `Entry`
 
-        val entryTypeConstructorDefinition = namespaceDefinition.getDefinition(
+        val entryTypeConstructorDefinition = definitionBlock.resolveName(
             name = Identifier.of("Entry"),
-        )!!
+        ) as ResolvedDefinition
 
         assertMatches(
             matcher = UniversalFunctionTypeMatcher(
@@ -96,12 +99,12 @@ class ScenarioTests {
                 ).checked(),
                 imageType = Matcher.Is<TypeType>(),
             ).checked(),
-            actual = entryTypeConstructorDefinition.computedBodyType.getOrCompute(),
+            actual = entryTypeConstructorDefinition.body.inferredTypeOrIllType.getOrCompute(),
         )
 
         // Construct `Entry[Bool]` and validate it
 
-        val entryTypeConstructorValue = entryTypeConstructorDefinition.valueThunk.value
+        val entryTypeConstructorValue = entryTypeConstructorDefinition.body.constClassified?.value
 
         assertIs<FunctionValue>(entryTypeConstructorValue)
 
@@ -127,9 +130,9 @@ class ScenarioTests {
 
         // Validate `entryOf`
 
-        val entryOfAbstractionDefinition = namespaceDefinition.getDefinition(
+        val entryOfAbstractionDefinition = definitionBlock.resolveName(
             name = Identifier.of("entryOf"),
-        )!!
+        ) as ResolvedDefinition
 
         assertMatches(
             matcher = GenericTypeMatcher(
@@ -168,15 +171,15 @@ class ScenarioTests {
                     ).checked(),
                 ).checked(),
             ).checked(),
-            actual = entryOfAbstractionDefinition.computedBodyType.getOrCompute() as Type,
+            actual = entryOfAbstractionDefinition.body.inferredTypeOrIllType.getOrCompute() as Type,
         )
 
 
         // Validate `entryTrueOf`
 
-        val entryTrueOfAbstractionDefinition = namespaceDefinition.getDefinition(
+        val entryTrueOfAbstractionDefinition = definitionBlock.resolveName(
             name = Identifier.of("entryTrueOf"),
-        )!!
+        ) as ResolvedDefinition
 
         assertTypeIsEquivalent(
             expected = UniversalFunctionType(
@@ -192,7 +195,7 @@ class ScenarioTests {
                     ),
                 ),
             ),
-            actual = entryTrueOfAbstractionDefinition.computedBodyType.getOrCompute() as SpecificType,
+            actual = entryTrueOfAbstractionDefinition.body.inferredTypeOrIllType.getOrCompute() as SpecificType,
         )
     }
 
@@ -208,14 +211,17 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespaceDefinition = NamespaceDefinition.build(
+        val namespaceBuildOutput = NamespaceDefinition.build(
             context = Expression.BuildContext.Builtin,
             qualifiedPath = QualifiedPath.Root,
             term = term,
         )
 
+        val definitionBlock = namespaceBuildOutput.definitionBlock
+        val namespaceBody = namespaceBuildOutput.namespaceBody
+
         val error = assertIs<Call.NonFullyInferredCalleeTypeError>(
-            namespaceDefinition.errors.singleOrNull(),
+            namespaceBody.errors.singleOrNull(),
         )
 
         assertMatches(
@@ -230,9 +236,11 @@ class ScenarioTests {
             actual = error,
         )
 
-        val aType = namespaceDefinition.getDefinition(
+        val aDefinition = definitionBlock.resolveName(
             name = Identifier.of("a"),
-        )!!.computedBodyType.getOrCompute()
+        ) as ResolvedDefinition
+
+        val aType = aDefinition.body.inferredTypeOrIllType.getOrCompute()
 
         assertEquals(
             expected = IllType,
@@ -254,17 +262,17 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespaceDefinition = NamespaceDefinition.build(
+        val namespaceBody = NamespaceDefinition.build(
             context = Expression.BuildContext(
                 outerScope = BuiltinScope,
             ),
             qualifiedPath = QualifiedPath.Root,
             term = term,
-        )
+        ).namespaceBody
 
         assertEquals(
             expected = emptySet(),
-            actual = namespaceDefinition.errors,
+            actual = namespaceBody.errors,
         )
     }
 }

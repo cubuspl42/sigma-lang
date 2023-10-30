@@ -8,6 +8,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TypeValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.EvaluationContext
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.buildReferenceMatcher
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.resolveName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
@@ -103,21 +104,21 @@ class UnionTypeConstructorTests {
                 ),
             )
 
-            val aResolvedName = staticBlock.resolveNameLocally(
+            val aResolvedName = staticBlock.resolveName(
                 name = Identifier.of("A"),
-            )!!.resolvedIntroduction
+            )!!
 
-            val bResolvedName = staticBlock.resolveNameLocally(
+            val bResolvedName = staticBlock.resolveName(
                 name = Identifier.of("B"),
-            )!!.resolvedIntroduction
+            )!!
 
-            val cResolvedName = staticBlock.resolveNameLocally(
+            val cResolvedName = staticBlock.resolveName(
                 name = Identifier.of("C"),
-            )!!.resolvedIntroduction
+            )!!
 
-            val dResolvedName = staticBlock.resolveNameLocally(
+            val dResolvedName = staticBlock.resolveName(
                 name = Identifier.of("D"),
-            )!!.resolvedIntroduction
+            )!!
 
             val unionTypeConstructor = UnionTypeConstructor.build(
                 context = Expression.BuildContext(

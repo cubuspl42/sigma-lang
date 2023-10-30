@@ -37,15 +37,17 @@ class NamespaceTests {
                 """.trimIndent(),
             )
 
-            val namespaceDefinition = NamespaceDefinition.build(
+            val namespaceBuildOutput = NamespaceDefinition.build(
                 context = Expression.BuildContext.Builtin,
                 qualifiedPath = QualifiedPath.Root,
                 term = term,
             )
 
-            val isUserIdValidDefinition = namespaceDefinition.getDefinition(
+            val definitionBlock = namespaceBuildOutput.definitionBlock
+
+            val isUserIdValidDefinition = definitionBlock.resolveName(
                 name = Identifier.of("isUserIdValid"),
-            )
+            ) as ResolvedDefinition
 
             assertNotNull(isUserIdValidDefinition)
 
@@ -61,7 +63,7 @@ class NamespaceTests {
                     ).checked(),
                     imageType = Matcher.Is<BoolType>(),
                 ).checked(),
-                actual = isUserIdValidDefinition.computedBodyType.getOrCompute(),
+                actual = isUserIdValidDefinition.body.inferredTypeOrIllType.getOrCompute(),
             )
         }
     }
