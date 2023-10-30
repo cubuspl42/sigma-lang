@@ -87,11 +87,14 @@ class FakeDefinitionBlock(
         )
     }
 
-    override val resolvedNameByName: Map<Symbol, LeveledResolvedIntroduction> = definitions.associate { definition ->
-        definition.name to LeveledResolvedIntroduction(
+    override val resolvedNameByName: Map<Symbol, LeveledResolvedIntroduction> = definitions.associate { fakeDefinition ->
+        fakeDefinition.name to LeveledResolvedIntroduction(
             level = level,
             resolvedIntroduction = ResolvedDefinition(
-                definition = definition.definition,
+                body = AtomicExpression(
+                    type = fakeDefinition.type,
+                    value = fakeDefinition.value,
+                ),
             ),
         )
     }

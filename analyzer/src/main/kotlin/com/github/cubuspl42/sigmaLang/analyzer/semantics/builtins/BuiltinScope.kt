@@ -178,20 +178,14 @@ object BuiltinScope : StaticScope {
         DictTypeConstructor.Name to DictTypeConstructor,
     )
 
-    private val builtinDeclarations: Map<Symbol, Definition> = builtinValues.mapValues { (_, builtinValue) ->
-        Definition(
-            body = builtinValue,
-        )
-    }
-
     override fun resolveNameLeveled(
         name: Symbol,
-    ): LeveledResolvedIntroduction? = builtinDeclarations[name]?.let {
+    ): LeveledResolvedIntroduction? = builtinValues[name]?.let {
         LeveledResolvedIntroduction(
             level = StaticScope.Level.Meta,
-            resolvedIntroduction = ResolvedDefinition(definition = it),
+            resolvedIntroduction = ResolvedDefinition(body = it),
         )
     }
 
-    override fun getAllNames(): Set<Symbol> = builtinDeclarations.keys
+    override fun getAllNames(): Set<Symbol> = builtinValues.keys
 }

@@ -48,7 +48,7 @@ class LocalDefinitionTests {
 
             assertEquals(
                 expected = IntCollectiveType,
-                actual = definition.definition.computedBodyType.getOrCompute(),
+                actual = definition.body.inferredTypeOrIllType.getOrCompute(),
             )
         }
 

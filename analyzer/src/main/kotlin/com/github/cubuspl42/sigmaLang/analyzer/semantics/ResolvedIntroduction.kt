@@ -43,7 +43,7 @@ class ResolvedUnorderedArgument(
 }
 
 class ResolvedDefinition(
-    val definition: Definition,
+    private val definition: Definition,
 ) : ResolvedIntroduction {
     constructor(
         body: Expression,
