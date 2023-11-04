@@ -7,7 +7,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.DictType
@@ -25,7 +24,7 @@ object DictTypeConstructor : TypeConstructorConstructor() {
         context: Expression.BuildContext,
         term: DictTypeConstructorTerm,
     ): Stub<Call> {
-        val subjectStub = ReferenceTerm.build(
+        val buildOutput = ReferenceTerm.build(
             context,
             referredName = Name,
         )
@@ -34,7 +33,7 @@ object DictTypeConstructor : TypeConstructorConstructor() {
             override val resolved: Call = object : Call() {
                 override val term: ExpressionTerm? = null
 
-                override val subject: Expression by lazy { subjectStub.resolved }
+                override val subject: Expression by buildOutput.expressionLazy
 
                 override val argument: Expression by lazy {
                     object : UnorderedTupleConstructor() {

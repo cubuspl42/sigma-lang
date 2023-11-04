@@ -246,7 +246,7 @@ abstract class Expression {
 
             is ReferenceTerm -> term.build(
                 context = context,
-            )
+            ).expressionLazy.asStub()
 
             is TupleConstructorTerm -> TupleConstructor.build(
                 context = context,

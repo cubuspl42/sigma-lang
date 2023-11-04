@@ -18,11 +18,6 @@ abstract class Reference : FirstOrderExpression() {
 
     abstract val referredDeclaration: Declaration
 
-    data class UnresolvedNameError(
-        override val location: SourceLocation?,
-        val name: Symbol,
-    ) : SemanticError
-
     data class NonValueDeclarationError(
         override val location: SourceLocation?,
         val name: Identifier,

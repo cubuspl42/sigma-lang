@@ -4,7 +4,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Reference
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ArrayType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
@@ -20,7 +19,7 @@ object ArrayTypeConstructor : WrapperTypeConstructor() {
         context: Expression.BuildContext,
         term: ArrayTypeConstructorTerm,
     ): Stub<Call> {
-        val subjectStub = ReferenceTerm.build(
+        val buildOutput = ReferenceTerm.build(
             context,
             referredName = Name,
         )
@@ -29,7 +28,7 @@ object ArrayTypeConstructor : WrapperTypeConstructor() {
             override val resolved: Call = object : Call() {
                 override val term: ExpressionTerm? = null
 
-                override val subject: Expression by lazy { subjectStub.resolved }
+                override val subject: Expression by buildOutput.expressionLazy
 
                 override val argument: Expression by lazy {
                     Expression.build(
