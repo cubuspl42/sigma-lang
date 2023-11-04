@@ -17,6 +17,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.DictTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
 
 object DictTypeConstructor : TypeConstructorConstructor() {
@@ -24,7 +25,7 @@ object DictTypeConstructor : TypeConstructorConstructor() {
         context: Expression.BuildContext,
         term: DictTypeConstructorTerm,
     ): Stub<Call> {
-        val subjectStub = Reference.build(
+        val subjectStub = ReferenceTerm.build(
             context,
             referredName = Name,
         )

@@ -28,32 +28,6 @@ abstract class Reference : FirstOrderExpression() {
         val name: Identifier,
     ) : SemanticError
 
-    companion object {
-        fun build(
-            context: BuildContext,
-            term: ReferenceTerm,
-        ): Stub<Expression> = build(
-            context = context,
-            referredName = term.referredName,
-        )
-
-        fun build(
-            context: BuildContext,
-            referredName: Symbol,
-        ): Stub<Expression> = object : Stub<Expression> {
-            override val resolved: Expression by lazy {
-                val outerScope = context.outerScope
-
-                // TODO: Clean error
-                val resolvedName = outerScope.resolveNameLeveled(name = referredName) ?: run {
-                    throw IllegalStateException("Unresolved name at compile-time: $referredName")
-                }
-
-                resolvedName.resolvedIntroduction.buildReference()
-            }
-        }
-    }
-
     override val computedDiagnosedAnalysis by lazy {
         Computation.pure(
             DiagnosedAnalysis(

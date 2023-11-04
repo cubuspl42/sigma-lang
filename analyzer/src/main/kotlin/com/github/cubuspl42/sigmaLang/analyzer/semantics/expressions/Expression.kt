@@ -46,6 +46,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleConstruct
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TypeSpecificationTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnionTypeConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.build
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 
 abstract class Expression {
@@ -243,9 +244,8 @@ abstract class Expression {
                 term = term,
             ).resultStub
 
-            is ReferenceTerm -> Reference.build(
+            is ReferenceTerm -> term.build(
                 context = context,
-                term = term,
             )
 
             is TupleConstructorTerm -> TupleConstructor.build(
