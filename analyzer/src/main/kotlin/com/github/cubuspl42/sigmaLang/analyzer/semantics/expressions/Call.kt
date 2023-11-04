@@ -79,7 +79,7 @@ abstract class Call : FirstOrderExpression() {
                     term = term.rightArgument,
                 ).resolved
 
-                val subjectStub = ReferenceTerm.build(
+                val buildOutput = ReferenceTerm.build(
                     context,
                     referredName = Symbol.of(prototype.functionName),
                 )
@@ -89,7 +89,7 @@ abstract class Call : FirstOrderExpression() {
 
                     override val term: CallTerm = term
 
-                    override val subject: Expression by lazy { subjectStub.resolved }
+                    override val subject: Expression by buildOutput.expressionLazy
 
                     override val argument: Expression by lazy {
                         object : UnorderedTupleConstructor() {

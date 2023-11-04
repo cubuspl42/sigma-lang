@@ -2,25 +2,63 @@ package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ErrorExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 interface ReferenceTerm : ExpressionTerm {
+    data class BuildOutput(
+        val expressionLazy: Lazy<Expression>,
+        val errorsLazy: Lazy<Set<SemanticError>>,
+    ) {
+        val expression: Expression by expressionLazy
+        val errors: Set<SemanticError> by errorsLazy
+    }
+
+    data class UnresolvedNameError(
+        override val location: SourceLocation?,
+        val name: Symbol,
+    ) : SemanticError
+
     companion object {
         fun build(
             context: Expression.BuildContext,
             referredName: Symbol,
-        ): Stub<Expression> = object : Stub<Expression> {
-            override val resolved: Expression by lazy {
-                val outerScope = context.outerScope
+        ): BuildOutput {
+            val outerScope = context.outerScope
 
-                // TODO: Clean error
-                val resolvedName = outerScope.resolveNameLeveled(name = referredName) ?: run {
-                    throw IllegalStateException("Unresolved name at compile-time: $referredName")
-                }
-
-                resolvedName.resolvedIntroduction.buildReference()
+            val resolvedName: LeveledResolvedIntroduction? by lazy {
+                outerScope.resolveNameLeveled(name = referredName)
             }
+
+            val expressionLazy = lazy {
+                resolvedName?.resolvedIntroduction?.buildReference() ?: ErrorExpression(
+                    term = null,
+                )
+            }
+
+            val expression by expressionLazy
+
+            val errorsLazy = lazy {
+                if (resolvedName == null) {
+                    setOf(
+                        UnresolvedNameError(
+                            location = null,
+                            name = referredName,
+                        ),
+                    )
+                } else {
+                    expression.errors
+                }
+            }
+
+            return BuildOutput(
+                expressionLazy = expressionLazy,
+                errorsLazy = errorsLazy,
+            )
         }
     }
 
@@ -29,7 +67,7 @@ interface ReferenceTerm : ExpressionTerm {
 
 fun ReferenceTerm.build(
     context: Expression.BuildContext,
-): Stub<Expression> = ReferenceTerm.build(
+): ReferenceTerm.BuildOutput = ReferenceTerm.build(
     context = context,
     referredName = referredName,
 )
