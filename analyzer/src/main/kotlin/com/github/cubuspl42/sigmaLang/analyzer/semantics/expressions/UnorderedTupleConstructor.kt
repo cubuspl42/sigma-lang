@@ -159,3 +159,9 @@ fun UnorderedTupleConstructor(
 
     override val entries: Set<UnorderedTupleConstructor.Entry> by entriesLazy
 }
+
+fun UnorderedTupleConstructor(
+    entries: Set<UnorderedTupleConstructor.Entry>,
+): UnorderedTupleConstructor = UnorderedTupleConstructor(
+    entriesLazy = lazyOf(entries),
+)
