@@ -13,13 +13,14 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ArrayTypeConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 
 object ArrayTypeConstructor : WrapperTypeConstructor() {
     fun build(
         context: Expression.BuildContext,
         term: ArrayTypeConstructorTerm,
     ): Stub<Call> {
-        val subjectStub = Reference.build(
+        val subjectStub = ReferenceTerm.build(
             context,
             referredName = Name,
         )

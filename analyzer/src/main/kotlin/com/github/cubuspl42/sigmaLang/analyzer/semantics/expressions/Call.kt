@@ -79,7 +79,7 @@ abstract class Call : FirstOrderExpression() {
                     term = term.rightArgument,
                 ).resolved
 
-                val subjectStub = Reference.build(
+                val subjectStub = ReferenceTerm.build(
                     context,
                     referredName = Symbol.of(prototype.functionName),
                 )
