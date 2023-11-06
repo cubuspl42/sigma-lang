@@ -20,6 +20,7 @@ importPath
 
 namespaceEntry
     : constantDefinition
+    | methodDefinition
     | metaDefinition
     | classDefinition
     | namespaceDefinition
@@ -27,6 +28,10 @@ namespaceEntry
 
 constantDefinition
     : ConstKeyword name=Identifier (Colon type=expression)? Assign definer=expression
+    ;
+
+methodDefinition
+    : DefKeyword instance=reference Colon name=Identifier body=abstractionConstructor
     ;
 
 metaDefinition

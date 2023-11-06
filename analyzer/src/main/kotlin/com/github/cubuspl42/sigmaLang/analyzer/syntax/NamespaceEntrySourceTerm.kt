@@ -27,6 +27,10 @@ sealed class NamespaceEntrySourceTerm : SourceTerm(), NamespaceEntryTerm {
                 ctx: SigmaParser.ConstantDefinitionContext,
             ): NamespaceEntrySourceTerm = ConstantDefinitionSourceTerm.build(ctx)
 
+            override fun visitMethodDefinition(
+                ctx: SigmaParser.MethodDefinitionContext,
+            ): NamespaceEntrySourceTerm = MethodDefinitionSourceTerm.build(ctx)
+
             override fun visitMetaDefinition(
                 ctx: SigmaParser.MetaDefinitionContext,
             ): NamespaceEntrySourceTerm = MetaDefinitionSourceTerm.build(ctx)
