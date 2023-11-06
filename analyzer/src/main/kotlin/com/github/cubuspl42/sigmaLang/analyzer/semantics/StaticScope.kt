@@ -54,4 +54,20 @@ fun StaticScope.resolveName(
 data class LeveledResolvedIntroduction(
     val level: StaticScope.Level,
     val resolvedIntroduction: ResolvedIntroduction,
-)
+) {
+    companion object {
+        fun primaryIntroduction(
+            resolvedIntroduction: ResolvedIntroduction,
+        ): LeveledResolvedIntroduction = LeveledResolvedIntroduction(
+            level = StaticScope.Level.Primary,
+            resolvedIntroduction = resolvedIntroduction,
+        )
+
+        fun metaIntroduction(
+            resolvedIntroduction: ResolvedIntroduction,
+        ): LeveledResolvedIntroduction = LeveledResolvedIntroduction(
+            level = StaticScope.Level.Meta,
+            resolvedIntroduction = resolvedIntroduction,
+        )
+    }
+}
