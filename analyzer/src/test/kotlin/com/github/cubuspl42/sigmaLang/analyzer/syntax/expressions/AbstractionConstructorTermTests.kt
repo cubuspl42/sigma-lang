@@ -1,20 +1,23 @@
+@file:Suppress("JUnitMalformedDeclaration")
+
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import UniversalFunctionTypeMatcher
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import utils.Matcher
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import utils.ListMatchers
+import utils.Matcher
 import utils.assertMatches
 import utils.checked
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AbstractionTermTests {
+@Suppress("unused")
+class AbstractionConstructorTermTests {
     class ParsingTests {
         @Test
         fun test() {
