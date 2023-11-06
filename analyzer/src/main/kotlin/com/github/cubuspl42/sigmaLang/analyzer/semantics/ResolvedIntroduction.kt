@@ -28,7 +28,6 @@ class ResolvedOrderedArgument(
         subjectLazy = lazy { Reference(referredDeclaration = argumentDeclaration) },
         argumentLazy = lazy { IntLiteral.of(index) },
     )
-
 }
 
 class ResolvedUnorderedArgument(

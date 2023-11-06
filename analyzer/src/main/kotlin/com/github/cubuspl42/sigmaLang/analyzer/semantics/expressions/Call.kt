@@ -32,6 +32,11 @@ abstract class Call : FirstOrderExpression() {
                 term = term,
             )
 
+            is MethodCallTerm -> buildMethod(
+                context = context,
+                term = term,
+            ).asStub()
+
             else -> throw UnsupportedOperationException("Unsupported call term: $term")
         }
 
@@ -60,6 +65,37 @@ abstract class Call : FirstOrderExpression() {
                     }
                 }
             }
+        }
+
+        private fun buildMethod(
+            context: BuildContext,
+            term: MethodCallTerm,
+        ): Lazy<Call> {
+            val instanceExpressionLazy = Expression.build(
+                context = context,
+                term = term.self,
+            ).asLazy()
+
+            val methodReferenceLazy = term.method.build(
+                context = context,
+            ).expressionLazy
+
+            val argumentExpressionLazy = Expression.build(
+                context = context,
+                term = term.argument,
+            ).asLazy()
+
+            val functionExpression = Call(
+                subjectLazy = methodReferenceLazy,
+                argumentLazy = instanceExpressionLazy,
+            )
+
+            return lazyOf(
+                Call(
+                    subjectLazy = lazyOf(functionExpression),
+                    argumentLazy = argumentExpressionLazy,
+                ),
+            )
         }
 
         private fun buildInfix(

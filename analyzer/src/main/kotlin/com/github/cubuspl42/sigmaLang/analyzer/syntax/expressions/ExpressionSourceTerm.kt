@@ -99,6 +99,10 @@ sealed class ExpressionSourceTerm : SourceTerm() {
                 ctx: CallExpressionTupleConstructorAltContext,
             ): ExpressionTerm = PostfixCallSourceTerm.build(ctx)
 
+            override fun visitCallableExpressionMethodCallAlt(
+                ctx: SigmaParser.CallableExpressionMethodCallAltContext,
+            ): ExpressionTerm = MethodCallSourceTerm.build(ctx)
+
             override fun visitCallableParenAlt(
                 ctx: CallableParenAltContext,
             ): ExpressionTerm = build(ctx.parenExpression().expression())
