@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
-import com.github.cubuspl42.sigmaLang.analyzer.BinaryOperationPrototype
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.BinaryOperator
 
 data class IntValue(
     val value: Long,
@@ -27,13 +27,13 @@ data class IntValue(
 
         override fun dump(): String = "(${prototype.functionName})"
 
-        abstract val prototype: BinaryOperationPrototype
+        abstract val prototype: BinaryOperator
 
         abstract fun calculate(left: Long, right: Long): Value
     }
 
     object Mul : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.multiplication
+        override val prototype: BinaryOperator = BinaryOperator.multiplication
 
         override fun calculate(
             left: Long, right: Long,
@@ -41,7 +41,7 @@ data class IntValue(
     }
 
     object Div : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.division
+        override val prototype: BinaryOperator = BinaryOperator.division
 
         override fun calculate(
             left: Long, right: Long,
@@ -49,7 +49,7 @@ data class IntValue(
     }
 
     object Add : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.addition
+        override val prototype: BinaryOperator = BinaryOperator.addition
 
         override fun calculate(
             left: Long, right: Long,
@@ -57,7 +57,7 @@ data class IntValue(
     }
 
     object Sub : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.subtraction
+        override val prototype: BinaryOperator = BinaryOperator.subtraction
 
         override fun calculate(
             left: Long, right: Long,
@@ -75,7 +75,7 @@ data class IntValue(
     }
 
     object Eq : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.equals
+        override val prototype: BinaryOperator = BinaryOperator.equals
 
         override fun calculate(
             left: Long,
@@ -84,7 +84,7 @@ data class IntValue(
     }
 
     object Lt : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.lessThan
+        override val prototype: BinaryOperator = BinaryOperator.lessThan
 
         override fun calculate(
             left: Long,
@@ -93,7 +93,7 @@ data class IntValue(
     }
 
     object Lte : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.lessThanOrEqual
+        override val prototype: BinaryOperator = BinaryOperator.lessThanOrEqual
 
         override fun calculate(
             left: Long,
@@ -102,7 +102,7 @@ data class IntValue(
     }
 
     object Gt : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.greaterThan
+        override val prototype: BinaryOperator = BinaryOperator.greaterThan
 
         override fun calculate(
             left: Long,
@@ -111,7 +111,7 @@ data class IntValue(
     }
 
     object Gte : BinaryIntFunction() {
-        override val prototype: BinaryOperationPrototype = BinaryOperationPrototype.greaterThanOrEqual
+        override val prototype: BinaryOperator = BinaryOperator.greaterThanOrEqual
 
         override fun calculate(
             left: Long,

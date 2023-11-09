@@ -222,4 +222,6 @@ data class OrderedTupleType(
     override fun walkRecursive(): Sequence<SpecificType> = indexedElements.asSequence().flatMap {
         (it.type as SpecificType).walk()
     }
+
+    fun getIndexByName(name: Identifier): Int? = indexedElements.indexOfFirst { it.name == name }.takeIf { it >= 0 }
 }

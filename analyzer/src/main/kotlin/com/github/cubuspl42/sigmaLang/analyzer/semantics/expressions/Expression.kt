@@ -200,6 +200,20 @@ abstract class Expression {
             override val inferredType: TypeAlike = inferredType
         }
 
+        fun buildType(
+            context: BuildContext,
+            typeTerm: ExpressionTerm,
+        ): Lazy<TypeExpression.DiagnosedAnalysis> {
+            val typeExpression by TypeExpression.build(
+                outerScope = context.outerScope,
+                term = typeTerm,
+            ).asLazy()
+
+            return lazy {
+                typeExpression.evaluateAsType()
+            }
+        }
+
         fun build(
             context: BuildContext,
             term: ExpressionTerm,
