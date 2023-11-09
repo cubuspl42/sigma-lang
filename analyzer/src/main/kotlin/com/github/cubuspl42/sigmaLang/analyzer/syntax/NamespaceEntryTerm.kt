@@ -25,7 +25,15 @@ sealed interface NamespaceEntryTerm {
                     resolvedIntroduction = UserVariableDefinition.build(
                         context = context,
                         term = term,
-                    )
+                    ),
+                )
+
+                is MethodDefinitionTerm -> LeveledResolvedIntroduction(
+                    level = StaticScope.Level.Primary,
+                    resolvedIntroduction = UserVariableDefinition.buildMethod(
+                        context = context,
+                        term = term,
+                    ),
                 )
 
                 is MetaDefinitionTerm -> LeveledResolvedIntroduction(
@@ -35,7 +43,7 @@ sealed interface NamespaceEntryTerm {
                             outerScope = context.outerScope
                         ), // TODO: Shift
                         term = term,
-                    )
+                    ),
                 )
 
                 is ClassDefinitionTerm -> LeveledResolvedIntroduction(
@@ -46,7 +54,7 @@ sealed interface NamespaceEntryTerm {
                             qualifiedPath = extendedQualifiedPath,
                             term = term,
                         ).classBodyLazy,
-                    )
+                    ),
                 )
 
                 is NamespaceDefinitionTerm -> TODO()

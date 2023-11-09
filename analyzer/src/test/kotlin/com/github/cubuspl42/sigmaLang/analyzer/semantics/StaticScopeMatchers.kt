@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import utils.Matcher
 import utils.checked
@@ -24,6 +25,14 @@ object StaticScopeMatchers {
             ): LevelResolvedIntroductionMatcher = primaryIntroductionMatcher(
                 resolvedIntroduction = ResolvedIntroductionMatchers.ResolvedAbstractionArgumentMatcher(
                     argumentDeclaration = Matcher.Equals(argumentDeclaration)
+                ).checked(),
+            )
+
+            fun primaryDefinitionMatcher(
+                body: Matcher<Expression>,
+            ): LevelResolvedIntroductionMatcher = primaryIntroductionMatcher(
+                resolvedIntroduction = ResolvedIntroductionMatchers.ResolvedDefinitionMatcher(
+                    body = body,
                 ).checked(),
             )
 

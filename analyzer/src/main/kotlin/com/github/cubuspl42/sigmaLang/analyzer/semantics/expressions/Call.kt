@@ -1,11 +1,11 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.BinaryOperationPrototype
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.BinaryOperator
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.lazier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.*
@@ -102,8 +102,8 @@ abstract class Call : FirstOrderExpression() {
             context: BuildContext,
             term: InfixCallTerm,
         ): Stub<Call> = object : Stub<Call> {
-            override val resolved: Call by lazy {
-                val prototype = BinaryOperationPrototype.build(term.operator)
+            override val resolved: Call by lazier {
+                val prototype = BinaryOperator.build(term.operator)
 
                 val leftArgument = Expression.build(
                     context = context,
@@ -115,39 +115,11 @@ abstract class Call : FirstOrderExpression() {
                     term = term.rightArgument,
                 ).resolved
 
-                val buildOutput = ReferenceTerm.build(
-                    context,
-                    referredName = Symbol.of(prototype.functionName),
+                prototype.buildCall(
+                    context = context,
+                    leftArgument = leftArgument,
+                    rightArgument = rightArgument,
                 )
-
-                object : Call() {
-                    override val outerScope: StaticScope = context.outerScope
-
-                    override val term: CallTerm = term
-
-                    override val subject: Expression by buildOutput.expressionLazy
-
-                    override val argument: Expression by lazy {
-                        object : UnorderedTupleConstructor() {
-                            override val outerScope: StaticScope = context.outerScope
-
-                            override val term: UnorderedTupleConstructorTerm? = null
-
-                            override val entries: Set<Entry> = setOf(
-                                object : Entry() {
-                                    override val name: Symbol = prototype.leftArgument
-
-                                    override val value: Expression = leftArgument
-                                },
-                                object : Entry() {
-                                    override val name: Symbol = prototype.rightArgument
-
-                                    override val value: Expression = rightArgument
-                                },
-                            )
-                        }
-                    }
-                }
             }
         }
     }

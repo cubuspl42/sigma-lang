@@ -42,6 +42,16 @@ abstract class Matcher<in T> {
                 matcher?.match(actual = actual)
             }
         }
+
+        @Suppress("TestFunctionName")
+        fun <T> Built(
+            build: (T) -> Matcher<T>,
+        ): Matcher<T> = object : Matcher<T>() {
+            override fun match(actual: T) {
+                val matcher = build(actual)
+                matcher.match(actual)
+            }
+        }
     }
 
     abstract fun match(actual: T)

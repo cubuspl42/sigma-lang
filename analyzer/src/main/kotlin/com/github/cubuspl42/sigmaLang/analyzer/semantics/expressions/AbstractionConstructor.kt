@@ -179,6 +179,7 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
 }
 
 fun AbstractionConstructor(
+    // TODO: Remove this argument, loop instead
     argumentDeclaration: AbstractionConstructor.ArgumentDeclaration,
     declaredImageTypeLazy: Lazy<TypeAlike?>,
     imageLazy: Lazy<Expression>,
