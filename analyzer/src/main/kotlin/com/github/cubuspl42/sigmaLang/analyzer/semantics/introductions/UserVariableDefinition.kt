@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.lazier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedOrderedArgument
@@ -13,6 +14,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.FirstOrderExpression
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.GenericConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.asLazy
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
@@ -65,55 +67,77 @@ object UserVariableDefinition {
     fun buildMethod(
         context: Expression.BuildContext,
         term: MethodDefinitionTerm,
-    ): ResolvedDefinition = ResolvedDefinition(
-        bodyLazy = object {
-            val instanceTypeDiagnosedAnalysis by Expression.buildType(
-                context = context,
+    ): ResolvedDefinition {
+        fun buildMethodExtractor(
+            outerScope: StaticScope,
+        ): Lazy<Expression> = lazier {
+            val instanceTypeDiagnosedAnalysis = Expression.buildType(
+                context = Expression.BuildContext(
+                    outerScope = outerScope,
+                ),
                 typeTerm = term.thisType,
-            )
+            ).value
 
-            val instanceType: TypeAlike by lazy {
-                instanceTypeDiagnosedAnalysis.type ?: IllType
-            }
+            val instanceType: TypeAlike = instanceTypeDiagnosedAnalysis.type ?: IllType
 
-            val argumentDeclaration by lazy {
-                AbstractionConstructor.ArgumentDeclaration(
-                    declaredType = OrderedTupleType(
-                        elements = listOf(
-                            OrderedTupleType.Element(
-                                name = Identifier.of("this"),
-                                type = instanceType,
-                            ),
+            val argumentDeclaration = AbstractionConstructor.ArgumentDeclaration(
+                declaredType = OrderedTupleType(
+                    elements = listOf(
+                        OrderedTupleType.Element(
+                            name = Identifier.of("this"),
+                            type = instanceType,
                         ),
                     ),
-                )
-            }
+                ),
+            )
 
-            val methodExtractorConstructorLazy = lazy {
-                AbstractionConstructor(
-                    argumentDeclaration = argumentDeclaration,
-                    declaredImageTypeLazy = lazyOf(null),
-                    imageLazy = methodConstructorLazy,
-                )
-            }
+            object {
+                val methodExtractorConstructorLazy = lazy {
+                    AbstractionConstructor(
+                        argumentDeclaration = argumentDeclaration,
+                        declaredImageTypeLazy = lazyOf(null),
+                        imageLazy = methodConstructorLazy,
+                    )
+                }
 
-            val methodConstructorLazy = AbstractionConstructor.build(
-                context = Expression.BuildContext(
-                    outerScope = StaticBlock.Fixed(
-                        resolvedNameByName = mapOf(
-                            Identifier.of("this") to LeveledResolvedIntroduction.primaryIntroduction(
-                                resolvedIntroduction = ResolvedOrderedArgument(
-                                    index = 0L,
-                                    argumentDeclaration = argumentDeclaration,
+                val methodConstructorLazy = Expression.build(
+                    context = Expression.BuildContext(
+                        outerScope = StaticBlock.Fixed(
+                            resolvedNameByName = mapOf(
+                                Identifier.of("this") to LeveledResolvedIntroduction.primaryIntroduction(
+                                    resolvedIntroduction = ResolvedOrderedArgument(
+                                        index = 0L,
+                                        argumentDeclaration = argumentDeclaration,
+                                    ),
                                 ),
                             ),
-                        ),
-                    ).chainWith(context.outerScope)
-                ),
-                term = term.body,
-            ).expressionLazy
-        }.methodExtractorConstructorLazy,
-    )
+                        ).chainWith(outerScope)
+                    ),
+                    term = term.body,
+                ).asLazy()
+            }.methodExtractorConstructorLazy
+        }
+
+        val metaArgumentType = term.metaArgumentType
+
+        return ResolvedDefinition(
+            bodyLazy = if (metaArgumentType != null) {
+                GenericConstructor.build(
+                    context = context,
+                    metaArgumentTerm = metaArgumentType,
+                    buildBody = {
+                        buildMethodExtractor(
+                            outerScope = it
+                        )
+                    },
+                )
+            } else {
+                buildMethodExtractor(
+                    outerScope = context.outerScope,
+                )
+            },
+        )
+    }
 }
 
 class TypeAnnotatedBody(

@@ -65,12 +65,12 @@ fun <T> Matcher<T>.with(other: Matcher<T>): Matcher<T> = object : Matcher<T>() {
     }
 }
 
-inline fun <B : Any, reified T : B> Matcher<T>.checked(): Matcher<B> = object : Matcher<B>() {
+inline fun <B : Any?, reified T : B> Matcher<T>.checked(): Matcher<B> = object : Matcher<B>() {
     override fun match(actual: B) {
         if (actual is T) {
             return this@checked.match(actual)
         } else {
-            throw AssertionError("Expected ${T::class.simpleName}, but got ${actual::class.simpleName}")
+            throw AssertionError("Expected ${T::class.simpleName}, but got ${actual?.let { it::class.simpleName }}")
         }
     }
 }
