@@ -218,9 +218,11 @@ class CallTermTests {
                 subject = unorderedArgumentReferenceMatcher(
                     name = Identifier.of("method1"),
                 ),
-                argument = unorderedArgumentReferenceMatcher(
-                    name = Identifier.of("instance"),
-                ),
+                argument = OrderedTupleConstructorMatcher.withElementsInOrder(
+                    unorderedArgumentReferenceMatcher(
+                        name = Identifier.of("instance"),
+                    ).checked(),
+                ).checked(),
             )
 
             assertMatches(
