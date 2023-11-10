@@ -52,3 +52,7 @@
     elements: ^[eT...],
     extract: ^[e: eT] -> ^[rT...],
 ] => concatAll[map[elements, extract]]
+
+%def !^[inT: Type] ^[inT...]:mapX ^[outT: Type] !=> ^[
+    transformFn: ^[inElement: inT] -> outT,
+] -> ^[outT...] => map[this, transformFn]

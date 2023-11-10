@@ -3,7 +3,7 @@
         list: ^[e...],
         transform: ^[e] -> ^[te...],
     ] -> ^[te...] =>
-        concatAll[map[list, transform]],
+        concatAll[list:mapX[transform]],
 
     concatAll = ^[e: Type] !=> ^[
         lists: ^[^[e...]...],

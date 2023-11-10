@@ -14,10 +14,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntLiteralTypeMat
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.StringType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
@@ -59,7 +57,7 @@ class GenericConstructorTests {
 
             assertMatches(
                 matcher = GenericConstructorMatcher(
-                    metaArgumentTypeConstructor = OrderedTupleTypeMatcher(
+                    metaArgumentType = OrderedTupleTypeMatcher(
                         elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
                                 name = Matcher.Equals(expected = Identifier.of("a")),
@@ -86,7 +84,7 @@ class GenericConstructorTests {
 
             assertMatches(
                 matcher = GenericConstructorMatcher(
-                    metaArgumentTypeConstructor = OrderedTupleTypeMatcher(
+                    metaArgumentType = OrderedTupleTypeMatcher(
                         elements = ListMatchers.inOrder(
                             OrderedTupleTypeMatcher.ElementMatcher(
                                 name = Matcher.Equals(expected = Identifier.of("t")),

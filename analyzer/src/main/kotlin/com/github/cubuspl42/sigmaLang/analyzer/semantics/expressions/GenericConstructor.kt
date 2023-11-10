@@ -11,23 +11,24 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.GenericConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
 
 class GenericConstructor(
-    override val term: GenericConstructorTerm,
+    override val term: GenericConstructorTerm?,
     private val metaArgumentDeclarationLazy: Lazy<ArgumentDeclaration>,
     private val bodyLazy: Lazy<Expression>,
 ) : Expression() {
     companion object {
         fun build(
             context: Expression.BuildContext,
-            term: GenericConstructorTerm,
+            metaArgumentTerm: TupleTypeConstructorTerm,
+            buildBody: (innerScope: StaticScope) -> Lazy<Expression>,
         ): Lazy<GenericConstructor> {
             val metaArgumentDeclarationBuildOutput = AbstractionConstructor.ArgumentDeclaration.build(
                 outerScope = context.outerScope,
-                argumentTypeTerm = term.metaArgumentType,
+                argumentTypeTerm = metaArgumentTerm,
             )
 
-            val metaArgumentDeclaration by metaArgumentDeclarationBuildOutput.argumentDeclarationLazy
             val metaArgumentDeclarationBlock by metaArgumentDeclarationBuildOutput.argumentDeclarationBlockLazy
 
             val bodyLazy = lazier {
@@ -35,22 +36,33 @@ class GenericConstructor(
                     outerScope = context.outerScope,
                 )
 
+                buildBody(innerScope)
+            }
+
+            return lazy {
+                GenericConstructor(
+                    term = null,
+                    metaArgumentDeclarationLazy = metaArgumentDeclarationBuildOutput.argumentDeclarationLazy,
+                    bodyLazy = bodyLazy,
+                )
+            }
+        }
+
+        fun build(
+            context: Expression.BuildContext,
+            term: GenericConstructorTerm,
+        ): Lazy<GenericConstructor> = build(
+            context = context,
+            metaArgumentTerm = term.metaArgumentType,
+            buildBody = { innerScope ->
                 Expression.build(
                     context = BuildContext(
                         outerScope = innerScope,
                     ),
                     term = term.body,
                 ).asLazy()
-            }
-
-            return lazy {
-                GenericConstructor(
-                    term = term,
-                    metaArgumentDeclarationLazy = metaArgumentDeclarationBuildOutput.argumentDeclarationLazy,
-                    bodyLazy = bodyLazy,
-                )
-            }
-        }
+            },
+        )
     }
 
     val metaArgumentDeclaration by metaArgumentDeclarationLazy

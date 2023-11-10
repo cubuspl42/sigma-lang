@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BinaryOperator
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
+import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -87,7 +88,11 @@ abstract class Call : FirstOrderExpression() {
 
             val functionExpression = Call(
                 subjectLazy = methodReferenceLazy,
-                argumentLazy = instanceExpressionLazy,
+                argumentLazy = lazyOf(
+                    OrderedTupleConstructor(
+                        elementsLazy = lazy { listOf(instanceExpressionLazy.value) },
+                    ),
+                ),
             )
 
             return lazyOf(

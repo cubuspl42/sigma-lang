@@ -5,6 +5,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 abstract class ParametricType : Type() {
     abstract val parameterType: TupleType
 
+    val functionType: UniversalFunctionType
+        get() = UniversalFunctionType(
+            argumentType = parameterType,
+            imageType = TypeType,
+        )
+
     final override fun resolveTypePlaceholders(
         assignedType: SpecificType,
     ): TypePlaceholderResolution = TypePlaceholderResolution.Empty

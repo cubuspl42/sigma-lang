@@ -31,7 +31,7 @@ constantDefinition
     ;
 
 methodDefinition
-    : DefKeyword thisType=expression Colon name=Identifier body=abstractionConstructor
+    : DefKeyword (Bang metaArgument=tupleTypeConstructor)? thisType=expression Colon name=Identifier body=expression
     ;
 
 metaDefinition
