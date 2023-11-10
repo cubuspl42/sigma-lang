@@ -25,7 +25,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTyp
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTermMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.IntLiteralTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleConstructorTermMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.OrderedTupleTypeConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallTermMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTermMatcher
 import utils.Matcher
 import utils.assertMatches
@@ -43,8 +45,37 @@ class MethodDefinitionTermTests {
 
             assertMatches(
                 matcher = MethodDefinitionTermMatcher(
-                    self = ReferenceTermMatcher(
+                    thisType = ReferenceTermMatcher(
                         referredName = Matcher.Equals(Identifier.of("Foo")),
+                    ).checked(),
+                    name = Matcher.Equals(Identifier.of("method1")),
+                    body = AbstractionConstructorTermMatcher(
+                        argumentType = Matcher.Is<OrderedTupleTypeConstructorTerm>(),
+                        declaredImageType = Matcher.IsNull(),
+                        image = Matcher.Is<IntLiteralTerm>(),
+                    ),
+                ).checked(),
+                actual = term,
+            )
+        }
+
+        @Test
+        fun testComplexSelf() {
+            val term = NamespaceEntrySourceTerm.parse(
+                source = "%def Foo[Bar]:method1 ^[n: Int] => 0",
+            )
+
+            assertMatches(
+                matcher = MethodDefinitionTermMatcher(
+                    thisType = PostfixCallTermMatcher(
+                        subject = ReferenceTermMatcher(
+                            referredName = Matcher.Equals(Identifier.of("Foo")),
+                        ).checked(),
+                        argument = OrderedTupleConstructorTermMatcher.withElementsInOrder(
+                            ReferenceTermMatcher(
+                                referredName = Matcher.Equals(Identifier.of("Bar")),
+                            ).checked(),
+                        ).checked(),
                     ).checked(),
                     name = Matcher.Equals(Identifier.of("method1")),
                     body = AbstractionConstructorTermMatcher(

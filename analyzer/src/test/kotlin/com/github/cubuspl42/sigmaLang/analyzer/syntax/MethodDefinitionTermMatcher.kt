@@ -6,12 +6,12 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 import utils.Matcher
 
 class MethodDefinitionTermMatcher(
-    private val self: Matcher<ExpressionTerm>,
+    private val thisType: Matcher<ExpressionTerm>,
     private val name: Matcher<Identifier>,
     private val body: Matcher<AbstractionConstructorTerm>,
 ) : Matcher<MethodDefinitionTerm>() {
     override fun match(actual: MethodDefinitionTerm) {
-        self.match(actual.instanceType)
+        thisType.match(actual.thisType)
         name.match(actual.name)
         body.match(actual.body)
     }

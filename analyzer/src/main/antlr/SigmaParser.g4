@@ -31,7 +31,7 @@ constantDefinition
     ;
 
 methodDefinition
-    : DefKeyword instance=reference Colon name=Identifier body=abstractionConstructor
+    : DefKeyword thisType=expression Colon name=Identifier body=abstractionConstructor
     ;
 
 metaDefinition

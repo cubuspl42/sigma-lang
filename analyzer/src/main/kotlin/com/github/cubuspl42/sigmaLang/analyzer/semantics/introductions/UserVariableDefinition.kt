@@ -13,7 +13,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.FirstOrderExpression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.asLazy
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
@@ -70,7 +69,7 @@ object UserVariableDefinition {
         bodyLazy = object {
             val instanceTypeDiagnosedAnalysis by Expression.buildType(
                 context = context,
-                typeTerm = term.instanceType,
+                typeTerm = term.thisType,
             )
 
             val instanceType: TypeAlike by lazy {

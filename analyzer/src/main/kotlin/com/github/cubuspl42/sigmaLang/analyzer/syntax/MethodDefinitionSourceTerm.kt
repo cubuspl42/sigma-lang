@@ -5,12 +5,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser.MethodDe
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 data class MethodDefinitionSourceTerm(
     override val location: SourceLocation,
-    override val instanceType: ReferenceTerm,
+    override val thisType: ExpressionTerm,
     override val name: Identifier,
     override val body: AbstractionConstructorTerm,
 ) : NamespaceEntrySourceTerm(), MethodDefinitionTerm {
@@ -19,7 +18,7 @@ data class MethodDefinitionSourceTerm(
             ctx: MethodDefinitionContext,
         ): MethodDefinitionSourceTerm = MethodDefinitionSourceTerm(
             location = SourceLocation.build(ctx),
-            instanceType = ReferenceSourceTerm.build(ctx.instance),
+            thisType = ExpressionSourceTerm.build(ctx.thisType),
             name = Identifier.of(ctx.name.text),
             body = AbstractionConstructorSourceTerm.build(ctx.body),
         )
