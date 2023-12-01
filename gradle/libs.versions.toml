@@ -1,7 +1,7 @@
 [versions]
 # libraries
 annotations = "24.0.1"
-kotlinxSerialization = "1.6.0"
+kotlinxSerialization = "1.6.2"
 
 # plugins
 kotlin = "1.9.20"
