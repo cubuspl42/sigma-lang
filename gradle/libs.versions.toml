@@ -20,4 +20,4 @@ gradleIntelliJPlugin = { id = "org.jetbrains.intellij", version.ref = "gradleInt
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
-gradleVersions = { id = "com.github.ben-manes.versions", version = "0.49.0"}
+gradleVersions = { id = "com.github.ben-manes.versions", version = "0.50.0"}
