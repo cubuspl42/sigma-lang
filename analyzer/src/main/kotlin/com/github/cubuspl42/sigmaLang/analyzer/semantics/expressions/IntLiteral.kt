@@ -35,8 +35,8 @@ data class IntLiteral(
 
     override val term: ExpressionTerm? = null
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        DiagnosedAnalysis(
+    override val computedAnalysis = buildAnalysisComputation {
+        Analysis(
             typeInference = TypeInference(
                 inferredType = IntLiteralType(
                     value = value,

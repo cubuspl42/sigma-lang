@@ -62,8 +62,8 @@ abstract class FieldRead : FirstOrderExpression() {
         }
     }
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val subjectAnalysis = compute(subject.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
+    override val computedAnalysis = buildAnalysisComputation {
+        val subjectAnalysis = compute(subject.computedTypeInference) ?: return@buildAnalysisComputation null
 
         val inferredSubjectType = subjectAnalysis.inferredType as SpecificType
         val validSubjectType = inferredSubjectType as? UnorderedTupleType
@@ -72,14 +72,14 @@ abstract class FieldRead : FirstOrderExpression() {
             val fieldType = validSubjectType.getFieldType(key = fieldName)
 
             if (fieldType != null) {
-                DiagnosedAnalysis(
+                Analysis(
                     typeInference = TypeInference(
                         inferredType = fieldType,
                     ),
                     directErrors = emptySet(),
                 )
             } else {
-                DiagnosedAnalysis.fromError(
+                Analysis.fromError(
                     MissingFieldError(
                         location = term?.location,
                         subjectType = validSubjectType,
@@ -88,7 +88,7 @@ abstract class FieldRead : FirstOrderExpression() {
                 )
             }
         } else {
-            DiagnosedAnalysis.fromError(
+            Analysis.fromError(
                 InvalidSubjectTypeError(
                     location = subject.location,
                     invalidSubjectType = inferredSubjectType,

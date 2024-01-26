@@ -154,9 +154,9 @@ abstract class Call : FirstOrderExpression() {
         override fun dump(): String = "Index $index is out of range for tuple type ${tupleType.dump()}"
     }
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val subjectAnalysis = compute(subject.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
-        val argumentAnalysis = compute(argument.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
+    override val computedAnalysis = buildAnalysisComputation {
+        val subjectAnalysis = compute(subject.computedTypeInference) ?: return@buildAnalysisComputation null
+        val argumentAnalysis = compute(argument.computedTypeInference) ?: return@buildAnalysisComputation null
 
         val subjectType = subjectAnalysis.inferredType.specifyImplicitly()
         val argumentType = argumentAnalysis.inferredType as SpecificType
@@ -166,14 +166,14 @@ abstract class Call : FirstOrderExpression() {
                 val index = argumentType.value.value
 
                 if (index >= subjectType.elements.size) {
-                    DiagnosedAnalysis.fromError(
+                    Analysis.fromError(
                         OutOfRangeCallError(
                             tupleType = subjectType,
                             index = index,
                         )
                     )
                 } else {
-                    DiagnosedAnalysis(
+                    Analysis(
                         typeInference = TypeInference(
                             inferredType = subjectType.indexedElements[index.toInt()].type,
                         ),
@@ -216,7 +216,7 @@ abstract class Call : FirstOrderExpression() {
                             null
                         }
 
-                        DiagnosedAnalysis(
+                        Analysis(
                             typeInference = TypeInference(
                                 inferredType = effectiveImageType,
                             ),
@@ -225,7 +225,7 @@ abstract class Call : FirstOrderExpression() {
                     }
 
                     else -> {
-                        DiagnosedAnalysis.fromError(
+                        Analysis.fromError(
                             NonFullyInferredCalleeTypeError(
                                 location = subject.location,
                                 calleeGenericType = subjectType,
@@ -236,7 +236,7 @@ abstract class Call : FirstOrderExpression() {
                 }
             }
 
-            else -> DiagnosedAnalysis.fromError(
+            else -> Analysis.fromError(
                 NonFunctionCallError(
                     location = subject.location,
                     illegalSubjectType = subjectType,

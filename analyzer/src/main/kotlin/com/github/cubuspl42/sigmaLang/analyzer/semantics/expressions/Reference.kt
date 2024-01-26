@@ -25,9 +25,9 @@ abstract class Reference : FirstOrderExpression() {
         val name: Identifier,
     ) : SemanticError
 
-    override val computedDiagnosedAnalysis by lazy {
+    override val computedAnalysis by lazy {
         Computation.pure(
-            DiagnosedAnalysis(
+            Analysis(
                 typeInference = TypeInference(
                     inferredType = referredDeclaration.declaredType,
                 ),

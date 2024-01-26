@@ -97,11 +97,11 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
         }
     }
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+    override val computedAnalysis = buildAnalysisComputation {
         val entriesAnalyses = entries.map {
             Entry.Analysis(
                 name = it.name,
-                valueAnalysis = compute(it.value.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null,
+                valueAnalysis = compute(it.value.computedTypeInference) ?: return@buildAnalysisComputation null,
             )
         }
 
@@ -120,7 +120,7 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
             }
         }
 
-        DiagnosedAnalysis(
+        Analysis(
             typeInference = TypeInference(
                 inferredType = UnorderedTupleType(
                     valueTypeByName = entryTypeByName.mapValues { (_, entryTypes) ->

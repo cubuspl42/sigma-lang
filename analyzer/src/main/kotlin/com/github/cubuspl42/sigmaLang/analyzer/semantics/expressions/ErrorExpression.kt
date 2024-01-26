@@ -14,8 +14,8 @@ class ErrorExpression(
 ) : FirstOrderExpression() {
     override val outerScope: StaticScope = StaticScope.Empty
 
-    override val computedDiagnosedAnalysis = Computation.pure(
-        DiagnosedAnalysis(
+    override val computedAnalysis = Computation.pure(
+        Analysis(
             inferredType = NeverType,
         )
     )

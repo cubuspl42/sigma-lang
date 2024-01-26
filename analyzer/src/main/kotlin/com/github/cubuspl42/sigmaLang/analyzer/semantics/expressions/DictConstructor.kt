@@ -105,11 +105,11 @@ abstract class DictConstructor : FirstOrderExpression() {
         override val location: SourceLocation,
     ) : SemanticError
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+    override val computedAnalysis = buildAnalysisComputation {
         val associationsAnalyses = associations.map {
             Association.Analysis(
-                keyAnalysis = compute(it.key.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null,
-                valueAnalysis = compute(it.value.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null,
+                keyAnalysis = compute(it.key.computedTypeInference) ?: return@buildAnalysisComputation null,
+                valueAnalysis = compute(it.value.computedTypeInference) ?: return@buildAnalysisComputation null,
             )
         }
 
@@ -161,7 +161,7 @@ abstract class DictConstructor : FirstOrderExpression() {
         val (keyType, keysError) = analyzeKeys()
         val (valueType, valuesError) = analyzeValues()
 
-        DiagnosedAnalysis(
+        Analysis(
             typeInference = TypeInference(
                 inferredType = DictType(
                     keyType = keyType,

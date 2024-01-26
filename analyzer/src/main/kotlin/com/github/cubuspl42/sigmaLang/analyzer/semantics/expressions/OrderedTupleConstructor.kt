@@ -37,12 +37,12 @@ abstract class OrderedTupleConstructor : TupleConstructor() {
         }
     }
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+    override val computedAnalysis = buildAnalysisComputation {
         val elementsAnalyses = elements.map {
-            compute(it.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
+            compute(it.computedTypeInference) ?: return@buildAnalysisComputation null
         }
 
-        DiagnosedAnalysis(
+        Analysis(
             typeInference = TypeInference(
                 inferredType = OrderedTupleType(
                     elements = elementsAnalyses.map {

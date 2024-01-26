@@ -57,11 +57,11 @@ class TypeSpecification(
     override val outerScope: StaticScope
         get() = StaticScope.Empty
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val subjectType = compute(subject.inferredTypeOrIllType) ?: return@buildDiagnosedAnalysisComputation null
+    override val computedAnalysis = buildAnalysisComputation {
+        val subjectType = compute(subject.inferredTypeOrIllType) ?: return@buildAnalysisComputation null
 
         if (subjectType !is ParametricType) {
-            return@buildDiagnosedAnalysisComputation DiagnosedAnalysis.fromError(
+            return@buildAnalysisComputation Analysis.fromError(
                 NonGenericCallError(
                     location = term.location,
                     illegalSubjectType = subjectType,
@@ -69,7 +69,7 @@ class TypeSpecification(
             )
         }
 
-        return@buildDiagnosedAnalysisComputation DiagnosedAnalysis(
+        return@buildAnalysisComputation Analysis(
             inferredType = subjectType.parametrize(metaArgument),
         )
     }
