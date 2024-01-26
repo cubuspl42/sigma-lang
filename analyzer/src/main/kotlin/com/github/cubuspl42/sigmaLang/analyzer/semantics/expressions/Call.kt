@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BinaryOperator
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.BinaryOperator
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk

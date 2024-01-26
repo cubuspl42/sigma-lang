@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BinaryOperator
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.BinaryOperator
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.resolveName

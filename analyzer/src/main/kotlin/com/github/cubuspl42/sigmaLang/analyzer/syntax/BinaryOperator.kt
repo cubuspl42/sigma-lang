@@ -1,4 +1,4 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics
+package com.github.cubuspl42.sigmaLang.analyzer.syntax
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
