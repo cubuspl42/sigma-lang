@@ -66,7 +66,7 @@ object ClassDefinition {
 
                 val bodyTypeConstructorAnalysis = bodyTypeConstructor.evaluateAsType()
 
-                val fieldsType = bodyTypeConstructorAnalysis.type as UnorderedTupleType
+                val fieldsType = bodyTypeConstructorAnalysis.evaluatedType as UnorderedTupleType
 
                 val tag = qualifiedPath
 

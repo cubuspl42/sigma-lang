@@ -178,6 +178,22 @@ abstract class Expression {
             get() = typeInference?.inferredType
     }
 
+    data class TypeEvaluation(
+        val evaluatedType: TypeAlike?,
+        val errors: Set<SemanticError>,
+    ) {
+        val typeOrIllType: TypeAlike
+            get() = evaluatedType ?: IllType
+    }
+
+    data class TypeEvaluationError(
+        val evaluationError: EvaluationError,
+    ) : SemanticError
+
+    data class NonTypeValueError(
+        val value: Value,
+    ) : SemanticError
+
     data class BuildContext(
         val outerScope: StaticScope,
     ) {
@@ -202,7 +218,7 @@ abstract class Expression {
         fun buildType(
             context: BuildContext,
             typeTerm: ExpressionTerm,
-        ): Lazy<TypeExpression.DiagnosedAnalysis> {
+        ): Lazy<TypeEvaluation> {
             val typeExpression by TypeExpression.build(
                 outerScope = context.outerScope,
                 term = typeTerm,
@@ -415,7 +431,7 @@ abstract class Expression {
         dynamicScope: DynamicScope,
     ): Thunk<Value> = classified.bind(dynamicScope = dynamicScope)
 
-    fun evaluateAsType(): TypeExpression.DiagnosedAnalysis {
+    fun evaluateAsType(): TypeEvaluation {
         val valueThunk by lazy {
             bind(
                 dynamicScope = TraitTranslationScope,
@@ -423,10 +439,10 @@ abstract class Expression {
         }
 
         return when (val outcome = valueThunk.outcome) {
-            is EvaluationError -> TypeExpression.DiagnosedAnalysis(
-                type = null,
+            is EvaluationError -> TypeEvaluation(
+                evaluatedType = null,
                 errors = setOf(
-                    TypeExpression.TypeEvaluationError(
+                    TypeEvaluationError(
                         evaluationError = outcome,
                     ),
                 ),
@@ -436,17 +452,17 @@ abstract class Expression {
                 val value = outcome.value
 
                 when (val type = value.asType) {
-                    null -> TypeExpression.DiagnosedAnalysis(
-                        type = null,
+                    null -> TypeEvaluation(
+                        evaluatedType = null,
                         errors = setOf(
-                            TypeExpression.NonTypeValueError(
+                            NonTypeValueError(
                                 value = value,
                             ),
                         ),
                     )
 
-                    else -> TypeExpression.DiagnosedAnalysis(
-                        type = type,
+                    else -> TypeEvaluation(
+                        evaluatedType = type,
                         errors = emptySet(),
                     )
                 }

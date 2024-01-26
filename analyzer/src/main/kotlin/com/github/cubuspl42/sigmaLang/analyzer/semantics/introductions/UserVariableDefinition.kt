@@ -78,7 +78,7 @@ object UserVariableDefinition {
                 typeTerm = term.thisType,
             ).value
 
-            val instanceType: TypeAlike = instanceTypeDiagnosedAnalysis.type ?: IllType
+            val instanceType: TypeAlike = instanceTypeDiagnosedAnalysis.evaluatedType ?: IllType
 
             val argumentDeclaration = AbstractionConstructor.ArgumentDeclaration(
                 declaredType = OrderedTupleType(
@@ -142,7 +142,7 @@ object UserVariableDefinition {
 
 class TypeAnnotatedBody(
     override val outerScope: StaticScope,
-    private val declaredTypeAnalysis: TypeExpression.DiagnosedAnalysis,
+    private val declaredTypeAnalysis: TypeEvaluation,
     private val body: Expression,
 ) : FirstOrderExpression() {
     data class UnmatchedInferredTypeError(
