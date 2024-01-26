@@ -10,6 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.InfixCallTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.InfixOperator
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
 
 data class BinaryOperator(
     val functionName: String,

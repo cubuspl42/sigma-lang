@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.NamespaceDef
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SetType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
-import kotlin.test.Ignore
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.resolveName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

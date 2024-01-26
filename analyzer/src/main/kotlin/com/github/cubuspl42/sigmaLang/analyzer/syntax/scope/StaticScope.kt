@@ -1,6 +1,7 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics
+package com.github.cubuspl42.sigmaLang.analyzer.syntax.scope
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedIntroduction
 
 // TODO: Move to `syntax`?
 interface StaticScope {

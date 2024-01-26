@@ -1,10 +1,10 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.LeveledResolvedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
 
 interface UnorderedTupleTypeConstructorTerm : TupleTypeConstructorTerm {
     interface Entry {
