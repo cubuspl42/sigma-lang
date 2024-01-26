@@ -5,8 +5,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TableValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor.ArgumentDeclaration
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm.ArgumentDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.Declaration
 
 class GenericType(
     private val parameterDeclaration: ArgumentDeclaration,

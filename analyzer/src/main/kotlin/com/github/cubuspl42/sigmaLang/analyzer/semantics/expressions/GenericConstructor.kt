@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.lazier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.chainWithIfNotNull
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor.ArgumentDeclaration
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm.ArgumentDeclaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
@@ -24,7 +24,7 @@ class GenericConstructor(
             metaArgumentTerm: TupleTypeConstructorTerm,
             buildBody: (innerScope: StaticScope) -> Lazy<Expression>,
         ): Lazy<GenericConstructor> {
-            val metaArgumentDeclarationBuildOutput = AbstractionConstructor.ArgumentDeclaration.build(
+            val metaArgumentDeclarationBuildOutput = ArgumentDeclaration.build(
                 outerScope = context.outerScope,
                 argumentTypeTerm = metaArgumentTerm,
             )

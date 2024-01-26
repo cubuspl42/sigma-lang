@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.PrimitiveValue
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.utils.MapUtils
 import com.github.cubuspl42.sigmaLang.analyzer.utils.SetUtils
 

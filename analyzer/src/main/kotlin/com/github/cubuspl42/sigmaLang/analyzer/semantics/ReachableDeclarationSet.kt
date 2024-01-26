@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.Declaration
 
 data class ReachableDeclarationSet(
     val reachableDeclarations: Set<Declaration>,

@@ -1,4 +1,4 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions
+package com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
@@ -24,6 +24,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.DefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.MethodDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
 
 object UserVariableDefinition {
@@ -80,7 +81,7 @@ object UserVariableDefinition {
 
             val instanceType: TypeAlike = instanceTypeAnalysis.evaluatedType ?: IllType
 
-            val argumentDeclaration = AbstractionConstructor.ArgumentDeclaration(
+            val argumentDeclaration = AbstractionConstructorTerm.ArgumentDeclaration(
                 declaredType = OrderedTupleType(
                     elements = listOf(
                         OrderedTupleType.Element(

@@ -7,9 +7,53 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.TypeExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.asLazy
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 
 interface AbstractionConstructorTerm : ExpressionTerm {
+    class ArgumentDeclaration(
+        override val declaredType: TupleType,
+    ) : Declaration {
+        data class BuildOutput(
+            val argumentDeclarationLazy: Lazy<ArgumentDeclaration>,
+            val argumentDeclarationBlockLazy: Lazy<StaticBlock>,
+        )
+
+        companion object {
+            fun build(
+                outerScope: StaticScope,
+                argumentTypeTerm: TupleTypeConstructorTerm,
+            ): BuildOutput {
+                val argumentDeclarationLazy = lazy {
+                    val argumentTypeConstructor = argumentTypeTerm.let {
+                        TypeExpression.build(
+                            outerScope = outerScope,
+                            term = it,
+                        )
+                    }.resolved
+
+                    val argumentType = argumentTypeConstructor.evaluateAsType().typeOrIllType as TupleType
+
+                    ArgumentDeclaration(
+                        declaredType = argumentType,
+                    )
+                }
+
+                val argumentDeclarationBlockLazy = lazy {
+                    argumentTypeTerm.toArgumentDeclarationBlock(
+                        argumentDeclaration = argumentDeclarationLazy.value,
+                    )
+                }
+
+                return BuildOutput(
+                    argumentDeclarationLazy = argumentDeclarationLazy,
+                    argumentDeclarationBlockLazy = argumentDeclarationBlockLazy,
+                )
+            }
+        }
+    }
+
     data class BuildOutput(
         val expressionLazy: Lazy<AbstractionConstructor>,
         val argumentDeclarationBlockLazy: Lazy<StaticBlock>,
@@ -25,7 +69,7 @@ interface AbstractionConstructorTerm : ExpressionTerm {
         ): AbstractionConstructorTerm.BuildOutput {
             val outerScope = context.outerScope
 
-            val argumentDeclarationBuildOutput = AbstractionConstructor.ArgumentDeclaration.build(
+            val argumentDeclarationBuildOutput = ArgumentDeclaration.build(
                 outerScope = outerScope,
                 argumentTypeTerm = term.argumentType,
             )
@@ -81,4 +125,5 @@ interface AbstractionConstructorTerm : ExpressionTerm {
     val declaredImageType: ExpressionTerm?
 
     val image: ExpressionTerm
+
 }
