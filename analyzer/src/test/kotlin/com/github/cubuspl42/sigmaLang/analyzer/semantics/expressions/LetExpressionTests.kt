@@ -9,10 +9,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.resolveName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import kotlin.test.Ignore
@@ -75,7 +75,7 @@ class LetExpressionTests {
                 """.trimIndent(),
             )
 
-            val namespaceBuildOutput = NamespaceDefinition.analyze(
+            val namespaceBuildOutput = NamespaceDefinitionTerm.analyze(
                 context = Expression.BuildContext.Empty,
                 qualifiedPath = QualifiedPath.Root,
                 term = term,

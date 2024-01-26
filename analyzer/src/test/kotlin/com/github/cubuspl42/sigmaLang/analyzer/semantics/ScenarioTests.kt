@@ -10,7 +10,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.CallMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.GenericTypeMatcher
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
@@ -25,6 +24,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTyp
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.resolveName
 import utils.CollectionMatchers
 import utils.ListMatchers
@@ -66,7 +66,7 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespaceBuildOutput = NamespaceDefinition.analyze(
+        val namespaceBuildOutput = NamespaceDefinitionTerm.analyze(
             context = Expression.BuildContext(
                 outerScope = Project.loadPrelude().innerStaticScope,
             ),
@@ -212,7 +212,7 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespaceBuildOutput = NamespaceDefinition.analyze(
+        val namespaceBuildOutput = NamespaceDefinitionTerm.analyze(
             context = Expression.BuildContext.Builtin,
             qualifiedPath = QualifiedPath.Root,
             term = term,
@@ -263,7 +263,7 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespaceBody = NamespaceDefinition.analyze(
+        val namespaceBody = NamespaceDefinitionTerm.analyze(
             context = Expression.BuildContext(
                 outerScope = BuiltinScope,
             ),

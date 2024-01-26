@@ -4,7 +4,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TableValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
@@ -81,7 +80,7 @@ class Module(
         }.toSet()
     }
 
-    private val rootNamespaceBodyLazy = NamespaceDefinition.analyze(
+    private val rootNamespaceBodyLazy = NamespaceDefinitionTerm.analyze(
         context = Expression.BuildContext(
             outerScope = importBlock.chainWith(outerScope),
         ),
