@@ -31,7 +31,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionCon
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.resolveName
 import utils.CollectionMatchers
 import utils.FakeArgumentDeclarationBlock

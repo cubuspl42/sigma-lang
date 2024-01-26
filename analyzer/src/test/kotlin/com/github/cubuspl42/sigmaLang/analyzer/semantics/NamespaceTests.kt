@@ -3,11 +3,11 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 import UniversalFunctionTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.resolveName
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
@@ -33,7 +33,7 @@ class NamespaceTests {
                 """.trimIndent(),
             )
 
-            val namespaceBuildOutput = NamespaceDefinition.analyze(
+            val namespaceBuildOutput = NamespaceDefinitionTerm.analyze(
                 context = Expression.BuildContext.Builtin,
                 qualifiedPath = QualifiedPath.Root,
                 term = term,
