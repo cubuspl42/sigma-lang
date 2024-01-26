@@ -13,7 +13,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntrySourceTerm
 import utils.CollectionMatchers
@@ -41,7 +40,7 @@ class ClassDefinitionTests {
 
             val classTag = QualifiedPath.of("foo", "Foo")
 
-            val classBuildOutput = ClassDefinition.analyze(
+            val classBuildOutput = ClassDefinitionTerm.analyze(
                 context = Expression.BuildContext.Builtin,
                 qualifiedPath = classTag,
                 term = term,
@@ -55,7 +54,7 @@ class ClassDefinitionTests {
                 matcher = UnorderedTupleTypeMatcher(
                     entries = CollectionMatchers.eachOnce(
                         UnorderedTupleTypeMatcher.EntryMatcher(
-                            name = Matcher.Equals(ClassDefinition.classTagKey),
+                            name = Matcher.Equals(ClassDefinitionTerm.classTagKey),
                             type = Matcher.Equals(SymbolType(value = classTag)),
                         ),
                         UnorderedTupleTypeMatcher.EntryMatcher(
@@ -80,7 +79,7 @@ class ClassDefinitionTests {
                                 imageType = UnorderedTupleTypeMatcher(
                                     entries = CollectionMatchers.eachOnce(
                                         UnorderedTupleTypeMatcher.EntryMatcher(
-                                            name = Matcher.Equals(ClassDefinition.instanceTagKey),
+                                            name = Matcher.Equals(ClassDefinitionTerm.instanceTagKey),
                                             type = Matcher.Equals(SymbolType(value = classTag)),
                                         ),
                                         UnorderedTupleTypeMatcher.EntryMatcher(
@@ -114,7 +113,7 @@ class ClassDefinitionTests {
                 """.trimIndent(),
             ) as ClassDefinitionTerm
 
-            val classBuildOutput = ClassDefinition.analyze(
+            val classBuildOutput = ClassDefinitionTerm.analyze(
                 context = Expression.BuildContext.Builtin,
                 qualifiedPath = QualifiedPath(
                     segments = listOf(
@@ -141,20 +140,20 @@ class ClassDefinitionTests {
             assertEquals(
                 expected = QualifiedPath.of("foo", "Foo"),
                 actual = classValue.readValue(
-                    key = ClassDefinition.classTagKey,
+                    key = ClassDefinitionTerm.classTagKey,
                 ),
             )
 
             val actualType = assertNotNull(
                 actual = classValue.readValue(
-                    key = ClassDefinition.instanceTypeKey,
+                    key = ClassDefinitionTerm.instanceTypeKey,
                 )?.asType,
             ) as SpecificType
 
             assertTypeIsEquivalent(
                 expected = UnorderedTupleType(
                     valueTypeByName = mapOf(
-                        ClassDefinition.instanceTagKey to SymbolType(
+                        ClassDefinitionTerm.instanceTagKey to SymbolType(
                             value = QualifiedPath.of("foo", "Foo"),
                         ),
                         Identifier.of("foo") to IntCollectiveType,

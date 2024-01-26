@@ -9,11 +9,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 
 object IsFunction : BuiltinGenericFunctionConstructor() {
     override val parameterDeclaration = GenericType.orderedTraitDeclaration(
@@ -49,8 +49,8 @@ object IsFunction : BuiltinGenericFunctionConstructor() {
             val instance = args[0] as DictValue
             val classValue = args[1] as DictValue
 
-            val instanceTagValue = instance.readValue(key = ClassDefinition.instanceTagKey) as Symbol
-            val classTagValue = classValue.readValue(key = ClassDefinition.classTagKey) as Symbol
+            val instanceTagValue = instance.readValue(key = ClassDefinitionTerm.instanceTagKey) as Symbol
+            val classTagValue = classValue.readValue(key = ClassDefinitionTerm.classTagKey) as Symbol
 
             return Thunk.pure(
                 BoolValue(
