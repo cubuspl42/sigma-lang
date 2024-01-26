@@ -53,7 +53,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] -> Int => a + 3",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructorTerm.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).expression
@@ -113,7 +113,7 @@ class AbstractionConstructorTests {
                 """.trimIndent(),
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructorBuildOutput = AbstractionConstructor.build(
+            val abstractionConstructorBuildOutput = AbstractionConstructorTerm.build(
                 context = Expression.BuildContext(
                     outerScope = FakeArgumentDeclarationBlock(
                         declarations = setOf(
@@ -264,7 +264,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] -> Bool => 3 + 4",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructorTerm.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).expression
@@ -285,7 +285,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => 2 + 3",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructorTerm.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).expression
@@ -306,7 +306,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => a",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructorTerm.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).expression
@@ -449,7 +449,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => a * 2",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructorTerm.build(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).expression
@@ -550,7 +550,7 @@ class AbstractionConstructorTests {
     class EvaluationTests {
         @Test
         fun testUnorderedArgumentTuple() {
-            val abstractionConstructor = AbstractionConstructor.build(
+            val abstractionConstructor = AbstractionConstructorTerm.build(
                 context = Expression.BuildContext.Builtin, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionConstructorSourceTerm

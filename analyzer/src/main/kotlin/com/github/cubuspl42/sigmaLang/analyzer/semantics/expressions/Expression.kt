@@ -233,7 +233,7 @@ abstract class Expression {
             context: BuildContext,
             term: ExpressionTerm,
         ): Stub<Expression> = when (term) {
-            is AbstractionConstructorTerm -> AbstractionConstructor.build(
+            is AbstractionConstructorTerm -> AbstractionConstructorTerm.build(
                 context = context,
                 term = term,
             ).expressionLazy.asStub()
