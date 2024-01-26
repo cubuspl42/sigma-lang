@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.CallMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.GenericTypeMatcher
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType

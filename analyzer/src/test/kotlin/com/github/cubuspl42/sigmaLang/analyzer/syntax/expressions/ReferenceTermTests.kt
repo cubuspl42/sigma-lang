@@ -8,7 +8,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.ErrorExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.FieldReadMatcher
@@ -44,7 +43,7 @@ class ReferenceTermTests {
         fun testReferringArgumentDeclaration() {
             val term = ExpressionSourceTerm.parse("foo") as ReferenceTerm
 
-            val argumentDeclaration = AbstractionConstructor.ArgumentDeclaration(
+            val argumentDeclaration = AbstractionConstructorTerm.ArgumentDeclaration(
                 declaredType = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         Identifier.of("foo") to IntCollectiveType,

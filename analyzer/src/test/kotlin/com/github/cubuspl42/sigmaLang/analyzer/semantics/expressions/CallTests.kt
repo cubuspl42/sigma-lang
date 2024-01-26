@@ -13,7 +13,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.EvaluationResul
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StringValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IntCollectiveType
@@ -24,9 +23,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.NeverType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.ParametricType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypePlaceholder
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeVariable
@@ -34,6 +30,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.PostfixCallSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import utils.CollectionMatchers
@@ -187,7 +184,7 @@ class CallTests {
                 context = Expression.BuildContext(
                     outerScope = FakeArgumentDeclarationBlock.of(
                         FakeUserDeclaration(name = Identifier.of("f"), declaredType = run {
-                            val parameterDeclaration = AbstractionConstructor.ArgumentDeclaration(
+                            val parameterDeclaration = AbstractionConstructorTerm.ArgumentDeclaration(
                                 declaredType = UnorderedTupleType(
                                     valueTypeByName = mapOf(
                                         Identifier.of("x") to TypeType,
@@ -265,7 +262,7 @@ class CallTests {
                         FakeUserDeclaration(
                             name = Identifier.of("f"),
                             declaredType = run {
-                                val parameterDeclaration = AbstractionConstructor.ArgumentDeclaration(
+                                val parameterDeclaration = AbstractionConstructorTerm.ArgumentDeclaration(
                                     declaredType = UnorderedTupleType(
                                         valueTypeByName = mapOf(
                                             Identifier.of("a") to TypeType,
@@ -312,7 +309,7 @@ class CallTests {
                 source = "f[]",
             ) as PostfixCallSourceTerm
 
-            val parameterDeclaration = AbstractionConstructor.ArgumentDeclaration(
+            val parameterDeclaration = AbstractionConstructorTerm.ArgumentDeclaration(
                 declaredType = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         Identifier.of("x") to TypeType,

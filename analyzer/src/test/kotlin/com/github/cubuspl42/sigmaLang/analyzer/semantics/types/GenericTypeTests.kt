@@ -5,7 +5,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.types
 import UniversalFunctionTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import utils.CollectionMatchers
 import utils.Matcher
 import utils.assertMatches
@@ -16,7 +16,7 @@ class GenericTypeTests {
     class ParametrizationTests {
         @Test
         fun testSimple() {
-            val parameterDeclaration = AbstractionConstructor.ArgumentDeclaration(
+            val parameterDeclaration = AbstractionConstructorTerm.ArgumentDeclaration(
                 declaredType = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         Identifier.of("x") to TypeType
@@ -83,7 +83,7 @@ class GenericTypeTests {
 
         @Test
         fun testPartial() {
-            val parameterDeclaration = AbstractionConstructor.ArgumentDeclaration(
+            val parameterDeclaration = AbstractionConstructorTerm.ArgumentDeclaration(
                 declaredType = UnorderedTupleType(
                     valueTypeByName = mapOf(
                         Identifier.of("x") to TypeType,

@@ -6,19 +6,16 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.CyclicComputation
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ReachableDeclarationSet
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeAlike
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionTerm
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.TupleTypeConstructorTerm
 
 abstract class AbstractionConstructor : FirstOrderExpression() {
-    abstract val argumentDeclaration: ArgumentDeclaration
+    abstract val argumentDeclaration: AbstractionConstructorTerm.ArgumentDeclaration
 
     val argumentType: TupleType
         get() = argumentDeclaration.declaredType
@@ -28,48 +25,6 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
     abstract val declaredImageType: TypeAlike?
 
     abstract val image: Expression
-
-    class ArgumentDeclaration(
-        override val declaredType: TupleType,
-    ) : Declaration {
-        data class BuildOutput(
-            val argumentDeclarationLazy: Lazy<ArgumentDeclaration>,
-            val argumentDeclarationBlockLazy: Lazy<StaticBlock>,
-        )
-
-        companion object {
-            fun build(
-                outerScope: StaticScope,
-                argumentTypeTerm: TupleTypeConstructorTerm,
-            ): BuildOutput {
-                val argumentDeclarationLazy = lazy {
-                    val argumentTypeConstructor = argumentTypeTerm.let {
-                        TypeExpression.build(
-                            outerScope = outerScope,
-                            term = it,
-                        )
-                    }.resolved
-
-                    val argumentType = argumentTypeConstructor.evaluateAsType().typeOrIllType as TupleType
-
-                    ArgumentDeclaration(
-                        declaredType = argumentType,
-                    )
-                }
-
-                val argumentDeclarationBlockLazy = lazy {
-                    argumentTypeTerm.toArgumentDeclarationBlock(
-                        argumentDeclaration = argumentDeclarationLazy.value,
-                    )
-                }
-
-                return BuildOutput(
-                    argumentDeclarationLazy = argumentDeclarationLazy,
-                    argumentDeclarationBlockLazy = argumentDeclarationBlockLazy,
-                )
-            }
-        }
-    }
 
     override fun bindDirectly(dynamicScope: DynamicScope): Thunk<Value> = Thunk.pure(
         ComputableAbstraction(
@@ -114,7 +69,7 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
 
 fun AbstractionConstructor(
     // TODO: Remove this argument, loop instead
-    argumentDeclaration: AbstractionConstructor.ArgumentDeclaration,
+    argumentDeclaration: AbstractionConstructorTerm.ArgumentDeclaration,
     declaredImageTypeLazy: Lazy<TypeAlike?>,
     imageLazy: Lazy<Expression>,
 ): AbstractionConstructor = object : AbstractionConstructor() {
@@ -122,7 +77,7 @@ fun AbstractionConstructor(
 
     override val term: ExpressionTerm? = null
 
-    override val argumentDeclaration: ArgumentDeclaration = argumentDeclaration
+    override val argumentDeclaration: AbstractionConstructorTerm.ArgumentDeclaration = argumentDeclaration
 
     override val declaredImageType: TypeAlike? by declaredImageTypeLazy
 

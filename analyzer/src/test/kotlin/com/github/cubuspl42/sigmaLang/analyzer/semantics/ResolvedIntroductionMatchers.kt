@@ -1,12 +1,12 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import utils.Matcher
 
 class ResolvedIntroductionMatchers {
     class ResolvedAbstractionArgumentMatcher(
-        private val argumentDeclaration: Matcher<AbstractionConstructor.ArgumentDeclaration>,
+        private val argumentDeclaration: Matcher<AbstractionConstructorTerm.ArgumentDeclaration>,
     ) : Matcher<ResolvedAbstractionArgument>() {
         override fun match(actual: ResolvedAbstractionArgument) {
             argumentDeclaration.match(actual.argumentDeclaration)

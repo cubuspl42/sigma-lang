@@ -8,11 +8,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.MappingStaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AtomicExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 
 abstract class FakeIntroduction
 
@@ -49,7 +49,7 @@ class FakeArgumentDeclarationBlock(
         )
     }
 
-    private val argumentDeclaration = AbstractionConstructor.ArgumentDeclaration(
+    private val argumentDeclaration = AbstractionConstructorTerm.ArgumentDeclaration(
         declaredType = UnorderedTupleType(
             valueTypeByName = declarations.associate { it.name to it.declaredType },
         ),

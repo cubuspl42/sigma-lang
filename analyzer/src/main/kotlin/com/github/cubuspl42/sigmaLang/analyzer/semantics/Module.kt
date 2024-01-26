@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TableValue
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.NamespaceDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.NamespaceDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm

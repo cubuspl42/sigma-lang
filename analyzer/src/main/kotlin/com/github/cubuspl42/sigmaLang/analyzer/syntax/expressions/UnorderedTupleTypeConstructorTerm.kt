@@ -5,7 +5,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduc
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 
 interface UnorderedTupleTypeConstructorTerm : TupleTypeConstructorTerm {
     interface Entry {
@@ -17,7 +16,7 @@ interface UnorderedTupleTypeConstructorTerm : TupleTypeConstructorTerm {
     val entries: List<Entry>
 
     override fun toArgumentDeclarationBlock(
-        argumentDeclaration: AbstractionConstructor.ArgumentDeclaration,
+        argumentDeclaration: AbstractionConstructorTerm.ArgumentDeclaration,
     ): StaticBlock = StaticBlock.Fixed(
         resolvedNameByName = entries.associate { entry ->
             entry.name to LeveledResolvedIntroduction(

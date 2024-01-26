@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.introductions.Declaration
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.Declaration
 
 interface DynamicScope {
     object Empty : DynamicScope {
