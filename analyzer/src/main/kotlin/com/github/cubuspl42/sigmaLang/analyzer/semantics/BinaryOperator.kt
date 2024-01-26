@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.CallTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.InfixCallTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.InfixOperator
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ReferenceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
@@ -83,18 +84,20 @@ data class BinaryOperator(
 
     fun buildCall(
         context: Expression.BuildContext,
+        term: InfixCallTerm,
         leftArgument: Expression,
         rightArgument: Expression,
     ): Lazy<Call> = lazy {
         val buildOutput = ReferenceTerm.build(
             context,
+            term = term,
             referredName = Symbol.of(functionName),
         )
 
         object : Call() {
             override val outerScope: StaticScope = context.outerScope
 
-            override val term: CallTerm? = null
+            override val term: CallTerm = term
 
             override val subject: Expression by buildOutput.expressionLazy
 

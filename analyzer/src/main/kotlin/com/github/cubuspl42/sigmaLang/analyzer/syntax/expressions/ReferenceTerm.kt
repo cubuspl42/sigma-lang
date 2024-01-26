@@ -26,6 +26,7 @@ interface ReferenceTerm : ExpressionTerm {
     companion object {
         fun build(
             context: Expression.BuildContext,
+            term: ExpressionTerm,
             referredName: Symbol,
         ): BuildOutput {
             val outerScope = context.outerScope
@@ -36,7 +37,7 @@ interface ReferenceTerm : ExpressionTerm {
 
             val expressionLazy = lazy {
                 resolvedName?.resolvedIntroduction?.buildReference() ?: ErrorExpression(
-                    term = null,
+                    term = term,
                 )
             }
 
@@ -69,5 +70,6 @@ fun ReferenceTerm.build(
     context: Expression.BuildContext,
 ): ReferenceTerm.BuildOutput = ReferenceTerm.build(
     context = context,
+    term = this,
     referredName = referredName,
 )
