@@ -81,7 +81,7 @@ class Module(
         }.toSet()
     }
 
-    private val rootNamespaceBodyLazy = NamespaceDefinition.build(
+    private val rootNamespaceBodyLazy = NamespaceDefinition.analyze(
         context = Expression.BuildContext(
             outerScope = importBlock.chainWith(outerScope),
         ),

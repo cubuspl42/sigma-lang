@@ -19,7 +19,7 @@ object ArrayTypeConstructor : WrapperTypeConstructor() {
         context: Expression.BuildContext,
         term: ArrayTypeConstructorTerm,
     ): Stub<Call> {
-        val buildOutput = ReferenceTerm.build(
+        val buildOutput = ReferenceTerm.analyze(
             context,
             term = term,
             referredName = Name,

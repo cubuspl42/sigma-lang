@@ -25,7 +25,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
 
 object ClassDefinition {
-    data class BuildOutput(
+    data class Analysis(
         val classBodyLazy: Lazy<Expression>,
     ) {
         val classBody: Expression by classBodyLazy
@@ -50,11 +50,11 @@ object ClassDefinition {
 //            ),
 //        )
 
-    fun build(
+    fun analyze(
         context: Expression.BuildContext,
         qualifiedPath: QualifiedPath,
         term: ClassDefinitionTerm,
-    ): BuildOutput {
+    ): Analysis {
         val outerScope = context.outerScope
 
         val userInstanceTypeStub = UnorderedTupleTypeConstructor.build(
@@ -127,7 +127,7 @@ object ClassDefinition {
             }
         }
 
-        return BuildOutput(
+        return Analysis(
             classBodyLazy = classBodyStub.asLazy(),
         )
     }

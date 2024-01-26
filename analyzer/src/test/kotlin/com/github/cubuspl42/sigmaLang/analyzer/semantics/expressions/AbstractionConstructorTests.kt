@@ -16,7 +16,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.buildReferenceMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.resolveName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
@@ -29,8 +28,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UniversalFunction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.NamespaceDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.resolveName
 import utils.CollectionMatchers
 import utils.FakeArgumentDeclarationBlock
 import utils.FakeUserDeclaration
@@ -52,7 +54,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] -> Int => a + 3",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructorTerm.build(
+            val abstractionConstructor = AbstractionConstructorTerm.analyze(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).expression
@@ -112,7 +114,7 @@ class AbstractionConstructorTests {
                 """.trimIndent(),
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructorBuildOutput = AbstractionConstructorTerm.build(
+            val abstractionConstructorBuildOutput = AbstractionConstructorTerm.analyze(
                 context = Expression.BuildContext(
                     outerScope = FakeArgumentDeclarationBlock(
                         declarations = setOf(
@@ -263,7 +265,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] -> Bool => 3 + 4",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructorTerm.build(
+            val abstractionConstructor = AbstractionConstructorTerm.analyze(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).expression
@@ -284,7 +286,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => 2 + 3",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructorTerm.build(
+            val abstractionConstructor = AbstractionConstructorTerm.analyze(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).expression
@@ -305,7 +307,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => a",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructorTerm.build(
+            val abstractionConstructor = AbstractionConstructorTerm.analyze(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).expression
@@ -448,7 +450,7 @@ class AbstractionConstructorTests {
                 source = "^[a: Int] => a * 2",
             ) as AbstractionConstructorSourceTerm
 
-            val abstractionConstructor = AbstractionConstructorTerm.build(
+            val abstractionConstructor = AbstractionConstructorTerm.analyze(
                 context = Expression.BuildContext.Builtin,
                 term = term,
             ).expression
@@ -549,7 +551,7 @@ class AbstractionConstructorTests {
     class EvaluationTests {
         @Test
         fun testUnorderedArgumentTuple() {
-            val abstractionConstructor = AbstractionConstructorTerm.build(
+            val abstractionConstructor = AbstractionConstructorTerm.analyze(
                 context = Expression.BuildContext.Builtin, term = ExpressionSourceTerm.parse(
                     source = "^[n: Int, m: Int] => n * m",
                 ) as AbstractionConstructorSourceTerm

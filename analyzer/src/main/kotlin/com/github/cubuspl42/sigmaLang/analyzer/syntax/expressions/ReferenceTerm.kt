@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 
 interface ReferenceTerm : ExpressionTerm {
-    data class BuildOutput(
+    data class Analysis(
         val expressionLazy: Lazy<Expression>,
         val errorsLazy: Lazy<Set<SemanticError>>,
     ) {
@@ -23,11 +23,11 @@ interface ReferenceTerm : ExpressionTerm {
     ) : SemanticError
 
     companion object {
-        fun build(
+        fun analyze(
             context: Expression.BuildContext,
             term: ExpressionTerm,
             referredName: Symbol,
-        ): BuildOutput {
+        ): Analysis {
             val outerScope = context.outerScope
 
             val resolvedName: LeveledResolvedIntroduction? by lazy {
@@ -55,7 +55,7 @@ interface ReferenceTerm : ExpressionTerm {
                 }
             }
 
-            return BuildOutput(
+            return Analysis(
                 expressionLazy = expressionLazy,
                 errorsLazy = errorsLazy,
             )
@@ -65,9 +65,9 @@ interface ReferenceTerm : ExpressionTerm {
     val referredName: Identifier
 }
 
-fun ReferenceTerm.build(
+fun ReferenceTerm.analyze(
     context: Expression.BuildContext,
-): ReferenceTerm.BuildOutput = ReferenceTerm.build(
+): ReferenceTerm.Analysis = ReferenceTerm.analyze(
     context = context,
     term = this,
     referredName = referredName,
