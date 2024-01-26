@@ -122,6 +122,7 @@ abstract class Call : FirstOrderExpression() {
 
                 prototype.buildCall(
                     context = context,
+                    term = term,
                     leftArgument = leftArgument,
                     rightArgument = rightArgument,
                 )

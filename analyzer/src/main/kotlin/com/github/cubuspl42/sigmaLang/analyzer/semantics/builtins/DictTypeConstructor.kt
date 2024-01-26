@@ -26,6 +26,7 @@ object DictTypeConstructor : TypeConstructorConstructor() {
     ): Stub<Call> {
         val buildOutput = ReferenceTerm.build(
             context,
+            term = term,
             referredName = Name,
         )
 
