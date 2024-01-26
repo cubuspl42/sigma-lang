@@ -45,7 +45,7 @@ abstract class SetConstructor : FirstOrderExpression() {
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         val elementsAnalyses = elements.map {
-            compute(it.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+            compute(it.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
         }
 
         val distinctiveElementTypes = elementsAnalyses.map { it.inferredType }.toSet()
@@ -54,7 +54,7 @@ abstract class SetConstructor : FirstOrderExpression() {
 
         if (elementType != null) {
             DiagnosedAnalysis(
-                analysis = Analysis(
+                typeInference = TypeInference(
                     inferredType = SetType(
                         elementType = elementType,
                     ),

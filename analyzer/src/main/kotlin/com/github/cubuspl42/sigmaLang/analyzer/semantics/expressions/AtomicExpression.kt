@@ -32,7 +32,7 @@ abstract class AtomicExpression : FirstOrderExpression() {
     override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> by lazy {
         Computation.pure(
             DiagnosedAnalysis(
-                analysis = Analysis(inferredType = type),
+                typeInference = TypeInference(inferredType = type),
                 directErrors = emptySet(),
             ),
         )

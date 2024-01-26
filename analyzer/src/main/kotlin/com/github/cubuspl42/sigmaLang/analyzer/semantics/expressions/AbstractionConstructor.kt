@@ -147,9 +147,9 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         DiagnosedAnalysis(
-            analysis = object : Analysis() {
+            typeInference = object : TypeInference() {
                 private val imageAnalysis by lazy {
-                    compute(image.computedAnalysis)
+                    compute(image.computedTypeInference)
                 }
 
                 override val inferredType: TypeAlike = run {

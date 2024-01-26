@@ -33,7 +33,7 @@ data class StringLiteral(
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         DiagnosedAnalysis(
-            analysis = Analysis(
+            typeInference = TypeInference(
                 inferredType = StringType,
             ),
             directErrors = emptySet(),

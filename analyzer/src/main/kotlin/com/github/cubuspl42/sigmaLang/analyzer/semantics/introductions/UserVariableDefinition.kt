@@ -155,7 +155,7 @@ class TypeAnnotatedBody(
     override val term: ExpressionTerm? = null
 
     override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = buildDiagnosedAnalysisComputation {
-        val bodyAnalysis = compute(body.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+        val bodyAnalysis = compute(body.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
         val inferredType = bodyAnalysis.inferredType
 
         val unmatchedInferredTypeError = run {
@@ -169,7 +169,7 @@ class TypeAnnotatedBody(
         }
 
         DiagnosedAnalysis(
-            analysis = Analysis(
+            typeInference = TypeInference(
                 inferredType = declaredType ?: inferredType,
             ),
             directErrors = declaredTypeAnalysis.errors + setOfNotNull(

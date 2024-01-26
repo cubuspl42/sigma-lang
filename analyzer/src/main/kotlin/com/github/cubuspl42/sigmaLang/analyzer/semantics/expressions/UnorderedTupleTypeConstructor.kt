@@ -23,7 +23,7 @@ abstract class UnorderedTupleTypeConstructor : TupleTypeConstructor() {
 
         data class Analysis(
             val name: Identifier,
-            val typeAnalysis: Expression.Analysis,
+            val typeInference: Expression.TypeInference,
         )
 
         companion object {

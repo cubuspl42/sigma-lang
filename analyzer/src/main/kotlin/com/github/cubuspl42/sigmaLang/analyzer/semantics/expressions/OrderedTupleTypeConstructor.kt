@@ -44,7 +44,7 @@ abstract class OrderedTupleTypeConstructor : TupleTypeConstructor() {
 
         data class Analysis(
             val name: Identifier?,
-            val typeAnalysis: Expression.Analysis,
+            val typeInference: Expression.TypeInference,
         )
     }
 

@@ -2,7 +2,6 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BinaryOperator
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.ArrayTable
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
@@ -156,8 +155,8 @@ abstract class Call : FirstOrderExpression() {
     }
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
-        val argumentAnalysis = compute(argument.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+        val subjectAnalysis = compute(subject.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
+        val argumentAnalysis = compute(argument.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
 
         val subjectType = subjectAnalysis.inferredType.specifyImplicitly()
         val argumentType = argumentAnalysis.inferredType as SpecificType
@@ -175,7 +174,7 @@ abstract class Call : FirstOrderExpression() {
                     )
                 } else {
                     DiagnosedAnalysis(
-                        analysis = Analysis(
+                        typeInference = TypeInference(
                             inferredType = subjectType.indexedElements[index.toInt()].type,
                         ),
                         directErrors = emptySet(),
@@ -218,7 +217,7 @@ abstract class Call : FirstOrderExpression() {
                         }
 
                         DiagnosedAnalysis(
-                            analysis = Analysis(
+                            typeInference = TypeInference(
                                 inferredType = effectiveImageType,
                             ),
                             directErrors = setOfNotNull(directError),

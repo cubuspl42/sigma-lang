@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.scope.DynamicScope
-import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.TableValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
@@ -64,7 +63,7 @@ abstract class FieldRead : FirstOrderExpression() {
     }
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val subjectAnalysis = compute(subject.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+        val subjectAnalysis = compute(subject.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
 
         val inferredSubjectType = subjectAnalysis.inferredType as SpecificType
         val validSubjectType = inferredSubjectType as? UnorderedTupleType
@@ -74,7 +73,7 @@ abstract class FieldRead : FirstOrderExpression() {
 
             if (fieldType != null) {
                 DiagnosedAnalysis(
-                    analysis = Analysis(
+                    typeInference = TypeInference(
                         inferredType = fieldType,
                     ),
                     directErrors = emptySet(),

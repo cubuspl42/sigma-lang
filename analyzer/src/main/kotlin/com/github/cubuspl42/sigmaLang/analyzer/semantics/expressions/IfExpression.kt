@@ -64,9 +64,9 @@ abstract class IfExpression : FirstOrderExpression() {
     }
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        val guardAnalysis = compute(guard.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
-        val trueBranchAnalysis = compute(trueBranch.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
-        val falseBranchAnalysis = compute(falseBranch.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null
+        val guardAnalysis = compute(guard.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
+        val trueBranchAnalysis = compute(trueBranch.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
+        val falseBranchAnalysis = compute(falseBranch.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
 
         val guardError = when (val inferredGuardType = guardAnalysis.inferredType as SpecificType) {
             is BoolType -> null
@@ -81,7 +81,7 @@ abstract class IfExpression : FirstOrderExpression() {
         val inferredResultType = inferredTrueType.findLowestCommonSupertype(inferredFalseType)
 
         DiagnosedAnalysis(
-            analysis = Analysis(
+            typeInference = TypeInference(
                 inferredType = inferredResultType,
             ),
             directErrors = setOfNotNull(guardError),

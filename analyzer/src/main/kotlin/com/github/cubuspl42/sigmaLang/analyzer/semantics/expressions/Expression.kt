@@ -140,7 +140,7 @@ abstract class Expression {
     ): Computation<DiagnosedAnalysis?> = Computation {
         if (isAnalyzed(this@Expression)) {
             DiagnosedAnalysis(
-                analysis = null,
+                typeInference = null,
                 // TODO: A specific error?
                 directErrors = emptySet(),
             )
@@ -149,20 +149,19 @@ abstract class Expression {
         }
     }
 
-    abstract class Analysis {
+    abstract class TypeInference {
         abstract val inferredType: TypeAlike
     }
 
-
     data class DiagnosedAnalysis(
-        val analysis: Analysis?,
+        val typeInference: TypeInference?,
         val directErrors: Set<SemanticError>,
     ) {
         companion object {
             fun fromError(
                 error: SemanticError,
             ): DiagnosedAnalysis = DiagnosedAnalysis(
-                analysis = null,
+                typeInference = null,
                 directErrors = setOf(error),
             )
         }
@@ -171,12 +170,12 @@ abstract class Expression {
             inferredType: TypeAlike,
             directErrors: Set<SemanticError> = emptySet(),
         ) : this(
-            analysis = Analysis(inferredType),
+            typeInference = TypeInference(inferredType),
             directErrors = directErrors,
         )
 
         val inferredType: TypeAlike?
-            get() = analysis?.inferredType
+            get() = typeInference?.inferredType
     }
 
     data class BuildContext(
@@ -194,9 +193,9 @@ abstract class Expression {
     }
 
     companion object {
-        fun Analysis(
+        fun TypeInference(
             inferredType: TypeAlike,
-        ): Analysis = object : Analysis() {
+        ): TypeInference = object : TypeInference() {
             override val inferredType: TypeAlike = inferredType
         }
 
@@ -370,14 +369,14 @@ abstract class Expression {
         }
     }
 
-    val computedAnalysis: Expression.Computation<Analysis?> by lazy {
+    val computedTypeInference: Expression.Computation<TypeInference?> by lazy {
         computedDiagnosedAnalysis.transform {
-            it?.analysis
+            it?.typeInference
         }
     }
 
     private val inferredTypeOrNull: Expression.Computation<TypeAlike?> by lazy {
-        computedAnalysis.transform { it?.inferredType }
+        computedTypeInference.transform { it?.inferredType }
     }
 
     val inferredTypeOrIllType: Computation<TypeAlike> by lazy {

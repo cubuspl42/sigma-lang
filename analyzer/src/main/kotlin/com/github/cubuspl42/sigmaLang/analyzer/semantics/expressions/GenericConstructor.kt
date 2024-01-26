@@ -80,7 +80,7 @@ class GenericConstructor(
         val inferredBodyType = compute(body.inferredTypeOrIllType) as Type
 
         DiagnosedAnalysis(
-            analysis = Analysis(
+            typeInference = TypeInference(
                 inferredType = GenericType(
                     parameterDeclaration = metaArgumentDeclaration,
                     bodyType = inferredBodyType,

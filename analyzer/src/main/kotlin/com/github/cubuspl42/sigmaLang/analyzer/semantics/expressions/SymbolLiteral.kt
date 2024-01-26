@@ -17,7 +17,7 @@ class SymbolLiteral(
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         DiagnosedAnalysis(
-            analysis = Analysis(
+            typeInference = TypeInference(
                 inferredType = SymbolType(value = value),
             ),
             directErrors = emptySet(),

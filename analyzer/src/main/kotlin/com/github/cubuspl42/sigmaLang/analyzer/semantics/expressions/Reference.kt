@@ -28,7 +28,7 @@ abstract class Reference : FirstOrderExpression() {
     override val computedDiagnosedAnalysis by lazy {
         Computation.pure(
             DiagnosedAnalysis(
-                analysis = Analysis(
+                typeInference = TypeInference(
                     inferredType = referredDeclaration.declaredType,
                 ),
                 directErrors = emptySet(),
