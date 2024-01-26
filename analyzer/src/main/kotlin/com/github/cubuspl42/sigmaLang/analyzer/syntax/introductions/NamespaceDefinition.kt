@@ -24,7 +24,7 @@ class NamespaceStaticBlock(
 }
 
 object NamespaceDefinition {
-    data class BuildOutput(
+    data class Analysis(
         val namespaceBodyLazy: Lazy<Expression>,
         val definitionBlockLazy: Lazy<StaticBlock>,
     ) {
@@ -32,11 +32,11 @@ object NamespaceDefinition {
         val definitionBlock: StaticBlock by definitionBlockLazy
     }
 
-    fun build(
+    fun analyze(
         context: Expression.BuildContext,
         qualifiedPath: QualifiedPath,
         term: NamespaceDefinitionTerm,
-    ): BuildOutput = StaticScope.looped { innerScopeLooped ->
+    ): Analysis = StaticScope.looped { innerScopeLooped ->
         val definitionByName = term.entries.associate { definitionTerm ->
             definitionTerm.name to NamespaceEntryTerm.build(
                 context = Expression.BuildContext(
@@ -73,7 +73,7 @@ object NamespaceDefinition {
         }
 
         Pair(
-            BuildOutput(
+            Analysis(
                 namespaceBodyLazy = lazyOf(namespaceBody),
                 definitionBlockLazy = lazyOf(staticBlock),
             ),

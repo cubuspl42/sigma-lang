@@ -15,16 +15,16 @@ interface AbstractionConstructorTerm : ExpressionTerm {
     class ArgumentDeclaration(
         override val declaredType: TupleType,
     ) : Declaration {
-        data class BuildOutput(
+        data class Analysis(
             val argumentDeclarationLazy: Lazy<ArgumentDeclaration>,
             val argumentDeclarationBlockLazy: Lazy<StaticBlock>,
         )
 
         companion object {
-            fun build(
+            fun analyze(
                 outerScope: StaticScope,
                 argumentTypeTerm: TupleTypeConstructorTerm,
-            ): BuildOutput {
+            ): Analysis {
                 val argumentDeclarationLazy = lazy {
                     val argumentTypeConstructor = argumentTypeTerm.let {
                         TypeExpression.build(
@@ -46,7 +46,7 @@ interface AbstractionConstructorTerm : ExpressionTerm {
                     )
                 }
 
-                return BuildOutput(
+                return Analysis(
                     argumentDeclarationLazy = argumentDeclarationLazy,
                     argumentDeclarationBlockLazy = argumentDeclarationBlockLazy,
                 )
@@ -54,7 +54,7 @@ interface AbstractionConstructorTerm : ExpressionTerm {
         }
     }
 
-    data class BuildOutput(
+    data class Analysis(
         val expressionLazy: Lazy<AbstractionConstructor>,
         val argumentDeclarationBlockLazy: Lazy<StaticBlock>,
     ) {
@@ -63,13 +63,13 @@ interface AbstractionConstructorTerm : ExpressionTerm {
     }
 
     companion object {
-        fun build(
+        fun analyze(
             context: Expression.BuildContext,
             term: AbstractionConstructorTerm,
-        ): AbstractionConstructorTerm.BuildOutput {
+        ): AbstractionConstructorTerm.Analysis {
             val outerScope = context.outerScope
 
-            val argumentDeclarationBuildOutput = ArgumentDeclaration.build(
+            val argumentDeclarationBuildOutput = ArgumentDeclaration.analyze(
                 outerScope = outerScope,
                 argumentTypeTerm = term.argumentType,
             )
@@ -113,7 +113,7 @@ interface AbstractionConstructorTerm : ExpressionTerm {
                 }
             }
 
-            return AbstractionConstructorTerm.BuildOutput(
+            return AbstractionConstructorTerm.Analysis(
                 expressionLazy = expressionStub.asLazy(),
                 argumentDeclarationBlockLazy = argumentDeclarationBuildOutput.argumentDeclarationBlockLazy,
             )

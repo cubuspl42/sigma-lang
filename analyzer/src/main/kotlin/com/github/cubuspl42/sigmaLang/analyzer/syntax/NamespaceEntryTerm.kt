@@ -48,7 +48,7 @@ sealed interface NamespaceEntryTerm {
                 is ClassDefinitionTerm -> LeveledResolvedIntroduction(
                     level = StaticScope.Level.Meta,
                     resolvedIntroduction = ResolvedDefinition(
-                        bodyLazy = ClassDefinition.build(
+                        bodyLazy = ClassDefinition.analyze(
                             context = context,
                             qualifiedPath = extendedQualifiedPath,
                             term = term,

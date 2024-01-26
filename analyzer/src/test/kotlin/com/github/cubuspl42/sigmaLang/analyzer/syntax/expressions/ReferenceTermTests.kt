@@ -51,7 +51,7 @@ class ReferenceTermTests {
                 ),
             )
 
-            val buildOutput = term.build(
+            val buildOutput = term.analyze(
                 context = Expression.BuildContext(
                     outerScope = StaticBlock.Fixed(
                         resolvedNameByName = mapOf(
@@ -99,7 +99,7 @@ class ReferenceTermTests {
                 ),
             )
 
-            val buildOutput = term.build(
+            val buildOutput = term.analyze(
                 context = Expression.BuildContext(
                     outerScope = StaticBlock.Fixed(
                         resolvedNameByName = mapOf(
@@ -132,7 +132,7 @@ class ReferenceTermTests {
         fun testUnresolved() {
             val term = ExpressionSourceTerm.parse("foo") as ReferenceTerm
 
-            val buildOutput = term.build(
+            val buildOutput = term.analyze(
                 context = Expression.BuildContext(
                     outerScope = StaticScope.Empty,
                 ),

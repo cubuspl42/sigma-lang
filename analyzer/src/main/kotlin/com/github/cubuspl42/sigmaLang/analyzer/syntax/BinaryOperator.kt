@@ -89,7 +89,7 @@ data class BinaryOperator(
         leftArgument: Expression,
         rightArgument: Expression,
     ): Lazy<Call> = lazy {
-        val buildOutput = ReferenceTerm.build(
+        val buildOutput = ReferenceTerm.analyze(
             context,
             term = term,
             referredName = Symbol.of(functionName),

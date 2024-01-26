@@ -76,7 +76,7 @@ abstract class Call : FirstOrderExpression() {
                 term = term.self,
             ).asLazy()
 
-            val methodReferenceLazy = term.method.build(
+            val methodReferenceLazy = term.method.analyze(
                 context = context,
             ).expressionLazy
 

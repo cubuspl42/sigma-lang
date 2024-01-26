@@ -75,7 +75,7 @@ class LetExpressionTests {
                 """.trimIndent(),
             )
 
-            val namespaceBuildOutput = NamespaceDefinition.build(
+            val namespaceBuildOutput = NamespaceDefinition.analyze(
                 context = Expression.BuildContext.Empty,
                 qualifiedPath = QualifiedPath.Root,
                 term = term,

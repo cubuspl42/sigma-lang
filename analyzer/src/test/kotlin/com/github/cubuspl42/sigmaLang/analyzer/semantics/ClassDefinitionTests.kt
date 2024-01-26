@@ -41,7 +41,7 @@ class ClassDefinitionTests {
 
             val classTag = QualifiedPath.of("foo", "Foo")
 
-            val classBuildOutput = ClassDefinition.build(
+            val classBuildOutput = ClassDefinition.analyze(
                 context = Expression.BuildContext.Builtin,
                 qualifiedPath = classTag,
                 term = term,
@@ -114,7 +114,7 @@ class ClassDefinitionTests {
                 """.trimIndent(),
             ) as ClassDefinitionTerm
 
-            val classBuildOutput = ClassDefinition.build(
+            val classBuildOutput = ClassDefinition.analyze(
                 context = Expression.BuildContext.Builtin,
                 qualifiedPath = QualifiedPath(
                     segments = listOf(

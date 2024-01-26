@@ -24,7 +24,7 @@ class GenericConstructor(
             metaArgumentTerm: TupleTypeConstructorTerm,
             buildBody: (innerScope: StaticScope) -> Lazy<Expression>,
         ): Lazy<GenericConstructor> {
-            val metaArgumentDeclarationBuildOutput = ArgumentDeclaration.build(
+            val metaArgumentDeclarationBuildOutput = ArgumentDeclaration.analyze(
                 outerScope = context.outerScope,
                 argumentTypeTerm = metaArgumentTerm,
             )

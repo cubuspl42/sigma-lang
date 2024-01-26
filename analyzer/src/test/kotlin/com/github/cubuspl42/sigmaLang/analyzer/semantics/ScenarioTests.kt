@@ -66,7 +66,7 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespaceBuildOutput = NamespaceDefinition.build(
+        val namespaceBuildOutput = NamespaceDefinition.analyze(
             context = Expression.BuildContext(
                 outerScope = Project.loadPrelude().innerStaticScope,
             ),
@@ -212,7 +212,7 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespaceBuildOutput = NamespaceDefinition.build(
+        val namespaceBuildOutput = NamespaceDefinition.analyze(
             context = Expression.BuildContext.Builtin,
             qualifiedPath = QualifiedPath.Root,
             term = term,
@@ -263,7 +263,7 @@ class ScenarioTests {
             """.trimIndent(),
         )
 
-        val namespaceBody = NamespaceDefinition.build(
+        val namespaceBody = NamespaceDefinition.analyze(
             context = Expression.BuildContext(
                 outerScope = BuiltinScope,
             ),

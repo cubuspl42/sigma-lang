@@ -24,7 +24,7 @@ object DictTypeConstructor : TypeConstructorConstructor() {
         context: Expression.BuildContext,
         term: DictTypeConstructorTerm,
     ): Stub<Call> {
-        val buildOutput = ReferenceTerm.build(
+        val buildOutput = ReferenceTerm.analyze(
             context,
             term = term,
             referredName = Name,

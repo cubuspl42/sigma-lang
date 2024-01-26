@@ -30,7 +30,7 @@ class BuiltinsTests {
             """.trimIndent(),
         )
 
-        val namespaceBuildOutput = NamespaceDefinition.build(
+        val namespaceBuildOutput = NamespaceDefinition.analyze(
             context = Expression.BuildContext.Builtin,
             qualifiedPath = QualifiedPath.Root,
             term = term,
