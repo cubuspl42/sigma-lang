@@ -4,9 +4,6 @@ package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedIntroduction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Call
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.CallMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression

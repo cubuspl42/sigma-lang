@@ -16,7 +16,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.ConstExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.buildReferenceMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.resolveName
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.resolveName
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.FunctionType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
@@ -33,7 +33,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.ExpressionSour
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionSourceTerm
 import utils.CollectionMatchers
 import utils.FakeArgumentDeclarationBlock
-import utils.FakeStaticScope
 import utils.FakeUserDeclaration
 import utils.ListMatchers
 import utils.Matcher

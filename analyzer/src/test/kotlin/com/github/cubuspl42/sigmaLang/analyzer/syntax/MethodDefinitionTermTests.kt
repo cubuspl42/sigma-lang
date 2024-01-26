@@ -9,10 +9,10 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.asType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.BinaryOperator
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.LeveledResolvedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScopeMatchers.LevelResolvedIntroductionMatcher.Companion.primaryDefinitionMatcher
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.builtins.BuiltinScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor

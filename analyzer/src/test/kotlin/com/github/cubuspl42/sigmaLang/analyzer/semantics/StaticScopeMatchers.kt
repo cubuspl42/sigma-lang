@@ -2,6 +2,8 @@ package com.github.cubuspl42.sigmaLang.analyzer.semantics
 
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.AbstractionConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.LeveledResolvedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
 import utils.Matcher
 import utils.checked
 

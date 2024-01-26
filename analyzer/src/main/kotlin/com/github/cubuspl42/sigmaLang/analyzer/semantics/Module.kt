@@ -9,6 +9,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleSourceTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ModuleTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntryTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.LeveledResolvedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
 
 class Module(
     private val moduleResolver: ModuleResolver,

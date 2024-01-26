@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticBlock
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub

@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.VariableDefinitionBlock
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.VariableDefinitionBlock
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.LetExpressionTerm
 
 data class LetExpression(

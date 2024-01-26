@@ -1,6 +1,8 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics
+package com.github.cubuspl42.sigmaLang.analyzer.syntax.scope
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.UserVariableDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.LocalDefinitionTerm

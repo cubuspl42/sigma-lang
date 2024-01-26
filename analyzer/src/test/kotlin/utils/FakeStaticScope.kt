@@ -3,11 +3,11 @@ package utils
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.LeveledResolvedIntroduction
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.MappingStaticBlock
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.LeveledResolvedIntroduction
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.MappingStaticBlock
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedUnorderedArgument
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AtomicExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType

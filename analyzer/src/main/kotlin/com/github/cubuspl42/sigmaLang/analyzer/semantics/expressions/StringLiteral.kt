@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.StringValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.toThunk
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.StringType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.StringLiteralTerm
 

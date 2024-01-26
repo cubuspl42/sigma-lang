@@ -21,6 +21,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTyp
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.asValue
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.expressions.UnorderedTupleConstructorTerm
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
 
 object ClassDefinition {
     data class BuildOutput(
