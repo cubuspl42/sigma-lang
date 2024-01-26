@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.analyzer.evaluation.values
 
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.BinaryOperator
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.BinaryOperator
 
 data class IntValue(
     val value: Long,
