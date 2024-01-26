@@ -38,7 +38,7 @@ abstract class IsUndefinedCheck : FirstOrderExpression() {
 
     override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
         DiagnosedAnalysis(
-            analysis = Analysis(
+            typeInference = TypeInference(
                 inferredType = BoolType,
             ),
             directErrors = emptySet(),

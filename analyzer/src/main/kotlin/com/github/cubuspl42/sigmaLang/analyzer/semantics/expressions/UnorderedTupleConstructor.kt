@@ -5,7 +5,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.*
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.SemanticError
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.IllType
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SpecificType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.Type
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.SourceLocation
@@ -23,7 +22,7 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
 
         data class Analysis(
             val name: Symbol,
-            val valueAnalysis: Expression.Analysis,
+            val valueAnalysis: Expression.TypeInference,
         ) {
             val inferredValueType: Type
                 get() = valueAnalysis.inferredType as Type
@@ -102,7 +101,7 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
         val entriesAnalyses = entries.map {
             Entry.Analysis(
                 name = it.name,
-                valueAnalysis = compute(it.value.computedAnalysis) ?: return@buildDiagnosedAnalysisComputation null,
+                valueAnalysis = compute(it.value.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null,
             )
         }
 
@@ -122,7 +121,7 @@ abstract class UnorderedTupleConstructor : TupleConstructor() {
         }
 
         DiagnosedAnalysis(
-            analysis = Analysis(
+            typeInference = TypeInference(
                 inferredType = UnorderedTupleType(
                     valueTypeByName = entryTypeByName.mapValues { (_, entryTypes) ->
                         entryTypes.singleOrNull() ?: IllType
