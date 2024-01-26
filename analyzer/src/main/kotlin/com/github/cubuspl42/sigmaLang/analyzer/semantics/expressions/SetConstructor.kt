@@ -43,9 +43,9 @@ abstract class SetConstructor : FirstOrderExpression() {
         override val location: SourceLocation,
     ) : SemanticError
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
+    override val computedAnalysis = buildAnalysisComputation {
         val elementsAnalyses = elements.map {
-            compute(it.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
+            compute(it.computedTypeInference) ?: return@buildAnalysisComputation null
         }
 
         val distinctiveElementTypes = elementsAnalyses.map { it.inferredType }.toSet()
@@ -53,7 +53,7 @@ abstract class SetConstructor : FirstOrderExpression() {
         val elementType = distinctiveElementTypes.singleOrNull()
 
         if (elementType != null) {
-            DiagnosedAnalysis(
+            Analysis(
                 typeInference = TypeInference(
                     inferredType = SetType(
                         elementType = elementType,
@@ -62,7 +62,7 @@ abstract class SetConstructor : FirstOrderExpression() {
                 directErrors = emptySet(),
             )
         } else {
-            DiagnosedAnalysis.fromError(
+            Analysis.fromError(
                 InconsistentElementTypeError(
                     location = term.location,
                 )

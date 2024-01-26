@@ -29,9 +29,9 @@ abstract class AtomicExpression : FirstOrderExpression() {
 
     override val term: ExpressionTerm? = null
 
-    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> by lazy {
+    override val computedAnalysis: Computation<Analysis?> by lazy {
         Computation.pure(
-            DiagnosedAnalysis(
+            Analysis(
                 typeInference = TypeInference(inferredType = type),
                 directErrors = emptySet(),
             ),

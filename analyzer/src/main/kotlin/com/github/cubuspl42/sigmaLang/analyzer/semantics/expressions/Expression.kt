@@ -135,11 +135,11 @@ abstract class Expression {
         ): R = context.block()
     }
 
-    fun buildDiagnosedAnalysisComputation(
-        block: Computation.Context.() -> DiagnosedAnalysis?,
-    ): Computation<DiagnosedAnalysis?> = Computation {
+    fun buildAnalysisComputation(
+        block: Computation.Context.() -> Analysis?,
+    ): Computation<Analysis?> = Computation {
         if (isAnalyzed(this@Expression)) {
-            DiagnosedAnalysis(
+            Analysis(
                 typeInference = null,
                 // TODO: A specific error?
                 directErrors = emptySet(),
@@ -153,14 +153,14 @@ abstract class Expression {
         abstract val inferredType: TypeAlike
     }
 
-    data class DiagnosedAnalysis(
+    data class Analysis(
         val typeInference: TypeInference?,
         val directErrors: Set<SemanticError>,
     ) {
         companion object {
             fun fromError(
                 error: SemanticError,
-            ): DiagnosedAnalysis = DiagnosedAnalysis(
+            ): Analysis = Analysis(
                 typeInference = null,
                 directErrors = setOf(error),
             )
@@ -354,7 +354,7 @@ abstract class Expression {
     abstract val outerScope: StaticScope
 
     val directErrors: Set<SemanticError> by lazy {
-        computedDiagnosedAnalysis.getOrCompute()?.directErrors ?: emptySet()
+        computedAnalysis.getOrCompute()?.directErrors ?: emptySet()
     }
 
     val errors: Set<SemanticError> by lazy {
@@ -363,7 +363,7 @@ abstract class Expression {
 
     protected abstract val term: ExpressionTerm?
 
-    protected abstract val computedDiagnosedAnalysis: Expression.Computation<DiagnosedAnalysis?>
+    protected abstract val computedAnalysis: Expression.Computation<Analysis?>
 
     open val computedReachableDeclarations: CyclicComputation<ReachableDeclarationSet> by lazy {
         ReachableDeclarationsComputationClass.visiting(expression = this)
@@ -386,7 +386,7 @@ abstract class Expression {
     }
 
     val computedTypeInference: Expression.Computation<TypeInference?> by lazy {
-        computedDiagnosedAnalysis.transform {
+        computedAnalysis.transform {
             it?.typeInference
         }
     }

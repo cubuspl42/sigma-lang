@@ -15,8 +15,8 @@ class AtomicTypeExpression(
 
     override val term: ExpressionTerm? = null
 
-    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = Computation.pure(
-        DiagnosedAnalysis(
+    override val computedAnalysis: Computation<Analysis?> = Computation.pure(
+        Analysis(
             typeInference = TypeInference(inferredType = type),
             directErrors = emptySet(),
         ),

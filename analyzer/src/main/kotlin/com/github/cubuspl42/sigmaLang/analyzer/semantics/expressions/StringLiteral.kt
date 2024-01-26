@@ -31,8 +31,8 @@ data class StringLiteral(
     val value: StringValue
         get() = term.value
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        DiagnosedAnalysis(
+    override val computedAnalysis = buildAnalysisComputation {
+        Analysis(
             typeInference = TypeInference(
                 inferredType = StringType,
             ),

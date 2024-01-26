@@ -76,10 +76,10 @@ class GenericConstructor(
         get() = StaticScope.Empty
 
     // TODO: A util to get the inferred type if the expression is first-order OR all meta arguments are inferrable
-    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = buildDiagnosedAnalysisComputation {
+    override val computedAnalysis: Computation<Analysis?> = buildAnalysisComputation {
         val inferredBodyType = compute(body.inferredTypeOrIllType) as Type
 
-        DiagnosedAnalysis(
+        Analysis(
             typeInference = TypeInference(
                 inferredType = GenericType(
                     parameterDeclaration = metaArgumentDeclaration,

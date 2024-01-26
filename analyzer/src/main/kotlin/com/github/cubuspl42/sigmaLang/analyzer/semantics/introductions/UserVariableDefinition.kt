@@ -71,14 +71,14 @@ object UserVariableDefinition {
         fun buildMethodExtractor(
             outerScope: StaticScope,
         ): Lazy<Expression> = lazier {
-            val instanceTypeDiagnosedAnalysis = Expression.buildType(
+            val instanceTypeAnalysis = Expression.buildType(
                 context = Expression.BuildContext(
                     outerScope = outerScope,
                 ),
                 typeTerm = term.thisType,
             ).value
 
-            val instanceType: TypeAlike = instanceTypeDiagnosedAnalysis.evaluatedType ?: IllType
+            val instanceType: TypeAlike = instanceTypeAnalysis.evaluatedType ?: IllType
 
             val argumentDeclaration = AbstractionConstructor.ArgumentDeclaration(
                 declaredType = OrderedTupleType(
@@ -154,8 +154,9 @@ class TypeAnnotatedBody(
 
     override val term: ExpressionTerm? = null
 
-    override val computedDiagnosedAnalysis: Computation<DiagnosedAnalysis?> = buildDiagnosedAnalysisComputation {
-        val bodyAnalysis = compute(body.computedTypeInference) ?: return@buildDiagnosedAnalysisComputation null
+    override val computedAnalysis: Computation<Analysis?> = buildAnalysisComputation {
+        val bodyAnalysis = compute(body.computedTypeInference) ?: return@buildAnalysisComputation null
+
         val inferredType = bodyAnalysis.inferredType
 
         val unmatchedInferredTypeError = run {
@@ -168,7 +169,7 @@ class TypeAnnotatedBody(
             )
         }
 
-        DiagnosedAnalysis(
+        Analysis(
             typeInference = TypeInference(
                 inferredType = declaredType ?: inferredType,
             ),

@@ -145,8 +145,8 @@ abstract class AbstractionConstructor : FirstOrderExpression() {
         ),
     )
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        DiagnosedAnalysis(
+    override val computedAnalysis = buildAnalysisComputation {
+        Analysis(
             typeInference = object : TypeInference() {
                 private val imageAnalysis by lazy {
                     compute(image.computedTypeInference)

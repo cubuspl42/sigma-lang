@@ -15,8 +15,8 @@ class SymbolLiteral(
 ) : FirstOrderExpression() {
     override val term: ExpressionTerm? = null
 
-    override val computedDiagnosedAnalysis = buildDiagnosedAnalysisComputation {
-        DiagnosedAnalysis(
+    override val computedAnalysis = buildAnalysisComputation {
+        Analysis(
             typeInference = TypeInference(
                 inferredType = SymbolType(value = value),
             ),
