@@ -1,4 +1,4 @@
-package com.github.cubuspl42.sigmaLang.analyzer.semantics
+package com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.BuiltinFunctionConstructor
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.DictValue
@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.FunctionValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
+import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.AtomicExpression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Stub

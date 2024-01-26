@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.IntValue
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Symbol
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Thunk
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Value
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.BoolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.GenericType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.OrderedTupleType

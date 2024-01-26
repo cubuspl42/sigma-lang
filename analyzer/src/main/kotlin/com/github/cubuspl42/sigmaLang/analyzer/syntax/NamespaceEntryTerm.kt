@@ -1,12 +1,12 @@
 package com.github.cubuspl42.sigmaLang.analyzer.syntax
 
 import com.github.cubuspl42.sigmaLang.analyzer.evaluation.values.Identifier
-import com.github.cubuspl42.sigmaLang.analyzer.semantics.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.LeveledResolvedIntroduction
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.QualifiedPath
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.ResolvedDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.expressions.Expression
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.UserVariableDefinition
 
 sealed interface NamespaceEntryTerm {

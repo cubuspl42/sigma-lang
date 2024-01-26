@@ -13,6 +13,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.TypeType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.SymbolType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleType
 import com.github.cubuspl42.sigmaLang.analyzer.semantics.types.UnorderedTupleTypeMatcher
+import com.github.cubuspl42.sigmaLang.analyzer.syntax.introductions.ClassDefinition
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.ClassDefinitionTerm
 import com.github.cubuspl42.sigmaLang.analyzer.syntax.NamespaceEntrySourceTerm
 import utils.CollectionMatchers
