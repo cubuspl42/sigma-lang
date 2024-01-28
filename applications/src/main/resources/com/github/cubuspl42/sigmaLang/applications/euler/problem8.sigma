@@ -23,4 +23,4 @@
     ],
 
     digitsWindows = windows[digits, 13],
-} %in maxOf[digitsWindows, product]
+} %in digitsWindows:maxOf[product]

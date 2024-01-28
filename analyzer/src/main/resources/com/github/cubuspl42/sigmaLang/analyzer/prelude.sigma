@@ -1,8 +1,7 @@
-%const maxOf = ^[e: Type, te: Type] !=> ^[
-    elements: ^[e...],
+%def !^[e: Type, te: Type] ^[e...]:maxOf ^[
     transform: ^[e] -> te,
 ] => max[
-    map[elements, transform],
+    map[this, transform],
 ]
 
 %const upTo = ^[
@@ -16,9 +15,7 @@
     ],
 )
 
-%const isEmpty = ^[e: Type] !=> ^[
-    elements: ^[e...],
-] => length[elements] == 0
+%def !^[e: Type] ^[e...]:isEmpty ^[] => length[this] == 0
 
 %const fold = ^[eT: Type, rT: Type] !=> ^{
     initial: rT,
@@ -26,7 +23,7 @@
 } => %let {
     innerFold = ^[
         elements: ^[eT...],
-    ] => %if isEmpty[elements] (
+    ] => %if elements:isEmpty[] (
         %then initial,
         %else %let {
             head = elements(0),
@@ -48,10 +45,9 @@
     } => concat[acc, el],
 }[lists]
 
-%const concatAllOf = ^[eT: Type, rT: Type] !=> ^[
-    elements: ^[eT...],
+%def !^[eT: Type, rT: Type] ^[eT...]:concatAllOf ^[
     extract: ^[e: eT] -> ^[rT...],
-] => concatAll[map[elements, extract]]
+] => concatAll[map[this, extract]]
 
 %def !^[inT: Type] ^[inT...]:mapX ^[outT: Type] !=> ^[
     transformFn: ^[inElement: inT] -> outT,
