@@ -25,10 +25,8 @@
     [ 1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52,  1, 89, 19, 67, 48],
 ]
 
-%const tuples = concatAllOf[
-    gridWindows,
-    ^[is: ^[Int...]] => concatAllOf[
-        gridWindows,
+%const tuples = gridWindows:concatAllOf[
+    ^[is: ^[Int...]] => gridWindows:concatAllOf[
         ^[js: ^[Int...]] -> ^[^[Int...]...] => [
             [grid(is(0))(js(0)), grid(is(0))(js(1)), grid(is(0))(js(2)), grid(is(0))(js(3))],
             [grid(is(1))(js(0)), grid(is(1))(js(1)), grid(is(1))(js(2)), grid(is(1))(js(3))],
@@ -46,7 +44,6 @@
     ],
 ]
 
-%const main = maxOf[
-    tuples,
+%const main = tuples:maxOf[
     ^[tuple: ^[Int...]] => product[tuple],
 ]

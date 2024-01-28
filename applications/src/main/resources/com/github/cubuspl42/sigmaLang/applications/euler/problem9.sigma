@@ -1,10 +1,4 @@
 %const main = %let {
-    concatAllOf = ^[e: Type, te: Type] !=> ^[
-        list: ^[e...],
-        transform: ^[e] -> ^[te...],
-    ] -> ^[te...] =>
-        concatAll[list:mapX[transform]],
-
     concatAll = ^[e: Type] !=> ^[
         lists: ^[^[e...]...],
     ] -> ^[e...] => %let {
@@ -32,10 +26,10 @@
     ),
 
     tripletsSummingTo = ^[n: Int] =>
-        concatAllOf[range[1, n], ^[a: Int] =>
-            map[range[1, n], ^[b: Int] =>
-                {a: a, b: b, c: n - a - b}
-            ]
+        range[1, n]:concatAllOf[
+            ^[a: Int] => range[1, n]:mapX[
+                ^[b: Int] => {a: a, b: b, c: n - a - b}
+            ],
         ],
 
     extractHead = ^[e: Type, r: Type] !=> ^[
