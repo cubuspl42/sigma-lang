@@ -27,7 +27,7 @@
 
     tripletsSummingTo = ^[n: Int] =>
         range[1, n]:concatAllOf[
-            ^[a: Int] => range[1, n]:mapX[
+            ^[a: Int] => range[1, n]:map[
                 ^[b: Int] => {a: a, b: b, c: n - a - b}
             ],
         ],

@@ -1,7 +1,7 @@
 %def !^[e: Type, te: Type] ^[e...]:maxOf ^[
     transform: ^[e] -> te,
 ] => max[
-    map[this, transform],
+    this:map[transform],
 ]
 
 %const upTo = ^[
@@ -47,8 +47,4 @@
 
 %def !^[eT: Type, rT: Type] ^[eT...]:concatAllOf ^[
     extract: ^[e: eT] -> ^[rT...],
-] => concatAll[map[this, extract]]
-
-%def !^[inT: Type] ^[inT...]:mapX ^[outT: Type] !=> ^[
-    transformFn: ^[inElement: inT] -> outT,
-] -> ^[outT...] => map[this, transformFn]
+] => concatAll[this:map[extract]]
