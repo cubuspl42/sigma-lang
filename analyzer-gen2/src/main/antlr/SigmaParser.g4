@@ -3,7 +3,13 @@ parser grammar SigmaParser;
 options { tokenVocab = SigmaLexer; }
 
 expression
-    : unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt
+    : reference # referenceExpressionAlt
+    | unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt
+    | abstractionConstructor # abstractionConstructorExpressionAlt
+    ;
+
+reference
+    : referredName=Identifier
     ;
 
 unorderedTupleConstructor
@@ -12,4 +18,12 @@ unorderedTupleConstructor
 
 unorderedTupleConstructorEntry
     : key=Identifier Colon value=expression
+    ;
+
+abstractionConstructor
+    : argumentType=unorderedTupleTypeConstructor FatArrow image=expression
+    ;
+
+unorderedTupleTypeConstructor
+    : Dash body=unorderedTupleConstructor
     ;

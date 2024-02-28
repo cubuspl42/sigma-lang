@@ -12,9 +12,9 @@ data class UnorderedTupleConstructorTerm(
 
     companion object {
         fun build(
-            context: SigmaParser.UnorderedTupleConstructorContext,
+            ctx: SigmaParser.UnorderedTupleConstructorContext,
         ): UnorderedTupleConstructorTerm = UnorderedTupleConstructorTerm(
-            entries = context.unorderedTupleConstructorEntry().map {
+            entries = ctx.unorderedTupleConstructorEntry().map {
                 Entry(
                     key = IdentifierTerm.build(it.key),
                     value = ExpressionTerm.build(it.value),

@@ -21,13 +21,19 @@ sealed interface ExpressionTerm : Term {
         }
 
         fun build(
-            context: SigmaParser.ExpressionContext,
+            ctx: SigmaParser.ExpressionContext,
         ): ExpressionTerm = object : SigmaParserBaseVisitor<ExpressionTerm>() {
+            override fun visitReferenceExpressionAlt(
+                ctx: SigmaParser.ReferenceExpressionAltContext,
+            ): ExpressionTerm = ReferenceTerm.build(ctx.reference())
+
             override fun visitUnorderedTupleConstructorExpressionAlt(
                 ctx: SigmaParser.UnorderedTupleConstructorExpressionAltContext,
-            ): ExpressionTerm {
-                return UnorderedTupleConstructorTerm.build(ctx.unorderedTupleConstructor())
-            }
-        }.visit(context)
+            ): ExpressionTerm = UnorderedTupleConstructorTerm.build(ctx.unorderedTupleConstructor())
+
+            override fun visitAbstractionConstructorExpressionAlt(
+                ctx: SigmaParser.AbstractionConstructorExpressionAltContext,
+            ): ExpressionTerm = AbstractionConstructorTerm.build(ctx.abstractionConstructor())
+        }.visit(ctx)
     }
 }
