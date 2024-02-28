@@ -1,16 +1,13 @@
 package com.github.cubuspl42.sigmaLang.shell.scope
 
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
-import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
 import com.github.cubuspl42.sigmaLang.shell.terms.IdentifierTerm
-import com.github.cubuspl42.sigmaLang.shell.terms.LetInTerm
 import com.github.cubuspl42.sigmaLang.shell.terms.UnorderedTupleTypeConstructorTerm
 
 class ArgumentScope(
     private val argumentNames: Set<IdentifierTerm>,
     private val abstractionConstructorLazy: Lazy<AbstractionConstructor>,
-) : Scope {
+) : StaticScope {
     companion object {
         fun construct(
             abstractionConstructorLazy: Lazy<AbstractionConstructor>,
@@ -25,12 +22,12 @@ class ArgumentScope(
         }
     }
 
-    override fun resolveName(referredName: IdentifierTerm): Scope.ReferenceResolution =
+    override fun resolveName(referredName: IdentifierTerm): StaticScope.ReferenceResolution =
         if (argumentNames.contains(referredName)) {
-            Scope.ArgumentReference(
+            StaticScope.ArgumentReference(
                 referredAbstractionLazy = abstractionConstructorLazy,
             )
         } else {
-            Scope.UnresolvedReference
+            StaticScope.UnresolvedReference
         }
 }

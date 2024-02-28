@@ -7,13 +7,13 @@ import com.github.cubuspl42.sigmaLang.shell.terms.LetInTerm
 
 class DefinitionScope(
     private val definitionBodyByName: Map<IdentifierTerm, Lazy<Expression>>,
-) : Scope {
+) : StaticScope {
     companion object {
         fun construct(
             context: ConstructionContext,
             letInTerm: LetInTerm,
         ): DefinitionScope {
-            val (definitionScope, _) = Scope.looped { innerScopeLooped ->
+            val (definitionScope, _) = StaticScope.looped { innerScopeLooped ->
                 val definitionBodyByName = letInTerm.block.entries.associate {
                     it.key to it.value.construct(
                         context = context.copy(
@@ -38,10 +38,10 @@ class DefinitionScope(
         }
     }
 
-    override fun resolveName(referredName: IdentifierTerm): Scope.ReferenceResolution =
+    override fun resolveName(referredName: IdentifierTerm): StaticScope.ReferenceResolution =
         definitionBodyByName[referredName]?.let {
-            Scope.DefinitionReference(
+            StaticScope.DefinitionReference(
                 referredBodyLazy = it,
             )
-        } ?: Scope.UnresolvedReference
+        } ?: StaticScope.UnresolvedReference
 }

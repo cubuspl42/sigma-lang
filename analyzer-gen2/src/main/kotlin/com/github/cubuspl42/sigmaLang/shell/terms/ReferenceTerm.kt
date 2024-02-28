@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.Reference
 import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
-import com.github.cubuspl42.sigmaLang.shell.scope.Scope
+import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 
 data class ReferenceTerm(
     val referredName: IdentifierTerm,
@@ -21,15 +21,15 @@ data class ReferenceTerm(
         val scope = context.scope
 
         return when (val resolution = scope.resolveName(referredName = referredName)) {
-            is Scope.ArgumentReference -> lazyOf(
+            is StaticScope.ArgumentReference -> lazyOf(
                 Reference(
                     referredAbstractionLazy = resolution.referredAbstractionLazy,
                 ),
             )
 
-            is Scope.DefinitionReference -> resolution.referredBodyLazy
+            is StaticScope.DefinitionReference -> resolution.referredBodyLazy
 
-            Scope.UnresolvedReference -> throw IllegalStateException("Unresolved reference: $referredName")
+            StaticScope.UnresolvedReference -> throw IllegalStateException("Unresolved reference: $referredName")
         }
     }
 }

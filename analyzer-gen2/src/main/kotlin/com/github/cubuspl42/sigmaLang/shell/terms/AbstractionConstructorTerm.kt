@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
 import com.github.cubuspl42.sigmaLang.shell.scope.ArgumentScope
-import com.github.cubuspl42.sigmaLang.shell.scope.Scope
+import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 
 data class AbstractionConstructorTerm(
     val argumentType: UnorderedTupleTypeConstructorTerm,
@@ -21,7 +21,7 @@ data class AbstractionConstructorTerm(
     }
 
     override fun construct(context: ConstructionContext): Lazy<Expression> = object {
-        val innerScope: Scope by lazy {
+        val innerScope: StaticScope by lazy {
             ArgumentScope.construct(
                 abstractionConstructorLazy = abstractionConstructorLazy,
                 argumentType = argumentType,
