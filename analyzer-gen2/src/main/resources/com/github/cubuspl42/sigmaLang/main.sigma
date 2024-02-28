@@ -1,4 +1,6 @@
-{
+%let {
+    value1: {},
+    value2: {},
     foo: ^{
         arg1: Type1,
     } => {},
@@ -13,4 +15,4 @@
             arg1: value1,
         },
     } %in foo2{arg1: value2}
-}
+} %in baz

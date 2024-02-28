@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 
 data class UnorderedTupleTypeConstructorTerm(
     val body: UnorderedTupleConstructorTerm,
-) : ExpressionTerm {
+) : Term {
     companion object {
         fun build(
             ctx: SigmaParser.UnorderedTupleTypeConstructorContext,
@@ -12,4 +12,6 @@ data class UnorderedTupleTypeConstructorTerm(
             body = UnorderedTupleConstructorTerm.build(ctx.body),
         )
     }
+
+    val keys: Set<IdentifierTerm> = body.entries.map { it.key }.toSet()
 }

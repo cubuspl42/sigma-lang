@@ -3,6 +3,8 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 
@@ -44,4 +46,6 @@ sealed interface ExpressionTerm : Term {
             ): ExpressionTerm = LetInTerm.build(ctx.letIn())
         }.visit(ctx)
     }
+
+    fun construct(context: ConstructionContext): Lazy<Expression>
 }

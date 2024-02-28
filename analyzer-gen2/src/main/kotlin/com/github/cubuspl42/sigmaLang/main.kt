@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
 import com.github.cubuspl42.sigmaLang.shell.terms.ExpressionTerm
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
@@ -20,7 +21,11 @@ fun main() {
 
     val program = parser.expression()
 
-    val root = ExpressionTerm.build(program)
+    val rootExpressionTerm = ExpressionTerm.build(program)
 
-    println(root)
+    val rootExpression = rootExpressionTerm.construct(
+        context = ConstructionContext.Empty,
+    ).value
+
+    println(rootExpression)
 }
