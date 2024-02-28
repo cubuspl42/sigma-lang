@@ -2,5 +2,7 @@
     foo: ^{
         arg1: Type1,
     } => {},
-    bar: {},
+    bar: foo{
+        arg1: value1,
+    },
 }

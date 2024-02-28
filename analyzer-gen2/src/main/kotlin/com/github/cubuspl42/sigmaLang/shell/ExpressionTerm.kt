@@ -20,12 +20,22 @@ sealed interface ExpressionTerm : Term {
             return build(parser.expression())
         }
 
+        // expression
+        //    : reference # referenceExpressionAlt
+        //    | call # callExpressionAlt
+        //    | unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt
+        //    | abstractionConstructor # abstractionConstructorExpressionAlt
+        //    ;
         fun build(
             ctx: SigmaParser.ExpressionContext,
         ): ExpressionTerm = object : SigmaParserBaseVisitor<ExpressionTerm>() {
             override fun visitReferenceExpressionAlt(
                 ctx: SigmaParser.ReferenceExpressionAltContext,
             ): ExpressionTerm = ReferenceTerm.build(ctx.reference())
+
+            override fun visitCallExpressionAlt(
+                ctx: SigmaParser.CallExpressionAltContext,
+            ): ExpressionTerm = CallTerm.build(ctx.call())
 
             override fun visitUnorderedTupleConstructorExpressionAlt(
                 ctx: SigmaParser.UnorderedTupleConstructorExpressionAltContext,
