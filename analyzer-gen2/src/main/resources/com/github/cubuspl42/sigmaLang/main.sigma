@@ -10,7 +10,10 @@
     baz: %let {
         foo2: ^{
             arg1: Type1,
-        } => {},
+        } => {
+            a1: {},
+            a2: {}
+        },
         bar3: foo{
             arg1: value1,
         },
