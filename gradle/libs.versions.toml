@@ -1,0 +1,23 @@
+[versions]
+# libraries
+annotations = "24.1.0"
+kotlinxSerialization = "1.6.2"
+
+# plugins
+kotlin = "1.9.22"
+changelog = "2.2.0"
+gradleIntelliJPlugin = "1.17.0"
+qodana = "0.1.13"
+kover = "0.7.5"
+
+[libraries]
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+kotlinxSerialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+[plugins]
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+gradleIntelliJPlugin = { id = "org.jetbrains.intellij", version.ref = "gradleIntelliJPlugin" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
+gradleVersions = { id = "com.github.ben-manes.versions", version = "0.51.0"}

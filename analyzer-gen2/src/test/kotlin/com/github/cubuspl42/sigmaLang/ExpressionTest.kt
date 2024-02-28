@@ -1,5 +1,6 @@
-package sigma
+package com.github.cubuspl42.sigmaLang
 
+import com.github.cubuspl42.sigmaLang.FormExpression
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

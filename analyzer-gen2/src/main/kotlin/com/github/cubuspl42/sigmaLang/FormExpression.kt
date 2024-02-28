@@ -1,6 +1,6 @@
-package sigma
+package com.github.cubuspl42.sigmaLang
 
-import sigma.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 
 data class FormExpression(
     val entries: List<Entry>,

@@ -1,9 +1,9 @@
-package sigma
+package com.github.cubuspl42.sigmaLang
 
+import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
+import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import sigma.parser.antlr.SigmaLexer
-import sigma.parser.antlr.SigmaParser
 
 fun main() {
     val source = "{{}: {{}: {}}}"
