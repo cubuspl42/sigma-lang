@@ -1,4 +1,4 @@
-package com.github.cubuspl42.sigmaLang.shell
+package com.github.cubuspl42.sigmaLang.shell.terms
 
 import org.antlr.v4.runtime.Token
 

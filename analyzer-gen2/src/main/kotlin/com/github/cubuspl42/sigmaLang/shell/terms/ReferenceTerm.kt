@@ -1,4 +1,4 @@
-package com.github.cubuspl42.sigmaLang.shell
+package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 
