@@ -1,0 +1,12 @@
+LeftBrace=1
+RightBrace=2
+Dash=3
+Colon=4
+Comma=5
+IntLiteral=6
+Whitespace=7
+'{'=1
+'}'=2
+'^'=3
+':'=4
+','=5

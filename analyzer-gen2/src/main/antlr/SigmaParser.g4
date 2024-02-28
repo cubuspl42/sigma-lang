@@ -2,14 +2,14 @@ parser grammar SigmaParser;
 
 options { tokenVocab = SigmaLexer; }
 
-program
-    : expression ;
-
 expression
-    : form # formAlt ;
+    : unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt
+    ;
 
-form
-    : LeftBrace (entry (Comma entry)*)? RightBrace ;
+unorderedTupleConstructor
+    : LeftBrace (unorderedTupleConstructorEntry (Comma unorderedTupleConstructorEntry)*)? Comma? RightBrace
+    ;
 
-entry
-    : key=expression Colon value=expression ;
+unorderedTupleConstructorEntry
+    : key=Identifier Colon value=expression
+    ;

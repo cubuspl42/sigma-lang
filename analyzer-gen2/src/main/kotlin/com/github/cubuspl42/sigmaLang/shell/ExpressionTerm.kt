@@ -1,4 +1,4 @@
-package com.github.cubuspl42.sigmaLang
+package com.github.cubuspl42.sigmaLang.shell
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
@@ -6,11 +6,11 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisit
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 
-sealed interface Expression {
+sealed interface ExpressionTerm : Term {
     companion object {
         fun parse(
             source: String,
-        ): Expression {
+        ): ExpressionTerm {
             val sourceName = "__main__"
 
             val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
@@ -21,13 +21,13 @@ sealed interface Expression {
         }
 
         fun build(
-            expression: SigmaParser.ExpressionContext,
-        ): Expression = object : SigmaParserBaseVisitor<Expression>() {
-            override fun visitFormAlt(
-                ctx: SigmaParser.FormAltContext,
-            ): Expression = FormExpression.build(ctx.form())
-        }.visit(expression)
+            context: SigmaParser.ExpressionContext,
+        ): ExpressionTerm = object : SigmaParserBaseVisitor<ExpressionTerm>() {
+            override fun visitUnorderedTupleConstructorExpressionAlt(
+                ctx: SigmaParser.UnorderedTupleConstructorExpressionAltContext,
+            ): ExpressionTerm {
+                return UnorderedTupleConstructorTerm.build(ctx.unorderedTupleConstructor())
+            }
+        }.visit(context)
     }
-
-    fun dump(): String
 }
