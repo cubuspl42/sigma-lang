@@ -5,4 +5,12 @@
     bar: foo{
         arg1: value1,
     },
+    baz: %let {
+        foo2: ^{
+            arg1: Type1,
+        } => {},
+        bar3: foo{
+            arg1: value1,
+        },
+    } %in foo2{arg1: value2}
 }

@@ -7,6 +7,7 @@ expression
     | call # callExpressionAlt
     | unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt
     | abstractionConstructor # abstractionConstructorExpressionAlt
+    | letIn # letInExpressionAlt
     ;
 
 reference
@@ -31,4 +32,8 @@ abstractionConstructor
 
 unorderedTupleTypeConstructor
     : Dash body=unorderedTupleConstructor
+    ;
+
+letIn
+    : LetKeyword block=unorderedTupleConstructor InKeyword result=expression
     ;

@@ -1,5 +1,8 @@
 lexer grammar SigmaLexer;
 
+LetKeyword : '%let' ;
+InKeyword : '%in' ;
+
 LeftBrace : '{' ;
 RightBrace : '}' ;
 Dash : '^' ;
