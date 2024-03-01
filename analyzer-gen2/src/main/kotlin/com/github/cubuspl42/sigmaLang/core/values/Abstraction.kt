@@ -1,16 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core.values
 
-import com.github.cubuspl42.sigmaLang.core.DynamicScope
-import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
+abstract class Abstraction : Value(), Callable {
+    final override fun call(argument: Value): Value = compute(argument = argument)
 
-class Abstraction(
-    private val abstractionConstructor: AbstractionConstructor,
-    private val closure: DynamicScope,
-): Value(), Callable {
-    override fun call(argument: Value): Value = abstractionConstructor.body.bind(
-        scope = closure.extend(
-            abstractionConstructor = abstractionConstructor,
-            value = argument,
-        ),
-    ).value
+    abstract fun compute(argument: Value): Value
 }

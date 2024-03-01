@@ -1,25 +1,23 @@
-%let {
+^{} => %let {
     value1: {},
     value2: {
-        value3: {
-            x1: {},
-        },
+        x3: {},
     },
     foo: ^{
         arg1: Type1,
     } => {},
     bar: foo{
-        arg1: value1,
+        arg2: value1,
     },
     baz: %let {
         foo2: ^{
-            arg1: Type1,
+            arg3: Type1,
         } => {
             a1: {},
-            a2: arg1,
+            a2: arg3,
         },
         bar3: foo{
-            arg1: value1,
+            arg3: value2,
         },
-    } %in foo2{arg1: value2}
+    } %in foo2{arg3: value2}
 } %in baz

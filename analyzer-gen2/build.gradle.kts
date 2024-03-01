@@ -16,6 +16,7 @@ dependencies {
 
     implementation(kotlin("stdlib"))
     implementation(libs.kotlinxSerialization)
+    implementation(libs.kotlinPoet)
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))

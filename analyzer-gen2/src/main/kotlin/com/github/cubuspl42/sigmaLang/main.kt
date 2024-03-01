@@ -1,36 +1,41 @@
 package com.github.cubuspl42.sigmaLang
 
-import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
-import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
-import com.github.cubuspl42.sigmaLang.shell.terms.ExpressionTerm
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
+import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.core.values.Abstraction
+import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import java.nio.file.Path
 
 fun getResourceAsText(
     path: String,
 ): String? = object {}.javaClass.getResource(path)?.readText()
 
 fun main() {
-    val source = getResourceAsText("main.sigma")
-    val sourceName = "__main__"
+    val source = getResourceAsText("main.sigma") ?: throw IllegalArgumentException("No source found")
 
-    val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
-    val tokenStream = CommonTokenStream(lexer)
-    val parser = SigmaParser(tokenStream)
+    val module = Module.fromSource(source = source)
 
-    val program = parser.expression()
+    val fileSpec = module.generateCode(
+        packageName = "com.github.cubuspl42.sigmaLang",
+    )
 
-    val rootExpressionTerm = ExpressionTerm.build(program)
+    fileSpec.writeTo(
+        directory = Path.of("analyzer-gen2/src/main/kotlin")
+    )
 
-    val rootExpression = rootExpressionTerm.construct(
-        context = ConstructionContext.Empty,
-    ).value
+    val rootAbstractionConstructor = module.root as AbstractionConstructor
 
-    val rootValue = rootExpression.bind(
-        scope = DynamicScope.Empty,
-    ).value
+    val rootAbstraction = rootAbstractionConstructor.bind(scope = DynamicScope.Empty).value as ExpressedAbstraction
 
-    println(rootValue)
+    val result = rootAbstraction.call(
+        argument = UnorderedTuple.Empty,
+    )
+
+    val codeGenRootAbstraction = root.value as Abstraction
+
+    val codeGenResult = codeGenRootAbstraction.compute(argument = UnorderedTuple.Empty)
+
+    println(result)
+    println(codeGenResult)
 }
