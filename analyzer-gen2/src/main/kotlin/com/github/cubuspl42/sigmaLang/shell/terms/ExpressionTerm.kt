@@ -33,6 +33,10 @@ sealed interface ExpressionTerm : Term {
                 ctx: SigmaParser.CallExpressionAltContext,
             ): ExpressionTerm = CallTerm.build(ctx.call())
 
+            override fun visitFieldReadExpressionAlt(
+                ctx: SigmaParser.FieldReadExpressionAltContext,
+            ): ExpressionTerm = FieldReadTerm.build(ctx.fieldRead())
+
             override fun visitUnorderedTupleConstructorExpressionAlt(
                 ctx: SigmaParser.UnorderedTupleConstructorExpressionAltContext,
             ): ExpressionTerm = UnorderedTupleConstructorTerm.build(ctx.unorderedTupleConstructor())

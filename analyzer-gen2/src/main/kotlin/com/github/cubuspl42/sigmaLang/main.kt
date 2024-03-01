@@ -32,5 +32,5 @@ fun main() {
         scope = DynamicScope.Empty,
     ).value
 
-    println(rootExpression)
+    println(rootValue)
 }

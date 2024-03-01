@@ -5,6 +5,7 @@ options { tokenVocab = SigmaLexer; }
 expression
     : reference # referenceExpressionAlt
     | call # callExpressionAlt
+    | fieldRead # fieldReadExpressionAlt
     | unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt
     | abstractionConstructor # abstractionConstructorExpressionAlt
     | letIn # letInExpressionAlt
@@ -16,6 +17,11 @@ reference
 
 call
     : callee=reference passedArgument=unorderedTupleConstructor
+    ;
+
+
+fieldRead
+    : subject=reference readFieldName=Identifier
     ;
 
 unorderedTupleConstructor

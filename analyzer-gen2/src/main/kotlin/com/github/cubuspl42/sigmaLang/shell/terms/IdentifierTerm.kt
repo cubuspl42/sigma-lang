@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
-import com.github.cubuspl42.sigmaLang.core.Identifier
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import org.antlr.v4.runtime.Token
 
 data class IdentifierTerm(

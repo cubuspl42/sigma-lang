@@ -1,6 +1,10 @@
 %let {
     value1: {},
-    value2: {},
+    value2: {
+        value3: {
+            x1: {},
+        },
+    },
     foo: ^{
         arg1: Type1,
     } => {},
@@ -12,7 +16,7 @@
             arg1: Type1,
         } => {
             a1: {},
-            a2: {}
+            a2: arg1,
         },
         bar3: foo{
             arg1: value1,

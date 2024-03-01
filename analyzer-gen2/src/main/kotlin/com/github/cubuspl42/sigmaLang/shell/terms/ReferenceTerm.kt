@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.Reference
 import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
@@ -21,10 +22,13 @@ data class ReferenceTerm(
         val scope = context.scope
 
         return when (val resolution = scope.resolveName(referredName = referredName)) {
-            is StaticScope.ArgumentReference -> lazyOf(
-                Reference(
-                    referredAbstractionLazy = resolution.referredAbstractionLazy,
+            is StaticScope.ArgumentReference -> Call.fieldRead(
+                subjectLazy = lazyOf(
+                    Reference(
+                        referredAbstractionLazy = resolution.referredAbstractionLazy,
+                    )
                 ),
+                readFieldName = referredName.construct(),
             )
 
             is StaticScope.DefinitionReference -> resolution.referredBodyLazy
