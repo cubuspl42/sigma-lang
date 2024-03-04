@@ -2,6 +2,23 @@ parser grammar SigmaParser;
 
 options { tokenVocab = SigmaLexer; }
 
+module
+    : definition+
+    ;
+
+definition
+    : valueDefinition
+    | functionDefinition
+    ;
+
+valueDefinition
+    : ValKeyword name=Identifier Equals initializer=expression
+    ;
+
+functionDefinition
+    : FunKeyword name=Identifier argumentType=unorderedTupleTypeConstructor FatArrow body=expression
+    ;
+
 expression
     : reference # referenceExpressionAlt
     | call # callExpressionAlt

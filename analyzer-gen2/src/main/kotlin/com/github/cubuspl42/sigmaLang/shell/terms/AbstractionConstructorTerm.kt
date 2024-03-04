@@ -20,7 +20,7 @@ data class AbstractionConstructorTerm(
         )
     }
 
-    override fun construct(context: ConstructionContext): Lazy<Expression> = object {
+    override fun construct(context: ConstructionContext): Lazy<AbstractionConstructor> = object {
         val innerScope: StaticScope by lazy {
             ArgumentScope.construct(
                 abstractionConstructorLazy = abstractionConstructorLazy,

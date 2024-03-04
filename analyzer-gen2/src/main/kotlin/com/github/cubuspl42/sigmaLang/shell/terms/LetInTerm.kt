@@ -22,7 +22,7 @@ data class LetInTerm(
     override fun construct(context: ConstructionContext): Lazy<Expression> {
         val innerScope = DefinitionScope.construct(
             context = context,
-            letInTerm = this,
+            definitionBlock = block,
         ).chainWith(context.scope)
 
         return result.construct(

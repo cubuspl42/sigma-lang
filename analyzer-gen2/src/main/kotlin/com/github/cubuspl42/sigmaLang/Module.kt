@@ -2,19 +2,24 @@ package com.github.cubuspl42.sigmaLang
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
-import com.github.cubuspl42.sigmaLang.shell.terms.ExpressionTerm
+import com.github.cubuspl42.sigmaLang.shell.terms.ModuleTerm
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.typeNameOf
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 
 class Module(
-    val root: Expression,
+    val root: AbstractionConstructor,
 ) {
     abstract class VisitingContext {
         private val visitedExpressions = mutableSetOf<Expression>()
@@ -80,17 +85,24 @@ class Module(
             val tokenStream = CommonTokenStream(lexer)
             val parser = SigmaParser(tokenStream)
 
-            val program = parser.expression()
-
-            val rootExpressionTerm = ExpressionTerm.build(program)
+            val moduleTerm = ModuleTerm.build(parser.module())
 
             return Module(
-                root = rootExpressionTerm.construct(
+                root = moduleTerm.construct(
                     context = ConstructionContext.Empty,
                 ).value,
             )
         }
     }
+
+    val main: Value
+        get() {
+            val rootAbstraction = root.bind(scope = DynamicScope.Empty).value as ExpressedAbstraction
+
+            return rootAbstraction.call(
+                argument = UnorderedTuple.Empty,
+            )
+        }
 
     private val referenceCountContext by lazy {
         ReferenceCountContext().apply { visitOnce(root) }
@@ -100,7 +112,7 @@ class Module(
         expression: Expression,
     ): Int = referenceCountContext.getReferenceCount(expression)
 
-    fun generateCode(packageName: String): FileSpec {
+    fun generateCode(packageName: String, name: String): FileSpec {
         val context = CodegenRepresentationContext(
             module = this,
         ).apply {
@@ -111,20 +123,20 @@ class Module(
 
         val rootRepresentation = context.getRepresentation(root)
 
-        return FileSpec.builder(packageName, "out")
-            .addAnnotation(
-                AnnotationSpec.builder(Suppress::class)
-                    .addMember("%S", "RedundantVisibilityModifier")
-                    .addMember("%S", "unused")
-                    .build()
-            )
-            .addProperty(
-            PropertySpec.builder(
-                name = "root",
-                type = CodegenRepresentationContext.lazyValueTypeName,
-            ).initializer(
-                rootRepresentation.generateUsage()
+        return FileSpec.builder(packageName, "out").addAnnotation(
+                AnnotationSpec.builder(Suppress::class).addMember("%S", "RedundantVisibilityModifier")
+                    .addMember("%S", "unused").build()
+            ).addType(
+                TypeSpec.objectBuilder(
+                    name = name,
+                ).addProperty(
+                        PropertySpec.builder(
+                            name = "root",
+                            type = CodegenRepresentationContext.lazyValueTypeName,
+                        ).initializer(
+                            rootRepresentation.generateUsage()
+                        ).build()
+                    ).build()
             ).build()
-        ).build()
     }
 }

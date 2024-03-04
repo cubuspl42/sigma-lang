@@ -18,10 +18,11 @@ fun main() {
 
     val fileSpec = module.generateCode(
         packageName = "com.github.cubuspl42.sigmaLang",
+        name = "Out",
     )
 
     fileSpec.writeTo(
-        directory = Path.of("analyzer-gen2/src/main/kotlin")
+        directory = Path.of("analyzer-gen2/src/main/kotlin"),
     )
 
     val rootAbstractionConstructor = module.root as AbstractionConstructor
@@ -32,10 +33,11 @@ fun main() {
         argument = UnorderedTuple.Empty,
     )
 
-    val codeGenRootAbstraction = root.value as Abstraction
+    println(result)
+
+    val codeGenRootAbstraction = Out.root.value as Abstraction
 
     val codeGenResult = codeGenRootAbstraction.compute(argument = UnorderedTuple.Empty)
 
-    println(result)
     println(codeGenResult)
 }

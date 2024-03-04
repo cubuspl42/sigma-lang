@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.shell.scope
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
 import com.github.cubuspl42.sigmaLang.shell.terms.IdentifierTerm
-import com.github.cubuspl42.sigmaLang.shell.terms.LetInTerm
+import com.github.cubuspl42.sigmaLang.shell.terms.UnorderedTupleConstructorTerm
 
 class DefinitionScope(
     private val definitionBodyByName: Map<IdentifierTerm, Lazy<Expression>>,
@@ -11,10 +11,10 @@ class DefinitionScope(
     companion object {
         fun construct(
             context: ConstructionContext,
-            letInTerm: LetInTerm,
+            definitionBlock: UnorderedTupleConstructorTerm,
         ): DefinitionScope {
             val (definitionScope, _) = StaticScope.looped { innerScopeLooped ->
-                val definitionBodyByName = letInTerm.block.entries.associate {
+                val definitionBodyByName = definitionBlock.entries.associate {
                     it.key to it.value.construct(
                         context = context.copy(
                             scope = innerScopeLooped,

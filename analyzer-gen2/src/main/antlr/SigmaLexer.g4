@@ -2,12 +2,15 @@ lexer grammar SigmaLexer;
 
 LetKeyword : '%let' ;
 InKeyword : '%in' ;
+ValKeyword : '%val' ;
+FunKeyword : '%fun' ;
 
 LeftBrace : '{' ;
 RightBrace : '}' ;
 Dash : '^' ;
 Colon : ':' ;
 Comma : ',' ;
+Equals : '=' ;
 
 FatArrow : '=>' ;
 

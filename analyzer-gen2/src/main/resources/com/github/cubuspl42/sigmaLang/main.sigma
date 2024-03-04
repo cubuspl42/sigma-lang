@@ -1,23 +1,17 @@
-^{} => %let {
-    value1: {},
-    value2: {
-        x3: {},
+%val a = {}
+
+%val value2 = {
+    x3: {},
+}
+
+%fun foo ^{arg1: Type1} => {}
+
+%val bar = foo{arg2: value1}
+
+%val main = %let {
+    foo2: ^{arg3: Type1} => {
+        a1: {},
+        a2: arg3,
     },
-    foo: ^{
-        arg1: Type1,
-    } => {},
-    bar: foo{
-        arg2: value1,
-    },
-    baz: %let {
-        foo2: ^{
-            arg3: Type1,
-        } => {
-            a1: {},
-            a2: arg3,
-        },
-        bar3: foo{
-            arg3: value2,
-        },
-    } %in foo2{arg3: value2}
-} %in baz
+    bar3: foo{arg3: value2},
+} %in foo2{arg3: value2}

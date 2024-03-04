@@ -6,6 +6,10 @@ data class UnorderedTupleTypeConstructorTerm(
     val body: UnorderedTupleConstructorTerm,
 ) : Term {
     companion object {
+        val Empty: UnorderedTupleTypeConstructorTerm = UnorderedTupleTypeConstructorTerm(
+            body = UnorderedTupleConstructorTerm.Empty,
+        )
+
         fun build(
             ctx: SigmaParser.UnorderedTupleTypeConstructorContext,
         ): UnorderedTupleTypeConstructorTerm = UnorderedTupleTypeConstructorTerm(
