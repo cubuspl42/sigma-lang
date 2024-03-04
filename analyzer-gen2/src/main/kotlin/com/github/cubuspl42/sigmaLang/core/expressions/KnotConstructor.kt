@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
+import com.github.cubuspl42.sigmaLang.utils.wrapWithLazyOf
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
@@ -50,9 +51,9 @@ class KnotConstructor(
                     UnorderedTupleConstructor.generateCode(
                         valueByKey = localProperties.associate {
                             Identifier(name = it.name) to it.generateLazierReference()
-                        }
-                    )
-                ).build()
+                        },
+                    ).wrapWithLazyOf(),
+                ).build(),
             )
 
             localProperties.forEach {

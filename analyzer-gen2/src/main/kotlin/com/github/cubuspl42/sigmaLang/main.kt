@@ -26,9 +26,7 @@ fun main() {
 
     println(result)
 
-//    val codeGenRootAbstraction = Out.root.value as Abstraction
-//
-//    val codeGenResult = codeGenRootAbstraction.compute(argument = UnorderedTuple.Empty)
-//
-//    println(codeGenResult)
+    val codeGenResult = Out.main
+
+    println(codeGenResult)
 }

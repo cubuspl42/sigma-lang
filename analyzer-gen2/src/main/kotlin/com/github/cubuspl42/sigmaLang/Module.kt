@@ -5,6 +5,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
+import com.github.cubuspl42.sigmaLang.core.values.Callable
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
@@ -12,8 +14,11 @@ import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.terms.ModuleTerm
+import com.github.cubuspl42.sigmaLang.utils.wrapWithLazyOf
 import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.typeNameOf
@@ -59,6 +64,8 @@ class Module(
         val module: Module,
     ) : VisitingContext() {
         companion object {
+            val valueTypeName = typeNameOf<Value>()
+
             val lazyValueTypeName = typeNameOf<Lazy<Value>>()
         }
 
@@ -80,6 +87,8 @@ class Module(
     }
 
     companion object {
+        val builtinScopeMemberName = MemberName("com.github.cubuspl42.sigmaLang", "BuiltinScope")
+
         fun fromSource(source: String): Module {
             val sourceName = "__main__"
 
@@ -148,6 +157,26 @@ class Module(
                     type = CodegenRepresentationContext.lazyValueTypeName,
                 ).initializer(
                     rootRepresentation.generateCode(),
+                ).build()
+            ).addProperty(
+                PropertySpec.builder(
+                    name = "main",
+                    type = CodegenRepresentationContext.valueTypeName,
+                ).initializer(
+                    CodeBlock.builder().add(
+                        """
+                            (root.value as %T).call(
+                            ⇥argument = %L,
+                            ⇤)
+                        """.trimIndent(),
+                        Callable::class,
+                        UnorderedTupleConstructor.generateCode(
+                            valueByKey = mapOf(
+                                Identifier(name = "builtin") to CodeBlock.of("%M", builtinScopeMemberName)
+                                    .wrapWithLazyOf(),
+                            ),
+                        ),
+                    ).build(),
                 ).build()
             ).build()
         ).build()

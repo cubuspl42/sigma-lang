@@ -29,14 +29,14 @@ public object Out {
                   Identifier(name = "bar") to LazyUtils.lazier { bar },
                   Identifier(name = "main") to LazyUtils.lazier { main },
                 )
-              )
+              ),
             )
 
         public val a: Lazy<Value> = lazyOf(
               UnorderedTuple(
                 valueByKey = mapOf(
                 )
-              )
+              ),
             )
 
         public val value1: Lazy<Value> = lazyOf(
@@ -46,16 +46,16 @@ public object Out {
                     UnorderedTuple(
                       valueByKey = mapOf(
                       )
-                    )
+                    ),
                   ),
                   Identifier(name = "x5") to lazyOf(
                     UnorderedTuple(
                       valueByKey = mapOf(
                       )
-                    )
+                    ),
                   ),
                 )
-              )
+              ),
             )
 
         public val value2: Lazy<Value> = lazyOf(
@@ -65,10 +65,10 @@ public object Out {
                     UnorderedTuple(
                       valueByKey = mapOf(
                       )
-                    )
+                    ),
                   ),
                 )
-              )
+              ),
             )
 
         public val foo: Lazy<Value> = lazyOf(object : Abstraction() {
@@ -78,7 +78,7 @@ public object Out {
               UnorderedTuple(
                 valueByKey = mapOf(
                 )
-              )
+              ),
             ).value
           }
         })
@@ -98,7 +98,7 @@ public object Out {
                         )
                       ),
                     )
-                  )
+                  ),
                 ).value,
               )
             )
@@ -111,7 +111,7 @@ public object Out {
                     Identifier(name = "bar3") to LazyUtils.lazier { bar3 },
                     Identifier(name = "baz") to LazyUtils.lazier { baz },
                   )
-                )
+                ),
               )
 
           public val foo2: Lazy<Value> = lazyOf(object : Abstraction() {
@@ -124,7 +124,7 @@ public object Out {
                       UnorderedTuple(
                         valueByKey = mapOf(
                         )
-                      )
+                      ),
                     ),
                     Identifier(name = "a2") to lazyOf(
                       (arg4.value as Callable).call(
@@ -132,7 +132,7 @@ public object Out {
                       )
                     ),
                   )
-                )
+                ),
               ).value
             }
           })
@@ -152,7 +152,7 @@ public object Out {
                           )
                         ),
                       )
-                    )
+                    ),
                   ).value,
                 )
               )
@@ -229,10 +229,10 @@ public object Out {
                                                         UnorderedTuple(
                                                           valueByKey = mapOf(
                                                           )
-                                                        )
+                                                        ),
                                                       ),
                                                     )
-                                                  )
+                                                  ),
                                                 ).value,
                                               )
                                             ),
@@ -247,17 +247,17 @@ public object Out {
                                               )
                                             ),
                                           )
-                                        )
+                                        ),
                                       ).value,
                                     )
                                   ),
                                 )
-                              )
+                              ),
                             ).value,
                           )
                         ),
                       )
-                    )
+                    ),
                   ).value,
                 )
               )
@@ -277,4 +277,14 @@ public object Out {
       }.result.value
     }
   })
+
+  public val main: Value = (root.value as Callable).call(
+        argument = UnorderedTuple(
+          valueByKey = mapOf(
+            Identifier(name = "builtin") to lazyOf(
+              BuiltinScope,
+            ),
+          )
+        ),
+      )
 }

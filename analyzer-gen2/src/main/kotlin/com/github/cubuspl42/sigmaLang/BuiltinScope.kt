@@ -12,6 +12,7 @@ val BuiltinScope = UnorderedTuple(
                 override fun compute(argument: Value): Value {
                     val args = argument as UnorderedTuple
 
+                    // TODO: Implement booleans!
                     val conditionValue = args.get(identifier = Identifier(name = "condition"))
                     val thenValue = args.get(identifier = Identifier(name = "then"))
                     val elseValue = args.get(identifier = Identifier(name = "else"))
