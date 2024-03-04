@@ -23,19 +23,21 @@ data class ReferenceTerm(
     override fun construct(context: ConstructionContext): Lazy<Expression> {
         val scope = context.scope
 
-        return when (val resolution = scope.resolveName(referredName = referredName)) {
-            is StaticScope.ArgumentReference -> Call.fieldRead(
-                subjectLazy = lazyOf(
-                    Reference(
-                        referredAbstractionLazy = resolution.referredAbstractionLazy,
-                    )
-                ),
-                readFieldName = referredName.construct(),
-            )
+        return lazy {
+            when (val resolution = scope.resolveName(referredName = referredName)) {
+                is StaticScope.ArgumentReference -> Call.fieldRead(
+                    subjectLazy = lazyOf(
+                        Reference(
+                            referredAbstractionLazy = resolution.referredAbstractionLazy,
+                        )
+                    ),
+                    readFieldName = referredName.construct(),
+                )
 
-            is StaticScope.DefinitionReference -> resolution.referredBodyLazy
+                is StaticScope.DefinitionReference -> resolution.referredBodyLazy
 
-            StaticScope.UnresolvedReference -> throw IllegalStateException("Unresolved reference: $referredName")
+                StaticScope.UnresolvedReference -> throw IllegalStateException("Unresolved reference: $referredName")
+            }.value
         }
     }
 }

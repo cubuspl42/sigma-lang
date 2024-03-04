@@ -4,9 +4,15 @@ LetKeyword : '%let' ;
 InKeyword : '%in' ;
 ValKeyword : '%val' ;
 FunKeyword : '%fun' ;
+WhenKeyword : '%when' ;
+CaseKeyword : '%case' ;
+ElseKeyword : '%else' ;
 
+LeftParen : '(' ;
+RightParen : ')' ;
 LeftBrace : '{' ;
 RightBrace : '}' ;
+
 Dash : '^' ;
 Colon : ':' ;
 Comma : ',' ;

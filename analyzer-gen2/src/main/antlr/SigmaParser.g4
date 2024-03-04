@@ -27,6 +27,7 @@ expression
     : reference # referenceExpressionAlt
     | call # callExpressionAlt
     | fieldRead # fieldReadExpressionAlt
+    | when # whenExpressionAlt
     | abstractionConstructor # abstractionConstructorExpressionAlt
     | unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt
     | letIn # letInExpressionAlt
@@ -50,6 +51,20 @@ call
 
 fieldRead
     : subject=reference readFieldName=Identifier
+    ;
+
+// #### When
+
+when
+    : WhenKeyword LeftParen whenConditionalEntry+ whenElseEntry? RightParen
+    ;
+
+whenConditionalEntry
+    : CaseKeyword condition=expression FatArrow result=expression
+    ;
+
+whenElseEntry
+    : ElseKeyword FatArrow result=expression
     ;
 
 // ### Abstraction constructor & abstraction constructor-alikes
@@ -79,7 +94,7 @@ letIn
 // ### Unordered tuple type constructor
 
 unorderedTupleTypeConstructor
-    : LeftBrace (unorderedTupleTypeConstructorEntry (Comma unorderedTupleTypeConstructorEntry)*)? Comma? RightBrace
+    : Dash LeftBrace (unorderedTupleTypeConstructorEntry (Comma unorderedTupleTypeConstructorEntry)*)? Comma? RightBrace
     ;
 
 unorderedTupleTypeConstructorEntry

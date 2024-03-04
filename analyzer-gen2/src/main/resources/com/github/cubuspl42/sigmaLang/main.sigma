@@ -1,5 +1,10 @@
 %val a = {}
 
+%val value1 = {
+    x4 = {},
+    x5 = {},
+}
+
 %val value2 = {
     x3 = {},
 }
@@ -15,7 +20,9 @@
     },
     bar3 = foo{arg3 = value2},
     baz = %when (
-        foo2 == 0 => foo{},
-        foo
-    )
-} %in foo2{arg3 = value2}
+        %case value2 => foo
+        %case value2 => bar
+        %case foo{arg2 = {}} => bar
+        %else => a
+    ),
+} %in baz

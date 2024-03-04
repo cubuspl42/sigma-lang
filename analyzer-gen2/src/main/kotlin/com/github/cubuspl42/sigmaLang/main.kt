@@ -25,19 +25,13 @@ fun main() {
         directory = Path.of("analyzer-gen2/src/main/kotlin"),
     )
 
-    val rootAbstractionConstructor = module.root as AbstractionConstructor
-
-    val rootAbstraction = rootAbstractionConstructor.bind(scope = DynamicScope.Empty).value as ExpressedAbstraction
-
-    val result = rootAbstraction.call(
-        argument = UnorderedTuple.Empty,
-    )
+    val result = module.main
 
     println(result)
 
-    val codeGenRootAbstraction = Out.root.value as Abstraction
-
-    val codeGenResult = codeGenRootAbstraction.compute(argument = UnorderedTuple.Empty)
-
-    println(codeGenResult)
+//    val codeGenRootAbstraction = Out.root.value as Abstraction
+//
+//    val codeGenResult = codeGenRootAbstraction.compute(argument = UnorderedTuple.Empty)
+//
+//    println(codeGenResult)
 }

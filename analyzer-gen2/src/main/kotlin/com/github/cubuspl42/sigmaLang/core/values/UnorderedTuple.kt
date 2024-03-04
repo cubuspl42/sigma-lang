@@ -7,6 +7,9 @@ class UnorderedTuple(
         val Empty = UnorderedTuple(valueByKey = emptyMap())
     }
 
-    override fun call(argument: Value): Value =
-        valueByKey[argument as Identifier]?.value ?: throw IllegalArgumentException("No such key")
+    override fun call(argument: Value): Value = get(identifier = argument as Identifier)
+
+    fun get(
+        identifier: Identifier,
+    ): Value = valueByKey[identifier]?.value ?: throw IllegalArgumentException("No such key: $identifier")
 }

@@ -48,6 +48,10 @@ sealed interface ExpressionTerm : Term {
             override fun visitLetInExpressionAlt(
                 ctx: SigmaParser.LetInExpressionAltContext,
             ): ExpressionTerm = LetInTerm.build(ctx.letIn())
+
+            override fun visitWhenExpressionAlt(
+                ctx: SigmaParser.WhenExpressionAltContext,
+            ): ExpressionTerm = WhenTerm.build(ctx.`when`())
         }.visit(ctx)
     }
 

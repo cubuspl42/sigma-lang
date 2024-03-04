@@ -6,9 +6,11 @@ import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
+import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.terms.ModuleTerm
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
@@ -87,11 +89,18 @@ class Module(
 
             val moduleTerm = ModuleTerm.build(parser.module())
 
-            return Module(
-                root = moduleTerm.construct(
-                    context = ConstructionContext.Empty,
-                ).value,
-            )
+            return object {
+                val module: Module by lazy {
+                    Module(
+                        root = moduleTerm.construct(
+                            context = ConstructionContext(
+                                scope = StaticScope.Empty,
+                                moduleRoot = lazy { module.root },
+                            ),
+                        ).value,
+                    )
+                }
+            }.module
         }
     }
 
@@ -100,7 +109,11 @@ class Module(
             val rootAbstraction = root.bind(scope = DynamicScope.Empty).value as ExpressedAbstraction
 
             return rootAbstraction.call(
-                argument = UnorderedTuple.Empty,
+                argument = UnorderedTuple(
+                    valueByKey = mapOf(
+                        Identifier(name = "builtin") to lazyOf(BuiltinScope),
+                    )
+                ),
             )
         }
 
@@ -124,19 +137,19 @@ class Module(
         val rootRepresentation = context.getRepresentation(root)
 
         return FileSpec.builder(packageName, "out").addAnnotation(
-                AnnotationSpec.builder(Suppress::class).addMember("%S", "RedundantVisibilityModifier")
-                    .addMember("%S", "unused").build()
-            ).addType(
-                TypeSpec.objectBuilder(
-                    name = name,
-                ).addProperty(
-                        PropertySpec.builder(
-                            name = "root",
-                            type = CodegenRepresentationContext.lazyValueTypeName,
-                        ).initializer(
-                            rootRepresentation.generateUsage()
-                        ).build()
-                    ).build()
+            AnnotationSpec.builder(Suppress::class).addMember("%S", "RedundantVisibilityModifier")
+                .addMember("%S", "unused").build()
+        ).addType(
+            TypeSpec.objectBuilder(
+                name = name,
+            ).addProperty(
+                PropertySpec.builder(
+                    name = "root",
+                    type = CodegenRepresentationContext.lazyValueTypeName,
+                ).initializer(
+                    rootRepresentation.generateUsage()
+                ).build()
             ).build()
+        ).build()
     }
 }

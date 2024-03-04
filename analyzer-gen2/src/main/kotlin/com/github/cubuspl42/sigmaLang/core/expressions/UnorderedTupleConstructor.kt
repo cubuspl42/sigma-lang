@@ -5,11 +5,18 @@ import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.squareup.kotlinpoet.CodeBlock
 
 class UnorderedTupleConstructor(
     private val valueByKey: Map<Identifier, Lazy<Expression>>,
 ): ComplexExpression() {
+    companion object {
+        val Empty: UnorderedTupleConstructor = UnorderedTupleConstructor(
+            valueByKey = emptyMap(),
+        )
+    }
+
     val values: Collection<Lazy<Expression>>
         get() = valueByKey.values
 
