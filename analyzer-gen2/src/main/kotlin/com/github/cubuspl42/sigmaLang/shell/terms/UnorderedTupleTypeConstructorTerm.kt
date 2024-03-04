@@ -13,7 +13,14 @@ data class UnorderedTupleTypeConstructorTerm(
         fun build(
             ctx: SigmaParser.UnorderedTupleTypeConstructorContext,
         ): UnorderedTupleTypeConstructorTerm = UnorderedTupleTypeConstructorTerm(
-            body = UnorderedTupleConstructorTerm.build(ctx.body),
+            body = UnorderedTupleConstructorTerm(
+                entries = ctx.unorderedTupleTypeConstructorEntry().map {
+                    UnorderedTupleConstructorTerm.Entry(
+                        key = IdentifierTerm.build(it.key),
+                        value = ExpressionTerm.build(it.value),
+                    )
+                },
+            ),
         )
     }
 

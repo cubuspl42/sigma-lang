@@ -49,12 +49,16 @@ unorderedTupleConstructorEntry
     : key=Identifier Equals value=expression
     ;
 
-abstractionConstructor
-    : argumentType=unorderedTupleTypeConstructor FatArrow image=expression
+unorderedTupleTypeConstructor
+    : LeftBrace (unorderedTupleTypeConstructorEntry (Comma unorderedTupleTypeConstructorEntry)*)? Comma? RightBrace
     ;
 
-unorderedTupleTypeConstructor
-    : Dash body=unorderedTupleConstructor
+unorderedTupleTypeConstructorEntry
+    : key=Identifier Colon value=expression
+    ;
+
+abstractionConstructor
+    : argumentType=unorderedTupleTypeConstructor FatArrow image=expression
     ;
 
 letIn

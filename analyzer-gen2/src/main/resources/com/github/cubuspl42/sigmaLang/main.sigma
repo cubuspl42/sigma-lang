@@ -4,12 +4,12 @@
     x3 = {},
 }
 
-%fun foo ^{arg1 = Type1} => {}
+%fun foo ^{arg1: Type1} => {}
 
 %val bar = foo{arg2 = value1}
 
 %val main = %let {
-    foo2 = ^{arg3 = Type1} => {
+    foo2 = ^{arg3: Type1} => {
         a1 = {},
         a2 = arg3,
     },
