@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
 
 data class ModuleTerm(
     val definitions: List<DefinitionTerm>,
-) {
+): Term {
     sealed class DefinitionTerm {
         companion object {
             fun build(
@@ -73,14 +73,14 @@ data class ModuleTerm(
             )
     }
 
-    companion object {
-        fun build(
+    companion object : Term.Builder<SigmaParser.ModuleContext, ModuleTerm>() {
+        override fun build(
             ctx: SigmaParser.ModuleContext,
         ): ModuleTerm = ModuleTerm(
-            definitions = ctx.definition().map {
-                DefinitionTerm.build(it)
-            },
+            definitions = ctx.definition().map { DefinitionTerm.build(it) },
         )
+
+        override fun extract(parser: SigmaParser): SigmaParser.ModuleContext = parser.module()
     }
 
     fun construct(

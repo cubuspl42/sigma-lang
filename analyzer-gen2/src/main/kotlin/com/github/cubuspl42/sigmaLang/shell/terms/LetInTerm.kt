@@ -10,13 +10,15 @@ data class LetInTerm(
     val block: UnorderedTupleConstructorTerm,
     val result: ExpressionTerm,
 ) : ExpressionTerm {
-    companion object {
-        fun build(
+    companion object : Term.Builder<SigmaParser.LetInContext, LetInTerm>() {
+        override fun build(
             ctx: SigmaParser.LetInContext,
         ): LetInTerm = LetInTerm(
-            block = UnorderedTupleConstructorTerm.build(ctx.block),
-            result = ExpressionTerm.build(ctx.result),
+            block = UnorderedTupleConstructorTerm.build(ctx.unorderedTupleConstructor()),
+            result = ExpressionTerm.build(ctx.expression()),
         )
+
+        override fun extract(parser: SigmaParser): SigmaParser.LetInContext = parser.letIn()
     }
 
     override fun construct(context: ConstructionContext): Lazy<Expression> {

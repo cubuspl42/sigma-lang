@@ -10,12 +10,14 @@ import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 data class ReferenceTerm(
     val referredName: IdentifierTerm,
 ) : ExpressionTerm {
-    companion object {
-        fun build(
+    companion object : Term.Builder<SigmaParser.ReferenceContext, ReferenceTerm>() {
+        override fun build(
             ctx: SigmaParser.ReferenceContext,
         ): ReferenceTerm = ReferenceTerm(
             referredName = IdentifierTerm.build(ctx.referredName),
         )
+
+        override fun extract(parser: SigmaParser): SigmaParser.ReferenceContext = parser.reference()
     }
 
     override fun construct(context: ConstructionContext): Lazy<Expression> {

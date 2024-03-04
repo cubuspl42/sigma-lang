@@ -9,13 +9,15 @@ data class FieldReadTerm(
     val subject: ReferenceTerm,
     val readFieldName: IdentifierTerm,
 ) : ExpressionTerm {
-    companion object {
-        fun build(
+    companion object : Term.Builder<SigmaParser.FieldReadContext, FieldReadTerm>() {
+        override fun build(
             ctx: SigmaParser.FieldReadContext,
         ): FieldReadTerm = FieldReadTerm(
-            subject = ReferenceTerm.build(ctx.subject),
+            subject = ReferenceTerm.build(ctx.reference()),
             readFieldName = IdentifierTerm.build(ctx.readFieldName),
         )
+
+        override fun extract(parser: SigmaParser): SigmaParser.FieldReadContext = parser.fieldRead()
     }
 
     override fun construct(context: ConstructionContext): Lazy<Expression> = Call.fieldRead(

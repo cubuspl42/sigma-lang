@@ -9,13 +9,15 @@ data class CallTerm(
     val callee: ReferenceTerm,
     val passedArgument: UnorderedTupleConstructorTerm,
 ) : ExpressionTerm {
-    companion object {
-        fun build(
+    companion object : Term.Builder<SigmaParser.CallContext, CallTerm>() {
+        override fun build(
             ctx: SigmaParser.CallContext,
         ): CallTerm = CallTerm(
-            callee = ReferenceTerm.build(ctx.callee),
-            passedArgument = UnorderedTupleConstructorTerm.build(ctx.passedArgument),
+            callee = ReferenceTerm.build(ctx.reference()),
+            passedArgument = UnorderedTupleConstructorTerm.build(ctx.unorderedTupleConstructor()),
         )
+
+        override fun extract(parser: SigmaParser): SigmaParser.CallContext = parser.call()
     }
 
     override fun construct(context: ConstructionContext): Lazy<Expression> = lazy {

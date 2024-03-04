@@ -13,12 +13,12 @@ data class UnorderedTupleConstructorTerm(
         val value: ExpressionTerm,
     )
 
-    companion object {
+    companion object : Term.Builder<SigmaParser.UnorderedTupleConstructorContext, UnorderedTupleConstructorTerm>() {
         val Empty: UnorderedTupleConstructorTerm = UnorderedTupleConstructorTerm(
             entries = emptyList(),
         )
 
-        fun build(
+        override fun build(
             ctx: SigmaParser.UnorderedTupleConstructorContext,
         ): UnorderedTupleConstructorTerm = UnorderedTupleConstructorTerm(
             entries = ctx.unorderedTupleConstructorEntry().map {
@@ -28,6 +28,9 @@ data class UnorderedTupleConstructorTerm(
                 )
             },
         )
+
+        override fun extract(parser: SigmaParser): SigmaParser.UnorderedTupleConstructorContext =
+            parser.unorderedTupleConstructor()
     }
 
     override fun construct(context: ConstructionContext): Lazy<Expression> = lazyOf(

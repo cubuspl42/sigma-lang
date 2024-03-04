@@ -5,12 +5,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 data class UnorderedTupleTypeConstructorTerm(
     val body: UnorderedTupleConstructorTerm,
 ) : Term {
-    companion object {
+    companion object :
+        Term.Builder<SigmaParser.UnorderedTupleTypeConstructorContext, UnorderedTupleTypeConstructorTerm>() {
         val Empty: UnorderedTupleTypeConstructorTerm = UnorderedTupleTypeConstructorTerm(
             body = UnorderedTupleConstructorTerm.Empty,
         )
 
-        fun build(
+        override fun build(
             ctx: SigmaParser.UnorderedTupleTypeConstructorContext,
         ): UnorderedTupleTypeConstructorTerm = UnorderedTupleTypeConstructorTerm(
             body = UnorderedTupleConstructorTerm(
@@ -22,7 +23,16 @@ data class UnorderedTupleTypeConstructorTerm(
                 },
             ),
         )
+
+        override fun extract(parser: SigmaParser): SigmaParser.UnorderedTupleTypeConstructorContext =
+            parser.unorderedTupleTypeConstructor()
     }
+
+    constructor(
+        entries: List<UnorderedTupleConstructorTerm.Entry>,
+    ) : this(
+        UnorderedTupleConstructorTerm(entries = entries),
+    )
 
     val keys: Set<IdentifierTerm> = body.entries.map { it.key }.toSet()
 }
