@@ -1,9 +1,6 @@
 package com.github.cubuspl42.sigmaLang
 
-import com.github.cubuspl42.sigmaLang.core.DynamicScope
-import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
-import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import java.nio.file.Path
 

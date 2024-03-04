@@ -10,9 +10,9 @@ abstract class Literal : Expression() {
 
     final override val subExpressions: Set<Expression> = emptySet()
 
-    final override fun buildInnerCodegenRepresentation(
+    final override fun buildCodegenRepresentation(
         context: Module.CodegenRepresentationContext,
-    ): InnerCodegenRepresentation = object : InnerCodegenRepresentation() {
+    ): CodegenRepresentation = object : CodegenRepresentation() {
         override fun generateCode(): CodeBlock = generateLiteralCode()
     }
 

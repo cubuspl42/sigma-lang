@@ -64,16 +64,16 @@ class Module(
 
         private var nextId = 0
 
-        private val representationByExpression: MutableMap<Expression, Expression.OuterCodegenRepresentation> =
+        private val representationByExpression: MutableMap<Expression, Expression.CodegenRepresentation> =
             mutableMapOf()
 
-        fun getRepresentation(expression: Expression): Expression.OuterCodegenRepresentation =
+        fun getRepresentation(expression: Expression): Expression.CodegenRepresentation =
             representationByExpression[expression] ?: throw IllegalStateException("No representation for $expression")
 
-        fun generateUniqueName(): String = "var${nextId++}"
+        fun generateUniqueName(prefix: String): String = "${prefix}${nextId++}"
 
         override fun visit(expression: Expression) {
-            representationByExpression[expression] = expression.buildOuterCodegenRepresentation(
+            representationByExpression[expression] = expression.buildCodegenRepresentation(
                 context = this,
             )
         }
@@ -147,7 +147,7 @@ class Module(
                     name = "root",
                     type = CodegenRepresentationContext.lazyValueTypeName,
                 ).initializer(
-                    rootRepresentation.generateUsage()
+                    rootRepresentation.generateCode(),
                 ).build()
             ).build()
         ).build()

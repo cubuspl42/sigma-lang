@@ -8,7 +8,7 @@ class ExpressedAbstraction(
     private val closure: DynamicScope,
 ): Abstraction() {
     override fun compute(argument: Value): Value = abstractionConstructor.body.bind(
-        scope = closure.extend(
+        scope = closure.withWrappingAbstraction(
             abstractionConstructor = abstractionConstructor,
             value = argument,
         ),

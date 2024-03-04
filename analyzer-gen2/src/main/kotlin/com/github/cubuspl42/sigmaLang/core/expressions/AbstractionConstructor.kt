@@ -4,12 +4,10 @@ import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
-import com.github.cubuspl42.sigmaLang.core.values.Callable
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.typeNameOf
 
@@ -18,12 +16,10 @@ fun <T> unionAll(sets: Iterable<Set<T>>) = sets.fold(emptySet<T>()) { acc, set -
 class AbstractionConstructor(
     val body: Expression,
 ) : ComplexExpression() {
-    abstract class CodegenRepresentation : Expression.InnerCodegenRepresentation() {
+    abstract class CodegenRepresentation : Expression.CodegenRepresentation() {
         abstract val argumentName: String
 
-        abstract val localProperties: List<Expression.NamedCodegenRepresentation>
-
-        abstract val body: Expression.OuterCodegenRepresentation
+        abstract val body: Expression.CodegenRepresentation
 
         final override fun generateCode(): CodeBlock {
             val abstractionObjectBuilder =
@@ -38,38 +34,17 @@ class AbstractionConstructor(
                             .returns(
                                 returnType = Value::class,
                             )
-                            .addCode(generateBodyCode())
+                            .addCode(
+                                """
+                                    val $argumentName = lazyOf(argument)
+                                    return %L.value
+                                """.trimIndent(),
+                                body.generateCode(),
+                            )
                             .build()
                     )
 
             return CodeBlock.of("lazyOf(%L)", abstractionObjectBuilder.build())
-        }
-
-        private fun generateBodyCode(): CodeBlock {
-            val helperObjectBuilder = TypeSpec.anonymousClassBuilder()
-                .addProperty(
-                    PropertySpec.builder(
-                        name = argumentName,
-                        type = Module.CodegenRepresentationContext.lazyValueTypeName,
-                    )
-                        .initializer("lazyOf(argument)")
-                        .build()
-                )
-
-            localProperties.forEach {
-                helperObjectBuilder.addProperty(it.generateDefinition())
-            }
-
-            helperObjectBuilder.addProperty(
-                PropertySpec.builder(
-                    name = "result",
-                    type = Module.CodegenRepresentationContext.lazyValueTypeName,
-                )
-                    .initializer(body.generateUsage())
-                    .build()
-            )
-
-            return CodeBlock.of("return %L.result.value", helperObjectBuilder.build())
         }
     }
 
@@ -95,18 +70,12 @@ class AbstractionConstructor(
         emptySet()
     }
 
-    override fun buildInnerCodegenRepresentation(
+    override fun buildCodegenRepresentation(
         context: Module.CodegenRepresentationContext,
-    ): InnerCodegenRepresentation = object : CodegenRepresentation() {
-        override val argumentName: String = context.generateUniqueName()
+    ): Expression.CodegenRepresentation = object : CodegenRepresentation() {
+        override val argumentName: String = context.generateUniqueName(prefix = "arg")
 
-        override val localProperties: List<NamedCodegenRepresentation> by lazy {
-            wrappedExpressions.mapNotNull {
-                context.getRepresentation(it) as? NamedCodegenRepresentation
-            }
-        }
-
-        override val body: OuterCodegenRepresentation by lazy {
+        override val body: Expression.CodegenRepresentation by lazy {
             context.getRepresentation(this@AbstractionConstructor.body)
         }
     }

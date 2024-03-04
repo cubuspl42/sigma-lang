@@ -28,9 +28,9 @@ class Call(
 
     override val subExpressions: Set<Expression> = setOf(callee, passedArgument)
 
-    override fun buildInnerCodegenRepresentation(
+    override fun buildCodegenRepresentation(
         context: Module.CodegenRepresentationContext,
-    ): InnerCodegenRepresentation = object : InnerCodegenRepresentation() {
+    ): CodegenRepresentation = object : CodegenRepresentation() {
         override fun generateCode(): CodeBlock {
             return CodeBlock.of(
                 """
@@ -40,9 +40,9 @@ class Call(
                     ⇤)
                     ⇤)
                 """.trimIndent(),
-                context.getRepresentation(callee).generateUsage(),
+                context.getRepresentation(callee).generateCode(),
                 Callable::class,
-                context.getRepresentation(passedArgument).generateUsage(),
+                context.getRepresentation(passedArgument).generateCode(),
             )
         }
     }

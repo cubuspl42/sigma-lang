@@ -3,7 +3,8 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.core.expressions.Reference
+import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
+import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
 import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 
@@ -25,16 +26,20 @@ data class ReferenceTerm(
 
         return lazy {
             when (val resolution = scope.resolveName(referredName = referredName)) {
-                is StaticScope.ArgumentReference -> Call.fieldRead(
+                is StaticScope.ResolvedReference -> Call.fieldRead(
                     subjectLazy = lazyOf(
-                        Reference(
-                            referredAbstractionLazy = resolution.referredAbstractionLazy,
-                        )
+                        when (resolution) {
+                            is StaticScope.ArgumentReference -> ArgumentReference(
+                                referredAbstractionLazy = resolution.referredAbstractionLazy,
+                            )
+
+                            is StaticScope.DefinitionReference -> KnotReference(
+                                referredKnotLazy = resolution.referredKnotLazy,
+                            )
+                        },
                     ),
                     readFieldName = referredName.construct(),
                 )
-
-                is StaticScope.DefinitionReference -> resolution.referredBodyLazy
 
                 StaticScope.UnresolvedReference -> throw IllegalStateException("Unresolved reference: $referredName")
             }.value

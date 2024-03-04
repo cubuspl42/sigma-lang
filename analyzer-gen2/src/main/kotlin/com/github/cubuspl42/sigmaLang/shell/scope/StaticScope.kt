@@ -1,7 +1,10 @@
 package com.github.cubuspl42.sigmaLang.shell.scope
 
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
+import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.shell.terms.IdentifierTerm
 
 interface StaticScope {
@@ -27,18 +30,18 @@ interface StaticScope {
 
     sealed interface ReferenceResolution
 
-    sealed interface ResolvedReference : ReferenceResolution
+    sealed class ResolvedReference : ReferenceResolution
 
     data class ArgumentReference(
         val referredAbstractionLazy: Lazy<AbstractionConstructor>,
-    ) : ResolvedReference {
+    ) : ResolvedReference() {
         val referredAbstraction by referredAbstractionLazy
     }
 
     data class DefinitionReference(
-        val referredBodyLazy: Lazy<Expression>,
-    ) : ResolvedReference {
-        val referredBody by referredBodyLazy
+        val referredKnotLazy: Lazy<KnotConstructor>,
+    ) : ResolvedReference() {
+        val referredKnot by referredKnotLazy
     }
 
     data object UnresolvedReference : ReferenceResolution
