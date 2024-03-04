@@ -14,4 +14,8 @@
         a2 = arg3,
     },
     bar3 = foo{arg3 = value2},
+    baz = %when (
+        foo2 == 0 => foo{},
+        foo
+    )
 } %in foo2{arg3 = value2}
