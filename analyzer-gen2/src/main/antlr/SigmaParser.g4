@@ -46,7 +46,7 @@ unorderedTupleConstructor
     ;
 
 unorderedTupleConstructorEntry
-    : key=Identifier Colon value=expression
+    : key=Identifier Equals value=expression
     ;
 
 abstractionConstructor
