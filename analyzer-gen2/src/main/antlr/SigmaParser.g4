@@ -51,7 +51,7 @@ call
 // #### Field read
 
 fieldRead
-    : subject=reference readFieldName=Identifier
+    : subject=reference Dot readFieldName=Identifier
     ;
 
 // #### When

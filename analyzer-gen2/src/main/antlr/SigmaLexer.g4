@@ -19,6 +19,7 @@ Dash : '^' ;
 Colon : ':' ;
 Comma : ',' ;
 Equals : '=' ;
+Dot : '.' ;
 
 FatArrow : '=>' ;
 
