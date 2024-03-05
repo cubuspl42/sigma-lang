@@ -5,10 +5,10 @@ options { tokenVocab = SigmaLexer; }
 // ## Module
 
 module
-    : definition+
+    : moduleDefinition+
     ;
 
-definition
+moduleDefinition
     : valueDefinition
     | functionDefinition
     ;

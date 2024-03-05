@@ -11,7 +11,7 @@ data class ModuleTerm(
     sealed class DefinitionTerm {
         companion object {
             fun build(
-                ctx: SigmaParser.DefinitionContext,
+                ctx: SigmaParser.ModuleDefinitionContext,
             ): DefinitionTerm = object : SigmaParserBaseVisitor<DefinitionTerm>() {
                 override fun visitValueDefinition(
                     ctx: SigmaParser.ValueDefinitionContext,
@@ -77,7 +77,7 @@ data class ModuleTerm(
         override fun build(
             ctx: SigmaParser.ModuleContext,
         ): ModuleTerm = ModuleTerm(
-            definitions = ctx.definition().map { DefinitionTerm.build(it) },
+            definitions = ctx.moduleDefinition().map { DefinitionTerm.build(it) },
         )
 
         override fun extract(parser: SigmaParser): SigmaParser.ModuleContext = parser.module()
