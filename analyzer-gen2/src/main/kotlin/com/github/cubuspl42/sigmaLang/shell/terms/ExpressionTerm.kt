@@ -1,28 +1,13 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
-import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
 
 sealed interface ExpressionTerm : Term {
-    companion object {
-        fun parse(
-            source: String,
-        ): ExpressionTerm {
-            val sourceName = "__main__"
-
-            val lexer = SigmaLexer(CharStreams.fromString(source, sourceName))
-            val tokenStream = CommonTokenStream(lexer)
-            val parser = SigmaParser(tokenStream)
-
-            return build(parser.expression())
-        }
-
-        fun build(
+    companion object : Term.Builder<SigmaParser.ExpressionContext, ExpressionTerm>() {
+        override fun build(
             ctx: SigmaParser.ExpressionContext,
         ): ExpressionTerm = object : SigmaParserBaseVisitor<ExpressionTerm>() {
             override fun visitReferenceExpressionAlt(
@@ -57,6 +42,10 @@ sealed interface ExpressionTerm : Term {
                 ctx: SigmaParser.WhenExpressionAltContext,
             ): ExpressionTerm = WhenTerm.build(ctx.`when`())
         }.visit(ctx)
+
+        override fun extract(
+            parser: SigmaParser,
+        ): SigmaParser.ExpressionContext = parser.expression()
     }
 
     fun construct(context: ConstructionContext): Lazy<Expression>
