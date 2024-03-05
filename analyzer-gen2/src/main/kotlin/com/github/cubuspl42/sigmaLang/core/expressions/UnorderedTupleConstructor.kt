@@ -63,7 +63,9 @@ class UnorderedTupleConstructor(
     override fun bind(scope: DynamicScope): Lazy<Value> = lazyOf(
         UnorderedTuple(
             valueByKey = valueByKey.mapValues { (_, valueLazy) ->
-                valueLazy.value.bind(scope = scope)
+                lazy {
+                    valueLazy.value.bindStrict(scope = scope)
+                }
             },
         ),
     )

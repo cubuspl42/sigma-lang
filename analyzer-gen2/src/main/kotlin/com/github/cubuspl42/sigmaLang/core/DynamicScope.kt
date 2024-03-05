@@ -1,42 +1,52 @@
 package com.github.cubuspl42.sigmaLang.core
 
-import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
-import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.expressions.Wrapper
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 
-data class DynamicScope(
-    private val argumentValueByAbstraction: Map<AbstractionConstructor, Value>,
-    private val knotValueByKnot: Map<KnotConstructor, UnorderedTuple>,
-) {
-    companion object {
-        val Empty = DynamicScope(
-            argumentValueByAbstraction = emptyMap(),
-            knotValueByKnot = emptyMap(),
-        )
+interface DynamicScope {
+    object Bottom : DynamicScope {
+        override fun getValue(referredWrapper: Wrapper): Value {
+            throw IllegalStateException("Unresolved reference at runtime: $referredWrapper")
+        }
     }
 
-    fun getArgumentValue(abstractionConstructor: AbstractionConstructor): Value =
-        argumentValueByAbstraction.getOrElse(abstractionConstructor) {
-            throw IllegalArgumentException("No value for abstraction $abstractionConstructor")
+    companion object {
+        fun <T> looped(
+            block: (
+                dynamicScopeLooped: DynamicScope,
+            ) -> Pair<T, DynamicScope>,
+        ): T = LazyUtils.looped2 { _, dynamicScopeLooped ->
+            block(
+                lazy(dynamicScopeLazy = dynamicScopeLooped),
+            )
+        }.first
+
+        private fun lazy(
+            dynamicScopeLazy: Lazy<DynamicScope>,
+        ): DynamicScope = object : DynamicScope {
+            override fun getValue(
+                referredWrapper: Wrapper,
+            ): Value = dynamicScopeLazy.value.getValue(
+                referredWrapper = referredWrapper,
+            )
         }
+    }
 
-    fun getKnotValue(knotConstructor: KnotConstructor): UnorderedTuple =
-        knotValueByKnot.getOrElse(knotConstructor) {
-            throw IllegalArgumentException("No value for knot $knotConstructor")
-        }
+    fun getValue(
+        referredWrapper: Wrapper,
+    ): Value
+}
 
-    fun withWrappingAbstraction(
-        abstractionConstructor: AbstractionConstructor,
-        value: Value,
-    ): DynamicScope = copy(
-        argumentValueByAbstraction = argumentValueByAbstraction + (abstractionConstructor to value),
-    )
-
-    fun withWrappingKnot(
-        knotConstructor: KnotConstructor,
-        value: UnorderedTuple,
-    ): DynamicScope = copy(
-        knotValueByKnot = knotValueByKnot + (knotConstructor to value),
-    )
+fun DynamicScope.withValue(
+    wrapper: Wrapper,
+    value: Value,
+): DynamicScope = object : DynamicScope {
+    override fun getValue(
+        referredWrapper: Wrapper,
+    ): Value = if (referredWrapper == wrapper) {
+        value
+    } else {
+        this@withValue.getValue(referredWrapper = referredWrapper)
+    }
 }

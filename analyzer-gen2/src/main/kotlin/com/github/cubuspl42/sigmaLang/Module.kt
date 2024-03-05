@@ -116,7 +116,9 @@ class Module(
 
     val main: Value
         get() {
-            val rootAbstraction = root.bind(scope = DynamicScope.Empty).value as ExpressedAbstraction
+            val rootAbstraction = root.bind(
+                scope = DynamicScope.Bottom,
+            ).value as ExpressedAbstraction
 
             return rootAbstraction.call(
                 argument = UnorderedTuple(

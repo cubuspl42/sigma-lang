@@ -23,6 +23,6 @@ class ArgumentReference(
     }
 
     override fun bind(scope: DynamicScope): Lazy<Value> = lazy {
-        scope.getArgumentValue(abstractionConstructor = referredAbstraction)
+        scope.getValue(referredWrapper = referredAbstraction)
     }
 }

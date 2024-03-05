@@ -96,4 +96,10 @@ sealed class Expression {
     abstract fun bind(
         scope: DynamicScope,
     ): Lazy<Value>
+
+    fun bindStrict(
+        scope: DynamicScope,
+    ): Value = bind(
+        scope = scope,
+    ).value
 }

@@ -54,6 +54,10 @@ abstract class ExpressionStub<TExpression : Expression> {
     abstract fun form(
         context: FormationContext,
     ): Lazy<Expression>
+
+    fun formStrict(
+        context: FormationContext,
+    ): Expression = form(context = context).value
 }
 
 fun <TExpression : Expression> TExpression.asStub(): ExpressionStub<TExpression> =

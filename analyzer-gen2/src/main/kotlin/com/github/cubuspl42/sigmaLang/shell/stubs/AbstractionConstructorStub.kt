@@ -3,28 +3,31 @@ package com.github.cubuspl42.sigmaLang.shell.stubs
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
-import com.github.cubuspl42.sigmaLang.shell.scope.ArgumentScope
+import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
-import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 
 class AbstractionConstructorStub(
     private val argumentNames: Set<Identifier>,
     private val image: ExpressionStub<*>,
 ) : ExpressionStub<AbstractionConstructor>() {
-    override fun form(context: FormationContext): Lazy<AbstractionConstructor> {
-        val abstractionConstructor = LazyUtils.looped { abstractionConstructorLooped ->
+    override fun form(
+        context: FormationContext,
+    ): Lazy<AbstractionConstructor> = lazyOf(
+        AbstractionConstructor.of { argumentReference ->
+            val innerScope = StaticScope.argumentScope(
+                argumentNames = argumentNames,
+                argumentReference = argumentReference,
+            ).chainWith(
+                context.scope,
+            )
+
             val innerContext = context.copy(
-                scope = ArgumentScope(
-                    argumentNames = argumentNames,
-                    abstractionConstructorLazy = abstractionConstructorLooped,
-                ).chainWith(context.scope),
+                scope = innerScope,
             )
 
-            return@looped AbstractionConstructor(
-                body = image.form(context = innerContext).value,
+            image.formStrict(
+                context = innerContext,
             )
-        }
-
-        return lazyOf(abstractionConstructor)
-    }
+        },
+    )
 }

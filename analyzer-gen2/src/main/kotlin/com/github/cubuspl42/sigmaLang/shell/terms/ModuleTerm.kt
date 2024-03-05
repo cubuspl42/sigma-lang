@@ -2,12 +2,10 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
-import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.AbstractionConstructorStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
-import com.github.cubuspl42.sigmaLang.shell.stubs.KnotConstructorStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.LocalScopeStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.ReferenceStub
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
@@ -29,8 +27,8 @@ data class ModuleTerm(
             }.visit(ctx)
         }
 
-        fun transmute(): KnotConstructorStub.DefinitionStub {
-            return KnotConstructorStub.DefinitionStub(
+        fun transmute(): LocalScopeStub.DefinitionStub {
+            return LocalScopeStub.DefinitionStub(
                 key = name.transmute(),
                 initializer = transmuteInitializer(),
             )
@@ -90,7 +88,7 @@ data class ModuleTerm(
 
     fun transmute() = AbstractionConstructorStub(
         argumentNames = emptySet(), // FIXME?
-        image = KnotConstructorStub(
+        image = LocalScopeStub(
             definitions = definitions.mapUniquely {
                 it.transmute()
             },

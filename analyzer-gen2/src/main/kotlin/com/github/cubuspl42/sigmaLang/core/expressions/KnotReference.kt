@@ -24,6 +24,6 @@ class KnotReference(
     }
 
     override fun bind(scope: DynamicScope): Lazy<Value> = lazy {
-        scope.getKnotValue(knotConstructor = referredKnot)
+        scope.getValue(referredWrapper = referredKnot)
     }
 }

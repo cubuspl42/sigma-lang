@@ -5,6 +5,7 @@ import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
@@ -15,7 +16,7 @@ fun <T> unionAll(sets: Iterable<Set<T>>) = sets.fold(emptySet<T>()) { acc, set -
 
 class AbstractionConstructor(
     val body: Expression,
-) : ComplexExpression() {
+) : Wrapper() {
     abstract class CodegenRepresentation : Expression.CodegenRepresentation() {
         abstract val argumentName: String
 
@@ -48,6 +49,22 @@ class AbstractionConstructor(
         }
     }
 
+    companion object {
+        fun of(
+            buildBody: (ArgumentReference) -> Expression,
+        ): AbstractionConstructor = LazyUtils.looped { abstractionConstructorLooped ->
+            val reference = ArgumentReference(
+                referredAbstractionLazy = abstractionConstructorLooped,
+            )
+
+            val body = buildBody(reference)
+
+            AbstractionConstructor(
+                body = body,
+            )
+        }
+    }
+
     override val subExpressions: Set<Expression> = setOf(body)
 
     /**
@@ -62,7 +79,7 @@ class AbstractionConstructor(
         expression: Expression,
     ): Set<ComplexExpression> = if (expression is ComplexExpression) {
         setOf(expression) + when (expression) {
-            is AbstractionConstructor -> emptySet()
+            is Wrapper -> emptySet()
             is Call -> collectWrappedExpressions(expression.callee) + collectWrappedExpressions(expression.passedArgument)
             is UnorderedTupleConstructor -> unionAll(expression.values.map { collectWrappedExpressions(it.value) })
         }
