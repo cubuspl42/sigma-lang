@@ -22,14 +22,6 @@
 
 %val bar = foo{arg2 = value1}
 
-%val main = Cat.pet{
-    this = pussy,
-}
-
-%val pussy = Cat.of{
-    hasSharpClaws = true,
-}
-
 %val value1 = {
     x4 = {},
     x5 = {
@@ -41,4 +33,12 @@
     b1 = %false,
     b2 = %true,
     x3 = {},
+}
+
+%val pussy = Cat.of{
+    hasSharpClaws = %false,
+}
+
+%val main = Cat.pet{
+    this = pussy,
 }
