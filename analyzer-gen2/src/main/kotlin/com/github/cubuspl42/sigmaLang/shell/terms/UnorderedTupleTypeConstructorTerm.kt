@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 
 data class UnorderedTupleTypeConstructorTerm(
     val body: UnorderedTupleConstructorTerm,

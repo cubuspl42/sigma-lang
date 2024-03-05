@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.terms.UnorderedTupleConstructorTerm
 
 class UnorderedTupleConstructorStub(
     private val valueStubByKey: Map<Identifier, ExpressionStub<*>>,
@@ -29,5 +30,9 @@ class UnorderedTupleConstructorStub(
                 valueStub.form(context = context)
             },
         ),
+    )
+
+    fun withEntry(entry: Entry) = UnorderedTupleConstructorStub(
+        valueStubByKey = valueStubByKey + (entry.key to entry.value),
     )
 }

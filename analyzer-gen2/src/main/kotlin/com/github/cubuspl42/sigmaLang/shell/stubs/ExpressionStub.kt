@@ -5,6 +5,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 
 abstract class ExpressionStub<TExpression : Expression> {
     data class IfFunctionStub(
@@ -27,9 +28,21 @@ abstract class ExpressionStub<TExpression : Expression> {
     }
 
     companion object {
+        fun looped(
+            block: (Lazy<Expression>) -> ExpressionStub<*>,
+        ): ExpressionStub<*> = object : ExpressionStub<Expression>() {
+            override fun form(context: FormationContext): Lazy<Expression> = lazy {
+                LazyUtils.looped { expressionLooped ->
+                    block(expressionLooped).form(
+                        context = context,
+                    ).value
+                }
+            }
+        }
+
         fun referBuiltin(
             name: Identifier,
-        ): ExpressionStub<*> = object : ExpressionStub<Call>() {
+        ): ExpressionStub<*> = object : ExpressionStub<Expression>() {
             override fun form(context: FormationContext) = CallStub.fieldRead(
                 subjectStub = CallStub.fieldRead(
                     subjectStub = ArgumentReference(

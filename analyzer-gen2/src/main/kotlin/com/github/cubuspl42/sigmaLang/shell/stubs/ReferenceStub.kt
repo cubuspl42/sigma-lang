@@ -11,7 +11,8 @@ class ReferenceStub(
     override fun form(context: FormationContext): Lazy<Expression> {
         val scope = context.scope
 
-        val reference = scope.resolveName(referredName = referredName) ?:  throw IllegalStateException("Unresolved reference: $referredName")
+        val reference = scope.resolveName(referredName = referredName)
+            ?: throw IllegalStateException("Unresolved reference: $referredName")
 
         return CallStub.fieldRead(
             subjectStub = reference.asStub(),

@@ -30,4 +30,9 @@ class AbstractionConstructorStub(
             )
         },
     )
+
+    fun withArgumentName(name: Identifier) = AbstractionConstructorStub(
+        argumentNames = argumentNames + name,
+        image = image,
+    )
 }

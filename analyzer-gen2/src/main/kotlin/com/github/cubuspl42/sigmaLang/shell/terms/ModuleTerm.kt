@@ -11,8 +11,8 @@ import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 data class ModuleTerm(
     val definitions: List<DefinitionTerm>,
-): Term {
-    sealed class DefinitionTerm {
+) : Term {
+    sealed class DefinitionTerm : Term {
         companion object {
             fun build(
                 ctx: SigmaParser.ModuleDefinitionContext,
@@ -24,13 +24,17 @@ data class ModuleTerm(
                 override fun visitFunctionDefinition(
                     ctx: SigmaParser.FunctionDefinitionContext,
                 ): DefinitionTerm = FunctionDefinitionTerm.build(ctx)
+
+                override fun visitClassDefinition(
+                    ctx: SigmaParser.ClassDefinitionContext,
+                ): DefinitionTerm = ClassDefinitionTerm.build(ctx)
             }.visit(ctx)
         }
 
         fun transmute(): LocalScopeStub.DefinitionStub {
             return LocalScopeStub.DefinitionStub(
                 key = name.transmute(),
-                initializer = transmuteInitializer(),
+                initializerStub = transmuteInitializer(),
             )
         }
 
@@ -88,7 +92,7 @@ data class ModuleTerm(
 
     fun transmute() = AbstractionConstructorStub(
         argumentNames = emptySet(), // FIXME?
-        image = LocalScopeStub(
+        image = LocalScopeStub.of(
             definitions = definitions.mapUniquely {
                 it.transmute()
             },

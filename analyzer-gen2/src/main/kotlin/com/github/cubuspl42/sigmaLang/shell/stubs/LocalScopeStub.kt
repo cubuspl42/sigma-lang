@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
+import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -8,23 +9,41 @@ import com.github.cubuspl42.sigmaLang.shell.scope.LocalScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
-class LocalScopeStub(
+class LocalScopeStub private constructor(
     private val definitions: Set<DefinitionStub>,
-    private val result: ExpressionStub<*>,
 ) : ExpressionStub<KnotConstructor>() {
     data class DefinitionStub(
         val key: Identifier,
-        val initializer: ExpressionStub<*>,
+        val initializerStub: ExpressionStub<*>,
     )
 
     companion object {
         val resultIdentifier = Identifier(name = "__result__")
+
+        fun of(
+            definitions: Set<DefinitionStub>,
+        ): ExpressionStub<KnotConstructor> = LocalScopeStub(
+            definitions = definitions,
+        )
+
+        fun of(
+            definitions: Set<DefinitionStub>,
+            result: ExpressionStub<*>,
+        ): ExpressionStub<Call> = CallStub.fieldRead(
+            subjectStub = of(
+                definitions = definitions + DefinitionStub(
+                    key = resultIdentifier,
+                    initializerStub = result,
+                ),
+            ),
+            readFieldName = resultIdentifier,
+        )
     }
 
     override fun form(
         context: FormationContext,
-    ): Lazy<Expression> = CallStub.fieldRead(
-        subjectStub = KnotConstructor.of { knotReference ->
+    ): Lazy<Expression> = lazyOf(
+        KnotConstructor.of { knotReference ->
             val innerScope = LocalScope(
                 names = definitions.mapUniquely { it.key },
                 reference = knotReference,
@@ -38,16 +57,11 @@ class LocalScopeStub(
 
             UnorderedTupleConstructorStub(
                 valueStubByKey = definitions.associate {
-                    it.key to it.initializer
-                } + mapOf(
-                    resultIdentifier to result,
-                ),
+                    it.key to it.initializerStub
+                },
             ).form(
                 context = innerContext,
             ).value
-        }.asStub(),
-        readFieldName = resultIdentifier,
-    ).form(
-        context = context
+        },
     )
 }

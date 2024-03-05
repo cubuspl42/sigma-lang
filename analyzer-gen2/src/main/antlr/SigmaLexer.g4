@@ -9,6 +9,8 @@ CaseKeyword : '%case' ;
 ElseKeyword : '%else' ;
 TrueKeyword : '%true' ;
 FalseKeyword : '%false' ;
+ClassKeyword : '%class' ;
+ConstructorKeyword : '%constructor' ;
 
 LeftParen : '(' ;
 RightParen : ')' ;

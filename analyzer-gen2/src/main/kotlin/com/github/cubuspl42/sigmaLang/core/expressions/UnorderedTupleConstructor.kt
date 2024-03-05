@@ -11,9 +11,20 @@ import com.squareup.kotlinpoet.CodeBlock
 class UnorderedTupleConstructor(
     private val valueByKey: Map<Identifier, Lazy<Expression>>,
 ) : ComplexExpression() {
+    data class Entry(
+        val key: Identifier,
+        val value: Lazy<Expression>,
+    )
+
     companion object {
         val Empty: UnorderedTupleConstructor = UnorderedTupleConstructor(
             valueByKey = emptyMap(),
+        )
+
+        fun fromEntries(
+            entries: Iterable<Entry>,
+        ): UnorderedTupleConstructor = UnorderedTupleConstructor(
+            valueByKey = entries.associate { it.key to it.value },
         )
 
         fun generateCode(

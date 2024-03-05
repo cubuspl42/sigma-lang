@@ -20,11 +20,11 @@ data class LetInTerm(
         override fun extract(parser: SigmaParser): SigmaParser.LetInContext = parser.letIn()
     }
 
-    override fun transmute(): ExpressionStub<*> = LocalScopeStub(
+    override fun transmute(): ExpressionStub<*> = LocalScopeStub.of(
         definitions = block.entries.mapUniquely { entry ->
             LocalScopeStub.DefinitionStub(
                 key = entry.key.transmute(),
-                initializer = entry.value.transmute(),
+                initializerStub = entry.value.transmute(),
             )
         },
         result = result.transmute(),

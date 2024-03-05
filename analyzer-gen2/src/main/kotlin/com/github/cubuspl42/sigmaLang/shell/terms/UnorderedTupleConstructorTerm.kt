@@ -34,6 +34,7 @@ data class UnorderedTupleConstructorTerm(
         override fun extract(parser: SigmaParser): SigmaParser.UnorderedTupleConstructorContext =
             parser.unorderedTupleConstructor()
     }
+
     override fun transmute() = UnorderedTupleConstructorStub(
          valueStubByKey = entries.associate { entry ->
              entry.key.transmute() to entry.value.transmute()

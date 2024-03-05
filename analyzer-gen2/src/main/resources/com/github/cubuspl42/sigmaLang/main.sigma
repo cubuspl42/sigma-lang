@@ -1,3 +1,35 @@
+%val bleedingResult = {
+    bleedingHands = %true,
+}
+
+%val calmResult = {
+    purringCat = %true,
+}
+
+%class Cat {
+    %constructor of ^{
+        name: String,
+        hasSharpClaws: Bool,
+    }
+
+    %fun pet ^{} => %when (
+        %case this.hasSharpClaws => bleedingResult
+        %else => calmResult
+    )
+}
+
+%fun foo ^{arg1: Type1} => %false
+
+%val bar = foo{arg2 = value1}
+
+%val main = Cat.pet{
+    this = pussy,
+}
+
+%val pussy = Cat.of{
+    hasSharpClaws = true,
+}
+
 %val value1 = {
     x4 = {},
     x5 = {
@@ -10,21 +42,3 @@
     b2 = %true,
     x3 = {},
 }
-
-%fun foo ^{arg1: Type1} => %false
-
-%val bar = foo{arg2 = value1}
-
-%val main = %let {
-    foo2 = ^{arg3: Type1} => {
-        a1 = {},
-        a2 = arg3,
-    },
-    bar3 = foo{arg3 = value2},
-    baz = %when (
-        %case value2.b1 => foo
-        %case value2.b2 => bar
-        %case foo{arg2 = {}} => bar
-        %else => value1
-    ),
-} %in baz

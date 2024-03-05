@@ -21,6 +21,32 @@ public object Out {
         public val knot1: Value by lazy {
               UnorderedTuple(
                 valueByKey = mapOf(
+                  Identifier(name = "Cat") to lazy {
+                    object {
+                      public val knot2: Value by lazy {
+                            UnorderedTuple(
+                              valueByKey = mapOf(
+                                Identifier(name = "of") to lazy {
+                                  object : Abstraction() {
+                                    override fun compute(argument: Value): Value {
+                                      val arg3 = argument
+                                      return arg3
+                                    }
+                                  } 
+                                },
+                                Identifier(name = "meow") to lazy {
+                                  object : Abstraction() {
+                                    override fun compute(argument: Value): Value {
+                                      val arg4 = argument
+                                      return BooleanPrimitive(value = false)
+                                    }
+                                  } 
+                                },
+                              )
+                            ) 
+                          }
+                    }.knot2 
+                  },
                   Identifier(name = "value1") to lazy {
                     UnorderedTuple(
                       valueByKey = mapOf(
@@ -63,7 +89,7 @@ public object Out {
                   Identifier(name = "foo") to lazy {
                     object : Abstraction() {
                       override fun compute(argument: Value): Value {
-                        val arg2 = argument
+                        val arg5 = argument
                         return BooleanPrimitive(value = false)
                       }
                     } 
@@ -85,13 +111,13 @@ public object Out {
                   },
                   Identifier(name = "main") to lazy {
                     (object {
-                      public val knot3: Value by lazy {
+                      public val knot6: Value by lazy {
                             UnorderedTuple(
                               valueByKey = mapOf(
                                 Identifier(name = "foo2") to lazy {
                                   object : Abstraction() {
                                     override fun compute(argument: Value): Value {
-                                      val arg4 = argument
+                                      val arg7 = argument
                                       return UnorderedTuple(
                                         valueByKey = mapOf(
                                           Identifier(name = "a1") to lazy {
@@ -101,7 +127,7 @@ public object Out {
                                             ) 
                                           },
                                           Identifier(name = "a2") to lazy {
-                                            (arg4 as Callable).call(
+                                            (arg7 as Callable).call(
                                               argument = Identifier(name = "arg3"),
                                             ) 
                                           },
@@ -212,14 +238,14 @@ public object Out {
                                   ) 
                                 },
                                 Identifier(name = "__result__") to lazy {
-                                  (knot3 as Callable).call(
+                                  (knot6 as Callable).call(
                                     argument = Identifier(name = "baz"),
                                   ) 
                                 },
                               )
                             ) 
                           }
-                    }.knot3 as Callable).call(
+                    }.knot6 as Callable).call(
                       argument = Identifier(name = "__result__"),
                     ) 
                   },

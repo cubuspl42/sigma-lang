@@ -11,6 +11,7 @@ module
 moduleDefinition
     : valueDefinition
     | functionDefinition
+    | classDefinition
     ;
 
 valueDefinition
@@ -19,6 +20,14 @@ valueDefinition
 
 functionDefinition
     : FunKeyword name=Identifier argumentType=unorderedTupleTypeConstructor FatArrow body=expression
+    ;
+
+classDefinition
+    : ClassKeyword name=Identifier LeftBrace constructor=classConstructorDeclaration? methodDefinitions+=functionDefinition* RightBrace
+    ;
+
+classConstructorDeclaration
+    : ConstructorKeyword name=Identifier argumentType=unorderedTupleTypeConstructor
     ;
 
 // ## Expression
