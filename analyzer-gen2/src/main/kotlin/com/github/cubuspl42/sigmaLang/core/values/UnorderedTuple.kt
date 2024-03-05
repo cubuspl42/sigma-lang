@@ -2,7 +2,7 @@ package com.github.cubuspl42.sigmaLang.core.values
 
 class UnorderedTuple(
     private val valueByKey: Map<Identifier, Lazy<Value>>,
-) : Value(), Callable {
+) : Callable() {
     companion object {
         val Empty = UnorderedTuple(valueByKey = emptyMap())
     }

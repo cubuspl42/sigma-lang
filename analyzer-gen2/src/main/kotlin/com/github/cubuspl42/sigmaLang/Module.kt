@@ -25,6 +25,7 @@ import com.squareup.kotlinpoet.typeNameOf
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 
+// TODO: Split to ModuleConstructor and Module
 class Module(
     val root: AbstractionConstructor,
 ) {
