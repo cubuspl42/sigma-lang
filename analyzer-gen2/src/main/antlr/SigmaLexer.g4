@@ -7,6 +7,8 @@ FunKeyword : '%fun' ;
 WhenKeyword : '%when' ;
 CaseKeyword : '%case' ;
 ElseKeyword : '%else' ;
+TrueKeyword : '%true' ;
+FalseKeyword : '%false' ;
 
 LeftParen : '(' ;
 RightParen : ')' ;

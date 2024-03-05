@@ -6,6 +6,7 @@
 package com.github.cubuspl42.sigmaLang
 
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
+import com.github.cubuspl42.sigmaLang.core.values.BooleanPrimitive
 import com.github.cubuspl42.sigmaLang.core.values.Callable
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
@@ -22,19 +23,11 @@ public object Out {
         public val knot1: Lazy<Value> = lazyOf(
               UnorderedTuple(
                 valueByKey = mapOf(
-                  Identifier(name = "a") to LazyUtils.lazier { a },
                   Identifier(name = "value1") to LazyUtils.lazier { value1 },
                   Identifier(name = "value2") to LazyUtils.lazier { value2 },
                   Identifier(name = "foo") to LazyUtils.lazier { foo },
                   Identifier(name = "bar") to LazyUtils.lazier { bar },
                   Identifier(name = "main") to LazyUtils.lazier { main },
-                )
-              ),
-            )
-
-        public val a: Lazy<Value> = lazyOf(
-              UnorderedTuple(
-                valueByKey = mapOf(
                 )
               ),
             )
@@ -51,6 +44,9 @@ public object Out {
                   Identifier(name = "x5") to lazyOf(
                     UnorderedTuple(
                       valueByKey = mapOf(
+                        Identifier(name = "b") to lazyOf(
+                          BooleanPrimitive(value = true),
+                        ),
                       )
                     ),
                   ),
@@ -243,7 +239,8 @@ public object Out {
                                             ),
                                             Identifier(name = "else") to lazyOf(
                                               (knot1.value as Callable).call(
-                                                argument = lazyOf(Identifier(name = "a")).value,
+                                                argument = lazyOf(Identifier(name =
+                                                    "value1")).value,
                                               )
                                             ),
                                           )

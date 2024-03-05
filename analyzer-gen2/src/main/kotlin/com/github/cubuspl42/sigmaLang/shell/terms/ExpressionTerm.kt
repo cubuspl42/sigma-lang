@@ -45,6 +45,10 @@ sealed interface ExpressionTerm : Term {
                 ctx: SigmaParser.AbstractionConstructorExpressionAltContext,
             ): ExpressionTerm = AbstractionConstructorTerm.build(ctx.abstractionConstructor())
 
+            override fun visitBooleanLiteralExpressionAlt(
+                ctx: SigmaParser.BooleanLiteralExpressionAltContext,
+            ): ExpressionTerm = BooleanLiteralTerm.build(ctx.booleanLiteral())
+
             override fun visitLetInExpressionAlt(
                 ctx: SigmaParser.LetInExpressionAltContext,
             ): ExpressionTerm = LetInTerm.build(ctx.letIn())

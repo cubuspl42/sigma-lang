@@ -1,8 +1,8 @@
-%val a = {}
-
 %val value1 = {
     x4 = {},
-    x5 = {},
+    x5 = {
+        b = %true,
+    },
 }
 
 %val value2 = {
@@ -23,6 +23,6 @@
         %case value2 => foo
         %case value2 => bar
         %case foo{arg2 = {}} => bar
-        %else => a
+        %else => value1
     ),
 } %in baz

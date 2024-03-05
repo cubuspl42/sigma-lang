@@ -30,6 +30,7 @@ expression
     | when # whenExpressionAlt
     | abstractionConstructor # abstractionConstructorExpressionAlt
     | unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt
+    | booleanLiteral # booleanLiteralExpressionAlt
     | letIn # letInExpressionAlt
     ;
 
@@ -85,7 +86,22 @@ unorderedTupleConstructorEntry
     : key=Identifier Equals value=expression
     ;
 
-// ### Let-in
+// #### Literals
+
+booleanLiteral
+    : trueLiteral
+    | falseLiteral
+    ;
+
+falseLiteral
+    : FalseKeyword
+    ;
+
+trueLiteral
+    : TrueKeyword
+    ;
+
+// #### Let-in
 
 letIn
     : LetKeyword block=unorderedTupleConstructor InKeyword result=expression
