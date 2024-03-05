@@ -11,20 +11,20 @@ fun main() {
 
     val module = Module.fromSource(source = source)
 
-//    val fileSpec = module.generateCode(
-//        packageName = "com.github.cubuspl42.sigmaLang",
-//        name = "Out",
-//    )
-//
-//    fileSpec.writeTo(
-//        directory = Path.of("analyzer-gen2/src/main/kotlin"),
-//    )
+    val fileSpec = module.generateCode(
+        packageName = "com.github.cubuspl42.sigmaLang",
+        name = "Out",
+    )
+
+    fileSpec.writeTo(
+        directory = Path.of("analyzer-gen2/src/main/kotlin"),
+    )
 
     val result = module.main
 
     println(result)
 
-//    val codeGenResult = Out.main
-//
-//    println(codeGenResult)
+    val codeGenResult = Out.main
+
+    println(codeGenResult)
 }

@@ -23,8 +23,8 @@ class LocalScopeStub(
 
     override fun form(
         context: FormationContext,
-    ): Lazy<Expression> = lazyOf(
-        KnotConstructor.of { knotReference ->
+    ): Lazy<Expression> = CallStub.fieldRead(
+        subjectStub = KnotConstructor.of { knotReference ->
             val innerScope = LocalScope(
                 names = definitions.mapUniquely { it.key },
                 reference = knotReference,
@@ -45,6 +45,9 @@ class LocalScopeStub(
             ).form(
                 context = innerContext,
             ).value
-        },
+        }.asStub(),
+        readFieldName = resultIdentifier,
+    ).form(
+        context = context
     )
 }

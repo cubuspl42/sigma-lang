@@ -11,6 +11,21 @@ class Call(
     val calleeLazy: Lazy<Expression>,
     val passedArgumentLazy: Lazy<Expression>,
 ) : ComplexExpression() {
+    companion object {
+        fun generateCallCode(
+            callee: CodeBlock,
+            passedArgument: CodeBlock,
+        ): CodeBlock = CodeBlock.of(
+            """
+                (%L as %T).call(
+                ⇥argument = %L,
+                ⇤)
+            """.trimIndent(),
+            callee,
+            Callable::class,
+            passedArgument
+        )
+    }
 
     val callee by calleeLazy
     val passedArgument by passedArgumentLazy
@@ -22,20 +37,10 @@ class Call(
     override fun buildCodegenRepresentation(
         context: Module.CodegenRepresentationContext,
     ): CodegenRepresentation = object : CodegenRepresentation() {
-        override fun generateCode(): CodeBlock {
-            return CodeBlock.of(
-                """
-                    lazyOf(
-                    ⇥(%L.value as %T).call(
-                    ⇥argument = %L.value,
-                    ⇤)
-                    ⇤)
-                """.trimIndent(),
-                context.getRepresentation(callee).generateCode(),
-                Callable::class,
-                context.getRepresentation(passedArgument).generateCode(),
-            )
-        }
+        override fun generateCode(): CodeBlock = generateCallCode(
+            callee = context.getRepresentation(callee).generateCode(),
+            passedArgument = context.getRepresentation(passedArgument).generateCode(),
+        )
     }
 
     override fun bind(scope: DynamicScope): Lazy<Value> {

@@ -37,15 +37,18 @@ class AbstractionConstructor(
                             )
                             .addCode(
                                 """
-                                    val $argumentName = lazyOf(argument)
-                                    return %L.value
+                                    val $argumentName = argument
+                                    return %L
                                 """.trimIndent(),
                                 body.generateCode(),
                             )
                             .build()
                     )
 
-            return CodeBlock.of("lazyOf(%L)", abstractionObjectBuilder.build())
+            return CodeBlock.of(
+                "%L",
+                abstractionObjectBuilder.build(),
+            )
         }
     }
 

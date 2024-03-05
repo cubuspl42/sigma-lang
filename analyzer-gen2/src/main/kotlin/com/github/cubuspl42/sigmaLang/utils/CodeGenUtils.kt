@@ -10,3 +10,22 @@ fun CodeBlock.wrapWithLazyOf(): CodeBlock = CodeBlock.of(
     """.trimIndent(),
     this,
 )
+
+fun CodeBlock.wrapWithLazy(): CodeBlock = CodeBlock.of(
+    """
+        lazy {
+        ⇥%L 
+        ⇤}
+    """.trimIndent(),
+    this,
+)
+
+fun CodeBlock.wrapWithLazier(): CodeBlock = CodeBlock.of(
+    """
+        %T.lazier {
+        ⇥%L 
+        ⇤}
+    """.trimIndent(),
+    LazyUtils::class,
+    this,
+)

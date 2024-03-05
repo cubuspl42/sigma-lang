@@ -7,9 +7,7 @@ data class IdentifierLiteral(
     override val value: Identifier,
 ) : Literal() {
     override fun generateLiteralCode(): CodeBlock = CodeBlock.of(
-        """
-            lazyOf(%L)
-        """.trimIndent(),
+        "%L",
         value.generateCode()
     )
 }

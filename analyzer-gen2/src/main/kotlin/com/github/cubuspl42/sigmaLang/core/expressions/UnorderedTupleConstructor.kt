@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.utils.wrapWithLazyOf
+import com.github.cubuspl42.sigmaLang.utils.wrapWithLazy
 import com.squareup.kotlinpoet.CodeBlock
 
 class UnorderedTupleConstructor(
@@ -55,9 +55,9 @@ class UnorderedTupleConstructor(
     ): CodegenRepresentation = object : CodegenRepresentation() {
         override fun generateCode(): CodeBlock = UnorderedTupleConstructor.generateCode(
             valueByKey = valueByKey.mapValues { (_, value) ->
-                context.getRepresentation(value.value).generateCode()
+                context.getRepresentation(value.value).generateCode().wrapWithLazy()
             },
-        ).wrapWithLazyOf()
+        )
     }
 
     override fun bind(scope: DynamicScope): Lazy<Value> = lazyOf(

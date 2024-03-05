@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Callable
@@ -66,8 +67,6 @@ class Module(
     ) : VisitingContext() {
         companion object {
             val valueTypeName = typeNameOf<Value>()
-
-            val lazyValueTypeName = typeNameOf<Lazy<Value>>()
         }
 
         private var nextId = 0
@@ -157,7 +156,7 @@ class Module(
             ).addProperty(
                 PropertySpec.builder(
                     name = "root",
-                    type = CodegenRepresentationContext.lazyValueTypeName,
+                    type = CodegenRepresentationContext.valueTypeName,
                 ).initializer(
                     rootRepresentation.generateCode(),
                 ).build()
@@ -166,20 +165,15 @@ class Module(
                     name = "main",
                     type = CodegenRepresentationContext.valueTypeName,
                 ).initializer(
-                    CodeBlock.builder().add(
-                        """
-                            (root.value as %T).call(
-                            ⇥argument = %L,
-                            ⇤)
-                        """.trimIndent(),
-                        Callable::class,
+                    Call.generateCallCode(
+                        CodeBlock.of("root"),
                         UnorderedTupleConstructor.generateCode(
                             valueByKey = mapOf(
                                 Identifier(name = "builtin") to CodeBlock.of("%M", builtinScopeMemberName)
                                     .wrapWithLazyOf(),
                             ),
                         ),
-                    ).build(),
+                    ),
                 ).build()
             ).build()
         ).build()
