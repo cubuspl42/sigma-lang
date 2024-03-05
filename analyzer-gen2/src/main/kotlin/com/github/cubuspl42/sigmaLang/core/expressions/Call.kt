@@ -11,17 +11,6 @@ class Call(
     val calleeLazy: Lazy<Expression>,
     val passedArgumentLazy: Lazy<Expression>,
 ) : ComplexExpression() {
-    companion object {
-        fun fieldRead(
-            subjectLazy: Lazy<Expression>,
-            readFieldName: Identifier,
-        ): Lazy<Expression> = lazyOf(
-            Call(
-                calleeLazy = subjectLazy,
-                passedArgumentLazy = lazyOf(IdentifierLiteral(value = readFieldName)),
-            ),
-        )
-    }
 
     val callee by calleeLazy
     val passedArgument by passedArgumentLazy

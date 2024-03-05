@@ -2,8 +2,7 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
-import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 sealed interface ExpressionTerm : Term {
     companion object : Term.Builder<SigmaParser.ExpressionContext, ExpressionTerm>() {
@@ -48,5 +47,5 @@ sealed interface ExpressionTerm : Term {
         ): SigmaParser.ExpressionContext = parser.expression()
     }
 
-    fun construct(context: ConstructionContext): Lazy<Expression>
+    fun transmute(): ExpressionStub
 }

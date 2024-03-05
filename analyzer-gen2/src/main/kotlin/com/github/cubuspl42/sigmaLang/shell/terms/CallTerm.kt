@@ -3,7 +3,9 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.stubs.CallStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class CallTerm(
     val callee: ReferenceTerm,
@@ -20,10 +22,8 @@ data class CallTerm(
         override fun extract(parser: SigmaParser): SigmaParser.CallContext = parser.call()
     }
 
-    override fun construct(context: ConstructionContext): Lazy<Expression> = lazy {
-        Call(
-            calleeLazy = callee.construct(context),
-            passedArgumentLazy = passedArgument.construct(context),
-        )
-    }
+    override fun transmute(): ExpressionStub = CallStub(
+        calleeStub = callee.transmute(),
+        passedArgumentStub = passedArgument.transmute(),
+    )
 }

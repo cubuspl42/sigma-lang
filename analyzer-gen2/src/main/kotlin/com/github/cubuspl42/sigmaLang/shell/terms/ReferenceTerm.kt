@@ -5,8 +5,12 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
+import com.github.cubuspl42.sigmaLang.shell.stubs.CallStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.ReferenceStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.asStub
 
 data class ReferenceTerm(
     val referredName: IdentifierTerm,
@@ -21,28 +25,7 @@ data class ReferenceTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ReferenceContext = parser.reference()
     }
 
-    override fun construct(context: ConstructionContext): Lazy<Expression> {
-        val scope = context.scope
-
-        return lazy {
-            when (val resolution = scope.resolveName(referredName = referredName)) {
-                is StaticScope.ResolvedReference -> Call.fieldRead(
-                    subjectLazy = lazyOf(
-                        when (resolution) {
-                            is StaticScope.ArgumentReference -> ArgumentReference(
-                                referredAbstractionLazy = resolution.referredAbstractionLazy,
-                            )
-
-                            is StaticScope.DefinitionReference -> KnotReference(
-                                referredKnotLazy = resolution.referredKnotLazy,
-                            )
-                        },
-                    ),
-                    readFieldName = referredName.construct(),
-                )
-
-                StaticScope.UnresolvedReference -> throw IllegalStateException("Unresolved reference: $referredName")
-            }.value
-        }
-    }
+    override fun transmute(): ExpressionStub = ReferenceStub(
+        referredName = referredName.transmute(),
+    )
 }

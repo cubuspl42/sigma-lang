@@ -5,7 +5,8 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisit
 import com.github.cubuspl42.sigmaLang.core.expressions.BooleanLiteral
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.BooleanPrimitive
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.stubs.asStub
 
 data class BooleanLiteralTerm(
     private val value: BooleanPrimitive,
@@ -26,11 +27,7 @@ data class BooleanLiteralTerm(
         ): SigmaParser.BooleanLiteralContext = parser.booleanLiteral()
     }
 
-    override fun construct(
-        context: ConstructionContext,
-    ): Lazy<Expression> = lazyOf(
-        BooleanLiteral(
-            value = value,
-        ),
-    )
+    override fun transmute() = BooleanLiteral(
+        value = value,
+    ).asStub()
 }

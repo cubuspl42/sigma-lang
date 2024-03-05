@@ -2,9 +2,12 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.ArgumentScope
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
+import com.github.cubuspl42.sigmaLang.shell.stubs.AbstractionConstructorStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
+import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 data class AbstractionConstructorTerm(
     val argumentType: UnorderedTupleTypeConstructorTerm,
@@ -22,22 +25,8 @@ data class AbstractionConstructorTerm(
             parser.abstractionConstructor()
     }
 
-    override fun construct(context: ConstructionContext): Lazy<AbstractionConstructor> = object {
-        val innerScope: StaticScope by lazy {
-            ArgumentScope.construct(
-                abstractionConstructorLazy = abstractionConstructorLazy,
-                argumentType = argumentType,
-            )
-        }
-
-        val abstractionConstructorLazy = lazy {
-            AbstractionConstructor(
-                body = image.construct(
-                    context.copy(
-                        scope = innerScope,
-                    )
-                ).value,
-            )
-        }
-    }.abstractionConstructorLazy
+    override fun transmute(): AbstractionConstructorStub = AbstractionConstructorStub(
+        argumentNames = argumentType.keys.mapUniquely { it.transmute() },
+        image = image.transmute(),
+    )
 }

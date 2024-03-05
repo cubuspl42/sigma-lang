@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.Token
 data class IdentifierTerm(
     val name: String,
 ) {
-    fun construct(): Identifier = Identifier(
+    fun transmute(): Identifier = Identifier(
         name = name,
     )
 

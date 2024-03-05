@@ -5,6 +5,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.terms.IdentifierTerm
 
 interface StaticScope {
@@ -48,6 +49,12 @@ interface StaticScope {
 
     fun resolveName(referredName: IdentifierTerm): ReferenceResolution
 }
+
+fun StaticScope.resolveName(
+    referredName: Identifier,
+): StaticScope.ReferenceResolution = this.resolveName(
+    referredName = IdentifierTerm(name = referredName.name),
+)
 
 fun StaticScope.chainWith(
     other: StaticScope,

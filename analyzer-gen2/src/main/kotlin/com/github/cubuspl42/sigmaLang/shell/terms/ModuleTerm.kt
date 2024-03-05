@@ -3,7 +3,13 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.stubs.AbstractionConstructorStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.KnotConstructorStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.ReferenceStub
+import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 data class ModuleTerm(
     val definitions: List<DefinitionTerm>,
@@ -23,15 +29,16 @@ data class ModuleTerm(
             }.visit(ctx)
         }
 
-        val asEntry: UnorderedTupleConstructorTerm.Entry
-            get() = UnorderedTupleConstructorTerm.Entry(
-                key = name,
-                value = effectiveInitializer,
+        fun transmute(): KnotConstructorStub.DefinitionStub {
+            return KnotConstructorStub.DefinitionStub(
+                key = name.transmute(),
+                initializer = transmuteInitializer(),
             )
+        }
 
         abstract val name: IdentifierTerm
 
-        abstract val effectiveInitializer: ExpressionTerm
+        abstract fun transmuteInitializer(): ExpressionStub
     }
 
     data class ValueDefinitionTerm(
@@ -47,8 +54,7 @@ data class ModuleTerm(
             )
         }
 
-        override val effectiveInitializer: ExpressionTerm
-            get() = initializer
+        override fun transmuteInitializer() = initializer.transmute()
     }
 
     data class FunctionDefinitionTerm(
@@ -66,11 +72,10 @@ data class ModuleTerm(
             )
         }
 
-        override val effectiveInitializer: AbstractionConstructorTerm
-            get() = AbstractionConstructorTerm(
-                argumentType = argumentType,
-                image = body,
-            )
+        override fun transmuteInitializer() = AbstractionConstructorTerm(
+            argumentType = argumentType,
+            image = body,
+        ).transmute()
     }
 
     companion object : Term.Builder<SigmaParser.ModuleContext, ModuleTerm>() {
@@ -83,19 +88,15 @@ data class ModuleTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ModuleContext = parser.module()
     }
 
-    fun construct(
-        context: ConstructionContext,
-    ): Lazy<AbstractionConstructor> = AbstractionConstructorTerm(
-        argumentType = UnorderedTupleTypeConstructorTerm.Empty,
-        image = LetInTerm(
-            block = UnorderedTupleConstructorTerm(
-                entries = definitions.map { it.asEntry },
+    fun transmute() = AbstractionConstructorStub(
+        argumentNames = emptySet(), // FIXME?
+        image = KnotConstructorStub(
+            definitions = definitions.mapUniquely {
+                it.transmute()
+            },
+            result = ReferenceStub(
+                referredName = Identifier(name = "main"),
             ),
-            result = ReferenceTerm(
-                referredName = IdentifierTerm(name = "main"),
-            ),
-        ),
-    ).construct(
-        context = context,
+        )
     )
 }

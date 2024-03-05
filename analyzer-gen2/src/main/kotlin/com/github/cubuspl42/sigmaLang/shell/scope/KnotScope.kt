@@ -11,7 +11,7 @@ class KnotScope(
     override fun resolveName(
         referredName: IdentifierTerm,
     ): StaticScope.ReferenceResolution = knotConstructor.getDefinition(
-        identifier = referredName.construct(),
+        identifier = referredName.transmute(),
     )?.let {
         StaticScope.DefinitionReference(
             referredKnotLazy = lazyOf(knotConstructor),

@@ -1,12 +1,9 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
-import com.github.cubuspl42.sigmaLang.shell.scope.KnotScope
-import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
-import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
-import com.github.cubuspl42.sigmaLang.utils.LazyUtils
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.KnotConstructorStub
+import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 data class LetInTerm(
     val block: UnorderedTupleConstructorTerm,
@@ -23,26 +20,13 @@ data class LetInTerm(
         override fun extract(parser: SigmaParser): SigmaParser.LetInContext = parser.letIn()
     }
 
-    override fun construct(context: ConstructionContext): Lazy<KnotConstructor> {
-        val knotConstructor = LazyUtils.looped { knotConstructorLooped ->
-            val innerContext = context.copy(
-                scope = KnotScope(
-                    knotConstructorLazy = knotConstructorLooped,
-                ).chainWith(context.scope),
+    override fun transmute(): ExpressionStub = KnotConstructorStub(
+        definitions = block.entries.mapUniquely { entry ->
+            KnotConstructorStub.DefinitionStub(
+                key = entry.key.transmute(),
+                initializer = entry.value.transmute(),
             )
-
-            return@looped KnotConstructor(
-                definitionByIdentifier = block.entries.associate {
-                    it.key.construct() to it.value.construct(
-                        context = innerContext,
-                    )
-                },
-                resultLazy = result.construct(
-                    context = innerContext,
-                ),
-            )
-        }
-
-        return lazyOf(knotConstructor)
-    }
+        },
+        result = result.transmute(),
+    )
 }

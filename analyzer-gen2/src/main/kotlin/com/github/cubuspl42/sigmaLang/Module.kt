@@ -11,7 +11,7 @@ import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.terms.ModuleTerm
 import com.github.cubuspl42.sigmaLang.utils.wrapWithLazyOf
@@ -102,8 +102,8 @@ class Module(
             return object {
                 val module: Module by lazy {
                     Module(
-                        root = moduleTerm.construct(
-                            context = ConstructionContext(
+                        root = moduleTerm.transmute().form(
+                            context = FormationContext(
                                 scope = StaticScope.Empty,
                                 moduleRoot = lazy { module.root },
                             ),

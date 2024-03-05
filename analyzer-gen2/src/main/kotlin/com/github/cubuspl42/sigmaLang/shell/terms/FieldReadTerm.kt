@@ -3,7 +3,9 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.shell.ConstructionContext
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.stubs.CallStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class FieldReadTerm(
     val subject: ReferenceTerm,
@@ -20,8 +22,8 @@ data class FieldReadTerm(
         override fun extract(parser: SigmaParser): SigmaParser.FieldReadContext = parser.fieldRead()
     }
 
-    override fun construct(context: ConstructionContext): Lazy<Expression> = Call.fieldRead(
-        subjectLazy = subject.construct(context),
-        readFieldName = readFieldName.construct(),
+    override fun transmute(): ExpressionStub = CallStub.fieldRead(
+        subjectStub = subject.transmute(),
+        readFieldName = readFieldName.transmute(),
     )
 }
