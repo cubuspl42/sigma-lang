@@ -6,10 +6,12 @@
 }
 
 %val value2 = {
+    b1 = %false,
+    b2 = %true,
     x3 = {},
 }
 
-%fun foo ^{arg1: Type1} => {}
+%fun foo ^{arg1: Type1} => %false
 
 %val bar = foo{arg2 = value1}
 
@@ -20,8 +22,8 @@
     },
     bar3 = foo{arg3 = value2},
     baz = %when (
-        %case value2 => foo
-        %case value2 => bar
+        %case value2.b1 => foo
+        %case value2.b2 => bar
         %case foo{arg2 = {}} => bar
         %else => value1
     ),

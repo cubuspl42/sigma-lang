@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang
 
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
+import com.github.cubuspl42.sigmaLang.core.values.BooleanPrimitive
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -12,12 +13,13 @@ val BuiltinScope = UnorderedTuple(
                 override fun compute(argument: Value): Value {
                     val args = argument as UnorderedTuple
 
-                    // TODO: Implement booleans!
-                    val conditionValue = args.get(identifier = Identifier(name = "condition"))
-                    val thenValue = args.get(identifier = Identifier(name = "then"))
-                    val elseValue = args.get(identifier = Identifier(name = "else"))
+                    val conditionValue = args.get(identifier = Identifier(name = "condition")) as BooleanPrimitive
 
-                    return elseValue
+                    return if (conditionValue.isTrue()) {
+                        args.get(identifier = Identifier(name = "then"))
+                    } else {
+                        args.get(identifier = Identifier(name = "else"))
+                    }
                 }
             },
         ),

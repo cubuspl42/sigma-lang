@@ -1,7 +1,5 @@
 package com.github.cubuspl42.sigmaLang
 
-import com.github.cubuspl42.sigmaLang.core.values.Abstraction
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import java.nio.file.Path
 
 fun getResourceAsText(

@@ -57,6 +57,12 @@ public object Out {
         public val value2: Lazy<Value> = lazyOf(
               UnorderedTuple(
                 valueByKey = mapOf(
+                  Identifier(name = "b1") to lazyOf(
+                    BooleanPrimitive(value = false),
+                  ),
+                  Identifier(name = "b2") to lazyOf(
+                    BooleanPrimitive(value = true),
+                  ),
                   Identifier(name = "x3") to lazyOf(
                     UnorderedTuple(
                       valueByKey = mapOf(
@@ -71,10 +77,7 @@ public object Out {
           override fun compute(argument: Value): Value {
             val arg2 = lazyOf(argument)
             return lazyOf(
-              UnorderedTuple(
-                valueByKey = mapOf(
-                )
-              ),
+              BooleanPrimitive(value = false),
             ).value
           }
         })
@@ -167,8 +170,12 @@ public object Out {
                     UnorderedTuple(
                       valueByKey = mapOf(
                         Identifier(name = "condition") to lazyOf(
-                          (knot1.value as Callable).call(
-                            argument = lazyOf(Identifier(name = "value2")).value,
+                          (lazyOf(
+                            (knot1.value as Callable).call(
+                              argument = lazyOf(Identifier(name = "value2")).value,
+                            )
+                          ).value as Callable).call(
+                            argument = lazyOf(Identifier(name = "b1")).value,
                           )
                         ),
                         Identifier(name = "then") to lazyOf(
@@ -190,8 +197,12 @@ public object Out {
                               UnorderedTuple(
                                 valueByKey = mapOf(
                                   Identifier(name = "condition") to lazyOf(
-                                    (knot1.value as Callable).call(
-                                      argument = lazyOf(Identifier(name = "value2")).value,
+                                    (lazyOf(
+                                      (knot1.value as Callable).call(
+                                        argument = lazyOf(Identifier(name = "value2")).value,
+                                      )
+                                    ).value as Callable).call(
+                                      argument = lazyOf(Identifier(name = "b2")).value,
                                     )
                                   ),
                                   Identifier(name = "then") to lazyOf(

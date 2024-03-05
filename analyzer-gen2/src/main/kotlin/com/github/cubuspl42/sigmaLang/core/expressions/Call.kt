@@ -26,7 +26,9 @@ class Call(
     val callee by calleeLazy
     val passedArgument by passedArgumentLazy
 
-    override val subExpressions: Set<Expression> = setOf(callee, passedArgument)
+    override val subExpressions: Set<Expression> by lazy {
+        setOf(callee, passedArgument)
+    }
 
     override fun buildCodegenRepresentation(
         context: Module.CodegenRepresentationContext,
