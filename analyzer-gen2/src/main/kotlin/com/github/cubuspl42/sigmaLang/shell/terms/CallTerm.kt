@@ -8,18 +8,16 @@ import com.github.cubuspl42.sigmaLang.shell.stubs.CallStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class CallTerm(
-    val callee: ReferenceTerm,
+    val callee: ExpressionTerm,
     val passedArgument: UnorderedTupleConstructorTerm,
 ) : ExpressionTerm {
-    companion object : Term.Builder<SigmaParser.CallContext, CallTerm>() {
-        override fun build(
-            ctx: SigmaParser.CallContext,
+    companion object {
+        fun build(
+            ctx: SigmaParser.CallCallableExpressionAltContext,
         ): CallTerm = CallTerm(
-            callee = ReferenceTerm.build(ctx.reference()),
+            callee = ExpressionTerm.build(ctx.callee()),
             passedArgument = UnorderedTupleConstructorTerm.build(ctx.unorderedTupleConstructor()),
         )
-
-        override fun extract(parser: SigmaParser): SigmaParser.CallContext = parser.call()
     }
 
     override fun transmute(): ExpressionStub<*> = CallStub(

@@ -6,11 +6,11 @@ import kotlin.test.assertEquals
 class FieldReadTermTest {
     @Test
     fun testSimple() {
-        val term = FieldReadTerm.parse(
+        val term = ExpressionTerm.parse(
             source = """
                 a1.a2,
             """.trimIndent()
-        )
+        ) as FieldReadTerm
 
         assertEquals(
            actual = term,

@@ -9,17 +9,13 @@ sealed interface ExpressionTerm : Term {
         override fun build(
             ctx: SigmaParser.ExpressionContext,
         ): ExpressionTerm = object : SigmaParserBaseVisitor<ExpressionTerm>() {
-            override fun visitReferenceExpressionAlt(
-                ctx: SigmaParser.ReferenceExpressionAltContext,
+            override fun visitCalleeExpressionAlt(
+                ctx: SigmaParser.CalleeExpressionAltContext,
+            ): ExpressionTerm = build(ctx.callee())
+
+            override fun visitReferenceCallableExpressionAlt(
+                ctx: SigmaParser.ReferenceCallableExpressionAltContext,
             ): ExpressionTerm = ReferenceTerm.build(ctx.reference())
-
-            override fun visitCallExpressionAlt(
-                ctx: SigmaParser.CallExpressionAltContext,
-            ): ExpressionTerm = CallTerm.build(ctx.call())
-
-            override fun visitFieldReadExpressionAlt(
-                ctx: SigmaParser.FieldReadExpressionAltContext,
-            ): ExpressionTerm = FieldReadTerm.build(ctx.fieldRead())
 
             override fun visitUnorderedTupleConstructorExpressionAlt(
                 ctx: SigmaParser.UnorderedTupleConstructorExpressionAltContext,
@@ -40,6 +36,22 @@ sealed interface ExpressionTerm : Term {
             override fun visitWhenExpressionAlt(
                 ctx: SigmaParser.WhenExpressionAltContext,
             ): ExpressionTerm = WhenTerm.build(ctx.`when`())
+        }.visit(ctx)
+
+        fun build(
+            ctx: SigmaParser.CalleeContext,
+        ): ExpressionTerm = object : SigmaParserBaseVisitor<ExpressionTerm>() {
+            override fun visitCallCallableExpressionAlt(
+                ctx: SigmaParser.CallCallableExpressionAltContext,
+            ): ExpressionTerm = CallTerm.build(ctx)
+
+            override fun visitFieldReadCallableExpressionAlt(
+                ctx: SigmaParser.FieldReadCallableExpressionAltContext,
+            ): ExpressionTerm = FieldReadTerm.build(ctx)
+
+            override fun visitReferenceCallableExpressionAlt(
+                ctx: SigmaParser.ReferenceCallableExpressionAltContext,
+            ): ExpressionTerm = ReferenceTerm.build(ctx.reference())
         }.visit(ctx)
 
         override fun extract(

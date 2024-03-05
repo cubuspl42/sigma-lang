@@ -8,18 +8,16 @@ import com.github.cubuspl42.sigmaLang.shell.stubs.CallStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class FieldReadTerm(
-    val subject: ReferenceTerm,
+    val subject: ExpressionTerm,
     val readFieldName: IdentifierTerm,
 ) : ExpressionTerm {
-    companion object : Term.Builder<SigmaParser.FieldReadContext, FieldReadTerm>() {
-        override fun build(
-            ctx: SigmaParser.FieldReadContext,
+    companion object {
+        fun build(
+            ctx: SigmaParser.FieldReadCallableExpressionAltContext,
         ): FieldReadTerm = FieldReadTerm(
-            subject = ReferenceTerm.build(ctx.reference()),
+            subject = ExpressionTerm.build(ctx.callee()),
             readFieldName = IdentifierTerm.build(ctx.readFieldName),
         )
-
-        override fun extract(parser: SigmaParser): SigmaParser.FieldReadContext = parser.fieldRead()
     }
 
     override fun transmute(): ExpressionStub<*> = CallStub.fieldRead(

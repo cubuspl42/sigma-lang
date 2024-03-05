@@ -6,11 +6,11 @@ import kotlin.test.assertEquals
 class CallTermTest {
     @Test
     fun testSimple() {
-        val term = CallTerm.parse(
+        val term = ExpressionTerm.parse(
             source = """
                 f1{arg1 = val1, arg2 = {}},
             """.trimIndent()
-        )
+        ) as CallTerm
 
         assertEquals(
             expected = CallTerm(
@@ -28,6 +28,35 @@ class CallTermTest {
                         UnorderedTupleConstructorTerm.Entry(
                             key = IdentifierTerm("arg2"),
                             value = UnorderedTupleConstructorTerm.Empty,
+                        ),
+                    ),
+                ),
+            ),
+            actual = term,
+        )
+    }
+
+    @Test
+    fun testFieldReadCallee() {
+        val term = ExpressionTerm.parse(
+            source = """
+                a.b{arg = %true},
+            """.trimIndent()
+        ) as CallTerm
+
+        assertEquals(
+            expected = CallTerm(
+                callee = FieldReadTerm(
+                    subject = ReferenceTerm(
+                        referredName = IdentifierTerm(name = "a"),
+                    ),
+                    readFieldName = IdentifierTerm(name = "b"),
+                ),
+                passedArgument = UnorderedTupleConstructorTerm(
+                    entries = listOf(
+                        UnorderedTupleConstructorTerm.Entry(
+                            key = IdentifierTerm("arg"),
+                            value = BooleanLiteralTerm.True,
                         ),
                     ),
                 ),

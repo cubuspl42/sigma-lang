@@ -12,6 +12,14 @@ data class BooleanLiteralTerm(
     private val value: BooleanPrimitive,
 ) : ExpressionTerm {
     companion object : Term.Builder<SigmaParser.BooleanLiteralContext, BooleanLiteralTerm>() {
+        val False = BooleanLiteralTerm(
+            value = BooleanPrimitive.False,
+        )
+
+        val True = BooleanLiteralTerm(
+            value = BooleanPrimitive.True,
+        )
+
         override fun build(
             ctx: SigmaParser.BooleanLiteralContext,
         ): BooleanLiteralTerm = object : SigmaParserBaseVisitor<BooleanLiteralTerm>() {

@@ -24,14 +24,19 @@ functionDefinition
 // ## Expression
 
 expression
-    : reference # referenceExpressionAlt
-    | call # callExpressionAlt
-    | fieldRead # fieldReadExpressionAlt
+    : callee # calleeExpressionAlt
     | when # whenExpressionAlt
     | abstractionConstructor # abstractionConstructorExpressionAlt
     | unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt
     | booleanLiteral # booleanLiteralExpressionAlt
     | letIn # letInExpressionAlt
+    ;
+
+// For left-recursion
+callee
+    : callee argument=unorderedTupleConstructor # callCallableExpressionAlt
+    | callee Dot readFieldName=Identifier # fieldReadCallableExpressionAlt
+    | reference # referenceCallableExpressionAlt
     ;
 
 // ### Reference
@@ -41,18 +46,6 @@ reference
     ;
 
 // ### Call & call-alikes
-
-// #### Call
-
-call
-    : callee=reference passedArgument=unorderedTupleConstructor
-    ;
-
-// #### Field read
-
-fieldRead
-    : subject=reference Dot readFieldName=Identifier
-    ;
 
 // #### When
 
