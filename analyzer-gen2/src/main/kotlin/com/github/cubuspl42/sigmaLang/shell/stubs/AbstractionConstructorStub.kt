@@ -9,8 +9,8 @@ import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 
 class AbstractionConstructorStub(
     private val argumentNames: Set<Identifier>,
-    private val image: ExpressionStub,
-) : ExpressionStub() {
+    private val image: ExpressionStub<*>,
+) : ExpressionStub<AbstractionConstructor>() {
     override fun form(context: FormationContext): Lazy<AbstractionConstructor> {
         val abstractionConstructor = LazyUtils.looped { abstractionConstructorLooped ->
             val innerContext = context.copy(

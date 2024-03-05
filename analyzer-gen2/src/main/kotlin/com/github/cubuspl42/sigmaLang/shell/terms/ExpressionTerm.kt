@@ -47,5 +47,5 @@ sealed interface ExpressionTerm : Term {
         ): SigmaParser.ExpressionContext = parser.expression()
     }
 
-    fun transmute(): ExpressionStub
+    fun transmute(): ExpressionStub<*>
 }

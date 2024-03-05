@@ -22,7 +22,7 @@ data class CallTerm(
         override fun extract(parser: SigmaParser): SigmaParser.CallContext = parser.call()
     }
 
-    override fun transmute(): ExpressionStub = CallStub(
+    override fun transmute(): ExpressionStub<*> = CallStub(
         calleeStub = callee.transmute(),
         passedArgumentStub = passedArgument.transmute(),
     )

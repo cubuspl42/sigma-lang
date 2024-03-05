@@ -32,15 +32,15 @@ data class WhenTerm(
         override fun extract(parser: SigmaParser): SigmaParser.WhenContext = parser.`when`()
     }
 
-    override fun transmute(): ExpressionStub {
+    override fun transmute(): ExpressionStub<*> {
         val ifExpression = ExpressionStub.ifFunction
 
-        fun constructElseExpression(): ExpressionStub = elseEntry?.transmute() ?: CallStub.panicCall
+        fun constructElseExpression(): ExpressionStub<*> = elseEntry?.transmute() ?: CallStub.panicCall
 
         fun constructConditionalEntryExpression(
             conditionalEntry: ConditionalEntry,
-            elseCase: ExpressionStub,
-        ): ExpressionStub = ifExpression.call(
+            elseCase: ExpressionStub<*>,
+        ): ExpressionStub<*> = ifExpression.call(
             condition = conditionalEntry.condition.transmute(),
             thenCase = conditionalEntry.result.transmute(),
             elseCase = elseCase,
@@ -48,7 +48,7 @@ data class WhenTerm(
 
         fun constructEntryExpression(
             remainingEntries: List<ConditionalEntry>,
-        ): ExpressionStub {
+        ): ExpressionStub<*> {
             val (head, tail) = remainingEntries.uncons() ?: return constructElseExpression()
 
             return constructConditionalEntryExpression(

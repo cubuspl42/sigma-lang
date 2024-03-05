@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.shell.stubs
 import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
+import com.github.cubuspl42.sigmaLang.core.expressions.Reference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
@@ -10,7 +11,7 @@ import com.github.cubuspl42.sigmaLang.shell.scope.resolveName
 
 class ReferenceStub(
     private val referredName: Identifier,
-) : ExpressionStub() {
+) : ExpressionStub<Reference>() {
     override fun form(context: FormationContext): Lazy<Expression> {
         val scope = context.scope
 

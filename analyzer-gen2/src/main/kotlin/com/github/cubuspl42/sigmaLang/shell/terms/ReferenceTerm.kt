@@ -25,7 +25,7 @@ data class ReferenceTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ReferenceContext = parser.reference()
     }
 
-    override fun transmute(): ExpressionStub = ReferenceStub(
+    override fun transmute(): ExpressionStub<*> = ReferenceStub(
         referredName = referredName.transmute(),
     )
 }

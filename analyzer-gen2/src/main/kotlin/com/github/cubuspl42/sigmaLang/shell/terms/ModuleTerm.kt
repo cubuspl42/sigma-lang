@@ -38,7 +38,7 @@ data class ModuleTerm(
 
         abstract val name: IdentifierTerm
 
-        abstract fun transmuteInitializer(): ExpressionStub
+        abstract fun transmuteInitializer(): ExpressionStub<*>
     }
 
     data class ValueDefinitionTerm(

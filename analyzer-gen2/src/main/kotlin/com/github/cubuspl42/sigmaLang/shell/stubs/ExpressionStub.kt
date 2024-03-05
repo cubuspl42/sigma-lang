@@ -1,19 +1,20 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
 import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
+import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 
-abstract class ExpressionStub {
+abstract class ExpressionStub<TExpression : Expression> {
     data class IfFunctionStub(
-        val calleeStub: ExpressionStub,
+        val calleeStub: ExpressionStub<*>,
     ) {
         fun call(
-            condition: ExpressionStub,
-            thenCase: ExpressionStub,
-            elseCase: ExpressionStub,
-        ): ExpressionStub = CallStub(
+            condition: ExpressionStub<*>,
+            thenCase: ExpressionStub<*>,
+            elseCase: ExpressionStub<*>,
+        ): ExpressionStub<*> = CallStub(
             calleeStub = calleeStub,
             passedArgumentStub = UnorderedTupleConstructorStub(
                 valueStubByKey = mapOf(
@@ -26,7 +27,9 @@ abstract class ExpressionStub {
     }
 
     companion object {
-        fun referBuiltin(name: Identifier): ExpressionStub = object : ExpressionStub() {
+        fun referBuiltin(
+            name: Identifier,
+        ): ExpressionStub<*> = object : ExpressionStub<Call>() {
             override fun form(context: FormationContext) = CallStub.fieldRead(
                 subjectStub = CallStub.fieldRead(
                     subjectStub = ArgumentReference(
@@ -53,6 +56,9 @@ abstract class ExpressionStub {
     ): Lazy<Expression>
 }
 
-fun Expression.asStub(): ExpressionStub = object : ExpressionStub() {
-    override fun form(context: FormationContext): Lazy<Expression> = lazyOf(this@asStub)
-}
+fun <TExpression : Expression> TExpression.asStub(): ExpressionStub<TExpression> =
+    object : ExpressionStub<TExpression>() {
+        override fun form(
+            context: FormationContext,
+        ): Lazy<Expression> = lazyOf(this@asStub)
+    }

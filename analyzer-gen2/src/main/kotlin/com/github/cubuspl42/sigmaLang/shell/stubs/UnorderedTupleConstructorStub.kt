@@ -6,11 +6,11 @@ import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 
 class UnorderedTupleConstructorStub(
-    private val valueStubByKey: Map<Identifier, ExpressionStub>,
-) : ExpressionStub() {
+    private val valueStubByKey: Map<Identifier, ExpressionStub<*>>,
+) : ExpressionStub<UnorderedTupleConstructor>() {
     data class Entry(
         val key: Identifier,
-        val value: ExpressionStub,
+        val value: ExpressionStub<*>,
     )
 
     companion object {

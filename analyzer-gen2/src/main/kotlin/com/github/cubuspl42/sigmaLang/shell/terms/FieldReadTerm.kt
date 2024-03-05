@@ -22,7 +22,7 @@ data class FieldReadTerm(
         override fun extract(parser: SigmaParser): SigmaParser.FieldReadContext = parser.fieldRead()
     }
 
-    override fun transmute(): ExpressionStub = CallStub.fieldRead(
+    override fun transmute(): ExpressionStub<*> = CallStub.fieldRead(
         subjectStub = subject.transmute(),
         readFieldName = readFieldName.transmute(),
     )

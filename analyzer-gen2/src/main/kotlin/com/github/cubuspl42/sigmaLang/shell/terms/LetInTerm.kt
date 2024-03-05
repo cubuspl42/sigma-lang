@@ -20,7 +20,7 @@ data class LetInTerm(
         override fun extract(parser: SigmaParser): SigmaParser.LetInContext = parser.letIn()
     }
 
-    override fun transmute(): ExpressionStub = KnotConstructorStub(
+    override fun transmute(): ExpressionStub<*> = KnotConstructorStub(
         definitions = block.entries.mapUniquely { entry ->
             KnotConstructorStub.DefinitionStub(
                 key = entry.key.transmute(),

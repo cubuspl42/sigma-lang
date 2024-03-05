@@ -10,11 +10,11 @@ import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 
 class KnotConstructorStub(
     private val definitions: Set<DefinitionStub>,
-    private val result: ExpressionStub,
-) : ExpressionStub() {
+    private val result: ExpressionStub<*>,
+) : ExpressionStub<KnotConstructor>() {
     data class DefinitionStub(
         val key: Identifier,
-        val initializer: ExpressionStub,
+        val initializer: ExpressionStub<*>,
     )
 
     override fun form(context: FormationContext): Lazy<Expression> {

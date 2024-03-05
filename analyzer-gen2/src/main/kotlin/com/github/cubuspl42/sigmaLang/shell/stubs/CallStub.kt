@@ -8,12 +8,12 @@ import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 
 class CallStub(
-    private val calleeStub: ExpressionStub,
-    private val passedArgumentStub: ExpressionStub,
-) : ExpressionStub() {
+    private val calleeStub: ExpressionStub<*>,
+    private val passedArgumentStub: ExpressionStub<*>,
+) : ExpressionStub<Call>() {
     companion object {
         fun fieldRead(
-            subjectStub: ExpressionStub,
+            subjectStub: ExpressionStub<*>,
             readFieldName: Identifier,
         ) = CallStub(
             calleeStub = subjectStub,
