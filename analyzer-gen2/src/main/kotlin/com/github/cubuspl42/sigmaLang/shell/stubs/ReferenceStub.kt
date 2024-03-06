@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.shell.FormationContext
 
 class ReferenceStub(
     private val referredName: Identifier,
-) : ExpressionStub<Reference>() {
+) : ExpressionStub<Expression>() {
     override fun form(context: FormationContext): Lazy<Expression> {
         val scope = context.scope
 
@@ -16,7 +16,7 @@ class ReferenceStub(
 
         return CallStub.fieldRead(
             subjectStub = reference.asStub(),
-            readFieldName = referredName,
+            fieldName = referredName,
         ).form(
             context = context,
         )

@@ -1,15 +1,20 @@
 package com.github.cubuspl42.sigmaLang.core.values
 
+import com.github.cubuspl42.sigmaLang.core.expressions.IdentifierLiteral
 import com.squareup.kotlinpoet.CodeBlock
 
 data class Identifier(
     val name: String,
-): Value() {
+) : PrimitiveValue() {
     fun generateCode(): CodeBlock = CodeBlock.of(
         """
             %T(name = %S)
         """.trimIndent(),
         Identifier::class,
         name,
+    )
+
+    override fun toLiteral() = IdentifierLiteral(
+        value = this,
     )
 }

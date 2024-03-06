@@ -14,13 +14,10 @@ class CallStub(
     companion object {
         fun fieldRead(
             subjectStub: ExpressionStub<*>,
-            readFieldName: Identifier,
-        ) = CallStub(
-            calleeStub = subjectStub,
-            passedArgumentStub = IdentifierLiteral(
-                value = readFieldName,
-            ).asStub(),
-        )
+            fieldName: Identifier,
+        ) = subjectStub.map {
+            it.readField(fieldName = fieldName)
+        }
 
         val panicCall = CallStub(
             calleeStub = referBuiltin(
@@ -30,7 +27,7 @@ class CallStub(
         )
     }
 
-    override fun form(context: FormationContext): Lazy<Expression> = lazyOf(
+    override fun form(context: FormationContext): Lazy<Call> = lazyOf(
         Call(
             calleeLazy = calleeStub.form(context = context),
             passedArgumentLazy = passedArgumentStub.form(context = context),

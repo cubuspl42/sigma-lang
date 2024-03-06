@@ -24,7 +24,7 @@ class UnorderedTupleConstructorStub(
         )
     }
 
-    override fun form(context: FormationContext): Lazy<Expression> = lazyOf(
+    override fun form(context: FormationContext) = lazyOf(
         UnorderedTupleConstructor(
             valueByKey = valueStubByKey.mapValues { (_, valueStub) ->
                 valueStub.form(context = context)

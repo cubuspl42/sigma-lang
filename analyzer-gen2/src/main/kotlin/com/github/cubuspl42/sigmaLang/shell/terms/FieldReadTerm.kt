@@ -20,8 +20,8 @@ data class FieldReadTerm(
         )
     }
 
-    override fun transmute(): ExpressionStub<*> = CallStub.fieldRead(
+    override fun transmute() = CallStub.fieldRead(
         subjectStub = subject.transmute(),
-        readFieldName = readFieldName.transmute(),
+        fieldName = readFieldName.transmute(),
     )
 }

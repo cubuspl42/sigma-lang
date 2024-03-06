@@ -49,11 +49,11 @@ abstract class ExpressionStub<TExpression : Expression> {
                         referredAbstractionLazy = context.moduleRoot,
                     ).asStub(),
 
-                    readFieldName = Identifier(
+                    fieldName = Identifier(
                         name = "builtin",
                     ),
                 ),
-                readFieldName = name,
+                fieldName = name,
             ).form(context = context)
         }
 
@@ -66,16 +66,28 @@ abstract class ExpressionStub<TExpression : Expression> {
 
     abstract fun form(
         context: FormationContext,
-    ): Lazy<Expression>
+    ): Lazy<TExpression>
 
     fun formStrict(
         context: FormationContext,
-    ): Expression = form(context = context).value
+    ): TExpression = form(context = context).value
+}
+
+fun <TExpression : Expression, RExpression : Expression> ExpressionStub<TExpression>.map(
+    function: (TExpression) -> RExpression,
+): ExpressionStub<RExpression> = object : ExpressionStub<RExpression>() {
+    override fun form(context: FormationContext): Lazy<RExpression> = lazyOf(
+        function(
+            this@map.formStrict(
+                context = context,
+            ),
+        ),
+    )
 }
 
 fun <TExpression : Expression> TExpression.asStub(): ExpressionStub<TExpression> =
     object : ExpressionStub<TExpression>() {
         override fun form(
             context: FormationContext,
-        ): Lazy<Expression> = lazyOf(this@asStub)
+        ) = lazyOf(this@asStub)
     }

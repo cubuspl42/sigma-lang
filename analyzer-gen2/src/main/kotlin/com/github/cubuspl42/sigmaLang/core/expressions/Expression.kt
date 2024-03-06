@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.squareup.kotlinpoet.CodeBlock
 
@@ -102,4 +103,11 @@ sealed class Expression {
     ): Value = bind(
         scope = scope,
     ).value
+
+    fun readField(
+        fieldName: Identifier,
+    ): Call = Call(
+        calleeLazy = lazyOf(this),
+        passedArgumentLazy = lazyOf(fieldName.toLiteral()),
+    )
 }
