@@ -10,5 +10,4 @@ import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 
 data class FormationContext(
     val scope: StaticScope,
-    val moduleRoot: Lazy<AbstractionConstructor>,
 )

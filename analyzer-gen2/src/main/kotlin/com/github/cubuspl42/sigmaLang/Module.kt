@@ -101,12 +101,7 @@ class Module(
             return object {
                 val module: Module by lazy {
                     Module(
-                        root = moduleTerm.transmute().form(
-                            context = FormationContext(
-                                scope = StaticScope.Empty,
-                                moduleRoot = lazy { module.root },
-                            ),
-                        ).value,
+                        root = moduleTerm.build(),
                     )
                 }
             }.module

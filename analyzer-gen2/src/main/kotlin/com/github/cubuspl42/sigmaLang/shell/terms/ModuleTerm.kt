@@ -2,7 +2,12 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
+import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.scope.ExpressionScope
+import com.github.cubuspl42.sigmaLang.shell.scope.FieldScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.AbstractionConstructorStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.LocalScopeStub
@@ -31,12 +36,10 @@ data class ModuleTerm(
             }.visit(ctx)
         }
 
-        fun transmute(): LocalScopeStub.DefinitionStub {
-            return LocalScopeStub.DefinitionStub(
-                key = name.transmute(),
-                initializerStub = transmuteInitializer(),
-            )
-        }
+        fun transmute(): LocalScopeStub.DefinitionStub = LocalScopeStub.DefinitionStub(
+            key = name.transmute(),
+            initializerStub = transmuteInitializer(),
+        )
 
         abstract val name: IdentifierTerm
 
@@ -81,6 +84,8 @@ data class ModuleTerm(
     }
 
     companion object : Term.Builder<SigmaParser.ModuleContext, ModuleTerm>() {
+        val builtinIdentifier = Identifier(name = "builtin")
+
         override fun build(
             ctx: SigmaParser.ModuleContext,
         ): ModuleTerm = ModuleTerm(
@@ -90,17 +95,28 @@ data class ModuleTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ModuleContext = parser.module()
     }
 
-    fun transmute() = AbstractionConstructorStub.of(
-        argumentNames = setOf(
-            Identifier(name = "builtin"),
-        ),
-        body = LocalScopeStub.of(
+    fun build() = AbstractionConstructor.looped { argumentReference ->
+        LocalScopeStub.of(
             definitions = definitions.mapUniquely {
                 it.transmute()
             },
-            result = ReferenceStub(
-                referredName = Identifier(name = "main"),
-            ),
+        ).transform(
+            context = FormationContext(
+                scope = ExpressionScope(
+                    name = builtinIdentifier,
+                    boundExpression = argumentReference.readField(
+                        builtinIdentifier,
+                    ),
+                ),
+            )
+        ).build(
+            buildContext = Expression.BuildContext(
+                builtin = argumentReference.readField(
+                    fieldName = builtinIdentifier,
+                )
+            )
+        ).readField(
+            fieldName = Identifier(name = "main"),
         )
-    )
+    }
 }

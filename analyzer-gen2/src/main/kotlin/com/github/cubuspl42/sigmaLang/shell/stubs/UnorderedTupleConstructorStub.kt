@@ -1,8 +1,10 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
+import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 class UnorderedTupleConstructorStub(
     private val valueStubByKey: Map<Identifier, ExpressionStub<*>>,
@@ -22,14 +24,26 @@ class UnorderedTupleConstructorStub(
         )
     }
 
+    val entries: Set<Entry> by lazy {
+        valueStubByKey.entries.mapUniquely { (key, valueStub) ->
+            Entry(
+                key = key,
+                valueStub = valueStub,
+            )
+        }
+    }
+
     val keys: Set<Identifier> by lazy { valueStubByKey.keys }
 
-    override fun form(context: FormationContext) = lazyOf(
-        UnorderedTupleConstructor(
-            valueByKey = valueStubByKey.mapValues { (_, valueStub) ->
-                valueStub.form(context = context)
-            },
-        ),
+    override fun transform(
+        context: FormationContext,
+    ): ExpressionBuilder<UnorderedTupleConstructor> = UnorderedTupleConstructor.builder(
+        entries = entries.map {
+            UnorderedTupleConstructor.Entry.Builder(
+                key = it.key,
+                valueBuilder = it.valueStub.transform(context = context),
+            )
+        },
     )
 
     fun withEntry(entry: Entry) = UnorderedTupleConstructorStub(

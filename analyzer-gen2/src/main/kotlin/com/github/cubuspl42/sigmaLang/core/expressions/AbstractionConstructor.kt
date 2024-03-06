@@ -6,8 +6,6 @@ import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
-import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -71,11 +69,13 @@ class AbstractionConstructor(
         }
 
         fun builder(
-            imageBuilder: ExpressionBuilder<*>,
+            buildImageBuilder: (ArgumentReference) -> ExpressionBuilder<*>,
         ): ExpressionBuilder<AbstractionConstructor> = object : ExpressionBuilder<AbstractionConstructor>() {
               override fun build(
                   buildContext: Expression.BuildContext,
               ): AbstractionConstructor = AbstractionConstructor.looped { argumentReference ->
+                  val imageBuilder = buildImageBuilder(argumentReference)
+
                   imageBuilder.buildRaw(
                       buildContext = buildContext,
                   )

@@ -1,93 +1,134 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
-import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
-import com.github.cubuspl42.sigmaLang.core.expressions.Call
+import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.concepts.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.concepts.map
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
-import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 
-abstract class ExpressionStub<TExpression : Expression> {
-    data class IfFunctionStub(
-        val calleeStub: ExpressionStub<*>,
-    ) {
+abstract class ExpressionStub<out TExpression : ShadowExpression> {
+    class IfFunction(
+        private val callee: Expression,
+    ) : ShadowExpression() {
         fun call(
-            condition: ExpressionStub<*>,
-            thenCase: ExpressionStub<*>,
-            elseCase: ExpressionStub<*>,
-        ): ExpressionStub<*> = CallStub(
-            calleeStub = calleeStub,
-            passedArgumentStub = UnorderedTupleConstructorStub(
-                valueStubByKey = mapOf(
-                    Identifier(name = "condition") to condition,
-                    Identifier(name = "then") to thenCase,
-                    Identifier(name = "else") to elseCase,
+            condition: ShadowExpression,
+            thenCase: ShadowExpression,
+            elseCase: ShadowExpression,
+        ) = callee.call(
+            passedArgument = UnorderedTupleConstructor(
+                valueByKey = mapOf(
+                    Identifier(name = "condition") to lazyOf(condition.rawExpression),
+                    Identifier(name = "then") to lazyOf(thenCase.rawExpression),
+                    Identifier(name = "else") to lazyOf(elseCase.rawExpression),
                 ),
-            ),
+            )
         )
+
+        override val rawExpression: Expression
+            get() = callee
     }
 
     companion object {
-        fun looped(
-            block: (Lazy<Expression>) -> ExpressionStub<*>,
-        ): ExpressionStub<*> = object : ExpressionStub<Expression>() {
-            override fun form(context: FormationContext): Lazy<Expression> = lazy {
-                LazyUtils.looped { expressionLooped ->
-                    block(expressionLooped).form(
-                        context = context,
-                    ).value
-                }
-            }
+        fun <TExpression : ShadowExpression> pure(
+            builder: ExpressionBuilder<TExpression>,
+        ): ExpressionStub<TExpression> = object : ExpressionStub<TExpression>() {
+            fun form(
+                context: FormationContext,
+            ): Nothing = TODO()
+
+            override fun transform(
+                context: FormationContext,
+            ): ExpressionBuilder<TExpression> = builder
+        }
+
+        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression> map2Unpacked(
+            stub1: ExpressionStub<TExpression1>,
+            stub2: ExpressionStub<TExpression2>,
+            function: (TExpression1, TExpression2) -> ExpressionBuilder<TExpression3>,
+        ): ExpressionStub<TExpression3> = object : ExpressionStub<TExpression3>() {
+            override fun transform(
+                context: FormationContext,
+            ): ExpressionBuilder<TExpression3> = ExpressionBuilder.map2Joined(
+                stub1.transform(context = context),
+                stub2.transform(context = context),
+                function = function,
+            )
+        }
+
+        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression, TExpression4 : ShadowExpression> map3Unpacked(
+            stub1: ExpressionStub<TExpression1>,
+            stub2: ExpressionStub<TExpression2>,
+            stub3: ExpressionStub<TExpression3>,
+            function: (TExpression1, TExpression2, TExpression3) -> ExpressionBuilder<TExpression4>,
+        ): ExpressionStub<TExpression4> = object : ExpressionStub<TExpression4>() {
+            override fun transform(
+                context: FormationContext,
+            ): ExpressionBuilder<TExpression4> = ExpressionBuilder.map3Joined(
+                stub1.transform(context = context),
+                stub2.transform(context = context),
+                stub3.transform(context = context),
+                function = function,
+            )
+        }
+
+        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression> map2Nested(
+            stub1: ExpressionStub<TExpression1>,
+            stub2: ExpressionStub<TExpression2>,
+            function: (TExpression1, TExpression2) -> TExpression3,
+        ): ExpressionStub<TExpression3> = object : ExpressionStub<TExpression3>() {
+            override fun transform(
+                context: FormationContext,
+            ): ExpressionBuilder<TExpression3> = ExpressionBuilder.map2(
+                builder1 = stub1.transform(context = context),
+                builder2 = stub2.transform(context = context),
+                function = function,
+            )
         }
 
         fun referBuiltin(
             name: Identifier,
-        ): ExpressionStub<*> = object : ExpressionStub<Expression>() {
-            override fun form(context: FormationContext) = CallStub.fieldRead(
-                subjectStub = CallStub.fieldRead(
-                    subjectStub = ArgumentReference(
-                        referredAbstractionLazy = context.moduleRoot,
-                    ).asStub(),
-
-                    fieldName = Identifier(
-                        name = "builtin",
-                    ),
-                ),
-                fieldName = name,
-            ).form(context = context)
+        ): ExpressionBuilder<*> = object : ExpressionBuilder<Expression>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): Expression = buildContext.referBuiltin(name = name)
         }
 
-        val ifFunction: IfFunctionStub = IfFunctionStub(
-            calleeStub = referBuiltin(
-                name = Identifier(name = "if"),
-            ),
+        val ifFunction: ExpressionBuilder<IfFunction> = object : ExpressionBuilder<IfFunction>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ) = IfFunction(
+                callee = buildContext.referBuiltin(
+                    name = Identifier(name = "if"),
+                ),
+            )
+        }
+
+        val panicFunction = ExpressionStub.referBuiltin(
+            name = Identifier(name = "panic"),
         )
     }
 
-    abstract fun form(
+    open fun transform(
         context: FormationContext,
-    ): Lazy<TExpression>
-
-    fun formStrict(
-        context: FormationContext,
-    ): TExpression = form(context = context).value
+    ): ExpressionBuilder<TExpression> {
+        throw UnsupportedOperationException()
+    }
 }
 
-fun <TExpression : Expression, RExpression : Expression> ExpressionStub<TExpression>.map(
+fun <TExpression : ShadowExpression, RExpression : ShadowExpression> ExpressionStub<TExpression>.map(
     function: (TExpression) -> RExpression,
 ): ExpressionStub<RExpression> = object : ExpressionStub<RExpression>() {
-    override fun form(context: FormationContext): Lazy<RExpression> = lazyOf(
-        function(
-            this@map.formStrict(
-                context = context,
-            ),
-        ),
-    )
+    override fun transform(
+        context: FormationContext,
+    ): ExpressionBuilder<RExpression> = this@map.transform(
+        context = context,
+    ).map(function)
 }
 
-fun <TExpression : Expression> TExpression.asStub(): ExpressionStub<TExpression> =
+fun <TExpression : ShadowExpression> TExpression.asStub(): ExpressionStub<TExpression> =
     object : ExpressionStub<TExpression>() {
-        override fun form(
-            context: FormationContext,
-        ) = lazyOf(this@asStub)
+        override fun transform(context: FormationContext): ExpressionBuilder<TExpression> =
+            ExpressionBuilder.pure(this@asStub)
     }

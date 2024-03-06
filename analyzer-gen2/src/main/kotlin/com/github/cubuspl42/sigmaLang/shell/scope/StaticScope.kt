@@ -22,6 +22,14 @@ interface StaticScope {
     }
 
     fun resolveName(referredName: Identifier): Expression?
+
+    fun extendWith(
+        name: Identifier,
+        expression: Expression,
+    ): StaticScope {
+        TODO()
+        // TODO: Expression-based StaticScope
+    }
 }
 
 fun StaticScope.chainWith(

@@ -73,11 +73,11 @@ class KnotConstructor private constructor(
             )
         }
 
-        fun <TExpression : ShadowExpression> builder(
-            buildBody: (KnotReference) -> ExpressionBuilder<TExpression>,
-        ): ExpressionBuilder<TExpression> = object : ExpressionBuilder<TExpression>() {
-            override fun build(buildContext: BuildContext): TExpression {
-                val (_, body) = LazyUtils.looped2 { knotConstructorLooped, _ ->
+        fun builder(
+            buildBody: (KnotReference) -> ExpressionBuilder<*>,
+        ): ExpressionBuilder<KnotConstructor> = object : ExpressionBuilder<KnotConstructor>() {
+            override fun build(buildContext: BuildContext): KnotConstructor {
+                val knotConstructor = LazyUtils.looped { knotConstructorLooped ->
                     val reference = KnotReference(
                         referredKnotLazy = knotConstructorLooped,
                     )
@@ -90,13 +90,10 @@ class KnotConstructor private constructor(
                         body = body.rawExpression,
                     )
 
-                    Pair(
-                        knotConstructor,
-                        body,
-                    )
+                    knotConstructor
                 }
 
-                return body
+                return knotConstructor
             }
         }
     }

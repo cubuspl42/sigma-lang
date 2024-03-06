@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 
 interface DynamicScope {
-    object Bottom : DynamicScope {
+    data object Bottom : DynamicScope {
         override fun getValue(referredWrapper: Wrapper): Value {
             throw IllegalStateException("Unresolved reference at runtime: $referredWrapper")
         }

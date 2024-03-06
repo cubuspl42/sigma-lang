@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
+import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -29,28 +30,26 @@ class AbstractionConstructorStub(
         )
     }
 
-    override fun form(
+    override fun transform(
         context: FormationContext,
-    ): Lazy<AbstractionConstructor> = lazyOf(
-        AbstractionConstructor.looped { argumentReference ->
-            val innerScope = StaticScope.argumentScope(
-                argumentNames = argumentNames,
-                argumentReference = argumentReference,
-            ).chainWith(
-                context.scope,
-            )
+    ): ExpressionBuilder<AbstractionConstructor> = AbstractionConstructor.builder { argumentReference ->
+        val innerScope = StaticScope.argumentScope(
+            argumentNames = argumentNames,
+            argumentReference = argumentReference,
+        ).chainWith(
+            context.scope,
+        )
 
-            val innerContext = context.copy(
-                scope = innerScope,
-            )
+        val innerContext = context.copy(
+            scope = innerScope,
+        )
 
-            val image = buildBody(argumentReference)
-
-            image.formStrict(
-                context = innerContext,
-            )
-        },
-    )
+        buildBody(
+            argumentReference,
+        ).transform(
+            context = innerContext,
+        )
+    }
 
     fun withArgumentName(name: Identifier) = AbstractionConstructorStub(
         argumentNames = argumentNames + name,

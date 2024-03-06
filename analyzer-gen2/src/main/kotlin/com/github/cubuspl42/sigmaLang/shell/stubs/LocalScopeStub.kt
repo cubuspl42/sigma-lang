@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
+import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
@@ -61,26 +62,24 @@ class LocalScopeStub private constructor(
         )
     }
 
-    override fun form(
+    override fun transform(
         context: FormationContext,
-    ) = lazyOf(
-        KnotConstructor.of { knotReference ->
-            val localScope: UnorderedTupleConstructorStub = buildScope(knotReference)
+    ): ExpressionBuilder<KnotConstructor> = KnotConstructor.builder { knotReference ->
+        val localScope = buildScope(knotReference)
 
-            val innerScope = FieldScope(
-                names = localScope.keys,
-                tupleReference = knotReference,
-            ).chainWith(
-                context.scope,
-            )
+        val innerScope = FieldScope(
+            names = localScope.keys,
+            tupleReference = knotReference,
+        ).chainWith(
+            context.scope,
+        )
 
-            val innerContext = context.copy(
-                scope = innerScope,
-            )
+        val innerContext = context.copy(
+            scope = innerScope,
+        )
 
-            localScope.formStrict(
-                context = innerContext,
-            )
-        },
-    )
+        localScope.transform(
+            context = innerContext,
+        )
+    }
 }

@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 abstract class ShadowExpression {
@@ -21,6 +22,51 @@ abstract class ExpressionBuilder<out TExpression : ShadowExpression> {
                 buildContext: Expression.BuildContext,
             ): TExpression = expression
         }
+
+        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression> map2(
+            builder1: ExpressionBuilder<TExpression1>,
+            builder2: ExpressionBuilder<TExpression2>,
+            function: (TExpression1, TExpression2) -> TExpression3,
+        ): ExpressionBuilder<TExpression3> = object : ExpressionBuilder<TExpression3>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): TExpression3 = function(
+                builder1.build(buildContext = buildContext),
+                builder2.build(buildContext = buildContext),
+            )
+        }
+
+        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression> map2Joined(
+            builder1: ExpressionBuilder<TExpression1>,
+            builder2: ExpressionBuilder<TExpression2>,
+            function: (TExpression1, TExpression2) -> ExpressionBuilder<TExpression3>,
+        ): ExpressionBuilder<TExpression3> = object : ExpressionBuilder<TExpression3>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): TExpression3 = function(
+                builder1.build(buildContext = buildContext),
+                builder2.build(buildContext = buildContext),
+            ).build(
+                buildContext = buildContext,
+            )
+        }
+
+        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression, TExpression4 : ShadowExpression> map3Joined(
+            builder1: ExpressionBuilder<TExpression1>,
+            builder2: ExpressionBuilder<TExpression2>,
+            builder3: ExpressionBuilder<TExpression3>,
+            function: (TExpression1, TExpression2, TExpression3) -> ExpressionBuilder<TExpression4>,
+        ): ExpressionBuilder<TExpression4> = object : ExpressionBuilder<TExpression4>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): TExpression4 = function(
+                builder1.build(buildContext = buildContext),
+                builder2.build(buildContext = buildContext),
+                builder3.build(buildContext = buildContext),
+            ).build(
+                buildContext = buildContext,
+            )
+        }
     }
 
     abstract fun build(
@@ -32,6 +78,28 @@ abstract class ExpressionBuilder<out TExpression : ShadowExpression> {
     ): Expression = build(
         buildContext = buildContext,
     ).rawExpression
+
+    fun asStub(): ExpressionStub<TExpression> = ExpressionStub.pure(this)
+}
+
+fun <TExpression : ShadowExpression, RExpression : ShadowExpression> ExpressionBuilder<TExpression>.map(
+    function: (TExpression) -> RExpression,
+): ExpressionBuilder<RExpression> = object : ExpressionBuilder<RExpression>() {
+    override fun build(
+        buildContext: Expression.BuildContext,
+    ): RExpression = function(
+        this@map.build(buildContext = buildContext),
+    )
+}
+
+fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression> ExpressionBuilder<TExpression1>.joinOf(
+    extract: (TExpression1) -> TExpression2,
+): ExpressionBuilder<TExpression2> = object : ExpressionBuilder<TExpression2>() {
+    override fun build(
+        buildContext: Expression.BuildContext,
+    ): TExpression2 = this@joinOf.map(extract).build(
+        buildContext = buildContext,
+    )
 }
 
 abstract class IntermediateExpressionBuilder<out TExpression : ShadowExpression> : ExpressionBuilder<TExpression>() {
@@ -81,6 +149,11 @@ abstract class ClassBuilder(
         override val rawExpression: Expression = rawConstructor
     }
 
+    data class PartialConstructor(
+        val prototypeConstructor: UnorderedTupleConstructor,
+        val proxyMethodDefinitions: Set<Constructor.MethodDefinition>,
+    )
+
     data class Reference(
         val prototypeReference: Expression,
     ) {
@@ -102,7 +175,9 @@ abstract class ClassBuilder(
     abstract class MethodDefinitionBuilder(
         val name: Identifier,
     ) {
-        fun buildOriginal() = Constructor.MethodDefinition(
+        fun buildOriginal(
+            buildContext: Expression.BuildContext,
+        ) = Constructor.MethodDefinition(
             name = name,
             outerImplementationConstructor = AbstractionConstructor.looped { methodArgumentReference ->
                 val thisReference = methodArgumentReference.readField(
@@ -111,6 +186,8 @@ abstract class ClassBuilder(
 
                 buildImplementation(
                     thisReference = thisReference,
+                ).build(
+                    buildContext = buildContext,
                 ).call(
                     passedArgument = methodArgumentReference.readField(
                         fieldName = argsIdentifier,
@@ -122,11 +199,11 @@ abstract class ClassBuilder(
         fun buildProxy() = Constructor.MethodDefinition(
             name = name,
             outerImplementationConstructor = AbstractionConstructor.looped { argumentReference ->
-                val self = argumentReference.readField(
+                val thisExpression = argumentReference.readField(
                     fieldName = thisIdentifier,
                 )
 
-                val instancePrototype = self.readField(
+                val instancePrototype = thisExpression.readField(
                     fieldName = instancePrototypeIdentifier,
                 )
 
@@ -135,20 +212,25 @@ abstract class ClassBuilder(
                 )
 
                 method.call(
-                    passedArgument = argumentReference,
+                    passedArgument = UnorderedTupleConstructor(
+                        valueByKey = mapOf(
+                            thisIdentifier to lazyOf(thisExpression),
+                            argsIdentifier to lazyOf(argumentReference),
+                        ),
+                    ),
                 )
             },
         )
 
         abstract fun buildImplementation(
             thisReference: Expression,
-        ): AbstractionConstructor
+        ): ExpressionBuilder<AbstractionConstructor>
     }
 
     companion object {
         val classPrototypeIdentifier = Identifier(name = "__class_prototype__")
         val instancePrototypeIdentifier = Identifier(name = "__instance_prototype__")
-        val thisIdentifier = Identifier(name = "__this__")
+        val thisIdentifier = Identifier(name = "this")
         val argsIdentifier = Identifier(name = "__args__")
     }
 
@@ -163,7 +245,7 @@ abstract class ClassBuilder(
             name = Identifier(name = "unionWith"),
         )
 
-        val (_, constructor) = KnotConstructor.looped { rawClassReference ->
+        val (rootKnotConstructor, partialConstructor) = KnotConstructor.looped { rawClassReference ->
             val classReference = Reference.wrap(rawClassReference)
 
             val methodDefinitionBuilders = buildMethods(classReference = classReference)
@@ -193,7 +275,7 @@ abstract class ClassBuilder(
             )
 
             val originalMethodDefinitions = methodDefinitionBuilders.mapUniquely { methodDefinitionStub ->
-                methodDefinitionStub.buildOriginal()
+                methodDefinitionStub.buildOriginal(buildContext = buildContext)
             }
 
             val prototypeConstructor = UnorderedTupleConstructor.fromEntries(
@@ -201,12 +283,11 @@ abstract class ClassBuilder(
             )
 
             val prototypeConstructorEntry = UnorderedTupleConstructor.Entry(
-                key = classPrototypeIdentifier, value = lazyOf(
-                    prototypeConstructor,
-                )
+                key = classPrototypeIdentifier,
+                value = lazyOf(prototypeConstructor),
             )
 
-            val rawConstructor = UnorderedTupleConstructor.fromEntries(
+            val rootTupleConstructor = UnorderedTupleConstructor.fromEntries(
                 entries = setOfNotNull(
                     instanceConstructorEntry,
                     prototypeConstructorEntry,
@@ -216,15 +297,18 @@ abstract class ClassBuilder(
             )
 
             Pair(
-                rawConstructor,
-                Constructor(
-                    rawConstructor = rawConstructor,
+                rootTupleConstructor,
+                PartialConstructor(
                     prototypeConstructor = prototypeConstructor,
                     proxyMethodDefinitions = proxyMethodDefinitions,
                 ),
             )
         }
 
-        return constructor
+        return Constructor(
+            rawConstructor = rootKnotConstructor,
+            prototypeConstructor = partialConstructor.prototypeConstructor,
+            proxyMethodDefinitions = partialConstructor.proxyMethodDefinitions,
+        )
     }
 }

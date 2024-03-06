@@ -1,9 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
-import com.github.cubuspl42.sigmaLang.shell.stubs.CallStub
+import com.github.cubuspl42.sigmaLang.core.concepts.map
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.utils.uncons
 
@@ -35,16 +33,25 @@ data class WhenTerm(
     override fun transmute(): ExpressionStub<*> {
         val ifExpression = ExpressionStub.ifFunction
 
-        fun constructElseExpression(): ExpressionStub<*> = elseEntry?.transmute() ?: CallStub.panicCall
+        fun constructElseExpression(): ExpressionStub<*> =
+            elseEntry?.transmute() ?: ExpressionStub.panicFunction.asStub()
 
         fun constructConditionalEntryExpression(
             conditionalEntry: ConditionalEntry,
-            elseCase: ExpressionStub<*>,
-        ): ExpressionStub<*> = ifExpression.call(
-            condition = conditionalEntry.condition.transmute(),
-            thenCase = conditionalEntry.result.transmute(),
-            elseCase = elseCase,
-        )
+            elseCaseStub: ExpressionStub<*>,
+        ): ExpressionStub<*> = ExpressionStub.map3Unpacked(
+            conditionalEntry.condition.transmute(),
+            conditionalEntry.result.transmute(),
+            elseCaseStub,
+        ) { condition, result, elseCase ->
+            ifExpression.map { ifFunction ->
+                ifFunction.call(
+                    condition = condition,
+                    thenCase = result,
+                    elseCase = elseCase,
+                )
+            }
+        }
 
         fun constructEntryExpression(
             remainingEntries: List<ConditionalEntry>,
@@ -53,7 +60,7 @@ data class WhenTerm(
 
             return constructConditionalEntryExpression(
                 conditionalEntry = head,
-                elseCase = constructEntryExpression(tail),
+                elseCaseStub = constructEntryExpression(tail),
             )
         }
 
