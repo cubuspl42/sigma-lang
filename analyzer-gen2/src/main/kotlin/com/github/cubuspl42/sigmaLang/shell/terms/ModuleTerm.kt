@@ -91,7 +91,9 @@ data class ModuleTerm(
     }
 
     fun transmute() = AbstractionConstructorStub(
-        argumentNames = emptySet(), // FIXME?
+        argumentNames = setOf(
+            Identifier(name = "builtin"),
+        ),
         image = LocalScopeStub.of(
             definitions = definitions.mapUniquely {
                 it.transmute()

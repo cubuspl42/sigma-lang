@@ -12,4 +12,10 @@ class UnorderedTuple(
     fun get(
         identifier: Identifier,
     ): Value = valueByKey[identifier]?.value ?: throw IllegalArgumentException("No such key: $identifier")
+
+    fun unionWith(
+        secondTuple: UnorderedTuple,
+    ): UnorderedTuple = UnorderedTuple(
+        valueByKey = valueByKey + secondTuple.valueByKey
+    )
 }

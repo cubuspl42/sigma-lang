@@ -39,6 +39,13 @@
     hasSharpClaws = %false,
 }
 
-%val main = Cat.pet{
-    this = pussy,
+%val main = builtin.unionWith{
+    first = {
+        x1 = %false,
+        x2 = %false,
+    },
+    second = {
+        x2 = %true,
+        x3 = %true,
+    },
 }

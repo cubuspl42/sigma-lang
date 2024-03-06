@@ -169,16 +169,35 @@ public object Out {
                     ) 
                   },
                   Identifier(name = "main") to lazy {
-                    (((knot1 as Callable).call(
-                      argument = Identifier(name = "Cat"),
+                    (((arg0 as Callable).call(
+                      argument = Identifier(name = "builtin"),
                     ) as Callable).call(
-                      argument = Identifier(name = "pet"),
+                      argument = Identifier(name = "unionWith"),
                     ) as Callable).call(
                       argument = UnorderedTuple(
                         valueByKey = mapOf(
-                          Identifier(name = "this") to lazy {
-                            (knot1 as Callable).call(
-                              argument = Identifier(name = "pussy"),
+                          Identifier(name = "first") to lazy {
+                            UnorderedTuple(
+                              valueByKey = mapOf(
+                                Identifier(name = "x1") to lazy {
+                                  BooleanPrimitive(value = false) 
+                                },
+                                Identifier(name = "x2") to lazy {
+                                  BooleanPrimitive(value = false) 
+                                },
+                              )
+                            ) 
+                          },
+                          Identifier(name = "second") to lazy {
+                            UnorderedTuple(
+                              valueByKey = mapOf(
+                                Identifier(name = "x2") to lazy {
+                                  BooleanPrimitive(value = true) 
+                                },
+                                Identifier(name = "x3") to lazy {
+                                  BooleanPrimitive(value = true) 
+                                },
+                              )
                             ) 
                           },
                         )

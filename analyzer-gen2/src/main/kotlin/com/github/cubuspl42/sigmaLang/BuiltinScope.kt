@@ -23,5 +23,17 @@ val BuiltinScope = UnorderedTuple(
                 }
             },
         ),
+        Identifier("unionWith") to lazyOf(
+            object : Abstraction() {
+                override fun compute(argument: Value): Value {
+                    val args = argument as UnorderedTuple
+
+                    val firstTuple = args.get(identifier = Identifier(name = "first")) as UnorderedTuple
+                    val secondTuple = args.get(identifier = Identifier(name = "second")) as UnorderedTuple
+
+                    return firstTuple.unionWith(secondTuple)
+                }
+            },
+        ),
     ),
 )
