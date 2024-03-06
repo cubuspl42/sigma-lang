@@ -2,9 +2,12 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
+import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -53,7 +56,7 @@ class AbstractionConstructor(
     }
 
     companion object {
-        fun of(
+        fun looped(
             buildBody: (ArgumentReference) -> Expression,
         ): AbstractionConstructor = LazyUtils.looped { abstractionConstructorLooped ->
             val reference = ArgumentReference(
@@ -66,6 +69,18 @@ class AbstractionConstructor(
                 body = body,
             )
         }
+
+        fun builder(
+            imageBuilder: ExpressionBuilder<*>,
+        ): ExpressionBuilder<AbstractionConstructor> = object : ExpressionBuilder<AbstractionConstructor>() {
+              override fun build(
+                  buildContext: Expression.BuildContext,
+              ): AbstractionConstructor = AbstractionConstructor.looped { argumentReference ->
+                  imageBuilder.buildRaw(
+                      buildContext = buildContext,
+                  )
+              }
+          }
     }
 
     override val subExpressions: Set<Expression> = setOf(body)

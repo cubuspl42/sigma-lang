@@ -32,7 +32,7 @@ class AbstractionConstructorStub(
     override fun form(
         context: FormationContext,
     ): Lazy<AbstractionConstructor> = lazyOf(
-        AbstractionConstructor.of { argumentReference ->
+        AbstractionConstructor.looped { argumentReference ->
             val innerScope = StaticScope.argumentScope(
                 argumentNames = argumentNames,
                 argumentReference = argumentReference,

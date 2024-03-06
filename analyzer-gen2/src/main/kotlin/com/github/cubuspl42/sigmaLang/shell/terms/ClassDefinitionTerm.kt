@@ -69,9 +69,3 @@ data class ClassDefinitionTerm(
         },
     )
 }
-
-data class ClassConstructor(
-    val prototypeConstructor: UnorderedTupleConstructor,
-    val methods: Map<Identifier, AbstractionConstructor>,
-)
-

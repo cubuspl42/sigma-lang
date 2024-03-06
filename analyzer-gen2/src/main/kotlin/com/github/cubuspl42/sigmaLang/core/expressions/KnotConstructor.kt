@@ -2,6 +2,8 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.concepts.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.core.withValue
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
@@ -50,6 +52,52 @@ class KnotConstructor private constructor(
             KnotConstructor(
                 body = body,
             )
+        }
+
+        fun <T> looped(
+            buildBody: (KnotReference) -> Pair<Expression, T>,
+        ): Pair<KnotConstructor, T> = LazyUtils.looped2 { knotConstructorLooped, _ ->
+            val reference = KnotReference(
+                referredKnotLazy = knotConstructorLooped,
+            )
+
+            val (body, t) = buildBody(reference)
+
+            val knotConstructor = KnotConstructor(
+                body = body,
+            )
+
+            Pair(
+                knotConstructor,
+                t,
+            )
+        }
+
+        fun <TExpression : ShadowExpression> builder(
+            buildBody: (KnotReference) -> ExpressionBuilder<TExpression>,
+        ): ExpressionBuilder<TExpression> = object : ExpressionBuilder<TExpression>() {
+            override fun build(buildContext: BuildContext): TExpression {
+                val (_, body) = LazyUtils.looped2 { knotConstructorLooped, _ ->
+                    val reference = KnotReference(
+                        referredKnotLazy = knotConstructorLooped,
+                    )
+
+                    val bodyBuilder = buildBody(reference)
+
+                    val body = bodyBuilder.build(buildContext = buildContext)
+
+                    val knotConstructor = KnotConstructor(
+                        body = body.rawExpression,
+                    )
+
+                    Pair(
+                        knotConstructor,
+                        body,
+                    )
+                }
+
+                return body
+            }
         }
     }
 

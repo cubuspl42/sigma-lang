@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.concepts.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.squareup.kotlinpoet.CodeBlock
@@ -83,7 +84,17 @@ class CompilationCodegenContext {
     }
 }
 
-sealed class Expression {
+sealed class Expression : ShadowExpression() {
+    data class BuildContext(
+        val builtin: Expression,
+    ) {
+        fun referBuiltin(
+            name: Identifier,
+        ): Expression = builtin.readField(
+            fieldName = name,
+        )
+    }
+
     abstract class CodegenRepresentation {
         abstract fun generateCode(): CodeBlock
     }
@@ -97,6 +108,9 @@ sealed class Expression {
     abstract fun bind(
         scope: DynamicScope,
     ): Lazy<Value>
+
+    final override val rawExpression: Expression
+        get() = this
 
     fun bindStrict(
         scope: DynamicScope,

@@ -22,7 +22,7 @@ object ClassStub {
 
         fun buildProxy() = UnorderedTupleConstructorStub.Entry(
             key = name,
-            valueStub = AbstractionConstructor.of { argumentReference ->
+            valueStub = AbstractionConstructor.looped { argumentReference ->
                 val self = argumentReference.readField(
                     fieldName = Identifier(name = "this"),
                 )
@@ -66,7 +66,7 @@ object ClassStub {
                     val instanceConstructorEntry = UnorderedTupleConstructor.Entry(
                         key = constructorName,
                         value = lazyOf(
-                            AbstractionConstructor.of { argumentReference ->
+                            AbstractionConstructor.looped { argumentReference ->
                                 unionWith.call(
                                     passedArgument = UnorderedTupleConstructor.of(
                                         Identifier(name = "first") to lazyOf(argumentReference),

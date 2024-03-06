@@ -2,11 +2,13 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.stubs.UnorderedTupleConstructorStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.asStub
+import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 import com.github.cubuspl42.sigmaLang.utils.wrapWithLazy
 import com.squareup.kotlinpoet.CodeBlock
 
@@ -17,6 +19,16 @@ class UnorderedTupleConstructor(
         val key: Identifier,
         val value: Lazy<Expression>,
     ) {
+        data class Builder(
+            val key: Identifier,
+            val valueBuilder: ExpressionBuilder<*>,
+        ) {
+            fun build(buildContext: BuildContext) = Entry(
+                key = key,
+                value = lazyOf(valueBuilder.buildRaw(buildContext)),
+            )
+        }
+
         fun asStub() = UnorderedTupleConstructorStub.Entry(
             key = key,
             valueStub = value.value.asStub(),
@@ -64,6 +76,16 @@ class UnorderedTupleConstructor(
                 """.trimIndent(),
                 UnorderedTuple::class,
                 passedEntriesBuilder.build(),
+            )
+        }
+
+        fun builder(
+            entries: Iterable<Entry.Builder>,
+        ): ExpressionBuilder<UnorderedTupleConstructor> = object : ExpressionBuilder<UnorderedTupleConstructor>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): UnorderedTupleConstructor = UnorderedTupleConstructor.fromEntries(
+                entries = entries.map { it.build(buildContext = buildContext) },
             )
         }
     }

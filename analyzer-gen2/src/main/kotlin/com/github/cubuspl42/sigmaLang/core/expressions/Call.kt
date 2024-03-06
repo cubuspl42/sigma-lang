@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Callable
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -11,6 +12,16 @@ class Call(
     val calleeLazy: Lazy<Expression>,
     val passedArgumentLazy: Lazy<Expression>,
 ) : ComplexExpression() {
+    object FieldRead {
+        fun builder(
+            subjectBuilder: ExpressionBuilder<*>,
+            fieldName: Identifier,
+        ) = Call.builder(
+            calleeBuilder = subjectBuilder,
+            passedArgumentBuilder = ExpressionBuilder.pure(fieldName.toLiteral()),
+        )
+    }
+
     companion object {
         fun generateCallCode(
             callee: CodeBlock,
@@ -25,6 +36,16 @@ class Call(
             Callable::class,
             passedArgument
         )
+
+        fun builder(
+            calleeBuilder: ExpressionBuilder<*>,
+            passedArgumentBuilder: ExpressionBuilder<*>,
+        ): ExpressionBuilder<Call> = object : ExpressionBuilder<Call>() {
+            override fun build(buildContext: BuildContext): Call = Call(
+                calleeLazy = lazyOf(calleeBuilder.buildRaw(buildContext)),
+                passedArgumentLazy = lazyOf(passedArgumentBuilder.buildRaw(buildContext)),
+            )
+        }
     }
 
     val callee by calleeLazy
