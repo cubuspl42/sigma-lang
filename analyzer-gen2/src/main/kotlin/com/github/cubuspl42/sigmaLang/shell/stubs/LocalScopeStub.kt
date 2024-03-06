@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.shell.stubs
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.LocalScope
@@ -55,13 +56,13 @@ class LocalScopeStub private constructor(
                 scope = innerScope,
             )
 
-            UnorderedTupleConstructorStub(
-                valueStubByKey = definitions.associate {
-                    it.key to it.initializerStub
+            UnorderedTupleConstructor(
+                valueByKey = definitions.associate {
+                    it.key to it.initializerStub.form(
+                        context = innerContext,
+                    )
                 },
-            ).form(
-                context = innerContext,
-            ).value
+            )
         },
     )
 }
