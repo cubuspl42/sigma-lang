@@ -110,4 +110,11 @@ sealed class Expression {
         calleeLazy = lazyOf(this),
         passedArgumentLazy = lazyOf(fieldName.toLiteral()),
     )
+
+    fun call(
+        passedArgument: Expression,
+    ): Call = Call(
+        calleeLazy = lazyOf(this),
+        passedArgumentLazy = lazyOf(passedArgument),
+    )
 }

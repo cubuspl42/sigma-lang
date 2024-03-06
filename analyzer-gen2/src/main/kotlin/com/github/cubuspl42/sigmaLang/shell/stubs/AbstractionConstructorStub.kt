@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
@@ -8,8 +9,26 @@ import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 
 class AbstractionConstructorStub(
     private val argumentNames: Set<Identifier>,
-    private val image: ExpressionStub<*>,
+    private val buildBody: (ArgumentReference) -> ExpressionStub<*>,
 ) : ExpressionStub<AbstractionConstructor>() {
+    companion object {
+        fun of(
+            argumentNames: Set<Identifier>,
+            buildBody: (ArgumentReference) -> ExpressionStub<*>,
+        ): AbstractionConstructorStub = AbstractionConstructorStub(
+            argumentNames = argumentNames,
+            buildBody = buildBody,
+        )
+
+        fun of(
+            argumentNames: Set<Identifier>,
+            body: ExpressionStub<*>,
+        ): AbstractionConstructorStub = AbstractionConstructorStub(
+            argumentNames = argumentNames,
+            buildBody = { body },
+        )
+    }
+
     override fun form(
         context: FormationContext,
     ): Lazy<AbstractionConstructor> = lazyOf(
@@ -25,6 +44,8 @@ class AbstractionConstructorStub(
                 scope = innerScope,
             )
 
+            val image = buildBody(argumentReference)
+
             image.formStrict(
                 context = innerContext,
             )
@@ -33,6 +54,10 @@ class AbstractionConstructorStub(
 
     fun withArgumentName(name: Identifier) = AbstractionConstructorStub(
         argumentNames = argumentNames + name,
-        image = image,
+        buildBody = buildBody,
+    )
+
+    fun toMethod(): ExpressionStub<*> = withArgumentName(
+        name = Identifier(name = "this"),
     )
 }

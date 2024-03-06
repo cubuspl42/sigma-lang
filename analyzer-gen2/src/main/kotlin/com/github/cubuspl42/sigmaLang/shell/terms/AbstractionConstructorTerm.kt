@@ -20,8 +20,8 @@ data class AbstractionConstructorTerm(
             parser.abstractionConstructor()
     }
 
-    override fun transmute(): AbstractionConstructorStub = AbstractionConstructorStub(
+    override fun transmute(): AbstractionConstructorStub = AbstractionConstructorStub.of(
         argumentNames = argumentType.keys.mapUniquely { it.transmute() },
-        image = image.transmute(),
+        body = image.transmute(),
     )
 }

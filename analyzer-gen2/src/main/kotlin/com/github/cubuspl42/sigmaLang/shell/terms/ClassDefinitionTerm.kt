@@ -2,14 +2,10 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
-import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.shell.stubs.ClassStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
-import com.github.cubuspl42.sigmaLang.shell.stubs.LocalScopeStub
-import com.github.cubuspl42.sigmaLang.shell.stubs.UnorderedTupleConstructorStub
-import com.github.cubuspl42.sigmaLang.shell.stubs.asStub
-import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 data class ClassDefinitionTerm(
@@ -29,13 +25,6 @@ data class ClassDefinitionTerm(
                 argumentType = UnorderedTupleTypeConstructorTerm.build(ctx.argumentType),
             )
         }
-
-        fun transmute() = LocalScopeStub.DefinitionStub(
-            key = name.transmute(),
-            initializerStub = AbstractionConstructor.of { argumentReference ->
-                argumentReference
-            }.asStub(),
-        )
     }
 
     data class MethodDefinitionTerm(
@@ -54,11 +43,9 @@ data class ClassDefinitionTerm(
             )
         }
 
-        fun transmute() = LocalScopeStub.DefinitionStub(
-            key = name.transmute(),
-            initializerStub = abstractionConstructor.transmute().withArgumentName(
-                name = Identifier(name = "this"),
-            ),
+        fun transmute() = ClassStub.MethodDefinitionStub(
+            name = name.transmute(),
+            methodConstructorStub = abstractionConstructor.transmute(),
         )
     }
 
@@ -74,11 +61,17 @@ data class ClassDefinitionTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ClassDefinitionContext = parser.classDefinition()
     }
 
-    override fun transmuteInitializer(): ExpressionStub<*> = LocalScopeStub.of(
-        definitions = setOfNotNull(
-            constructor?.transmute(),
-        ) + methodDefinitions.mapUniquely {
+
+    override fun transmuteInitializer(): ExpressionStub<*> = ClassStub.of(
+        constructorName = constructor!!.name.transmute(),
+        methodDefinitionStubs = methodDefinitions.mapUniquely {
             it.transmute()
         },
     )
 }
+
+data class ClassConstructor(
+    val prototypeConstructor: UnorderedTupleConstructor,
+    val methods: Map<Identifier, AbstractionConstructor>,
+)
+

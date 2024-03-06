@@ -1,17 +1,15 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
-import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
-import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.LocalScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
-import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 class LocalScopeStub private constructor(
-    private val definitions: Set<DefinitionStub>,
+    private val   buildScope: (KnotReference) -> UnorderedTupleConstructorStub,
 ) : ExpressionStub<KnotConstructor>() {
     data class DefinitionStub(
         val key: Identifier,
@@ -23,8 +21,30 @@ class LocalScopeStub private constructor(
 
         fun of(
             definitions: Set<DefinitionStub>,
+        ): ExpressionStub<KnotConstructor> = ofDefinitions(
+            buildDefinitions = { definitions },
+        )
+
+        // TODO: Nuke?
+        fun ofDefinitions(
+            buildDefinitions: (KnotReference) -> Set<DefinitionStub>,
+        ): ExpressionStub<KnotConstructor> = of(
+            buildScope = { knotReference ->
+                UnorderedTupleConstructorStub.fromEntries(
+                    buildDefinitions(knotReference).map {
+                        UnorderedTupleConstructorStub.Entry(
+                            key = it.key,
+                            valueStub = it.initializerStub,
+                        )
+                    },
+                )
+            },
+        )
+
+        fun of(
+            buildScope: (KnotReference) -> UnorderedTupleConstructorStub,
         ): ExpressionStub<KnotConstructor> = LocalScopeStub(
-            definitions = definitions,
+            buildScope = buildScope,
         )
 
         fun of(
@@ -45,8 +65,10 @@ class LocalScopeStub private constructor(
         context: FormationContext,
     ) = lazyOf(
         KnotConstructor.of { knotReference ->
+            val localScope = buildScope(knotReference)
+
             val innerScope = LocalScope(
-                names = definitions.mapUniquely { it.key },
+                names = localScope.keys,
                 reference = knotReference,
             ).chainWith(
                 context.scope,
@@ -56,12 +78,8 @@ class LocalScopeStub private constructor(
                 scope = innerScope,
             )
 
-            UnorderedTupleConstructor(
-                valueByKey = definitions.associate {
-                    it.key to it.initializerStub.form(
-                        context = innerContext,
-                    )
-                },
+            localScope.formStrict(
+                context = innerContext,
             )
         },
     )

@@ -90,11 +90,11 @@ data class ModuleTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ModuleContext = parser.module()
     }
 
-    fun transmute() = AbstractionConstructorStub(
+    fun transmute() = AbstractionConstructorStub.of(
         argumentNames = setOf(
             Identifier(name = "builtin"),
         ),
-        image = LocalScopeStub.of(
+        body = LocalScopeStub.of(
             definitions = definitions.mapUniquely {
                 it.transmute()
             },

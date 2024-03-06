@@ -5,6 +5,8 @@ import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.shell.stubs.UnorderedTupleConstructorStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.asStub
 import com.github.cubuspl42.sigmaLang.utils.wrapWithLazy
 import com.squareup.kotlinpoet.CodeBlock
 
@@ -14,11 +16,22 @@ class UnorderedTupleConstructor(
     data class Entry(
         val key: Identifier,
         val value: Lazy<Expression>,
-    )
+    ) {
+        fun asStub() = UnorderedTupleConstructorStub.Entry(
+            key = key,
+            valueStub = value.value.asStub(),
+        )
+    }
 
     companion object {
         val Empty: UnorderedTupleConstructor = UnorderedTupleConstructor(
             valueByKey = emptyMap(),
+        )
+
+        fun of(
+            vararg entries: Pair<Identifier, Lazy<Expression>>,
+        ): UnorderedTupleConstructor = UnorderedTupleConstructor(
+            valueByKey = entries.toMap(),
         )
 
         fun fromEntries(
