@@ -12,6 +12,7 @@ FalseKeyword : '%false' ;
 ClassKeyword : '%class' ;
 ConstructorKeyword : '%constructor' ;
 IsAKeyword : '%is_a' ;
+ImportKeyword : '%import' ;
 
 LeftParen : '(' ;
 RightParen : ')' ;

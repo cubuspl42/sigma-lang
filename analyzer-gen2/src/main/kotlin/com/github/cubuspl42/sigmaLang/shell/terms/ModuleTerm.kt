@@ -15,9 +15,27 @@ import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.LocalScopeStub
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
+// module
+//    : imports=import_*
+//    | moduleDefinition+
+//    ;
+
 data class ModuleTerm(
+    val imports: List<ImportTerm>,
     val definitions: List<DefinitionTerm>,
 ) : Term {
+    data class ImportTerm(
+        val importedModuleName: IdentifierTerm,
+    ) : Term {
+        companion object {
+            fun build(
+                ctx: SigmaParser.Import_Context,
+            ): ImportTerm = ImportTerm(
+                importedModuleName = IdentifierTerm.build(ctx.importedModuleName),
+            )
+        }
+    }
+
     sealed class DefinitionTerm : Term {
         companion object {
             fun build(
@@ -88,6 +106,7 @@ data class ModuleTerm(
         override fun build(
             ctx: SigmaParser.ModuleContext,
         ): ModuleTerm = ModuleTerm(
+            imports = ctx.import_().map { ImportTerm.build(it) },
             definitions = ctx.moduleDefinition().map { DefinitionTerm.build(it) },
         )
 

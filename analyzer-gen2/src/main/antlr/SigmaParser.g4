@@ -5,7 +5,11 @@ options { tokenVocab = SigmaLexer; }
 // ## Module
 
 module
-    : moduleDefinition+
+    : imports=import_* moduleDefinition+
+    ;
+
+import_
+    : ImportKeyword importedModuleName=Identifier
     ;
 
 moduleDefinition
