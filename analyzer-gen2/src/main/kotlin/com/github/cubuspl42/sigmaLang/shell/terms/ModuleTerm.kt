@@ -2,16 +2,16 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
+import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.concepts.ModuleBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.ExpressionScope
-import com.github.cubuspl42.sigmaLang.shell.scope.FieldScope
-import com.github.cubuspl42.sigmaLang.shell.stubs.AbstractionConstructorStub
+import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.LocalScopeStub
-import com.github.cubuspl42.sigmaLang.shell.stubs.ReferenceStub
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 data class ModuleTerm(
@@ -95,28 +95,35 @@ data class ModuleTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ModuleContext = parser.module()
     }
 
-    fun build() = AbstractionConstructor.looped { argumentReference ->
-        LocalScopeStub.of(
-            definitions = definitions.mapUniquely {
-                it.transmute()
+    fun build(): ModuleBuilder.Constructor {
+        val moduleBuilder = ModuleBuilder(
+            memberDefinitionBuilders = definitions.mapUniquely { definitionTerm ->
+                val definitionStub = definitionTerm.transmute()
+
+                object : ModuleBuilder.MemberDefinitionBuilder(
+                    name = definitionTerm.name.transmute(),
+                ) {
+                    override fun buildInitializer(
+                        moduleReference: ModuleBuilder.Reference,
+                    ): ExpressionBuilder<*> {
+                        val rootScope = object : StaticScope {
+                            override fun resolveName(
+                                referredName: Identifier,
+                            ) = moduleReference.referDefinition(
+                                referredDefinitionName = referredName,
+                            )
+                        }
+
+                        return definitionStub.initializerStub.transform(
+                            context = FormationContext(
+                                scope = rootScope,
+                            ),
+                        )
+                    }
+                }
             },
-        ).transform(
-            context = FormationContext(
-                scope = ExpressionScope(
-                    name = builtinIdentifier,
-                    boundExpression = argumentReference.readField(
-                        builtinIdentifier,
-                    ),
-                ),
-            )
-        ).build(
-            buildContext = Expression.BuildContext(
-                builtin = argumentReference.readField(
-                    fieldName = builtinIdentifier,
-                )
-            )
-        ).readField(
-            fieldName = Identifier(name = "main"),
         )
+
+        return moduleBuilder.build()
     }
 }

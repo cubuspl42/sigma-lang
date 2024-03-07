@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.concepts.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Callable
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -56,7 +56,7 @@ class Call(
     }
 
     override fun buildCodegenRepresentation(
-        context: Module.CodegenRepresentationContext,
+        context: CodegenRepresentationContext,
     ): CodegenRepresentation = object : CodegenRepresentation() {
         override fun generateCode(): CodeBlock = generateCallCode(
             callee = context.getRepresentation(callee).generateCode(),

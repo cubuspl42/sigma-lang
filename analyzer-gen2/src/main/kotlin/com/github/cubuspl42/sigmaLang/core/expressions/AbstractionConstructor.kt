@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.concepts.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
@@ -54,17 +54,31 @@ class AbstractionConstructor(
     }
 
     companion object {
-        fun looped(
+        fun looped1(
             buildBody: (ArgumentReference) -> Expression,
-        ): AbstractionConstructor = LazyUtils.looped { abstractionConstructorLooped ->
+        ): AbstractionConstructor = looped {
+            Pair(
+                buildBody(it),
+                Unit,
+            )
+        }.first
+
+        fun <T> looped(
+            buildBody: (ArgumentReference) -> Pair<Expression, T>,
+        ): Pair<AbstractionConstructor, T> = LazyUtils.looped2 { abstractionConstructorLooped, _ ->
             val reference = ArgumentReference(
                 referredAbstractionLazy = abstractionConstructorLooped,
             )
 
-            val body = buildBody(reference)
+            val (body, t) = buildBody(reference)
 
-            AbstractionConstructor(
+            val abstractionConstructor = AbstractionConstructor(
                 body = body,
+            )
+
+            Pair(
+                abstractionConstructor,
+                t,
             )
         }
 
@@ -73,7 +87,7 @@ class AbstractionConstructor(
         ): ExpressionBuilder<AbstractionConstructor> = object : ExpressionBuilder<AbstractionConstructor>() {
               override fun build(
                   buildContext: Expression.BuildContext,
-              ): AbstractionConstructor = AbstractionConstructor.looped { argumentReference ->
+              ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
                   val imageBuilder = buildImageBuilder(argumentReference)
 
                   imageBuilder.buildRaw(
@@ -106,7 +120,7 @@ class AbstractionConstructor(
     }
 
     override fun buildCodegenRepresentation(
-        context: Module.CodegenRepresentationContext,
+        context: CodegenRepresentationContext,
     ): Expression.CodegenRepresentation = object : CodegenRepresentation() {
         override val argumentName: String = context.generateUniqueName(prefix = "arg")
 

@@ -1,9 +1,8 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.concepts.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.concepts.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.core.withValue
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
@@ -26,7 +25,7 @@ class KnotConstructor private constructor(
             val objectBuilder = TypeSpec.anonymousClassBuilder().addProperty(
                 PropertySpec.builder(
                     name = knotName,
-                    type = Module.CodegenRepresentationContext.valueTypeName,
+                    type = CodegenRepresentationContext.valueTypeName,
                 ).delegate(
                     result.generateCode().wrapWithLazy(),
                 ).build(),
@@ -103,7 +102,7 @@ class KnotConstructor private constructor(
     }
 
     override fun buildCodegenRepresentation(
-        context: Module.CodegenRepresentationContext,
+        context: CodegenRepresentationContext,
     ): Expression.CodegenRepresentation = object : CodegenRepresentation() {
         override val knotName: String = context.generateUniqueName(prefix = "knot")
 

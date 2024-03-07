@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.concepts.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.squareup.kotlinpoet.CodeBlock
 
@@ -11,7 +11,7 @@ class ArgumentReference(
     private val referredAbstraction by referredAbstractionLazy
 
     override fun buildCodegenRepresentation(
-        context: Module.CodegenRepresentationContext,
+        context: CodegenRepresentationContext,
     ): CodegenRepresentation = object : CodegenRepresentation() {
         override fun generateCode(): CodeBlock {
             val referredAbstractionRepresentation = context.getRepresentation(

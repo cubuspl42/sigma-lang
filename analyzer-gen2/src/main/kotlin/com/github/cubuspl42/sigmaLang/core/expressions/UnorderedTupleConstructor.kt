@@ -1,14 +1,13 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.Module
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.concepts.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.stubs.UnorderedTupleConstructorStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.asStub
-import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 import com.github.cubuspl42.sigmaLang.utils.wrapWithLazy
 import com.squareup.kotlinpoet.CodeBlock
 
@@ -97,7 +96,7 @@ class UnorderedTupleConstructor(
         get() = values.map { it.value }.toSet()
 
     override fun buildCodegenRepresentation(
-        context: Module.CodegenRepresentationContext,
+        context: CodegenRepresentationContext,
     ): CodegenRepresentation = object : CodegenRepresentation() {
         override fun generateCode(): CodeBlock = UnorderedTupleConstructor.generateCode(
             valueByKey = valueByKey.mapValues { (_, value) ->

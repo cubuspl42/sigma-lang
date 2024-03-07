@@ -179,7 +179,7 @@ abstract class ClassBuilder(
             buildContext: Expression.BuildContext,
         ) = Constructor.MethodDefinition(
             name = name,
-            outerImplementationConstructor = AbstractionConstructor.looped { methodArgumentReference ->
+            outerImplementationConstructor = AbstractionConstructor.looped1 { methodArgumentReference ->
                 val thisReference = methodArgumentReference.readField(
                     fieldName = thisIdentifier,
                 )
@@ -198,7 +198,7 @@ abstract class ClassBuilder(
 
         fun buildProxy() = Constructor.MethodDefinition(
             name = name,
-            outerImplementationConstructor = AbstractionConstructor.looped { argumentReference ->
+            outerImplementationConstructor = AbstractionConstructor.looped1 { argumentReference ->
                 val thisExpression = argumentReference.readField(
                     fieldName = thisIdentifier,
                 )
@@ -257,7 +257,7 @@ abstract class ClassBuilder(
             val instanceConstructorEntry = UnorderedTupleConstructor.Entry(
                 key = constructorName,
                 value = lazyOf(
-                    AbstractionConstructor.looped { argumentReference ->
+                    AbstractionConstructor.looped1 { argumentReference ->
                         unionWith.call(
                             passedArgument = UnorderedTupleConstructor.of(
                                 Identifier(name = "first") to lazyOf(argumentReference),

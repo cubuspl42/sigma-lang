@@ -17,7 +17,7 @@ public object Out {
   public val root: Value = object : Abstraction() {
     override fun compute(argument: Value): Value {
       val arg0 = argument
-      return (object {
+      return object {
         public val knot1: Value by lazy {
               UnorderedTuple(
                 valueByKey = mapOf(
@@ -258,9 +258,7 @@ public object Out {
                 )
               ) 
             }
-      }.knot1 as Callable).call(
-        argument = Identifier(name = "main"),
-      )
+      }.knot1
     }
   }
 

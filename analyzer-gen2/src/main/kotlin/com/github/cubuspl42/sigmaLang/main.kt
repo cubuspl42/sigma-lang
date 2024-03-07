@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang
 
+import com.github.cubuspl42.sigmaLang.shell.terms.ModuleTerm
 import java.nio.file.Path
 
 fun getResourceAsText(
@@ -9,9 +10,11 @@ fun getResourceAsText(
 fun main() {
     val source = getResourceAsText("main.sigma") ?: throw IllegalArgumentException("No source found")
 
-    val module = Module.fromSource(source = source)
+    val moduleTerm = ModuleTerm.parse(source = source)
 
-    val fileSpec = module.generateCode(
+    val moduleConstructor = moduleTerm.build()
+
+    val fileSpec = moduleConstructor.generateCode(
         packageName = "com.github.cubuspl42.sigmaLang",
         name = "Out",
     )
@@ -20,7 +23,7 @@ fun main() {
         directory = Path.of("analyzer-gen2/src/main/kotlin"),
     )
 
-    val result = module.main
+    val result = moduleConstructor.main
 
     println(result)
 
@@ -28,4 +31,3 @@ fun main() {
 
     println(codeGenResult)
 }
-
