@@ -86,28 +86,6 @@ abstract class ExpressionStub<out TExpression : ShadowExpression> {
                 function = function,
             )
         }
-
-        fun referBuiltin(
-            name: Identifier,
-        ): ExpressionBuilder<*> = object : ExpressionBuilder<Expression>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ): Expression = buildContext.referBuiltin(name = name)
-        }
-
-        val ifFunction: ExpressionBuilder<IfFunction> = object : ExpressionBuilder<IfFunction>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ) = IfFunction(
-                callee = buildContext.referBuiltin(
-                    name = Identifier(name = "if"),
-                ),
-            )
-        }
-
-        val panicFunction = ExpressionStub.referBuiltin(
-            name = Identifier(name = "panic"),
-        )
     }
 
     open fun transform(

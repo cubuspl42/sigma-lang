@@ -33,7 +33,8 @@ classConstructorDeclaration
 // ## Expression
 
 expression
-    : callee # calleeExpressionAlt
+    : instance=expression IsAKeyword class=expression # isAExpressionAlt
+    | callee # calleeExpressionAlt
     | when # whenExpressionAlt
     | abstractionConstructor # abstractionConstructorExpressionAlt
     | unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt

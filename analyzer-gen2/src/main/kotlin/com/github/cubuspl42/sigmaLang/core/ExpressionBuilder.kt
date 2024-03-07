@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core
 
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 abstract class ExpressionBuilder<out TExpression : ShadowExpression> {
@@ -63,6 +64,32 @@ abstract class ExpressionBuilder<out TExpression : ShadowExpression> {
                 buildContext = buildContext,
             )
         }
+
+        fun referBuiltin(
+            name: Identifier,
+        ): ExpressionBuilder<*> = object : ExpressionBuilder<Expression>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): Expression = buildContext.referBuiltin(name = name)
+        }
+
+        val ifFunction: ExpressionBuilder<ExpressionStub.IfFunction> = object : ExpressionBuilder<ExpressionStub.IfFunction>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ) = ExpressionStub.IfFunction(
+                callee = buildContext.referBuiltin(
+                    name = Identifier(name = "if"),
+                ),
+            )
+        }
+
+        val panicFunction = referBuiltin(
+            name = Identifier(name = "panic"),
+        )
+
+        val isAFunction = referBuiltin(
+            name = Identifier(name = "isA"),
+        )
     }
 
     abstract fun build(

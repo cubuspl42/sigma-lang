@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
@@ -32,10 +33,10 @@ data class WhenTerm(
     }
 
     override fun transmute(): ExpressionStub<*> {
-        val ifExpression = ExpressionStub.ifFunction
+        val ifExpression = ExpressionBuilder.ifFunction
 
         fun constructElseExpression(): ExpressionStub<*> =
-            elseEntry?.transmute() ?: ExpressionStub.panicFunction.map {
+            elseEntry?.transmute() ?: ExpressionBuilder.panicFunction.map {
                 it.rawExpression.call(
                     passedArgument = UnorderedTupleConstructor.Empty,
                 )

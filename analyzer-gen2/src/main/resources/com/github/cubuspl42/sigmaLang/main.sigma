@@ -58,20 +58,8 @@
 %val isA = builtin.isA
 
 %val main = {
-    isPussyCat = isA{
-        instance = pussy,
-        class = Cat,
-    },
-    isPussyDog = isA{
-        instance = pussy,
-        class = Dog,
-    },
-    isRexCat = isA{
-        instance = rex,
-        class = Cat,
-    },
-    isRexDog = isA{
-        instance = rex,
-        class = Dog,
-    },
+    isPussyCat = pussy %is_a Cat,
+    isPussyDog = pussy %is_a Dog,
+    isRexCat = rex %is_a Cat,
+    isRexDog = rex %is_a Dog,
 }

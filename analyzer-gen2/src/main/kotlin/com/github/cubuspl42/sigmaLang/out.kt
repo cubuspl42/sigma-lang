@@ -371,7 +371,9 @@ public object Out {
                     UnorderedTuple(
                       valueByKey = mapOf(
                         Identifier(name = "isPussyCat") to lazy {
-                          ((knot1 as Callable).call(
+                          (((arg0 as Callable).call(
+                            argument = Identifier(name = "__builtin__"),
+                          ) as Callable).call(
                             argument = Identifier(name = "isA"),
                           ) as Callable).call(
                             argument = UnorderedTuple(
@@ -391,7 +393,9 @@ public object Out {
                           ) 
                         },
                         Identifier(name = "isPussyDog") to lazy {
-                          ((knot1 as Callable).call(
+                          (((arg0 as Callable).call(
+                            argument = Identifier(name = "__builtin__"),
+                          ) as Callable).call(
                             argument = Identifier(name = "isA"),
                           ) as Callable).call(
                             argument = UnorderedTuple(
@@ -411,7 +415,9 @@ public object Out {
                           ) 
                         },
                         Identifier(name = "isRexCat") to lazy {
-                          ((knot1 as Callable).call(
+                          (((arg0 as Callable).call(
+                            argument = Identifier(name = "__builtin__"),
+                          ) as Callable).call(
                             argument = Identifier(name = "isA"),
                           ) as Callable).call(
                             argument = UnorderedTuple(
@@ -431,7 +437,9 @@ public object Out {
                           ) 
                         },
                         Identifier(name = "isRexDog") to lazy {
-                          ((knot1 as Callable).call(
+                          (((arg0 as Callable).call(
+                            argument = Identifier(name = "__builtin__"),
+                          ) as Callable).call(
                             argument = Identifier(name = "isA"),
                           ) as Callable).call(
                             argument = UnorderedTuple(

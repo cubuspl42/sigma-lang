@@ -9,6 +9,10 @@ sealed interface ExpressionTerm : Term {
         override fun build(
             ctx: SigmaParser.ExpressionContext,
         ): ExpressionTerm = object : SigmaParserBaseVisitor<ExpressionTerm>() {
+            override fun visitIsAExpressionAlt(
+                ctx: SigmaParser.IsAExpressionAltContext,
+            ): ExpressionTerm = IsATerm.build(ctx)
+
             override fun visitCalleeExpressionAlt(
                 ctx: SigmaParser.CalleeExpressionAltContext,
             ): ExpressionTerm = build(ctx.callee())
