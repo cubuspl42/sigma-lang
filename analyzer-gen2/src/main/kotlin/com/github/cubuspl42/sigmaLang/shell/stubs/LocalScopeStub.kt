@@ -5,11 +5,11 @@ import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
-import com.github.cubuspl42.sigmaLang.shell.scope.LocalScope
+import com.github.cubuspl42.sigmaLang.shell.scope.FieldScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 
 class LocalScopeStub private constructor(
-    private val   buildScope: (KnotReference) -> UnorderedTupleConstructorStub,
+    private val buildScope: (KnotReference) -> UnorderedTupleConstructorStub,
 ) : ExpressionStub<KnotConstructor>() {
     data class DefinitionStub(
         val key: Identifier,
@@ -65,11 +65,11 @@ class LocalScopeStub private constructor(
         context: FormationContext,
     ) = lazyOf(
         KnotConstructor.of { knotReference ->
-            val localScope = buildScope(knotReference)
+            val localScope: UnorderedTupleConstructorStub = buildScope(knotReference)
 
-            val innerScope = LocalScope(
+            val innerScope = FieldScope(
                 names = localScope.keys,
-                reference = knotReference,
+                tupleReference = knotReference,
             ).chainWith(
                 context.scope,
             )

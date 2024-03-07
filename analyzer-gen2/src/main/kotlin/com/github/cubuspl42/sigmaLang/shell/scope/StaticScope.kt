@@ -2,7 +2,6 @@ package com.github.cubuspl42.sigmaLang.shell.scope
 
 import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.core.expressions.Reference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 
 interface StaticScope {
@@ -16,9 +15,9 @@ interface StaticScope {
         fun argumentScope(
             argumentNames: Set<Identifier>,
             argumentReference: ArgumentReference,
-        ): StaticScope = LocalScope(
+        ): StaticScope = FieldScope(
             names = argumentNames,
-            reference = argumentReference,
+            tupleReference = argumentReference,
         )
     }
 
