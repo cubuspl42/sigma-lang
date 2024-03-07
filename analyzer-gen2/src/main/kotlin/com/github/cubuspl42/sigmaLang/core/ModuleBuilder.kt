@@ -7,6 +7,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
+import com.github.cubuspl42.sigmaLang.core.values.Callable
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
@@ -60,12 +61,16 @@ class ModuleBuilder(
                     scope = DynamicScope.Bottom,
                 ).value as ExpressedAbstraction
 
-                return rootAbstraction.call(
+                val rootResult = rootAbstraction.call(
                     argument = UnorderedTuple(
                         valueByKey = mapOf(
-                            Identifier(name = "builtin") to lazyOf(BuiltinScope),
+                            builtinIdentifier to lazyOf(BuiltinScope),
                         )
                     ),
+                )
+
+                return (rootResult as Callable).call(
+                    argument = Identifier(name = "main"),
                 )
             }
 
@@ -98,7 +103,7 @@ class ModuleBuilder(
                             CodeBlock.of("root"),
                             UnorderedTupleConstructor.generateCode(
                                 valueByKey = mapOf(
-                                    Identifier(name = "builtin") to CodeBlock.of(
+                                    builtinIdentifier to CodeBlock.of(
                                         "%M", builtinScopeMemberName
                                     ).wrapWithLazyOf(),
                                 ),
@@ -140,6 +145,10 @@ class ModuleBuilder(
         )
     }
 
+    companion object {
+        val builtinIdentifier = Identifier(name = "__builtin__")
+    }
+
     fun build(): Constructor {
         val (
             rootAbstractionConstructor,
@@ -147,7 +156,7 @@ class ModuleBuilder(
         ) = AbstractionConstructor.looped { argumentReference ->
             val buildContext = Expression.BuildContext(
                 builtin = argumentReference.readField(
-                    fieldName = ModuleTerm.builtinIdentifier,
+                    fieldName = builtinIdentifier,
                 ),
             )
 

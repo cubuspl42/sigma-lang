@@ -5,6 +5,12 @@ import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 abstract class ExpressionBuilder<out TExpression : ShadowExpression> {
     companion object {
+        val builtin = object : ExpressionBuilder<Expression>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): Expression = buildContext.builtin
+        }
+
         fun <TExpression : ShadowExpression> pure(
             expression: TExpression,
         ): ExpressionBuilder<TExpression> = object : ExpressionBuilder<TExpression>() {
@@ -83,11 +89,15 @@ fun <TExpression : ShadowExpression, RExpression : ShadowExpression> ExpressionB
 }
 
 fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression> ExpressionBuilder<TExpression1>.joinOf(
-    extract: (TExpression1) -> TExpression2,
+    extract: (TExpression1) -> ExpressionBuilder<TExpression2>,
 ): ExpressionBuilder<TExpression2> = object : ExpressionBuilder<TExpression2>() {
     override fun build(
         buildContext: Expression.BuildContext,
-    ): TExpression2 = this@joinOf.map(extract).build(
-        buildContext = buildContext,
-    )
+    ): TExpression2 {
+        val expression1 = this@joinOf.build(buildContext = buildContext)
+        val builder2 = extract(expression1)
+        val expression2 = builder2.build(buildContext = buildContext)
+
+        return expression2
+    }
 }

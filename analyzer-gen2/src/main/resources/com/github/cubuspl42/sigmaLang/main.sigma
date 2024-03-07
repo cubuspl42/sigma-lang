@@ -18,6 +18,19 @@
     )
 }
 
+%val tailWavingResult = {
+    wavingTail = %true,
+}
+
+%class Dog {
+    %constructor of ^{
+        name: String,
+        hasSharpTeeth: Bool,
+    }
+
+    %fun pet ^{} => tailWavingResult
+}
+
 %fun foo ^{arg1: Type1} => %false
 
 %val bar = foo{arg2 = value1}
@@ -39,4 +52,26 @@
     hasSharpClaws = %false,
 }
 
-%val main = Cat.pet{this = pussy}
+%val rex = Dog.of{
+}
+
+%val isA = builtin.isA
+
+%val main = {
+    isPussyCat = isA{
+        instance = pussy,
+        class = Cat,
+    },
+    isPussyDog = isA{
+        instance = pussy,
+        class = Dog,
+    },
+    isRexCat = isA{
+        instance = rex,
+        class = Cat,
+    },
+    isRexDog = isA{
+        instance = rex,
+        class = Dog,
+    },
+}

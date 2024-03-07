@@ -4,9 +4,13 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ModuleBuilder
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.joinOf
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.scope.ExpressionScope
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
+import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.LocalScopeStub
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
@@ -81,8 +85,6 @@ data class ModuleTerm(
     }
 
     companion object : Term.Builder<SigmaParser.ModuleContext, ModuleTerm>() {
-        val builtinIdentifier = Identifier(name = "builtin")
-
         override fun build(
             ctx: SigmaParser.ModuleContext,
         ): ModuleTerm = ModuleTerm(
@@ -93,6 +95,8 @@ data class ModuleTerm(
     }
 
     fun build(): ModuleBuilder.Constructor {
+        val memberNames = definitions.mapUniquely { it.name.transmute() }
+
         val moduleBuilder = ModuleBuilder(
             memberDefinitionBuilders = definitions.mapUniquely { definitionTerm ->
                 val definitionStub = definitionTerm.transmute()
@@ -102,16 +106,23 @@ data class ModuleTerm(
                 ) {
                     override fun buildInitializer(
                         moduleReference: ModuleBuilder.Reference,
-                    ): ExpressionBuilder<*> {
+                    ) = ExpressionBuilder.builtin.joinOf { builtin ->
                         val rootScope = object : StaticScope {
                             override fun resolveName(
                                 referredName: Identifier,
-                            ) = moduleReference.referDefinition(
-                                referredDefinitionName = referredName,
+                            ): Expression? = if (memberNames.contains(referredName)) {
+                                moduleReference.referDefinition(
+                                    referredDefinitionName = referredName,
+                                )
+                            } else null
+                        }.chainWith(
+                            ExpressionScope(
+                                name = Identifier(name = "builtin"),
+                                boundExpression = builtin,
                             )
-                        }
+                        )
 
-                        return definitionStub.initializerStub.transform(
+                        return@joinOf definitionStub.initializerStub.transform(
                             context = FormationContext(
                                 scope = rootScope,
                             ),

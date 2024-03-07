@@ -110,6 +110,7 @@ abstract class ClassBuilder(
 
     companion object {
         val classPrototypeIdentifier = Identifier(name = "__class_prototype__")
+        val classTagIdentifier = Identifier(name = "__class_tag__")
         val instancePrototypeIdentifier = Identifier(name = "__instance_prototype__")
         val thisIdentifier = Identifier(name = "this")
         val argsIdentifier = Identifier(name = "__args__")
@@ -192,7 +193,7 @@ abstract class ClassBuilder(
                     ),
                 ),
             )
-        },
+        }
     }
 
     private fun buildPrototypeConstructor(
@@ -204,7 +205,12 @@ abstract class ClassBuilder(
         }
 
         val prototypeConstructor = UnorderedTupleConstructor.fromEntries(
-            entries = originalMethodDefinitions.mapUniquely { it.toEntry() },
+            entries = originalMethodDefinitions.mapUniquely {
+                it.toEntry()
+            } + UnorderedTupleConstructor.Entry(
+                key = classTagIdentifier,
+                value = lazyOf(tag.toLiteral()),
+            ),
         )
 
         return prototypeConstructor

@@ -49,7 +49,7 @@ public object Out {
                                     override fun compute(argument: Value): Value {
                                       val arg3 = argument
                                       return (((arg0 as Callable).call(
-                                        argument = Identifier(name = "builtin"),
+                                        argument = Identifier(name = "__builtin__"),
                                       ) as Callable).call(
                                         argument = Identifier(name = "unionWith"),
                                       ) as Callable).call(
@@ -88,7 +88,7 @@ public object Out {
                                               override fun compute(argument: Value): Value {
                                                 val arg5 = argument
                                                 return (((arg0 as Callable).call(
-                                                  argument = Identifier(name = "builtin"),
+                                                  argument = Identifier(name = "__builtin__"),
                                                 ) as Callable).call(
                                                   argument = Identifier(name = "if"),
                                                 ) as Callable).call(
@@ -126,6 +126,9 @@ public object Out {
                                           }
                                         } 
                                       },
+                                      Identifier(name = "__class_tag__") to lazy {
+                                        Identifier(name = "Cat") 
+                                      },
                                     )
                                   ) 
                                 },
@@ -161,10 +164,117 @@ public object Out {
                           }
                     }.knot2 
                   },
+                  Identifier(name = "tailWavingResult") to lazy {
+                    UnorderedTuple(
+                      valueByKey = mapOf(
+                        Identifier(name = "wavingTail") to lazy {
+                          BooleanPrimitive(value = true) 
+                        },
+                      )
+                    ) 
+                  },
+                  Identifier(name = "Dog") to lazy {
+                    object {
+                      public val knot7: Value by lazy {
+                            UnorderedTuple(
+                              valueByKey = mapOf(
+                                Identifier(name = "of") to lazy {
+                                  object : Abstraction() {
+                                    override fun compute(argument: Value): Value {
+                                      val arg8 = argument
+                                      return (((arg0 as Callable).call(
+                                        argument = Identifier(name = "__builtin__"),
+                                      ) as Callable).call(
+                                        argument = Identifier(name = "unionWith"),
+                                      ) as Callable).call(
+                                        argument = UnorderedTuple(
+                                          valueByKey = mapOf(
+                                            Identifier(name = "first") to lazy {
+                                              arg8 
+                                            },
+                                            Identifier(name = "second") to lazy {
+                                              UnorderedTuple(
+                                                valueByKey = mapOf(
+                                                  Identifier(name = "__instance_prototype__") to
+                                                      lazy {
+                                                    (knot7 as Callable).call(
+                                                      argument = Identifier(name =
+                                                          "__class_prototype__"),
+                                                    ) 
+                                                  },
+                                                )
+                                              ) 
+                                            },
+                                          )
+                                        ),
+                                      )
+                                    }
+                                  } 
+                                },
+                                Identifier(name = "__class_prototype__") to lazy {
+                                  UnorderedTuple(
+                                    valueByKey = mapOf(
+                                      Identifier(name = "pet") to lazy {
+                                        object : Abstraction() {
+                                          override fun compute(argument: Value): Value {
+                                            val arg9 = argument
+                                            return (object : Abstraction() {
+                                              override fun compute(argument: Value): Value {
+                                                val arg10 = argument
+                                                return (knot1 as Callable).call(
+                                                  argument = Identifier(name = "tailWavingResult"),
+                                                )
+                                              }
+                                            } as Callable).call(
+                                              argument = (arg9 as Callable).call(
+                                                argument = Identifier(name = "__args__"),
+                                              ),
+                                            )
+                                          }
+                                        } 
+                                      },
+                                      Identifier(name = "__class_tag__") to lazy {
+                                        Identifier(name = "Dog") 
+                                      },
+                                    )
+                                  ) 
+                                },
+                                Identifier(name = "pet") to lazy {
+                                  object : Abstraction() {
+                                    override fun compute(argument: Value): Value {
+                                      val arg11 = argument
+                                      return ((((arg11 as Callable).call(
+                                        argument = Identifier(name = "this"),
+                                      ) as Callable).call(
+                                        argument = Identifier(name = "__instance_prototype__"),
+                                      ) as Callable).call(
+                                        argument = Identifier(name = "pet"),
+                                      ) as Callable).call(
+                                        argument = UnorderedTuple(
+                                          valueByKey = mapOf(
+                                            Identifier(name = "this") to lazy {
+                                              (arg11 as Callable).call(
+                                                argument = Identifier(name = "this"),
+                                              ) 
+                                            },
+                                            Identifier(name = "__args__") to lazy {
+                                              arg11 
+                                            },
+                                          )
+                                        ),
+                                      )
+                                    }
+                                  } 
+                                },
+                              )
+                            ) 
+                          }
+                    }.knot7 
+                  },
                   Identifier(name = "foo") to lazy {
                     object : Abstraction() {
                       override fun compute(argument: Value): Value {
-                        val arg7 = argument
+                        val arg12 = argument
                         return BooleanPrimitive(value = false)
                       }
                     } 
@@ -238,21 +348,109 @@ public object Out {
                       ),
                     ) 
                   },
-                  Identifier(name = "main") to lazy {
+                  Identifier(name = "rex") to lazy {
                     (((knot1 as Callable).call(
-                      argument = Identifier(name = "Cat"),
+                      argument = Identifier(name = "Dog"),
                     ) as Callable).call(
-                      argument = Identifier(name = "pet"),
+                      argument = Identifier(name = "of"),
                     ) as Callable).call(
                       argument = UnorderedTuple(
                         valueByKey = mapOf(
-                          Identifier(name = "this") to lazy {
-                            (knot1 as Callable).call(
-                              argument = Identifier(name = "pussy"),
-                            ) 
-                          },
                         )
                       ),
+                    ) 
+                  },
+                  Identifier(name = "isA") to lazy {
+                    ((arg0 as Callable).call(
+                      argument = Identifier(name = "__builtin__"),
+                    ) as Callable).call(
+                      argument = Identifier(name = "isA"),
+                    ) 
+                  },
+                  Identifier(name = "main") to lazy {
+                    UnorderedTuple(
+                      valueByKey = mapOf(
+                        Identifier(name = "isPussyCat") to lazy {
+                          ((knot1 as Callable).call(
+                            argument = Identifier(name = "isA"),
+                          ) as Callable).call(
+                            argument = UnorderedTuple(
+                              valueByKey = mapOf(
+                                Identifier(name = "instance") to lazy {
+                                  (knot1 as Callable).call(
+                                    argument = Identifier(name = "pussy"),
+                                  ) 
+                                },
+                                Identifier(name = "class") to lazy {
+                                  (knot1 as Callable).call(
+                                    argument = Identifier(name = "Cat"),
+                                  ) 
+                                },
+                              )
+                            ),
+                          ) 
+                        },
+                        Identifier(name = "isPussyDog") to lazy {
+                          ((knot1 as Callable).call(
+                            argument = Identifier(name = "isA"),
+                          ) as Callable).call(
+                            argument = UnorderedTuple(
+                              valueByKey = mapOf(
+                                Identifier(name = "instance") to lazy {
+                                  (knot1 as Callable).call(
+                                    argument = Identifier(name = "pussy"),
+                                  ) 
+                                },
+                                Identifier(name = "class") to lazy {
+                                  (knot1 as Callable).call(
+                                    argument = Identifier(name = "Dog"),
+                                  ) 
+                                },
+                              )
+                            ),
+                          ) 
+                        },
+                        Identifier(name = "isRexCat") to lazy {
+                          ((knot1 as Callable).call(
+                            argument = Identifier(name = "isA"),
+                          ) as Callable).call(
+                            argument = UnorderedTuple(
+                              valueByKey = mapOf(
+                                Identifier(name = "instance") to lazy {
+                                  (knot1 as Callable).call(
+                                    argument = Identifier(name = "rex"),
+                                  ) 
+                                },
+                                Identifier(name = "class") to lazy {
+                                  (knot1 as Callable).call(
+                                    argument = Identifier(name = "Cat"),
+                                  ) 
+                                },
+                              )
+                            ),
+                          ) 
+                        },
+                        Identifier(name = "isRexDog") to lazy {
+                          ((knot1 as Callable).call(
+                            argument = Identifier(name = "isA"),
+                          ) as Callable).call(
+                            argument = UnorderedTuple(
+                              valueByKey = mapOf(
+                                Identifier(name = "instance") to lazy {
+                                  (knot1 as Callable).call(
+                                    argument = Identifier(name = "rex"),
+                                  ) 
+                                },
+                                Identifier(name = "class") to lazy {
+                                  (knot1 as Callable).call(
+                                    argument = Identifier(name = "Dog"),
+                                  ) 
+                                },
+                              )
+                            ),
+                          ) 
+                        },
+                      )
                     ) 
                   },
                 )
@@ -265,7 +463,7 @@ public object Out {
   public val main: Value = (root as Callable).call(
         argument = UnorderedTuple(
           valueByKey = mapOf(
-            Identifier(name = "builtin") to lazyOf(
+            Identifier(name = "__builtin__") to lazyOf(
               BuiltinScope,
             ),
           )
