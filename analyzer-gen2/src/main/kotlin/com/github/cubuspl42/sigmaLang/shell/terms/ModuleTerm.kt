@@ -2,13 +2,10 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
-import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.concepts.ModuleBuilder
-import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
-import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.ModuleBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
-import com.github.cubuspl42.sigmaLang.shell.scope.ExpressionScope
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.LocalScopeStub

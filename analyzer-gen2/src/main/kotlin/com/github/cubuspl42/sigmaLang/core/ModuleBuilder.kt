@@ -1,8 +1,7 @@
-package com.github.cubuspl42.sigmaLang.core.concepts
+package com.github.cubuspl42.sigmaLang.core
 
 import com.github.cubuspl42.sigmaLang.BuiltinScope
-import com.github.cubuspl42.sigmaLang.core.DynamicScope
-import com.github.cubuspl42.sigmaLang.core.concepts.visitors.CodegenRepresentationContext
+import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression

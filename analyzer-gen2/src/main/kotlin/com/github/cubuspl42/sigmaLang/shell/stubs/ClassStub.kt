@@ -1,8 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
-import com.github.cubuspl42.sigmaLang.core.concepts.ClassBuilder
-import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.concepts.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.ClassBuilder
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier

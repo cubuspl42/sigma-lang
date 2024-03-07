@@ -1,7 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.concepts.map
+import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.utils.uncons
 

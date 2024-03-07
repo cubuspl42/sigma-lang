@@ -1,4 +1,4 @@
-package com.github.cubuspl42.sigmaLang.core.concepts.visitors
+package com.github.cubuspl42.sigmaLang.core.visitors
 
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 

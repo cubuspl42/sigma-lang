@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
-import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference

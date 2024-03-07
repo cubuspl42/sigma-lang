@@ -1,10 +1,10 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
-import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.concepts.ShadowExpression
-import com.github.cubuspl42.sigmaLang.core.concepts.map
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
+import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 

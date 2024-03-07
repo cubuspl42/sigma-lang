@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
-import com.github.cubuspl42.sigmaLang.core.concepts.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
