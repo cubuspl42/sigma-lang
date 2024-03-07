@@ -5,6 +5,7 @@ import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.squareup.kotlinpoet.CodeBlock
 
 private fun <K, V : Any> MutableMap<K, V>.update(expression: K, function: (oldValue: V?) -> V) {
@@ -86,11 +87,23 @@ class CompilationCodegenContext {
 
 sealed class Expression : ShadowExpression() {
     data class BuildContext(
-        val builtin: Expression,
+        private val builtin: Expression,
+        private val root: Expression,
     ) {
+        val builtinScope = object : StaticScope {
+            override fun resolveName(referredName: Identifier): Expression =
+                builtin.readField(fieldName = referredName)
+        }
+
         fun referBuiltin(
             name: Identifier,
         ): Expression = builtin.readField(
+            fieldName = name,
+        )
+
+        fun referModule(
+            name: Identifier,
+        ): Expression = root.readField(
             fieldName = name,
         )
     }

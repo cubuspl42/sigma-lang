@@ -1,21 +1,11 @@
+%import cat
+
 %val bleedingResult = {
     bleedingHands = %true,
 }
 
 %val calmResult = {
     purringCat = %true,
-}
-
-%class Cat {
-    %constructor of ^{
-        name: String,
-        hasSharpClaws: Bool,
-    }
-
-    %fun pet ^{} => %when (
-        %case this.hasSharpClaws => bleedingResult
-        %else => calmResult
-    )
 }
 
 %val tailWavingResult = {
@@ -48,7 +38,7 @@
     x3 = {},
 }
 
-%val pussy = Cat.of{
+%val pussy = cat.Cat.of{
     hasSharpClaws = %false,
 }
 

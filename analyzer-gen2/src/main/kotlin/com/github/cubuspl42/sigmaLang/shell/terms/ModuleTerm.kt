@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ModuleBuilder
+import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.joinOf
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -62,7 +63,7 @@ data class ModuleTerm(
 
         abstract val name: IdentifierTerm
 
-        abstract fun transmuteInitializer(): ExpressionStub<*>
+        abstract fun transmuteInitializer(): ExpressionStub<ShadowExpression>
     }
 
     data class ValueDefinitionTerm(
@@ -125,7 +126,7 @@ data class ModuleTerm(
                 ) {
                     override fun buildInitializer(
                         moduleReference: ModuleBuilder.Reference,
-                    ) = ExpressionBuilder.builtin.joinOf { builtin ->
+                    ) = ExpressionBuilder.builtinScope.joinOf { builtinScope ->
                         val rootScope = object : StaticScope {
                             override fun resolveName(
                                 referredName: Identifier,
@@ -134,12 +135,7 @@ data class ModuleTerm(
                                     referredDefinitionName = referredName,
                                 )
                             } else null
-                        }.chainWith(
-                            ExpressionScope(
-                                name = Identifier(name = "builtin"),
-                                boundExpression = builtin,
-                            )
-                        )
+                        }.chainWith(builtinScope)
 
                         return@joinOf definitionStub.initializerStub.transform(
                             context = FormationContext(

@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
@@ -20,7 +21,7 @@ data class CallTerm(
         )
     }
 
-    override fun transmute(): ExpressionStub<*> = CallStub(
+    override fun transmute(): ExpressionStub<ShadowExpression> = CallStub(
         calleeStub = callee.transmute(),
         passedArgumentStub = passedArgument.transmute(),
     )

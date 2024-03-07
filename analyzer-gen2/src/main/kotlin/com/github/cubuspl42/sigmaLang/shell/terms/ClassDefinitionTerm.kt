@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -61,7 +62,7 @@ data class ClassDefinitionTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ClassDefinitionContext = parser.classDefinition()
     }
 
-    override fun transmuteInitializer(): ExpressionStub<*> = ClassStub.of(
+    override fun transmuteInitializer(): ExpressionStub<ShadowExpression> = ClassStub.of(
         tag = name.transmute(),
         constructorName = constructor!!.name.transmute(),
         methodDefinitionStubs = methodDefinitions.mapUniquely {

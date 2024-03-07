@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -20,7 +21,7 @@ data class IsATerm(
         )
     }
 
-    override fun transmute(): ExpressionStub<*> = ExpressionStub.map2Unpacked(
+    override fun transmute(): ExpressionStub<ShadowExpression> = ExpressionStub.map2Unpacked(
         instance.transmute(),
         class_.transmute(),
     ) { instanceExpression, classExpression ->

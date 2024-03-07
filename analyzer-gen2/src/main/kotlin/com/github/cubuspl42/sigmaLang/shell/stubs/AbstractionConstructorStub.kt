@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -10,12 +11,12 @@ import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 
 class AbstractionConstructorStub(
     private val argumentNames: Set<Identifier>,
-    private val buildBody: (ArgumentReference) -> ExpressionStub<*>,
+    private val buildBody: (ArgumentReference) -> ExpressionStub<ShadowExpression>,
 ) : ExpressionStub<AbstractionConstructor>() {
     companion object {
         fun of(
             argumentNames: Set<Identifier>,
-            buildBody: (ArgumentReference) -> ExpressionStub<*>,
+            buildBody: (ArgumentReference) -> ExpressionStub<ShadowExpression>,
         ): AbstractionConstructorStub = AbstractionConstructorStub(
             argumentNames = argumentNames,
             buildBody = buildBody,
@@ -23,7 +24,7 @@ class AbstractionConstructorStub(
 
         fun of(
             argumentNames: Set<Identifier>,
-            body: ExpressionStub<*>,
+            body: ExpressionStub<ShadowExpression>,
         ): AbstractionConstructorStub = AbstractionConstructorStub(
             argumentNames = argumentNames,
             buildBody = { body },
@@ -56,7 +57,7 @@ class AbstractionConstructorStub(
         buildBody = buildBody,
     )
 
-    fun toMethod(): ExpressionStub<*> = withArgumentName(
+    fun toMethod(): ExpressionStub<ShadowExpression> = withArgumentName(
         name = Identifier(name = "this"),
     )
 }

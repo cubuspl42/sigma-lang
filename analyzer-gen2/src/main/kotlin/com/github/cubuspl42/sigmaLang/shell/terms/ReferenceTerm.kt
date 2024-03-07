@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
@@ -25,7 +26,7 @@ data class ReferenceTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ReferenceContext = parser.reference()
     }
 
-    override fun transmute(): ExpressionStub<*> = ReferenceStub(
+    override fun transmute(): ExpressionStub<ShadowExpression> = ReferenceStub(
         referredName = referredName.transmute(),
     )
 }

@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 
-abstract class ExpressionStub<out TExpression : ShadowExpression> {
+abstract class ExpressionStub<out T> {
     class IfFunction(
         private val callee: Expression,
     ) : ShadowExpression() {
@@ -31,7 +31,7 @@ abstract class ExpressionStub<out TExpression : ShadowExpression> {
     }
 
     companion object {
-        fun <TExpression : ShadowExpression> pure(
+        fun <TExpression> pure(
             builder: ExpressionBuilder<TExpression>,
         ): ExpressionStub<TExpression> = object : ExpressionStub<TExpression>() {
             fun form(
@@ -90,7 +90,7 @@ abstract class ExpressionStub<out TExpression : ShadowExpression> {
 
     open fun transform(
         context: FormationContext,
-    ): ExpressionBuilder<TExpression> {
+    ): ExpressionBuilder<T> {
         throw UnsupportedOperationException()
     }
 }

@@ -3,6 +3,8 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.buildRaw
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -83,7 +85,7 @@ class AbstractionConstructor(
         }
 
         fun builder(
-            buildImageBuilder: (ArgumentReference) -> ExpressionBuilder<*>,
+            buildImageBuilder: (ArgumentReference) -> ExpressionBuilder<ShadowExpression>,
         ): ExpressionBuilder<AbstractionConstructor> = object : ExpressionBuilder<AbstractionConstructor>() {
               override fun build(
                   buildContext: Expression.BuildContext,

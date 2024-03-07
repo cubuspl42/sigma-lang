@@ -1,0 +1,11 @@
+%class Cat {
+    %constructor of ^{
+        name: String,
+        hasSharpClaws: Bool,
+    }
+
+    %fun pet ^{} => %when (
+        %case this.hasSharpClaws => bleedingResult
+        %else => calmResult
+    )
+}

@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
@@ -32,10 +33,10 @@ data class WhenTerm(
         override fun extract(parser: SigmaParser): SigmaParser.WhenContext = parser.`when`()
     }
 
-    override fun transmute(): ExpressionStub<*> {
+    override fun transmute(): ExpressionStub<ShadowExpression> {
         val ifExpression = ExpressionBuilder.ifFunction
 
-        fun constructElseExpression(): ExpressionStub<*> =
+        fun constructElseExpression(): ExpressionStub<ShadowExpression> =
             elseEntry?.transmute() ?: ExpressionBuilder.panicFunction.map {
                 it.rawExpression.call(
                     passedArgument = UnorderedTupleConstructor.Empty,
@@ -44,8 +45,8 @@ data class WhenTerm(
 
         fun constructConditionalEntryExpression(
             conditionalEntry: ConditionalEntry,
-            elseCaseStub: ExpressionStub<*>,
-        ): ExpressionStub<*> = ExpressionStub.map3Unpacked(
+            elseCaseStub: ExpressionStub<ShadowExpression>,
+        ): ExpressionStub<ShadowExpression> = ExpressionStub.map3Unpacked(
             conditionalEntry.condition.transmute(),
             conditionalEntry.result.transmute(),
             elseCaseStub,
@@ -61,7 +62,7 @@ data class WhenTerm(
 
         fun constructEntryExpression(
             remainingEntries: List<ConditionalEntry>,
-        ): ExpressionStub<*> {
+        ): ExpressionStub<ShadowExpression> {
             val (head, tail) = remainingEntries.uncons() ?: return constructElseExpression()
 
             return constructConditionalEntryExpression(

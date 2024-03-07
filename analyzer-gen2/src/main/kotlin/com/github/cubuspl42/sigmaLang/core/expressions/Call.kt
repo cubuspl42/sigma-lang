@@ -3,6 +3,8 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.buildRaw
 import com.github.cubuspl42.sigmaLang.core.values.Callable
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -14,7 +16,7 @@ class Call(
 ) : ComplexExpression() {
     object FieldRead {
         fun builder(
-            subjectBuilder: ExpressionBuilder<*>,
+            subjectBuilder: ExpressionBuilder<ShadowExpression>,
             fieldName: Identifier,
         ) = Call.builder(
             calleeBuilder = subjectBuilder,
@@ -38,8 +40,8 @@ class Call(
         )
 
         fun builder(
-            calleeBuilder: ExpressionBuilder<*>,
-            passedArgumentBuilder: ExpressionBuilder<*>,
+            calleeBuilder: ExpressionBuilder<ShadowExpression>,
+            passedArgumentBuilder: ExpressionBuilder<ShadowExpression>,
         ): ExpressionBuilder<Call> = object : ExpressionBuilder<Call>() {
             override fun build(buildContext: BuildContext): Call = Call(
                 calleeLazy = lazyOf(calleeBuilder.buildRaw(buildContext)),

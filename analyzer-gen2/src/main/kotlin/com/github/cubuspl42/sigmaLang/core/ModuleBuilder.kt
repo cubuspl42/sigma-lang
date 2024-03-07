@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core
 
 import com.github.cubuspl42.sigmaLang.BuiltinScope
-import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
@@ -12,7 +11,7 @@ import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.terms.ModuleTerm
+import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 import com.github.cubuspl42.sigmaLang.utils.wrapWithLazyOf
 import com.squareup.kotlinpoet.AnnotationSpec
@@ -130,7 +129,7 @@ class ModuleBuilder(
     ) {
         abstract fun buildInitializer(
             moduleReference: Reference,
-        ): ExpressionBuilder<*>
+        ): ExpressionBuilder<ShadowExpression>
 
         fun build(
             moduleReference: Reference,
@@ -147,6 +146,7 @@ class ModuleBuilder(
 
     companion object {
         val builtinIdentifier = Identifier(name = "__builtin__")
+        val rootIdentifier = Identifier(name = "__root__")
     }
 
     fun build(): Constructor {
@@ -157,6 +157,9 @@ class ModuleBuilder(
             val buildContext = Expression.BuildContext(
                 builtin = argumentReference.readField(
                     fieldName = builtinIdentifier,
+                ),
+                root = argumentReference.readField(
+                    fieldName = rootIdentifier,
                 ),
             )
 

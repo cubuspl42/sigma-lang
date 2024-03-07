@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.buildRaw
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -21,7 +22,7 @@ class UnorderedTupleConstructor(
     ) {
         data class Builder(
             val key: Identifier,
-            val valueBuilder: ExpressionBuilder<*>,
+            val valueBuilder: ExpressionBuilder<ShadowExpression>,
         ) {
             fun build(buildContext: BuildContext) = Entry(
                 key = key,

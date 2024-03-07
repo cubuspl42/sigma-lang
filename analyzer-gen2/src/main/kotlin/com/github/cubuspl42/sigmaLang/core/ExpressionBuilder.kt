@@ -2,14 +2,15 @@ package com.github.cubuspl42.sigmaLang.core
 
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
-abstract class ExpressionBuilder<out TExpression : ShadowExpression> {
+abstract class ExpressionBuilder<out T> {
     companion object {
-        val builtin = object : ExpressionBuilder<Expression>() {
+        val builtinScope = object : ExpressionBuilder<StaticScope>() {
             override fun build(
                 buildContext: Expression.BuildContext,
-            ): Expression = buildContext.builtin
+            ) = buildContext.builtinScope
         }
 
         fun <TExpression : ShadowExpression> pure(
@@ -67,21 +68,22 @@ abstract class ExpressionBuilder<out TExpression : ShadowExpression> {
 
         fun referBuiltin(
             name: Identifier,
-        ): ExpressionBuilder<*> = object : ExpressionBuilder<Expression>() {
+        ): ExpressionBuilder<ShadowExpression> = object : ExpressionBuilder<Expression>() {
             override fun build(
                 buildContext: Expression.BuildContext,
             ): Expression = buildContext.referBuiltin(name = name)
         }
 
-        val ifFunction: ExpressionBuilder<ExpressionStub.IfFunction> = object : ExpressionBuilder<ExpressionStub.IfFunction>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ) = ExpressionStub.IfFunction(
-                callee = buildContext.referBuiltin(
-                    name = Identifier(name = "if"),
-                ),
-            )
-        }
+        val ifFunction: ExpressionBuilder<ExpressionStub.IfFunction> =
+            object : ExpressionBuilder<ExpressionStub.IfFunction>() {
+                override fun build(
+                    buildContext: Expression.BuildContext,
+                ) = ExpressionStub.IfFunction(
+                    callee = buildContext.referBuiltin(
+                        name = Identifier(name = "if"),
+                    ),
+                )
+            }
 
         val panicFunction = referBuiltin(
             name = Identifier(name = "panic"),
@@ -94,16 +96,16 @@ abstract class ExpressionBuilder<out TExpression : ShadowExpression> {
 
     abstract fun build(
         buildContext: Expression.BuildContext,
-    ): TExpression
+    ): T
 
-    fun buildRaw(
-        buildContext: Expression.BuildContext,
-    ): Expression = build(
-        buildContext = buildContext,
-    ).rawExpression
-
-    fun asStub(): ExpressionStub<TExpression> = ExpressionStub.pure(this)
+    fun asStub(): ExpressionStub<T> = ExpressionStub.pure(this)
 }
+
+fun <TExpression : ShadowExpression> ExpressionBuilder<TExpression>.buildRaw(
+    buildContext: Expression.BuildContext,
+): Expression = build(
+    buildContext = buildContext,
+).rawExpression
 
 fun <TExpression : ShadowExpression, RExpression : ShadowExpression> ExpressionBuilder<TExpression>.map(
     function: (TExpression) -> RExpression,
@@ -115,7 +117,7 @@ fun <TExpression : ShadowExpression, RExpression : ShadowExpression> ExpressionB
     )
 }
 
-fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression> ExpressionBuilder<TExpression1>.joinOf(
+fun <TExpression1, TExpression2> ExpressionBuilder<TExpression1>.joinOf(
     extract: (TExpression1) -> ExpressionBuilder<TExpression2>,
 ): ExpressionBuilder<TExpression2> = object : ExpressionBuilder<TExpression2>() {
     override fun build(
