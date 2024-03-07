@@ -61,8 +61,8 @@ data class ClassDefinitionTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ClassDefinitionContext = parser.classDefinition()
     }
 
-
     override fun transmuteInitializer(): ExpressionStub<*> = ClassStub.of(
+        tag = name.transmute(),
         constructorName = constructor!!.name.transmute(),
         methodDefinitionStubs = methodDefinitions.mapUniquely {
             it.transmute()

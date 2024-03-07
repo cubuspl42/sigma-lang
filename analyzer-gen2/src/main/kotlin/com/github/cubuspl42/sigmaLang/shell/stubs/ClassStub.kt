@@ -40,12 +40,14 @@ object ClassStub {
     }
 
     fun of(
+        tag: Identifier,
         constructorName: Identifier,
         methodDefinitionStubs: Set<MethodDefinitionStub>,
     ): ExpressionStub<ClassBuilder.Constructor> = object : ExpressionStub<ClassBuilder.Constructor>() {
         override fun transform(
             context: FormationContext,
         ) = object : ClassBuilder(
+            tag = tag,
             constructorName = constructorName,
         ) {
             override fun buildMethods(

@@ -9,6 +9,7 @@ import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 abstract class ClassBuilder(
+    private val tag: Identifier,
     private val constructorName: Identifier,
 ) : ExpressionBuilder<ClassBuilder.Constructor>() {
     data class Constructor(
@@ -121,56 +122,34 @@ abstract class ClassBuilder(
     override fun build(
         buildContext: Expression.BuildContext,
     ): Constructor {
-        val unionWith = buildContext.referBuiltin(
-            name = Identifier(name = "unionWith"),
-        )
-
         val (rootKnotConstructor, partialConstructor) = KnotConstructor.looped { rawClassReference ->
             val classReference = Reference.wrap(rawClassReference)
 
+            val instanceConstructor = buildInstanceConstructor(
+                buildContext = buildContext,
+                classReference = classReference,
+            )
             val methodDefinitionBuilders = buildMethods(classReference = classReference)
+
+            val prototypeConstructor = buildPrototypeConstructor(
+                methodDefinitionBuilders = methodDefinitionBuilders,
+                buildContext = buildContext,
+            )
 
             val proxyMethodDefinitions = methodDefinitionBuilders.mapUniquely {
                 it.buildProxy()
             }
 
-            val instanceConstructorEntry = UnorderedTupleConstructor.Entry(
-                key = constructorName,
-                value = lazyOf(
-                    AbstractionConstructor.looped1 { argumentReference ->
-                        unionWith.call(
-                            passedArgument = UnorderedTupleConstructor.of(
-                                Identifier(name = "first") to lazyOf(argumentReference),
-                                Identifier(name = "second") to lazyOf(
-                                    UnorderedTupleConstructor(
-                                        valueByKey = mapOf(
-                                            instancePrototypeIdentifier to lazyOf(classReference.prototypeReference),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        )
-                    },
-                ),
-            )
-
-            val originalMethodDefinitions = methodDefinitionBuilders.mapUniquely { methodDefinitionStub ->
-                methodDefinitionStub.buildOriginal(buildContext = buildContext)
-            }
-
-            val prototypeConstructor = UnorderedTupleConstructor.fromEntries(
-                entries = originalMethodDefinitions.mapUniquely { it.toEntry() },
-            )
-
-            val prototypeConstructorEntry = UnorderedTupleConstructor.Entry(
-                key = classPrototypeIdentifier,
-                value = lazyOf(prototypeConstructor),
-            )
-
             val rootTupleConstructor = UnorderedTupleConstructor.fromEntries(
                 entries = setOfNotNull(
-                    instanceConstructorEntry,
-                    prototypeConstructorEntry,
+                    UnorderedTupleConstructor.Entry(
+                        key = constructorName,
+                        value = lazyOf(instanceConstructor),
+                    ),
+                    UnorderedTupleConstructor.Entry(
+                        key = classPrototypeIdentifier,
+                        value = lazyOf(prototypeConstructor),
+                    ),
                 ) + proxyMethodDefinitions.mapUniquely {
                     it.toEntry()
                 },
@@ -190,5 +169,44 @@ abstract class ClassBuilder(
             prototypeConstructor = partialConstructor.prototypeConstructor,
             proxyMethodDefinitions = partialConstructor.proxyMethodDefinitions,
         )
+    }
+
+    private fun buildInstanceConstructor(
+        buildContext: Expression.BuildContext,
+        classReference: Reference,
+    ): AbstractionConstructor {
+        val unionWith = buildContext.referBuiltin(
+            name = Identifier(name = "unionWith"),
+        )
+
+        return AbstractionConstructor.looped1 { argumentReference ->
+            unionWith.call(
+                passedArgument = UnorderedTupleConstructor.of(
+                    Identifier(name = "first") to lazyOf(argumentReference),
+                    Identifier(name = "second") to lazyOf(
+                        UnorderedTupleConstructor(
+                            valueByKey = mapOf(
+                                instancePrototypeIdentifier to lazyOf(classReference.prototypeReference),
+                            ),
+                        ),
+                    ),
+                ),
+            )
+        },
+    }
+
+    private fun buildPrototypeConstructor(
+        methodDefinitionBuilders: Set<ClassBuilder.MethodDefinitionBuilder>,
+        buildContext: Expression.BuildContext,
+    ): UnorderedTupleConstructor {
+        val originalMethodDefinitions = methodDefinitionBuilders.mapUniquely { methodDefinitionStub ->
+            methodDefinitionStub.buildOriginal(buildContext = buildContext)
+        }
+
+        val prototypeConstructor = UnorderedTupleConstructor.fromEntries(
+            entries = originalMethodDefinitions.mapUniquely { it.toEntry() },
+        )
+
+        return prototypeConstructor
     }
 }
