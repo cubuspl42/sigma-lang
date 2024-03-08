@@ -47,4 +47,4 @@
 
 %val isA = builtin.isA
 
-%val main = List.of[%true] ..l List.of[%false, %true]
+%val main = List.of[%true] ..l List.of[%false, "abc"]

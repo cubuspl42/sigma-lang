@@ -9,10 +9,6 @@ import com.github.cubuspl42.sigmaLang.shell.ModuleLoader
 import com.github.cubuspl42.sigmaLang.shell.ProjectLoader
 import java.nio.file.Path
 
-fun getResourceAsText(
-    path: String,
-): String? = object {}.javaClass.getResource(path)?.readText()
-
 fun main() {
     val projectConstructor = ProjectLoader(
         moduleLoader = ModuleLoader(

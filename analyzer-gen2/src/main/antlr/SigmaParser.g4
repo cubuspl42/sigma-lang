@@ -43,6 +43,7 @@ expression
     | when # whenExpressionAlt
     | abstractionConstructor # abstractionConstructorExpressionAlt
     | tupleConstructor # tupleConstructorExpressionAlt
+    | stringLiteral # stringLiteralExpressionAlt
     | booleanLiteral # booleanLiteralExpressionAlt
     | letIn # letInExpressionAlt
     ;
@@ -106,6 +107,10 @@ orderedTupleConstructor
     ;
 
 // #### Literals
+
+stringLiteral
+    : StringLiteral # stringLiteralAlt
+    ;
 
 booleanLiteral
     : trueLiteral

@@ -11,6 +11,7 @@ import com.github.cubuspl42.sigmaLang.core.values.BuiltinModule
 import com.github.cubuspl42.sigmaLang.core.values.Callable
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.ListValue
+import com.github.cubuspl42.sigmaLang.core.values.StringPrimitive
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import kotlin.Suppress
@@ -289,7 +290,7 @@ public object Out {
                                         argument = ListValue(
                                           values = listOf(
                                             BooleanPrimitive(value = false),
-                                            BooleanPrimitive(value = true),
+                                            StringPrimitive(value = "abc"),
                                           ),
                                         ),
                                       ) 

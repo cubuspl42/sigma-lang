@@ -1,7 +1,4 @@
-%import IndentUtils
-%import Lists
-
-%val List =  {
+%val KtNode =  {
     of = ^{
         name: Any,
         children: Any,

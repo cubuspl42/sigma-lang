@@ -14,9 +14,6 @@ sealed interface ExpressionTerm : Term {
                 ctx: SigmaParser.IsAExpressionAltContext,
             ): ExpressionTerm = IsATerm.build(ctx)
 
-
-          //  | left=expression ConcatStringsOperator|ConcatListsOperator right=expression # concatExpressionAlt
-
             override fun visitConcatExpressionAlt(
                 ctx: SigmaParser.ConcatExpressionAltContext,
             ): ExpressionTerm = ConcatTerm.build(ctx)
@@ -32,6 +29,10 @@ sealed interface ExpressionTerm : Term {
             override fun visitTupleConstructorExpressionAlt(
                 ctx: SigmaParser.TupleConstructorExpressionAltContext,
             ): ExpressionTerm = TupleConstructorTerm.build(ctx.tupleConstructor())
+
+            override fun visitStringLiteralExpressionAlt(
+                ctx: SigmaParser.StringLiteralExpressionAltContext,
+            ): ExpressionTerm = StringLiteralTerm.build(ctx.stringLiteral())
 
             override fun visitAbstractionConstructorExpressionAlt(
                 ctx: SigmaParser.AbstractionConstructorExpressionAltContext,

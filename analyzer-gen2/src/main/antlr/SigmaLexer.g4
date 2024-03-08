@@ -29,6 +29,10 @@ Dot : '.' ;
 ConcatStringsOperator : '..s' ;
 ConcatListsOperator : '..l' ;
 
+StringLiteral : '"' StringLiteralContent '"' ;
+
+fragment StringLiteralContent : (~["\r\n])* ;
+
 FatArrow : '=>' ;
 
 Identifier : [a-zA-Z] [a-zA-Z0-9]* ;
