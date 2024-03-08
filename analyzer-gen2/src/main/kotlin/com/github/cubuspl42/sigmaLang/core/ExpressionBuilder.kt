@@ -2,15 +2,14 @@ package com.github.cubuspl42.sigmaLang.core
 
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 abstract class ExpressionBuilder<out T> {
     companion object {
-        val builtinScope = object : ExpressionBuilder<StaticScope>() {
+        val projectReference = object : ExpressionBuilder<ProjectBuilder.Reference>() {
             override fun build(
                 buildContext: Expression.BuildContext,
-            ) = buildContext.builtinScope
+            ) = buildContext.projectReference
         }
 
         fun <TExpression : ShadowExpression> pure(

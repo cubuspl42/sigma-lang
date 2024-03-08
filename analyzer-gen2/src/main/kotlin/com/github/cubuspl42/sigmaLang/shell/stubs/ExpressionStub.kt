@@ -34,10 +34,6 @@ abstract class ExpressionStub<out T> {
         fun <TExpression> pure(
             builder: ExpressionBuilder<TExpression>,
         ): ExpressionStub<TExpression> = object : ExpressionStub<TExpression>() {
-            fun form(
-                context: FormationContext,
-            ): Nothing = TODO()
-
             override fun transform(
                 context: FormationContext,
             ): ExpressionBuilder<TExpression> = builder
@@ -88,11 +84,9 @@ abstract class ExpressionStub<out T> {
         }
     }
 
-    open fun transform(
+    abstract fun transform(
         context: FormationContext,
-    ): ExpressionBuilder<T> {
-        throw UnsupportedOperationException()
-    }
+    ): ExpressionBuilder<T>
 }
 
 fun <TExpression : ShadowExpression, RExpression : ShadowExpression> ExpressionStub<TExpression>.map(

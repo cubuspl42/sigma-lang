@@ -1,26 +1,20 @@
-package com.github.cubuspl42.sigmaLang
+package com.github.cubuspl42.sigmaLang.core.values
 
 import com.github.cubuspl42.sigmaLang.core.ClassBuilder
-import com.github.cubuspl42.sigmaLang.core.values.Abstraction
-import com.github.cubuspl42.sigmaLang.core.values.BooleanPrimitive
-import com.github.cubuspl42.sigmaLang.core.values.Callable
-import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
-import com.github.cubuspl42.sigmaLang.core.values.Value
 
-val BuiltinScope = UnorderedTuple(
-    valueByKey = mapOf(
+object BuiltinModule : Indexable() {
+    override val valueByKey = mapOf(
         Identifier("if") to lazyOf(
             object : Abstraction() {
                 override fun compute(argument: Value): Value {
                     val args = argument as UnorderedTuple
 
-                    val conditionValue = args.get(identifier = Identifier(name = "condition")) as BooleanPrimitive
+                    val conditionValue = args.get(key = Identifier(name = "condition")) as BooleanPrimitive
 
                     return if (conditionValue.isTrue()) {
-                        args.get(identifier = Identifier(name = "then"))
+                        args.get(key = Identifier(name = "then"))
                     } else {
-                        args.get(identifier = Identifier(name = "else"))
+                        args.get(key = Identifier(name = "else"))
                     }
                 }
             },
@@ -30,8 +24,8 @@ val BuiltinScope = UnorderedTuple(
                 override fun compute(argument: Value): Value {
                     val args = argument as UnorderedTuple
 
-                    val firstTuple = args.get(identifier = Identifier(name = "first")) as UnorderedTuple
-                    val secondTuple = args.get(identifier = Identifier(name = "second")) as UnorderedTuple
+                    val firstTuple = args.get(key = Identifier(name = "first")) as UnorderedTuple
+                    val secondTuple = args.get(key = Identifier(name = "second")) as UnorderedTuple
 
                     return firstTuple.unionWith(secondTuple)
                 }
@@ -42,8 +36,8 @@ val BuiltinScope = UnorderedTuple(
                 override fun compute(argument: Value): Value {
                     val args = argument as UnorderedTuple
 
-                    val instanceValue = args.get(identifier = Identifier(name = "instance"))
-                    val classValue = args.get(identifier = Identifier(name = "class"))
+                    val instanceValue = args.get(key = Identifier(name = "instance"))
+                    val classValue = args.get(key = Identifier(name = "class"))
 
                     val instancePrototypeValue = (instanceValue as Callable).call(
                         argument = ClassBuilder.instancePrototypeIdentifier,
@@ -67,5 +61,5 @@ val BuiltinScope = UnorderedTuple(
                 }
             },
         ),
-    ),
-)
+    )
+}

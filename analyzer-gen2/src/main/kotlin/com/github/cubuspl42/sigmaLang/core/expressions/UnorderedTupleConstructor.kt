@@ -53,6 +53,12 @@ class UnorderedTupleConstructor(
             valueByKey = entries.associate { it.key to it.value },
         )
 
+        fun fromEntries(
+            vararg entries: Entry,
+        ): UnorderedTupleConstructor = fromEntries(
+            entries = entries.asIterable(),
+        )
+
         fun generateCode(
             valueByKey: Map<Identifier, CodeBlock>,
         ): CodeBlock {

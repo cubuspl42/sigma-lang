@@ -3,23 +3,18 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.ModuleBuilder
+import com.github.cubuspl42.sigmaLang.core.ModulePath
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.joinOf
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
-import com.github.cubuspl42.sigmaLang.shell.scope.ExpressionScope
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.LocalScopeStub
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
-
-// module
-//    : imports=import_*
-//    | moduleDefinition+
-//    ;
 
 data class ModuleTerm(
     val imports: List<ImportTerm>,
@@ -28,6 +23,11 @@ data class ModuleTerm(
     data class ImportTerm(
         val importedModuleName: IdentifierTerm,
     ) : Term {
+        val importedModulePath: ModulePath
+            get() = ModulePath(
+                name = importedModuleName.transmute(),
+            )
+
         companion object {
             fun build(
                 ctx: SigmaParser.Import_Context,
@@ -114,39 +114,49 @@ data class ModuleTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ModuleContext = parser.module()
     }
 
-    fun build(): ModuleBuilder.Constructor {
-        val memberNames = definitions.mapUniquely { it.name.transmute() }
+    fun transform(): ExpressionBuilder<KnotConstructor> {
+        return ExpressionBuilder.projectReference.joinOf { projectReference ->
+            val rootScope = StaticScope.fixed(
+                expressionByName = imports.associate {
+                    it.importedModuleName.transmute() to projectReference.resolveModule(
+                        modulePath = it.importedModulePath,
+                    )
+                },
+            ).chainWith(
+                object : StaticScope {
+                    override fun resolveName(
+                        referredName: Identifier,
+                    ): Expression = projectReference.resolveBuiltin(
+                        builtinName = referredName,
+                    )
+                },
+            )
 
-        val moduleBuilder = ModuleBuilder(
-            memberDefinitionBuilders = definitions.mapUniquely { definitionTerm ->
-                val definitionStub = definitionTerm.transmute()
-
-                object : ModuleBuilder.MemberDefinitionBuilder(
-                    name = definitionTerm.name.transmute(),
-                ) {
-                    override fun buildInitializer(
-                        moduleReference: ModuleBuilder.Reference,
-                    ) = ExpressionBuilder.builtinScope.joinOf { builtinScope ->
-                        val rootScope = object : StaticScope {
-                            override fun resolveName(
-                                referredName: Identifier,
-                            ): Expression? = if (memberNames.contains(referredName)) {
-                                moduleReference.referDefinition(
-                                    referredDefinitionName = referredName,
-                                )
-                            } else null
-                        }.chainWith(builtinScope)
-
-                        return@joinOf definitionStub.initializerStub.transform(
-                            context = FormationContext(
-                                scope = rootScope,
-                            ),
-                        )
-                    }
-                }
-            },
-        )
-
-        return moduleBuilder.build()
+            LocalScopeStub.of(
+                definitions = definitions.mapUniquely {
+                    LocalScopeStub.DefinitionStub(
+                        key = it.name.transmute(),
+                        initializerStub = it.transmuteInitializer(),
+                    )
+                },
+            ).transform(
+                context = FormationContext(
+                    scope = rootScope,
+                ),
+            )
+        }
     }
+
+//    // TODO: Nuke?
+//    fun build(
+//        projectReference: ProjectBuilder.Reference,
+//    ): Expression {
+//        transform(
+//            projectReference = projectReference,
+//        ).build(
+//            buildContext = Expression.BuildContext(
+//                projectReference = projectReference,
+//            )
+//        )
+//    }
 }

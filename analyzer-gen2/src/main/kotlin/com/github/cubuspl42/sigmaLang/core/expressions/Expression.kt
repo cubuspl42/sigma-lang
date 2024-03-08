@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.ProjectBuilder
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -87,24 +88,12 @@ class CompilationCodegenContext {
 
 sealed class Expression : ShadowExpression() {
     data class BuildContext(
-        private val builtin: Expression,
-        private val root: Expression,
+        val projectReference: ProjectBuilder.Reference,
     ) {
-        val builtinScope = object : StaticScope {
-            override fun resolveName(referredName: Identifier): Expression =
-                builtin.readField(fieldName = referredName)
-        }
-
         fun referBuiltin(
             name: Identifier,
-        ): Expression = builtin.readField(
-            fieldName = name,
-        )
-
-        fun referModule(
-            name: Identifier,
-        ): Expression = root.readField(
-            fieldName = name,
+        ): Expression = projectReference.resolveBuiltin(
+            builtinName = name,
         )
     }
 

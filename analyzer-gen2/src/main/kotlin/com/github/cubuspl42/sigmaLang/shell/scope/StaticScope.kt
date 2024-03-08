@@ -12,6 +12,14 @@ interface StaticScope {
     }
 
     companion object {
+        fun fixed(
+            expressionByName: Map<Identifier, Expression>,
+        ): StaticScope = object : StaticScope {
+            override fun resolveName(
+                referredName: Identifier,
+            ): Expression? = expressionByName[referredName]
+        }
+
         fun argumentScope(
             argumentNames: Set<Identifier>,
             argumentReference: ArgumentReference,
