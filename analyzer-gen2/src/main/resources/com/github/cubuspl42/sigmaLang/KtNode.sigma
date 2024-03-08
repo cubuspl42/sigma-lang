@@ -1,0 +1,22 @@
+%import IndentUtils
+%import Lists
+
+%val List =  {
+    of = ^{
+        name: Any,
+        children: Any,
+    }
+
+    %fun dump ^{} => IndentUtils.indentAll{
+        lines = List.of[
+            "object " ..s  this.name ..s " {",
+        ] ..l IndentUtils.indentAll{
+            lines = Lists.concatAllOf{
+                list = children,
+                transform = ^[child: Any] => KtNode.dump{this = child},
+            },
+        } ..l List.of[
+            "}",
+        ]
+    }
+}

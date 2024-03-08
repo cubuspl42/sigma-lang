@@ -41,14 +41,14 @@ expression
     | callee # calleeExpressionAlt
     | when # whenExpressionAlt
     | abstractionConstructor # abstractionConstructorExpressionAlt
-    | unorderedTupleConstructor # unorderedTupleConstructorExpressionAlt
+    | tupleConstructor # tupleConstructorExpressionAlt
     | booleanLiteral # booleanLiteralExpressionAlt
     | letIn # letInExpressionAlt
     ;
 
 // For left-recursion
 callee
-    : callee argument=unorderedTupleConstructor # callCallableExpressionAlt
+    : callee argument=tupleConstructor # callCallableExpressionAlt
     | callee Dot readFieldName=Identifier # fieldReadCallableExpressionAlt
     | reference # referenceCallableExpressionAlt
     ;
@@ -83,6 +83,11 @@ abstractionConstructor
     : argumentType=unorderedTupleTypeConstructor FatArrow image=expression
     ;
 
+tupleConstructor
+    : unorderedTupleConstructor
+    | orderedTupleConstructor
+    ;
+
 // #### Unordered tuple constructor
 
 unorderedTupleConstructor
@@ -91,6 +96,12 @@ unorderedTupleConstructor
 
 unorderedTupleConstructorEntry
     : key=Identifier Equals value=expression
+    ;
+
+// #### Ordered tuple constructor
+
+orderedTupleConstructor
+    : LeftBracket (expression (Comma expression)*)? Comma? RightBracket
     ;
 
 // #### Literals

@@ -13,14 +13,14 @@ import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class CallTerm(
     val callee: ExpressionTerm,
-    val passedArgument: UnorderedTupleConstructorTerm,
+    val passedArgument: TupleConstructorTerm,
 ) : ExpressionTerm {
     companion object {
         fun build(
             ctx: SigmaParser.CallCallableExpressionAltContext,
         ): CallTerm = CallTerm(
             callee = ExpressionTerm.build(ctx.callee()),
-            passedArgument = UnorderedTupleConstructorTerm.build(ctx.unorderedTupleConstructor()),
+            passedArgument = TupleConstructorTerm.build(ctx.tupleConstructor()),
         )
     }
 

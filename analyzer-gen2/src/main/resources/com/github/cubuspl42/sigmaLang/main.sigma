@@ -47,9 +47,4 @@
 
 %val isA = builtin.isA
 
-%val main = {
-    isPussyCat = pussy %is_a cat.Cat,
-    isPussyDog = pussy %is_a Dog,
-    isRexCat = rex %is_a cat.Cat,
-    isRexDog = rex %is_a Dog,
-}
+%val main = List.of[%true]

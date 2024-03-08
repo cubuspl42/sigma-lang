@@ -10,6 +10,7 @@ import com.github.cubuspl42.sigmaLang.core.values.BooleanPrimitive
 import com.github.cubuspl42.sigmaLang.core.values.BuiltinModule
 import com.github.cubuspl42.sigmaLang.core.values.Callable
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.core.values.ListValue
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import kotlin.Suppress
@@ -30,7 +31,7 @@ public object Out {
                                   Identifier(name = "bleedingHands") to lazy {
                                     BooleanPrimitive(value = true) 
                                   },
-                                )
+                                ),
                               ) 
                             },
                             Identifier(name = "calmResult") to lazy {
@@ -39,7 +40,7 @@ public object Out {
                                   Identifier(name = "purringCat") to lazy {
                                     BooleanPrimitive(value = true) 
                                   },
-                                )
+                                ),
                               ) 
                             },
                             Identifier(name = "tailWavingResult") to lazy {
@@ -48,7 +49,7 @@ public object Out {
                                   Identifier(name = "wavingTail") to lazy {
                                     BooleanPrimitive(value = true) 
                                   },
-                                )
+                                ),
                               ) 
                             },
                             Identifier(name = "Dog") to lazy {
@@ -80,10 +81,10 @@ public object Out {
                                                                     "__class_prototype__"),
                                                               ) 
                                                             },
-                                                          )
+                                                          ),
                                                         ) 
                                                       },
-                                                    )
+                                                    ),
                                                   ),
                                                 )
                                               }
@@ -116,7 +117,7 @@ public object Out {
                                                 Identifier(name = "__class_tag__") to lazy {
                                                   Identifier(name = "Dog") 
                                                 },
-                                              )
+                                              ),
                                             ) 
                                           },
                                           Identifier(name = "pet") to lazy {
@@ -141,13 +142,13 @@ public object Out {
                                                       Identifier(name = "__args__") to lazy {
                                                         arg6 
                                                       },
-                                                    )
+                                                    ),
                                                   ),
                                                 )
                                               }
                                             } 
                                           },
-                                        )
+                                        ),
                                       ) 
                                     }
                               }.knot2 
@@ -171,7 +172,7 @@ public object Out {
                                         argument = Identifier(name = "value1"),
                                       ) 
                                     },
-                                  )
+                                  ),
                                 ),
                               ) 
                             },
@@ -181,7 +182,7 @@ public object Out {
                                   Identifier(name = "x4") to lazy {
                                     UnorderedTuple(
                                       valueByKey = mapOf(
-                                      )
+                                      ),
                                     ) 
                                   },
                                   Identifier(name = "x5") to lazy {
@@ -190,10 +191,10 @@ public object Out {
                                         Identifier(name = "b") to lazy {
                                           BooleanPrimitive(value = true) 
                                         },
-                                      )
+                                      ),
                                     ) 
                                   },
-                                )
+                                ),
                               ) 
                             },
                             Identifier(name = "value2") to lazy {
@@ -208,10 +209,10 @@ public object Out {
                                   Identifier(name = "x3") to lazy {
                                     UnorderedTuple(
                                       valueByKey = mapOf(
-                                      )
+                                      ),
                                     ) 
                                   },
-                                )
+                                ),
                               ) 
                             },
                             Identifier(name = "pussy") to lazy {
@@ -227,7 +228,7 @@ public object Out {
                                     Identifier(name = "hasSharpClaws") to lazy {
                                       BooleanPrimitive(value = false) 
                                     },
-                                  )
+                                  ),
                                 ),
                               ) 
                             },
@@ -239,7 +240,7 @@ public object Out {
                               ) as Callable).call(
                                 argument = UnorderedTuple(
                                   valueByKey = mapOf(
-                                  )
+                                  ),
                                 ),
                               ) 
                             },
@@ -253,104 +254,21 @@ public object Out {
                               ) 
                             },
                             Identifier(name = "main") to lazy {
-                              UnorderedTuple(
-                                valueByKey = mapOf(
-                                  Identifier(name = "isPussyCat") to lazy {
-                                    (((knot0 as Callable).call(
-                                      argument = Identifier(name = "__builtin__"),
-                                    ) as Callable).call(
-                                      argument = Identifier(name = "isA"),
-                                    ) as Callable).call(
-                                      argument = UnorderedTuple(
-                                        valueByKey = mapOf(
-                                          Identifier(name = "instance") to lazy {
-                                            (knot1 as Callable).call(
-                                              argument = Identifier(name = "pussy"),
-                                            ) 
-                                          },
-                                          Identifier(name = "class") to lazy {
-                                            ((knot0 as Callable).call(
-                                              argument = Identifier(name = "cat"),
-                                            ) as Callable).call(
-                                              argument = Identifier(name = "Cat"),
-                                            ) 
-                                          },
-                                        )
-                                      ),
-                                    ) 
-                                  },
-                                  Identifier(name = "isPussyDog") to lazy {
-                                    (((knot0 as Callable).call(
-                                      argument = Identifier(name = "__builtin__"),
-                                    ) as Callable).call(
-                                      argument = Identifier(name = "isA"),
-                                    ) as Callable).call(
-                                      argument = UnorderedTuple(
-                                        valueByKey = mapOf(
-                                          Identifier(name = "instance") to lazy {
-                                            (knot1 as Callable).call(
-                                              argument = Identifier(name = "pussy"),
-                                            ) 
-                                          },
-                                          Identifier(name = "class") to lazy {
-                                            (knot1 as Callable).call(
-                                              argument = Identifier(name = "Dog"),
-                                            ) 
-                                          },
-                                        )
-                                      ),
-                                    ) 
-                                  },
-                                  Identifier(name = "isRexCat") to lazy {
-                                    (((knot0 as Callable).call(
-                                      argument = Identifier(name = "__builtin__"),
-                                    ) as Callable).call(
-                                      argument = Identifier(name = "isA"),
-                                    ) as Callable).call(
-                                      argument = UnorderedTuple(
-                                        valueByKey = mapOf(
-                                          Identifier(name = "instance") to lazy {
-                                            (knot1 as Callable).call(
-                                              argument = Identifier(name = "rex"),
-                                            ) 
-                                          },
-                                          Identifier(name = "class") to lazy {
-                                            ((knot0 as Callable).call(
-                                              argument = Identifier(name = "cat"),
-                                            ) as Callable).call(
-                                              argument = Identifier(name = "Cat"),
-                                            ) 
-                                          },
-                                        )
-                                      ),
-                                    ) 
-                                  },
-                                  Identifier(name = "isRexDog") to lazy {
-                                    (((knot0 as Callable).call(
-                                      argument = Identifier(name = "__builtin__"),
-                                    ) as Callable).call(
-                                      argument = Identifier(name = "isA"),
-                                    ) as Callable).call(
-                                      argument = UnorderedTuple(
-                                        valueByKey = mapOf(
-                                          Identifier(name = "instance") to lazy {
-                                            (knot1 as Callable).call(
-                                              argument = Identifier(name = "rex"),
-                                            ) 
-                                          },
-                                          Identifier(name = "class") to lazy {
-                                            (knot1 as Callable).call(
-                                              argument = Identifier(name = "Dog"),
-                                            ) 
-                                          },
-                                        )
-                                      ),
-                                    ) 
-                                  },
-                                )
+                              ((((knot0 as Callable).call(
+                                argument = Identifier(name = "__builtin__"),
+                              ) as Callable).call(
+                                argument = Identifier(name = "List"),
+                              ) as Callable).call(
+                                argument = Identifier(name = "of"),
+                              ) as Callable).call(
+                                argument = ListValue(
+                                  values = listOf(
+                                    BooleanPrimitive(value = true),
+                                  ),
+                                ),
                               ) 
                             },
-                          )
+                          ),
                         ) 
                       }
                 }.knot1 
@@ -389,10 +307,10 @@ public object Out {
                                                                     "__class_prototype__"),
                                                               ) 
                                                             },
-                                                          )
+                                                          ),
                                                         ) 
                                                       },
-                                                    )
+                                                    ),
                                                   ),
                                                 )
                                               }
@@ -445,7 +363,7 @@ public object Out {
                                                                         "calmResult"),
                                                                   ) 
                                                                 },
-                                                              )
+                                                              ),
                                                             ),
                                                           )
                                                         }
@@ -460,7 +378,7 @@ public object Out {
                                                 Identifier(name = "__class_tag__") to lazy {
                                                   Identifier(name = "Cat") 
                                                 },
-                                              )
+                                              ),
                                             ) 
                                           },
                                           Identifier(name = "pet") to lazy {
@@ -485,18 +403,18 @@ public object Out {
                                                       Identifier(name = "__args__") to lazy {
                                                         arg13 
                                                       },
-                                                    )
+                                                    ),
                                                   ),
                                                 )
                                               }
                                             } 
                                           },
-                                        )
+                                        ),
                                       ) 
                                     }
                               }.knot9 
                             },
-                          )
+                          ),
                         ) 
                       }
                 }.knot8 
@@ -504,7 +422,7 @@ public object Out {
               Identifier(name = "__builtin__") to lazy {
                 BuiltinModule 
               },
-            )
+            ),
           ) 
         }
   }.knot0

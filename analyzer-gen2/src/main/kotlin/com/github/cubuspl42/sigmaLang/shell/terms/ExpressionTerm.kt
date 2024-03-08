@@ -22,9 +22,9 @@ sealed interface ExpressionTerm : Term {
                 ctx: SigmaParser.ReferenceCallableExpressionAltContext,
             ): ExpressionTerm = ReferenceTerm.build(ctx.reference())
 
-            override fun visitUnorderedTupleConstructorExpressionAlt(
-                ctx: SigmaParser.UnorderedTupleConstructorExpressionAltContext,
-            ): ExpressionTerm = UnorderedTupleConstructorTerm.build(ctx.unorderedTupleConstructor())
+            override fun visitTupleConstructorExpressionAlt(
+                ctx: SigmaParser.TupleConstructorExpressionAltContext,
+            ): ExpressionTerm = TupleConstructorTerm.build(ctx.tupleConstructor())
 
             override fun visitAbstractionConstructorExpressionAlt(
                 ctx: SigmaParser.AbstractionConstructorExpressionAltContext,

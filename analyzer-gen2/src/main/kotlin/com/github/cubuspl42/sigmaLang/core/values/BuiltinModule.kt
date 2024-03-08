@@ -4,6 +4,21 @@ import com.github.cubuspl42.sigmaLang.core.ClassBuilder
 
 object BuiltinModule : Indexable() {
     override val valueByKey = mapOf(
+        Identifier("List") to lazyOf(
+            UnorderedTuple(
+                valueByKey = mapOf(
+                    Identifier.of("of") to lazyOf(
+                        object : Abstraction() {
+                            override fun compute(argument: Value): Value {
+                                val args = argument as ListValue
+
+                                return args
+                            }
+                        },
+                    ),
+                ),
+            ),
+        ),
         Identifier("if") to lazyOf(
             object : Abstraction() {
                 override fun compute(argument: Value): Value {

@@ -18,6 +18,8 @@ LeftParen : '(' ;
 RightParen : ')' ;
 LeftBrace : '{' ;
 RightBrace : '}' ;
+LeftBracket : '[' ;
+RightBracket : ']' ;
 
 Dash : '^' ;
 Colon : ':' ;

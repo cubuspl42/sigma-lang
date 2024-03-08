@@ -116,6 +116,7 @@ class AbstractionConstructor(
             is Wrapper -> emptySet()
             is Call -> collectWrappedExpressions(expression.callee) + collectWrappedExpressions(expression.passedArgument)
             is UnorderedTupleConstructor -> unionAll(expression.values.map { collectWrappedExpressions(it.value.rawExpression) })
+            is OrderedTupleConstructor -> TODO()
         }
     } else {
         emptySet()

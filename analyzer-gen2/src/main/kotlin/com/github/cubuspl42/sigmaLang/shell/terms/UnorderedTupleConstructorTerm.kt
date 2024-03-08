@@ -1,18 +1,14 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.UnorderedTupleConstructorStub
 
 data class UnorderedTupleConstructorTerm(
     val entries: List<Entry>,
-) : ExpressionTerm {
+) : TupleConstructorTerm() {
     data class Entry(
         val key: IdentifierTerm,
         val value: ExpressionTerm,

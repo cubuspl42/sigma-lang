@@ -78,7 +78,7 @@ class UnorderedTupleConstructor(
                 """
                     %T(
                     ⇥valueByKey = mapOf(
-                    %L)
+                    %L),
                     ⇤)
                 """.trimIndent(),
                 UnorderedTuple::class,

@@ -12,7 +12,7 @@ interface Wrappable {
 fun String.wrap(): Value = StringPrimitive(value = this)
 
 fun List<Wrappable>.wrap(): Value = ListValue(
-    list = map { it.wrap() },
+    values = map { it.wrap() },
 )
 
 fun Wrappable?.wrapOrNil(): Value = this?.wrap() ?: Nil
