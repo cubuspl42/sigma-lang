@@ -26,6 +26,8 @@ Colon : ':' ;
 Comma : ',' ;
 Equals : '=' ;
 Dot : '.' ;
+ConcatStringsOperator : '..s' ;
+ConcatListsOperator : '..l' ;
 
 FatArrow : '=>' ;
 

@@ -259,11 +259,41 @@ public object Out {
                               ) as Callable).call(
                                 argument = Identifier(name = "List"),
                               ) as Callable).call(
-                                argument = Identifier(name = "of"),
+                                argument = Identifier(name = "concat"),
                               ) as Callable).call(
-                                argument = ListValue(
-                                  values = listOf(
-                                    BooleanPrimitive(value = true),
+                                argument = UnorderedTuple(
+                                  valueByKey = mapOf(
+                                    Identifier(name = "left") to lazy {
+                                      ((((knot0 as Callable).call(
+                                        argument = Identifier(name = "__builtin__"),
+                                      ) as Callable).call(
+                                        argument = Identifier(name = "List"),
+                                      ) as Callable).call(
+                                        argument = Identifier(name = "of"),
+                                      ) as Callable).call(
+                                        argument = ListValue(
+                                          values = listOf(
+                                            BooleanPrimitive(value = true),
+                                          ),
+                                        ),
+                                      ) 
+                                    },
+                                    Identifier(name = "right") to lazy {
+                                      ((((knot0 as Callable).call(
+                                        argument = Identifier(name = "__builtin__"),
+                                      ) as Callable).call(
+                                        argument = Identifier(name = "List"),
+                                      ) as Callable).call(
+                                        argument = Identifier(name = "of"),
+                                      ) as Callable).call(
+                                        argument = ListValue(
+                                          values = listOf(
+                                            BooleanPrimitive(value = false),
+                                            BooleanPrimitive(value = true),
+                                          ),
+                                        ),
+                                      ) 
+                                    },
                                   ),
                                 ),
                               ) 

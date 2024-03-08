@@ -6,11 +6,12 @@ import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 abstract class ExpressionBuilder<out T> {
     companion object {
-        val projectReference = object : ExpressionBuilder<ProjectBuilder.Reference>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ) = buildContext.projectReference
-        }
+        val projectReference: ExpressionBuilder<ProjectBuilder.Reference> =
+            object : ExpressionBuilder<ProjectBuilder.Reference>() {
+                override fun build(
+                    buildContext: Expression.BuildContext,
+                ) = buildContext.projectReference
+            }
 
         fun <TExpression : ShadowExpression> pure(
             expression: TExpression,
@@ -91,6 +92,10 @@ abstract class ExpressionBuilder<out T> {
         val isAFunction = referBuiltin(
             name = Identifier(name = "isA"),
         )
+
+        val listClass = referBuiltin(
+            name = Identifier(name = "List"),
+        )
     }
 
     abstract fun build(
@@ -106,7 +111,7 @@ fun <TExpression : ShadowExpression> ExpressionBuilder<TExpression>.buildRaw(
     buildContext = buildContext,
 ).rawExpression
 
-fun <TExpression : ShadowExpression, RExpression : ShadowExpression> ExpressionBuilder<TExpression>.map(
+fun <TExpression, RExpression> ExpressionBuilder<TExpression>.map(
     function: (TExpression) -> RExpression,
 ): ExpressionBuilder<RExpression> = object : ExpressionBuilder<RExpression>() {
     override fun build(

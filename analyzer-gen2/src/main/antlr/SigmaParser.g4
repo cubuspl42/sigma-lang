@@ -38,6 +38,7 @@ classConstructorDeclaration
 
 expression
     : instance=expression IsAKeyword class=expression # isAExpressionAlt
+    | left=expression variant=(ConcatStringsOperator|ConcatListsOperator) right=expression # concatExpressionAlt
     | callee # calleeExpressionAlt
     | when # whenExpressionAlt
     | abstractionConstructor # abstractionConstructorExpressionAlt

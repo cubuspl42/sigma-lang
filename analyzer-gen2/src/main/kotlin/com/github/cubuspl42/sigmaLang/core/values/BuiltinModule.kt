@@ -16,6 +16,40 @@ object BuiltinModule : Indexable() {
                             }
                         },
                     ),
+                    Identifier.of("concat") to lazyOf(
+                        object : Abstraction() {
+                            override fun compute(argument: Value): Value {
+                                val args = argument as UnorderedTuple
+
+                                val left = args.get(key = Identifier.of("left")) as ListValue
+                                val right = args.get(key = Identifier.of("right")) as ListValue
+
+                                return ListValue(
+                                    values = left.values + right.values,
+                                )
+                            }
+                        },
+                    ),
+                ),
+            ),
+        ),
+        Identifier("String") to lazyOf(
+            UnorderedTuple(
+                valueByKey = mapOf(
+                    Identifier.of("concat") to lazyOf(
+                        object : Abstraction() {
+                            override fun compute(argument: Value): Value {
+                                val args = argument as UnorderedTuple
+
+                                val left = args.get(key = Identifier.of("left")) as StringPrimitive
+                                val right = args.get(key = Identifier.of("right")) as StringPrimitive
+
+                                return StringPrimitive(
+                                    value = left.value + right.value,
+                                )
+                            }
+                        },
+                    ),
                 ),
             ),
         ),

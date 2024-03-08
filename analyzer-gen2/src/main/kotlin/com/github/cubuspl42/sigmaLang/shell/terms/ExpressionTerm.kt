@@ -14,6 +14,13 @@ sealed interface ExpressionTerm : Term {
                 ctx: SigmaParser.IsAExpressionAltContext,
             ): ExpressionTerm = IsATerm.build(ctx)
 
+
+          //  | left=expression ConcatStringsOperator|ConcatListsOperator right=expression # concatExpressionAlt
+
+            override fun visitConcatExpressionAlt(
+                ctx: SigmaParser.ConcatExpressionAltContext,
+            ): ExpressionTerm = ConcatTerm.build(ctx)
+
             override fun visitCalleeExpressionAlt(
                 ctx: SigmaParser.CalleeExpressionAltContext,
             ): ExpressionTerm = build(ctx.callee())

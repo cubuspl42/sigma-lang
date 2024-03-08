@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.StringLiteral
 import com.squareup.kotlinpoet.CodeBlock
 
 data class StringPrimitive(
-    private val value: String,
+    val value: String,
 ) : PrimitiveValue() {
     fun generateConstructionCode(): CodeBlock = CodeBlock.of(
         """
