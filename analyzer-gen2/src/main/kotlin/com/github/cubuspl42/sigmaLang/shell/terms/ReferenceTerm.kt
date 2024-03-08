@@ -6,6 +6,9 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.ArgumentReference
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.CallStub
@@ -28,5 +31,11 @@ data class ReferenceTerm(
 
     override fun transmute(): ExpressionStub<ShadowExpression> = ReferenceStub(
         referredName = referredName.transmute(),
+    )
+
+    override fun wrap(): Value = UnorderedTuple(
+        valueByKey = mapOf(
+            Identifier.of("referredName") to lazyOf(referredName.wrap()),
+        ),
     )
 }

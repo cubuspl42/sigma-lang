@@ -9,6 +9,8 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.joinOf
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
@@ -35,6 +37,12 @@ data class ModuleTerm(
                 importedModuleName = IdentifierTerm.build(ctx.importedModuleName),
             )
         }
+
+        override fun wrap(): Value = UnorderedTuple(
+            valueByKey = mapOf(
+                Identifier.of("importedModuleName") to lazyOf(importedModuleName.wrap()),
+            )
+        )
     }
 
     sealed class DefinitionTerm : Term {
@@ -80,6 +88,12 @@ data class ModuleTerm(
         }
 
         override fun transmuteInitializer() = initializer.transmute()
+        override fun wrap(): Value = UnorderedTuple(
+            valueByKey = mapOf(
+                Identifier.of("name") to lazyOf(name.wrap()),
+                Identifier.of("initializer") to lazyOf(initializer.wrap()),
+            )
+        )
     }
 
     data class FunctionDefinitionTerm(
@@ -101,6 +115,14 @@ data class ModuleTerm(
             argumentType = argumentType,
             image = body,
         ).transmute()
+
+        override fun wrap(): Value = UnorderedTuple(
+            valueByKey = mapOf(
+                Identifier.of("name") to lazyOf(name.wrap()),
+                Identifier.of("argumentType") to lazyOf(argumentType.wrap()),
+                Identifier.of("body") to lazyOf(body.wrap()),
+            )
+        )
     }
 
     companion object : Term.Builder<SigmaParser.ModuleContext, ModuleTerm>() {
@@ -147,16 +169,10 @@ data class ModuleTerm(
         }
     }
 
-//    // TODO: Nuke?
-//    fun build(
-//        projectReference: ProjectBuilder.Reference,
-//    ): Expression {
-//        transform(
-//            projectReference = projectReference,
-//        ).build(
-//            buildContext = Expression.BuildContext(
-//                projectReference = projectReference,
-//            )
-//        )
-//    }
+    override fun wrap(): Value = UnorderedTuple(
+        valueByKey = mapOf(
+            Identifier.of("imports") to lazyOf(imports.wrap()),
+            Identifier.of("definitions") to lazyOf(definitions.wrap()),
+        )
+    )
 }

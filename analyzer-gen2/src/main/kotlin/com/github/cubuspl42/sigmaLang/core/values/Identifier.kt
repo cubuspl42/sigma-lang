@@ -17,4 +17,8 @@ data class Identifier(
     override fun toLiteral() = IdentifierLiteral(
         value = this,
     )
+
+    companion object {
+        fun of(name: String): Identifier = Identifier(name = name)
+    }
 }

@@ -5,6 +5,8 @@ import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.stubs.ClassStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
@@ -17,7 +19,7 @@ data class ClassDefinitionTerm(
     data class ConstructorDeclarationTerm(
         val name: IdentifierTerm,
         val argumentType: UnorderedTupleTypeConstructorTerm,
-    ) {
+    ): Wrappable {
         companion object {
             fun build(
                 ctx: SigmaParser.ClassConstructorDeclarationContext,
@@ -26,12 +28,16 @@ data class ClassDefinitionTerm(
                 argumentType = UnorderedTupleTypeConstructorTerm.build(ctx.argumentType),
             )
         }
+
+        override fun wrap(): Value {
+            TODO("Not yet implemented")
+        }
     }
 
     data class MethodDefinitionTerm(
         val name: IdentifierTerm,
         val abstractionConstructor: AbstractionConstructorTerm,
-    ) {
+    ): Wrappable {
         companion object {
             fun build(
                 ctx: SigmaParser.FunctionDefinitionContext,
@@ -47,6 +53,13 @@ data class ClassDefinitionTerm(
         fun transmute() = ClassStub.MethodDefinitionStub(
             name = name.transmute(),
             methodConstructorStub = abstractionConstructor.transmute(),
+        )
+
+        override fun wrap(): Value = UnorderedTuple(
+            valueByKey = mapOf(
+                Identifier.of("name") to lazyOf(name.wrap()),
+                Identifier.of("abstractionConstructor") to lazyOf(abstractionConstructor.wrap()),
+            ),
         )
     }
 
@@ -69,4 +82,14 @@ data class ClassDefinitionTerm(
             it.transmute()
         },
     )
+
+    override fun wrap(): Value {
+        return UnorderedTuple(
+            valueByKey = mapOf(
+                Identifier.of("name") to lazyOf(name.wrap()),
+                Identifier.of("constructor") to lazyOf(constructor.wrapOrNil()),
+                Identifier.of("methodDefinitions") to lazyOf(methodDefinitions.wrap())
+            )
+        )
+    }
 }

@@ -3,6 +3,9 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.UnorderedTupleConstructorStub
@@ -13,7 +16,14 @@ data class UnorderedTupleConstructorTerm(
     data class Entry(
         val key: IdentifierTerm,
         val value: ExpressionTerm,
-    )
+    ) : Wrappable {
+        override fun wrap(): Value = UnorderedTuple(
+            valueByKey = mapOf(
+                Identifier.of("key") to lazyOf(key.wrap()),
+                Identifier.of("value") to lazyOf(value.wrap()),
+            ),
+        )
+    }
 
     companion object : Term.Builder<SigmaParser.UnorderedTupleConstructorContext, UnorderedTupleConstructorTerm>() {
         val Empty: UnorderedTupleConstructorTerm = UnorderedTupleConstructorTerm(
@@ -36,8 +46,14 @@ data class UnorderedTupleConstructorTerm(
     }
 
     override fun transmute() = UnorderedTupleConstructorStub(
-         valueStubByKey = entries.associate { entry ->
-             entry.key.transmute() to entry.value.transmute()
-         }
-     )
+        valueStubByKey = entries.associate { entry ->
+            entry.key.transmute() to entry.value.transmute()
+        },
+    )
+
+    override fun wrap(): Value = UnorderedTuple(
+        valueByKey = mapOf(
+            Identifier.of("entries") to lazyOf(entries.wrap()),
+        ),
+    )
 }
