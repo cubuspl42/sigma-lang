@@ -3,6 +3,8 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 sealed interface ExpressionTerm : Term {
@@ -49,6 +51,11 @@ sealed interface ExpressionTerm : Term {
             override fun visitWhenExpressionAlt(
                 ctx: SigmaParser.WhenExpressionAltContext,
             ): ExpressionTerm = WhenTerm.build(ctx.`when`())
+
+            override fun visitMatchExpressionAlt(
+                ctx: SigmaParser.MatchExpressionAltContext,
+            ): ExpressionTerm = MatchTerm.build(ctx.match())
+
         }.visit(ctx)
 
         fun build(
@@ -73,4 +80,8 @@ sealed interface ExpressionTerm : Term {
     }
 
     fun transmute(): ExpressionStub<ShadowExpression>
+    fun build(
+        formationContext: FormationContext,
+        buildContext: Expression.BuildContext,
+    ): ShadowExpression = transmute().transform(context = formationContext).build(buildContext = buildContext)
 }

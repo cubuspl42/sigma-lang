@@ -1,5 +1,7 @@
 %import cat
 
+%val Cat = cat.Cat
+
 %val bleedingResult = {
     bleedingHands = %true,
 }
@@ -19,6 +21,8 @@
     }
 
     %fun pet ^{} => tailWavingResult
+
+    %fun bark ^{} => "Woof!"
 }
 
 %fun foo ^{arg1: Type1} => %false
@@ -47,4 +51,9 @@
 
 %val isA = builtin.isA
 
-%val main = List.of[%true] ..l List.of[%false, "abc"]
+%val animal = pussy
+
+%val main = %match animal (
+    Cat => Cat.meow{this = animal}
+    Dog => Dog.bark{this = animal}
+)

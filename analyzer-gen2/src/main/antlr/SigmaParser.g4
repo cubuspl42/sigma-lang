@@ -41,6 +41,7 @@ expression
     | left=expression variant=(ConcatStringsOperator|ConcatListsOperator) right=expression # concatExpressionAlt
     | callee # calleeExpressionAlt
     | when # whenExpressionAlt
+    | match # matchExpressionAlt
     | abstractionConstructor # abstractionConstructorExpressionAlt
     | tupleConstructor # tupleConstructorExpressionAlt
     | stringLiteral # stringLiteralExpressionAlt
@@ -75,6 +76,16 @@ whenConditionalEntry
 
 whenElseEntry
     : ElseKeyword FatArrow result=expression
+    ;
+
+// #### Match
+
+match
+    : MatchKeyword matched=expression LeftParen patternBlocks+=patternBlock+ RightParen
+    ;
+
+patternBlock
+    : class=expression FatArrow result=expression
     ;
 
 // ### Abstraction constructor & abstraction constructor-alikes

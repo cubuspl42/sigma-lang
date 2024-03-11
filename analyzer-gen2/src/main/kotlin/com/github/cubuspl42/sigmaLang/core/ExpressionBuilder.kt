@@ -1,7 +1,9 @@
 package com.github.cubuspl42.sigmaLang.core
 
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 abstract class ExpressionBuilder<out T> {
@@ -88,6 +90,12 @@ abstract class ExpressionBuilder<out T> {
         val panicFunction = referBuiltin(
             name = Identifier(name = "panic"),
         )
+
+        val panicCall = panicFunction.map {
+            it.call(
+                passedArgument = UnorderedTupleConstructor.Empty,
+            )
+        }
 
         val isAFunction = referBuiltin(
             name = Identifier(name = "isA"),

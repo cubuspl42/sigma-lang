@@ -1,10 +1,8 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
-import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
-import com.github.cubuspl42.sigmaLang.core.map
+import com.github.cubuspl42.sigmaLang.core.isA
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -27,16 +25,7 @@ data class IsATerm(
         instance.transmute(),
         class_.transmute(),
     ) { instanceExpression, classExpression ->
-        ExpressionBuilder.isAFunction.map { isAFunction ->
-            isAFunction.rawExpression.call(
-                passedArgument = UnorderedTupleConstructor(
-                    valueByKey = mapOf(
-                        Identifier(name = "instance") to lazyOf(instanceExpression),
-                        Identifier(name = "class") to lazyOf(classExpression),
-                    ),
-                ),
-            )
-        }
+        instanceExpression.isA(classExpression)
     }
 
     override fun wrap(): Value = UnorderedTuple(

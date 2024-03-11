@@ -8,4 +8,6 @@
         %case this.hasSharpClaws => bleedingResult
         %else => calmResult
     )
+
+    %fun meow ^{} => "Meow!"
 }
