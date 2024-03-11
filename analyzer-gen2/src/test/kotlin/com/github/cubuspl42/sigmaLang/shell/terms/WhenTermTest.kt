@@ -18,8 +18,8 @@ class WhenTermTest {
 
         assertEquals(
             expected = WhenTerm(
-                entries = listOf(
-                    WhenTerm.ConditionalEntry(
+                caseBlocks = listOf(
+                    WhenTerm.CaseBlock(
                         condition = ReferenceTerm(
                             referredName = IdentifierTerm(name = "someReference1"),
                         ),
@@ -37,7 +37,7 @@ class WhenTermTest {
                             ),
                         ),
                     ),
-                    WhenTerm.ConditionalEntry(
+                    WhenTerm.CaseBlock(
                         condition = CallTerm(
                             callee = ReferenceTerm(
                                 referredName = IdentifierTerm(name = "someFunction1"),
@@ -56,7 +56,7 @@ class WhenTermTest {
                         ),
                     ),
                 ),
-                elseEntry = CallTerm(
+                elseBlock = CallTerm(
                     callee = ReferenceTerm(
                         referredName = IdentifierTerm(name = "someFunction3"),
                     ),
