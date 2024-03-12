@@ -20,6 +20,6 @@
     result = %match thing (
         cat.Cat %as c => cat.Cat.meow{this = c}
         Dog %as d => Dog.bark{this = d}
-        [head, ...tail] => head,
+        [head, ...tail] => head
     )
 } %in result

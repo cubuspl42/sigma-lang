@@ -81,11 +81,20 @@ whenElseEntry
 // #### Match
 
 match
-    : MatchKeyword matched=expression LeftParen patternBlocks+=patternBlock+ RightParen
+    : MatchKeyword matched=expression LeftParen patternBlocks+=matchCase+ RightParen
     ;
 
-patternBlock
-    : pattern FatArrow result=expression
+matchCase
+    : matchPattern FatArrow result=expression
+    ;
+
+matchPattern
+    : destructuringPattern
+    | tagPattern
+    ;
+
+tagPattern
+    : class=expression AsKeyword newName=Identifier
     ;
 
 // ### Abstraction constructor & abstraction constructor-alikes
@@ -139,35 +148,31 @@ trueLiteral
 // #### Let-in
 
 letIn
-    : LetKeyword block=letInBlock InKeyword result=expression
+    : LetKeyword block=definitionBlock InKeyword result=expression
     ;
 
-letInBlock
-    : LeftBrace (letInBlockEntry (Comma letInBlockEntry)*)? Comma? RightBrace
+definitionBlock
+    : LeftBrace (definition (Comma definition)*)? Comma? RightBrace
     ;
 
-letInBlockEntry
-    : pattern Equals initializer=expression
+definition
+    : definitionLhs Equals initializer=expression
     ;
 
-// ### Patterns
-
-pattern
-    : identityPattern
-    | listUnconsPattern
-    | tagPattern
+definitionLhs
+    : name=Identifier # nameDefinitionLhs
+    | destructuringPattern # destructuringPatternDefinitionLhs
     ;
 
-identityPattern
-    : name=Identitfier
+// ### Destructuring patterns
+
+destructuringPattern
+    : listUnconsPattern
+//    | unorderedTupleDestructuringPattern
     ;
 
 listUnconsPattern
     : LeftBracket headName=Identifier Comma Ellipsis tailName=Identifier RightBracket
-    ;
-
-tagPattern
-    : class=expression AsKeyword newName=Identifier
     ;
 
 // ### Unordered tuple type constructor

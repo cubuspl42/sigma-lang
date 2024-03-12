@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
@@ -11,6 +12,7 @@ import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
+import com.github.cubuspl42.sigmaLang.shell.stubs.map
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 data class LetInTerm(
@@ -18,27 +20,153 @@ data class LetInTerm(
     val result: ExpressionTerm,
 ) : ExpressionTerm {
     data class DefinitionTerm(
-        val pattern: PatternTerm,
+        val lhs: LhsTerm,
         val initializer: ExpressionTerm,
     ) {
-        val names: Set<Identifier>
-            get() = pattern.names
+        sealed class LhsTerm {
+            companion object {
+                fun build(
+                    ctx: SigmaParser.DefinitionLhsContext,
+                ): LhsTerm = object : SigmaParserBaseVisitor<LhsTerm>() {
+                    override fun visitDestructuringPatternDefinitionLhs(
+                        ctx: SigmaParser.DestructuringPatternDefinitionLhsContext,
+                    ) = DestructuringLhsTerm.build(
+                        ctx = ctx.destructuringPattern(),
+                    )
+
+                    override fun visitNameDefinitionLhs(
+                        ctx: SigmaParser.NameDefinitionLhsContext,
+                    ) = NameLhsTerm.build(
+                        ctx = ctx,
+                    )
+                }.visit(ctx)
+            }
+
+            abstract val names: Set<Identifier>
+
+            abstract fun makeDefinition(
+                initializer: ExpressionTerm,
+            ): ExpressionStub<LocalScope.Constructor.Definition>
+        }
+
+        data class NameLhsTerm(
+            val name: Identifier,
+        ) : LhsTerm() {
+            companion object {
+                fun build(
+                    ctx: SigmaParser.NameDefinitionLhsContext,
+                ): NameLhsTerm = NameLhsTerm(
+                    name = IdentifierTerm.build(ctx.name).transmute(),
+                )
+            }
+
+            override val names: Set<Identifier>
+                get() = setOf(name)
+
+            override fun makeDefinition(
+                initializer: ExpressionTerm,
+            ) = initializer.transmute().map {
+                LocalScope.Constructor.SimpleDefinition(
+                    name = name,
+                    initializer = it,
+                )
+            }
+        }
+
+        data class DestructuringLhsTerm(
+            val pattern: DestructuringPatternTerm,
+        ) : LhsTerm() {
+            companion object {
+                fun build(
+                    ctx: SigmaParser.DestructuringPatternContext,
+                ): DestructuringLhsTerm = DestructuringLhsTerm(
+                    pattern = DestructuringPatternTerm.build(ctx),
+                )
+            }
+
+            override val names: Set<Identifier>
+                get() = pattern.names
+
+            override fun makeDefinition(
+                initializer: ExpressionTerm,
+            ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
+                override fun transform(
+                    context: FormationContext,
+                ) = object : ExpressionBuilder<LocalScope.Constructor.PatternDefinition>() {
+                    override fun build(
+                        buildContext: Expression.BuildContext,
+                    ): LocalScope.Constructor.PatternDefinition {
+                        val pattern = pattern.makePattern().build(
+                            formationContext = context,
+                            buildContext = buildContext,
+                        )
+
+                        return LocalScope.Constructor.PatternDefinition(
+                            builtinModuleReference = buildContext.builtinModule,
+                            pattern = pattern,
+                            initializer = initializer.transmute().build(
+                                formationContext = context,
+                                buildContext = buildContext,
+                            ),
+                        )
+                    }
+                }
+            }
+        }
 
         companion object {
             fun build(
-                ctx: SigmaParser.LetInBlockEntryContext,
+                ctx: SigmaParser.DefinitionContext,
             ): DefinitionTerm = DefinitionTerm(
-                pattern = PatternTerm.build(ctx.pattern()),
+                lhs = LhsTerm.build(ctx.definitionLhs()),
                 initializer = ExpressionTerm.build(ctx.initializer),
             )
         }
+
+        val names: Set<Identifier>
+            get() = lhs.names
+
+        fun makeDefinition() = lhs.makeDefinition(initializer = initializer)
     }
+
+//    data class SimpleDefinitionTerm(
+//        val name: Identifier,
+//        override val initializer: ExpressionTerm,
+//    ) : DefinitionTerm() {
+//        companion object {
+//            fun build(
+//                ctx: SigmaParser.NameDefinitionLhsContext,
+//                initializer: ExpressionTerm,
+//            ): SimpleDefinitionTerm = SimpleDefinitionTerm(
+//                name = IdentifierTerm.build(ctx.name).transmute(),
+//                initializer = initializer,
+//            )
+//        }
+//    }
+//
+//    data class DestructuringDefinitionTerm(
+//        val pattern: DestructuringPatternTerm,
+//        override val initializer: ExpressionTerm,
+//    ) : DefinitionTerm() {
+//        val names: Set<Identifier>
+//            get() = pattern.names
+//
+//        companion object {
+//            fun build(
+//                ctx: SigmaParser.DestructuringPatternContext,
+//                initializer: ExpressionTerm,
+//            ): DestructuringDefinitionTerm = DestructuringDefinitionTerm(
+//                pattern = DestructuringPatternTerm.build(ctx.pattern()),
+//                initializer = initializer,
+//            )
+//        }
+//    }
 
     companion object : Term.Builder<SigmaParser.LetInContext, LetInTerm>() {
         override fun build(
             ctx: SigmaParser.LetInContext,
         ): LetInTerm = LetInTerm(
-            definitions = ctx.letInBlock().letInBlockEntry().mapUniquely {
+            definitions = ctx.definitionBlock().definition().mapUniquely {
                 DefinitionTerm.build(it)
             },
             result = ExpressionTerm.build(ctx.expression()),
@@ -89,9 +217,7 @@ data class LetInTerm(
                             localScopeReference = localScopeReference,
                         ) { innerContext ->
                             definitions.mapUniquely {
-                                it.pattern.transmute(
-                                    initializerStub = it.initializer.transmute(),
-                                ).build(
+                                it.makeDefinition().build(
                                     formationContext = innerContext,
                                     buildContext = buildContext,
                                 )

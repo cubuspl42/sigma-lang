@@ -15,64 +15,33 @@ import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.map
 
 sealed class PatternTerm {
-    companion object {
-        fun build(
-            ctx: SigmaParser.PatternContext,
-        ): PatternTerm = object : SigmaParserBaseVisitor<PatternTerm>() {
-            override fun visitIdentityPattern(
-                ctx: SigmaParser.IdentityPatternContext,
-            ): PatternTerm = IdentityPatternTerm.build(ctx)
-
-            override fun visitListUnconsPattern(
-                ctx: SigmaParser.ListUnconsPatternContext,
-            ): PatternTerm = ListUnconsPatternTerm.build(ctx)
-
-            override fun visitTagPattern(
-                ctx: SigmaParser.TagPatternContext,
-            ): PatternTerm = TagPatternTerm.build(ctx)
-        }.visit(ctx)
-    }
-
     abstract val names: Set<Identifier>
 
     abstract fun transmute(
         initializerStub: ExpressionStub<ShadowExpression>,
     ): ExpressionStub<LocalScope.Constructor.Definition>
-
-}
-
-data class IdentityPatternTerm(
-    val name: Identifier,
-) : PatternTerm() {
-    companion object {
-        fun build(
-            ctx: SigmaParser.IdentityPatternContext,
-        ): IdentityPatternTerm = IdentityPatternTerm(
-            name = IdentifierTerm.build(ctx.name).transmute(),
-        )
-    }
-
-    override val names: Set<Identifier>
-        get() = setOf(name)
-
-    override fun transmute(
-        initializerStub: ExpressionStub<ShadowExpression>,
-    ): ExpressionStub<LocalScope.Constructor.Definition> = initializerStub.map { initializer ->
-        LocalScope.Constructor.SimpleDefinition(
-            name = name,
-            initializer = initializer,
-        )
-    }
 }
 
 sealed class ComplexPatternTerm : PatternTerm() {
     abstract fun makePattern(): ExpressionStub<Pattern>
 }
 
+sealed class DestructuringPatternTerm : ComplexPatternTerm() {
+    companion object {
+        fun build(
+            ctx: SigmaParser.DestructuringPatternContext,
+        ): DestructuringPatternTerm = object : SigmaParserBaseVisitor<DestructuringPatternTerm>() {
+            override fun visitListUnconsPattern(
+                ctx: SigmaParser.ListUnconsPatternContext,
+            ): DestructuringPatternTerm = ListUnconsPatternTerm.build(ctx)
+        }.visit(ctx)
+    }
+}
+
 data class ListUnconsPatternTerm(
     val headName: Identifier,
     val tailName: Identifier,
-) : ComplexPatternTerm() {
+) : DestructuringPatternTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.ListUnconsPatternContext,
