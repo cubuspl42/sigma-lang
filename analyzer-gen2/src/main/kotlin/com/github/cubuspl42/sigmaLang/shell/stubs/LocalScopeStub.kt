@@ -9,7 +9,6 @@ import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.FieldScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
-import com.github.cubuspl42.sigmaLang.shell.terms.BindingTerm
 
 class LocalScopeStub private constructor(
     private val buildScope: (KnotReference) -> UnorderedTupleConstructorStub,

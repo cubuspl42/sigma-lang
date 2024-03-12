@@ -4,9 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
-import com.github.cubuspl42.sigmaLang.core.bindToReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.core.readField
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
@@ -20,17 +18,17 @@ data class LetInTerm(
     val result: ExpressionTerm,
 ) : ExpressionTerm {
     data class DefinitionTerm(
-        val binding: BindingTerm,
+        val pattern: PatternTerm,
         val initializer: ExpressionTerm,
     ) {
         val names: Set<Identifier>
-            get() = binding.names
+            get() = pattern.names
 
         companion object {
             fun build(
                 ctx: SigmaParser.LetInBlockEntryContext,
             ): DefinitionTerm = DefinitionTerm(
-                binding = BindingTerm.build(ctx.binding()),
+                pattern = PatternTerm.build(ctx.pattern()),
                 initializer = ExpressionTerm.build(ctx.initializer),
             )
         }
@@ -91,7 +89,7 @@ data class LetInTerm(
                             localScopeReference = localScopeReference,
                         ) { innerContext ->
                             definitions.mapUniquely {
-                                it.binding.transmute(
+                                it.pattern.transmute(
                                     initializerStub = it.initializer.transmute(),
                                 ).build(
                                     formationContext = innerContext,

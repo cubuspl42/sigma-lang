@@ -17,19 +17,26 @@ import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class MatchTerm(
     val matched: ExpressionTerm,
-    val patternBlocks: List<PatternBlock>,
+    val patternBlocks: List<PatternBlockTerm>,
 ) : ExpressionTerm {
-    data class PatternBlock(
-        @Suppress("PropertyName") val class_: ExpressionTerm,
-        val newName: Identifier,
+    data class PatternBlockTerm(
+        val pattern: ComplexPatternTerm,
         val result: ExpressionTerm,
     ) : Wrappable {
-        override fun wrap(): Value = UnorderedTuple(
-            valueByKey = mapOf(
-                Identifier.of("class") to lazyOf(class_.wrap()),
-                Identifier.of("result") to lazyOf(result.wrap()),
-            ),
-        )
+        companion object {
+            fun build(
+                ctx: SigmaParser.PatternBlockContext,
+            ): PatternBlockTerm {
+                val complexPatternTerm = PatternTerm.build(ctx.pattern()) as? ComplexPatternTerm
+
+                return PatternBlockTerm(
+                    pattern = complexPatternTerm ?: throw IllegalStateException("Pattern is not complex"),
+                    result = ExpressionTerm.build(ctx.result),
+                )
+            }
+        }
+
+        override fun wrap(): Value = TODO()
     }
 
     companion object : Term.Builder<SigmaParser.MatchContext, MatchTerm>() {
@@ -38,11 +45,7 @@ data class MatchTerm(
         ): MatchTerm = MatchTerm(
             matched = ExpressionTerm.build(ctx.matched),
             patternBlocks = ctx.patternBlocks.map {
-                PatternBlock(
-                    class_ = ExpressionTerm.build(it.class_),
-                    newName = IdentifierTerm.build(it.newName).transmute(),
-                    result = ExpressionTerm.build(it.result),
-                )
+                PatternBlockTerm.build(it)
             },
         )
 
@@ -60,14 +63,11 @@ data class MatchTerm(
                         buildContext = buildContext,
                     ),
                     patternBlocks = patternBlocks.map { patternBlock ->
+                        val pattern = patternBlock.pattern
                         object : MatcherConstructor.PatternBlock(
-                            pattern = TagPattern(
-                                builtinModuleReference = buildContext.builtinModule,
-                                newName = patternBlock.newName,
-                                class_ = patternBlock.class_.build(
-                                    formationContext = context,
-                                    buildContext = buildContext,
-                                ),
+                            pattern = pattern.makePattern().build(
+                                formationContext = context,
+                                buildContext = buildContext,
                             ),
                         ) {
                             override fun makeResult(
@@ -76,7 +76,7 @@ data class MatchTerm(
                                 val innerScope = object : StaticScope {
                                     override fun resolveName(
                                         referredName: Identifier,
-                                    ): Expression? = if (referredName == patternBlock.newName) {
+                                    ): Expression? = if (pattern.names.contains(referredName)) {
                                         definitionBlock.getInitializer(name = referredName).rawExpression
                                     } else null
                                 }.chainWith(

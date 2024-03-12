@@ -24,13 +24,13 @@ class MatchTermTest {
                     referredName = IdentifierTerm(name = "listOrNull"),
                 ),
                 patternBlocks = listOf(
-                    MatchTerm.PatternBlock(
+                    MatchTerm.PatternBlockTerm(
                         class_ = ReferenceTerm(
                             referredName = IdentifierTerm(name = "List"),
                         ),
                         result = ExpressionTerm.parse(listResult)
                     ),
-                    MatchTerm.PatternBlock(
+                    MatchTerm.PatternBlockTerm(
                         class_ = ReferenceTerm(
                             referredName = IdentifierTerm(name = "Nil"),
                         ),

@@ -85,7 +85,7 @@ match
     ;
 
 patternBlock
-    : class=expression AsKeyword newName=Identifier FatArrow result=expression
+    : pattern FatArrow result=expression
     ;
 
 // ### Abstraction constructor & abstraction constructor-alikes
@@ -147,22 +147,27 @@ letInBlock
     ;
 
 letInBlockEntry
-    : binding Equals initializer=expression
+    : pattern Equals initializer=expression
     ;
 
-// ### Bindings
+// ### Patterns
 
-binding
-    : nameBinding
-    | listUnconsBinding
+pattern
+    : identityPattern
+    | listUnconsPattern
+    | tagPattern
     ;
 
-nameBinding
-    : name=Identifier
+identityPattern
+    : name=Identitfier
     ;
 
-listUnconsBinding
+listUnconsPattern
     : LeftBracket headName=Identifier Comma Ellipsis tailName=Identifier RightBracket
+    ;
+
+tagPattern
+    : class=expression AsKeyword newName=Identifier
     ;
 
 // ### Unordered tuple type constructor
