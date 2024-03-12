@@ -85,7 +85,7 @@ match
     ;
 
 patternBlock
-    : class=expression FatArrow result=expression
+    : class=expression AsKeyword newName=Identifier FatArrow result=expression
     ;
 
 // ### Abstraction constructor & abstraction constructor-alikes

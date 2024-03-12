@@ -39,6 +39,10 @@ object LocalScope {
         final override val rawExpression: Expression
             get() = blockExpression.rawExpression
 
+        fun getInitializer(
+            name: Identifier,
+        ): ShadowExpression = blockExpression.readField(fieldName = name)
+
         fun mergeWith(
             dictClass: BuiltinModuleReference.DictClassReference,
             other: DefinitionBlock,

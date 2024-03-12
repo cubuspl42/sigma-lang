@@ -14,6 +14,7 @@ ConstructorKeyword : '%constructor' ;
 IsAKeyword : '%is_a' ;
 ImportKeyword : '%import' ;
 MatchKeyword : '%match' ;
+AsKeyword : '%as' ;
 
 LeftParen : '(' ;
 RightParen : ')' ;

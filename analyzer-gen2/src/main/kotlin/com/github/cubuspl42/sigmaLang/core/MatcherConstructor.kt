@@ -5,10 +5,13 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 class MatcherConstructor(
     override val rawExpression: Expression,
 ) : ShadowExpression() {
-    data class PatternBlock(
-        @Suppress("PropertyName") val class_: ShadowExpression,
-        val result: ShadowExpression,
-    )
+    abstract class PatternBlock(
+        val pattern: Pattern,
+    ) {
+        abstract fun makeResult(
+            definitionBlock: LocalScope.DefinitionBlock,
+        ): ShadowExpression
+    }
 
     companion object {
         fun make(
@@ -21,13 +24,15 @@ class MatcherConstructor(
                     SwitchExpression.make(
                         buildContext = buildContext,
                         caseBlocks = patternBlocks.map { patternBlock ->
+                            val application = patternBlock.pattern.apply(matchedReference)
+
+                            val result = application.definitionBlock.bindToReference {
+                                patternBlock.makeResult(definitionBlock = it.asDefinitionBlock())
+                            }
+
                             SwitchExpression.CaseBlock(
-                                condition = matchedReference.isA(
-                                    class_ = patternBlock.class_,
-                                ).build(
-                                    buildContext = buildContext,
-                                ),
-                                result = patternBlock.result,
+                                condition = application.condition,
+                                result = result,
                             )
                         },
                         elseResult = elseResult,

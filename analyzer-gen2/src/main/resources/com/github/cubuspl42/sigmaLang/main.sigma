@@ -1,5 +1,25 @@
 %import cat
 
+%class Dog {
+    %constructor of ^{}
+
+    %fun bark ^{} => "Woof!"
+}
+
+%val pussy = cat.Cat.of{
+}
+
+%val rex = Dog.of{
+}
+
+%val letters = ["a", "b", "c", "d"]
+
+%val thing = letters
+
 %val main = %let {
-    [head, ...tail] = [],
-} %in head
+    result = %match thing (
+        cat.Cat %as c => cat.Cat.meow{this = c}
+        Dog %as d => Dog.bark{this = d}
+        [head, ...tail] => head,
+    )
+} %in result

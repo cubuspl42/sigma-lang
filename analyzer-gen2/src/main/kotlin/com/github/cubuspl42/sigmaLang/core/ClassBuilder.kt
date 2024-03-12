@@ -211,17 +211,13 @@ abstract class ClassBuilder(
     }
 }
 
-fun ShadowExpression.isA(class_: ShadowExpression): ExpressionBuilder<ShadowExpression> {
-    val instance = this
-
-    return ExpressionBuilder.isAFunction.map { isAFunction ->
-        isAFunction.call(
-            passedArgument = UnorderedTupleConstructor(
-                valueByKey = mapOf(
-                    Identifier(name = "instance") to lazyOf(instance),
-                    Identifier(name = "class") to lazyOf(class_),
-                ),
-            ),
-        )
-    }
+fun ShadowExpression.isA(
+    class_: ShadowExpression,
+): ExpressionBuilder<ShadowExpression> = object : ExpressionBuilder<ShadowExpression>() {
+    override fun build(
+        buildContext: Expression.BuildContext,
+    ): ShadowExpression = buildContext.builtinModule.isAFunction.call(
+        instance = this@isA,
+        class_ = class_,
+    )
 }

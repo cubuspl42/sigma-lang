@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core
 
 import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 
 abstract class Pattern {
@@ -10,6 +11,29 @@ abstract class Pattern {
     )
 
     abstract fun apply(expression: ShadowExpression): Application
+}
+
+class TagPattern(
+    private val builtinModuleReference: BuiltinModuleReference,
+    @Suppress("PropertyName") val class_: ShadowExpression,
+    private val newName: Identifier,
+) : Pattern() {
+    override fun apply(
+        expression: ShadowExpression,
+    ) = Application(
+        condition = builtinModuleReference.isAFunction.call(
+            instance = expression,
+            class_ = class_,
+        ),
+        definitionBlock = LocalScope.DefinitionBlock.makeSimple(
+            definitions = setOf(
+                LocalScope.Constructor.SimpleDefinition(
+                    name = newName,
+                    initializer = expression,
+                ),
+            ),
+        ),
+    )
 }
 
 class ListUnconsPattern(

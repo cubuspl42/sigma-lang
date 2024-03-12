@@ -30,22 +30,17 @@ interface StaticScope {
     }
 
     fun resolveName(referredName: Identifier): Expression?
-
-    fun extendWith(
-        name: Identifier,
-        expression: Expression,
-    ): StaticScope {
-        TODO()
-        // TODO: Expression-based StaticScope
-    }
 }
 
 fun StaticScope.chainWith(
     other: StaticScope,
 ): StaticScope = object : StaticScope {
-    override fun resolveName(referredName: Identifier): Expression? = this@chainWith.resolveName(
-        referredName = referredName,
-    ) ?: other.resolveName(
-        referredName = referredName,
-    )
+    override fun resolveName(referredName: Identifier): Expression? {
+        val r = this@chainWith.resolveName(
+            referredName = referredName,
+        ) ?: other.resolveName(
+            referredName = referredName,
+        )
+        return r
+    }
 }

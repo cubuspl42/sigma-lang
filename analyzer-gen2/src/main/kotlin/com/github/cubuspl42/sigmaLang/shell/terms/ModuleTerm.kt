@@ -144,12 +144,6 @@ data class ModuleTerm(
                         modulePath = it.importedModulePath,
                     )
                 },
-            ).chainWith(
-                object : StaticScope {
-                    override fun resolveName(
-                        referredName: Identifier,
-                    ): Expression = projectReference.builtinModule.rawModuleReference.rawExpression
-                },
             )
 
             LocalScopeStub.of(

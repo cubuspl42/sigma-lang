@@ -5,8 +5,8 @@
     }
 
     %fun pet ^{} => %when (
-        %case this.hasSharpClaws => bleedingResult
-        %else => calmResult
+        %case this.hasSharpClaws => "Bleeding"
+        %else => "Purrr"
     )
 
     %fun meow ^{} => "Meow!"
