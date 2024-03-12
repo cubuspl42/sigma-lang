@@ -18,7 +18,7 @@ class UnorderedTupleConstructor(
 ) : ComplexExpression() {
     data class Entry(
         val key: Identifier,
-        val value: Lazy<Expression>,
+        val value: Lazy<ShadowExpression>,
     ) {
         data class Builder(
             val key: Identifier,
@@ -116,9 +116,7 @@ class UnorderedTupleConstructor(
     override fun bind(scope: DynamicScope): Lazy<Value> = lazyOf(
         UnorderedTuple(
             valueByKey = valueByKey.mapValues { (_, valueLazy) ->
-                lazy {
-                    valueLazy.value.rawExpression.bindStrict(scope = scope)
-                }
+                valueLazy.value.rawExpression.bind(scope = scope)
             },
         ),
     )

@@ -139,7 +139,30 @@ trueLiteral
 // #### Let-in
 
 letIn
-    : LetKeyword block=unorderedTupleConstructor InKeyword result=expression
+    : LetKeyword block=letInBlock InKeyword result=expression
+    ;
+
+letInBlock
+    : LeftBrace (letInBlockEntry (Comma letInBlockEntry)*)? Comma? RightBrace
+    ;
+
+letInBlockEntry
+    : binding Equals initializer=expression
+    ;
+
+// ### Bindings
+
+binding
+    : nameBinding
+    | listUnconsBinding
+    ;
+
+nameBinding
+    : name=Identifier
+    ;
+
+listUnconsBinding
+    : LeftBracket headName=Identifier Comma Ellipsis tailName=Identifier RightBracket
     ;
 
 // ### Unordered tuple type constructor

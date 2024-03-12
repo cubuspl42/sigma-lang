@@ -148,9 +148,7 @@ data class ModuleTerm(
                 object : StaticScope {
                     override fun resolveName(
                         referredName: Identifier,
-                    ): Expression = projectReference.resolveBuiltin(
-                        builtinName = referredName,
-                    )
+                    ): Expression = projectReference.builtinModule.rawModuleReference.rawExpression
                 },
             )
 

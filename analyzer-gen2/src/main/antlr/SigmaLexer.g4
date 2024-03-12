@@ -29,6 +29,7 @@ Equals : '=' ;
 Dot : '.' ;
 ConcatStringsOperator : '..s' ;
 ConcatListsOperator : '..l' ;
+Ellipsis : '...' ;
 
 StringLiteral : '"' StringLiteralContent '"' ;
 

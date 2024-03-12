@@ -1,9 +1,9 @@
 package com.github.cubuspl42.sigmaLang.core
 
+import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 abstract class ExpressionBuilder<out T> {
@@ -68,28 +68,19 @@ abstract class ExpressionBuilder<out T> {
             )
         }
 
-        fun referBuiltin(
-            name: Identifier,
-        ): ExpressionBuilder<ShadowExpression> = object : ExpressionBuilder<Expression>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ): Expression = buildContext.referBuiltin(name = name)
-        }
-
-        val ifFunction: ExpressionBuilder<ExpressionStub.IfFunction> =
-            object : ExpressionBuilder<ExpressionStub.IfFunction>() {
+        val ifFunction: ExpressionBuilder<BuiltinModuleReference.IfFunction> =
+            object : ExpressionBuilder<BuiltinModuleReference.IfFunction>() {
                 override fun build(
                     buildContext: Expression.BuildContext,
-                ) = ExpressionStub.IfFunction(
-                    callee = buildContext.referBuiltin(
-                        name = Identifier(name = "if"),
-                    ),
-                )
+                ) = buildContext.builtinModule.ifFunction
             }
 
-        val panicFunction = referBuiltin(
-            name = Identifier(name = "panic"),
-        )
+        val panicFunction: ExpressionBuilder<BuiltinModuleReference.PanicFunction> =
+            object : ExpressionBuilder<BuiltinModuleReference.PanicFunction>() {
+                override fun build(
+                    buildContext: Expression.BuildContext,
+                ) = buildContext.builtinModule.panicFunction
+            }
 
         val panicCall = panicFunction.map {
             it.call(
@@ -97,13 +88,11 @@ abstract class ExpressionBuilder<out T> {
             )
         }
 
-        val isAFunction = referBuiltin(
-            name = Identifier(name = "isA"),
-        )
-
-        val listClass = referBuiltin(
-            name = Identifier(name = "List"),
-        )
+        val isAFunction = object : ExpressionBuilder<BuiltinModuleReference.IsAFunction>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ) = buildContext.builtinModule.isAFunction
+        }
     }
 
     abstract fun build(

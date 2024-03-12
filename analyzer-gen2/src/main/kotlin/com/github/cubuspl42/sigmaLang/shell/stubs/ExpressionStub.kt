@@ -9,27 +9,6 @@ import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 
 abstract class ExpressionStub<out T> {
-    class IfFunction(
-        private val callee: Expression,
-    ) : ShadowExpression() {
-        fun call(
-            condition: ShadowExpression,
-            thenCase: ShadowExpression,
-            elseCase: ShadowExpression,
-        ) = callee.call(
-            passedArgument = UnorderedTupleConstructor(
-                valueByKey = mapOf(
-                    Identifier(name = "condition") to lazyOf(condition.rawExpression),
-                    Identifier(name = "then") to lazyOf(thenCase.rawExpression),
-                    Identifier(name = "else") to lazyOf(elseCase.rawExpression),
-                ),
-            )
-        )
-
-        override val rawExpression: Expression
-            get() = callee
-    }
-
     companion object {
         fun <TExpression> pure(
             builder: ExpressionBuilder<TExpression>,
@@ -87,9 +66,18 @@ abstract class ExpressionStub<out T> {
     abstract fun transform(
         context: FormationContext,
     ): ExpressionBuilder<T>
+
+    fun build(
+        formationContext: FormationContext,
+        buildContext: Expression.BuildContext,
+    ): T = transform(
+        context = formationContext,
+    ).build(
+        buildContext = buildContext,
+    )
 }
 
-fun <TExpression : ShadowExpression, RExpression : ShadowExpression> ExpressionStub<TExpression>.map(
+fun <TExpression : Any, RExpression: Any> ExpressionStub<TExpression>.map(
     function: (TExpression) -> RExpression,
 ): ExpressionStub<RExpression> = object : ExpressionStub<RExpression>() {
     override fun transform(

@@ -176,23 +176,17 @@ abstract class ClassBuilder(
         buildContext: Expression.BuildContext,
         classReference: Reference,
     ): AbstractionConstructor {
-        val unionWith = buildContext.referBuiltin(
-            name = Identifier(name = "unionWith"),
-        )
+        val unionWith = buildContext.builtinModule.dictClass.unionWith
 
         return AbstractionConstructor.looped1 { argumentReference ->
             unionWith.call(
-                passedArgument = UnorderedTupleConstructor.of(
-                    Identifier(name = "first") to lazyOf(argumentReference),
-                    Identifier(name = "second") to lazyOf(
-                        UnorderedTupleConstructor(
-                            valueByKey = mapOf(
-                                instancePrototypeIdentifier to lazyOf(classReference.prototypeReference),
-                            ),
-                        ),
+                dict = argumentReference,
+                otherDict = UnorderedTupleConstructor(
+                    valueByKey = mapOf(
+                        instancePrototypeIdentifier to lazyOf(classReference.prototypeReference),
                     ),
                 ),
-            )
+            ).rawExpression
         }
     }
 

@@ -41,25 +41,19 @@ data class ConcatTerm(
         right.transmute(),
     ) { leftExpression, rightExpression ->
         ExpressionBuilder.projectReference.map { projectReference ->
-            val class_ = projectReference.resolveBuiltin(
-                builtinName = Identifier.of(
-                    when (variant) {
-                        Variant.Strings -> "String"
-                        Variant.Lists -> "List"
-                    }
+            val builtinModule = projectReference.builtinModule
+
+            return@map when (variant) {
+                Variant.Strings -> builtinModule.stringClass.concat.call(
+                    string = leftExpression,
+                    otherString = rightExpression,
                 )
-            )
 
-            val concatFunction = class_.call(IdentifierLiteral.of("concat"))
-
-            concatFunction.call(
-                passedArgument = UnorderedTupleConstructor(
-                    valueByKey = mapOf(
-                        Identifier(name = "left") to lazyOf(leftExpression),
-                        Identifier(name = "right") to lazyOf(rightExpression),
-                    ),
-                ),
-            )
+                Variant.Lists -> builtinModule.listClass.concat.call(
+                    list = leftExpression,
+                    otherList = rightExpression,
+                )
+            }
         }
     }
 

@@ -30,6 +30,30 @@ object BuiltinModule : Indexable() {
                             }
                         },
                     ),
+                    Identifier.of("head") to lazyOf(
+                        object : Abstraction() {
+                            override fun compute(argument: Value): Value {
+                                val args = argument as UnorderedTuple
+
+                                val list = args.get(Identifier.of("this")) as ListValue
+
+                                return list.values.first()
+                            }
+                        },
+                    ),
+                    Identifier.of("tail") to lazyOf(
+                        object : Abstraction() {
+                            override fun compute(argument: Value): Value {
+                                val args = argument as UnorderedTuple
+
+                                val list = args.get(Identifier.of("this")) as ListValue
+
+                                return ListValue(
+                                    values = list.values.drop(1),
+                                )
+                            }
+                        },
+                    ),
                 ),
             ),
         ),
@@ -53,6 +77,24 @@ object BuiltinModule : Indexable() {
                 ),
             ),
         ),
+        Identifier("Dict") to lazyOf(
+            UnorderedTuple(
+                valueByKey = mapOf(
+                    Identifier("unionWith") to lazyOf(
+                        object : Abstraction() {
+                            override fun compute(argument: Value): Value {
+                                val args = argument as UnorderedTuple
+
+                                val firstTuple = args.get(key = Identifier(name = "first")) as UnorderedTuple
+                                val secondTuple = args.get(key = Identifier(name = "second")) as UnorderedTuple
+
+                                return firstTuple.unionWith(secondTuple)
+                            }
+                        },
+                    ),
+                ),
+            ),
+        ),
         Identifier("if") to lazyOf(
             object : Abstraction() {
                 override fun compute(argument: Value): Value {
@@ -65,18 +107,6 @@ object BuiltinModule : Indexable() {
                     } else {
                         args.get(key = Identifier(name = "else"))
                     }
-                }
-            },
-        ),
-        Identifier("unionWith") to lazyOf(
-            object : Abstraction() {
-                override fun compute(argument: Value): Value {
-                    val args = argument as UnorderedTuple
-
-                    val firstTuple = args.get(key = Identifier(name = "first")) as UnorderedTuple
-                    val secondTuple = args.get(key = Identifier(name = "second")) as UnorderedTuple
-
-                    return firstTuple.unionWith(secondTuple)
                 }
             },
         ),

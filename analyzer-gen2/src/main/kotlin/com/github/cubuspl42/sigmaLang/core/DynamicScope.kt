@@ -17,21 +17,27 @@ interface DynamicScope {
                 dynamicScopeLooped: DynamicScope,
             ) -> Pair<T, DynamicScope>,
         ): T = LazyUtils.looped2 { _, dynamicScopeLooped ->
-            block(
-                lazy(dynamicScopeLazy = dynamicScopeLooped),
-            )
+            val lazyScope = lazy(dynamicScopeLazy = dynamicScopeLooped)
+
+            val pair = block(lazyScope)
+
+            lazyScope.init()
+
+            if (pair.second === lazyScope) {
+                throw IllegalStateException("DynamicScope looped block must return a new DynamicScope")
+            }
+
+            pair
         }.first
 
-        private fun lazy(
+        fun lazy(
             dynamicScopeLazy: Lazy<DynamicScope>,
-        ): DynamicScope = object : DynamicScope {
-            override fun getValue(
-                referredWrapper: Wrapper,
-            ): Value = dynamicScopeLazy.value.getValue(
-                referredWrapper = referredWrapper,
-            )
-        }
+        ): LazyDynamicScope = LazyDynamicScope(
+            dynamicScopeLazy = dynamicScopeLazy,
+        )
     }
+
+
 
     fun getValue(
         referredWrapper: Wrapper,
@@ -40,12 +46,12 @@ interface DynamicScope {
 
 fun DynamicScope.withValue(
     wrapper: Wrapper,
-    value: Value,
+    valueLazy: Lazy<Value>,
 ): DynamicScope = object : DynamicScope {
     override fun getValue(
         referredWrapper: Wrapper,
     ): Value = if (referredWrapper == wrapper) {
-        value
+        valueLazy.value
     } else {
         this@withValue.getValue(referredWrapper = referredWrapper)
     }

@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core
 
 import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
@@ -24,11 +25,11 @@ class ProjectBuilder(
             buildContext: Expression.BuildContext,
         ) = UnorderedTupleConstructor.Entry(
             key = name,
-            value = lazyOf(
+            value = lazy {
                 initializer.build(
                     buildContext = buildContext,
-                ).rawExpression,
-            ),
+                ).rawExpression
+            },
         )
     }
 
@@ -66,16 +67,16 @@ class ProjectBuilder(
     data class Reference(
         val rawKnotReference: Expression,
     ) {
-        private val builtinModule: Expression = rawKnotReference.readField(
-            fieldName = builtinIdentifier,
-        )
+        val builtinModule by lazy {
+            BuiltinModuleReference(
+                rawModuleReference = rawKnotReference.readField(
+                    fieldName = builtinIdentifier,
+                ),
+            )
+        }
 
         fun resolveModule(modulePath: ModulePath): Expression = rawKnotReference.readField(
             fieldName = modulePath.name,
-        )
-
-        fun resolveBuiltin(builtinName: Identifier): Expression = builtinModule.readField(
-            fieldName = builtinName,
         )
     }
 
@@ -103,7 +104,7 @@ class ProjectBuilder(
             val rootTupleConstructor = UnorderedTupleConstructor.fromEntries(
                 moduleEntries + UnorderedTupleConstructor.Entry(
                     key = builtinIdentifier,
-                    value = lazyOf(BuiltinModuleConstructor),
+                    value = lazy { BuiltinModuleConstructor },
                 ),
             )
 

@@ -114,18 +114,16 @@ class KnotConstructor private constructor(
 
     override fun bind(
         scope: DynamicScope,
-    ): Lazy<Value> = lazyOf(
-        DynamicScope.looped { innerScopeLooped ->
-            val body = this@KnotConstructor.body.bind(
-                scope = innerScopeLooped,
-            ).value
+    ): Lazy<Value> = DynamicScope.looped { innerScopeLooped ->
+        val bodyValueLazy = this@KnotConstructor.body.bind(
+            scope = innerScopeLooped,
+        )
 
-            val innerScope = scope.withValue(
-                wrapper = this@KnotConstructor,
-                value = body,
-            )
+        val innerScope = scope.withValue(
+            wrapper = this@KnotConstructor,
+            valueLazy = bodyValueLazy,
+        )
 
-            Pair(body, innerScope)
-        },
-    )
+        Pair(bodyValueLazy, innerScope)
+    }
 }

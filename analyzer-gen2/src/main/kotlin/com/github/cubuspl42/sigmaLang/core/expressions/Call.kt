@@ -67,9 +67,14 @@ class Call(
     }
 
     override fun bind(scope: DynamicScope): Lazy<Value> {
-        val calleeValue = callee.bind(scope = scope).value as Callable
-        val passedArgumentValue = passedArgument.bind(scope = scope).value
+        val calleeValueLazy = callee.bind(scope = scope)
+        val passedArgumentValueLazy = passedArgument.bind(scope = scope)
 
-        return lazyOf(calleeValue.call(argument = passedArgumentValue))
+        return lazy {
+            val calleeValue = calleeValueLazy.value as Callable
+            val passedArgumentValue = passedArgumentValueLazy.value
+
+            calleeValue.call(argument = passedArgumentValue)
+        }
     }
 }
