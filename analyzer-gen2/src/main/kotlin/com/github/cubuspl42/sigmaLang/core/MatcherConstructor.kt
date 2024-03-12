@@ -17,25 +17,22 @@ class MatcherConstructor(
             elseResult: ShadowExpression,
         ): ExpressionBuilder<MatcherConstructor> = object : ExpressionBuilder<MatcherConstructor>() {
             override fun build(buildContext: Expression.BuildContext): MatcherConstructor {
-                val result = LocalScope.Constructor.bindSingle(
-                    expression = matched,
-                    makeResult = { matchedReference ->
-                        SwitchExpression.make(
-                            buildContext = buildContext,
-                            caseBlocks = patternBlocks.map { patternBlock ->
-                                SwitchExpression.CaseBlock(
-                                    condition = matchedReference.isA(
-                                        class_ = patternBlock.class_,
-                                    ).build(
-                                        buildContext = buildContext,
-                                    ),
-                                    result = patternBlock.result,
-                                )
-                            },
-                            elseResult = elseResult,
-                        )
-                    }
-                )
+                val result = matched.bindToReference { matchedReference ->
+                    SwitchExpression.make(
+                        buildContext = buildContext,
+                        caseBlocks = patternBlocks.map { patternBlock ->
+                            SwitchExpression.CaseBlock(
+                                condition = matchedReference.isA(
+                                    class_ = patternBlock.class_,
+                                ).build(
+                                    buildContext = buildContext,
+                                ),
+                                result = patternBlock.result,
+                            )
+                        },
+                        elseResult = elseResult,
+                    )
+                }
 
                 return MatcherConstructor(
                     rawExpression = result.rawExpression,

@@ -48,9 +48,7 @@ object LocalScope {
                 ): ShadowExpression {
                     val listClass = buildContext.builtinModule.listClass
 
-                    return LocalScope.Constructor.bindSingle(
-                        expression = listInitializer,
-                    ) { listInitializerReference ->
+                    return listInitializer.bindToReference { listInitializerReference ->
                         UnorderedTupleConstructor.fromEntries(
                             UnorderedTupleConstructor.Entry(
                                 key = headName,
@@ -112,15 +110,6 @@ object LocalScope {
                     )
                 }
             }
-
-            fun bindSingle(
-                expression: ShadowExpression,
-                makeResult: (ShadowExpression) -> ShadowExpression,
-            ): ShadowExpression = AbstractionConstructor.looped1 { argumentReference ->
-                makeResult(argumentReference).rawExpression
-            }.call(
-                passedArgument = expression,
-            )
         }
 
         fun getDefinitionInitializer(name: Identifier): ShadowExpression = knotConstructor.readField(fieldName = name)

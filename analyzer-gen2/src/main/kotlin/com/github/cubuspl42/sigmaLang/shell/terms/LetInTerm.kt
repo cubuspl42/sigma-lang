@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.bindToReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.readField
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -90,9 +91,7 @@ data class LetInTerm(
                     buildContext = buildContext,
                 )
 
-                val result = LocalScope.Constructor.bindSingle(
-                    expression = localScopeConstructor,
-                ) { localScopeReference ->
+                val result = localScopeConstructor.bindToReference { localScopeReference ->
                     val innerScope = object : StaticScope {
                         override fun resolveName(
                             referredName: Identifier,
@@ -104,7 +103,6 @@ data class LetInTerm(
                     }.chainWith(
                         context.scope,
                     )
-
 
                     val innerContext = context.copy(
                         scope = innerScope,
