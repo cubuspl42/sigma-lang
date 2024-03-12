@@ -11,8 +11,8 @@ import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.squareup.kotlinpoet.CodeBlock
 
 class Call(
-    val calleeLazy: Lazy<Expression>,
-    val passedArgumentLazy: Lazy<Expression>,
+    val callee: Expression,
+    val passedArgument: Expression,
 ) : ComplexExpression() {
     object FieldRead {
         fun builder(
@@ -44,14 +44,11 @@ class Call(
             passedArgumentBuilder: ExpressionBuilder<ShadowExpression>,
         ): ExpressionBuilder<Call> = object : ExpressionBuilder<Call>() {
             override fun build(buildContext: BuildContext): Call = Call(
-                calleeLazy = lazyOf(calleeBuilder.buildRaw(buildContext)),
-                passedArgumentLazy = lazyOf(passedArgumentBuilder.buildRaw(buildContext)),
+                callee = calleeBuilder.buildRaw(buildContext),
+                passedArgument = passedArgumentBuilder.buildRaw(buildContext),
             )
         }
     }
-
-    val callee by calleeLazy
-    val passedArgument by passedArgumentLazy
 
     override val subExpressions: Set<Expression> by lazy {
         setOf(callee, passedArgument)

@@ -128,14 +128,14 @@ sealed class Expression : ShadowExpression() {
     fun readField(
         fieldName: Identifier,
     ): Call = Call(
-        calleeLazy = lazyOf(this),
-        passedArgumentLazy = lazyOf(fieldName.toLiteral()),
+        callee = this,
+        passedArgument = fieldName.toLiteral(),
     )
 
     fun call(
         passedArgument: Expression,
     ): Call = Call(
-        calleeLazy = lazyOf(this),
-        passedArgumentLazy = lazyOf(passedArgument),
+        callee = this,
+        passedArgument = passedArgument,
     )
 }
