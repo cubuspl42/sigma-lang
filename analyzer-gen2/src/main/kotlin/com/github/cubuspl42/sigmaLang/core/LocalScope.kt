@@ -1,20 +1,18 @@
 package com.github.cubuspl42.sigmaLang.core
 
-import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
-import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 object LocalScope {
     class Reference(
-        private val knotReference: KnotReference,
+        private val rawReference: ShadowExpression,
     ) {
         fun referDefinitionInitializer(
             name: Identifier,
-        ): ShadowExpression = knotReference.readField(fieldName = name)
+        ): ShadowExpression = rawReference.readField(fieldName = name)
     }
 
     class Constructor(
@@ -76,7 +74,7 @@ object LocalScope {
                     val unionWith = buildContext.builtinModule.dictClass.unionWith
 
                     val (knotConstructor, definitions) = KnotConstructor.looped { knotReference ->
-                        val reference = Reference(knotReference = knotReference)
+                        val reference = Reference(rawReference = knotReference)
 
                         val definitions = makeDefinitions(reference)
 
@@ -108,6 +106,19 @@ object LocalScope {
                         knotConstructor = knotConstructor,
                         definitions = definitions,
                     )
+                }
+            }
+
+            fun makeWithResult(
+                makeDefinitions: (Reference) -> Set<Definition>,
+                makeResult: (Reference) -> ShadowExpression,
+            ): ExpressionBuilder<ShadowExpression> = make(
+                makeDefinitions = makeDefinitions,
+            ).map { localScopeConstructor ->
+                localScopeConstructor.bindToReference { localScopeReference ->
+                    val reference = Reference(rawReference = localScopeReference)
+
+                    makeResult(reference)
                 }
             }
         }

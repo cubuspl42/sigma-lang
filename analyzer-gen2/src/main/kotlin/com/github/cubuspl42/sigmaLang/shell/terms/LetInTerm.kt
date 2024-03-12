@@ -62,7 +62,10 @@ data class LetInTerm(
                     accLocalNames + definitionTerm.names
                 }
 
-                val localScopeConstructor = LocalScope.Constructor.make { localScopeReference ->
+                fun <T : Any> withExtendedScope(
+                    localScopeReference: LocalScope.Reference,
+                    block: (innerContext: FormationContext) -> T,
+                ): T {
                     val innerScope = object : StaticScope {
                         override fun resolveName(
                             referredName: Identifier,
@@ -79,40 +82,37 @@ data class LetInTerm(
                         scope = innerScope,
                     )
 
-                    definitions.mapUniquely {
-                        it.binding.transmute(
-                            initializerStub = it.initializer.transmute(),
-                        ).build(
-                            formationContext = innerContext,
-                            buildContext = buildContext,
-                        )
-                    }
-                }.build(
+                    return block(innerContext)
+                }
+
+                val result = LocalScope.Constructor.makeWithResult(
+                    makeDefinitions = { localScopeReference ->
+                        withExtendedScope(
+                            localScopeReference = localScopeReference,
+                        ) { innerContext ->
+                            definitions.mapUniquely {
+                                it.binding.transmute(
+                                    initializerStub = it.initializer.transmute(),
+                                ).build(
+                                    formationContext = innerContext,
+                                    buildContext = buildContext,
+                                )
+                            }
+                        }
+                    },
+                    makeResult = { localScopeReference ->
+                        withExtendedScope(
+                            localScopeReference = localScopeReference,
+                        ) { innerContext ->
+                            result.transmute().build(
+                                formationContext = innerContext,
+                                buildContext = buildContext,
+                            )
+                        }
+                    },
+                ).build(
                     buildContext = buildContext,
                 )
-
-                val result = localScopeConstructor.bindToReference { localScopeReference ->
-                    val innerScope = object : StaticScope {
-                        override fun resolveName(
-                            referredName: Identifier,
-                        ): Expression? = if (referredName in allLocalNames) {
-                            localScopeReference.readField(
-                                fieldName = referredName,
-                            ).rawExpression
-                        } else null
-                    }.chainWith(
-                        context.scope,
-                    )
-
-                    val innerContext = context.copy(
-                        scope = innerScope,
-                    )
-
-                    result.transmute().build(
-                        formationContext = innerContext,
-                        buildContext = buildContext,
-                    )
-                }
 
                 return result
             }
