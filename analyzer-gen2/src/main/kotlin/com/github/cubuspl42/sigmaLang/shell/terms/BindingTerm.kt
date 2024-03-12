@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.ListUnconsPattern
 import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
@@ -52,14 +53,18 @@ data class ListUnconsBindingTerm(
 
     override fun transmute(
         initializerStub: ExpressionStub<ShadowExpression>,
-    ) = object : ExpressionStub<LocalScope.Constructor.ListUnconsDefinition>() {
+    ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
         override fun transform(
             context: FormationContext,
-        ) = object : ExpressionBuilder<LocalScope.Constructor.ListUnconsDefinition>() {
-            override fun build(buildContext: Expression.BuildContext) = LocalScope.Constructor.ListUnconsDefinition(
-                headName = headName,
-                tailName = tailName,
-                listInitializer = initializerStub.build(
+        ) = object : ExpressionBuilder<LocalScope.Constructor.PatternDefinition>() {
+            override fun build(buildContext: Expression.BuildContext) = LocalScope.Constructor.PatternDefinition(
+                builtinModuleReference = buildContext.builtinModule,
+                pattern = ListUnconsPattern(
+                    listClass = buildContext.builtinModule.listClass,
+                    headName = headName,
+                    tailName = tailName,
+                ),
+                initializer = initializerStub.build(
                     formationContext = context,
                     buildContext = buildContext,
                 ),

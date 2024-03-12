@@ -54,6 +54,19 @@ object BuiltinModule : Indexable() {
                             }
                         },
                     ),
+                    Identifier.of("isNotEmpty") to lazyOf(
+                        object : Abstraction() {
+                            override fun compute(argument: Value): Value {
+                                val args = argument as UnorderedTuple
+
+                                val list = args.get(Identifier.of("this")) as ListValue
+
+                                return BooleanPrimitive(
+                                    value = list.values.isNotEmpty(),
+                                )
+                            }
+                        },
+                    ),
                 ),
             ),
         ),
@@ -137,6 +150,13 @@ object BuiltinModule : Indexable() {
                     return BooleanPrimitive(
                         value = instancePrototypeTag == classPrototypeTag,
                     )
+                }
+            },
+        ),
+        Identifier("panic") to lazyOf(
+            object : Abstraction() {
+                override fun compute(argument: Value): Value {
+                    throw RuntimeException("Panic!")
                 }
             },
         ),

@@ -1,5 +1,5 @@
 %import cat
 
 %val main = %let {
-    [head, ...tail] = ["foo", "bar", "baz"],
-} %in tail
+    [head, ...tail] = [],
+} %in head
