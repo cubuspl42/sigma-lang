@@ -114,9 +114,7 @@ data class LetInTerm(
                         formationContext = innerContext,
                         buildContext = buildContext,
                     )
-                }.build(
-                    buildContext = buildContext,
-                )
+                }
 
                 return result
             }

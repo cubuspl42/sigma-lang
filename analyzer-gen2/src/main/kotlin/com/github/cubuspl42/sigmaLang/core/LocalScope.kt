@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core
 
+import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
@@ -64,9 +65,7 @@ object LocalScope {
                                 },
                             ),
                         )
-                    }.build(
-                        buildContext = buildContext,
-                    )
+                    }
                 }
             }
         }
@@ -117,40 +116,11 @@ object LocalScope {
             fun bindSingle(
                 expression: ShadowExpression,
                 makeResult: (ShadowExpression) -> ShadowExpression,
-            ): ExpressionBuilder<ShadowExpression> = object : ExpressionBuilder<ShadowExpression>() {
-                override fun build(buildContext: Expression.BuildContext): ShadowExpression {
-
-                    val boundIdentifier = Identifier.of("bound")
-                    val resultIdentifier = Identifier.of("result")
-
-                    val constructor = make { reference ->
-                        val boundReference = reference.referDefinitionInitializer(
-                            name = boundIdentifier,
-                        )
-
-                        val result = makeResult(boundReference)
-
-                        setOf(
-                            SimpleDefinition(
-                                name = boundIdentifier,
-                                initializer = expression,
-                            ),
-                            SimpleDefinition(
-                                name = resultIdentifier,
-                                initializer = result,
-                            ),
-                        )
-                    }.build(
-                        buildContext = buildContext,
-                    )
-
-                    val result = constructor.getDefinitionInitializer(
-                        name = resultIdentifier,
-                    )
-
-                    return result
-                }
-            }
+            ): ShadowExpression = AbstractionConstructor.looped1 { argumentReference ->
+                makeResult(argumentReference).rawExpression
+            }.call(
+                passedArgument = expression,
+            )
         }
 
         fun getDefinitionInitializer(name: Identifier): ShadowExpression = knotConstructor.readField(fieldName = name)

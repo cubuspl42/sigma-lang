@@ -26,151 +26,91 @@ public object Out {
                         UnorderedTuple(
                           valueByKey = mapOf(
                             Identifier(name = "main") to lazy {
-                              (object {
-                                public val knot2: Value by lazy {
-                                      UnorderedTuple(
-                                        valueByKey = mapOf(
-                                          Identifier(name = "bound") to lazy {
-                                            object {
-                                              public val knot3: Value by lazy {
-                                                    ((((knot0 as Callable).call(
-                                                      argument = Identifier(name = "__builtin__"),
-                                                    ) as Callable).call(
-                                                      argument = Identifier(name = "Dict"),
-                                                    ) as Callable).call(
-                                                      argument = Identifier(name = "unionWith"),
-                                                    ) as Callable).call(
-                                                      argument = UnorderedTuple(
-                                                        valueByKey = mapOf(
-                                                          Identifier(name = "first") to lazy {
-                                                            UnorderedTuple(
+                              (object : Abstraction() {
+                                override fun compute(argument: Value): Value {
+                                  val arg2 = argument
+                                  return (arg2 as Callable).call(
+                                    argument = Identifier(name = "tail"),
+                                  )
+                                }
+                              } as Callable).call(
+                                argument = object {
+                                  public val knot3: Value by lazy {
+                                        ((((knot0 as Callable).call(
+                                          argument = Identifier(name = "__builtin__"),
+                                        ) as Callable).call(
+                                          argument = Identifier(name = "Dict"),
+                                        ) as Callable).call(
+                                          argument = Identifier(name = "unionWith"),
+                                        ) as Callable).call(
+                                          argument = UnorderedTuple(
+                                            valueByKey = mapOf(
+                                              Identifier(name = "first") to lazy {
+                                                UnorderedTuple(
+                                                  valueByKey = mapOf(
+                                                  ),
+                                                ) 
+                                              },
+                                              Identifier(name = "second") to lazy {
+                                                (object : Abstraction() {
+                                                  override fun compute(argument: Value): Value {
+                                                    val arg4 = argument
+                                                    return UnorderedTuple(
+                                                      valueByKey = mapOf(
+                                                        Identifier(name = "head") to lazy {
+                                                          ((((knot0 as Callable).call(
+                                                            argument = Identifier(name =
+                                                                "__builtin__"),
+                                                          ) as Callable).call(
+                                                            argument = Identifier(name = "List"),
+                                                          ) as Callable).call(
+                                                            argument = Identifier(name = "head"),
+                                                          ) as Callable).call(
+                                                            argument = UnorderedTuple(
                                                               valueByKey = mapOf(
+                                                                Identifier(name = "this") to lazy {
+                                                                  arg4 
+                                                                },
                                                               ),
-                                                            ) 
-                                                          },
-                                                          Identifier(name = "second") to lazy {
-                                                            (object {
-                                                              public val knot4: Value by lazy {
-                                                                    UnorderedTuple(
-                                                                      valueByKey = mapOf(
-                                                                        Identifier(name = "bound")
-                                                                            to lazy {
-                                                                          ListValue(
-                                                                            values = listOf(
-                                                                              StringPrimitive(value
-                                                                                  = "foo"),
-                                                                              StringPrimitive(value
-                                                                                  = "bar"),
-                                                                              StringPrimitive(value
-                                                                                  = "baz"),
-                                                                            ),
-                                                                          ) 
-                                                                        },
-                                                                        Identifier(name = "result")
-                                                                            to lazy {
-                                                                          UnorderedTuple(
-                                                                            valueByKey = mapOf(
-                                                                              Identifier(name =
-                                                                                  "head") to lazy {
-                                                                                ((((knot0 as
-                                                                                    Callable).call(
-                                                                                  argument =
-                                                                                      Identifier(name
-                                                                                      =
-                                                                                      "__builtin__"),
-                                                                                ) as Callable).call(
-                                                                                  argument =
-                                                                                      Identifier(name
-                                                                                      = "List"),
-                                                                                ) as Callable).call(
-                                                                                  argument =
-                                                                                      Identifier(name
-                                                                                      = "head"),
-                                                                                ) as Callable).call(
-                                                                                  argument =
-                                                                                      UnorderedTuple(
-                                                                                    valueByKey =
-                                                                                        mapOf(
-                                                                                      Identifier(name
-                                                                                          = "this")
-                                                                                          to lazy {
-                                                                                        (knot4 as
-                                                                                            Callable).call(
-                                                                                          argument =
-                                                                                              Identifier(name
-                                                                                              =
-                                                                                              "bound"),
-                                                                                        ) 
-                                                                                      },
-                                                                                    ),
-                                                                                  ),
-                                                                                ) 
-                                                                              },
-                                                                              Identifier(name =
-                                                                                  "tail") to lazy {
-                                                                                ((((knot0 as
-                                                                                    Callable).call(
-                                                                                  argument =
-                                                                                      Identifier(name
-                                                                                      =
-                                                                                      "__builtin__"),
-                                                                                ) as Callable).call(
-                                                                                  argument =
-                                                                                      Identifier(name
-                                                                                      = "List"),
-                                                                                ) as Callable).call(
-                                                                                  argument =
-                                                                                      Identifier(name
-                                                                                      = "tail"),
-                                                                                ) as Callable).call(
-                                                                                  argument =
-                                                                                      UnorderedTuple(
-                                                                                    valueByKey =
-                                                                                        mapOf(
-                                                                                      Identifier(name
-                                                                                          = "this")
-                                                                                          to lazy {
-                                                                                        (knot4 as
-                                                                                            Callable).call(
-                                                                                          argument =
-                                                                                              Identifier(name
-                                                                                              =
-                                                                                              "bound"),
-                                                                                        ) 
-                                                                                      },
-                                                                                    ),
-                                                                                  ),
-                                                                                ) 
-                                                                              },
-                                                                            ),
-                                                                          ) 
-                                                                        },
-                                                                      ),
-                                                                    ) 
-                                                                  }
-                                                            }.knot4 as Callable).call(
-                                                              argument = Identifier(name =
-                                                                  "result"),
-                                                            ) 
-                                                          },
-                                                        ),
+                                                            ),
+                                                          ) 
+                                                        },
+                                                        Identifier(name = "tail") to lazy {
+                                                          ((((knot0 as Callable).call(
+                                                            argument = Identifier(name =
+                                                                "__builtin__"),
+                                                          ) as Callable).call(
+                                                            argument = Identifier(name = "List"),
+                                                          ) as Callable).call(
+                                                            argument = Identifier(name = "tail"),
+                                                          ) as Callable).call(
+                                                            argument = UnorderedTuple(
+                                                              valueByKey = mapOf(
+                                                                Identifier(name = "this") to lazy {
+                                                                  arg4 
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ) 
+                                                        },
                                                       ),
-                                                    ) 
+                                                    )
                                                   }
-                                            }.knot3 
-                                          },
-                                          Identifier(name = "result") to lazy {
-                                            ((knot2 as Callable).call(
-                                              argument = Identifier(name = "bound"),
-                                            ) as Callable).call(
-                                              argument = Identifier(name = "tail"),
-                                            ) 
-                                          },
-                                        ),
-                                      ) 
-                                    }
-                              }.knot2 as Callable).call(
-                                argument = Identifier(name = "result"),
+                                                } as Callable).call(
+                                                  argument = ListValue(
+                                                    values = listOf(
+                                                      StringPrimitive(value = "foo"),
+                                                      StringPrimitive(value = "bar"),
+                                                      StringPrimitive(value = "baz"),
+                                                    ),
+                                                  ),
+                                                ) 
+                                              },
+                                            ),
+                                          ),
+                                        ) 
+                                      }
+                                }.knot3,
                               ) 
                             },
                           ),

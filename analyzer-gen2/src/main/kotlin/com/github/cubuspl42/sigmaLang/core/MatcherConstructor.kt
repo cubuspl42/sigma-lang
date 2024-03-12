@@ -35,8 +35,6 @@ class MatcherConstructor(
                             elseResult = elseResult,
                         )
                     }
-                ).build(
-                    buildContext = buildContext,
                 )
 
                 return MatcherConstructor(
