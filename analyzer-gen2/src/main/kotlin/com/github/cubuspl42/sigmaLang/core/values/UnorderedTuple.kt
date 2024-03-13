@@ -12,4 +12,19 @@ class UnorderedTuple(
     ): UnorderedTuple = UnorderedTuple(
         valueByKey = valueByKey + secondTuple.valueByKey
     )
+
+    fun extendWith(
+        key: Identifier,
+        valueLazy: Lazy<Value>,
+    ): UnorderedTuple = UnorderedTuple(
+        valueByKey = valueByKey + (key to valueLazy),
+    )
+
+    fun extendWith(
+        key: Identifier,
+        value: Value,
+    ): UnorderedTuple = extendWith(
+        key = key,
+        valueLazy = lazyOf(value),
+    )
 }

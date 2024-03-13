@@ -1,9 +1,19 @@
-package com.github.cubuspl42.sigmaLang.core.values
+package com.github.cubuspl42.sigmaLang.core.values.builtin
 
 import com.github.cubuspl42.sigmaLang.core.ClassExpression
+import com.github.cubuspl42.sigmaLang.core.values.Abstraction
+import com.github.cubuspl42.sigmaLang.core.values.BooleanPrimitive
+import com.github.cubuspl42.sigmaLang.core.values.Callable
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.core.values.Indexable
+import com.github.cubuspl42.sigmaLang.core.values.ListValue
+import com.github.cubuspl42.sigmaLang.core.values.StringPrimitive
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.Value
 
 object BuiltinModule : Indexable() {
     override val valueByKey = mapOf(
+        Identifier.of("Class") to lazyOf(ClassModule),
         Identifier("List") to lazyOf(
             UnorderedTuple(
                 valueByKey = mapOf(
