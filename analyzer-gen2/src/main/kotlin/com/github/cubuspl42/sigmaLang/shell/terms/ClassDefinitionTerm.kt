@@ -1,13 +1,16 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.ClassConstructor
+import com.github.cubuspl42.sigmaLang.core.ClassReference
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
-import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.stubs.ClassStub
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.scope.ExpressionScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
@@ -19,7 +22,7 @@ data class ClassDefinitionTerm(
     data class ConstructorDeclarationTerm(
         val name: IdentifierTerm,
         val argumentType: UnorderedTupleTypeConstructorTerm,
-    ): Wrappable {
+    ) : Wrappable {
         companion object {
             fun build(
                 ctx: SigmaParser.ClassConstructorDeclarationContext,
@@ -36,31 +39,41 @@ data class ClassDefinitionTerm(
 
     data class MethodDefinitionTerm(
         val name: IdentifierTerm,
-        val abstractionConstructor: AbstractionConstructorTerm,
-    ): Wrappable {
+        val implementation: AbstractionConstructorTerm,
+    ) : Wrappable {
         companion object {
             fun build(
                 ctx: SigmaParser.FunctionDefinitionContext,
             ): MethodDefinitionTerm = MethodDefinitionTerm(
                 name = IdentifierTerm.build(ctx.name),
-                abstractionConstructor = AbstractionConstructorTerm(
+                implementation = AbstractionConstructorTerm(
                     argumentType = UnorderedTupleTypeConstructorTerm.build(ctx.argumentType),
                     image = ExpressionTerm.build(ctx.body),
                 ),
             )
         }
 
-        fun transmute() = ClassStub.MethodDefinitionStub(
-            name = name.transmute(),
-            methodConstructorStub = abstractionConstructor.transmute(),
-        )
+        fun buildMethodDefinitionConfig(
+            formationContext: FormationContext,
+            buildContext: Expression.BuildContext,
+        ) = object : ClassConstructor.MethodDefinition.Config() {
+            override val name: Identifier
+                get() = this@MethodDefinitionTerm.name.toIdentifier()
 
-        override fun wrap(): Value = UnorderedTuple(
-            valueByKey = mapOf(
-                Identifier.of("name") to lazyOf(name.wrap()),
-                Identifier.of("abstractionConstructor") to lazyOf(abstractionConstructor.wrap()),
-            ),
-        )
+            override fun createImplementation(
+                thisReference: Expression,
+            ) = implementation.build(
+                formationContext = formationContext.extendScope(
+                    innerScope = ExpressionScope(
+                        name = Identifier(name = "this"),
+                        boundExpression = thisReference,
+                    ),
+                ),
+                buildContext = buildContext,
+            ) as AbstractionConstructor
+        }
+
+        override fun wrap(): Value = TODO()
     }
 
     companion object : Term.Builder<SigmaParser.ClassDefinitionContext, ClassDefinitionTerm>() {
@@ -75,21 +88,39 @@ data class ClassDefinitionTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ClassDefinitionContext = parser.classDefinition()
     }
 
-    override fun transmuteInitializer(): ExpressionStub<ShadowExpression> = ClassStub.of(
-        tag = name.transmute(),
-        constructorName = constructor!!.name.transmute(),
-        methodDefinitionStubs = methodDefinitions.mapUniquely {
-            it.transmute()
-        },
-    )
+    override fun transmuteInitializer(): ExpressionStub<ClassConstructor> =
+        object : ExpressionStub<ClassConstructor>() {
+            override fun transform(
+                context: FormationContext,
+            ): ExpressionBuilder<ClassConstructor> = object : ExpressionBuilder<ClassConstructor>() {
+                override fun build(
+                    buildContext: Expression.BuildContext,
+                ) = ClassConstructor.create(
+                    builtinModule = buildContext.builtinModule,
+                    config = object : ClassConstructor.Config() {
+                        override val tag = name.toIdentifier()
 
-    override fun wrap(): Value {
-        return UnorderedTuple(
-            valueByKey = mapOf(
-                Identifier.of("name") to lazyOf(name.wrap()),
-                Identifier.of("constructor") to lazyOf(constructor.wrapOrNil()),
-                Identifier.of("methodDefinitions") to lazyOf(methodDefinitions.wrap())
-            )
+                        override val constructorName = constructor!!.name.toIdentifier()
+
+                        override fun createMethodDefinitions(
+                            classReference: ClassReference,
+                        ): Set<ClassConstructor.MethodDefinition.Config> =
+                            methodDefinitions.mapUniquely { methodDefinitionTerm ->
+                                methodDefinitionTerm.buildMethodDefinitionConfig(
+                                    formationContext = context,
+                                    buildContext = buildContext,
+                                )
+                            }
+                    },
+                )
+            }
+        }
+
+    override fun wrap(): Value = UnorderedTuple(
+        valueByKey = mapOf(
+            Identifier.of("name") to lazyOf(name.wrap()),
+            Identifier.of("constructor") to lazyOf(constructor.wrapOrNil()),
+            Identifier.of("methodDefinitions") to lazyOf(methodDefinitions.wrap())
         )
-    }
+    )
 }

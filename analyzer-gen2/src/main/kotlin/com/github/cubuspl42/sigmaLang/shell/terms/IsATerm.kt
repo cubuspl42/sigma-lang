@@ -1,11 +1,15 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.ClassConstructor
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
-import com.github.cubuspl42.sigmaLang.core.isA
+import com.github.cubuspl42.sigmaLang.core.expressions.Call
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class IsATerm(
@@ -21,11 +25,27 @@ data class IsATerm(
         )
     }
 
-    override fun transmute(): ExpressionStub<ShadowExpression> = ExpressionStub.map2Unpacked(
-        instance.transmute(),
-        class_.transmute(),
-    ) { instanceExpression, classExpression ->
-        instanceExpression.isA(classExpression)
+    override fun transmute(): ExpressionStub<Call> = object : ExpressionStub<Call>() {
+        override fun transform(
+            context: FormationContext,
+        ) = object : ExpressionBuilder<Call>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): Call {
+                val isA = buildContext.builtinModule.isAFunction
+
+                return isA.call(
+                    instance = instance.build(
+                        formationContext = context,
+                        buildContext = buildContext,
+                    ),
+                    class_ = class_.build(
+                        formationContext = context,
+                        buildContext = buildContext,
+                    ),
+                )
+            }
+        }
     }
 
     override fun wrap(): Value = UnorderedTuple(

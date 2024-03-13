@@ -80,6 +80,7 @@ sealed interface ExpressionTerm : Term {
     }
 
     fun transmute(): ExpressionStub<ShadowExpression>
+
     fun build(
         formationContext: FormationContext,
         buildContext: Expression.BuildContext,

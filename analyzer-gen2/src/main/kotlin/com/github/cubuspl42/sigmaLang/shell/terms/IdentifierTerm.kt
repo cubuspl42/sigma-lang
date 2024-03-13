@@ -8,8 +8,10 @@ import org.antlr.v4.runtime.Token
 
 data class IdentifierTerm(
     val name: String,
-): Wrappable {
-    fun transmute(): Identifier = Identifier(
+) : Wrappable {
+    fun transmute(): Identifier = toIdentifier()
+
+    fun toIdentifier(): Identifier = Identifier(
         name = name,
     )
 

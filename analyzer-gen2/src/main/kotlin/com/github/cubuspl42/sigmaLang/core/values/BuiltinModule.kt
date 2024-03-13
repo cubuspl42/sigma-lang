@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core.values
 
-import com.github.cubuspl42.sigmaLang.core.ClassBuilder
+import com.github.cubuspl42.sigmaLang.core.ClassExpression
 
 object BuiltinModule : Indexable() {
     override val valueByKey = mapOf(
@@ -132,19 +132,19 @@ object BuiltinModule : Indexable() {
                     val classValue = args.get(key = Identifier(name = "class"))
 
                     val instancePrototypeValue = (instanceValue as Callable).call(
-                        argument = ClassBuilder.instancePrototypeIdentifier,
+                        argument = ClassExpression.instancePrototypeIdentifier,
                     )
 
                     val classPrototypeValue = (classValue as Callable).call(
-                        argument = ClassBuilder.classPrototypeIdentifier,
+                        argument = ClassExpression.classPrototypeIdentifier,
                     )
 
                     val instancePrototypeTag = (instancePrototypeValue as Callable).call(
-                        argument = ClassBuilder.classTagIdentifier,
+                        argument = ClassExpression.classTagIdentifier,
                     )
 
                     val classPrototypeTag = (classPrototypeValue as Callable).call(
-                        argument = ClassBuilder.classTagIdentifier,
+                        argument = ClassExpression.classTagIdentifier,
                     )
 
                     return BooleanPrimitive(
