@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.call
 import com.github.cubuspl42.sigmaLang.core.readField
+import com.github.cubuspl42.sigmaLang.core.values.Abstraction
 import com.github.cubuspl42.sigmaLang.core.values.builtin.BuiltinModule
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -255,4 +256,54 @@ class BuiltinModuleReference(
             fieldName = Identifier.of("String"),
         ),
     )
+
+    val classModule = ClassModuleExpression(
+        rawModuleExpression = rawModuleReference.readField(
+            fieldName = Identifier.of("Class"),
+        ),
+    )
+}
+
+class ClassModuleExpression(
+    private val rawModuleExpression: ShadowExpression,
+) {
+    inner class Of : ShadowExpression() {
+        private val rawMethodExpression: ShadowExpression = rawModuleExpression.readField(
+            fieldName = Identifier.of("of"),
+        )
+
+        override val rawExpression: Expression
+            get() = rawModuleExpression.rawExpression
+
+        fun call(
+            tag: Identifier,
+            instanceConstructorName: Identifier,
+            methodByName: Map<Identifier, AbstractionConstructor>,
+        ): ShadowExpression = rawMethodExpression.call(
+            passedArgument = UnorderedTupleConstructor.fromEntries(
+                UnorderedTupleConstructor.Entry(
+                    key = Identifier.of("tag"),
+                    value = lazyOf(tag.toLiteral()),
+                ),
+                UnorderedTupleConstructor.Entry(
+                    key = Identifier.of("instanceConstructorName"),
+                    value = lazyOf(instanceConstructorName.toLiteral()),
+                ),
+                UnorderedTupleConstructor.Entry(
+                    key = Identifier.of("methods"),
+                    value = lazyOf(
+                        UnorderedTupleConstructor.fromEntries(
+                            methodByName.map { (name, implementation) ->
+                                UnorderedTupleConstructor.Entry(
+                                    key = name, value = lazyOf(implementation)
+                                )
+                            },
+                        )
+                    ),
+                ),
+            ),
+        )
+    }
+
+    val of = Of()
 }

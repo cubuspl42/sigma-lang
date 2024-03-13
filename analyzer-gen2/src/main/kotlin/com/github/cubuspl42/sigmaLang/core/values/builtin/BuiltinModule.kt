@@ -1,6 +1,5 @@
 package com.github.cubuspl42.sigmaLang.core.values.builtin
 
-import com.github.cubuspl42.sigmaLang.core.ClassExpression
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
 import com.github.cubuspl42.sigmaLang.core.values.BooleanPrimitive
 import com.github.cubuspl42.sigmaLang.core.values.Callable
@@ -142,19 +141,19 @@ object BuiltinModule : Indexable() {
                     val classValue = args.get(key = Identifier(name = "class"))
 
                     val instancePrototypeValue = (instanceValue as Callable).call(
-                        argument = ClassExpression.instancePrototypeIdentifier,
+                        argument = ClassModule.instancePrototypeIdentifier,
                     )
 
                     val classPrototypeValue = (classValue as Callable).call(
-                        argument = ClassExpression.classPrototypeIdentifier,
+                        argument = ClassModule.classPrototypeIdentifier,
                     )
 
                     val instancePrototypeTag = (instancePrototypeValue as Callable).call(
-                        argument = ClassExpression.classTagIdentifier,
+                        argument = ClassModule.classTagIdentifier,
                     )
 
                     val classPrototypeTag = (classPrototypeValue as Callable).call(
-                        argument = ClassExpression.classTagIdentifier,
+                        argument = ClassModule.classTagIdentifier,
                     )
 
                     return BooleanPrimitive(

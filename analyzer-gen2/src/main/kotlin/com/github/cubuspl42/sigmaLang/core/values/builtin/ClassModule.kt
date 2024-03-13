@@ -1,8 +1,5 @@
 package com.github.cubuspl42.sigmaLang.core.values.builtin
 
-import com.github.cubuspl42.sigmaLang.core.ClassExpression.Companion.classPrototypeIdentifier
-import com.github.cubuspl42.sigmaLang.core.ClassExpression.Companion.instancePrototypeIdentifier
-import com.github.cubuspl42.sigmaLang.core.ClassExpression.Companion.thisIdentifier
 import com.github.cubuspl42.sigmaLang.core.values.Abstraction
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Indexable
@@ -10,6 +7,11 @@ import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
 import com.github.cubuspl42.sigmaLang.core.values.Value
 
 object ClassModule : Indexable() {
+    val classPrototypeIdentifier = Identifier(name = "__class_prototype__")
+    val classTagIdentifier = Identifier(name = "__class_tag__")
+    val instancePrototypeIdentifier = Identifier(name = "__instance_prototype__")
+    val thisIdentifier = Identifier(name = "this")
+
     private fun buildProxyMethod(
         methodName: Identifier,
     ): Abstraction = object : Abstraction() {
@@ -30,16 +32,12 @@ object ClassModule : Indexable() {
         ): Value {
             argument as Indexable
 
-            val tag = argument.get(key = classPrototypeIdentifier) as Identifier
-            val instanceConstructorName = argument.get(key = instancePrototypeIdentifier) as Identifier
-            val methods = argument.valueByKey.mapValues { it.value as Abstraction }
+            val tag = argument.get(key = Identifier.of("tag")) as Identifier
+            val instanceConstructorName = argument.get(key = Identifier.of("instanceConstructorName")) as Identifier
+            val methods = argument.get(key = Identifier.of("methods")) as UnorderedTuple
 
-            val prototype: Value = UnorderedTuple(
-                valueByKey = methods.mapValues { (_, method) ->
-                    lazyOf(method)
-                },
-            ).extendWith(
-                key = classPrototypeIdentifier,
+            val prototype = methods.extendWith(
+                key = classTagIdentifier,
                 value = tag,
             )
 
@@ -50,7 +48,7 @@ object ClassModule : Indexable() {
                 )
             }
 
-            val proxyMethods: Map<Identifier, Lazy<Abstraction>> = methods.mapValues { (name, _) ->
+            val proxyMethods: Map<Identifier, Lazy<Abstraction>> = methods.valueByKey.mapValues { (name, _) ->
                 lazyOf(buildProxyMethod(methodName = name))
             }
 

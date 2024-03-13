@@ -37,11 +37,11 @@ fun main() {
 
     println(result)
 
-    val codeGenRoot = Out.root
-
-    val codeGenResult = extractMain(codeGenRoot)
-
-    println(codeGenResult)
+//    val codeGenRoot = Out.root
+//
+//    val codeGenResult = extractMain(codeGenRoot)
+//
+//    println(codeGenResult)
 }
 
 private fun extractMain(root: Value): Value {

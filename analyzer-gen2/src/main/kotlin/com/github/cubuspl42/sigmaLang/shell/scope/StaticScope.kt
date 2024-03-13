@@ -35,12 +35,9 @@ interface StaticScope {
 fun StaticScope.chainWith(
     other: StaticScope,
 ): StaticScope = object : StaticScope {
-    override fun resolveName(referredName: Identifier): Expression? {
-        val r = this@chainWith.resolveName(
-            referredName = referredName,
-        ) ?: other.resolveName(
-            referredName = referredName,
-        )
-        return r
-    }
+    override fun resolveName(referredName: Identifier): Expression? = this@chainWith.resolveName(
+        referredName = referredName,
+    ) ?: other.resolveName(
+        referredName = referredName,
+    )
 }

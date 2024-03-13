@@ -1,8 +1,12 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.scope.FieldScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.AbstractionConstructorStub
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
@@ -20,6 +24,27 @@ data class AbstractionConstructorTerm(
 
         override fun extract(parser: SigmaParser): SigmaParser.AbstractionConstructorContext =
             parser.abstractionConstructor()
+    }
+
+    val argumentNames: Set<Identifier>
+        get() = argumentType.keys.mapUniquely { it.toIdentifier() }
+
+    fun build(
+        formationContext: FormationContext,
+        buildContext: Expression.BuildContext,
+        extraArgumentNames: Set<Identifier> = emptySet(),
+    ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
+        AbstractionConstructor(
+            body = image.build(
+                formationContext = formationContext.extendScope(
+                    innerScope = FieldScope(
+                        names = argumentNames + extraArgumentNames,
+                        tupleReference = argumentReference,
+                    ),
+                ),
+                buildContext = buildContext,
+            ).rawExpression,
+        )
     }
 
     override fun transmute(): AbstractionConstructorStub = AbstractionConstructorStub.of(
