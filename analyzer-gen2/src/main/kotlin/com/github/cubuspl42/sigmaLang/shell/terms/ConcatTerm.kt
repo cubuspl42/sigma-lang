@@ -4,12 +4,9 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
-import com.github.cubuspl42.sigmaLang.core.call
-import com.github.cubuspl42.sigmaLang.core.expressions.IdentifierLiteral
-import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
@@ -57,7 +54,7 @@ data class ConcatTerm(
         }
     }
 
-    override fun wrap(): Value = UnorderedTuple(
+    override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(
             Identifier.of("left") to lazyOf(left.wrap()),
             Identifier.of("right") to lazyOf(right.wrap()),

@@ -5,8 +5,8 @@ import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.buildRaw
-import com.github.cubuspl42.sigmaLang.core.values.Abstraction
-import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstraction
+import com.github.cubuspl42.sigmaLang.core.values.AbstractionValue
+import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstractionValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 import com.squareup.kotlinpoet.CodeBlock
@@ -28,7 +28,7 @@ class AbstractionConstructor(
         final override fun generateCode(): CodeBlock {
             val abstractionObjectBuilder =
                 TypeSpec.anonymousClassBuilder()
-                    .superclass(typeNameOf<Abstraction>())
+                    .superclass(typeNameOf<AbstractionValue>())
                     .addSuperclassConstructorParameter("")
                     .addFunction(
                         FunSpec.builder(name = "compute").addParameter(
@@ -133,7 +133,7 @@ class AbstractionConstructor(
     }
 
     override fun bind(scope: DynamicScope): Lazy<Value> = lazyOf(
-        ExpressedAbstraction(
+        ExpressedAbstractionValue(
             abstractionConstructor = this,
             closure = scope,
         )

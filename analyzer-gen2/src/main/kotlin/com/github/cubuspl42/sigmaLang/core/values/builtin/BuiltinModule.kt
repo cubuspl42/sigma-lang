@@ -1,23 +1,23 @@
 package com.github.cubuspl42.sigmaLang.core.values.builtin
 
-import com.github.cubuspl42.sigmaLang.core.values.Abstraction
-import com.github.cubuspl42.sigmaLang.core.values.BooleanPrimitive
-import com.github.cubuspl42.sigmaLang.core.values.Callable
+import com.github.cubuspl42.sigmaLang.core.values.AbstractionValue
+import com.github.cubuspl42.sigmaLang.core.values.BooleanValue
+import com.github.cubuspl42.sigmaLang.core.values.CallableValue
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.Indexable
+import com.github.cubuspl42.sigmaLang.core.values.IndexableValue
 import com.github.cubuspl42.sigmaLang.core.values.ListValue
-import com.github.cubuspl42.sigmaLang.core.values.StringPrimitive
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.StringValue
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 
-object BuiltinModule : Indexable() {
+object BuiltinModule : IndexableValue() {
     override val valueByKey = mapOf(
         Identifier.of("Class") to lazyOf(ClassModule),
         Identifier("List") to lazyOf(
-            UnorderedTuple(
+            UnorderedTupleValue(
                 valueByKey = mapOf(
                     Identifier.of("of") to lazyOf(
-                        object : Abstraction() {
+                        object : AbstractionValue() {
                             override fun compute(argument: Value): Value {
                                 val args = argument as ListValue
 
@@ -26,9 +26,9 @@ object BuiltinModule : Indexable() {
                         },
                     ),
                     Identifier.of("concat") to lazyOf(
-                        object : Abstraction() {
+                        object : AbstractionValue() {
                             override fun compute(argument: Value): Value {
-                                val args = argument as UnorderedTuple
+                                val args = argument as UnorderedTupleValue
 
                                 val left = args.get(key = Identifier.of("left")) as ListValue
                                 val right = args.get(key = Identifier.of("right")) as ListValue
@@ -40,9 +40,9 @@ object BuiltinModule : Indexable() {
                         },
                     ),
                     Identifier.of("head") to lazyOf(
-                        object : Abstraction() {
+                        object : AbstractionValue() {
                             override fun compute(argument: Value): Value {
-                                val args = argument as UnorderedTuple
+                                val args = argument as UnorderedTupleValue
 
                                 val list = args.get(Identifier.of("this")) as ListValue
 
@@ -51,9 +51,9 @@ object BuiltinModule : Indexable() {
                         },
                     ),
                     Identifier.of("tail") to lazyOf(
-                        object : Abstraction() {
+                        object : AbstractionValue() {
                             override fun compute(argument: Value): Value {
-                                val args = argument as UnorderedTuple
+                                val args = argument as UnorderedTupleValue
 
                                 val list = args.get(Identifier.of("this")) as ListValue
 
@@ -64,13 +64,13 @@ object BuiltinModule : Indexable() {
                         },
                     ),
                     Identifier.of("isNotEmpty") to lazyOf(
-                        object : Abstraction() {
+                        object : AbstractionValue() {
                             override fun compute(argument: Value): Value {
-                                val args = argument as UnorderedTuple
+                                val args = argument as UnorderedTupleValue
 
                                 val list = args.get(Identifier.of("this")) as ListValue
 
-                                return BooleanPrimitive(
+                                return BooleanValue(
                                     value = list.values.isNotEmpty(),
                                 )
                             }
@@ -80,17 +80,17 @@ object BuiltinModule : Indexable() {
             ),
         ),
         Identifier("String") to lazyOf(
-            UnorderedTuple(
+            UnorderedTupleValue(
                 valueByKey = mapOf(
                     Identifier.of("concat") to lazyOf(
-                        object : Abstraction() {
+                        object : AbstractionValue() {
                             override fun compute(argument: Value): Value {
-                                val args = argument as UnorderedTuple
+                                val args = argument as UnorderedTupleValue
 
-                                val left = args.get(key = Identifier.of("left")) as StringPrimitive
-                                val right = args.get(key = Identifier.of("right")) as StringPrimitive
+                                val left = args.get(key = Identifier.of("left")) as StringValue
+                                val right = args.get(key = Identifier.of("right")) as StringValue
 
-                                return StringPrimitive(
+                                return StringValue(
                                     value = left.value + right.value,
                                 )
                             }
@@ -100,15 +100,15 @@ object BuiltinModule : Indexable() {
             ),
         ),
         Identifier("Dict") to lazyOf(
-            UnorderedTuple(
+            UnorderedTupleValue(
                 valueByKey = mapOf(
                     Identifier("unionWith") to lazyOf(
-                        object : Abstraction() {
+                        object : AbstractionValue() {
                             override fun compute(argument: Value): Value {
-                                val args = argument as UnorderedTuple
+                                val args = argument as UnorderedTupleValue
 
-                                val firstTuple = args.get(key = Identifier(name = "first")) as UnorderedTuple
-                                val secondTuple = args.get(key = Identifier(name = "second")) as UnorderedTuple
+                                val firstTuple = args.get(key = Identifier(name = "first")) as UnorderedTupleValue
+                                val secondTuple = args.get(key = Identifier(name = "second")) as UnorderedTupleValue
 
                                 return firstTuple.unionWith(secondTuple)
                             }
@@ -118,11 +118,11 @@ object BuiltinModule : Indexable() {
             ),
         ),
         Identifier("if") to lazyOf(
-            object : Abstraction() {
+            object : AbstractionValue() {
                 override fun compute(argument: Value): Value {
-                    val args = argument as UnorderedTuple
+                    val args = argument as UnorderedTupleValue
 
-                    val conditionValue = args.get(key = Identifier(name = "condition")) as BooleanPrimitive
+                    val conditionValue = args.get(key = Identifier(name = "condition")) as BooleanValue
 
                     return if (conditionValue.isTrue()) {
                         args.get(key = Identifier(name = "then"))
@@ -133,37 +133,37 @@ object BuiltinModule : Indexable() {
             },
         ),
         Identifier("isA") to lazyOf(
-            object : Abstraction() {
+            object : AbstractionValue() {
                 override fun compute(argument: Value): Value {
-                    val args = argument as UnorderedTuple
+                    val args = argument as UnorderedTupleValue
 
                     val instanceValue = args.get(key = Identifier(name = "instance"))
                     val classValue = args.get(key = Identifier(name = "class"))
 
-                    val instancePrototypeValue = (instanceValue as Callable).call(
+                    val instancePrototypeValue = (instanceValue as CallableValue).call(
                         argument = ClassModule.instancePrototypeIdentifier,
                     )
 
-                    val classPrototypeValue = (classValue as Callable).call(
+                    val classPrototypeValue = (classValue as CallableValue).call(
                         argument = ClassModule.classPrototypeIdentifier,
                     )
 
-                    val instancePrototypeTag = (instancePrototypeValue as Callable).call(
+                    val instancePrototypeTag = (instancePrototypeValue as CallableValue).call(
                         argument = ClassModule.classTagIdentifier,
                     )
 
-                    val classPrototypeTag = (classPrototypeValue as Callable).call(
+                    val classPrototypeTag = (classPrototypeValue as CallableValue).call(
                         argument = ClassModule.classTagIdentifier,
                     )
 
-                    return BooleanPrimitive(
+                    return BooleanValue(
                         value = instancePrototypeTag == classPrototypeTag,
                     )
                 }
             },
         ),
         Identifier("panic") to lazyOf(
-            object : Abstraction() {
+            object : AbstractionValue() {
                 override fun compute(argument: Value): Value {
                     throw RuntimeException("Panic!")
                 }

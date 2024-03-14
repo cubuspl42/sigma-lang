@@ -1,9 +1,8 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 
 data class UnorderedTupleTypeConstructorTerm(
@@ -41,7 +40,7 @@ data class UnorderedTupleTypeConstructorTerm(
     val keys: Set<IdentifierTerm> = body.entries.map { it.key }.toSet()
 
     override fun wrap(): Value {
-        return UnorderedTuple(
+        return UnorderedTupleValue(
             valueByKey = mapOf(
                 Identifier.of("body") to lazyOf(body.wrap()),
             ),

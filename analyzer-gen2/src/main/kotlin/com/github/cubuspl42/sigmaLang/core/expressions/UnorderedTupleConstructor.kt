@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.buildRaw
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.stubs.UnorderedTupleConstructorStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.asStub
@@ -81,7 +81,7 @@ class UnorderedTupleConstructor(
                     %L),
                     ⇤)
                 """.trimIndent(),
-                UnorderedTuple::class,
+                UnorderedTupleValue::class,
                 passedEntriesBuilder.build(),
             )
         }
@@ -114,7 +114,7 @@ class UnorderedTupleConstructor(
     }
 
     override fun bind(scope: DynamicScope): Lazy<Value> = lazyOf(
-        UnorderedTuple(
+        UnorderedTupleValue(
             valueByKey = valueByKey.mapValues { (_, valueLazy) ->
                 valueLazy.value.rawExpression.bind(scope = scope)
             },

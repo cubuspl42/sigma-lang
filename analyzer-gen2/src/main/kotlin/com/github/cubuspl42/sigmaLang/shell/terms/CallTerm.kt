@@ -2,12 +2,9 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
-import com.github.cubuspl42.sigmaLang.core.expressions.Call
-import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.CallStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
@@ -29,7 +26,7 @@ data class CallTerm(
         passedArgumentStub = passedArgument.transmute(),
     )
 
-    override fun wrap(): Value = UnorderedTuple(
+    override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(
             Identifier.of("callee") to lazyOf(callee.wrap()),
             Identifier.of("passedArgument") to lazyOf(passedArgument.wrap()),

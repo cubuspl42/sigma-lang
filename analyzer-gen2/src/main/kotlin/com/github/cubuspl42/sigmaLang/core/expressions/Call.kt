@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.buildRaw
-import com.github.cubuspl42.sigmaLang.core.values.Callable
+import com.github.cubuspl42.sigmaLang.core.values.CallableValue
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.squareup.kotlinpoet.CodeBlock
@@ -35,7 +35,7 @@ class Call(
                 ⇤)
             """.trimIndent(),
             callee,
-            Callable::class,
+            CallableValue::class,
             passedArgument
         )
 
@@ -68,7 +68,7 @@ class Call(
         val passedArgumentValueLazy = passedArgument.bind(scope = scope)
 
         return lazy {
-            val calleeValue = calleeValueLazy.value as Callable
+            val calleeValue = calleeValueLazy.value as CallableValue
             val passedArgumentValue = passedArgumentValueLazy.value
 
             calleeValue.call(argument = passedArgumentValue)

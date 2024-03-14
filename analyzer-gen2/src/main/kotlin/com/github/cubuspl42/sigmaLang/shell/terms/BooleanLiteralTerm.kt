@@ -3,32 +3,32 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.expressions.BooleanLiteral
-import com.github.cubuspl42.sigmaLang.core.values.BooleanPrimitive
+import com.github.cubuspl42.sigmaLang.core.values.BooleanValue
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.stubs.asStub
 
 data class BooleanLiteralTerm(
-    override val value: BooleanPrimitive,
+    override val value: BooleanValue,
 ) : PrimitiveLiteralTerm() {
     companion object : Term.Builder<SigmaParser.BooleanLiteralContext, BooleanLiteralTerm>() {
         val False = BooleanLiteralTerm(
-            value = BooleanPrimitive.False,
+            value = BooleanValue.False,
         )
 
         val True = BooleanLiteralTerm(
-            value = BooleanPrimitive.True,
+            value = BooleanValue.True,
         )
 
         override fun build(
             ctx: SigmaParser.BooleanLiteralContext,
         ): BooleanLiteralTerm = object : SigmaParserBaseVisitor<BooleanLiteralTerm>() {
             override fun visitFalseLiteral(ctx: SigmaParser.FalseLiteralContext?): BooleanLiteralTerm =
-                BooleanLiteralTerm(value = BooleanPrimitive.False)
+                BooleanLiteralTerm(value = BooleanValue.False)
 
             override fun visitTrueLiteral(ctx: SigmaParser.TrueLiteralContext?): BooleanLiteralTerm =
-                BooleanLiteralTerm(value = BooleanPrimitive.True)
+                BooleanLiteralTerm(value = BooleanValue.True)
         }.visit(ctx)
 
         override fun extract(
@@ -40,7 +40,7 @@ data class BooleanLiteralTerm(
         value = value,
     ).asStub()
 
-    override fun wrap(): Value = UnorderedTuple(
+    override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(
             Identifier.of("value") to lazyOf(value),
         )

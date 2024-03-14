@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.core.MatcherConstructor
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
@@ -105,7 +105,7 @@ data class MatchTerm(
             }
     }
 
-    override fun wrap(): Value = UnorderedTuple(
+    override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(
             Identifier.of("matched") to lazyOf(matched.wrap()),
             Identifier.of("patternBlocks") to lazyOf(patternBlocks.wrap()),

@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
-import com.github.cubuspl42.sigmaLang.core.values.BooleanPrimitive
+import com.github.cubuspl42.sigmaLang.core.values.BooleanValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -33,7 +33,7 @@ class OrderedTupleConstructorTermTest {
                             UnorderedTupleConstructorTerm.Entry(
                                 key = IdentifierTerm("x"),
                                 value = BooleanLiteralTerm(
-                                    value = BooleanPrimitive.True,
+                                    value = BooleanValue.True,
                                 ),
                             ),
                         ),

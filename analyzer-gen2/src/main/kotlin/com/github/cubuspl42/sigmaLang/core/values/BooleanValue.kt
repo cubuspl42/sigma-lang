@@ -3,12 +3,12 @@ package com.github.cubuspl42.sigmaLang.core.values
 import com.github.cubuspl42.sigmaLang.core.expressions.BooleanLiteral
 import com.squareup.kotlinpoet.CodeBlock
 
-data class BooleanPrimitive(
+data class BooleanValue(
     private val value: Boolean,
 ) : PrimitiveValue() {
     companion object {
-        val False = BooleanPrimitive(value = false)
-        val True = BooleanPrimitive(value = true)
+        val False = BooleanValue(value = false)
+        val True = BooleanValue(value = true)
     }
 
     fun isTrue(): Boolean = value
@@ -17,7 +17,7 @@ data class BooleanPrimitive(
         """
             %T(value = $value)
         """.trimIndent(),
-        BooleanPrimitive::class,
+        BooleanValue::class,
     )
 
     override fun toLiteral() = BooleanLiteral(

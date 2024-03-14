@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class UnorderedTupleConstructorTermTest {
+class UnorderedTupleValueConstructorTermTest {
     @Test
     fun testSimple() {
         val term = UnorderedTupleConstructorTerm.parse(

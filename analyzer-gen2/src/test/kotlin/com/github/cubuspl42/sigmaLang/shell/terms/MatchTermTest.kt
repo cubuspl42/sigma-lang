@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
-import com.github.cubuspl42.sigmaLang.core.values.StringPrimitive
+import com.github.cubuspl42.sigmaLang.core.values.StringValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -35,7 +35,7 @@ class MatchTermTest {
                             referredName = IdentifierTerm(name = "Nil"),
                         ),
                         result = StringLiteralTerm(
-                            value = StringPrimitive(
+                            value = StringValue(
                                 value = "nil"
                             ),
                         ),

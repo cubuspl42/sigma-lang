@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.core.values.builtin.ClassModule
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
@@ -101,7 +101,7 @@ data class ClassDefinitionTerm(
             }
         }
 
-    override fun wrap(): Value = UnorderedTuple(
+    override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(
             Identifier.of("name") to lazyOf(name.wrap()),
             Identifier.of("constructor") to lazyOf(constructor.wrapOrNil()),

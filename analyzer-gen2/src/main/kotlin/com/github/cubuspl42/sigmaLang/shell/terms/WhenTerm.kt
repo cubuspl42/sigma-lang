@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.utils.uncons
@@ -19,7 +19,7 @@ data class WhenTerm(
         val condition: ExpressionTerm,
         val result: ExpressionTerm,
     ): Wrappable {
-        override fun wrap(): Value = UnorderedTuple(
+        override fun wrap(): Value = UnorderedTupleValue(
             valueByKey = mapOf(
                 Identifier.of("condition") to lazyOf(condition.wrap()),
                 Identifier.of("result") to lazyOf(result.wrap()),
@@ -86,7 +86,7 @@ data class WhenTerm(
         )
     }
 
-    override fun wrap(): Value = UnorderedTuple(
+    override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(
             Identifier.of("entries") to lazyOf(caseBlocks.wrap()),
             Identifier.of("elseEntry") to lazyOf(elseBlock.wrapOrNil()),

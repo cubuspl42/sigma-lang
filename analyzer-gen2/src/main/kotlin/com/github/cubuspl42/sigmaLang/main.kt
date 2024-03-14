@@ -3,7 +3,7 @@ package com.github.cubuspl42.sigmaLang
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.ModulePath
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.Indexable
+import com.github.cubuspl42.sigmaLang.core.values.IndexableValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.ModuleLoader
 import com.github.cubuspl42.sigmaLang.shell.ProjectLoader
@@ -46,5 +46,5 @@ fun main() {
 
 private fun extractMain(root: Value): Value {
     val main = Identifier(name = "main")
-    return ((root as Indexable).get(main) as Indexable).get(main)
+    return ((root as IndexableValue).get(main) as IndexableValue).get(main)
 }

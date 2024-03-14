@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core.values
 
-abstract class Indexable : Callable() {
+abstract class IndexableValue : CallableValue() {
     final override fun call(argument: Value): Value = get(key = argument as Identifier)
 
     fun get(

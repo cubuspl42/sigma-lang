@@ -4,7 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.FieldScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.AbstractionConstructorStub
@@ -52,7 +52,7 @@ data class AbstractionConstructorTerm(
         body = image.transmute(),
     )
 
-    override fun wrap(): UnorderedTuple = UnorderedTuple(
+    override fun wrap(): UnorderedTupleValue = UnorderedTupleValue(
         valueByKey = mapOf(
             Identifier.of("name") to lazyOf(argumentType.wrap()),
             Identifier.of("body") to lazyOf(image.wrap()),

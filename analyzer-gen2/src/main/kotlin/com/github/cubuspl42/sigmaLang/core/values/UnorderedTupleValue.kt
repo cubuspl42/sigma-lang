@@ -1,29 +1,29 @@
 package com.github.cubuspl42.sigmaLang.core.values
 
-class UnorderedTuple(
+class UnorderedTupleValue(
     override val valueByKey: Map<Identifier, Lazy<Value>>,
-) : Indexable() {
+) : IndexableValue() {
     companion object {
-        val Empty = UnorderedTuple(valueByKey = emptyMap())
+        val Empty = UnorderedTupleValue(valueByKey = emptyMap())
     }
 
     fun unionWith(
-        secondTuple: UnorderedTuple,
-    ): UnorderedTuple = UnorderedTuple(
+        secondTuple: UnorderedTupleValue,
+    ): UnorderedTupleValue = UnorderedTupleValue(
         valueByKey = valueByKey + secondTuple.valueByKey
     )
 
     fun extendWith(
         key: Identifier,
         valueLazy: Lazy<Value>,
-    ): UnorderedTuple = UnorderedTuple(
+    ): UnorderedTupleValue = UnorderedTupleValue(
         valueByKey = valueByKey + (key to valueLazy),
     )
 
     fun extendWith(
         key: Identifier,
         value: Value,
-    ): UnorderedTuple = extendWith(
+    ): UnorderedTupleValue = extendWith(
         key = key,
         valueLazy = lazyOf(value),
     )

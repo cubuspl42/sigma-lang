@@ -1,12 +1,12 @@
 package com.github.cubuspl42.sigmaLang.core.values.builtin
 
-import com.github.cubuspl42.sigmaLang.core.values.Abstraction
+import com.github.cubuspl42.sigmaLang.core.values.AbstractionValue
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.core.values.Indexable
-import com.github.cubuspl42.sigmaLang.core.values.UnorderedTuple
+import com.github.cubuspl42.sigmaLang.core.values.IndexableValue
+import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 
-object ClassModule : Indexable() {
+object ClassModule : IndexableValue() {
     val classPrototypeIdentifier = Identifier(name = "__class_prototype__")
     val classTagIdentifier = Identifier(name = "__class_tag__")
     val instancePrototypeIdentifier = Identifier(name = "__instance_prototype__")
@@ -14,45 +14,45 @@ object ClassModule : Indexable() {
 
     private fun buildProxyMethod(
         methodName: Identifier,
-    ): Abstraction = object : Abstraction() {
+    ): AbstractionValue = object : AbstractionValue() {
         override fun compute(argument: Value): Value {
-            val self = (argument as UnorderedTuple).get(key = thisIdentifier) as Indexable
+            val self = (argument as UnorderedTupleValue).get(key = thisIdentifier) as IndexableValue
 
-            val instancePrototype = self.get(key = instancePrototypeIdentifier) as Indexable
+            val instancePrototype = self.get(key = instancePrototypeIdentifier) as IndexableValue
 
-            val originalMethod = instancePrototype.get(key = methodName) as Abstraction
+            val originalMethod = instancePrototype.get(key = methodName) as AbstractionValue
 
             return originalMethod.call(argument = argument)
         }
     }
 
-    object Of : Abstraction() {
+    object Of : AbstractionValue() {
         override fun compute(
             argument: Value,
         ): Value {
-            argument as Indexable
+            argument as IndexableValue
 
             val tag = argument.get(key = Identifier.of("tag")) as Identifier
             val instanceConstructorName = argument.get(key = Identifier.of("instanceConstructorName")) as Identifier
-            val methods = argument.get(key = Identifier.of("methods")) as UnorderedTuple
+            val methods = argument.get(key = Identifier.of("methods")) as UnorderedTupleValue
 
             val prototype = methods.extendWith(
                 key = classTagIdentifier,
                 value = tag,
             )
 
-            val instanceConstructor = object : Abstraction() {
-                override fun compute(argument: Value): Value = (argument as UnorderedTuple).extendWith(
+            val instanceConstructor = object : AbstractionValue() {
+                override fun compute(argument: Value): Value = (argument as UnorderedTupleValue).extendWith(
                     key = instancePrototypeIdentifier,
                     value = prototype,
                 )
             }
 
-            val proxyMethods: Map<Identifier, Lazy<Abstraction>> = methods.valueByKey.mapValues { (name, _) ->
+            val proxyMethods: Map<Identifier, Lazy<AbstractionValue>> = methods.valueByKey.mapValues { (name, _) ->
                 lazyOf(buildProxyMethod(methodName = name))
             }
 
-            return UnorderedTuple(
+            return UnorderedTupleValue(
                 valueByKey = mapOf(
                     classPrototypeIdentifier to lazyOf(prototype),
                     instanceConstructorName to lazyOf(instanceConstructor),
@@ -63,14 +63,14 @@ object ClassModule : Indexable() {
         fun call(
             tag: Identifier,
             instanceConstructorName: Identifier,
-            methodByName: Map<Identifier, Abstraction>,
+            methodByName: Map<Identifier, AbstractionValue>,
         ): Value = compute(
-            argument = UnorderedTuple(
+            argument = UnorderedTupleValue(
                 valueByKey = mapOf(
                     Identifier.of("tag") to lazyOf(tag),
                     Identifier.of("instanceConstructorName") to lazyOf(instanceConstructorName),
                     Identifier.of("methods") to lazyOf(
-                        UnorderedTuple(
+                        UnorderedTupleValue(
                             valueByKey = methodByName.mapValues { (_, method) -> lazyOf(method) },
                         ),
                     ),
