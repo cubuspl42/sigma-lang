@@ -76,6 +76,19 @@ object BuiltinModule : IndexableValue() {
                             }
                         },
                     ),
+                    Identifier.of("isEmpty") to lazyOf(
+                        object : AbstractionValue() {
+                            override fun compute(argument: Value): Value {
+                                val args = argument as UnorderedTupleValue
+
+                                val list = args.get(Identifier.of("this")) as ListValue
+
+                                return BooleanValue(
+                                    value = list.values.isEmpty(),
+                                )
+                            }
+                        },
+                    ),
                 ),
             ),
         ),

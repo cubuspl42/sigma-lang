@@ -134,6 +134,14 @@ class BuiltinModuleReference(
 
         val tail = TailMethod()
 
+        inner class IsEmptyMethod : NoArgMethod(
+            rawMethodReference = rawClassReference.rawExpression.readField(
+                fieldName = Identifier.of("isEmpty"),
+            )
+        )
+
+        val isEmpty = IsEmptyMethod()
+
         inner class IsNotEmptyMethod : NoArgMethod(
             rawMethodReference = rawClassReference.rawExpression.readField(
                 fieldName = Identifier.of("isNotEmpty"),

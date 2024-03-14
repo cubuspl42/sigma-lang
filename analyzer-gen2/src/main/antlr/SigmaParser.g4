@@ -167,8 +167,13 @@ definitionLhs
 // ### Destructuring patterns
 
 destructuringPattern
-    : listUnconsPattern
+    : listEmptyPattern
+    | listUnconsPattern
 //    | unorderedTupleDestructuringPattern
+    ;
+
+listEmptyPattern
+    : LeftBracket RightBracket
     ;
 
 listUnconsPattern

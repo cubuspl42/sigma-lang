@@ -23,6 +23,10 @@ object LocalScope {
 
     abstract class DefinitionBlock : ShadowExpression() {
         companion object {
+            val Empty = object : DefinitionBlock() {
+                override val blockExpression: ShadowExpression = UnorderedTupleConstructor.Empty
+            }
+
             fun makeSimple(
                 definitions: Set<Constructor.SimpleDefinition>,
             ): DefinitionBlock {

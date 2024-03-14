@@ -58,3 +58,14 @@ class ListUnconsPattern(
         ),
     )
 }
+
+class ListEmptyPattern(
+    private val listClass: BuiltinModuleReference.ListClassReference,
+) : Pattern() {
+    override fun apply(
+        expression: ShadowExpression,
+    ): Pattern.Application = Pattern.Application(
+        condition = listClass.isEmpty.call(list = expression),
+        definitionBlock = LocalScope.DefinitionBlock.Empty,
+    )
+}
