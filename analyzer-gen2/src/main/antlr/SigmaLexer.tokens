@@ -32,6 +32,7 @@ FatArrow=31
 Identifier=32
 IntLiteral=33
 Whitespace=34
+LineComment=35
 '%let'=1
 '%in'=2
 '%val'=3
