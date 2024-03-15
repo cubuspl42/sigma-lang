@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 
 class CallTermTest {
     @Test
-    fun testSimple() {
+    fun testNamedArgs() {
         val term = ExpressionTerm.parse(
             source = """
                 f1{arg1 = val1, arg2 = {}},
@@ -29,6 +29,32 @@ class CallTermTest {
                             key = IdentifierTerm("arg2"),
                             value = UnorderedTupleConstructorTerm.Empty,
                         ),
+                    ),
+                ),
+            ),
+            actual = term,
+        )
+    }
+
+    @Test
+    fun testUnnamedArgs() {
+        val term = ExpressionTerm.parse(
+            source = """
+                f1[val1, {}],
+            """.trimIndent()
+        ) as CallTerm
+
+        assertEquals(
+            expected = CallTerm(
+                callee = ReferenceTerm(
+                    referredName = IdentifierTerm(name = "f1"),
+                ),
+                passedArgument = OrderedTupleConstructorTerm(
+                    elements = listOf(
+                        ReferenceTerm(
+                            referredName = IdentifierTerm(name = "val1"),
+                        ),
+                        UnorderedTupleConstructorTerm.Empty,
                     ),
                 ),
             ),
