@@ -34,17 +34,15 @@ data class AbstractionConstructorTerm(
         buildContext: Expression.BuildContext,
         extraArgumentNames: Set<Identifier> = emptySet(),
     ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
-        AbstractionConstructor(
-            body = image.build(
-                formationContext = formationContext.extendScope(
-                    innerScope = FieldScope(
-                        names = argumentNames + extraArgumentNames,
-                        tupleReference = argumentReference,
-                    ),
+        image.build(
+            formationContext = formationContext.extendScope(
+                innerScope = FieldScope(
+                    names = argumentNames + extraArgumentNames,
+                    tupleReference = argumentReference,
                 ),
-                buildContext = buildContext,
-            ).rawExpression,
-        )
+            ),
+            buildContext = buildContext,
+        ).rawExpression
     }
 
     override fun transmute(): AbstractionConstructorStub = AbstractionConstructorStub.of(

@@ -54,13 +54,11 @@ data class ClassDefinitionTerm(
         fun buildImplementation(
             formationContext: FormationContext,
             buildContext: Expression.BuildContext,
-        ): AbstractionConstructor = AbstractionConstructor.looped1 {
-            implementation.build(
-                formationContext = formationContext,
-                buildContext = buildContext,
-                extraArgumentNames = setOf(ClassModule.thisIdentifier),
-            )
-        }
+        ): AbstractionConstructor = implementation.build(
+            formationContext = formationContext,
+            buildContext = buildContext,
+            extraArgumentNames = setOf(ClassModule.thisIdentifier),
+        )
 
         override fun wrap(): Value = TODO()
     }
