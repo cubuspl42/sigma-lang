@@ -23,6 +23,14 @@ data class LetInTerm(
         val lhs: LhsTerm,
         val initializer: ExpressionTerm,
     ) {
+        constructor(
+            name: IdentifierTerm,
+            initializer: ExpressionTerm,
+        ): this(
+            lhs = NameLhsTerm(name = name.transmute()),
+            initializer = initializer,
+        )
+
         sealed class LhsTerm {
             companion object {
                 fun build(

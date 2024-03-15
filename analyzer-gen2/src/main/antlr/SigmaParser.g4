@@ -9,7 +9,7 @@ module
     ;
 
 import_
-    : ImportKeyword importedModuleName=Identifier
+    : ImportKeyword importedModuleName=Identifier (AsKeyword aliasName=Identifier)?
     ;
 
 moduleDefinition

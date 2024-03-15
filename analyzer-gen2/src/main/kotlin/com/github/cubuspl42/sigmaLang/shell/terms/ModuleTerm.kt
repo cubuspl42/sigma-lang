@@ -22,6 +22,7 @@ data class ModuleTerm(
 ) : Term {
     data class ImportTerm(
         val importedModuleName: IdentifierTerm,
+        val aliasName: IdentifierTerm? = null,
     ) : Term {
         val importedModulePath: ModulePath
             get() = ModulePath(
@@ -33,8 +34,12 @@ data class ModuleTerm(
                 ctx: SigmaParser.Import_Context,
             ): ImportTerm = ImportTerm(
                 importedModuleName = IdentifierTerm.build(ctx.importedModuleName),
+                aliasName = ctx.aliasName?.let { IdentifierTerm.build(it) },
             )
         }
+
+        val effectiveName: IdentifierTerm
+            get() = aliasName ?: importedModuleName
 
         override fun wrap(): Value = UnorderedTupleValue(
             valueByKey = mapOf(
@@ -138,7 +143,7 @@ data class ModuleTerm(
         return ExpressionBuilder.projectReference.joinOf { projectReference ->
             val rootScope = StaticScope.fixed(
                 expressionByName = imports.associate {
-                    it.importedModuleName.transmute() to projectReference.resolveModule(
+                    it.effectiveName.transmute() to projectReference.resolveModule(
                         modulePath = it.importedModulePath,
                     )
                 },

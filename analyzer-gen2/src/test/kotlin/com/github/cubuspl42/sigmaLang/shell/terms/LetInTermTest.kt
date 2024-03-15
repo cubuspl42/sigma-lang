@@ -23,49 +23,47 @@ class LetInTermTest {
 
         assertEquals(
             expected = LetInTerm(
-                block = UnorderedTupleConstructorTerm(
-                    entries = listOf(
-                        UnorderedTupleConstructorTerm.Entry(
-                            key = IdentifierTerm("foo"),
-                            value = AbstractionConstructorTerm(
-                                argumentType = UnorderedTupleTypeConstructorTerm(
-                                    entries = listOf(
-                                        UnorderedTupleConstructorTerm.Entry(
-                                            key = IdentifierTerm("arg3"),
-                                            value = ReferenceTerm(
-                                                referredName = IdentifierTerm(name = "Type1"),
-                                            ),
+                definitions = setOf(
+                    LetInTerm.DefinitionTerm(
+                        name = IdentifierTerm("foo"),
+                        initializer = AbstractionConstructorTerm(
+                            argumentType = UnorderedTupleTypeConstructorTerm(
+                                entries = listOf(
+                                    UnorderedTupleConstructorTerm.Entry(
+                                        key = IdentifierTerm("arg3"),
+                                        value = ReferenceTerm(
+                                            referredName = IdentifierTerm(name = "Type1"),
                                         ),
                                     ),
                                 ),
-                                image = UnorderedTupleConstructorTerm(
-                                    entries = listOf(
-                                        UnorderedTupleConstructorTerm.Entry(
-                                            key = IdentifierTerm("a1"),
-                                            value = UnorderedTupleConstructorTerm.Empty,
-                                        ),
-                                        UnorderedTupleConstructorTerm.Entry(
-                                            key = IdentifierTerm("a2"),
-                                            value = ReferenceTerm(
-                                                referredName = IdentifierTerm(name = "arg3"),
-                                            ),
+                            ),
+                            image = UnorderedTupleConstructorTerm(
+                                entries = listOf(
+                                    UnorderedTupleConstructorTerm.Entry(
+                                        key = IdentifierTerm("a1"),
+                                        value = UnorderedTupleConstructorTerm.Empty,
+                                    ),
+                                    UnorderedTupleConstructorTerm.Entry(
+                                        key = IdentifierTerm("a2"),
+                                        value = ReferenceTerm(
+                                            referredName = IdentifierTerm(name = "arg3"),
                                         ),
                                     ),
                                 ),
                             ),
                         ),
-                        UnorderedTupleConstructorTerm.Entry(
-                            key = IdentifierTerm("bar"),
-                            value = UnorderedTupleConstructorTerm.Empty,
-                        ),
-                        UnorderedTupleConstructorTerm.Entry(
-                            key = IdentifierTerm("baz"),
-                            value = UnorderedTupleConstructorTerm(
-                                entries = listOf(
-                                    UnorderedTupleConstructorTerm.Entry(
-                                        key = IdentifierTerm("x1"),
-                                        value = UnorderedTupleConstructorTerm.Empty,
-                                    ),
+                    ),
+                    LetInTerm.DefinitionTerm(
+                        name = IdentifierTerm("bar"),
+                        initializer = UnorderedTupleConstructorTerm.Empty,
+                    ),
+                    LetInTerm.DefinitionTerm(
+                        name = IdentifierTerm("baz"),
+                        initializer = UnorderedTupleConstructorTerm(
+                            entries = listOf(
+                                UnorderedTupleConstructorTerm.Entry(
+                                    key = IdentifierTerm("x1"),
+                                    value = UnorderedTupleConstructorTerm.Empty,
                                 ),
                             ),
                         ),
