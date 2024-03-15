@@ -44,9 +44,9 @@ data class ClassDefinitionTerm(
                 ctx: SigmaParser.FunctionDefinitionContext,
             ): MethodDefinitionTerm = MethodDefinitionTerm(
                 name = IdentifierTerm.build(ctx.name),
-                implementation = AbstractionConstructorTerm(
-                    argumentType = UnorderedTupleTypeConstructorTerm.build(ctx.argumentType),
-                    image = ExpressionTerm.build(ctx.body),
+                implementation = AbstractionConstructorTerm.build(
+                    argumentTypeCtx = ctx.argumentType,
+                    bodyCtx = ctx.body,
                 ),
             )
         }

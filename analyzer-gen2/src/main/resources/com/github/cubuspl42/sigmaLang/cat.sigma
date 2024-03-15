@@ -1,7 +1,7 @@
 %class Cat {
     %constructor of ^{
-        name: String,
-        hasSharpClaws: Bool,
+        name,
+        hasSharpClaws,
     }
 
     %fun pet ^{} => %when (

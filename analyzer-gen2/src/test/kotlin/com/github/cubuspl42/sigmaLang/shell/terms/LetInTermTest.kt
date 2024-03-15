@@ -29,7 +29,7 @@ class LetInTermTest {
                         name = IdentifierTerm("foo"),
                         initializer = AbstractionConstructorTerm(
                             argumentType = UnorderedTupleTypeConstructorTerm(
-                                keys = setOf(
+                                names = setOf(
                                     Identifier.of("arg3"),
                                 ),
                             ),

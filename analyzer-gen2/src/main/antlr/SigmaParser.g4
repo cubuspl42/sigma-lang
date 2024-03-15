@@ -23,7 +23,7 @@ valueDefinition
     ;
 
 functionDefinition
-    : FunKeyword name=Identifier argumentType=unorderedTupleTypeConstructor FatArrow body=expression
+    : FunKeyword name=Identifier argumentType=tupleTypeConstructor FatArrow body=expression
     ;
 
 classDefinition
@@ -102,7 +102,7 @@ tagPattern
 // #### Abstraction
 
 abstractionConstructor
-    : argumentType=unorderedTupleTypeConstructor FatArrow image=expression
+    : argumentType=tupleTypeConstructor FatArrow image=expression
     ;
 
 tupleConstructor
@@ -180,12 +180,29 @@ listUnconsPattern
     : LeftBracket headName=Identifier Comma Ellipsis tailName=Identifier RightBracket
     ;
 
-// ### Unordered tuple type constructor
+// ### Tuple type constructors
+
+tupleTypeConstructor
+    : unorderedTupleTypeConstructor
+    | orderedTupleTypeConstructor
+    ;
+
+// #### Unordered tuple type constructor
 
 unorderedTupleTypeConstructor
     : Dash LeftBrace (unorderedTupleTypeConstructorEntry (Comma unorderedTupleTypeConstructorEntry)*)? Comma? RightBrace
     ;
 
 unorderedTupleTypeConstructorEntry
+    : key=Identifier
+    ;
+
+// #### Ordered tuple type constructor
+
+orderedTupleTypeConstructor
+    : Dash LeftBracket (orderedTupleTypeConstructorEntry (Comma orderedTupleTypeConstructorEntry)*)? Comma? RightBracket
+    ;
+
+orderedTupleTypeConstructorEntry
     : key=Identifier
     ;

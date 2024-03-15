@@ -5,6 +5,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisit
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ModulePath
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.joinOf
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -101,31 +102,23 @@ data class ModuleTerm(
 
     data class FunctionDefinitionTerm(
         override val name: IdentifierTerm,
-        val argumentType: UnorderedTupleTypeConstructorTerm,
-        val body: ExpressionTerm,
+        val abstractionConstructor: AbstractionConstructorTerm,
     ) : DefinitionTerm() {
         companion object {
             fun build(
                 ctx: SigmaParser.FunctionDefinitionContext,
             ): FunctionDefinitionTerm = FunctionDefinitionTerm(
                 name = IdentifierTerm.build(ctx.name),
-                argumentType = UnorderedTupleTypeConstructorTerm.build(ctx.argumentType),
-                body = ExpressionTerm.build(ctx.body),
+                abstractionConstructor = AbstractionConstructorTerm.build(
+                    argumentTypeCtx = ctx.argumentType,
+                    bodyCtx = ctx.body,
+                ),
             )
         }
 
-        override fun transmuteInitializer() = AbstractionConstructorTerm(
-            argumentType = argumentType,
-            image = body,
-        ).transmute()
+        override fun transmuteInitializer() = abstractionConstructor.transmute()
 
-        override fun wrap(): Value = UnorderedTupleValue(
-            valueByKey = mapOf(
-                Identifier.of("name") to lazyOf(name.wrap()),
-                Identifier.of("argumentType") to lazyOf(argumentType.wrap()),
-                Identifier.of("body") to lazyOf(body.wrap()),
-            )
-        )
+        override fun wrap(): Value = TODO()
     }
 
     companion object : Term.Builder<SigmaParser.ModuleContext, ModuleTerm>() {

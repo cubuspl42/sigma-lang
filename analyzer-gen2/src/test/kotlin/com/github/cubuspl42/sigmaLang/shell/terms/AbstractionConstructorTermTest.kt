@@ -17,8 +17,31 @@ class AbstractionConstructorTermTest {
         assertEquals(
             expected = AbstractionConstructorTerm(
                 argumentType = UnorderedTupleTypeConstructorTerm(
-                    keys = setOf(
+                    names = setOf(
                         Identifier.of("arg3"),
+                    ),
+                ),
+                image = StringLiteralTerm(
+                    value = StringValue(value = "result"),
+                ),
+            ),
+            actual = term,
+        )
+    }
+
+    @Test
+    fun testUnnamedArgs() {
+        val term = AbstractionConstructorTerm.parse(
+            source = """
+                ^[arg1] => "result"
+            """.trimIndent()
+        )
+
+        assertEquals(
+            expected = AbstractionConstructorTerm(
+                argumentType = OrderedTupleTypeConstructorTerm(
+                    names = listOf(
+                        Identifier.of("arg1"),
                     ),
                 ),
                 image = StringLiteralTerm(
