@@ -27,7 +27,7 @@ data class AbstractionConstructorTerm(
     }
 
     val argumentNames: Set<Identifier>
-        get() = argumentType.keys.mapUniquely { it.toIdentifier() }
+        get() = argumentType.keys
 
     fun build(
         formationContext: FormationContext,
@@ -46,7 +46,7 @@ data class AbstractionConstructorTerm(
     }
 
     override fun transmute(): AbstractionConstructorStub = AbstractionConstructorStub.of(
-        argumentNames = argumentType.keys.mapUniquely { it.transmute() },
+        argumentNames = argumentType.keys,
         body = image.transmute(),
     )
 

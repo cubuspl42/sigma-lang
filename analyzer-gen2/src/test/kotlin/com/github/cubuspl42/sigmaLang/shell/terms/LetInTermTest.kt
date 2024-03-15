@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -9,7 +10,7 @@ class LetInTermTest {
         val term = LetInTerm.parse(
             source = """
                 %let {
-                    foo = ^{arg3: Type1} => {
+                    foo = ^{arg3} => {
                         a1 = {},
                         a2 = arg3,
                     },
@@ -28,13 +29,8 @@ class LetInTermTest {
                         name = IdentifierTerm("foo"),
                         initializer = AbstractionConstructorTerm(
                             argumentType = UnorderedTupleTypeConstructorTerm(
-                                entries = listOf(
-                                    UnorderedTupleConstructorTerm.Entry(
-                                        key = IdentifierTerm("arg3"),
-                                        value = ReferenceTerm(
-                                            referredName = IdentifierTerm(name = "Type1"),
-                                        ),
-                                    ),
+                                keys = setOf(
+                                    Identifier.of("arg3"),
                                 ),
                             ),
                             image = UnorderedTupleConstructorTerm(

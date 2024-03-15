@@ -187,5 +187,5 @@ unorderedTupleTypeConstructor
     ;
 
 unorderedTupleTypeConstructorEntry
-    : key=Identifier Colon value=expression
+    : key=Identifier
     ;
