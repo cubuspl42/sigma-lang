@@ -1,10 +1,14 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.stubs.UnorderedTupleConstructorStub
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class UnorderedTupleConstructorTerm(
     val entries: List<Entry>,
@@ -41,11 +45,28 @@ data class UnorderedTupleConstructorTerm(
             parser.unorderedTupleConstructor()
     }
 
-    override fun transmute() = UnorderedTupleConstructorStub(
-        valueStubByKey = entries.associate { entry ->
-            entry.key.transmute() to entry.value.transmute()
-        },
-    )
+    override fun transmute(): ExpressionStub<UnorderedTupleConstructor> =
+        object : ExpressionStub<UnorderedTupleConstructor>() {
+            override fun transform(
+                context: FormationContext,
+            ) = object : ExpressionBuilder<UnorderedTupleConstructor>() {
+                override fun build(
+                    buildContext: Expression.BuildContext,
+                ) = UnorderedTupleConstructor.fromEntries(
+                    entries = entries.map {
+                        UnorderedTupleConstructor.Entry(
+                            key = it.key.transmute(),
+                            value = lazy {
+                                it.value.transmute().build(
+                                    formationContext = context,
+                                    buildContext = buildContext,
+                                )
+                            },
+                        )
+                    },
+                )
+            }
+        }
 
     override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(
