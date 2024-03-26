@@ -24,27 +24,21 @@ class AbstractionConstructor(
         abstract val body: Expression.CodegenRepresentation
 
         final override fun generateCode(): CodeBlock {
-            val abstractionObjectBuilder =
-                TypeSpec.anonymousClassBuilder()
-                    .superclass(typeNameOf<AbstractionValue>())
-                    .addSuperclassConstructorParameter("")
-                    .addFunction(
-                        FunSpec.builder(name = "compute").addParameter(
-                            name = "argument",
-                            type = Value::class,
-                        ).addModifiers(KModifier.OVERRIDE)
-                            .returns(
-                                returnType = Value::class,
-                            )
-                            .addCode(
-                                """
+            val abstractionObjectBuilder = TypeSpec.anonymousClassBuilder().superclass(typeNameOf<AbstractionValue>())
+                .addSuperclassConstructorParameter("").addFunction(
+                    FunSpec.builder(name = "compute").addParameter(
+                        name = "argument",
+                        type = Value::class,
+                    ).addModifiers(KModifier.OVERRIDE).returns(
+                            returnType = Value::class,
+                        ).addCode(
+                            """
                                     val $argumentName = argument
                                     return %L
                                 """.trimIndent(),
-                                body.generateCode(),
-                            )
-                            .build()
-                    )
+                            body.generateCode(),
+                        ).build()
+                )
 
             return CodeBlock.of(
                 "%L",
@@ -85,16 +79,16 @@ class AbstractionConstructor(
         fun builder(
             buildImageBuilder: (ArgumentReference) -> ExpressionBuilder<Expression>,
         ): ExpressionBuilder<AbstractionConstructor> = object : ExpressionBuilder<AbstractionConstructor>() {
-              override fun build(
-                  buildContext: Expression.BuildContext,
-              ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
-                  val imageBuilder = buildImageBuilder(argumentReference)
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
+                val imageBuilder = buildImageBuilder(argumentReference)
 
-                  imageBuilder.build(
-                      buildContext = buildContext,
-                  )
-              }
-          }
+                imageBuilder.build(
+                    buildContext = buildContext,
+                )
+            }
+        }
     }
 
     override val subExpressions: Set<Expression> = setOf(body)
