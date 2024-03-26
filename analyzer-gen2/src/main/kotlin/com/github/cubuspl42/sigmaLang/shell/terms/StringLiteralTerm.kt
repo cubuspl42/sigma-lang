@@ -6,7 +6,6 @@ import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.StringValue
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.stubs.asStub
 
 data class StringLiteralTerm(
     override val value: StringValue,

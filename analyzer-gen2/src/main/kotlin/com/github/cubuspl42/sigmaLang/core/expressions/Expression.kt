@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
+import com.github.cubuspl42.sigmaLang.core.CoreTerm
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ProjectBuilder
@@ -87,7 +88,7 @@ class CompilationCodegenContext {
     }
 }
 
-sealed class Expression {
+sealed class Expression : CoreTerm() {
     private var expressionId = ++nextExpressionId
 
     data class BuildContext(

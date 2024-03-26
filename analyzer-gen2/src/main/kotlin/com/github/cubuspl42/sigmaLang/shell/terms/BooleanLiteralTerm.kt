@@ -7,8 +7,6 @@ import com.github.cubuspl42.sigmaLang.core.values.BooleanValue
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
-import com.github.cubuspl42.sigmaLang.shell.stubs.asStub
 
 data class BooleanLiteralTerm(
     override val value: BooleanValue,

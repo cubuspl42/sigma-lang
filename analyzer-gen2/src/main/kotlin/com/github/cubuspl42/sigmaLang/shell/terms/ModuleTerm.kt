@@ -3,9 +3,8 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.ModulePath
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
-import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.joinOf
@@ -15,7 +14,7 @@ import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
-import com.github.cubuspl42.sigmaLang.shell.stubs.LocalScopeStub
+import com.github.cubuspl42.sigmaLang.shell.withExtendedScope
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 data class ModuleTerm(
@@ -69,25 +68,20 @@ data class ModuleTerm(
             }.visit(ctx)
         }
 
-        fun transmute(): LocalScopeStub.DefinitionStub = LocalScopeStub.DefinitionStub(
-            key = name.transmute(),
-            initializerStub = transmuteInitializer(),
-        )
-
-        abstract val name: IdentifierTerm
+        abstract val name: Identifier
 
         abstract fun transmuteInitializer(): ExpressionStub<Expression>
     }
 
     data class ValueDefinitionTerm(
-        override val name: IdentifierTerm,
+        override val name: Identifier,
         val initializer: ExpressionTerm,
     ) : DefinitionTerm() {
         companion object {
             fun build(
                 ctx: SigmaParser.ValueDefinitionContext,
             ): ValueDefinitionTerm = ValueDefinitionTerm(
-                name = IdentifierTerm.build(ctx.name),
+                name = IdentifierTerm.build(ctx.name).toIdentifier(),
                 initializer = ExpressionTerm.build(ctx.initializer),
             )
         }
@@ -95,21 +89,21 @@ data class ModuleTerm(
         override fun transmuteInitializer() = initializer.transmute()
         override fun wrap(): Value = UnorderedTupleValue(
             valueByKey = mapOf(
-                Identifier.of("name") to lazyOf(name.wrap()),
+                Identifier.of("name") to lazyOf(name),
                 Identifier.of("initializer") to lazyOf(initializer.wrap()),
             )
         )
     }
 
     data class FunctionDefinitionTerm(
-        override val name: IdentifierTerm,
+        override val name: Identifier,
         val abstractionConstructor: AbstractionConstructorTerm,
     ) : DefinitionTerm() {
         companion object {
             fun build(
                 ctx: SigmaParser.FunctionDefinitionContext,
             ): FunctionDefinitionTerm = FunctionDefinitionTerm(
-                name = IdentifierTerm.build(ctx.name),
+                name = IdentifierTerm.build(ctx.name).toIdentifier(),
                 abstractionConstructor = AbstractionConstructorTerm.build(
                     argumentTypeCtx = ctx.argumentType,
                     bodyCtx = ctx.body,
@@ -133,8 +127,12 @@ data class ModuleTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ModuleContext = parser.module()
     }
 
-    fun transform(): ExpressionBuilder<KnotConstructor> {
-        return ExpressionBuilder.projectReference.joinOf { projectReference ->
+    fun transform(): ExpressionBuilder<KnotConstructor> = object : ExpressionBuilder<KnotConstructor>() {
+        override fun build(
+            buildContext: Expression.BuildContext,
+        ): KnotConstructor {
+            val projectReference = buildContext.projectReference
+
             val rootScope = StaticScope.fixed(
                 expressionByName = imports.associate {
                     it.effectiveName.transmute() to projectReference.resolveModule(
@@ -143,18 +141,34 @@ data class ModuleTerm(
                 },
             )
 
-            LocalScopeStub.of(
-                definitions = definitions.mapUniquely {
-                    LocalScopeStub.DefinitionStub(
-                        key = it.name.transmute(),
-                        initializerStub = it.transmuteInitializer(),
-                    )
-                },
-            ).transform(
-                context = FormationContext(
-                    scope = rootScope,
-                ),
+            val rootContext = FormationContext(
+                scope = rootScope,
             )
+
+            val allLocalNames = definitions.fold(
+                initial = emptySet<Identifier>()
+            ) { accLocalNames, definitionTerm ->
+                accLocalNames + definitionTerm.name
+            }
+
+            return LocalScope.Constructor.make { localScopeReference ->
+                val innerContext = rootContext.withExtendedScope(
+                    localNames = allLocalNames,
+                    localScopeReference = localScopeReference,
+                )
+
+                definitions.mapUniquely {
+                    LocalScope.Constructor.SimpleDefinition(
+                        name = it.name,
+                        initializer = it.transmuteInitializer().build(
+                            formationContext = innerContext,
+                            buildContext = buildContext,
+                        ),
+                    )
+                }
+            }.build(
+                buildContext = buildContext,
+            ).knotConstructor
         }
     }
 
