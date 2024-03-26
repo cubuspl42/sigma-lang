@@ -83,9 +83,3 @@ fun <TExpression : Any, RExpression : Any> ExpressionStub<TExpression>.map(
         context = context,
     ).map(function)
 }
-
-fun <TExpression : Expression> TExpression.asStub(): ExpressionStub<TExpression> =
-    object : ExpressionStub<TExpression>() {
-        override fun transform(context: FormationContext): ExpressionBuilder<TExpression> =
-            ExpressionBuilder.pure(this@asStub)
-    }

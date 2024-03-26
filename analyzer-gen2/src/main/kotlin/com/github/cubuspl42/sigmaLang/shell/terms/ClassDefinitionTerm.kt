@@ -13,7 +13,7 @@ import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class ClassDefinitionTerm(
-    override val name: IdentifierTerm,
+    override val name: Identifier,
     val constructor: ConstructorDeclarationTerm?,
     val methodDefinitions: List<MethodDefinitionTerm>,
 ) : ModuleTerm.DefinitionTerm() {
@@ -67,7 +67,7 @@ data class ClassDefinitionTerm(
         override fun build(
             ctx: SigmaParser.ClassDefinitionContext,
         ): ClassDefinitionTerm = ClassDefinitionTerm(
-            name = IdentifierTerm.build(ctx.name),
+            name = IdentifierTerm.build(ctx.name).toIdentifier(),
             constructor = ctx.constructor?.let { ConstructorDeclarationTerm.build(it) },
             methodDefinitions = ctx.methodDefinitions.map { MethodDefinitionTerm.build(it) },
         )
@@ -86,7 +86,7 @@ data class ClassDefinitionTerm(
                     val classModule = buildContext.builtinModule.classModule
 
                     return classModule.of.call(
-                        tag = name.toIdentifier(),
+                        tag = name,
                         instanceConstructorName = constructor!!.name.toIdentifier(),
                         methodByName = methodDefinitions.associate { methodDefinitionTerm ->
                             methodDefinitionTerm.name.toIdentifier() to methodDefinitionTerm.buildImplementation(
@@ -101,7 +101,7 @@ data class ClassDefinitionTerm(
 
     override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(
-            Identifier.of("name") to lazyOf(name.wrap()),
+            Identifier.of("name") to lazyOf(name),
             Identifier.of("constructor") to lazyOf(constructor.wrapOrNil()),
             Identifier.of("methodDefinitions") to lazyOf(methodDefinitions.wrap())
         )

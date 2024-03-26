@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.StringValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,7 +25,7 @@ class ModuleTermTest {
                 ),
                 definitions = listOf(
                     ModuleTerm.ValueDefinitionTerm(
-                        name = IdentifierTerm(name = "result"),
+                        name = Identifier.of(name = "result"),
                         initializer = CallTerm(
                             callee = FieldReadTerm(
                                 subject = ReferenceTerm(
@@ -61,7 +62,7 @@ class ModuleTermTest {
                 ),
                 definitions = listOf(
                     ModuleTerm.ValueDefinitionTerm(
-                        name = IdentifierTerm(name = "a"),
+                        name = Identifier.of(name = "a"),
                         initializer = StringLiteralTerm(
                             value = StringValue(value = ""),
                         ),

@@ -66,8 +66,8 @@ object LocalScope {
     }
 
     class Constructor(
-        private val knotConstructor: KnotConstructor,
-        private val definitions: Set<Definition>,
+        val knotConstructor: KnotConstructor,
+        val definitions: Set<Definition>,
     ) : ShadowExpression() {
         sealed class Definition {
             abstract val initializer: Expression
