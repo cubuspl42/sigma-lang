@@ -37,18 +37,6 @@ class OrderedTupleConstructor(
                 passedElementsBuilder.build(),
             )
         }
-
-        fun builder(
-            elements: Iterable<ExpressionBuilder<Expression>>,
-        ): ExpressionBuilder<OrderedTupleConstructor> = object : ExpressionBuilder<OrderedTupleConstructor>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ): OrderedTupleConstructor = OrderedTupleConstructor(
-                elements = elements.map {
-                    lazyOf(it.build(buildContext = buildContext))
-                },
-            )
-        }
     }
 
     override val subExpressions: Set<Expression>

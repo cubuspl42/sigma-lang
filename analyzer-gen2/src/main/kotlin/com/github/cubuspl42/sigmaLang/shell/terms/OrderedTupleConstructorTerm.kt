@@ -1,9 +1,13 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.expressions.OrderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.ListValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.stubs.OrderedTupleConstructorStub
+import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class OrderedTupleConstructorTerm(
     val elements: List<ExpressionTerm>,
@@ -25,7 +29,24 @@ data class OrderedTupleConstructorTerm(
             parser.orderedTupleConstructor()
     }
 
-    override fun transmute() = OrderedTupleConstructorStub(elementStubs = elements.map { entry -> entry.transmute() })
+    override fun transmute(): ExpressionStub<Expression> = object : ExpressionStub<OrderedTupleConstructor>() {
+        override fun transform(
+            context: FormationContext,
+        ): ExpressionBuilder<OrderedTupleConstructor> = object : ExpressionBuilder<OrderedTupleConstructor>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): OrderedTupleConstructor = OrderedTupleConstructor(
+                elements = elements.map {
+                    lazyOf(
+                        it.build(
+                            formationContext = context,
+                            buildContext = buildContext,
+                        ),
+                    )
+                },
+            )
+        }
+    }
 
     override fun wrap(): Value = ListValue(
         values = elements.map { entry -> entry.wrap() },

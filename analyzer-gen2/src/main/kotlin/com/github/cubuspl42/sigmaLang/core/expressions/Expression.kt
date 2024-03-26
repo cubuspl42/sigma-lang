@@ -89,7 +89,7 @@ class CompilationCodegenContext {
 }
 
 sealed class Expression : CoreTerm() {
-    private var expressionId = ++nextExpressionId
+    private val expressionId = ++nextExpressionId
 
     data class BuildContext(
         val projectReference: ProjectBuilder.Reference,

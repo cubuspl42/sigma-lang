@@ -14,16 +14,6 @@ class Call(
     val callee: Expression,
     val passedArgument: Expression,
 ) : ComplexExpression() {
-    object FieldRead {
-        fun builder(
-            subjectBuilder: ExpressionBuilder<Expression>,
-            fieldName: Identifier,
-        ) = Call.builder(
-            calleeBuilder = subjectBuilder,
-            passedArgumentBuilder = ExpressionBuilder.pure(fieldName.toLiteral()),
-        )
-    }
-
     companion object {
         fun generateCallCode(
             callee: CodeBlock,
