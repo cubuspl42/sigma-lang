@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.shell.stubs
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -15,7 +16,7 @@ class LocalScopeStub private constructor(
 ) : ExpressionStub<KnotConstructor>() {
     data class DefinitionStub(
         val key: Identifier,
-        val initializerStub: ExpressionStub<ShadowExpression>,
+        val initializerStub: ExpressionStub<Expression>,
     )
 
     companion object {
@@ -51,7 +52,7 @@ class LocalScopeStub private constructor(
 
         fun of(
             definitions: Set<DefinitionStub>,
-            result: ExpressionStub<ShadowExpression>,
+            result: ExpressionStub<Expression>,
         ): ExpressionStub<Call> = CallStub.fieldRead(
             subjectStub = of(
                 definitions = definitions + DefinitionStub(

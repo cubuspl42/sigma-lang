@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core
 
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
+import com.github.cubuspl42.sigmaLang.core.expressions.bindToReference
 
 class MatcherConstructor(
     override val rawExpression: Expression,
@@ -10,14 +11,14 @@ class MatcherConstructor(
     ) {
         abstract fun makeResult(
             definitionBlock: LocalScope.DefinitionBlock,
-        ): ShadowExpression
+        ): Expression
     }
 
     companion object {
         fun make(
-            matched: ShadowExpression,
+            matched: Expression,
             patternBlocks: List<PatternBlock>,
-            elseResult: ShadowExpression,
+            elseResult: Expression,
         ): ExpressionBuilder<MatcherConstructor> = object : ExpressionBuilder<MatcherConstructor>() {
             override fun build(buildContext: Expression.BuildContext): MatcherConstructor {
                 val result = matched.bindToReference { matchedReference ->
@@ -26,7 +27,7 @@ class MatcherConstructor(
                         caseBlocks = patternBlocks.map { patternBlock ->
                             val application = patternBlock.pattern.apply(matchedReference)
 
-                            val result = application.definitionBlock.bindToReference {
+                            val result = application.definitionBlock.rawExpression.bindToReference {
                                 patternBlock.makeResult(definitionBlock = it.asDefinitionBlock())
                             }
 
@@ -36,11 +37,11 @@ class MatcherConstructor(
                             )
                         },
                         elseResult = elseResult,
-                    )
+                    ).rawExpression
                 }
 
                 return MatcherConstructor(
-                    rawExpression = result.rawExpression,
+                    rawExpression = result,
                 )
             }
 

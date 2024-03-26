@@ -79,10 +79,14 @@ sealed interface ExpressionTerm : Term {
         ): SigmaParser.ExpressionContext = parser.expression()
     }
 
-    fun transmute(): ExpressionStub<ShadowExpression>
+    fun transmute(): ExpressionStub<Expression>
 
     fun build(
         formationContext: FormationContext,
         buildContext: Expression.BuildContext,
-    ): ShadowExpression = transmute().transform(context = formationContext).build(buildContext = buildContext)
+    ): Expression = transmute().transform(
+        context = formationContext,
+    ).build(
+        buildContext = buildContext,
+    )
 }

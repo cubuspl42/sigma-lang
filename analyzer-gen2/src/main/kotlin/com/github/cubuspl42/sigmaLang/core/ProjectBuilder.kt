@@ -19,7 +19,7 @@ class ProjectBuilder(
 ) {
     data class ModuleDefinitionBuilder(
         private val name: Identifier,
-        private val initializer: ExpressionBuilder<ShadowExpression>,
+        private val initializer: ExpressionBuilder<Expression>,
     ) {
         fun build(
             buildContext: Expression.BuildContext,
@@ -28,7 +28,7 @@ class ProjectBuilder(
             value = lazy {
                 initializer.build(
                     buildContext = buildContext,
-                ).rawExpression
+                )
             },
         )
     }

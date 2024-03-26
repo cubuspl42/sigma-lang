@@ -183,13 +183,13 @@ data class LetInTerm(
         override fun extract(parser: SigmaParser): SigmaParser.LetInContext = parser.letIn()
     }
 
-    override fun transmute() = object : ExpressionStub<ShadowExpression>() {
+    override fun transmute() = object : ExpressionStub<Expression>() {
         override fun transform(
             context: FormationContext,
-        ) = object : ExpressionBuilder<ShadowExpression>() {
+        ) = object : ExpressionBuilder<Expression>() {
             override fun build(
                 buildContext: Expression.BuildContext,
-            ): ShadowExpression {
+            ): Expression {
                 val allLocalNames = definitions.fold(
                     initial = emptySet<Identifier>()
                 ) { accLocalNames, definitionTerm ->
@@ -206,7 +206,7 @@ data class LetInTerm(
                         ): Expression? = if (referredName in allLocalNames) {
                             localScopeReference.referDefinitionInitializer(
                                 name = referredName,
-                            ).rawExpression
+                            )
                         } else null
                     }.chainWith(
                         context.scope,

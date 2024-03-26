@@ -56,9 +56,9 @@ data class MatchTerm(
         override fun extract(parser: SigmaParser): SigmaParser.MatchContext = parser.match()
     }
 
-    override fun transmute() = object : ExpressionStub<ShadowExpression>() {
-        override fun transform(context: FormationContext): ExpressionBuilder<ShadowExpression> =
-            object : ExpressionBuilder<ShadowExpression>() {
+    override fun transmute() = object : ExpressionStub<Expression>() {
+        override fun transform(context: FormationContext): ExpressionBuilder<Expression> =
+            object : ExpressionBuilder<Expression>() {
                 override fun build(
                     buildContext: Expression.BuildContext,
                 ) = MatcherConstructor.make(
@@ -76,12 +76,12 @@ data class MatchTerm(
                         ) {
                             override fun makeResult(
                                 definitionBlock: LocalScope.DefinitionBlock,
-                            ): ShadowExpression {
+                            ): Expression {
                                 val innerScope = object : StaticScope {
                                     override fun resolveName(
                                         referredName: Identifier,
                                     ): Expression? = if (pattern.names.contains(referredName)) {
-                                        definitionBlock.getInitializer(name = referredName).rawExpression
+                                        definitionBlock.getInitializer(name = referredName)
                                     } else null
                                 }.chainWith(
                                     context.scope,
@@ -101,7 +101,7 @@ data class MatchTerm(
                     ),
                 ).build(
                     buildContext = buildContext,
-                )
+                ).rawExpression
             }
     }
 

@@ -5,25 +5,25 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.utils.uncons
 
 class SwitchExpression(
-    val rootExpression: ShadowExpression,
+    val rootExpression: Expression,
 ) : ShadowExpression() {
     class Builder(
         private val caseBlocks: List<CaseBlockBuilder>,
         private val elseBlock: ElseBlockBuilder,
     ) : ExpressionBuilder<SwitchExpression>() {
         data class CaseBlockBuilder(
-            val condition: ExpressionBuilder<ShadowExpression>,
-            val result: ExpressionBuilder<ShadowExpression>,
+            val condition: ExpressionBuilder<Expression>,
+            val result: ExpressionBuilder<Expression>,
         )
 
         data class ElseBlockBuilder(
-            val result: ExpressionBuilder<ShadowExpression>,
+            val result: ExpressionBuilder<Expression>,
         )
 
         override fun build(buildContext: Expression.BuildContext): SwitchExpression {
             val ifFunction = ExpressionBuilder.ifFunction.build(buildContext = buildContext)
 
-            fun constructElseExpression(): Expression = elseBlock.result.buildRaw(
+            fun constructElseExpression(): Expression = elseBlock.result.build(
                 buildContext = buildContext,
             )
 
@@ -61,23 +61,23 @@ class SwitchExpression(
     }
 
     data class CaseBlock(
-        val condition: ShadowExpression,
-        val result: ShadowExpression,
+        val condition: Expression,
+        val result: Expression,
     )
 
     companion object {
         fun make(
             buildContext: Expression.BuildContext,
             caseBlocks: List<CaseBlock>,
-            elseResult: ShadowExpression,
+            elseResult: Expression,
         ): SwitchExpression {
             val ifFunction = ExpressionBuilder.ifFunction.build(buildContext = buildContext)
 
-            fun constructElseExpression(): ShadowExpression = elseResult
+            fun constructElseExpression(): Expression = elseResult
 
             fun constructConditionalEntryExpression(
                 caseBlock: CaseBlock,
-                tailExpression: ShadowExpression,
+                tailExpression: Expression,
             ): Call {
                 val condition = caseBlock.condition
                 val result = caseBlock.result
@@ -91,7 +91,7 @@ class SwitchExpression(
 
             fun constructSwitchExpression(
                 remainingBlocks: List<CaseBlock>,
-            ): ShadowExpression {
+            ): Expression {
                 val (headCaseBlock, tailCaseBlocks) = remainingBlocks.uncons() ?: return constructElseExpression()
 
                 return constructConditionalEntryExpression(
@@ -109,5 +109,5 @@ class SwitchExpression(
     }
 
     override val rawExpression: Expression
-        get() = rootExpression.rawExpression
+        get() = rootExpression
 }

@@ -1,13 +1,9 @@
 package com.github.cubuspl42.sigmaLang.shell.stubs
 
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.map
-import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
-import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 
 abstract class ExpressionStub<out T> {
     companion object {
@@ -19,7 +15,7 @@ abstract class ExpressionStub<out T> {
             ): ExpressionBuilder<TExpression> = builder
         }
 
-        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression> map2Unpacked(
+        fun <TExpression1 : Expression, TExpression2 : Expression, TExpression3 : Expression> map2Unpacked(
             stub1: ExpressionStub<TExpression1>,
             stub2: ExpressionStub<TExpression2>,
             function: (TExpression1, TExpression2) -> ExpressionBuilder<TExpression3>,
@@ -33,7 +29,7 @@ abstract class ExpressionStub<out T> {
             )
         }
 
-        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression, TExpression4 : ShadowExpression> map3Unpacked(
+        fun <TExpression1 : Expression, TExpression2 : Expression, TExpression3 : Expression, TExpression4 : Expression> map3Unpacked(
             stub1: ExpressionStub<TExpression1>,
             stub2: ExpressionStub<TExpression2>,
             stub3: ExpressionStub<TExpression3>,
@@ -49,7 +45,7 @@ abstract class ExpressionStub<out T> {
             )
         }
 
-        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression> map2Nested(
+        fun <TExpression1 : Expression, TExpression2 : Expression, TExpression3 : Expression> map2Nested(
             stub1: ExpressionStub<TExpression1>,
             stub2: ExpressionStub<TExpression2>,
             function: (TExpression1, TExpression2) -> TExpression3,
@@ -78,7 +74,7 @@ abstract class ExpressionStub<out T> {
     )
 }
 
-fun <TExpression : Any, RExpression: Any> ExpressionStub<TExpression>.map(
+fun <TExpression : Any, RExpression : Any> ExpressionStub<TExpression>.map(
     function: (TExpression) -> RExpression,
 ): ExpressionStub<RExpression> = object : ExpressionStub<RExpression>() {
     override fun transform(
@@ -88,7 +84,7 @@ fun <TExpression : Any, RExpression: Any> ExpressionStub<TExpression>.map(
     ).map(function)
 }
 
-fun <TExpression : ShadowExpression> TExpression.asStub(): ExpressionStub<TExpression> =
+fun <TExpression : Expression> TExpression.asStub(): ExpressionStub<TExpression> =
     object : ExpressionStub<TExpression>() {
         override fun transform(context: FormationContext): ExpressionBuilder<TExpression> =
             ExpressionBuilder.pure(this@asStub)

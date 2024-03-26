@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ModulePath
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.joinOf
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -75,7 +76,7 @@ data class ModuleTerm(
 
         abstract val name: IdentifierTerm
 
-        abstract fun transmuteInitializer(): ExpressionStub<ShadowExpression>
+        abstract fun transmuteInitializer(): ExpressionStub<Expression>
     }
 
     data class ValueDefinitionTerm(

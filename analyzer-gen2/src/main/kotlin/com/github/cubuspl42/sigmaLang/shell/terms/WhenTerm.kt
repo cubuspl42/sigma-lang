@@ -3,6 +3,7 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -43,10 +44,10 @@ data class WhenTerm(
         override fun extract(parser: SigmaParser): SigmaParser.WhenContext = parser.`when`()
     }
 
-    override fun transmute(): ExpressionStub<ShadowExpression> {
+    override fun transmute(): ExpressionStub<Expression> {
         val ifExpression = ExpressionBuilder.ifFunction
 
-        fun constructElseExpression(): ExpressionStub<ShadowExpression> =
+        fun constructElseExpression(): ExpressionStub<Expression> =
             elseBlock?.transmute() ?: ExpressionBuilder.panicFunction.map {
                 it.rawExpression.call(
                     passedArgument = UnorderedTupleConstructor.Empty,
@@ -55,8 +56,8 @@ data class WhenTerm(
 
         fun constructConditionalEntryExpression(
             caseBlock: CaseBlock,
-            elseCaseStub: ExpressionStub<ShadowExpression>,
-        ): ExpressionStub<ShadowExpression> = ExpressionStub.map3Unpacked(
+            elseCaseStub: ExpressionStub<Expression>,
+        ): ExpressionStub<Expression> = ExpressionStub.map3Unpacked(
             caseBlock.condition.transmute(),
             caseBlock.result.transmute(),
             elseCaseStub,
@@ -72,7 +73,7 @@ data class WhenTerm(
 
         fun constructEntryExpression(
             remainingEntries: List<CaseBlock>,
-        ): ExpressionStub<ShadowExpression> {
+        ): ExpressionStub<Expression> {
             val (head, tail) = remainingEntries.uncons() ?: return constructElseExpression()
 
             return constructConditionalEntryExpression(

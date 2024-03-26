@@ -74,7 +74,7 @@ class KnotConstructor private constructor(
         }
 
         fun builder(
-            buildBody: (KnotReference) -> ExpressionBuilder<ShadowExpression>,
+            buildBody: (KnotReference) -> ExpressionBuilder<Expression>,
         ): ExpressionBuilder<KnotConstructor> = object : ExpressionBuilder<KnotConstructor>() {
             override fun build(buildContext: BuildContext): KnotConstructor {
                 val knotConstructor = LazyUtils.looped { knotConstructorLooped ->
@@ -87,7 +87,7 @@ class KnotConstructor private constructor(
                     val body = bodyBuilder.build(buildContext = buildContext)
 
                     val knotConstructor = KnotConstructor(
-                        body = body.rawExpression,
+                        body = body,
                     )
 
                     knotConstructor

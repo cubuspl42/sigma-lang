@@ -15,7 +15,7 @@ abstract class ExpressionBuilder<out T> {
                 ) = buildContext.projectReference
             }
 
-        fun <TExpression : ShadowExpression> pure(
+        fun <TExpression> pure(
             expression: TExpression,
         ): ExpressionBuilder<TExpression> = object : ExpressionBuilder<TExpression>() {
             override fun build(
@@ -23,7 +23,7 @@ abstract class ExpressionBuilder<out T> {
             ): TExpression = expression
         }
 
-        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression> map2(
+        fun <TExpression1, TExpression2, TExpression3> map2(
             builder1: ExpressionBuilder<TExpression1>,
             builder2: ExpressionBuilder<TExpression2>,
             function: (TExpression1, TExpression2) -> TExpression3,
@@ -36,7 +36,7 @@ abstract class ExpressionBuilder<out T> {
             )
         }
 
-        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression> map2Joined(
+        fun <TExpression1, TExpression2, TExpression3> map2Joined(
             builder1: ExpressionBuilder<TExpression1>,
             builder2: ExpressionBuilder<TExpression2>,
             function: (TExpression1, TExpression2) -> ExpressionBuilder<TExpression3>,
@@ -51,7 +51,7 @@ abstract class ExpressionBuilder<out T> {
             )
         }
 
-        fun <TExpression1 : ShadowExpression, TExpression2 : ShadowExpression, TExpression3 : ShadowExpression, TExpression4 : ShadowExpression> map3Joined(
+        fun <TExpression1, TExpression2, TExpression3, TExpression4> map3Joined(
             builder1: ExpressionBuilder<TExpression1>,
             builder2: ExpressionBuilder<TExpression2>,
             builder3: ExpressionBuilder<TExpression3>,
@@ -83,9 +83,7 @@ abstract class ExpressionBuilder<out T> {
             }
 
         val panicCall = panicFunction.map {
-            it.call(
-                passedArgument = UnorderedTupleConstructor.Empty,
-            )
+            it.call()
         }
 
         val isAFunction = object : ExpressionBuilder<BuiltinModuleReference.IsAFunction>() {
@@ -102,11 +100,11 @@ abstract class ExpressionBuilder<out T> {
     fun asStub(): ExpressionStub<T> = ExpressionStub.pure(this)
 }
 
-fun <TExpression : ShadowExpression> ExpressionBuilder<TExpression>.buildRaw(
+fun <TExpression : Expression> ExpressionBuilder<TExpression>.buildRaw(
     buildContext: Expression.BuildContext,
 ): Expression = build(
     buildContext = buildContext,
-).rawExpression
+)
 
 fun <TExpression, RExpression> ExpressionBuilder<TExpression>.map(
     function: (TExpression) -> RExpression,

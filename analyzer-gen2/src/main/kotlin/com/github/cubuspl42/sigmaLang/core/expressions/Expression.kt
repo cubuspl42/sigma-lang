@@ -1,11 +1,13 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ProjectBuilder
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.squareup.kotlinpoet.CodeBlock
 
 private fun <K, V : Any> MutableMap<K, V>.update(expression: K, function: (oldValue: V?) -> V) {
@@ -85,7 +87,7 @@ class CompilationCodegenContext {
     }
 }
 
-sealed class Expression : ShadowExpression() {
+sealed class Expression {
     private var expressionId = ++nextExpressionId
 
     data class BuildContext(
@@ -113,9 +115,6 @@ sealed class Expression : ShadowExpression() {
         scope: DynamicScope,
     ): Lazy<Value>
 
-    final override val rawExpression: Expression
-        get() = this
-
     fun bindStrict(
         scope: DynamicScope,
     ): Value = bind(
@@ -135,4 +134,14 @@ sealed class Expression : ShadowExpression() {
         callee = this,
         passedArgument = passedArgument,
     )
+
+    fun asStub(): ExpressionStub<Expression> = ExpressionStub.pure(ExpressionBuilder.pure(this@Expression))
 }
+
+fun Expression.bindToReference(
+    block: (reference: Expression) -> Expression,
+): Expression = AbstractionConstructor.looped1 { argumentReference ->
+    block(argumentReference)
+}.call(
+    passedArgument = this@bindToReference,
+)
