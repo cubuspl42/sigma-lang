@@ -75,14 +75,14 @@ data class ClassDefinitionTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ClassDefinitionContext = parser.classDefinition()
     }
 
-    override fun transmuteInitializer(): ExpressionStub<ShadowExpression> =
-        object : ExpressionStub<ShadowExpression>() {
+    override fun transmuteInitializer(): ExpressionStub<Expression> =
+        object : ExpressionStub<Expression>() {
             override fun transform(
                 context: FormationContext,
-            ) = object : ExpressionBuilder<ShadowExpression>() {
+            ) = object : ExpressionBuilder<Expression>() {
                 override fun build(
                     buildContext: Expression.BuildContext,
-                ): ShadowExpression {
+                ): Expression {
                     val classModule = buildContext.builtinModule.classModule
 
                     return classModule.of.call(

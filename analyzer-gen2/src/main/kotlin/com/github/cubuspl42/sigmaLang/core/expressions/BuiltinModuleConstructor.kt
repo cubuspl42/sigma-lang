@@ -2,11 +2,9 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
-import com.github.cubuspl42.sigmaLang.core.call
-import com.github.cubuspl42.sigmaLang.core.readField
-import com.github.cubuspl42.sigmaLang.core.values.builtin.BuiltinModule
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.core.values.builtin.BuiltinModule
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.typeNameOf
@@ -28,21 +26,21 @@ data object BuiltinModuleConstructor : Expression() {
 }
 
 class BuiltinModuleReference(
-    val rawModuleReference: ShadowExpression,
+    val rawModuleReference: Expression,
 ) {
     class IfFunction(
         private val rawFunctionReference: Expression,
     ) : ShadowExpression() {
         fun call(
-            condition: ShadowExpression,
-            thenCase: ShadowExpression,
-            elseCase: ShadowExpression,
+            condition: Expression,
+            thenCase: Expression,
+            elseCase: Expression,
         ) = rawFunctionReference.call(
             passedArgument = UnorderedTupleConstructor(
                 valueByKey = mapOf(
-                    Identifier(name = "condition") to lazyOf(condition.rawExpression),
-                    Identifier(name = "then") to lazyOf(thenCase.rawExpression),
-                    Identifier(name = "else") to lazyOf(elseCase.rawExpression),
+                    Identifier(name = "condition") to lazyOf(condition),
+                    Identifier(name = "then") to lazyOf(thenCase),
+                    Identifier(name = "else") to lazyOf(elseCase),
                 ),
             )
         )
@@ -55,20 +53,20 @@ class BuiltinModuleReference(
     val ifFunction = IfFunction(
         rawFunctionReference = rawModuleReference.readField(
             fieldName = Identifier.of("if"),
-        ).rawExpression
+        )
     )
 
     class IsAFunction(
         private val rawFunctionReference: Expression,
     ) : ShadowExpression() {
         fun call(
-            instance: ShadowExpression,
-            class_: ShadowExpression,
+            instance: Expression,
+            class_: Expression,
         ) = rawFunctionReference.call(
             passedArgument = UnorderedTupleConstructor(
                 valueByKey = mapOf(
-                    Identifier(name = "instance") to lazyOf(instance.rawExpression),
-                    Identifier(name = "class") to lazyOf(class_.rawExpression),
+                    Identifier(name = "instance") to lazyOf(instance),
+                    Identifier(name = "class") to lazyOf(class_),
                 ),
             )
         )
@@ -80,7 +78,7 @@ class BuiltinModuleReference(
     val isAFunction = IsAFunction(
         rawFunctionReference = rawModuleReference.readField(
             fieldName = Identifier.of("isA"),
-        ).rawExpression
+        )
     )
 
     class PanicFunction(
@@ -97,29 +95,29 @@ class BuiltinModuleReference(
     val panicFunction = PanicFunction(
         rawFunctionReference = rawModuleReference.readField(
             fieldName = Identifier.of("panic"),
-        ).rawExpression
+        )
     )
 
     class ListClassReference(
-        private val rawClassReference: ShadowExpression,
+        private val rawClassReference: Expression,
     ) {
         abstract class NoArgMethod(
-            private val rawMethodReference: ShadowExpression,
+            private val rawMethodReference: Expression,
         ) {
             fun call(
-                list: ShadowExpression,
-            ): ShadowExpression = rawMethodReference.call(
+                list: Expression,
+            ): Expression = rawMethodReference.call(
                 passedArgument = UnorderedTupleConstructor.fromEntries(
                     UnorderedTupleConstructor.Entry(
                         key = Identifier.of("this"),
-                        value = lazyOf(list.rawExpression),
+                        value = lazyOf(list),
                     )
                 )
             )
         }
 
         inner class HeadMethod : NoArgMethod(
-            rawMethodReference = rawClassReference.rawExpression.readField(
+            rawMethodReference = rawClassReference.readField(
                 fieldName = Identifier.of("head"),
             )
         )
@@ -127,7 +125,7 @@ class BuiltinModuleReference(
         val head = HeadMethod()
 
         inner class TailMethod : NoArgMethod(
-            rawMethodReference = rawClassReference.rawExpression.readField(
+            rawMethodReference = rawClassReference.readField(
                 fieldName = Identifier.of("tail"),
             )
         )
@@ -135,7 +133,7 @@ class BuiltinModuleReference(
         val tail = TailMethod()
 
         inner class IsEmptyMethod : NoArgMethod(
-            rawMethodReference = rawClassReference.rawExpression.readField(
+            rawMethodReference = rawClassReference.readField(
                 fieldName = Identifier.of("isEmpty"),
             )
         )
@@ -143,7 +141,7 @@ class BuiltinModuleReference(
         val isEmpty = IsEmptyMethod()
 
         inner class IsNotEmptyMethod : NoArgMethod(
-            rawMethodReference = rawClassReference.rawExpression.readField(
+            rawMethodReference = rawClassReference.readField(
                 fieldName = Identifier.of("isNotEmpty"),
             )
         )
@@ -156,17 +154,17 @@ class BuiltinModuleReference(
             )
 
             fun call(
-                list: ShadowExpression,
-                otherList: ShadowExpression,
-            ): ShadowExpression = rawMethodReference.call(
+                list: Expression,
+                otherList: Expression,
+            ): Expression = rawMethodReference.call(
                 passedArgument = UnorderedTupleConstructor.fromEntries(
                     UnorderedTupleConstructor.Entry(
                         key = Identifier.of("left"),
-                        value = lazyOf(list.rawExpression),
+                        value = lazyOf(list),
                     ),
                     UnorderedTupleConstructor.Entry(
                         key = Identifier.of("right"),
-                        value = lazyOf(otherList.rawExpression),
+                        value = lazyOf(otherList),
                     ),
                 ),
             )
@@ -182,18 +180,18 @@ class BuiltinModuleReference(
     )
 
     class DictClassReference(
-        private val rawClassReference: ShadowExpression,
+        private val rawClassReference: Expression,
     ) {
         abstract class NoArgMethod(
-            private val rawMethodReference: ShadowExpression,
+            private val rawMethodReference: Expression,
         ) {
             fun call(
-                dict: ShadowExpression,
-            ): ShadowExpression = rawMethodReference.call(
+                dict: Expression,
+            ): Expression = rawMethodReference.call(
                 passedArgument = UnorderedTupleConstructor.fromEntries(
                     UnorderedTupleConstructor.Entry(
                         key = Identifier.of("this"),
-                        value = lazyOf(dict.rawExpression),
+                        value = lazyOf(dict),
                     )
                 )
             )
@@ -205,17 +203,17 @@ class BuiltinModuleReference(
             )
 
             fun call(
-                dict: ShadowExpression,
-                otherDict: ShadowExpression,
-            ): ShadowExpression = rawMethodReference.call(
+                dict: Expression,
+                otherDict: Expression,
+            ): Expression = rawMethodReference.call(
                 passedArgument = UnorderedTupleConstructor.fromEntries(
                     UnorderedTupleConstructor.Entry(
                         key = Identifier.of("first"),
-                        value = lazy { dict.rawExpression },
+                        value = lazy { dict },
                     ),
                     UnorderedTupleConstructor.Entry(
                         key = Identifier.of("second"),
-                        value = lazy { otherDict.rawExpression },
+                        value = lazy { otherDict },
                     ),
                 ),
             )
@@ -231,7 +229,7 @@ class BuiltinModuleReference(
     )
 
     class StringClassReference(
-        private val rawClassReference: ShadowExpression,
+        private val rawClassReference: Expression,
     ) {
         inner class ConcatMethod {
             private val rawMethodReference = rawClassReference.readField(
@@ -239,17 +237,17 @@ class BuiltinModuleReference(
             )
 
             fun call(
-                string: ShadowExpression,
-                otherString: ShadowExpression,
-            ): ShadowExpression = rawMethodReference.call(
+                string: Expression,
+                otherString: Expression,
+            ): Expression = rawMethodReference.call(
                 passedArgument = UnorderedTupleConstructor.fromEntries(
                     UnorderedTupleConstructor.Entry(
                         key = Identifier.of("left"),
-                        value = lazyOf(string.rawExpression),
+                        value = lazyOf(string),
                     ),
                     UnorderedTupleConstructor.Entry(
                         key = Identifier.of("right"),
-                        value = lazyOf(otherString.rawExpression),
+                        value = lazyOf(otherString),
                     ),
                 ),
             )
@@ -272,21 +270,21 @@ class BuiltinModuleReference(
 }
 
 class ClassModuleExpression(
-    private val rawModuleExpression: ShadowExpression,
+    private val rawModuleExpression: Expression,
 ) {
     inner class Of : ShadowExpression() {
-        private val rawMethodExpression: ShadowExpression = rawModuleExpression.readField(
+        private val rawMethodExpression: Expression = rawModuleExpression.readField(
             fieldName = Identifier.of("of"),
         )
 
         override val rawExpression: Expression
-            get() = rawModuleExpression.rawExpression
+            get() = rawModuleExpression
 
         fun call(
             tag: Identifier,
             instanceConstructorName: Identifier,
             methodByName: Map<Identifier, AbstractionConstructor>,
-        ): ShadowExpression = rawMethodExpression.call(
+        ): Expression = rawMethodExpression.call(
             passedArgument = UnorderedTupleConstructor.fromEntries(
                 UnorderedTupleConstructor.Entry(
                     key = Identifier.of("tag"),

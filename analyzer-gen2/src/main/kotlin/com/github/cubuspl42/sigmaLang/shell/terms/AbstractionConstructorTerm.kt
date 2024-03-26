@@ -50,7 +50,7 @@ data class AbstractionConstructorTerm(
                 ),
             ),
             buildContext = buildContext,
-        ).rawExpression
+        )
     }
 
     override fun transmute(): AbstractionConstructorStub = AbstractionConstructorStub.of(

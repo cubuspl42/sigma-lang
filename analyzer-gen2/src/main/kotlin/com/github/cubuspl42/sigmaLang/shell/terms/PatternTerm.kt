@@ -19,7 +19,7 @@ sealed class PatternTerm {
     abstract val names: Set<Identifier>
 
     abstract fun transmute(
-        initializerStub: ExpressionStub<ShadowExpression>,
+        initializerStub: ExpressionStub<Expression>,
     ): ExpressionStub<LocalScope.Constructor.Definition>
 }
 
@@ -70,7 +70,7 @@ data class ListUnconsPatternTerm(
         get() = setOf(headName, tailName)
 
     override fun transmute(
-        initializerStub: ExpressionStub<ShadowExpression>,
+        initializerStub: ExpressionStub<Expression>,
     ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
         override fun transform(
             context: FormationContext,
@@ -103,7 +103,7 @@ data object ListEmptyPatternTerm : DestructuringPatternTerm() {
     override val names: Set<Identifier> = emptySet()
 
     override fun transmute(
-        initializerStub: ExpressionStub<ShadowExpression>,
+        initializerStub: ExpressionStub<Expression>,
     ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
         override fun transform(
             context: FormationContext,
@@ -153,7 +153,7 @@ data class TagPatternTerm(
         }
     }
 
-    override fun transmute(initializerStub: ExpressionStub<ShadowExpression>): ExpressionStub<LocalScope.Constructor.Definition> {
+    override fun transmute(initializerStub: ExpressionStub<Expression>): ExpressionStub<LocalScope.Constructor.Definition> {
         TODO("Not yet implemented")
     }
 }

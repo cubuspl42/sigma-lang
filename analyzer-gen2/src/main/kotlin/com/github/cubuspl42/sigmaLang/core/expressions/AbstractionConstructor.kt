@@ -1,13 +1,11 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
-import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
-import com.github.cubuspl42.sigmaLang.core.buildRaw
 import com.github.cubuspl42.sigmaLang.core.values.AbstractionValue
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstractionValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -85,14 +83,14 @@ class AbstractionConstructor(
         }
 
         fun builder(
-            buildImageBuilder: (ArgumentReference) -> ExpressionBuilder<ShadowExpression>,
+            buildImageBuilder: (ArgumentReference) -> ExpressionBuilder<Expression>,
         ): ExpressionBuilder<AbstractionConstructor> = object : ExpressionBuilder<AbstractionConstructor>() {
               override fun build(
                   buildContext: Expression.BuildContext,
               ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
                   val imageBuilder = buildImageBuilder(argumentReference)
 
-                  imageBuilder.buildRaw(
+                  imageBuilder.build(
                       buildContext = buildContext,
                   )
               }
@@ -115,7 +113,7 @@ class AbstractionConstructor(
         setOf(expression) + when (expression) {
             is Wrapper -> emptySet()
             is Call -> collectWrappedExpressions(expression.callee) + collectWrappedExpressions(expression.passedArgument)
-            is UnorderedTupleConstructor -> unionAll(expression.values.map { collectWrappedExpressions(it.value.rawExpression) })
+            is UnorderedTupleConstructor -> unionAll(expression.values.map { collectWrappedExpressions(it.value) })
             is OrderedTupleConstructor -> TODO()
         }
     } else {

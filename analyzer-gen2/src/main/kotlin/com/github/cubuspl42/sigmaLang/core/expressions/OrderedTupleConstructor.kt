@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.squareup.kotlinpoet.CodeBlock
 
 class OrderedTupleConstructor(
-    private val elements: List<Lazy<ShadowExpression>>,
+    private val elements: List<Lazy<Expression>>,
 ) : ComplexExpression() {
     companion object {
         fun generateCode(
@@ -39,7 +39,7 @@ class OrderedTupleConstructor(
         }
 
         fun builder(
-            elements: Iterable<ExpressionBuilder<ShadowExpression>>,
+            elements: Iterable<ExpressionBuilder<Expression>>,
         ): ExpressionBuilder<OrderedTupleConstructor> = object : ExpressionBuilder<OrderedTupleConstructor>() {
             override fun build(
                 buildContext: Expression.BuildContext,
@@ -52,14 +52,14 @@ class OrderedTupleConstructor(
     }
 
     override val subExpressions: Set<Expression>
-        get() = elements.map { it.value.rawExpression }.toSet()
+        get() = elements.map { it.value }.toSet()
 
     override fun buildCodegenRepresentation(
         context: CodegenRepresentationContext,
     ): CodegenRepresentation = object : CodegenRepresentation() {
         override fun generateCode(): CodeBlock = OrderedTupleConstructor.generateCode(
             elements = elements.map {
-                context.getRepresentation(it.value.rawExpression).generateCode()
+                context.getRepresentation(it.value).generateCode()
             },
         )
     }
@@ -67,7 +67,7 @@ class OrderedTupleConstructor(
     override fun bind(scope: DynamicScope): Lazy<Value> = lazyOf(
         ListValue(
             values = elements.map {
-                it.value.rawExpression.bindStrict(scope = scope)
+                it.value.bindStrict(scope = scope)
             },
         )
     )

@@ -16,7 +16,7 @@ class Call(
 ) : ComplexExpression() {
     object FieldRead {
         fun builder(
-            subjectBuilder: ExpressionBuilder<ShadowExpression>,
+            subjectBuilder: ExpressionBuilder<Expression>,
             fieldName: Identifier,
         ) = Call.builder(
             calleeBuilder = subjectBuilder,
@@ -40,12 +40,12 @@ class Call(
         )
 
         fun builder(
-            calleeBuilder: ExpressionBuilder<ShadowExpression>,
-            passedArgumentBuilder: ExpressionBuilder<ShadowExpression>,
+            calleeBuilder: ExpressionBuilder<Expression>,
+            passedArgumentBuilder: ExpressionBuilder<Expression>,
         ): ExpressionBuilder<Call> = object : ExpressionBuilder<Call>() {
             override fun build(buildContext: BuildContext): Call = Call(
-                callee = calleeBuilder.buildRaw(buildContext),
-                passedArgument = passedArgumentBuilder.buildRaw(buildContext),
+                callee = calleeBuilder.build(buildContext),
+                passedArgument = passedArgumentBuilder.build(buildContext),
             )
         }
     }

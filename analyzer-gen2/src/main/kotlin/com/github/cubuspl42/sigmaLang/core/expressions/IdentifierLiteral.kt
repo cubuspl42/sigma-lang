@@ -12,7 +12,7 @@ data class IdentifierLiteral(
     )
 
     companion object {
-        fun of(name: String): ShadowExpression = IdentifierLiteral(
+        fun of(name: String): Expression = IdentifierLiteral(
             value = Identifier.of(name)
         )
     }

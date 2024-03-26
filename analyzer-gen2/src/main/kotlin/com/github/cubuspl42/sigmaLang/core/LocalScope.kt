@@ -4,27 +4,28 @@ import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.bindToReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
-fun ShadowExpression.asDefinitionBlock(): LocalScope.DefinitionBlock = object : LocalScope.DefinitionBlock() {
-    override val blockExpression: ShadowExpression
+fun Expression.asDefinitionBlock(): LocalScope.DefinitionBlock = object : LocalScope.DefinitionBlock() {
+    override val blockExpression: Expression
         get() = this@asDefinitionBlock
 }
 
 object LocalScope {
     class Reference(
-        private val rawReference: ShadowExpression,
+        private val rawReference: Expression,
     ) {
         fun referDefinitionInitializer(
             name: Identifier,
-        ): ShadowExpression = rawReference.readField(fieldName = name)
+        ): Expression = rawReference.readField(fieldName = name)
     }
 
     abstract class DefinitionBlock : ShadowExpression() {
         companion object {
             val Empty = object : DefinitionBlock() {
-                override val blockExpression: ShadowExpression = UnorderedTupleConstructor.Empty
+                override val blockExpression: Expression = UnorderedTupleConstructor.Empty
             }
 
             fun makeSimple(
@@ -35,17 +36,17 @@ object LocalScope {
                 )
 
                 return object : DefinitionBlock() {
-                    override val blockExpression: ShadowExpression = tupleConstructor
+                    override val blockExpression: Expression = tupleConstructor
                 }
             }
         }
 
         final override val rawExpression: Expression
-            get() = blockExpression.rawExpression
+            get() = blockExpression
 
         fun getInitializer(
             name: Identifier,
-        ): ShadowExpression = blockExpression.readField(fieldName = name)
+        ): Expression = blockExpression.readField(fieldName = name)
 
         fun mergeWith(
             dictClass: BuiltinModuleReference.DictClassReference,
@@ -61,7 +62,7 @@ object LocalScope {
          * An expression evaluating to an unordered tuple, where keys are definition names and the respective values
          * are definitions' initializers.
          */
-        abstract val blockExpression: ShadowExpression
+        abstract val blockExpression: Expression
     }
 
     class Constructor(
@@ -69,23 +70,23 @@ object LocalScope {
         private val definitions: Set<Definition>,
     ) : ShadowExpression() {
         sealed class Definition {
-            abstract val initializer: ShadowExpression
+            abstract val initializer: Expression
         }
 
         data class SimpleDefinition(
             val name: Identifier,
-            override val initializer: ShadowExpression,
+            override val initializer: Expression,
         ) : Definition() {
             fun toEntry(): UnorderedTupleConstructor.Entry = UnorderedTupleConstructor.Entry(
                 key = name,
-                value = lazy { initializer.rawExpression },
+                value = lazyOf(initializer),
             )
         }
 
         data class PatternDefinition(
             val builtinModuleReference: BuiltinModuleReference,
             val pattern: Pattern,
-            override val initializer: ShadowExpression,
+            override val initializer: Expression,
         ) : Definition() {
             val guardedDefinitionBlock: DefinitionBlock
                 get() {
@@ -93,7 +94,7 @@ object LocalScope {
 
                     return builtinModuleReference.ifFunction.call(
                         condition = patternApplication.condition,
-                        thenCase = patternApplication.definitionBlock,
+                        thenCase = patternApplication.definitionBlock.rawExpression,
                         elseCase = builtinModuleReference.panicFunction.call(),
                     ).asDefinitionBlock()
                 }
@@ -138,19 +139,17 @@ object LocalScope {
 
             fun makeWithResult(
                 makeDefinitions: (Reference) -> Set<Definition>,
-                makeResult: (Reference) -> ShadowExpression,
-            ): ExpressionBuilder<ShadowExpression> = make(
+                makeResult: (Reference) -> Expression,
+            ): ExpressionBuilder<Expression> = make(
                 makeDefinitions = makeDefinitions,
             ).map { localScopeConstructor ->
-                localScopeConstructor.bindToReference { localScopeReference ->
+                localScopeConstructor.rawExpression.bindToReference { localScopeReference ->
                     val reference = Reference(rawReference = localScopeReference)
 
                     makeResult(reference)
                 }
             }
         }
-
-        fun getDefinitionInitializer(name: Identifier): ShadowExpression = knotConstructor.readField(fieldName = name)
 
         override val rawExpression: Expression
             get() = knotConstructor

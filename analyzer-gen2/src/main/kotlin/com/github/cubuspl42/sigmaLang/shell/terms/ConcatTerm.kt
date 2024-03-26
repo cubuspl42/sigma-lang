@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
@@ -33,7 +34,7 @@ data class ConcatTerm(
         )
     }
 
-    override fun transmute(): ExpressionStub<ShadowExpression> = ExpressionStub.map2Unpacked(
+    override fun transmute(): ExpressionStub<Expression> = ExpressionStub.map2Unpacked(
         left.transmute(),
         right.transmute(),
     ) { leftExpression, rightExpression ->
