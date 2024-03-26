@@ -1,14 +1,16 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.FieldScope
-import com.github.cubuspl42.sigmaLang.shell.stubs.AbstractionConstructorStub
-import com.github.cubuspl42.sigmaLang.utils.mapUniquely
+import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
+import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
+import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class AbstractionConstructorTerm(
     val argumentType: TupleTypeConstructorTerm,
@@ -53,10 +55,31 @@ data class AbstractionConstructorTerm(
         )
     }
 
-    override fun transmute(): AbstractionConstructorStub = AbstractionConstructorStub.of(
-        argumentNames = argumentNames,
-        body = image.transmute(),
-    )
+    override fun transmute(): ExpressionStub<Expression> = object : ExpressionStub<Expression>() {
+        override fun transform(
+            context: FormationContext,
+        ): ExpressionBuilder<AbstractionConstructor> = object : ExpressionBuilder<AbstractionConstructor>() {
+            override fun build(
+                buildContext: Expression.BuildContext,
+            ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
+                val innerScope = StaticScope.argumentScope(
+                    argumentNames = argumentNames,
+                    argumentReference = argumentReference,
+                ).chainWith(
+                    context.scope,
+                )
+
+                val innerContext = context.copy(
+                    scope = innerScope,
+                )
+
+                image.build(
+                    formationContext = innerContext,
+                    buildContext = buildContext,
+                )
+            }
+        }
+    }
 
     override fun wrap(): UnorderedTupleValue = UnorderedTupleValue(
         valueByKey = mapOf(
