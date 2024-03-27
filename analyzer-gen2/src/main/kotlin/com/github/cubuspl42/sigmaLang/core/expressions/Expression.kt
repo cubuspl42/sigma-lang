@@ -94,10 +94,7 @@ sealed class Expression : CoreTerm() {
 
     data class BuildContext(
         val projectReference: ProjectBuilder.Reference,
-    ) {
-        val builtinModule: BuiltinModuleReference
-            get() = projectReference.builtinModule
-    }
+    )
 
     abstract class CodegenRepresentation {
         abstract fun generateCode(): CodeBlock

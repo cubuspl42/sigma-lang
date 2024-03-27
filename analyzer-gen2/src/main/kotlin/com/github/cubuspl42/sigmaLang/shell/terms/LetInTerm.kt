@@ -108,7 +108,6 @@ data class LetInTerm(
                         )
 
                         return LocalScope.Constructor.PatternDefinition(
-                            builtinModuleReference = buildContext.builtinModule,
                             pattern = pattern,
                             initializer = initializer.transmute().build(
                                 formationContext = context,

@@ -50,7 +50,6 @@ interface DynamicScope {
         )
     }
 
-
     fun getValue(
         referredWrapper: Wrapper,
     ): Value

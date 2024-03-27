@@ -78,14 +78,6 @@ class ProjectBuilder(
     data class Reference(
         val rawKnotReference: Expression,
     ) {
-        val builtinModule by lazy {
-            BuiltinModuleReference(
-                rawModuleReference = rawKnotReference.readField(
-                    fieldName = builtinIdentifier,
-                ),
-            )
-        }
-
         fun resolveModule(modulePath: ModulePath): Expression = rawKnotReference.readField(
             fieldName = modulePath.name,
         )

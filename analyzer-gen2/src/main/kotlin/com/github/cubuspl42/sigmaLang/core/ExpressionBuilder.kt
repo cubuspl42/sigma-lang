@@ -6,6 +6,8 @@ import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
+// TODO: Nuke
+// Switch to a special root reference + builtin reference
 abstract class ExpressionBuilder<out T> {
     companion object {
         val projectReference: ExpressionBuilder<ProjectBuilder.Reference> =
@@ -72,14 +74,14 @@ abstract class ExpressionBuilder<out T> {
             object : ExpressionBuilder<BuiltinModuleReference.IfFunction>() {
                 override fun build(
                     buildContext: Expression.BuildContext,
-                ) = buildContext.builtinModule.ifFunction
+                ) = BuiltinModuleReference.ifFunction
             }
 
         val panicFunction: ExpressionBuilder<BuiltinModuleReference.PanicFunction> =
             object : ExpressionBuilder<BuiltinModuleReference.PanicFunction>() {
                 override fun build(
                     buildContext: Expression.BuildContext,
-                ) = buildContext.builtinModule.panicFunction
+                ) = BuiltinModuleReference.panicFunction
             }
 
         val panicCall = panicFunction.map {
@@ -89,7 +91,7 @@ abstract class ExpressionBuilder<out T> {
         val isAFunction = object : ExpressionBuilder<BuiltinModuleReference.IsAFunction>() {
             override fun build(
                 buildContext: Expression.BuildContext,
-            ) = buildContext.builtinModule.isAFunction
+            ) = BuiltinModuleReference.isAFunction
         }
     }
 

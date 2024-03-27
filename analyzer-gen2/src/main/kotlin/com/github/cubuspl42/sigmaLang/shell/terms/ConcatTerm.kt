@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaLexer
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -34,24 +35,20 @@ data class ConcatTerm(
         )
     }
 
-    override fun transmute(): ExpressionStub<Expression> = ExpressionStub.map2Unpacked(
+    override fun transmute(): ExpressionStub<Expression> = ExpressionStub.map2Nested(
         left.transmute(),
         right.transmute(),
     ) { leftExpression, rightExpression ->
-        ExpressionBuilder.projectReference.map { projectReference ->
-            val builtinModule = projectReference.builtinModule
+        when (variant) {
+            Variant.Strings -> BuiltinModuleReference.stringClass.concat.call(
+                string = leftExpression,
+                otherString = rightExpression,
+            )
 
-            return@map when (variant) {
-                Variant.Strings -> builtinModule.stringClass.concat.call(
-                    string = leftExpression,
-                    otherString = rightExpression,
-                )
-
-                Variant.Lists -> builtinModule.listClass.concat.call(
-                    list = leftExpression,
-                    otherList = rightExpression,
-                )
-            }
+            Variant.Lists -> BuiltinModuleReference.listClass.concat.call(
+                list = leftExpression,
+                otherList = rightExpression,
+            )
         }
     }
 

@@ -2,6 +2,7 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
+import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -30,7 +31,7 @@ data class IsATerm(
             override fun build(
                 buildContext: Expression.BuildContext,
             ): Call {
-                val isA = buildContext.builtinModule.isAFunction
+                val isA = BuiltinModuleReference.isAFunction
 
                 return isA.call(
                     instance = instance.build(

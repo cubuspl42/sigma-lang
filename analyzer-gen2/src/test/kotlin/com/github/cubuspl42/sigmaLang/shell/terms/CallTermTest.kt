@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -76,7 +77,7 @@ class CallTermTest {
                     subject = ReferenceTerm(
                         referredName = IdentifierTerm(name = "a"),
                     ),
-                    readFieldName = IdentifierTerm(name = "b"),
+                    readFieldName = Identifier.of(name = "b"),
                 ),
                 passedArgument = UnorderedTupleConstructorTerm(
                     entries = listOf(

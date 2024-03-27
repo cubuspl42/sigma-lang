@@ -6,6 +6,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.bindToReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.core.values.builtin.BuiltinModule
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
 fun Expression.asDefinitionBlock(): LocalScope.DefinitionBlock = object : LocalScope.DefinitionBlock() {
@@ -84,7 +85,6 @@ object LocalScope {
         }
 
         data class PatternDefinition(
-            val builtinModuleReference: BuiltinModuleReference,
             val pattern: Pattern,
             override val initializer: Expression,
         ) : Definition() {
@@ -92,10 +92,10 @@ object LocalScope {
                 get() {
                     val patternApplication = pattern.apply(expression = initializer)
 
-                    return builtinModuleReference.ifFunction.call(
+                    return BuiltinModuleReference.ifFunction.call(
                         condition = patternApplication.condition,
                         thenCase = patternApplication.definitionBlock.rawExpression,
-                        elseCase = builtinModuleReference.panicFunction.call(),
+                        elseCase = BuiltinModuleReference.panicFunction.call(),
                     ).asDefinitionBlock()
                 }
         }
@@ -119,7 +119,7 @@ object LocalScope {
                             )
                         ) { accDefinitionBlock: DefinitionBlock, patternDefinition ->
                             accDefinitionBlock.mergeWith(
-                                dictClass = buildContext.builtinModule.dictClass,
+                                dictClass = BuiltinModuleReference.dictClass,
                                 patternDefinition.guardedDefinitionBlock,
                             )
                         }

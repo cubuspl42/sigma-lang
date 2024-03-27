@@ -31,7 +31,7 @@ class ModuleTermTest {
                                 subject = ReferenceTerm(
                                     referredName = IdentifierTerm(name = "calculator")
                                 ),
-                                readFieldName = IdentifierTerm(name = "calculate"),
+                                readFieldName = Identifier.of(name = "calculate"),
                             ),
                             passedArgument = UnorderedTupleConstructorTerm.Empty,
                         ),
