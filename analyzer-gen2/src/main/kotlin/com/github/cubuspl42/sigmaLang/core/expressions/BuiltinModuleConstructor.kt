@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -21,7 +21,7 @@ data object BuiltinModuleConstructor : Expression() {
     }
 
     override fun bind(
-        scope: DynamicScope,
+        context: DynamicContext,
     ): Lazy<Value> = lazyOf(BuiltinModule)
 }
 

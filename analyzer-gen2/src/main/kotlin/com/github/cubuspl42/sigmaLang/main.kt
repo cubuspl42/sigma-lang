@@ -7,7 +7,6 @@ import com.github.cubuspl42.sigmaLang.core.values.IndexableValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.ModuleLoader
 import com.github.cubuspl42.sigmaLang.shell.ProjectLoader
-import java.nio.file.Path
 
 fun main() {
     val projectConstructor = ProjectLoader(
@@ -29,9 +28,9 @@ fun main() {
 //        directory = Path.of("analyzer-gen2/src/main/kotlin"),
 //    )
 
-    val root = projectConstructor.rawExpression.bind(
-        scope = DynamicScope.Bottom,
-    ).value
+    val root = projectConstructor.evaluate()
+
+    projectConstructor.evaluate()
 
     val result = extractMain(root)
 

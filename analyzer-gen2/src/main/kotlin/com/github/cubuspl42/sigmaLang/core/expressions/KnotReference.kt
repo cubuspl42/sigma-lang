@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.squareup.kotlinpoet.CodeBlock
@@ -23,7 +23,11 @@ class KnotReference(
         }
     }
 
-    override fun bind(scope: DynamicScope): Lazy<Value> = lazy {
-        scope.getValue(referredWrapper = referredKnot)
+    override fun bind(context: DynamicContext): Lazy<Value> {
+        val scope = context.scope
+
+        return lazy {
+            scope.getValue(referredWrapper = referredKnot)
+        }
     }
 }

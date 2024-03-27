@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
@@ -104,10 +104,10 @@ class UnorderedTupleConstructor(
         )
     }
 
-    override fun bind(scope: DynamicScope): Lazy<Value> = lazyOf(
+    override fun bind(context: DynamicContext): Lazy<Value> = lazyOf(
         UnorderedTupleValue(
             valueByKey = valueByKey.mapValues { (_, valueLazy) ->
-                valueLazy.value.bind(scope = scope)
+                valueLazy.value.bind(context = context)
             },
         ),
     )

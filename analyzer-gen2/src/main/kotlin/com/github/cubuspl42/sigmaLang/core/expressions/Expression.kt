@@ -1,6 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.core.CoreTerm
+import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ProjectBuilder
@@ -113,13 +114,13 @@ sealed class Expression : CoreTerm() {
     ): CodegenRepresentation
 
     abstract fun bind(
-        scope: DynamicScope,
+        context: DynamicContext,
     ): Lazy<Value>
 
     fun bindStrict(
-        scope: DynamicScope,
+        context: DynamicContext,
     ): Value = bind(
-        scope = scope,
+        context = context,
     ).value
 
     fun readField(

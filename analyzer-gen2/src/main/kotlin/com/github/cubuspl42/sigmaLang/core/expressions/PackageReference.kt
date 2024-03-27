@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.Package
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
@@ -14,7 +14,7 @@ class PackageReference(
         context: CodegenRepresentationContext,
     ): CodegenRepresentation = TODO()
 
-    override fun bind(scope: DynamicScope): Lazy<Value> = lazy {
+    override fun bind(context: DynamicContext): Lazy<Value> = lazy {
         TODO() // Package is not a Wrapper
     }
 }

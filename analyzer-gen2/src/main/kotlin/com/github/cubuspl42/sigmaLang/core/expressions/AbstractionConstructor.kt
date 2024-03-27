@@ -1,6 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.AbstractionValue
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstractionValue
@@ -124,10 +124,10 @@ class AbstractionConstructor(
         }
     }
 
-    override fun bind(scope: DynamicScope): Lazy<Value> = lazyOf(
+    override fun bind(context: DynamicContext): Lazy<Value> = lazyOf(
         ExpressedAbstractionValue(
             abstractionConstructor = this,
-            closure = scope,
+            closure = context,
         )
     )
 }
