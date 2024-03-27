@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core
 
 import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleConstructor
-import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
@@ -21,32 +20,27 @@ class ProjectBuilder(
 ) {
     data class ModuleDefinitionBuilder(
         private val name: Identifier,
-        private val initializer: ExpressionBuilder<Expression>,
+        private val initializer: Expression,
     ) {
         fun build(
-            buildContext: Expression.BuildContext,
         ) = UnorderedTupleConstructor.Entry(
             key = name,
-            value = lazy {
-                initializer.build(
-                    buildContext = buildContext,
-                )
-            },
+            value = lazyOf(initializer),
         )
     }
 
     data class Constructor(
-        val rootKnotConstructor: KnotConstructor,
+        val rootTupleConstructor: UnorderedTupleConstructor,
     ) : ShadowExpression() {
         override val rawExpression: Expression
-            get() = rootKnotConstructor
+            get() = rootTupleConstructor
 
         fun generateCode(packageName: String, name: String): FileSpec {
             val context = CodegenRepresentationContext().apply {
                 visitOnce(rawExpression)
             }
 
-            val rootRepresentation = context.getRepresentation(rootKnotConstructor)
+            val rootRepresentation = context.getRepresentation(rootTupleConstructor)
 
             return FileSpec.builder(packageName, "out").addAnnotation(
                 AnnotationSpec.builder(Suppress::class).addMember("%S", "RedundantVisibilityModifier")
@@ -75,33 +69,16 @@ class ProjectBuilder(
         }
     }
 
-    data class Reference(
-        val rawKnotReference: Expression,
-    ) {
-        fun resolveModule(modulePath: ModulePath): Expression = rawKnotReference.readField(
-            fieldName = modulePath.name,
-        )
-    }
+    data object Reference
 
     companion object {
         val builtinIdentifier = Identifier(name = "__builtin__")
     }
 
     fun build(): Constructor {
-        val (
-            rootKnotConstructor,
-            _,
-        ) = KnotConstructor.looped { knotReference ->
-            val projectReference = Reference(
-                rawKnotReference = knotReference,
-            )
 
             val moduleEntries = moduleDefinitionBuilders.mapUniquely {
-                it.build(
-                    buildContext = Expression.BuildContext(
-                        projectReference = projectReference,
-                    )
-                )
+                it.build()
             }
 
             val rootTupleConstructor = UnorderedTupleConstructor.fromEntries(
@@ -111,14 +88,10 @@ class ProjectBuilder(
                 ),
             )
 
-            Pair(
-                rootTupleConstructor,
-                Unit,
-            )
-        }
+
 
         return Constructor(
-            rootKnotConstructor = rootKnotConstructor,
+            rootTupleConstructor = rootTupleConstructor,
         )
     }
 }

@@ -2,19 +2,16 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ListEmptyPattern
 import com.github.cubuspl42.sigmaLang.core.ListUnconsPattern
 import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.Pattern
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.TagPattern
 import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
-import com.github.cubuspl42.sigmaLang.shell.stubs.map
 
 sealed class PatternTerm {
     abstract val names: Set<Identifier>
@@ -57,15 +54,13 @@ data class ListUnconsPatternTerm(
         )
     }
 
-    override fun makePattern() = object : ExpressionBuilder<Pattern>() {
-        override fun build(
-            buildContext: Expression.BuildContext,
-        ): Pattern = ListUnconsPattern(
+    override fun makePattern(): ExpressionStub<Pattern> = ExpressionStub.pure(
+        ListUnconsPattern(
             listClass = BuiltinModuleReference.listClass,
             headName = headName,
             tailName = tailName,
-        )
-    }.asStub()
+        ),
+    )
 
     override val names: Set<Identifier>
         get() = setOf(headName, tailName)
@@ -75,30 +70,25 @@ data class ListUnconsPatternTerm(
     ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
         override fun transform(
             context: FormationContext,
-        ) = object : ExpressionBuilder<LocalScope.Constructor.PatternDefinition>() {
-            override fun build(buildContext: Expression.BuildContext) = LocalScope.Constructor.PatternDefinition(
-                pattern = ListUnconsPattern(
-                    listClass = BuiltinModuleReference.listClass,
-                    headName = headName,
-                    tailName = tailName,
-                ),
-                initializer = initializerStub.build(
-                    formationContext = context,
-                    buildContext = buildContext,
-                ),
-            )
-        }
+        ) = LocalScope.Constructor.PatternDefinition(
+            pattern = ListUnconsPattern(
+                listClass = BuiltinModuleReference.listClass,
+                headName = headName,
+                tailName = tailName,
+            ),
+            initializer = initializerStub.build(
+                formationContext = context,
+            ),
+        )
     }
 }
 
 data object ListEmptyPatternTerm : DestructuringPatternTerm() {
-    override fun makePattern() = object : ExpressionBuilder<Pattern>() {
-        override fun build(
-            buildContext: Expression.BuildContext,
-        ): Pattern = ListEmptyPattern(
+    override fun makePattern() = ExpressionStub.pure(
+        ListEmptyPattern(
             listClass = BuiltinModuleReference.listClass,
-        )
-    }.asStub()
+        ),
+    )
 
     override val names: Set<Identifier> = emptySet()
 
@@ -107,17 +97,14 @@ data object ListEmptyPatternTerm : DestructuringPatternTerm() {
     ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
         override fun transform(
             context: FormationContext,
-        ) = object : ExpressionBuilder<LocalScope.Constructor.PatternDefinition>() {
-            override fun build(buildContext: Expression.BuildContext) = LocalScope.Constructor.PatternDefinition(
-                pattern = ListEmptyPattern(
-                    listClass = BuiltinModuleReference.listClass,
-                ),
-                initializer = initializerStub.build(
-                    formationContext = context,
-                    buildContext = buildContext,
-                ),
-            )
-        }
+        ) = LocalScope.Constructor.PatternDefinition(
+            pattern = ListEmptyPattern(
+                listClass = BuiltinModuleReference.listClass,
+            ),
+            initializer = initializerStub.build(
+                formationContext = context,
+            ),
+        )
     }
 }
 
@@ -138,17 +125,12 @@ data class TagPatternTerm(
     override fun makePattern(): ExpressionStub<Pattern> = object : ExpressionStub<Pattern>() {
         override fun transform(
             context: FormationContext,
-        ): ExpressionBuilder<Pattern> = object : ExpressionBuilder<Pattern>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ): Pattern = TagPattern(
-                class_ = class_.build(
-                    formationContext = context,
-                    buildContext = buildContext,
-                ),
-                newName = newName,
-            )
-        }
+        ) = TagPattern(
+            class_ = class_.build(
+                formationContext = context,
+            ),
+            newName = newName,
+        )
     }
 
     override fun transmute(initializerStub: ExpressionStub<Expression>): ExpressionStub<LocalScope.Constructor.Definition> {

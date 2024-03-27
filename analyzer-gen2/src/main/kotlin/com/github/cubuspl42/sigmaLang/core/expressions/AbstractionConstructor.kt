@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.core.DynamicContext
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.AbstractionValue
 import com.github.cubuspl42.sigmaLang.core.values.ExpressedAbstractionValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -74,20 +73,6 @@ class AbstractionConstructor(
                 abstractionConstructor,
                 t,
             )
-        }
-
-        fun builder(
-            buildImageBuilder: (ArgumentReference) -> ExpressionBuilder<Expression>,
-        ): ExpressionBuilder<AbstractionConstructor> = object : ExpressionBuilder<AbstractionConstructor>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
-                val imageBuilder = buildImageBuilder(argumentReference)
-
-                imageBuilder.build(
-                    buildContext = buildContext,
-                )
-            }
         }
     }
 

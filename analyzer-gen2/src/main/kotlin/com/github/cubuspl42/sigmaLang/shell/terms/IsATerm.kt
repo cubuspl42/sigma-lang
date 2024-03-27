@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
@@ -27,25 +26,20 @@ data class IsATerm(
     override fun transmute(): ExpressionStub<Call> = object : ExpressionStub<Call>() {
         override fun transform(
             context: FormationContext,
-        ) = object : ExpressionBuilder<Call>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ): Call {
-                val isA = BuiltinModuleReference.isAFunction
+        ): Call {
+            val isA = BuiltinModuleReference.isAFunction
 
-                return isA.call(
-                    instance = instance.build(
-                        formationContext = context,
-                        buildContext = buildContext,
-                    ),
-                    class_ = class_.build(
-                        formationContext = context,
-                        buildContext = buildContext,
-                    ),
-                )
-            }
+            return isA.call(
+                instance = instance.build(
+                    formationContext = context,
+                ),
+                class_ = class_.build(
+                    formationContext = context,
+                ),
+            )
         }
     }
+    
 
     override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(

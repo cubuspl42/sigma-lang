@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -49,23 +48,18 @@ data class UnorderedTupleConstructorTerm(
         object : ExpressionStub<UnorderedTupleConstructor>() {
             override fun transform(
                 context: FormationContext,
-            ) = object : ExpressionBuilder<UnorderedTupleConstructor>() {
-                override fun build(
-                    buildContext: Expression.BuildContext,
-                ) = UnorderedTupleConstructor.fromEntries(
-                    entries = entries.map {
-                        UnorderedTupleConstructor.Entry(
-                            key = it.key.transmute(),
-                            value = lazy {
-                                it.value.transmute().build(
-                                    formationContext = context,
-                                    buildContext = buildContext,
-                                )
-                            },
-                        )
-                    },
-                )
-            }
+            ) = UnorderedTupleConstructor.fromEntries(
+                entries = entries.map {
+                    UnorderedTupleConstructor.Entry(
+                        key = it.key.transmute(),
+                        value = lazy {
+                            it.value.transmute().build(
+                                formationContext = context,
+                            )
+                        },
+                    )
+                },
+            )
         }
 
     override fun wrap(): Value = UnorderedTupleValue(

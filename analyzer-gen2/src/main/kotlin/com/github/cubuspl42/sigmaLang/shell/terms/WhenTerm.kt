@@ -1,11 +1,8 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
+import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
-import com.github.cubuspl42.sigmaLang.core.map
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -19,7 +16,7 @@ data class WhenTerm(
     data class CaseBlock(
         val condition: ExpressionTerm,
         val result: ExpressionTerm,
-    ): Wrappable {
+    ) : Wrappable {
         override fun wrap(): Value = UnorderedTupleValue(
             valueByKey = mapOf(
                 Identifier.of("condition") to lazyOf(condition.wrap()),
@@ -45,30 +42,24 @@ data class WhenTerm(
     }
 
     override fun transmute(): ExpressionStub<Expression> {
-        val ifExpression = ExpressionBuilder.ifFunction
-
         fun constructElseExpression(): ExpressionStub<Expression> =
-            elseBlock?.transmute() ?: ExpressionBuilder.panicFunction.map {
-                it.rawExpression.call(
-                    passedArgument = UnorderedTupleConstructor.Empty,
-                )
-            }.asStub()
+            elseBlock?.transmute() ?: ExpressionStub.pure(
+                BuiltinModuleReference.panicFunction.call()
+            )
 
         fun constructConditionalEntryExpression(
             caseBlock: CaseBlock,
             elseCaseStub: ExpressionStub<Expression>,
-        ): ExpressionStub<Expression> = ExpressionStub.map3Unpacked(
+        ): ExpressionStub<Expression> = ExpressionStub.map3(
             caseBlock.condition.transmute(),
             caseBlock.result.transmute(),
             elseCaseStub,
         ) { condition, result, elseCase ->
-            ifExpression.map { ifFunction ->
-                ifFunction.call(
-                    condition = condition,
-                    thenCase = result,
-                    elseCase = elseCase,
-                )
-            }
+            BuiltinModuleReference.ifFunction.call(
+                condition = condition,
+                thenCase = result,
+                elseCase = elseCase,
+            )
         }
 
         fun constructEntryExpression(

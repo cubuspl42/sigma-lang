@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.core.DynamicContext
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -15,17 +14,7 @@ class UnorderedTupleConstructor(
     data class Entry(
         val key: Identifier,
         val value: Lazy<Expression>,
-    ) {
-        data class Builder(
-            val key: Identifier,
-            val valueBuilder: ExpressionBuilder<Expression>,
-        ) {
-            fun build(buildContext: BuildContext) = Entry(
-                key = key,
-                value = lazyOf(valueBuilder.build(buildContext)),
-            )
-        }
-    }
+    )
 
     companion object {
         val Empty: UnorderedTupleConstructor = UnorderedTupleConstructor(
@@ -74,16 +63,6 @@ class UnorderedTupleConstructor(
                 """.trimIndent(),
                 UnorderedTupleValue::class,
                 passedEntriesBuilder.build(),
-            )
-        }
-
-        fun builder(
-            entries: Iterable<Entry.Builder>,
-        ): ExpressionBuilder<UnorderedTupleConstructor> = object : ExpressionBuilder<UnorderedTupleConstructor>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ): UnorderedTupleConstructor = UnorderedTupleConstructor.fromEntries(
-                entries = entries.map { it.build(buildContext = buildContext) },
             )
         }
     }

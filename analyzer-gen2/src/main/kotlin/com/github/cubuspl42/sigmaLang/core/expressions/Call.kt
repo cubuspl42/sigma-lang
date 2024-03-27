@@ -2,7 +2,6 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.CallableValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.squareup.kotlinpoet.CodeBlock
@@ -25,16 +24,6 @@ class Call(
             CallableValue::class,
             passedArgument
         )
-
-        fun builder(
-            calleeBuilder: ExpressionBuilder<Expression>,
-            passedArgumentBuilder: ExpressionBuilder<Expression>,
-        ): ExpressionBuilder<Call> = object : ExpressionBuilder<Call>() {
-            override fun build(buildContext: BuildContext): Call = Call(
-                callee = calleeBuilder.build(buildContext),
-                passedArgument = passedArgumentBuilder.build(buildContext),
-            )
-        }
     }
 
     override val subExpressions: Set<Expression> by lazy {
