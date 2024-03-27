@@ -4,6 +4,19 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Wrapper
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 
+data class DynamicContext(
+    val rootLazy: Lazy<Value>,
+    val scope: DynamicScope,
+) {
+    val root by rootLazy
+
+    fun withScope(
+        transform: DynamicScope.() -> DynamicScope,
+    ): DynamicContext = copy(
+        scope = scope.transform(),
+    )
+}
+
 interface DynamicScope {
     data object Bottom : DynamicScope {
         override fun getValue(referredWrapper: Wrapper): Value {
@@ -36,7 +49,6 @@ interface DynamicScope {
             dynamicScopeLazy = dynamicScopeLazy,
         )
     }
-
 
 
     fun getValue(

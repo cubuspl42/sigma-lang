@@ -6,7 +6,9 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.UnorderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
+import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
+import com.github.cubuspl42.sigmaLang.utils.LazyUtils
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
@@ -61,6 +63,15 @@ class ProjectBuilder(
                     ).build()
                 ).build()
             ).build()
+        }
+
+        fun evaluate(): Value = LazyUtils.looped { rootLooped ->
+            rawExpression.bindStrict(
+                context = DynamicContext(
+                    rootLazy = rootLooped,
+                    scope = DynamicScope.Bottom,
+                ),
+            )
         }
     }
 

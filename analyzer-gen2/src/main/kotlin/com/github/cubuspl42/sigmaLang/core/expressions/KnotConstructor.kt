@@ -1,9 +1,9 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
+import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.core.withValue
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
@@ -113,17 +113,23 @@ class KnotConstructor private constructor(
     }
 
     override fun bind(
-        scope: DynamicScope,
-    ): Lazy<Value> = DynamicScope.looped { innerScopeLooped ->
-        val bodyValueLazy = this@KnotConstructor.body.bind(
-            scope = innerScopeLooped,
-        )
+        context: DynamicContext,
+    ): Lazy<Value> {
+        val scope = context.scope
 
-        val innerScope = scope.withValue(
-            wrapper = this@KnotConstructor,
-            valueLazy = bodyValueLazy,
-        )
+        return DynamicScope.looped { innerScopeLooped ->
+            val bodyValueLazy = this@KnotConstructor.body.bind(
+                context = context.copy(
+                    scope = innerScopeLooped,
+                ),
+            )
 
-        Pair(bodyValueLazy, innerScope)
+            val innerScope = scope.withValue(
+                wrapper = this,
+                valueLazy = bodyValueLazy,
+            )
+
+            Pair(bodyValueLazy, innerScope)
+        }
     }
 }

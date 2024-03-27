@@ -1,9 +1,7 @@
 package com.github.cubuspl42.sigmaLang.core.expressions
 
-import com.github.cubuspl42.sigmaLang.core.DynamicScope
+import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.values.ListValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.squareup.kotlinpoet.CodeBlock
@@ -52,10 +50,10 @@ class OrderedTupleConstructor(
         )
     }
 
-    override fun bind(scope: DynamicScope): Lazy<Value> = lazyOf(
+    override fun bind(context: DynamicContext): Lazy<Value> = lazyOf(
         ListValue(
             values = elements.map {
-                it.value.bindStrict(scope = scope)
+                it.value.bindStrict(context = context)
             },
         )
     )
