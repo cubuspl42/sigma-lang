@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
@@ -25,13 +24,13 @@ data class ReferenceTerm(
     override fun transmute(): ExpressionStub<Expression> = object : ExpressionStub<Expression>() {
         override fun transform(
             context: FormationContext,
-        ): ExpressionBuilder<Expression> {
+        ): Expression {
             val scope = context.scope
 
             val referredExpression = scope.resolveName(referredName = referredName.toIdentifier())
                 ?: throw IllegalStateException("Unresolved reference: $referredName")
 
-            return ExpressionBuilder.pure(referredExpression)
+            return referredExpression
         }
     }
 

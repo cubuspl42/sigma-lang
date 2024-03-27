@@ -1,7 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.OrderedTupleConstructor
 import com.github.cubuspl42.sigmaLang.core.values.ListValue
@@ -32,20 +31,15 @@ data class OrderedTupleConstructorTerm(
     override fun transmute(): ExpressionStub<Expression> = object : ExpressionStub<OrderedTupleConstructor>() {
         override fun transform(
             context: FormationContext,
-        ): ExpressionBuilder<OrderedTupleConstructor> = object : ExpressionBuilder<OrderedTupleConstructor>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ): OrderedTupleConstructor = OrderedTupleConstructor(
-                elements = elements.map {
-                    lazyOf(
-                        it.build(
-                            formationContext = context,
-                            buildContext = buildContext,
-                        ),
-                    )
-                },
-            )
-        }
+        ): OrderedTupleConstructor = OrderedTupleConstructor(
+            elements = elements.map {
+                lazyOf(
+                    it.build(
+                        formationContext = context,
+                    ),
+                )
+            },
+        )
     }
 
     override fun wrap(): Value = ListValue(

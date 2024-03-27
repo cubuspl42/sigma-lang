@@ -3,7 +3,6 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.DynamicScope
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.core.withValue
 import com.github.cubuspl42.sigmaLang.utils.LazyUtils
@@ -71,30 +70,6 @@ class KnotConstructor private constructor(
                 knotConstructor,
                 t,
             )
-        }
-
-        fun builder(
-            buildBody: (KnotReference) -> ExpressionBuilder<Expression>,
-        ): ExpressionBuilder<KnotConstructor> = object : ExpressionBuilder<KnotConstructor>() {
-            override fun build(buildContext: BuildContext): KnotConstructor {
-                val knotConstructor = LazyUtils.looped { knotConstructorLooped ->
-                    val reference = KnotReference(
-                        referredKnotLazy = knotConstructorLooped,
-                    )
-
-                    val bodyBuilder = buildBody(reference)
-
-                    val body = bodyBuilder.build(buildContext = buildContext)
-
-                    val knotConstructor = KnotConstructor(
-                        body = body,
-                    )
-
-                    knotConstructor
-                }
-
-                return knotConstructor
-            }
         }
     }
 

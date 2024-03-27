@@ -1,8 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
@@ -54,10 +52,8 @@ data class ClassDefinitionTerm(
 
         fun buildImplementation(
             formationContext: FormationContext,
-            buildContext: Expression.BuildContext,
         ): AbstractionConstructor = implementation.build(
             formationContext = formationContext,
-            buildContext = buildContext,
             extraArgumentNames = setOf(ClassModule.thisIdentifier),
         )
 
@@ -80,23 +76,18 @@ data class ClassDefinitionTerm(
         object : ExpressionStub<Expression>() {
             override fun transform(
                 context: FormationContext,
-            ) = object : ExpressionBuilder<Expression>() {
-                override fun build(
-                    buildContext: Expression.BuildContext,
-                ): Expression {
-                    val classModule = BuiltinModuleReference.classModule
+            ): Expression {
+                val classModule = BuiltinModuleReference.classModule
 
-                    return classModule.of.call(
-                        tag = name,
-                        instanceConstructorName = constructor!!.name.toIdentifier(),
-                        methodByName = methodDefinitions.associate { methodDefinitionTerm ->
-                            methodDefinitionTerm.name.toIdentifier() to methodDefinitionTerm.buildImplementation(
-                                formationContext = context,
-                                buildContext = buildContext,
-                            )
-                        },
-                    )
-                }
+                return classModule.of.call(
+                    tag = name,
+                    instanceConstructorName = constructor!!.name.toIdentifier(),
+                    methodByName = methodDefinitions.associate { methodDefinitionTerm ->
+                        methodDefinitionTerm.name.toIdentifier() to methodDefinitionTerm.buildImplementation(
+                            formationContext = context,
+                        )
+                    },
+                )
             }
         }
 

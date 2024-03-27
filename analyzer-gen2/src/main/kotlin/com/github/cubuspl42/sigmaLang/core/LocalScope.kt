@@ -103,47 +103,47 @@ object LocalScope {
         companion object {
             fun make(
                 makeDefinitions: (Reference) -> Set<Definition>,
-            ): ExpressionBuilder<Constructor> = object : ExpressionBuilder<Constructor>() {
-                override fun build(buildContext: Expression.BuildContext): Constructor {
-                    val (knotConstructor, definitions) = KnotConstructor.looped { knotReference ->
-                        val reference = Reference(rawReference = knotReference)
+            ): Constructor {
+                val (knotConstructor, definitions) = KnotConstructor.looped { knotReference ->
+                    val reference = Reference(rawReference = knotReference)
 
-                        val definitions = makeDefinitions(reference)
+                    val definitions = makeDefinitions(reference)
 
-                        val simpleDefinitions = definitions.filterIsInstance<SimpleDefinition>().toSet()
-                        val patternDefinitions = definitions.filterIsInstance<PatternDefinition>()
+                    val simpleDefinitions = definitions.filterIsInstance<SimpleDefinition>().toSet()
+                    val patternDefinitions = definitions.filterIsInstance<PatternDefinition>()
 
-                        val fullDefinitionBlock = patternDefinitions.fold(
-                            initial = DefinitionBlock.makeSimple(
-                                definitions = simpleDefinitions,
-                            )
-                        ) { accDefinitionBlock: DefinitionBlock, patternDefinition ->
-                            accDefinitionBlock.mergeWith(
-                                dictClass = BuiltinModuleReference.dictClass,
-                                patternDefinition.guardedDefinitionBlock,
-                            )
-                        }
-
-                        Pair(
-                            fullDefinitionBlock.rawExpression,
-                            definitions,
+                    val fullDefinitionBlock = patternDefinitions.fold(
+                        initial = DefinitionBlock.makeSimple(
+                            definitions = simpleDefinitions,
+                        )
+                    ) { accDefinitionBlock: DefinitionBlock, patternDefinition ->
+                        accDefinitionBlock.mergeWith(
+                            dictClass = BuiltinModuleReference.dictClass,
+                            patternDefinition.guardedDefinitionBlock,
                         )
                     }
 
-                    return Constructor(
-                        knotConstructor = knotConstructor,
-                        definitions = definitions,
+                    Pair(
+                        fullDefinitionBlock.rawExpression,
+                        definitions,
                     )
                 }
+
+                return Constructor(
+                    knotConstructor = knotConstructor,
+                    definitions = definitions,
+                )
             }
 
             fun makeWithResult(
                 makeDefinitions: (Reference) -> Set<Definition>,
                 makeResult: (Reference) -> Expression,
-            ): ExpressionBuilder<Expression> = make(
-                makeDefinitions = makeDefinitions,
-            ).map { localScopeConstructor ->
-                localScopeConstructor.rawExpression.bindToReference { localScopeReference ->
+            ): Expression {
+                val localScopeConstructor = make(
+                    makeDefinitions = makeDefinitions,
+                )
+
+                return localScopeConstructor.rawExpression.bindToReference { localScopeReference ->
                     val reference = Reference(rawReference = localScopeReference)
 
                     makeResult(reference)

@@ -2,12 +2,11 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.ModulePath
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.KnotConstructor
-import com.github.cubuspl42.sigmaLang.core.joinOf
+import com.github.cubuspl42.sigmaLang.core.expressions.RootReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
@@ -127,49 +126,40 @@ data class ModuleTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ModuleContext = parser.module()
     }
 
-    fun transform(): ExpressionBuilder<KnotConstructor> = object : ExpressionBuilder<KnotConstructor>() {
-        override fun build(
-            buildContext: Expression.BuildContext,
-        ): KnotConstructor {
-            val projectReference = buildContext.projectReference
-
-            val rootScope = StaticScope.fixed(
-                expressionByName = imports.associate {
-                    it.effectiveName.transmute() to projectReference.resolveModule(
-                        modulePath = it.importedModulePath,
-                    )
-                },
-            )
-
-            val rootContext = FormationContext(
-                scope = rootScope,
-            )
-
-            val allLocalNames = definitions.fold(
-                initial = emptySet<Identifier>()
-            ) { accLocalNames, definitionTerm ->
-                accLocalNames + definitionTerm.name
-            }
-
-            return LocalScope.Constructor.make { localScopeReference ->
-                val innerContext = rootContext.withExtendedScope(
-                    localNames = allLocalNames,
-                    localScopeReference = localScopeReference,
+    fun transform(): KnotConstructor {
+        val rootScope = StaticScope.fixed(
+            expressionByName = imports.associate {
+                it.effectiveName.transmute() to RootReference.readField(
+                    fieldName = it.importedModulePath.name,
                 )
+            },
+        )
 
-                definitions.mapUniquely {
-                    LocalScope.Constructor.SimpleDefinition(
-                        name = it.name,
-                        initializer = it.transmuteInitializer().build(
-                            formationContext = innerContext,
-                            buildContext = buildContext,
-                        ),
-                    )
-                }
-            }.build(
-                buildContext = buildContext,
-            ).knotConstructor
+        val rootContext = FormationContext(
+            scope = rootScope,
+        )
+
+        val allLocalNames = definitions.fold(
+            initial = emptySet<Identifier>()
+        ) { accLocalNames, definitionTerm ->
+            accLocalNames + definitionTerm.name
         }
+
+        return LocalScope.Constructor.make { localScopeReference ->
+            val innerContext = rootContext.withExtendedScope(
+                localNames = allLocalNames,
+                localScopeReference = localScopeReference,
+            )
+
+            definitions.mapUniquely {
+                LocalScope.Constructor.SimpleDefinition(
+                    name = it.name,
+                    initializer = it.transmuteInitializer().build(
+                        formationContext = innerContext,
+                    ),
+                )
+            }
+        }.knotConstructor
     }
 
     override fun wrap(): Value = UnorderedTupleValue(

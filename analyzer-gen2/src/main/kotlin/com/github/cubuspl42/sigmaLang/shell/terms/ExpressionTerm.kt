@@ -83,10 +83,7 @@ sealed interface ExpressionTerm : Term {
 
     fun build(
         formationContext: FormationContext,
-        buildContext: Expression.BuildContext,
     ): Expression = transmute().transform(
         context = formationContext,
-    ).build(
-        buildContext = buildContext,
     )
 }

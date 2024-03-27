@@ -2,7 +2,6 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
@@ -98,23 +97,17 @@ data class LetInTerm(
             ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
                 override fun transform(
                     context: FormationContext,
-                ) = object : ExpressionBuilder<LocalScope.Constructor.PatternDefinition>() {
-                    override fun build(
-                        buildContext: Expression.BuildContext,
-                    ): LocalScope.Constructor.PatternDefinition {
-                        val pattern = pattern.makePattern().build(
-                            formationContext = context,
-                            buildContext = buildContext,
-                        )
+                ): LocalScope.Constructor.PatternDefinition {
+                    val pattern = pattern.makePattern().build(
+                        formationContext = context,
+                    )
 
-                        return LocalScope.Constructor.PatternDefinition(
-                            pattern = pattern,
-                            initializer = initializer.transmute().build(
-                                formationContext = context,
-                                buildContext = buildContext,
-                            ),
-                        )
-                    }
+                    return LocalScope.Constructor.PatternDefinition(
+                        pattern = pattern,
+                        initializer = initializer.transmute().build(
+                            formationContext = context,
+                        ),
+                    )
                 }
             }
         }
@@ -134,39 +127,6 @@ data class LetInTerm(
         fun makeDefinition() = lhs.makeDefinition(initializer = initializer)
     }
 
-//    data class SimpleDefinitionTerm(
-//        val name: Identifier,
-//        override val initializer: ExpressionTerm,
-//    ) : DefinitionTerm() {
-//        companion object {
-//            fun build(
-//                ctx: SigmaParser.NameDefinitionLhsContext,
-//                initializer: ExpressionTerm,
-//            ): SimpleDefinitionTerm = SimpleDefinitionTerm(
-//                name = IdentifierTerm.build(ctx.name).transmute(),
-//                initializer = initializer,
-//            )
-//        }
-//    }
-//
-//    data class DestructuringDefinitionTerm(
-//        val pattern: DestructuringPatternTerm,
-//        override val initializer: ExpressionTerm,
-//    ) : DefinitionTerm() {
-//        val names: Set<Identifier>
-//            get() = pattern.names
-//
-//        companion object {
-//            fun build(
-//                ctx: SigmaParser.DestructuringPatternContext,
-//                initializer: ExpressionTerm,
-//            ): DestructuringDefinitionTerm = DestructuringDefinitionTerm(
-//                pattern = DestructuringPatternTerm.build(ctx.pattern()),
-//                initializer = initializer,
-//            )
-//        }
-//    }
-
     companion object : Term.Builder<SigmaParser.LetInContext, LetInTerm>() {
         override fun build(
             ctx: SigmaParser.LetInContext,
@@ -183,50 +143,40 @@ data class LetInTerm(
     override fun transmute() = object : ExpressionStub<Expression>() {
         override fun transform(
             context: FormationContext,
-        ) = object : ExpressionBuilder<Expression>() {
-            override fun build(
-                buildContext: Expression.BuildContext,
-            ): Expression {
-                val allLocalNames = definitions.fold(
-                    initial = emptySet<Identifier>()
-                ) { accLocalNames, definitionTerm ->
-                    accLocalNames + definitionTerm.names
-                }
-
-
-                val result = LocalScope.Constructor.makeWithResult(
-                    makeDefinitions = { localScopeReference ->
-                        val innerContext = context.withExtendedScope(
-                            localNames = allLocalNames,
-                            localScopeReference = localScopeReference,
-                        )
-
-                        definitions.mapUniquely {
-                            it.makeDefinition().build(
-                                formationContext = innerContext,
-                                buildContext = buildContext,
-                            )
-                        }
-                    },
-                    makeResult = { localScopeReference ->
-                        val innerContext = context.withExtendedScope(
-                            localNames = allLocalNames,
-                            localScopeReference = localScopeReference,
-                        )
-
-                        result.transmute().build(
-                            formationContext = innerContext,
-                            buildContext = buildContext,
-                        )
-                    },
-                ).build(
-                    buildContext = buildContext,
-                )
-
-                return result
+        ): Expression {
+            val allLocalNames = definitions.fold(
+                initial = emptySet<Identifier>()
+            ) { accLocalNames, definitionTerm ->
+                accLocalNames + definitionTerm.names
             }
-        }
 
+            val result = LocalScope.Constructor.makeWithResult(
+                makeDefinitions = { localScopeReference ->
+                    val innerContext = context.withExtendedScope(
+                        localNames = allLocalNames,
+                        localScopeReference = localScopeReference,
+                    )
+
+                    definitions.mapUniquely {
+                        it.makeDefinition().build(
+                            formationContext = innerContext,
+                        )
+                    }
+                },
+                makeResult = { localScopeReference ->
+                    val innerContext = context.withExtendedScope(
+                        localNames = allLocalNames,
+                        localScopeReference = localScopeReference,
+                    )
+
+                    result.transmute().build(
+                        formationContext = innerContext,
+                    )
+                },
+            )
+
+            return result
+        }
     }
 
     override fun wrap(): Value = TODO()

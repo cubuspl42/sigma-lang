@@ -2,13 +2,9 @@ package com.github.cubuspl42.sigmaLang.core.expressions
 
 import com.github.cubuspl42.sigmaLang.core.CoreTerm
 import com.github.cubuspl42.sigmaLang.core.DynamicContext
-import com.github.cubuspl42.sigmaLang.core.DynamicScope
-import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
-import com.github.cubuspl42.sigmaLang.core.ProjectBuilder
-import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.squareup.kotlinpoet.CodeBlock
 
@@ -92,10 +88,6 @@ class CompilationCodegenContext {
 sealed class Expression : CoreTerm() {
     private val expressionId = ++nextExpressionId
 
-    data class BuildContext(
-        val projectReference: ProjectBuilder.Reference,
-    )
-
     abstract class CodegenRepresentation {
         abstract fun generateCode(): CodeBlock
     }
@@ -134,7 +126,7 @@ sealed class Expression : CoreTerm() {
         passedArgument = passedArgument,
     )
 
-    fun asStub(): ExpressionStub<Expression> = ExpressionStub.pure(ExpressionBuilder.pure(this@Expression))
+    fun asStub(): ExpressionStub<Expression> = ExpressionStub.pure(this@Expression)
 }
 
 fun Expression.bindToReference(
