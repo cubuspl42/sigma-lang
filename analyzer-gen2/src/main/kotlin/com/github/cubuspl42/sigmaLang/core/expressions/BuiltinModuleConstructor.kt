@@ -25,9 +25,7 @@ data object BuiltinModuleConstructor : Expression() {
     ): Lazy<Value> = lazyOf(BuiltinModule)
 }
 
-class BuiltinModuleReference(
-    val rawModuleReference: Expression,
-) {
+data object BuiltinModuleReference : Reference() {
     class IfFunction(
         private val rawFunctionReference: Expression,
     ) : ShadowExpression() {
@@ -51,7 +49,7 @@ class BuiltinModuleReference(
 
 
     val ifFunction = IfFunction(
-        rawFunctionReference = rawModuleReference.readField(
+        rawFunctionReference = this.readField(
             fieldName = Identifier.of("if"),
         )
     )
@@ -76,7 +74,7 @@ class BuiltinModuleReference(
     }
 
     val isAFunction = IsAFunction(
-        rawFunctionReference = rawModuleReference.readField(
+        rawFunctionReference = this.readField(
             fieldName = Identifier.of("isA"),
         )
     )
@@ -93,7 +91,7 @@ class BuiltinModuleReference(
     }
 
     val panicFunction = PanicFunction(
-        rawFunctionReference = rawModuleReference.readField(
+        rawFunctionReference = this.readField(
             fieldName = Identifier.of("panic"),
         )
     )
@@ -174,7 +172,7 @@ class BuiltinModuleReference(
     }
 
     val listClass = ListClassReference(
-        rawClassReference = rawModuleReference.readField(
+        rawClassReference = this.readField(
             fieldName = Identifier.of("List"),
         ),
     )
@@ -223,7 +221,7 @@ class BuiltinModuleReference(
     }
 
     val dictClass = DictClassReference(
-        rawClassReference = rawModuleReference.readField(
+        rawClassReference = this.readField(
             fieldName = Identifier.of("Dict"),
         ),
     )
@@ -257,16 +255,22 @@ class BuiltinModuleReference(
     }
 
     val stringClass = StringClassReference(
-        rawClassReference = rawModuleReference.readField(
+        rawClassReference = this.readField(
             fieldName = Identifier.of("String"),
         ),
     )
 
     val classModule = ClassModuleExpression(
-        rawModuleExpression = rawModuleReference.readField(
+        rawModuleExpression = this.readField(
             fieldName = Identifier.of("Class"),
         ),
     )
+
+    override fun buildCodegenRepresentation(context: CodegenRepresentationContext): CodegenRepresentation {
+        TODO("Not yet implemented")
+    }
+
+    override fun bind(context: DynamicContext): Lazy<Value> = lazyOf(BuiltinModule)
 }
 
 class ClassModuleExpression(

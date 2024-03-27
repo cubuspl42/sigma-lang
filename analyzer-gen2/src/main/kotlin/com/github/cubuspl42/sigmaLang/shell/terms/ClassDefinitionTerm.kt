@@ -4,6 +4,7 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.ExpressionBuilder
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
+import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
@@ -83,7 +84,7 @@ data class ClassDefinitionTerm(
                 override fun build(
                     buildContext: Expression.BuildContext,
                 ): Expression {
-                    val classModule = buildContext.builtinModule.classModule
+                    val classModule = BuiltinModuleReference.classModule
 
                     return classModule.of.call(
                         tag = name,

@@ -1,5 +1,6 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
+import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -18,7 +19,7 @@ class FieldReadTermTest {
                 subject = ReferenceTerm(
                     referredName = IdentifierTerm(name = "a1"),
                 ),
-                readFieldName = IdentifierTerm(name = "a2"),
+                readFieldName = Identifier.of(name = "a2"),
             )
         )
 

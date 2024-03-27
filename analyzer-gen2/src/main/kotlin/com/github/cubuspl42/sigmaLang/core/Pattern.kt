@@ -14,14 +14,13 @@ abstract class Pattern {
 }
 
 class TagPattern(
-    private val builtinModuleReference: BuiltinModuleReference,
     @Suppress("PropertyName") val class_: Expression,
     private val newName: Identifier,
 ) : Pattern() {
     override fun apply(
         expression: Expression,
     ) = Application(
-        condition = builtinModuleReference.isAFunction.call(
+        condition = BuiltinModuleReference.isAFunction.call(
             instance = expression,
             class_ = class_,
         ),

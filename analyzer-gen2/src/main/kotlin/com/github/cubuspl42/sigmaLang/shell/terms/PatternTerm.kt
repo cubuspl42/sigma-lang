@@ -9,6 +9,7 @@ import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.Pattern
 import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.TagPattern
+import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.FormationContext
@@ -60,7 +61,7 @@ data class ListUnconsPatternTerm(
         override fun build(
             buildContext: Expression.BuildContext,
         ): Pattern = ListUnconsPattern(
-            listClass = buildContext.builtinModule.listClass,
+            listClass = BuiltinModuleReference.listClass,
             headName = headName,
             tailName = tailName,
         )
@@ -76,9 +77,8 @@ data class ListUnconsPatternTerm(
             context: FormationContext,
         ) = object : ExpressionBuilder<LocalScope.Constructor.PatternDefinition>() {
             override fun build(buildContext: Expression.BuildContext) = LocalScope.Constructor.PatternDefinition(
-                builtinModuleReference = buildContext.builtinModule,
                 pattern = ListUnconsPattern(
-                    listClass = buildContext.builtinModule.listClass,
+                    listClass = BuiltinModuleReference.listClass,
                     headName = headName,
                     tailName = tailName,
                 ),
@@ -96,7 +96,7 @@ data object ListEmptyPatternTerm : DestructuringPatternTerm() {
         override fun build(
             buildContext: Expression.BuildContext,
         ): Pattern = ListEmptyPattern(
-            listClass = buildContext.builtinModule.listClass,
+            listClass = BuiltinModuleReference.listClass,
         )
     }.asStub()
 
@@ -109,9 +109,8 @@ data object ListEmptyPatternTerm : DestructuringPatternTerm() {
             context: FormationContext,
         ) = object : ExpressionBuilder<LocalScope.Constructor.PatternDefinition>() {
             override fun build(buildContext: Expression.BuildContext) = LocalScope.Constructor.PatternDefinition(
-                builtinModuleReference = buildContext.builtinModule,
                 pattern = ListEmptyPattern(
-                    listClass = buildContext.builtinModule.listClass,
+                    listClass = BuiltinModuleReference.listClass,
                 ),
                 initializer = initializerStub.build(
                     formationContext = context,
@@ -143,7 +142,6 @@ data class TagPatternTerm(
             override fun build(
                 buildContext: Expression.BuildContext,
             ): Pattern = TagPattern(
-                builtinModuleReference = buildContext.builtinModule,
                 class_ = class_.build(
                     formationContext = context,
                     buildContext = buildContext,
