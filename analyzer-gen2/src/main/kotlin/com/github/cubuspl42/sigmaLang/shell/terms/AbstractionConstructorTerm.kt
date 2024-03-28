@@ -9,7 +9,6 @@ import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.FieldScope
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class AbstractionConstructorTerm(
     val argumentType: TupleTypeConstructorTerm,
@@ -42,7 +41,7 @@ data class AbstractionConstructorTerm(
         transmutationContext: TransmutationContext,
         extraArgumentNames: Set<Identifier> = emptySet(),
     ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
-        image.transmuteFully(
+        image.transmute(
             context = transmutationContext.extendScope(
                 innerScope = FieldScope(
                     names = argumentNames + extraArgumentNames,
@@ -52,10 +51,8 @@ data class AbstractionConstructorTerm(
         )
     }
 
-    override fun transmute(): ExpressionStub<Expression> = object : ExpressionStub<Expression>() {
-        override fun transform(
-            context: TransmutationContext,
-        ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
+    override fun transmute(context: TransmutationContext): Expression {
+        val argumentReference = AbstractionConstructor.looped1 { argumentReference ->
             val innerScope = StaticScope.argumentScope(
                 argumentNames = argumentNames,
                 argumentReference = argumentReference,
@@ -67,12 +64,13 @@ data class AbstractionConstructorTerm(
                 scope = innerScope,
             )
 
-            image.transmuteFully(
+            image.transmute(
                 context = innerContext,
             )
         }
-    }
 
+        return argumentReference
+    }
 
     override fun wrap(): UnorderedTupleValue = UnorderedTupleValue(
         valueByKey = mapOf(

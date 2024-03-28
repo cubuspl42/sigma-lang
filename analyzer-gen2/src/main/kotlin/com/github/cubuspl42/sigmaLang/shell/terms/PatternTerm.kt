@@ -4,28 +4,21 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.ListEmptyPattern
 import com.github.cubuspl42.sigmaLang.core.ListUnconsPattern
-import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.Pattern
 import com.github.cubuspl42.sigmaLang.core.TagPattern
 import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
-import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 sealed class PatternTerm {
     abstract val names: Set<Identifier>
 
     abstract fun transmute(
-        initializerStub: ExpressionStub<Expression>,
-    ): ExpressionStub<LocalScope.Constructor.Definition>
+        context: TransmutationContext,
+    ): Pattern
 }
 
-sealed class ComplexPatternTerm : PatternTerm() {
-    abstract fun makePattern(): ExpressionStub<Pattern>
-}
-
-sealed class DestructuringPatternTerm : ComplexPatternTerm() {
+sealed class DestructuringPatternTerm : PatternTerm() {
     companion object {
         fun build(
             ctx: SigmaParser.DestructuringPatternContext,
@@ -49,69 +42,37 @@ data class ListUnconsPatternTerm(
         fun build(
             ctx: SigmaParser.ListUnconsPatternContext,
         ): ListUnconsPatternTerm = ListUnconsPatternTerm(
-            headName = IdentifierTerm.build(ctx.headName).transmute(),
-            tailName = IdentifierTerm.build(ctx.tailName).transmute(),
+            headName = IdentifierTerm.build(ctx.headName).toIdentifier(),
+            tailName = IdentifierTerm.build(ctx.tailName).toIdentifier(),
         )
     }
-
-    override fun makePattern(): ExpressionStub<Pattern> = ExpressionStub.pure(
-        ListUnconsPattern(
-            listClass = BuiltinModuleReference.listClass,
-            headName = headName,
-            tailName = tailName,
-        ),
-    )
 
     override val names: Set<Identifier>
         get() = setOf(headName, tailName)
 
     override fun transmute(
-        initializerStub: ExpressionStub<Expression>,
-    ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
-        override fun transform(
-            context: TransmutationContext,
-        ) = LocalScope.Constructor.PatternDefinition(
-            pattern = ListUnconsPattern(
-                listClass = BuiltinModuleReference.listClass,
-                headName = headName,
-                tailName = tailName,
-            ),
-            initializer = initializerStub.build(
-                context = context,
-            ),
-        )
-    }
+        context: TransmutationContext,
+    ): Pattern = ListUnconsPattern(
+        listClass = BuiltinModuleReference.listClass,
+        headName = headName,
+        tailName = tailName,
+    )
 }
 
 data object ListEmptyPatternTerm : DestructuringPatternTerm() {
-    override fun makePattern() = ExpressionStub.pure(
-        ListEmptyPattern(
-            listClass = BuiltinModuleReference.listClass,
-        ),
-    )
-
     override val names: Set<Identifier> = emptySet()
 
     override fun transmute(
-        initializerStub: ExpressionStub<Expression>,
-    ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
-        override fun transform(
-            context: TransmutationContext,
-        ) = LocalScope.Constructor.PatternDefinition(
-            pattern = ListEmptyPattern(
-                listClass = BuiltinModuleReference.listClass,
-            ),
-            initializer = initializerStub.build(
-                context = context,
-            ),
-        )
-    }
+        context: TransmutationContext,
+    ) = ListEmptyPattern(
+        listClass = BuiltinModuleReference.listClass,
+    )
 }
 
 data class TagPatternTerm(
     @Suppress("PropertyName") val class_: ExpressionTerm,
     val newName: Identifier,
-) : ComplexPatternTerm() {
+) : PatternTerm() {
     companion object {
         fun build(ctx: SigmaParser.TagPatternContext): TagPatternTerm = TagPatternTerm(
             class_ = ExpressionTerm.build(ctx.class_),
@@ -122,18 +83,12 @@ data class TagPatternTerm(
     override val names: Set<Identifier>
         get() = setOf(newName)
 
-    override fun makePattern(): ExpressionStub<Pattern> = object : ExpressionStub<Pattern>() {
-        override fun transform(
-            context: TransmutationContext,
-        ) = TagPattern(
-            class_ = class_.transmuteFully(
-                context = context,
-            ),
-            newName = newName,
-        )
-    }
-
-    override fun transmute(initializerStub: ExpressionStub<Expression>): ExpressionStub<LocalScope.Constructor.Definition> {
-        TODO("Not yet implemented")
-    }
+    override fun transmute(
+        context: TransmutationContext,
+    ) = TagPattern(
+        class_ = class_.transmute(
+            context = context,
+        ),
+        newName = newName,
+    )
 }

@@ -1,9 +1,10 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
-import com.github.cubuspl42.sigmaLang.shell.stubs.map
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 
 data class FieldReadTerm(
     val subject: ExpressionTerm,
@@ -18,8 +19,10 @@ data class FieldReadTerm(
         )
     }
 
-    override fun transmute() = subject.transmute().map {
-        it.readField(fieldName = readFieldName)
+    override fun transmute(context: TransmutationContext): Expression {
+        val subjectExpression = subject.transmute(context = context)
+
+        return subjectExpression.readField(fieldName = readFieldName)
     }
 
     override fun wrap() = UnorderedTupleValue(

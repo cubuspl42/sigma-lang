@@ -1,11 +1,13 @@
 package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.expressions.StringLiteral
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.StringValue
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 
 data class StringLiteralTerm(
     override val value: StringValue,
@@ -27,9 +29,11 @@ data class StringLiteralTerm(
         ): SigmaParser.StringLiteralContext = parser.stringLiteral()
     }
 
-    override fun transmute() = StringLiteral(
+    override fun transmute(
+        context: TransmutationContext,
+    ): Expression = StringLiteral(
         value = value,
-    ).asStub()
+    )
 
     override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(

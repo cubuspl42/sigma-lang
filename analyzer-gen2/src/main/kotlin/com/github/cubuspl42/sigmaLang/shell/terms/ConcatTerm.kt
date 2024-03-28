@@ -7,7 +7,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 
 data class ConcatTerm(
     val left: ExpressionTerm,
@@ -32,11 +32,11 @@ data class ConcatTerm(
         )
     }
 
-    override fun transmute(): ExpressionStub<Expression> = ExpressionStub.map2Nested(
-        left.transmute(),
-        right.transmute(),
-    ) { leftExpression, rightExpression ->
-        when (variant) {
+    override fun transmute(context: TransmutationContext): Expression {
+        val leftExpression = left.transmute(context = context)
+        val rightExpression = right.transmute(context = context)
+
+        return when (variant) {
             Variant.Strings -> BuiltinModuleReference.stringClass.concat.call(
                 string = leftExpression,
                 otherString = rightExpression,

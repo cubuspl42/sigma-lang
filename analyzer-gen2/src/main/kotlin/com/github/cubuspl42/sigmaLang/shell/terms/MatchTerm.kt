@@ -12,28 +12,27 @@ import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class MatchTerm(
     val matched: ExpressionTerm,
     val patternBlocks: List<CaseTerm>,
 ) : ExpressionTerm {
     data class CaseTerm(
-        val pattern: ComplexPatternTerm,
+        val pattern: PatternTerm,
         val result: ExpressionTerm,
     ) : Wrappable {
         companion object {
             fun build(
                 ctx: SigmaParser.MatchCaseContext,
             ): CaseTerm = CaseTerm(
-                pattern = object : SigmaParserBaseVisitor<ComplexPatternTerm>() {
+                pattern = object : SigmaParserBaseVisitor<PatternTerm>() {
                     override fun visitDestructuringPattern(
                         ctx: SigmaParser.DestructuringPatternContext,
-                    ): ComplexPatternTerm = DestructuringPatternTerm.build(ctx)
+                    ): PatternTerm = DestructuringPatternTerm.build(ctx)
 
                     override fun visitTagPattern(
                         ctx: SigmaParser.TagPatternContext,
-                    ): ComplexPatternTerm = TagPatternTerm.build(ctx)
+                    ): PatternTerm = TagPatternTerm.build(ctx)
                 }.visit(ctx.matchPattern()),
                 result = ExpressionTerm.build(ctx.result),
             )
@@ -55,43 +54,46 @@ data class MatchTerm(
         override fun extract(parser: SigmaParser): SigmaParser.MatchContext = parser.match()
     }
 
-    override fun transmute() = object : ExpressionStub<Expression>() {
-        override fun transform(context: TransmutationContext): Expression = MatcherConstructor.make(
-            matched = matched.transmuteFully(
-                context = context,
-            ),
-            patternBlocks = patternBlocks.map { patternBlock ->
-                val pattern = patternBlock.pattern
-                object : MatcherConstructor.PatternBlock(
-                    pattern = pattern.makePattern().build(
-                        context = context,
-                    ),
-                ) {
-                    override fun makeResult(
-                        definitionBlock: LocalScope.DefinitionBlock,
-                    ): Expression {
-                        val innerScope = object : StaticScope {
-                            override fun resolveName(
-                                referredName: Identifier,
-                            ): Expression? = if (pattern.names.contains(referredName)) {
-                                definitionBlock.getInitializer(name = referredName)
-                            } else null
-                        }.chainWith(
-                            context.scope,
-                        )
+    override fun transmute(context: TransmutationContext): Expression {
+        val matchedExpression = matched.transmute(
+            context = context,
+        )
 
-                        return patternBlock.result.transmuteFully(
-                            context = context.copy(
-                                scope = innerScope,
-                            ),
-                        )
-                    }
+        val patternBlocks = patternBlocks.map { patternBlock ->
+            val pattern = patternBlock.pattern
+            object : MatcherConstructor.PatternBlock(
+                pattern = pattern.transmute(
+                    context = context,
+                ),
+            ) {
+                override fun makeResult(
+                    definitionBlock: LocalScope.DefinitionBlock,
+                ): Expression {
+                    val innerScope = object : StaticScope {
+                        override fun resolveName(
+                            referredName: Identifier,
+                        ): Expression? = if (pattern.names.contains(referredName)) {
+                            definitionBlock.getInitializer(name = referredName)
+                        } else null
+                    }.chainWith(
+                        context.scope,
+                    )
+
+                    return patternBlock.result.transmute(
+                        context = context.copy(
+                            scope = innerScope,
+                        ),
+                    )
                 }
-            },
+            }
+        }
+
+        return MatcherConstructor.make(
+            matched = matchedExpression,
+            patternBlocks = patternBlocks,
             elseResult = BuiltinModuleReference.panicFunction.call(),
         ).rawExpression
     }
-
 
     override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(

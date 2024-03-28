@@ -4,7 +4,6 @@ import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 sealed interface ExpressionTerm : Term {
     companion object : Term.Builder<SigmaParser.ExpressionContext, ExpressionTerm>() {
@@ -78,11 +77,7 @@ sealed interface ExpressionTerm : Term {
         ): SigmaParser.ExpressionContext = parser.expression()
     }
 
-    fun transmute(): ExpressionStub<Expression>
-
-    fun transmuteFully(
+    fun transmute(
         context: TransmutationContext,
-    ): Expression = transmute().transform(
-        context = context,
-    )
+    ): Expression
 }

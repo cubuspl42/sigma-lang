@@ -5,7 +5,6 @@ import com.github.cubuspl42.sigmaLang.core.DynamicContext
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.core.visitors.CodegenRepresentationContext
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.squareup.kotlinpoet.CodeBlock
 
 private fun <K, V : Any> MutableMap<K, V>.update(expression: K, function: (oldValue: V?) -> V) {
@@ -125,8 +124,6 @@ sealed class Expression : CoreTerm() {
         callee = this,
         passedArgument = passedArgument,
     )
-
-    fun asStub(): ExpressionStub<Expression> = ExpressionStub.pure(this@Expression)
 }
 
 fun Expression.bindToReference(
