@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.core.LocalScope
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.stubs.map
 import com.github.cubuspl42.sigmaLang.shell.withExtendedScope
@@ -96,16 +96,16 @@ data class LetInTerm(
                 initializer: ExpressionTerm,
             ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
                 override fun transform(
-                    context: FormationContext,
+                    context: TransmutationContext,
                 ): LocalScope.Constructor.PatternDefinition {
                     val pattern = pattern.makePattern().build(
-                        formationContext = context,
+                        context = context,
                     )
 
                     return LocalScope.Constructor.PatternDefinition(
                         pattern = pattern,
                         initializer = initializer.transmute().build(
-                            formationContext = context,
+                            context = context,
                         ),
                     )
                 }
@@ -142,7 +142,7 @@ data class LetInTerm(
 
     override fun transmute() = object : ExpressionStub<Expression>() {
         override fun transform(
-            context: FormationContext,
+            context: TransmutationContext,
         ): Expression {
             val allLocalNames = definitions.fold(
                 initial = emptySet<Identifier>()
@@ -159,7 +159,7 @@ data class LetInTerm(
 
                     definitions.mapUniquely {
                         it.makeDefinition().build(
-                            formationContext = innerContext,
+                            context = innerContext,
                         )
                     }
                 },
@@ -170,7 +170,7 @@ data class LetInTerm(
                     )
 
                     result.transmute().build(
-                        formationContext = innerContext,
+                        context = innerContext,
                     )
                 },
             )
