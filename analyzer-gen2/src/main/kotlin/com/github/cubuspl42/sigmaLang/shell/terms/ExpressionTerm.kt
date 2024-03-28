@@ -2,9 +2,8 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
-import com.github.cubuspl42.sigmaLang.core.ShadowExpression
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 sealed interface ExpressionTerm : Term {
@@ -81,9 +80,9 @@ sealed interface ExpressionTerm : Term {
 
     fun transmute(): ExpressionStub<Expression>
 
-    fun build(
-        formationContext: FormationContext,
+    fun transmuteFully(
+        context: TransmutationContext,
     ): Expression = transmute().transform(
-        context = formationContext,
+        context = context,
     )
 }

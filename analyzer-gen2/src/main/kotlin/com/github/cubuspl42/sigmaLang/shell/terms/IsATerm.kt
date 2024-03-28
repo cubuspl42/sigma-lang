@@ -3,11 +3,10 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Call
-import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class IsATerm(
@@ -25,21 +24,21 @@ data class IsATerm(
 
     override fun transmute(): ExpressionStub<Call> = object : ExpressionStub<Call>() {
         override fun transform(
-            context: FormationContext,
+            context: TransmutationContext,
         ): Call {
             val isA = BuiltinModuleReference.isAFunction
 
             return isA.call(
-                instance = instance.build(
-                    formationContext = context,
+                instance = instance.transmuteFully(
+                    context = context,
                 ),
-                class_ = class_.build(
-                    formationContext = context,
+                class_ = class_.transmuteFully(
+                    context = context,
                 ),
             )
         }
     }
-    
+
 
     override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(

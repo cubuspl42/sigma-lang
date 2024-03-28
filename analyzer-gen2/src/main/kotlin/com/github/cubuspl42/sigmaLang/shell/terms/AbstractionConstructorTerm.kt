@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.AbstractionConstructor
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.FieldScope
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
@@ -39,11 +39,11 @@ data class AbstractionConstructorTerm(
         get() = argumentType.names.toSet()
 
     fun build(
-        formationContext: FormationContext,
+        transmutationContext: TransmutationContext,
         extraArgumentNames: Set<Identifier> = emptySet(),
     ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
-        image.build(
-            formationContext = formationContext.extendScope(
+        image.transmuteFully(
+            context = transmutationContext.extendScope(
                 innerScope = FieldScope(
                     names = argumentNames + extraArgumentNames,
                     tupleReference = argumentReference,
@@ -54,7 +54,7 @@ data class AbstractionConstructorTerm(
 
     override fun transmute(): ExpressionStub<Expression> = object : ExpressionStub<Expression>() {
         override fun transform(
-            context: FormationContext,
+            context: TransmutationContext,
         ): AbstractionConstructor = AbstractionConstructor.looped1 { argumentReference ->
             val innerScope = StaticScope.argumentScope(
                 argumentNames = argumentNames,
@@ -67,8 +67,8 @@ data class AbstractionConstructorTerm(
                 scope = innerScope,
             )
 
-            image.build(
-                formationContext = innerContext,
+            image.transmuteFully(
+                context = innerContext,
             )
         }
     }

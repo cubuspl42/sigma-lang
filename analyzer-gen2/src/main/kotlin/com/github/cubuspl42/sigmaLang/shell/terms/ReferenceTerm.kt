@@ -5,7 +5,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class ReferenceTerm(
@@ -23,7 +23,7 @@ data class ReferenceTerm(
 
     override fun transmute(): ExpressionStub<Expression> = object : ExpressionStub<Expression>() {
         override fun transform(
-            context: FormationContext,
+            context: TransmutationContext,
         ): Expression {
             val scope = context.scope
 

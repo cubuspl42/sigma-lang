@@ -8,7 +8,7 @@ import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.core.values.builtin.ClassModule
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class ClassDefinitionTerm(
@@ -51,9 +51,9 @@ data class ClassDefinitionTerm(
         }
 
         fun buildImplementation(
-            formationContext: FormationContext,
+            transmutationContext: TransmutationContext,
         ): AbstractionConstructor = implementation.build(
-            formationContext = formationContext,
+            transmutationContext = transmutationContext,
             extraArgumentNames = setOf(ClassModule.thisIdentifier),
         )
 
@@ -75,7 +75,7 @@ data class ClassDefinitionTerm(
     override fun transmuteInitializer(): ExpressionStub<Expression> =
         object : ExpressionStub<Expression>() {
             override fun transform(
-                context: FormationContext,
+                context: TransmutationContext,
             ): Expression {
                 val classModule = BuiltinModuleReference.classModule
 
@@ -84,7 +84,7 @@ data class ClassDefinitionTerm(
                     instanceConstructorName = constructor!!.name.toIdentifier(),
                     methodByName = methodDefinitions.associate { methodDefinitionTerm ->
                         methodDefinitionTerm.name.toIdentifier() to methodDefinitionTerm.buildImplementation(
-                            formationContext = context,
+                            transmutationContext = context,
                         )
                     },
                 )

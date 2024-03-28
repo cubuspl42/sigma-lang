@@ -9,7 +9,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
@@ -56,15 +56,15 @@ data class MatchTerm(
     }
 
     override fun transmute() = object : ExpressionStub<Expression>() {
-        override fun transform(context: FormationContext): Expression = MatcherConstructor.make(
-            matched = matched.build(
-                formationContext = context,
+        override fun transform(context: TransmutationContext): Expression = MatcherConstructor.make(
+            matched = matched.transmuteFully(
+                context = context,
             ),
             patternBlocks = patternBlocks.map { patternBlock ->
                 val pattern = patternBlock.pattern
                 object : MatcherConstructor.PatternBlock(
                     pattern = pattern.makePattern().build(
-                        formationContext = context,
+                        context = context,
                     ),
                 ) {
                     override fun makeResult(
@@ -80,8 +80,8 @@ data class MatchTerm(
                             context.scope,
                         )
 
-                        return patternBlock.result.build(
-                            formationContext = context.copy(
+                        return patternBlock.result.transmuteFully(
+                            context = context.copy(
                                 scope = innerScope,
                             ),
                         )

@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.core.TagPattern
 import com.github.cubuspl42.sigmaLang.core.expressions.BuiltinModuleReference
 import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 sealed class PatternTerm {
@@ -69,7 +69,7 @@ data class ListUnconsPatternTerm(
         initializerStub: ExpressionStub<Expression>,
     ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
         override fun transform(
-            context: FormationContext,
+            context: TransmutationContext,
         ) = LocalScope.Constructor.PatternDefinition(
             pattern = ListUnconsPattern(
                 listClass = BuiltinModuleReference.listClass,
@@ -77,7 +77,7 @@ data class ListUnconsPatternTerm(
                 tailName = tailName,
             ),
             initializer = initializerStub.build(
-                formationContext = context,
+                context = context,
             ),
         )
     }
@@ -96,13 +96,13 @@ data object ListEmptyPatternTerm : DestructuringPatternTerm() {
         initializerStub: ExpressionStub<Expression>,
     ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
         override fun transform(
-            context: FormationContext,
+            context: TransmutationContext,
         ) = LocalScope.Constructor.PatternDefinition(
             pattern = ListEmptyPattern(
                 listClass = BuiltinModuleReference.listClass,
             ),
             initializer = initializerStub.build(
-                formationContext = context,
+                context = context,
             ),
         )
     }
@@ -124,10 +124,10 @@ data class TagPatternTerm(
 
     override fun makePattern(): ExpressionStub<Pattern> = object : ExpressionStub<Pattern>() {
         override fun transform(
-            context: FormationContext,
+            context: TransmutationContext,
         ) = TagPattern(
-            class_ = class_.build(
-                formationContext = context,
+            class_ = class_.transmuteFully(
+                context = context,
             ),
             newName = newName,
         )

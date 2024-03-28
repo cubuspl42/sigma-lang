@@ -6,18 +6,18 @@ import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.scope.chainWith
 
-data class FormationContext(
+data class TransmutationContext(
     val scope: StaticScope,
 ) {
-    fun extendScope(innerScope: StaticScope): FormationContext = copy(
+    fun extendScope(innerScope: StaticScope): TransmutationContext = copy(
         scope = innerScope.chainWith(scope),
     )
 }
 
-fun FormationContext.withExtendedScope(
+fun TransmutationContext.withExtendedScope(
     localNames: Set<Identifier>,
     localScopeReference: LocalScope.Reference,
-): FormationContext = extendScope(
+): TransmutationContext = extendScope(
     innerScope = object : StaticScope {
         override fun resolveName(
             referredName: Identifier,

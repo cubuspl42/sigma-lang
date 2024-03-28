@@ -10,7 +10,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.RootReference
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.FormationContext
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
 import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.withExtendedScope
@@ -135,7 +135,7 @@ data class ModuleTerm(
             },
         )
 
-        val rootContext = FormationContext(
+        val rootContext = TransmutationContext(
             scope = rootScope,
         )
 
@@ -155,7 +155,7 @@ data class ModuleTerm(
                 LocalScope.Constructor.SimpleDefinition(
                     name = it.name,
                     initializer = it.transmuteInitializer().build(
-                        formationContext = innerContext,
+                        context = innerContext,
                     ),
                 )
             }
