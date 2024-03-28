@@ -12,7 +12,6 @@ import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.shell.scope.StaticScope
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 import com.github.cubuspl42.sigmaLang.shell.withExtendedScope
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
@@ -69,7 +68,9 @@ data class ModuleTerm(
 
         abstract val name: Identifier
 
-        abstract fun transmuteInitializer(): ExpressionStub<Expression>
+        abstract fun transmuteInitializer(
+            context: TransmutationContext,
+        ): Expression
     }
 
     data class ValueDefinitionTerm(
@@ -85,7 +86,10 @@ data class ModuleTerm(
             )
         }
 
-        override fun transmuteInitializer() = initializer.transmute()
+        override fun transmuteInitializer(
+            context: TransmutationContext,
+        ): Expression = initializer.transmute(context = context)
+
         override fun wrap(): Value = UnorderedTupleValue(
             valueByKey = mapOf(
                 Identifier.of("name") to lazyOf(name),
@@ -110,7 +114,11 @@ data class ModuleTerm(
             )
         }
 
-        override fun transmuteInitializer() = abstractionConstructor.transmute()
+        override fun transmuteInitializer(
+            context: TransmutationContext,
+        ): Expression = abstractionConstructor.transmute(
+            context = context,
+        )
 
         override fun wrap(): Value = TODO()
     }
@@ -154,7 +162,7 @@ data class ModuleTerm(
             definitions.mapUniquely {
                 LocalScope.Constructor.SimpleDefinition(
                     name = it.name,
-                    initializer = it.transmuteInitializer().build(
+                    initializer = it.transmuteInitializer(
                         context = innerContext,
                     ),
                 )

@@ -7,8 +7,6 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
-import com.github.cubuspl42.sigmaLang.shell.stubs.map
 import com.github.cubuspl42.sigmaLang.shell.withExtendedScope
 import com.github.cubuspl42.sigmaLang.utils.mapUniquely
 
@@ -49,9 +47,10 @@ data class LetInTerm(
 
             abstract val names: Set<Identifier>
 
-            abstract fun makeDefinition(
+            abstract fun transmute(
+                context: TransmutationContext,
                 initializer: ExpressionTerm,
-            ): ExpressionStub<LocalScope.Constructor.Definition>
+            ): LocalScope.Constructor.Definition
         }
 
         data class NameLhsTerm(
@@ -68,14 +67,15 @@ data class LetInTerm(
             override val names: Set<Identifier>
                 get() = setOf(name)
 
-            override fun makeDefinition(
+            override fun transmute(
+                context: TransmutationContext,
                 initializer: ExpressionTerm,
-            ) = initializer.transmute().map {
-                LocalScope.Constructor.SimpleDefinition(
-                    name = name,
-                    initializer = it,
-                )
-            }
+            ): LocalScope.Constructor.Definition = LocalScope.Constructor.SimpleDefinition(
+                name = name,
+                initializer = initializer.transmute(
+                    context = context,
+                ),
+            )
         }
 
         data class DestructuringLhsTerm(
@@ -92,23 +92,20 @@ data class LetInTerm(
             override val names: Set<Identifier>
                 get() = pattern.names
 
-            override fun makeDefinition(
+            override fun transmute(
+                context: TransmutationContext,
                 initializer: ExpressionTerm,
-            ) = object : ExpressionStub<LocalScope.Constructor.PatternDefinition>() {
-                override fun transform(
-                    context: TransmutationContext,
-                ): LocalScope.Constructor.PatternDefinition {
-                    val pattern = pattern.makePattern().build(
-                        context = context,
-                    )
+            ): LocalScope.Constructor.PatternDefinition {
+                val pattern = pattern.transmute(
+                    context = context,
+                )
 
-                    return LocalScope.Constructor.PatternDefinition(
-                        pattern = pattern,
-                        initializer = initializer.transmute().build(
-                            context = context,
-                        ),
-                    )
-                }
+                return LocalScope.Constructor.PatternDefinition(
+                    pattern = pattern,
+                    initializer = initializer.transmute(
+                        context = context,
+                    ),
+                )
             }
         }
 
@@ -124,7 +121,12 @@ data class LetInTerm(
         val names: Set<Identifier>
             get() = lhs.names
 
-        fun makeDefinition() = lhs.makeDefinition(initializer = initializer)
+        fun transmute(
+            context: TransmutationContext,
+        ) = lhs.transmute(
+            context = context,
+            initializer = initializer,
+        )
     }
 
     companion object : Term.Builder<SigmaParser.LetInContext, LetInTerm>() {
@@ -140,43 +142,35 @@ data class LetInTerm(
         override fun extract(parser: SigmaParser): SigmaParser.LetInContext = parser.letIn()
     }
 
-    override fun transmute() = object : ExpressionStub<Expression>() {
-        override fun transform(
-            context: TransmutationContext,
-        ): Expression {
-            val allLocalNames = definitions.fold(
-                initial = emptySet<Identifier>()
-            ) { accLocalNames, definitionTerm ->
-                accLocalNames + definitionTerm.names
-            }
-
-            val result = LocalScope.Constructor.makeWithResult(
-                makeDefinitions = { localScopeReference ->
-                    val innerContext = context.withExtendedScope(
-                        localNames = allLocalNames,
-                        localScopeReference = localScopeReference,
-                    )
-
-                    definitions.mapUniquely {
-                        it.makeDefinition().build(
-                            context = innerContext,
-                        )
-                    }
-                },
-                makeResult = { localScopeReference ->
-                    val innerContext = context.withExtendedScope(
-                        localNames = allLocalNames,
-                        localScopeReference = localScopeReference,
-                    )
-
-                    result.transmute().build(
-                        context = innerContext,
-                    )
-                },
-            )
-
-            return result
+    override fun transmute(context: TransmutationContext): Expression {
+        val allLocalNames = definitions.fold(
+            initial = emptySet<Identifier>()
+        ) { accLocalNames, definitionTerm ->
+            accLocalNames + definitionTerm.names
         }
+
+        return LocalScope.Constructor.makeWithResult(
+            makeDefinitions = { localScopeReference ->
+                val innerContext = context.withExtendedScope(
+                    localNames = allLocalNames,
+                    localScopeReference = localScopeReference,
+                )
+
+                definitions.mapUniquely {
+                    it.transmute(context = innerContext)
+                }
+            },
+            makeResult = { localScopeReference ->
+                val innerContext = context.withExtendedScope(
+                    localNames = allLocalNames,
+                    localScopeReference = localScopeReference,
+                )
+
+                result.transmute(
+                    context = innerContext,
+                )
+            },
+        )
     }
 
     override fun wrap(): Value = TODO()

@@ -6,7 +6,7 @@ import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 import com.github.cubuspl42.sigmaLang.utils.uncons
 
 data class WhenTerm(
@@ -41,35 +41,38 @@ data class WhenTerm(
         override fun extract(parser: SigmaParser): SigmaParser.WhenContext = parser.`when`()
     }
 
-    override fun transmute(): ExpressionStub<Expression> {
-        fun constructElseExpression(): ExpressionStub<Expression> =
-            elseBlock?.transmute() ?: ExpressionStub.pure(
-                BuiltinModuleReference.panicFunction.call()
-            )
+    override fun transmute(context: TransmutationContext): Expression {
+        fun constructElseExpression(): Expression = elseBlock?.transmute(
+            context = context,
+        ) ?: BuiltinModuleReference.panicFunction.call()
 
         fun constructConditionalEntryExpression(
             caseBlock: CaseBlock,
-            elseCaseStub: ExpressionStub<Expression>,
-        ): ExpressionStub<Expression> = ExpressionStub.map3(
-            caseBlock.condition.transmute(),
-            caseBlock.result.transmute(),
-            elseCaseStub,
-        ) { condition, result, elseCase ->
-            BuiltinModuleReference.ifFunction.call(
-                condition = condition,
-                thenCase = result,
+            elseCase: Expression,
+        ): Expression {
+            val conditionExpression = caseBlock.condition.transmute(
+                context = context,
+            )
+
+            val resultExpression = caseBlock.result.transmute(
+                context = context,
+            )
+
+            return BuiltinModuleReference.ifFunction.call(
+                condition = conditionExpression,
+                thenCase = resultExpression,
                 elseCase = elseCase,
             )
         }
 
         fun constructEntryExpression(
             remainingEntries: List<CaseBlock>,
-        ): ExpressionStub<Expression> {
+        ): Expression {
             val (head, tail) = remainingEntries.uncons() ?: return constructElseExpression()
 
             return constructConditionalEntryExpression(
                 caseBlock = head,
-                elseCaseStub = constructEntryExpression(tail),
+                elseCase = constructEntryExpression(tail),
             )
         }
 

@@ -6,7 +6,6 @@ import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class ReferenceTerm(
     val referredName: IdentifierTerm,
@@ -21,17 +20,13 @@ data class ReferenceTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ReferenceContext = parser.reference()
     }
 
-    override fun transmute(): ExpressionStub<Expression> = object : ExpressionStub<Expression>() {
-        override fun transform(
-            context: TransmutationContext,
-        ): Expression {
-            val scope = context.scope
+    override fun transmute(context: TransmutationContext): Expression {
+        val scope = context.scope
 
-            val referredExpression = scope.resolveName(referredName = referredName.toIdentifier())
-                ?: throw IllegalStateException("Unresolved reference: $referredName")
+        val referredExpression = scope.resolveName(referredName = referredName.toIdentifier())
+            ?: throw IllegalStateException("Unresolved reference: $referredName")
 
-            return referredExpression
-        }
+        return referredExpression
     }
 
     override fun wrap(): Value = UnorderedTupleValue(

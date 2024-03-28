@@ -9,7 +9,6 @@ import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
 import com.github.cubuspl42.sigmaLang.core.values.builtin.ClassModule
 import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
-import com.github.cubuspl42.sigmaLang.shell.stubs.ExpressionStub
 
 data class ClassDefinitionTerm(
     override val name: Identifier,
@@ -72,24 +71,19 @@ data class ClassDefinitionTerm(
         override fun extract(parser: SigmaParser): SigmaParser.ClassDefinitionContext = parser.classDefinition()
     }
 
-    override fun transmuteInitializer(): ExpressionStub<Expression> =
-        object : ExpressionStub<Expression>() {
-            override fun transform(
-                context: TransmutationContext,
-            ): Expression {
-                val classModule = BuiltinModuleReference.classModule
+    override fun transmuteInitializer(context: TransmutationContext): Expression {
+        val classModule = BuiltinModuleReference.classModule
 
-                return classModule.of.call(
-                    tag = name,
-                    instanceConstructorName = constructor!!.name.toIdentifier(),
-                    methodByName = methodDefinitions.associate { methodDefinitionTerm ->
-                        methodDefinitionTerm.name.toIdentifier() to methodDefinitionTerm.buildImplementation(
-                            transmutationContext = context,
-                        )
-                    },
+        return classModule.of.call(
+            tag = name,
+            instanceConstructorName = constructor!!.name.toIdentifier(),
+            methodByName = methodDefinitions.associate { methodDefinitionTerm ->
+                methodDefinitionTerm.name.toIdentifier() to methodDefinitionTerm.buildImplementation(
+                    transmutationContext = context,
                 )
-            }
-        }
+            },
+        )
+    }
 
     override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(

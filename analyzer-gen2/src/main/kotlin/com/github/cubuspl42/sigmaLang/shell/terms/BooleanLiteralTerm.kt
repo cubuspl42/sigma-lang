@@ -3,10 +3,12 @@ package com.github.cubuspl42.sigmaLang.shell.terms
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParser
 import com.github.cubuspl42.sigmaLang.analyzer.parser.antlr.SigmaParserBaseVisitor
 import com.github.cubuspl42.sigmaLang.core.expressions.BooleanLiteral
+import com.github.cubuspl42.sigmaLang.core.expressions.Expression
 import com.github.cubuspl42.sigmaLang.core.values.BooleanValue
 import com.github.cubuspl42.sigmaLang.core.values.Identifier
 import com.github.cubuspl42.sigmaLang.core.values.UnorderedTupleValue
 import com.github.cubuspl42.sigmaLang.core.values.Value
+import com.github.cubuspl42.sigmaLang.shell.TransmutationContext
 
 data class BooleanLiteralTerm(
     override val value: BooleanValue,
@@ -35,9 +37,9 @@ data class BooleanLiteralTerm(
         ): SigmaParser.BooleanLiteralContext = parser.booleanLiteral()
     }
 
-    override fun transmute() = BooleanLiteral(
+    override fun transmute(context: TransmutationContext): Expression = BooleanLiteral(
         value = value,
-    ).asStub()
+    )
 
     override fun wrap(): Value = UnorderedTupleValue(
         valueByKey = mapOf(
